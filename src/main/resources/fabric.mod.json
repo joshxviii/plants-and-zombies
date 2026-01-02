@@ -1,0 +1,45 @@
+{
+	"schemaVersion": 1,
+	"id": "plants-and-zombies",
+	"version": "${version}",
+	"name": "Plants & Zombies",
+	"description": "Find and grow helpful Plants that can defend your base.",
+	"authors": [
+		"joshxviii"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/plants-and-zombies/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			{
+				"value": "joshxviii.paz.PazMain",
+				"adapter": "kotlin"
+			}
+		],
+		"client": [
+			{
+				"value": "joshxviii.paz.PazClient",
+				"adapter": "kotlin"
+			}
+		]
+	},
+	"mixins": [
+		"plants-and-zombies.mixins.json",
+		{
+			"config": "plants-and-zombies.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.18.4",
+		"minecraft": "~26.1-",
+		"java": ">=25",
+		"fabric-api": "*",
+		"fabric-language-kotlin": "*"
+	}
+}
