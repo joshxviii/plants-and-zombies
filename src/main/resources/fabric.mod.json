@@ -1,6 +1,6 @@
 {
 	"schemaVersion": 1,
-	"id": "plants-and-zombies",
+	"id": "plantz",
 	"version": "${version}",
 	"name": "Plants & Zombies",
 	"description": "Find and grow helpful Plants that can defend your base.",
@@ -12,26 +12,26 @@
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/plants-and-zombies/icon.png",
+	"icon": "assets/plantz/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
 			{
-				"value": "joshxviii.paz.PazMain",
+				"value": "joshxviii.plantz.PazMain",
 				"adapter": "kotlin"
 			}
 		],
 		"client": [
 			{
-				"value": "joshxviii.paz.PazClient",
+				"value": "joshxviii.plantz.PazClient",
 				"adapter": "kotlin"
 			}
 		]
 	},
 	"mixins": [
-		"plants-and-zombies.mixins.json",
+		"plantz.mixins.json",
 		{
-			"config": "plants-and-zombies.client.mixins.json",
+			"config": "plantz.client.mixins.json",
 			"environment": "client"
 		}
 	],

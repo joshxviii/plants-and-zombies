@@ -1,0 +1,13 @@
+{
+  "itemGroup.plantz.plantz_tab": "Plants & Zombies",
+
+  "message.plantz.too_damaged": "%s is too damaged to be transplanted!",
+
+  "item.plantz.sun": "Sun",
+  "item.plantz.seed_packet": "Seed Packet",
+  "item.plantz.seed_packet.sunflower": "Sunflower Seed Packet",
+  "item.plantz.seed_packet.peashooter": "Pea Shooter Seed Packet",
+
+  "entity.plantz.sunflower": "Sunflower",
+  "entity.plantz.peashooter": "Pea Shooter"
+}

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:entity_interact",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "plantz:sun"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}
