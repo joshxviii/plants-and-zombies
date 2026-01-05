@@ -12,16 +12,16 @@ public class PeaShooter<T extends PeaShooter> extends EntityModel<T> {
 	private final ModelPart head;
 	private final ModelPart barrel;
 	private final ModelPart head_leaf;
-	private final ModelPart head_leaf2;
+	private final ModelPart head_leaf_tip;
 	private final ModelPart leaves;
 	private final ModelPart leaf_1;
-	private final ModelPart leaf_seg_1;
+	private final ModelPart leaf_tip_1;
 	private final ModelPart leaf_2;
-	private final ModelPart leaf_seg_2;
+	private final ModelPart leaf_tip_2;
 	private final ModelPart leaf_3;
-	private final ModelPart leaf_seg_3;
+	private final ModelPart leaf_tip_3;
 	private final ModelPart leaf_4;
-	private final ModelPart leaf_seg_4;
+	private final ModelPart leaf_tip_4;
 
 	public PeaShooter(ModelPart root) {
 		this.body = root.getChild("body");
@@ -30,16 +30,16 @@ public class PeaShooter<T extends PeaShooter> extends EntityModel<T> {
 		this.head = this.stem_2.getChild("head");
 		this.barrel = this.head.getChild("barrel");
 		this.head_leaf = this.head.getChild("head_leaf");
-		this.head_leaf2 = this.head_leaf.getChild("head_leaf2");
+		this.head_leaf_tip = this.head_leaf.getChild("head_leaf_tip");
 		this.leaves = this.body.getChild("leaves");
 		this.leaf_1 = this.leaves.getChild("leaf_1");
-		this.leaf_seg_1 = this.leaf_1.getChild("leaf_seg_1");
+		this.leaf_tip_1 = this.leaf_1.getChild("leaf_tip_1");
 		this.leaf_2 = this.leaves.getChild("leaf_2");
-		this.leaf_seg_2 = this.leaf_2.getChild("leaf_seg_2");
+		this.leaf_tip_2 = this.leaf_2.getChild("leaf_tip_2");
 		this.leaf_3 = this.leaves.getChild("leaf_3");
-		this.leaf_seg_3 = this.leaf_3.getChild("leaf_seg_3");
+		this.leaf_tip_3 = this.leaf_3.getChild("leaf_tip_3");
 		this.leaf_4 = this.leaves.getChild("leaf_4");
-		this.leaf_seg_4 = this.leaf_4.getChild("leaf_seg_4");
+		this.leaf_tip_4 = this.leaf_4.getChild("leaf_tip_4");
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -62,27 +62,27 @@ public class PeaShooter<T extends PeaShooter> extends EntityModel<T> {
 
 		PartDefinition cube_r1 = head_leaf.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(30, -2).addBox(0.0F, -4.0F, 0.0F, 0.0F, 8.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0833F, 0.0F, 0.0F, 1.5708F));
 
-		PartDefinition head_leaf2 = head_leaf.addOrReplaceChild("head_leaf2", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 3.0833F));
+		PartDefinition head_leaf_tip = head_leaf.addOrReplaceChild("head_leaf_tip", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 3.0833F));
 
-		PartDefinition cube_r2 = head_leaf2.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(36, -6).addBox(0.0F, -4.0F, 0.0F, 0.0F, 8.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5708F));
+		PartDefinition cube_r2 = head_leaf_tip.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(36, -6).addBox(0.0F, -4.0F, 0.0F, 0.0F, 8.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5708F));
 
 		PartDefinition leaves = body.addOrReplaceChild("leaves", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
 		PartDefinition leaf_1 = leaves.addOrReplaceChild("leaf_1", CubeListBuilder.create().texOffs(31, 10).addBox(-3.0F, 0.0F, -6.0F, 6.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.7071F, 0.0F, -0.6464F, 0.0F, -0.7854F, 0.0F));
 
-		PartDefinition leaf_seg_1 = leaf_1.addOrReplaceChild("leaf_seg_1", CubeListBuilder.create().texOffs(31, 16).addBox(-3.0F, 0.0F, -6.0F, 6.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -6.0F));
+		PartDefinition leaf_tip_1 = leaf_1.addOrReplaceChild("leaf_tip_1", CubeListBuilder.create().texOffs(31, 16).addBox(-3.0F, 0.0F, -6.0F, 6.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -6.0F));
 
 		PartDefinition leaf_2 = leaves.addOrReplaceChild("leaf_2", CubeListBuilder.create().texOffs(31, 10).addBox(-3.0F, 0.0F, -6.0F, 6.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.7071F, 0.0F, 0.7678F, 0.0F, -2.3562F, 0.0F));
 
-		PartDefinition leaf_seg_2 = leaf_2.addOrReplaceChild("leaf_seg_2", CubeListBuilder.create().texOffs(31, 16).addBox(-3.0F, 0.0F, -6.0F, 6.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -6.0F));
+		PartDefinition leaf_tip_2 = leaf_2.addOrReplaceChild("leaf_tip_2", CubeListBuilder.create().texOffs(31, 16).addBox(-3.0F, 0.0F, -6.0F, 6.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -6.0F));
 
 		PartDefinition leaf_3 = leaves.addOrReplaceChild("leaf_3", CubeListBuilder.create().texOffs(31, 10).addBox(-3.0F, 0.0F, -6.0F, 6.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.7071F, 0.0F, -0.6464F, 0.0F, 0.7854F, 0.0F));
 
-		PartDefinition leaf_seg_3 = leaf_3.addOrReplaceChild("leaf_seg_3", CubeListBuilder.create().texOffs(31, 16).addBox(-3.0F, 0.0F, -6.0F, 6.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -6.0F));
+		PartDefinition leaf_tip_3 = leaf_3.addOrReplaceChild("leaf_tip_3", CubeListBuilder.create().texOffs(31, 16).addBox(-3.0F, 0.0F, -6.0F, 6.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -6.0F));
 
 		PartDefinition leaf_4 = leaves.addOrReplaceChild("leaf_4", CubeListBuilder.create().texOffs(31, 10).addBox(-3.0F, 0.0F, -6.0F, 6.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.7071F, 0.0F, 0.7678F, 0.0F, 2.3562F, 0.0F));
 
-		PartDefinition leaf_seg_4 = leaf_4.addOrReplaceChild("leaf_seg_4", CubeListBuilder.create().texOffs(31, 16).addBox(-3.0F, 0.0F, -6.0F, 6.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -6.0F));
+		PartDefinition leaf_tip_4 = leaf_4.addOrReplaceChild("leaf_tip_4", CubeListBuilder.create().texOffs(31, 16).addBox(-3.0F, 0.0F, -6.0F, 6.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -6.0F));
 
 		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
