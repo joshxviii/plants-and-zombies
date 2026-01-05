@@ -27,6 +27,10 @@ object PazTabs {
                 // Seed packets for each plant type
                 output.accept(SeedPacketItem.stackFor(PazEntities.SUNFLOWER))
                 output.accept(SeedPacketItem.stackFor(PazEntities.PEA_SHOOTER))
+                output.accept(SeedPacketItem.stackFor(PazEntities.WALL_NUT))
+                output.accept(SeedPacketItem.stackFor(PazEntities.CHOMPER))
+                output.accept(SeedPacketItem.stackFor(PazEntities.CHERRY_BOMB))
+                output.accept(SeedPacketItem.stackFor(PazEntities.POTATO_MINE))
             }
 
             .build()

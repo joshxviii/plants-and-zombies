@@ -4,6 +4,7 @@ import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.item.component.SeedPacket
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
@@ -59,8 +60,8 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
         val component = itemStack.get(PazComponents.SEED_PACKET) ?: return super.getName(itemStack)
         val entityId = component.entityId ?: return super.getName(itemStack)
 
-        val translationKey = "${this.descriptionId}.${entityId.path}"
-        return Component.translatable(translationKey)
+        val entityName = Component.translatable("entity.${entityId.namespace}.${entityId.path}")
+        return Component.translatable("item.plantz.seed_packet.entity", entityName)
     }
 
     override fun appendHoverText(

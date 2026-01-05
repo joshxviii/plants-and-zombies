@@ -1,8 +1,12 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.entity.CherryBomb
+import joshxviii.plantz.entity.Chomper
 import joshxviii.plantz.entity.PeaShooter
 import joshxviii.plantz.entity.Plant
+import joshxviii.plantz.entity.PotatoMine
 import joshxviii.plantz.entity.Sunflower
+import joshxviii.plantz.entity.WallNut
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
@@ -14,10 +18,14 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 
 object PazEntities {
 
-    @JvmField
-    val SUNFLOWER: EntityType<Sunflower> = registerPlantEntity("sunflower", { _, l -> Sunflower(l) })
-    @JvmField
-    val PEA_SHOOTER: EntityType<PeaShooter> = registerPlantEntity("peashooter", { _, l -> PeaShooter(l) })
+    @JvmField val SUNFLOWER: EntityType<Sunflower> = registerPlantEntity("sunflower", { _, l -> Sunflower(l) })
+    @JvmField val PEA_SHOOTER: EntityType<PeaShooter> = registerPlantEntity("peashooter", { _, l -> PeaShooter(l) })
+    @JvmField val WALL_NUT: EntityType<WallNut> = registerPlantEntity("wallnut", { _, l -> WallNut(l) })
+    @JvmField val CHOMPER: EntityType<Chomper> = registerPlantEntity("chomper", { _, l -> Chomper(l) })
+    @JvmField val CHERRY_BOMB: EntityType<CherryBomb> = registerPlantEntity("cherrybomb", { _, l -> CherryBomb(l) })
+    @JvmField val POTATO_MINE: EntityType<PotatoMine> = registerPlantEntity("potatomine", { _, l -> PotatoMine(l) })
+    @JvmField val ICE_PEA: EntityType<PotatoMine> = registerPlantEntity("icepea", { _, l -> PotatoMine(l) })
+    @JvmField val REPEATER: EntityType<PotatoMine> = registerPlantEntity("repeater", { _, l -> PotatoMine(l) })
 
     fun <T: Plant> registerPlantEntity(
         name : String,
@@ -38,6 +46,10 @@ object PazEntities {
     fun registerAttributes(consumer: (EntityType<out LivingEntity>, AttributeSupplier.Builder) -> Unit) {
         consumer(SUNFLOWER, Plant.createAttributes())
         consumer(PEA_SHOOTER, Plant.createAttributes())
+        consumer(WALL_NUT, Plant.createAttributes())
+        consumer(CHOMPER, Plant.createAttributes())
+        consumer(CHERRY_BOMB, Plant.createAttributes())
+        consumer(POTATO_MINE, Plant.createAttributes())
     }
 
     fun initialize() {}

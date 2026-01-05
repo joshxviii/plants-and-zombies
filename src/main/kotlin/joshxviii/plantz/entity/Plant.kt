@@ -6,14 +6,21 @@ import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.BlockTags
 import net.minecraft.tags.ItemTags
 import net.minecraft.util.Mth
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.entity.EntityDimensions
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Pose
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal
@@ -25,10 +32,14 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.gameevent.GameEvent
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
 
 open class Plant(type: EntityType<out Plant>, level: Level) : AbstractGolem(type, level) {
     companion object {
+        @JvmStatic val DATA_POTTED_ID: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, EntityDataSerializers.BOOLEAN)
+
         fun createAttributes(): AttributeSupplier.Builder {
             return createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20.0)
@@ -37,11 +48,29 @@ open class Plant(type: EntityType<out Plant>, level: Level) : AbstractGolem(type
         }
     }
 
-    //TODO make a data sync variable
-    var isPotted: Boolean = false
+    var isPotted: Boolean
+        get() { return this.entityData.get(DATA_POTTED_ID) }
+        set(value) { this.entityData.set(DATA_POTTED_ID, value); refreshDimensions() }
+    val  damage: Float
+        get() { return 1.0f - (this.health / this.maxHealth); }
 
     init {
         this.playSound(SoundEvents.BIG_DRIPLEAF_PLACE)
+    }
+
+    override fun defineSynchedData(builder: SynchedEntityData.Builder) {
+        super.defineSynchedData(builder)
+        builder.define(DATA_POTTED_ID, false)
+    }
+
+    // save and load custom synced data
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+        output.putBoolean("plantz:IsPotted", this.isPotted)
+    }
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+        this.isPotted = input.getBooleanOr("plantz:IsPotted", false)
     }
 
     override fun registerGoals() {
@@ -58,6 +87,12 @@ open class Plant(type: EntityType<out Plant>, level: Level) : AbstractGolem(type
             Mth.floor(y + 0.5).toDouble(),
             Mth.floor(z) + 0.5
         )
+    }
+
+    override fun getDefaultDimensions(pose: Pose): EntityDimensions {
+        val base = super.getDefaultDimensions(pose)
+        val height = if (isPotted) base.height + 0.375 else base.height
+        return EntityDimensions.scalable(base.width, height.toFloat())
     }
 
     override fun tick() {
