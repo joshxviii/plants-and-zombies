@@ -12,27 +12,39 @@ import net.minecraft.client.animation.KeyframeAnimations;
  */
 public class PotatoMineAnimation {
 	public static final AnimationDefinition idle = AnimationDefinition.Builder.withLength(2.0F).looping()
-		.addAnimation("body", new AnimationChannel(AnimationChannel.Targets.SCALE, 
-			new Keyframe(0.0F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM),
-			new Keyframe(1.0F, KeyframeAnimations.scaleVec(1.1F, 0.9F, 1.1F), AnimationChannel.Interpolations.CATMULLROM),
-			new Keyframe(2.0F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM)
-		))
-		.build();
+			.addAnimation("potato", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+					new Keyframe(0.0F, KeyframeAnimations.degreeVec(-10.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+			))
+			.addAnimation("potato", new AnimationChannel(AnimationChannel.Targets.POSITION,
+					new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, -2.0F, -0.75F), AnimationChannel.Interpolations.LINEAR)
+			))
+			.addAnimation("potato", new AnimationChannel(AnimationChannel.Targets.SCALE,
+					new Keyframe(0.0F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(1.0F, KeyframeAnimations.scaleVec(1.07F, 0.9F, 1.07F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(2.0F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM)
+			))
+			.addAnimation("body", new AnimationChannel(AnimationChannel.Targets.SCALE,
+					new Keyframe(0.0F, KeyframeAnimations.scaleVec(0.8F, 0.8F, 0.8F), AnimationChannel.Interpolations.LINEAR)
+			))
+			.build();
 
-	public static final AnimationDefinition explode = AnimationDefinition.Builder.withLength(0.56F)
-		.addAnimation("body", new AnimationChannel(AnimationChannel.Targets.POSITION, 
-			new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-			new Keyframe(0.52F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-			new Keyframe(0.559F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-			new Keyframe(0.56F, KeyframeAnimations.posVec(0.0F, -11.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
-		))
-		.addAnimation("body", new AnimationChannel(AnimationChannel.Targets.SCALE, 
-			new Keyframe(0.0F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM),
-			new Keyframe(0.24F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.LINEAR),
-			new Keyframe(0.4F, KeyframeAnimations.scaleVec(1.5F, 1.6F, 1.6F), AnimationChannel.Interpolations.LINEAR),
-			new Keyframe(0.52F, KeyframeAnimations.scaleVec(1.4F, 1.5F, 1.5F), AnimationChannel.Interpolations.LINEAR),
-			new Keyframe(0.559F, KeyframeAnimations.scaleVec(1.4F, 1.5F, 1.5F), AnimationChannel.Interpolations.LINEAR),
-			new Keyframe(0.56F, KeyframeAnimations.scaleVec(0.0F, -0.1F, 0.0F), AnimationChannel.Interpolations.LINEAR)
-		))
-		.build();
+	public static final AnimationDefinition explode = AnimationDefinition.Builder.withLength(0.44F)
+			.addAnimation("potato", new AnimationChannel(AnimationChannel.Targets.POSITION,
+					new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+					new Keyframe(0.4F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+					new Keyframe(0.439F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+					new Keyframe(0.44F, KeyframeAnimations.posVec(0.0F, -11.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+			))
+			.addAnimation("potato", new AnimationChannel(AnimationChannel.Targets.SCALE,
+					new Keyframe(0.0F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(0.12F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.LINEAR),
+					new Keyframe(0.28F, KeyframeAnimations.scaleVec(1.8F, 1.9F, 1.7F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(0.4F, KeyframeAnimations.scaleVec(1.8F, 2.2F, 1.9F), AnimationChannel.Interpolations.LINEAR),
+					new Keyframe(0.439F, KeyframeAnimations.scaleVec(1.8F, 2.2F, 1.9F), AnimationChannel.Interpolations.LINEAR),
+					new Keyframe(0.44F, KeyframeAnimations.scaleVec(0.0F, -0.1F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+			))
+			.addAnimation("body", new AnimationChannel(AnimationChannel.Targets.SCALE,
+					new Keyframe(0.0F, KeyframeAnimations.scaleVec(0.8F, 0.8F, 0.8F), AnimationChannel.Interpolations.LINEAR)
+			))
+			.build();
 }

@@ -2,7 +2,9 @@ package joshxviii.plantz.item
 
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazItems
+import joshxviii.plantz.entity.Plant
 import joshxviii.plantz.item.component.SeedPacket
+import net.minecraft.ChatFormatting
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
@@ -12,11 +14,13 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.TamableAnimal
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.component.TooltipDisplay
 import net.minecraft.world.item.context.UseOnContext
+import net.minecraft.world.phys.AABB
 import java.util.function.Consumer
 
 class SeedPacketItem(properties: Properties) : Item(properties) {
@@ -40,17 +44,26 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
         val spawnPos = if (blockState.getCollisionShape(level, pos).isEmpty) pos
         else pos.relative(clickedFace)
 
+        // Prevent spawn if there's already a Plant in that block
+        val aabb = AABB(spawnPos)
+        val existingPlants = level.getEntitiesOfClass(Plant::class.java, aabb)
+        if (existingPlants.isNotEmpty()) {
+            player?.displayClientMessage(
+                Component.translatable("message.plantz.already_planted").withStyle(ChatFormatting.RED),
+                true
+            )
+            return InteractionResult.FAIL
+        }
+
         val entity = type.spawn(level as ServerLevel, spawnPos, EntitySpawnReason.SPAWN_ITEM_USE)
         if (entity == null) return InteractionResult.FAIL
 
-        if (!level.addFreshEntity(entity)) {
-            return InteractionResult.PASS
-        }
+        itemStack.consume(1, player)
 
         entity.playSound(SoundEvents.BIG_DRIPLEAF_PLACE, 1.0f, 1.0f)
-
-        if (player == null || !player.abilities.instabuild) {
-            itemStack.shrink(1)
+        if (entity is TamableAnimal && player != null) entity.tame(player)
+        if (!level.addFreshEntity(entity)) {
+            return InteractionResult.PASS
         }
 
         return InteractionResult.CONSUME

@@ -1,5 +1,7 @@
 {
   "message.plantz.too_damaged": "%s is too damaged to be transplanted!",
+  "message.plantz.already_planted": "There's already a plant here!",
+  "message.plantz.not_yours": "You do not own this plant!",
 
   "item.plantz.sun": "Sun",
   "item.plantz.seed_packet": "Seed Packet",

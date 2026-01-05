@@ -1,38 +1,44 @@
 package joshxviii.plantz.entity
 
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.goal.RangedPlantAttackGoal
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.monster.Enemy
+import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
+import java.util.function.Consumer
+import kotlin.math.sqrt
 
 class PeaShooter(level: Level) : Plant(PazEntities.PEA_SHOOTER, level) {
 
     override fun registerGoals() {
         super.registerGoals()
 
+        this.goalSelector.addGoal(2, RangedPlantAttackGoal(this))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->
             target is Enemy
         })
     }
 
-    fun performRangedAttack(target: LivingEntity, velocity: Float) {
-        val snowball = Snowball(EntityType.SNOWBALL, this.level())
+    override fun performRangedAttack(target: LivingEntity, power: Float) {
+        val xd = target.x - this.x
+        val yd = target.eyeY - 1.1f
+        val zd = target.z - this.z
+        val yo = sqrt(xd * xd + zd * zd) * 0.2f
+        if (this.level() is ServerLevel) {
+            val itemStack = ItemStack(Items.SNOWBALL)
+            Projectile.spawnProjectile(Snowball(this.level(), this, itemStack), this.level() as ServerLevel, itemStack) { projectile: Snowball? ->
+                projectile!!.shoot(xd, yd + yo - projectile.y, zd, 1.6f, 12.0f)
+            }
+        }
 
-        // Adjust spawning position to the "head" area of the plant
-        val d0 = target.eyeY - 1.100000023841858
-        val d1 = target.x - this.x
-        val d2 = d0 - snowball.y
-        val d3 = target.z - this.z
-        val d4 = Math.sqrt(d1 * d1 + d3 * d3).toFloat() * 0.2f
-
-        snowball.shoot(d1, d2 + d4.toDouble(), d3, 1.6f, 2.0f)
-
-        this.playSound(SoundEvents.SNOWBALL_THROW, 1.0f, 0.4f / (this.getRandom().nextFloat() * 0.4f + 0.8f))
-        this.level().addFreshEntity(snowball)
+        this.playSound(SoundEvents.BUBBLE_POP, 3.0f, 0.4f / (this.getRandom().nextFloat() * 0.4f + 0.8f))
     }
 }

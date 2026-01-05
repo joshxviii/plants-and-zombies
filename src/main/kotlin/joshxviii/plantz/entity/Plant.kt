@@ -10,16 +10,14 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.BlockTags
 import net.minecraft.tags.ItemTags
 import net.minecraft.util.Mth
-import net.minecraft.util.StringRepresentable
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
-import net.minecraft.world.entity.EntityDimensions
-import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.Pose
+import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.control.BodyRotationControl
@@ -27,18 +25,22 @@ import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
-import net.minecraft.world.entity.animal.golem.AbstractGolem
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.item.ItemEntity
+import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
+import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import java.util.*
 
-open class Plant(type: EntityType<out Plant>, level: Level) : AbstractGolem(type, level) {
+abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(type, level) {
     companion object {
         @JvmStatic val DATA_POTTED_ID: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, EntityDataSerializers.BOOLEAN)
 
@@ -48,6 +50,18 @@ open class Plant(type: EntityType<out Plant>, level: Level) : AbstractGolem(type
                 .add(Attributes.ATTACK_DAMAGE, 4.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.0)
         }
+    }
+
+    open fun performRangedAttack(target: LivingEntity, power: Float) {}
+
+    override fun registerGoals() {
+        this.goalSelector.addGoal(2, LookAtPlayerGoal(this, Player::class.java, 8.0f))
+        this.goalSelector.addGoal(3, RandomLookAroundGoal(this))
+
+        this.targetSelector.addGoal(1, HurtByTargetGoal(this).setAlertOthers())
+        this.targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Mob::class.java, 10, true, false,
+                TargetingConditions.Selector { target: LivingEntity?, level: ServerLevel? -> target is Enemy })
+        )
     }
 
     var isPotted: Boolean
@@ -68,6 +82,12 @@ open class Plant(type: EntityType<out Plant>, level: Level) : AbstractGolem(type
     override fun createBodyControl(): BodyRotationControl {
         return object : BodyRotationControl(this) { override fun clientTick() {} }
     }
+
+    override fun getBreedOffspring(
+        level: ServerLevel,
+        partner: AgeableMob
+    ): AgeableMob? { return this }
+
     override fun defineSynchedData(builder: SynchedEntityData.Builder) {
         super.defineSynchedData(builder)
         builder.define(DATA_POTTED_ID, false)
@@ -83,11 +103,8 @@ open class Plant(type: EntityType<out Plant>, level: Level) : AbstractGolem(type
         this.isPotted = input.getBooleanOr("plantz:IsPotted", false)
     }
 
-    override fun registerGoals() {
-        this.targetSelector.addGoal(1, HurtByTargetGoal(this).setAlertOthers())
-        
-        this.goalSelector.addGoal(2, LookAtPlayerGoal(this, Player::class.java, 8.0f))
-        this.goalSelector.addGoal(3, RandomLookAroundGoal(this))
+    override fun isFood(itemStack: ItemStack): Boolean {
+        return false
     }
 
     override fun setPos(x: Double, y: Double, z: Double) {
@@ -129,11 +146,20 @@ open class Plant(type: EntityType<out Plant>, level: Level) : AbstractGolem(type
     }
 
     private fun canStayAt(pos: BlockPos): Boolean {
-        val blockBelow = this.level().getBlockState(pos.below())
-        return blockBelow.`is`(BlockTags.DIRT)
-            || blockBelow.`is`(Blocks.FARMLAND)
-            || blockBelow.`is`(Blocks.LILY_PAD)
-            || blockBelow.`is`(Blocks.DECORATED_POT)
+        val level = this.level()
+
+        // Check valid ground below
+        val blockBelow = level.getBlockState(pos.below())
+        val validGround = blockBelow.`is`(BlockTags.DIRT)
+                || blockBelow.`is`(Blocks.FARMLAND)
+                || blockBelow.`is`(Blocks.LILY_PAD)
+                || blockBelow.`is`(Blocks.DECORATED_POT)
+        if (!validGround) return false
+
+        // Check if another Plant entity is already occupying this position
+        val aabb = AABB(pos)
+        val entitiesInBlock = level.getEntitiesOfClass(Plant::class.java, aabb) { it != this }
+        return entitiesInBlock.isEmpty()
     }
 
     override fun getDeltaMovement(): Vec3 = Vec3.ZERO
@@ -144,13 +170,22 @@ open class Plant(type: EntityType<out Plant>, level: Level) : AbstractGolem(type
         val itemStack = player.getItemInHand(hand)
 
         // sun iteration
-        if (itemStack.`is`(PazItems.SUN) ) {
-            if (this.health < this.maxHealth) {
-                itemStack.shrink(1)
-                this.playSound(SoundEvents.BUBBLE_POP, 2.0f, 0.5f)
+        if (itemStack.`is`(PazItems.SUN) ) {// heal
+            if (this.isTame && this.health < this.maxHealth) {
+                itemStack.consume(1, player)
                 this.addParticlesAroundSelf(ParticleTypes.HAPPY_VILLAGER)
-                this.heal(1f)
-
+                this.heal( this.maxHealth / 10 )
+                return InteractionResult.SUCCESS
+            }
+            else if (!this.isTame) {// try to tame
+                itemStack.consume(1, player)
+                if (this.random.nextInt(4) == 0) {
+                    this.tame(player)
+                    this.target = null
+                    this.level().broadcastEntityEvent(this, 7.toByte())
+                } else {
+                    this.level().broadcastEntityEvent(this, 6.toByte())
+                }
                 return InteractionResult.SUCCESS
             }
         }
@@ -158,15 +193,17 @@ open class Plant(type: EntityType<out Plant>, level: Level) : AbstractGolem(type
         // shovel interaction
         if (itemStack.`is`(ItemTags.SHOVELS)) {
 
-            if (this.health < this.maxHealth) {
-                player.displayClientMessage(Component
-                    .translatable("message.plantz.too_damaged", this.name)
-                    .withStyle(ChatFormatting.RED),
-                true)
-                return InteractionResult.SUCCESS
+            if (!this.isTame || player != this.owner) {
+                player.displayClientMessage(
+                    Component.translatable("message.plantz.not_yours", this.name).withStyle(ChatFormatting.RED),
+                    true
+                )
+                return InteractionResult.FAIL
             }
 
-            itemStack.hurtAndBreak(8, player, hand.asEquipmentSlot())
+            // apply tool damage base on how damaged the plant was
+            val shovelCost = ((1.0 - (this.health / this.maxHealth)) * 128).toInt()
+            itemStack.hurtAndBreak(shovelCost, player, hand.asEquipmentSlot())
             run {// Spawn a seed packet item containing this plant's data
                 val stack = SeedPacketItem.stackFor(this.type)
                 val itemEntity = ItemEntity(this.level(), this.x, this.y + 0.5, this.z, stack)

@@ -3,13 +3,13 @@
 // Paste this class into your mod and generate all required imports
 
 
-public class WallNut<T extends WallNut> extends EntityModel<T> {
+public class WallNutModel<T extends WallNut> extends EntityModel<T> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "wallnut"), "main");
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "wallnutmodel"), "main");
 	private final ModelPart body;
 	private final ModelPart inner;
 
-	public WallNut(ModelPart root) {
+	public WallNutModel(ModelPart root) {
 		this.body = root.getChild("body");
 		this.inner = this.body.getChild("inner");
 	}

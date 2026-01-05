@@ -39,3 +39,6 @@ replay_*.log
 *.hprof
 *.jfr
 /.kotlin/sessions
+
+/external-assets/*
+!/external-assets/bb_models

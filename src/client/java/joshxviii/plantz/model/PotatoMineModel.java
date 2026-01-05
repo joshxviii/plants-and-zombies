@@ -17,14 +17,16 @@ import static joshxviii.plantz.UtilsKt.pazResource;
 
 public class PotatoMineModel extends EntityModel<@NotNull PlantRenderState> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("potatomine"), "main");
-	private final ModelPart dirt;
 	private final ModelPart body;
+	private final ModelPart dirt;
+	private final ModelPart potato;
 	private final KeyframeAnimation idleAnimation;
 
 	public PotatoMineModel(ModelPart root) {
 		super(root);
-		this.dirt = root.getChild("dirt");
-		this.body = this.dirt.getChild("body");
+		this.body = root.getChild("body");
+		this.dirt = this.body.getChild("dirt");
+		this.potato = this.body.getChild("potato");
 		this.idleAnimation = PotatoMineAnimation.idle.bake(root);
 	}
 
@@ -32,11 +34,13 @@ public class PotatoMineModel extends EntityModel<@NotNull PlantRenderState> {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition dirt = partdefinition.addOrReplaceChild("dirt", CubeListBuilder.create().texOffs(0, 0).addBox(-8.0F, 9.5F, -8.0F, 16.0F, 2.0F, 16.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 13.0F, 0.0F));
+		PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-		PartDefinition body = dirt.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 18).addBox(-6.0F, -7.0F, -6.0F, 12.0F, 7.0F, 12.0F, new CubeDeformation(0.0F))
-		.texOffs(16, 37).addBox(-1.0F, -11.0F, -1.0F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 37).addBox(-2.0F, -15.0F, -2.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 11.0F, 0.0F));
+		PartDefinition dirt = body.addOrReplaceChild("dirt", CubeListBuilder.create().texOffs(3, 2).addBox(-7.0F, -2.0F, -7.0F, 14.0F, 2.0F, 14.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.5F, 0.0F));
+
+		PartDefinition potato = body.addOrReplaceChild("potato", CubeListBuilder.create().texOffs(0, 18).addBox(-6.0F, -7.0F, -6.0F, 12.0F, 7.0F, 12.0F, new CubeDeformation(0.0F))
+				.texOffs(16, 37).addBox(-1.0F, -11.0F, -1.0F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 37).addBox(-2.0F, -15.0F, -2.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
 		return LayerDefinition.create(meshdefinition, 64, 64);
 	}

@@ -3,9 +3,9 @@
 // Paste this class into your mod and generate all required imports
 
 
-public class Sunflower<T extends Sunflower> extends EntityModel<T> {
+public class SunflowerModel<T extends Sunflower> extends EntityModel<T> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "sunflower"), "main");
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "sunflowermodel"), "main");
 	private final ModelPart body;
 	private final ModelPart stem;
 	private final ModelPart stem_2;
@@ -21,7 +21,7 @@ public class Sunflower<T extends Sunflower> extends EntityModel<T> {
 	private final ModelPart leaf_4;
 	private final ModelPart leaf_tip_4;
 
-	public Sunflower(ModelPart root) {
+	public SunflowerModel(ModelPart root) {
 		this.body = root.getChild("body");
 		this.stem = this.body.getChild("stem");
 		this.stem_2 = this.stem.getChild("stem_2");

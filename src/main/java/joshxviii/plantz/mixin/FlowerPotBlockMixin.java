@@ -70,6 +70,7 @@ public class FlowerPotBlockMixin {
                 var entity = entityType.spawn((ServerLevel) level, pos, EntitySpawnReason.SPAWN_ITEM_USE);
                 if (entity instanceof Plant) {
                     ((Plant) entity).setPotted(true);
+                    ((Plant) entity).tame(player);
                     level.addFreshEntity(entity);
                     entity.playSound(SoundEvents.BIG_DRIPLEAF_PLACE, 1.0f, 1.0f);
                 }
