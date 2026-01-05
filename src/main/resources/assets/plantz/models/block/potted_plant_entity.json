@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/flower_pot",
-  "textures": {
-    "particle": "block/flower_pot",
-    "flowerpot": "block/flower_pot",
-    "dirt": "block/dirt"
-  }
-}

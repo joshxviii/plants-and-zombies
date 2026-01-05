@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "plantz:block/plant_pot" },
+    "facing=south": { "model": "plantz:block/plant_pot", "y": 180 },
+    "facing=east":  { "model": "plantz:block/plant_pot", "y": 90 },
+    "facing=west":  { "model": "plantz:block/plant_pot", "y": 270 }
+  }
+}
