@@ -6,7 +6,6 @@ import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
-import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -15,14 +14,16 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.BlockTags
 import net.minecraft.tags.ItemTags
 import net.minecraft.util.Mth
+import net.minecraft.util.StringRepresentable
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.EntityDimensions
 import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Pose
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.control.BodyRotationControl
+import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
@@ -35,6 +36,7 @@ import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
+import java.util.*
 
 open class Plant(type: EntityType<out Plant>, level: Level) : AbstractGolem(type, level) {
     companion object {
@@ -51,13 +53,21 @@ open class Plant(type: EntityType<out Plant>, level: Level) : AbstractGolem(type
     var isPotted: Boolean
         get() { return this.entityData.get(DATA_POTTED_ID) }
         set(value) { this.entityData.set(DATA_POTTED_ID, value); refreshDimensions() }
-    val  damage: Float
+    val damage: Float
         get() { return 1.0f - (this.health / this.maxHealth); }
 
     init {
         this.playSound(SoundEvents.BIG_DRIPLEAF_PLACE)
+
+        this.lookControl = object : LookControl(this) {
+            override fun clampHeadRotationToBody() {}
+        }
     }
 
+    // disable body control
+    override fun createBodyControl(): BodyRotationControl {
+        return object : BodyRotationControl(this) { override fun clientTick() {} }
+    }
     override fun defineSynchedData(builder: SynchedEntityData.Builder) {
         super.defineSynchedData(builder)
         builder.define(DATA_POTTED_ID, false)
@@ -104,6 +114,8 @@ open class Plant(type: EntityType<out Plant>, level: Level) : AbstractGolem(type
                 destroy()
             }
         }
+        val target = this.target
+        if (target != null) this.getLookControl().setLookAt(target, 180.0F, 180.0F);
     }
 
     private fun destroy() {

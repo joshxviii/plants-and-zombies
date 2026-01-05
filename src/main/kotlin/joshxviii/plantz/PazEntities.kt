@@ -2,9 +2,11 @@ package joshxviii.plantz
 
 import joshxviii.plantz.entity.CherryBomb
 import joshxviii.plantz.entity.Chomper
+import joshxviii.plantz.entity.IcePea
 import joshxviii.plantz.entity.PeaShooter
 import joshxviii.plantz.entity.Plant
 import joshxviii.plantz.entity.PotatoMine
+import joshxviii.plantz.entity.Repeater
 import joshxviii.plantz.entity.Sunflower
 import joshxviii.plantz.entity.WallNut
 import net.minecraft.core.Registry
@@ -24,8 +26,19 @@ object PazEntities {
     @JvmField val CHOMPER: EntityType<Chomper> = registerPlantEntity("chomper", { _, l -> Chomper(l) })
     @JvmField val CHERRY_BOMB: EntityType<CherryBomb> = registerPlantEntity("cherrybomb", { _, l -> CherryBomb(l) })
     @JvmField val POTATO_MINE: EntityType<PotatoMine> = registerPlantEntity("potatomine", { _, l -> PotatoMine(l) })
-    @JvmField val ICE_PEA: EntityType<PotatoMine> = registerPlantEntity("icepea", { _, l -> PotatoMine(l) })
-    @JvmField val REPEATER: EntityType<PotatoMine> = registerPlantEntity("repeater", { _, l -> PotatoMine(l) })
+    @JvmField val ICE_PEA: EntityType<IcePea> = registerPlantEntity("icepea", { _, l -> IcePea(l) })
+    @JvmField val REPEATER: EntityType<Repeater> = registerPlantEntity("repeater", { _, l -> Repeater(l) })
+
+    fun registerAttributes(consumer: (EntityType<out LivingEntity>, AttributeSupplier.Builder) -> Unit) {
+        consumer(SUNFLOWER, Plant.createAttributes())
+        consumer(PEA_SHOOTER, Plant.createAttributes())
+        consumer(WALL_NUT, Plant.createAttributes())
+        consumer(CHOMPER, Plant.createAttributes())
+        consumer(CHERRY_BOMB, Plant.createAttributes())
+        consumer(POTATO_MINE, Plant.createAttributes())
+        consumer(ICE_PEA, Plant.createAttributes())
+        consumer(REPEATER, Plant.createAttributes())
+    }
 
     fun <T: Plant> registerPlantEntity(
         name : String,
@@ -41,15 +54,6 @@ object PazEntities {
             .build(key)
 
         return Registry.register(BuiltInRegistries.ENTITY_TYPE, key, type)
-    }
-
-    fun registerAttributes(consumer: (EntityType<out LivingEntity>, AttributeSupplier.Builder) -> Unit) {
-        consumer(SUNFLOWER, Plant.createAttributes())
-        consumer(PEA_SHOOTER, Plant.createAttributes())
-        consumer(WALL_NUT, Plant.createAttributes())
-        consumer(CHOMPER, Plant.createAttributes())
-        consumer(CHERRY_BOMB, Plant.createAttributes())
-        consumer(POTATO_MINE, Plant.createAttributes())
     }
 
     fun initialize() {}

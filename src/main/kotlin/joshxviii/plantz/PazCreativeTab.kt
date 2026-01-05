@@ -31,6 +31,8 @@ object PazTabs {
                 output.accept(SeedPacketItem.stackFor(PazEntities.CHOMPER))
                 output.accept(SeedPacketItem.stackFor(PazEntities.CHERRY_BOMB))
                 output.accept(SeedPacketItem.stackFor(PazEntities.POTATO_MINE))
+                output.accept(SeedPacketItem.stackFor(PazEntities.ICE_PEA))
+                output.accept(SeedPacketItem.stackFor(PazEntities.REPEATER))
             }
 
             .build()

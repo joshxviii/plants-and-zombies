@@ -3,7 +3,10 @@ package joshxviii.plantz.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import joshxviii.plantz.PlantRenderState;
+import joshxviii.plantz.animation.PeaShooterAnimation;
+import joshxviii.plantz.animation.WallNutAnimation;
 import joshxviii.plantz.entity.WallNut;
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -16,11 +19,13 @@ public class WallNutModel extends EntityModel<@NotNull PlantRenderState> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("wallnut"), "main");
 	private final ModelPart body;
 	private final ModelPart inner;
+	private final KeyframeAnimation idleAnimation;
 
 	public WallNutModel(ModelPart root) {
 		super(root);
 		this.body = root.getChild("body");
 		this.inner = this.body.getChild("inner");
+		this.idleAnimation = WallNutAnimation.idle.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -41,5 +46,6 @@ public class WallNutModel extends EntityModel<@NotNull PlantRenderState> {
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
+		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 	}
 }

@@ -65,7 +65,7 @@ public class CherryBombModel extends EntityModel<@NotNull PlantRenderState> {
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
-
+		this.stem.yRot = state.yRot * (float) (Math.PI / 180.0);
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 	}
 }

@@ -11,6 +11,8 @@
   "entity.plantz.chomper": "Chomper",
   "entity.plantz.cherrybomb": "Cherry Bomb",
   "entity.plantz.potatomine": "Potatomine",
+  "entity.plantz.icepea": "Ice Pea",
+  "entity.plantz.repeater": "Repeater",
 
   "itemGroup.plantz.plantz_tab": "Plants & Zombies"
 }
