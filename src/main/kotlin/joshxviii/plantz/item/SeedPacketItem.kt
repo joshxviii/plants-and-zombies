@@ -5,8 +5,8 @@ import joshxviii.plantz.PazItems
 import joshxviii.plantz.entity.Plant
 import joshxviii.plantz.item.component.SeedPacket
 import net.minecraft.ChatFormatting
+import net.minecraft.core.Direction
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
@@ -20,6 +20,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.component.TooltipDisplay
 import net.minecraft.world.item.context.UseOnContext
+import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.AABB
 import java.util.function.Consumer
 
@@ -55,16 +56,14 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             return InteractionResult.FAIL
         }
 
-        val entity = type.spawn(level as ServerLevel, spawnPos, EntitySpawnReason.SPAWN_ITEM_USE)
-        if (entity == null) return InteractionResult.FAIL
-
-        itemStack.consume(1, player)
-
-        entity.playSound(SoundEvents.BIG_DRIPLEAF_PLACE, 1.0f, 1.0f)
-        if (entity is TamableAnimal && player != null) entity.tame(player)
-        if (!level.addFreshEntity(entity)) {
-            return InteractionResult.PASS
+        val entity = type.spawn(level as ServerLevel, itemStack, player, spawnPos, EntitySpawnReason.SPAWN_ITEM_USE, true, pos != spawnPos && clickedFace == Direction.UP)
+        if (entity != null) {
+            itemStack.consume(1, player)
+            entity.playSound(SoundEvents.BIG_DRIPLEAF_PLACE, 1.0f, 1.0f)
+            if (entity is TamableAnimal && player != null) entity.tame(player)
+            level.gameEvent(player, GameEvent.ENTITY_PLACE, spawnPos)
         }
+
 
         return InteractionResult.CONSUME
     }

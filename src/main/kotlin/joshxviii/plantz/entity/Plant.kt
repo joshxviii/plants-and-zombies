@@ -1,5 +1,6 @@
 package joshxviii.plantz.entity
 
+import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.ChatFormatting
@@ -111,7 +112,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         // snap to the center of blocks, and on top of flower pots
         super.setPos(
             Mth.floor(x) + 0.5,
-            Mth.floor(y + 0.5).toDouble(),
+            y,
             Mth.floor(z) + 0.5
         )
     }
@@ -149,11 +150,15 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val level = this.level()
 
         // Check valid ground below
-        val blockBelow = level.getBlockState(pos.below())
+        val feetY = this.y - 0.001 // slight offset down to avoid floating point issues
+        val blockBelowPos = BlockPos.containing(this.x, feetY, this.z)
+        val blockBelow = level.getBlockState(blockBelowPos)
+
         val validGround = blockBelow.`is`(BlockTags.DIRT)
                 || blockBelow.`is`(Blocks.FARMLAND)
                 || blockBelow.`is`(Blocks.LILY_PAD)
                 || blockBelow.`is`(Blocks.DECORATED_POT)
+                || blockBelow.`is`(PazBlocks.PLANT_POT)
         if (!validGround) return false
 
         // Check if another Plant entity is already occupying this position

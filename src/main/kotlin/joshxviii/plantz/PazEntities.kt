@@ -17,17 +17,33 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.MobCategory
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
+import net.minecraft.world.level.Level
 
 object PazEntities {
 
-    @JvmField val SUNFLOWER: EntityType<Sunflower> = registerPlantEntity("sunflower", { _, l -> Sunflower(l) })
-    @JvmField val PEA_SHOOTER: EntityType<PeaShooter> = registerPlantEntity("peashooter", { _, l -> PeaShooter(l) })
-    @JvmField val WALL_NUT: EntityType<WallNut> = registerPlantEntity("wallnut", { _, l -> WallNut(l) })
-    @JvmField val CHOMPER: EntityType<Chomper> = registerPlantEntity("chomper", { _, l -> Chomper(l) })
-    @JvmField val CHERRY_BOMB: EntityType<CherryBomb> = registerPlantEntity("cherrybomb", { _, l -> CherryBomb(l) })
-    @JvmField val POTATO_MINE: EntityType<PotatoMine> = registerPlantEntity("potatomine", { _, l -> PotatoMine(l) })
-    @JvmField val ICE_PEA: EntityType<IcePea> = registerPlantEntity("icepea", { _, l -> IcePea(l) })
-    @JvmField val REPEATER: EntityType<Repeater> = registerPlantEntity("repeater", { _, l -> Repeater(l) })
+    @JvmField val SUNFLOWER: EntityType<Sunflower> = registerPlantEntity("sunflower", ::Sunflower,
+        width = 0.6f,
+        height = 1.3f,
+    )
+    @JvmField val PEA_SHOOTER: EntityType<PeaShooter> = registerPlantEntity("peashooter", ::PeaShooter)
+    @JvmField val WALL_NUT: EntityType<WallNut> = registerPlantEntity("wallnut", ::WallNut,
+        width = 0.6f,
+        height = 0.25f
+    )
+    @JvmField val CHOMPER: EntityType<Chomper> = registerPlantEntity("chomper", ::Chomper,
+        width = 0.6f,
+        height = 0.25f
+    )
+    @JvmField val CHERRY_BOMB: EntityType<CherryBomb> = registerPlantEntity("cherrybomb", ::CherryBomb,
+        width = 0.6f,
+        height = 0.25f
+    )
+    @JvmField val POTATO_MINE: EntityType<PotatoMine> = registerPlantEntity("potatomine", ::PotatoMine,
+        width = 0.8f,
+        height = 0.35f
+    )
+    @JvmField val ICE_PEA: EntityType<IcePea> = registerPlantEntity("icepea", ::IcePea)
+    @JvmField val REPEATER: EntityType<Repeater> = registerPlantEntity("repeater", ::Repeater)
 
     fun registerAttributes(consumer: (EntityType<out LivingEntity>, AttributeSupplier.Builder) -> Unit) {
         consumer(SUNFLOWER, Plant.createAttributes())
@@ -42,15 +58,17 @@ object PazEntities {
 
     fun <T: Plant> registerPlantEntity(
         name : String,
-        factory: EntityType.EntityFactory<T>,
+        factory: (Level) -> T,
         category: MobCategory = MobCategory.CREATURE,
-        width: Float = 0.75f,
-        height: Float = 0.8f,
+        width: Float = 0.6f,
+        height: Float = 1.0f,
     ) : EntityType<T> {
         val key = ResourceKey.create(Registries.ENTITY_TYPE, pazResource(name))
 
-        val type = EntityType.Builder.of(factory, category)
-            .sized(width, height) // hitbox size
+        val type = EntityType.Builder.of({ type, level ->
+            factory(level).apply { type }
+        }, category)
+            .sized(width, height)
             .build(key)
 
         return Registry.register(BuiltInRegistries.ENTITY_TYPE, key, type)

@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.state.CameraRenderState
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
-import net.minecraft.world.level.block.Blocks
 
 class PlantRenderer(
     model: EntityModel<PlantRenderState>,
@@ -34,7 +33,7 @@ class PlantRenderer(
             poseStack.translate(-0.5,0.0,-0.5)
             collector.submitBlock(
                 poseStack,
-                Blocks.FLOWER_POT.defaultBlockState(),
+                PazBlocks.PLANT_POT.defaultBlockState(),
                 state.lightCoords,
                 OverlayTexture.NO_OVERLAY,
                 0

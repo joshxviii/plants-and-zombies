@@ -1,5 +1,6 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.block.PlantPotBlock
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
@@ -7,17 +8,23 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.block.FlowerPotBlock
 import net.minecraft.world.level.block.state.BlockBehaviour
+import net.minecraft.world.level.material.PushReaction
 
 object PazBlocks {
     @JvmField
-    val POTTED_PLANT_ENTITY: Block = registerBlock("potted_plant_entity", Blocks.flowerPotProperties(), { FlowerPotBlock(Blocks.DIRT, it) })
+    val PLANT_POT: Block = registerBlock(
+        "plant_pot",
+        BlockBehaviour.Properties.of()
+            .instabreak()
+            .noOcclusion()
+            .pushReaction(PushReaction.DESTROY),
+        ::PlantPotBlock
+    )
 
     private fun registerBlock(
-        name: String, 
-        properties: BlockBehaviour.Properties, 
+        name: String,
+        properties: BlockBehaviour.Properties = BlockBehaviour.Properties.of(),
         blockFactory: (BlockBehaviour.Properties) -> Block = ::Block
     ): Block {
         val key = ResourceKey.create(Registries.BLOCK, pazResource(name))
