@@ -58,6 +58,7 @@ class PlantRenderer(
         state.damage = entity.damage
         state.isPotted = entity.isPotted
         state.texturePath = BuiltInRegistries.ENTITY_TYPE.getKey(entity.type).path
+        state.idleAnimationState.start(0)
     }
 
     override fun getTextureLocation(state: PlantRenderState): Identifier {

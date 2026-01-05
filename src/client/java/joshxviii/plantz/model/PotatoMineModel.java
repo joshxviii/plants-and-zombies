@@ -3,7 +3,10 @@ package joshxviii.plantz.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import joshxviii.plantz.PlantRenderState;
+import joshxviii.plantz.animation.PeaShooterAnimation;
+import joshxviii.plantz.animation.PotatoMineAnimation;
 import joshxviii.plantz.entity.PotatoMine;
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -16,11 +19,13 @@ public class PotatoMineModel extends EntityModel<@NotNull PlantRenderState> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("potatomine"), "main");
 	private final ModelPart dirt;
 	private final ModelPart body;
+	private final KeyframeAnimation idleAnimation;
 
 	public PotatoMineModel(ModelPart root) {
 		super(root);
 		this.dirt = root.getChild("dirt");
 		this.body = this.dirt.getChild("body");
+		this.idleAnimation = PotatoMineAnimation.idle.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -39,5 +44,6 @@ public class PotatoMineModel extends EntityModel<@NotNull PlantRenderState> {
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
+		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 	}
 }
