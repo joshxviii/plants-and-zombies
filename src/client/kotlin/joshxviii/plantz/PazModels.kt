@@ -1,6 +1,5 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.entity.IcePea
 import joshxviii.plantz.entity.Plant
 import joshxviii.plantz.model.CherryBombModel
 import joshxviii.plantz.model.ChomperModel
@@ -10,6 +9,7 @@ import joshxviii.plantz.model.PotatoMineModel
 import joshxviii.plantz.model.RepeaterModel
 import joshxviii.plantz.model.SunflowerModel
 import joshxviii.plantz.model.WallNutModel
+import joshxviii.plantz.model.projectiles.PeaModel
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.geom.ModelLayerLocation
@@ -18,7 +18,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition
 import net.minecraft.client.renderer.entity.EntityRenderers
 import net.minecraft.world.entity.EntityType
 
-object PlantRenderers {
+object PazModels {
 
     fun registerAll() {
         // REGISTER MODELS
@@ -31,6 +31,8 @@ object PlantRenderers {
         ModelLayerRegistry.registerModelLayer(IcePeaModel.LAYER_LOCATION) { IcePeaModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(RepeaterModel.LAYER_LOCATION) { RepeaterModel.createBodyLayer() }
 
+        ModelLayerRegistry.registerModelLayer(PeaModel.LAYER_LOCATION) { PeaModel.createBodyLayer() }
+
         // REGISTER ENTITY RENDERERS
         EntityRenderers.register(PazEntities.PEA_SHOOTER) { ctx -> PlantRenderer(PeaShooterModel(ctx.bakeLayer(PeaShooterModel.LAYER_LOCATION)), ctx) }
         EntityRenderers.register(PazEntities.SUNFLOWER) { ctx -> PlantRenderer(SunflowerModel(ctx.bakeLayer(SunflowerModel.LAYER_LOCATION)), ctx) }
@@ -40,6 +42,9 @@ object PlantRenderers {
         EntityRenderers.register(PazEntities.POTATO_MINE) { ctx -> PlantRenderer(PotatoMineModel(ctx.bakeLayer(PotatoMineModel.LAYER_LOCATION)), ctx) }
         EntityRenderers.register(PazEntities.ICE_PEA) { ctx -> PlantRenderer(IcePeaModel(ctx.bakeLayer(IcePeaModel.LAYER_LOCATION)), ctx) }
         EntityRenderers.register(PazEntities.REPEATER) { ctx -> PlantRenderer(RepeaterModel(ctx.bakeLayer(RepeaterModel.LAYER_LOCATION)), ctx) }
+
+        EntityRenderers.register(PazEntities.PEA) { ctx -> ProjectileRenderer(PeaModel(ctx.bakeLayer(PeaModel.LAYER_LOCATION)), ctx) }
+        EntityRenderers.register(PazEntities.PEA_ICE) { ctx -> ProjectileRenderer(PeaModel(ctx.bakeLayer(PeaModel.LAYER_LOCATION)), ctx) }
     }
 
     private fun <M : EntityModel<PlantRenderState>> registerPlant(

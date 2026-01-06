@@ -1,47 +1,64 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.entity.CherryBomb
-import joshxviii.plantz.entity.Chomper
-import joshxviii.plantz.entity.IcePea
-import joshxviii.plantz.entity.PeaShooter
-import joshxviii.plantz.entity.Plant
-import joshxviii.plantz.entity.PotatoMine
-import joshxviii.plantz.entity.Repeater
-import joshxviii.plantz.entity.Sunflower
-import joshxviii.plantz.entity.WallNut
+import joshxviii.plantz.entity.*
+import joshxviii.plantz.entity.projectile.Pea
+import joshxviii.plantz.entity.projectile.PeaIce
+import joshxviii.plantz.entity.projectile.PlantProjectile
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.tags.TagKey
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.MobCategory
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
-import net.minecraft.world.level.Level
 
 object PazEntities {
 
-    @JvmField val SUNFLOWER: EntityType<Sunflower> = registerPlantEntity("sunflower", ::Sunflower,
+    @JvmField val SUNFLOWER: EntityType<Sunflower> = registerPlant(
+        "sunflower",
+        EntityType.Builder.of(::Sunflower, MobCategory.CREATURE),
         height = 1.3f,
     )
-    @JvmField val PEA_SHOOTER: EntityType<PeaShooter> = registerPlantEntity("peashooter", ::PeaShooter)
-    @JvmField val WALL_NUT: EntityType<WallNut> = registerPlantEntity("wallnut", ::WallNut,
+    @JvmField val PEA_SHOOTER: EntityType<PeaShooter> = registerPlant(
+        "peashooter",
+        EntityType.Builder.of(::PeaShooter, MobCategory.CREATURE),
+    )
+    @JvmField val WALL_NUT: EntityType<WallNut> = registerPlant(
+        "wallnut",
+        EntityType.Builder.of(::WallNut, MobCategory.CREATURE),
         width = 0.9f,
         height = 1.1f
     )
-    @JvmField val CHOMPER: EntityType<Chomper> = registerPlantEntity("chomper", ::Chomper,
+    @JvmField val CHOMPER: EntityType<Chomper> = registerPlant(
+        "chomper",
+        EntityType.Builder.of(::Chomper, MobCategory.CREATURE),
         height = 1.5f
     )
-    @JvmField val CHERRY_BOMB: EntityType<CherryBomb> = registerPlantEntity("cherrybomb", ::CherryBomb,
+    @JvmField val CHERRY_BOMB: EntityType<CherryBomb> = registerPlant(
+        "cherrybomb",
+        EntityType.Builder.of(::CherryBomb, MobCategory.CREATURE),
         height = 0.5f
     )
-    @JvmField val POTATO_MINE: EntityType<PotatoMine> = registerPlantEntity("potatomine", ::PotatoMine,
+    @JvmField val POTATO_MINE: EntityType<PotatoMine> = registerPlant(
+        "potatomine",
+        EntityType.Builder.of(::PotatoMine, MobCategory.CREATURE),
         width = 0.8f,
         height = 0.35f
     )
-    @JvmField val ICE_PEA: EntityType<IcePea> = registerPlantEntity("icepea", ::IcePea)
-    @JvmField val REPEATER: EntityType<Repeater> = registerPlantEntity("repeater", ::Repeater)
+    @JvmField val ICE_PEA: EntityType<IcePea> = registerPlant(
+        "icepea",
+        EntityType.Builder.of(::IcePea, MobCategory.CREATURE),
+    )
+    @JvmField val REPEATER: EntityType<Repeater> = registerPlant(
+        "repeater",
+        EntityType.Builder.of(::Repeater, MobCategory.CREATURE),
+    )
+
+    @JvmField val PEA: EntityType<Pea> = registerProjectile("pea", EntityType.Builder.of(::Pea, MobCategory.MISC))
+    @JvmField val PEA_ICE: EntityType<PeaIce> = registerProjectile("pea_ice", EntityType.Builder.of(::PeaIce, MobCategory.MISC))
 
     fun registerAttributes(consumer: (EntityType<out LivingEntity>, AttributeSupplier.Builder) -> Unit) {
         consumer(SUNFLOWER, Plant.createAttributes())
@@ -52,24 +69,34 @@ object PazEntities {
         consumer(POTATO_MINE, Plant.createAttributes())
         consumer(ICE_PEA, Plant.createAttributes())
         consumer(REPEATER, Plant.createAttributes())
+
     }
 
-    fun <T: Plant> registerPlantEntity(
+    private fun <T : Plant> registerPlant(
         name : String,
-        factory: (Level) -> T,
-        category: MobCategory = MobCategory.CREATURE,
+        builder: EntityType.Builder<T> = EntityType.Builder.createNothing(MobCategory.CREATURE),
         width: Float = 0.6f,
         height: Float = 1.0f,
-    ) : EntityType<T> {
-        val key = ResourceKey.create(Registries.ENTITY_TYPE, pazResource(name))
+    ): EntityType<T> {
+        builder.sized(width, height)
+        return register(name, builder)
+    }
+    private fun <T : PlantProjectile> registerProjectile(
+        name : String,
+        builder: EntityType.Builder<T> = EntityType.Builder.createNothing(MobCategory.MISC),
+        width: Float = 0.3125f,
+        height: Float = 0.3125f
+    ): EntityType<T> {
+        builder.sized(width, height).eyeHeight(0.0f)
+        return register(name, builder)
+    }
 
-        val type = EntityType.Builder.of({ type, level ->
-            factory(level).apply { type }
-        }, category)
-            .sized(width, height)
-            .build(key)
-
-        return Registry.register(BuiltInRegistries.ENTITY_TYPE, key, type)
+    private fun <T : Entity> register(
+        name : String,
+        builder: EntityType.Builder<T>
+    ): EntityType<T> {
+        val id = ResourceKey.create(Registries.ENTITY_TYPE, pazResource(name))
+        return Registry.register(BuiltInRegistries.ENTITY_TYPE, id, builder.build(id))
     }
 
     @JvmField val PLANTS = registerEntityTag("plants")

@@ -4,6 +4,7 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.goal.RangedPlantAttackGoal
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
@@ -16,7 +17,7 @@ import net.minecraft.world.level.Level
 import java.util.function.Consumer
 import kotlin.math.sqrt
 
-class PeaShooter(level: Level) : Plant(PazEntities.PEA_SHOOTER, level) {
+class PeaShooter(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.PEA_SHOOTER, level) {
 
     override fun registerGoals() {
         super.registerGoals()

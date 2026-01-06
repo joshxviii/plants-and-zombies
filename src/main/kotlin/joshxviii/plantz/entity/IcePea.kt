@@ -16,7 +16,7 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import kotlin.math.sqrt
 
-class IcePea(level: Level) : Plant(PazEntities.ICE_PEA, level) {
+class IcePea(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.ICE_PEA, level) {
 
     override fun registerGoals() {
         super.registerGoals()

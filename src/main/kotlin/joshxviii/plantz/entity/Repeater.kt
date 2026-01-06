@@ -18,7 +18,7 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import kotlin.math.sqrt
 
-class Repeater(level: Level) : Plant(PazEntities.REPEATER, level) {
+class Repeater(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.REPEATER, level) {
 
     override fun registerGoals() {
         super.registerGoals()
