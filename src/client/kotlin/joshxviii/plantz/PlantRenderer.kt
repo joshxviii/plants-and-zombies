@@ -27,23 +27,10 @@ class PlantRenderer(
         camera: CameraRenderState
     ) {
         poseStack.pushPose()
-        if (state.isPotted) {
 
-            poseStack.pushPose()
-            poseStack.translate(-0.5,0.0,-0.5)
-            collector.submitBlock(
-                poseStack,
-                PazBlocks.PLANT_POT.defaultBlockState(),
-                state.lightCoords,
-                OverlayTexture.NO_OVERLAY,
-                0
-            )
-            poseStack.popPose()
-
-            poseStack.translate(0.0, 0.375, 0.0)
-        }
-
+        //Add any extra rendering stuff here
         super.submit(state, poseStack, collector, camera)
+
         poseStack.popPose()
     }
 
@@ -55,7 +42,6 @@ class PlantRenderer(
         super.extractRenderState(entity, state, partialTick)
 
         state.damage = entity.damage
-        state.isPotted = entity.isPotted
         state.texturePath = BuiltInRegistries.ENTITY_TYPE.getKey(entity.type).path
         state.idleAnimationState.start(0)
     }

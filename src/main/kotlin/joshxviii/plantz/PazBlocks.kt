@@ -5,6 +5,7 @@ import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
+import net.minecraft.tags.TagKey
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
@@ -38,6 +39,10 @@ object PazBlocks {
 
         return block
     }
+
+    @JvmField val PLANTABLE = registerBlockTag("plantable")
+
+    private fun registerBlockTag(name: String) = TagKey.create(Registries.BLOCK, pazResource(name))
 
     fun initialize() {}
 }

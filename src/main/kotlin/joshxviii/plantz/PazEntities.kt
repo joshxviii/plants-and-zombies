@@ -13,6 +13,7 @@ import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
+import net.minecraft.tags.TagKey
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.MobCategory
@@ -22,21 +23,18 @@ import net.minecraft.world.level.Level
 object PazEntities {
 
     @JvmField val SUNFLOWER: EntityType<Sunflower> = registerPlantEntity("sunflower", ::Sunflower,
-        width = 0.6f,
         height = 1.3f,
     )
     @JvmField val PEA_SHOOTER: EntityType<PeaShooter> = registerPlantEntity("peashooter", ::PeaShooter)
     @JvmField val WALL_NUT: EntityType<WallNut> = registerPlantEntity("wallnut", ::WallNut,
-        width = 0.6f,
-        height = 0.25f
+        width = 0.9f,
+        height = 1.1f
     )
     @JvmField val CHOMPER: EntityType<Chomper> = registerPlantEntity("chomper", ::Chomper,
-        width = 0.6f,
-        height = 0.25f
+        height = 1.5f
     )
     @JvmField val CHERRY_BOMB: EntityType<CherryBomb> = registerPlantEntity("cherrybomb", ::CherryBomb,
-        width = 0.6f,
-        height = 0.25f
+        height = 0.5f
     )
     @JvmField val POTATO_MINE: EntityType<PotatoMine> = registerPlantEntity("potatomine", ::PotatoMine,
         width = 0.8f,
@@ -73,6 +71,9 @@ object PazEntities {
 
         return Registry.register(BuiltInRegistries.ENTITY_TYPE, key, type)
     }
+
+    @JvmField val PLANTS = registerEntityTag("plants")
+    private fun registerEntityTag(name: String) = TagKey.create(Registries.ENTITY_TYPE, pazResource(name))
 
     fun initialize() {}
 }

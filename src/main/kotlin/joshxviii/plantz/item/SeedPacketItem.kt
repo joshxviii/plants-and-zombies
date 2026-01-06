@@ -1,5 +1,6 @@
 package joshxviii.plantz.item
 
+import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.entity.Plant
@@ -31,12 +32,10 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
         val player = context.player
         val itemStack = context.itemInHand
 
-        if (level.isClientSide) return InteractionResult.SUCCESS
-
         val component = itemStack.get(PazComponents.SEED_PACKET) ?: return InteractionResult.PASS
         val entityId: Identifier = component.entityId ?: return InteractionResult.PASS
 
-        val type = BuiltInRegistries.ENTITY_TYPE.get(entityId).get().value() as EntityType<*>
+        val type = BuiltInRegistries.ENTITY_TYPE.get(entityId).get().value()
 
         val pos = context.clickedPos
         val clickedFace = context.clickedFace
@@ -44,6 +43,8 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
 
         val spawnPos = if (blockState.getCollisionShape(level, pos).isEmpty) pos
         else pos.relative(clickedFace)
+
+        val blockBelow = level.getBlockState(spawnPos.below())
 
         // Prevent spawn if there's already a Plant in that block
         val aabb = AABB(spawnPos)
@@ -55,8 +56,9 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             )
             return InteractionResult.FAIL
         }
+        if (!blockBelow.`is`(PazBlocks.PLANTABLE)) return InteractionResult.FAIL
 
-        val entity = type.spawn(level as ServerLevel, itemStack, player, spawnPos, EntitySpawnReason.SPAWN_ITEM_USE, true, pos != spawnPos && clickedFace == Direction.UP)
+        val entity = if (level is ServerLevel) type.spawn(level, itemStack, player, spawnPos, EntitySpawnReason.SPAWN_ITEM_USE, true, clickedFace == Direction.UP) else null
         if (entity != null) {
             itemStack.consume(1, player)
             entity.playSound(SoundEvents.BIG_DRIPLEAF_PLACE, 1.0f, 1.0f)
@@ -64,8 +66,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             level.gameEvent(player, GameEvent.ENTITY_PLACE, spawnPos)
         }
 
-
-        return InteractionResult.CONSUME
+        return InteractionResult.SUCCESS
     }
 
     override fun getName(itemStack: ItemStack): Component {

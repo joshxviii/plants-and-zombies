@@ -43,8 +43,6 @@ import java.util.*
 
 abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(type, level) {
     companion object {
-        @JvmStatic val DATA_POTTED_ID: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, EntityDataSerializers.BOOLEAN)
-
         fun createAttributes(): AttributeSupplier.Builder {
             return createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20.0)
@@ -60,14 +58,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         this.goalSelector.addGoal(3, RandomLookAroundGoal(this))
 
         this.targetSelector.addGoal(1, HurtByTargetGoal(this).setAlertOthers())
-        this.targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Mob::class.java, 10, true, false,
-                TargetingConditions.Selector { target: LivingEntity?, level: ServerLevel? -> target is Enemy })
+        this.targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Mob::class.java, 10, true, false) { target: LivingEntity, level: ServerLevel -> target is Enemy }
         )
     }
 
-    var isPotted: Boolean
-        get() { return this.entityData.get(DATA_POTTED_ID) }
-        set(value) { this.entityData.set(DATA_POTTED_ID, value); refreshDimensions() }
     val damage: Float
         get() { return 1.0f - (this.health / this.maxHealth); }
 
@@ -91,17 +85,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun defineSynchedData(builder: SynchedEntityData.Builder) {
         super.defineSynchedData(builder)
-        builder.define(DATA_POTTED_ID, false)
-    }
-
-    // save and load custom synced data
-    override fun addAdditionalSaveData(output: ValueOutput) {
-        super.addAdditionalSaveData(output)
-        output.putBoolean("plantz:IsPotted", this.isPotted)
-    }
-    override fun readAdditionalSaveData(input: ValueInput) {
-        super.readAdditionalSaveData(input)
-        this.isPotted = input.getBooleanOr("plantz:IsPotted", false)
     }
 
     override fun isFood(itemStack: ItemStack): Boolean {
@@ -117,18 +100,11 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         )
     }
 
-    override fun getDefaultDimensions(pose: Pose): EntityDimensions {
-        val base = super.getDefaultDimensions(pose)
-        val height = if (isPotted) base.height + 0.375 else base.height
-        return EntityDimensions.scalable(base.width, height.toFloat())
-    }
-
     override fun tick() {
         super.tick()
         // check if the attached block still exists
         if (!this.level().isClientSide && !this.isPassenger) {
-            if (!this.canStayAt(this.blockPosition()) && !isPotted) {
-                // kill if on invalid ground or not potted
+            if (!this.canStayAt(this.blockPosition())) {
                 destroy()
             }
         }
@@ -137,11 +113,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     private fun destroy() {
-        if (isPotted) {
-            val pos = this.blockPosition()
-            this.level().setBlock(pos, Blocks.FLOWER_POT.defaultBlockState(), 3)
-            this.level().gameEvent(this, GameEvent.BLOCK_CHANGE, pos)
-        }
         this.playSound(SoundEvents.BIG_DRIPLEAF_BREAK)
         this.discard()
     }
@@ -154,12 +125,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val blockBelowPos = BlockPos.containing(this.x, feetY, this.z)
         val blockBelow = level.getBlockState(blockBelowPos)
 
-        val validGround = blockBelow.`is`(BlockTags.DIRT)
-                || blockBelow.`is`(Blocks.FARMLAND)
-                || blockBelow.`is`(Blocks.LILY_PAD)
-                || blockBelow.`is`(Blocks.DECORATED_POT)
-                || blockBelow.`is`(PazBlocks.PLANT_POT)
-        if (!validGround) return false
+//        val validGround = blockBelow.`is`(PazBlocks.PLANTABLE)
+//        if (!validGround) return false
 
         // Check if another Plant entity is already occupying this position
         val aabb = AABB(pos)
@@ -167,9 +134,12 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return entitiesInBlock.isEmpty()
     }
 
-    override fun getDeltaMovement(): Vec3 = Vec3.ZERO
 
-    override fun setDeltaMovement(deltaMovement: Vec3) {/* Prevent movement */}
+    override fun setDeltaMovement(deltaMovement: Vec3) {
+        if (onGround()) return
+        super.setDeltaMovement(deltaMovement)
+    }
+
 
     override fun mobInteract(player: Player, hand: InteractionHand): InteractionResult {
         val itemStack = player.getItemInHand(hand)
