@@ -26,6 +26,8 @@ class ProjectileRenderer(
         submitNodeCollector: SubmitNodeCollector,
         camera: CameraRenderState
     ) {
+        poseStack.pushPose()
+        poseStack.translate(0.0, -1.5, 0.0)
         submitNodeCollector.submitModel(
             this.model,
             state,
@@ -43,6 +45,7 @@ class ProjectileRenderer(
             state.outlineColor,
             null
         )
+        poseStack.popPose()
         super.submit(state, poseStack, submitNodeCollector, camera)
     }
 
@@ -52,12 +55,11 @@ class ProjectileRenderer(
 
     override fun extractRenderState(entity: PlantProjectile, state: ProjectileRenderState, partialTick: Float) {
         super.extractRenderState(entity, state, partialTick)
-
         state.type = entity.type as EntityType<out PlantProjectile>?
     }
 
     fun getTextureLocation(state: ProjectileRenderState): Identifier {
-        val texture = when (state.type) {// change texture based on projectile type
+        val texture = when (state.type) {// change texture based on the projectile type
             PazEntities.PEA -> "pea"
             PazEntities.PEA_ICE -> "pea_ice"
             else -> "pea"

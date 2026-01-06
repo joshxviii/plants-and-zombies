@@ -28,4 +28,7 @@ public class PeaModel extends EntityModel<@NotNull ProjectileRenderState> {
         return LayerDefinition.create(meshdefinition, 16, 16);
     }
 
+    public void setupAnim(final @NotNull ProjectileRenderState state) {
+        super.setupAnim(state);
+    }
 }

@@ -2,6 +2,7 @@ package joshxviii.plantz.entity
 
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazItems
+import joshxviii.plantz.entity.projectile.PlantProjectile
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
@@ -27,12 +28,14 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.SpawnEggItem
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
-import org.apache.logging.log4j.core.jmx.Server
 import java.util.*
+import kotlin.math.sqrt
 
 abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(type, level) {
     companion object {
@@ -46,7 +49,25 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
     }
 
-    open fun performRangedAttack(target: LivingEntity, power: Float) {}
+    open fun createProjectile(): PlantProjectile? { return null }
+
+    fun performRangedAttack(target: LivingEntity, power: Float) {
+        val speed = 1.5f
+        val projectile = createProjectile()
+        if (projectile==null) return
+        val xd = target.x - this.x
+        val yd = target.eyeY + 0.5
+        val zd = target.z - this.z
+        val yo = sqrt(xd * xd + zd * zd) * 0.2f
+        if (this.level() is ServerLevel) {
+            Projectile.spawnProjectile(projectile, this.level() as ServerLevel, ItemStack.EMPTY) {
+                it.shoot(xd, yd + yo - it.y, zd, power * speed, 12.0f)
+            }
+        }
+
+        // TODO make pea shooting sound
+        this.playSound(SoundEvents.BUBBLE_POP, 3.0f, 0.4f / (this.getRandom().nextFloat() * 0.4f + 0.8f))
+    }
 
     override fun registerGoals() {
         this.goalSelector.addGoal(2, LookAtPlayerGoal(this, Player::class.java, 8.0f))
@@ -141,6 +162,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun setDeltaMovement(deltaMovement: Vec3) {
         if (onGround()) return
         super.setDeltaMovement(deltaMovement)
+    }
+
+    override fun getPickResult(): ItemStack {
+        return SeedPacketItem.stackFor(this.type)
     }
 
     override fun mobInteract(player: Player, hand: InteractionHand): InteractionResult {

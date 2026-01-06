@@ -4,6 +4,7 @@
   "message.plantz.not_yours": "You do not own this plant!",
 
   "item.plantz.sun": "Sun",
+  "item.plantz.plant_pot": "Plant Pot",
   "item.plantz.seed_packet": "Seed Packet",
   "item.plantz.seed_packet.entity": "%s Seeds",
 
