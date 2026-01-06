@@ -23,7 +23,7 @@ class Sunflower(level: Level) : Plant(PazEntities.SUNFLOWER, level) {
                     this.spawnAtLocation(level!!, itemStack!!)
                 }
             ) {
-                this.playSound(SoundEvents.CHICKEN_EGG, 1.0f, (this.random.nextFloat() - this.random.nextFloat()) * 0.2f + 1.0f)
+                this.playSound(SoundEvents.CHICKEN_EGG, 1.0f, 0.5f)
                 this.gameEvent(GameEvent.ENTITY_PLACE)
             }
 

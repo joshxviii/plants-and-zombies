@@ -8,12 +8,9 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.chat.Component
-import net.minecraft.network.syncher.EntityDataAccessor
-import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.tags.BlockTags
 import net.minecraft.tags.ItemTags
 import net.minecraft.util.Mth
 import net.minecraft.world.InteractionHand
@@ -27,22 +24,20 @@ import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
-import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.gameevent.GameEvent
-import net.minecraft.world.level.storage.ValueInput
-import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
+import org.apache.logging.log4j.core.jmx.Server
 import java.util.*
 
 abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(type, level) {
     companion object {
+
+        private const val NUTRIENT_SUPPLY_MAX = 120  // 15 seconds before suffocating when on invalid block
         fun createAttributes(): AttributeSupplier.Builder {
             return createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20.0)
@@ -62,6 +57,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         )
     }
 
+    private var nutrientSupply = NUTRIENT_SUPPLY_MAX
     val damage: Float
         get() { return 1.0f - (this.health / this.maxHealth); }
 
@@ -92,22 +88,29 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     override fun setPos(x: Double, y: Double, z: Double) {
-        // snap to the center of blocks, and on top of flower pots
-        super.setPos(
-            Mth.floor(x) + 0.5,
-            y,
-            Mth.floor(z) + 0.5
-        )
+        super.setPos(Mth.floor(x) + 0.5, y, Mth.floor(z) + 0.5)
     }
 
     override fun tick() {
         super.tick()
-        // check if the attached block still exists
-        if (!this.level().isClientSide && !this.isPassenger) {
-            if (!this.canStayAt(this.blockPosition())) {
-                destroy()
+
+        if (onValidGround() && canStayAt(this.blockPosition())) {
+            this.nutrientSupply = NUTRIENT_SUPPLY_MAX
+        } else {
+            this.nutrientSupply--
+
+            if (this.nutrientSupply <= 0) {
+                if (this.tickCount % 20 == 0) {
+                    val level = this.level()
+                    if (level is ServerLevel) this.hurtServer(level, this.damageSources().dryOut(), 2.0f)
+                }
+            }
+
+            if (this.airSupply < 100 && this.random.nextInt(8) == 0) {
+                addParticlesAroundSelf()
             }
         }
+
         val target = this.target
         if (target != null) this.getLookControl().setLookAt(target, 180.0F, 180.0F);
     }
@@ -118,28 +121,25 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     private fun canStayAt(pos: BlockPos): Boolean {
-        val level = this.level()
-
-        // Check valid ground below
-        val feetY = this.y - 0.001 // slight offset down to avoid floating point issues
-        val blockBelowPos = BlockPos.containing(this.x, feetY, this.z)
-        val blockBelow = level.getBlockState(blockBelowPos)
-
-//        val validGround = blockBelow.`is`(PazBlocks.PLANTABLE)
-//        if (!validGround) return false
-
         // Check if another Plant entity is already occupying this position
         val aabb = AABB(pos)
-        val entitiesInBlock = level.getEntitiesOfClass(Plant::class.java, aabb) { it != this }
+        val entitiesInBlock = this.level().getEntitiesOfClass(Plant::class.java, aabb) { it != this }
         return entitiesInBlock.isEmpty()
     }
 
+    // if on invalid ground plant should start to suffocate
+    fun onValidGround() : Boolean {
+        val feetY = this.y - 0.001 // slight offset down to avoid floating point issues
+        val blockBelowPos = BlockPos.containing(this.x, feetY, this.z)
+        val blockBelow =  this.level().getBlockState(blockBelowPos)
+
+        return blockBelow.`is`(PazBlocks.PLANTABLE)
+    }
 
     override fun setDeltaMovement(deltaMovement: Vec3) {
         if (onGround()) return
         super.setDeltaMovement(deltaMovement)
     }
-
 
     override fun mobInteract(player: Player, hand: InteractionHand): InteractionResult {
         val itemStack = player.getItemInHand(hand)
