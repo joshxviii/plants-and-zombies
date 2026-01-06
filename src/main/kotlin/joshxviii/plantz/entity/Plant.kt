@@ -106,7 +106,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 }
             }
 
-            if (this.airSupply < 100 && this.random.nextInt(8) == 0) {
+            if (this.nutrientSupply < 100 && this.random.nextInt(10) == 0) {
                 addParticlesAroundSelf()
             }
         }
@@ -135,6 +135,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
         return blockBelow.`is`(PazBlocks.PLANTABLE)
     }
+
+    override fun getDeltaMovement(): Vec3 = Vec3(0.0, super.deltaMovement.y, 0.0)
 
     override fun setDeltaMovement(deltaMovement: Vec3) {
         if (onGround()) return
@@ -192,13 +194,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return super.mobInteract(player, hand)
     }
 
-    private fun addParticlesAroundSelf(particle: ParticleOptions = ParticleTypes.DRIPPING_WATER, amount: Int = 10) {
+    private fun addParticlesAroundSelf(particle: ParticleOptions = ParticleTypes.SPLASH, amount: Int = 8) {
         repeat(amount) {
             val xa = this.random.nextGaussian() * 0.02
             val ya = this.random.nextGaussian() * 0.02
             val za = this.random.nextGaussian() * 0.02
             this.level()
-                .addParticle(particle, this.getRandomX(1.0), this.randomY + 0.5, this.getRandomZ(1.0), xa, ya, za)
+                .addParticle(particle, this.getRandomX(0.6), this.position().y + this.eyeHeight, this.getRandomZ(0.6), xa, ya, za)
         }
     }
 }
