@@ -2,13 +2,18 @@ package joshxviii.plantz
 
 import joshxviii.plantz.item.SeedPacketItem
 import joshxviii.plantz.item.component.SeedPacket
+import net.minecraft.core.Direction
 import net.minecraft.core.Registry
+import net.minecraft.core.dispenser.BlockSource
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
-import net.minecraft.tags.TagKey
-import net.minecraft.world.item.BlockItem
+import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.block.DispenserBlock
+import net.minecraft.world.level.gameevent.GameEvent
 import java.util.function.Function
 
 object PazItems {
@@ -33,5 +38,30 @@ object PazItems {
         return item
     }
 
-    fun initialize() {}
+    fun initialize() {// Dispenser behavior
+        DispenserBlock.registerBehavior(
+            SEED_PACKET, object : DefaultDispenseItemBehavior() {
+            public override fun execute(source: BlockSource, dispensed: ItemStack): ItemStack {
+                val direction: Direction = source.state().getValue<Direction>(DispenserBlock.FACING)
+                val serverLevel = source.level()
+                val plantType = SeedPacketItem.typeFromStack(dispensed)
+
+                if (plantType != null){
+                    plantType.spawn(
+                        serverLevel,
+                        dispensed,
+                        null,
+                        source.pos().relative(direction),
+                        EntitySpawnReason.DISPENSER,
+                        direction != Direction.UP,
+                        false
+                    )
+                    source.level().gameEvent(null, GameEvent.ENTITY_PLACE, source.pos())
+                    dispensed.shrink(1)
+                }
+
+                return dispensed
+            }
+        })
+    }
 }

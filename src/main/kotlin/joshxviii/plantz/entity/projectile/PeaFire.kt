@@ -12,20 +12,13 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.EntityHitResult
 
-class PeaIce(
-    type: EntityType<out PlantProjectile> = PazEntities.PEA_ICE,
+class PeaFire(
+    type: EntityType<out PlantProjectile> = PazEntities.PEA_FIRE,
     level: Level,
     owner: Plant? = null,
 ) : PlantProjectile(type, level, owner,
-    DamageTypes.FREEZE,
+    DamageTypes.IN_FIRE,
     PazParticles.ICE_PEA_HIT
 ) {
-    override fun onHitEntity(hitResult: EntityHitResult) {
-        val target = hitResult.entity
-        if (target is LivingEntity && target !is Player) {
-            target.addEffect(MobEffectInstance(MobEffects.SLOWNESS, 100, 0))
-            target.addEffect(MobEffectInstance(MobEffects.WEAKNESS, 100, 0))
-        }
-        super.onHitEntity(hitResult)
-    }
+
 }

@@ -2,6 +2,7 @@ package joshxviii.plantz
 
 import joshxviii.plantz.entity.*
 import joshxviii.plantz.entity.projectile.Pea
+import joshxviii.plantz.entity.projectile.PeaFire
 import joshxviii.plantz.entity.projectile.PeaIce
 import joshxviii.plantz.entity.projectile.PlantProjectile
 import net.minecraft.core.Registry
@@ -48,17 +49,23 @@ object PazEntities {
         width = 0.8f,
         height = 0.35f
     )
-    @JvmField val ICE_PEA: EntityType<IcePea> = registerPlant(
+    @JvmField val ICE_PEA_SHOOTER: EntityType<IcePeaShooter> = registerPlant(
         "icepea",
-        EntityType.Builder.of(::IcePea, MobCategory.CREATURE),
+        EntityType.Builder.of(::IcePeaShooter, MobCategory.CREATURE),
     )
     @JvmField val REPEATER: EntityType<Repeater> = registerPlant(
         "repeater",
         EntityType.Builder.of(::Repeater, MobCategory.CREATURE),
     )
+    @JvmField val FIRE_PEA_SHOOTER: EntityType<FirePeaShooter> = registerPlant(
+        "firepea",
+        EntityType.Builder.of(::FirePeaShooter, MobCategory.CREATURE).fireImmune(),
+    )
 
+    //Projectiles
     @JvmField val PEA: EntityType<Pea> = registerProjectile("pea", EntityType.Builder.of(::Pea, MobCategory.MISC))
     @JvmField val PEA_ICE: EntityType<PeaIce> = registerProjectile("pea_ice", EntityType.Builder.of(::PeaIce, MobCategory.MISC))
+    @JvmField val PEA_FIRE: EntityType<PeaFire> = registerProjectile("pea_fire", EntityType.Builder.of(::PeaFire, MobCategory.MISC))
 
     fun registerAttributes(consumer: (EntityType<out LivingEntity>, AttributeSupplier.Builder) -> Unit) {
         consumer(SUNFLOWER, Plant.createAttributes())
@@ -67,8 +74,9 @@ object PazEntities {
         consumer(CHOMPER, Plant.createAttributes())
         consumer(CHERRY_BOMB, Plant.createAttributes())
         consumer(POTATO_MINE, Plant.createAttributes())
-        consumer(ICE_PEA, Plant.createAttributes())
+        consumer(ICE_PEA_SHOOTER, Plant.createAttributes())
         consumer(REPEATER, Plant.createAttributes())
+        consumer(FIRE_PEA_SHOOTER, Plant.createAttributes())
 
     }
 

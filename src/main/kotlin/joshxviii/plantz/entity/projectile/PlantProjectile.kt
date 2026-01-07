@@ -2,9 +2,14 @@ package joshxviii.plantz.entity.projectile
 
 import joshxviii.plantz.entity.Plant
 import net.minecraft.core.BlockPos
+import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.world.damagesource.DamageType
+import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.InsideBlockEffectApplier
@@ -24,6 +29,8 @@ abstract class PlantProjectile(
     type: EntityType<out PlantProjectile>,
     level: Level,
     owner: Plant? = null,
+    val damageType: ResourceKey<DamageType> = DamageTypes.GENERIC,
+    val particleType: ParticleOptions = ParticleTypes.POOF
 ) : Projectile(type, level) {
 
     init {
@@ -31,8 +38,12 @@ abstract class PlantProjectile(
             this.setOwner(owner)
             this.setPos(
                 owner.x,
-                owner.eyeHeight - 0.1,
+                owner.y + owner.eyeHeight,
                 owner.z
+            )
+            this.setRot(
+                owner.xRot,
+                owner.yRot
             )
         }
     }
@@ -86,18 +97,33 @@ abstract class PlantProjectile(
         super.onHitEntity(hitResult)
         val serverLevel = this.level() as? ServerLevel
         if (serverLevel != null) {
-            val entity = hitResult.entity
+            val target = hitResult.entity
             val owner = this.getOwner() as? LivingEntity
-            owner?.setLastHurtMob(entity)
+            owner?.setLastHurtMob(target)
+
+            // get damage from attribute
             val damage : Float = if (owner?.attributes?.hasAttribute(Attributes.ATTACK_DAMAGE)!=null)
                 owner.attributes.getValue(Attributes.ATTACK_DAMAGE).toFloat()
             else
                 1.0f
 
-            val source = this.damageSources().mobProjectile(this, owner)
-            if (entity.hurtServer(serverLevel, source, damage) && entity is LivingEntity) {
-                EnchantmentHelper.doPostAttackEffects(serverLevel, entity, source)
+            val source = this.damageSources().source(damageType, target, owner)
+            if(target.hurtServer(serverLevel, source, damage)) {
+                owner?.let {// apply knockback
+                    val knockbackDir = target.position().subtract(it.position()).normalize()
+                    val strength = 0.6
+                    target.push(knockbackDir.x * strength, 0.3, knockbackDir.z * strength)
+                    target.hurtMarked = true
+                }
             }
+        }
+    }
+    override fun onHit(hitResult: HitResult) {
+        super.onHit(hitResult)
+        if (!this.level().isClientSide) {
+            this.playSound(SoundEvents.HONEY_BLOCK_PLACE, 0.4f, 1.8f)
+            this.spawnParticle()
+            this.discard()
         }
     }
 
@@ -116,9 +142,14 @@ abstract class PlantProjectile(
         else super.canHitEntity(entity)
     }
 
-    override fun onHit(hitResult: HitResult) {
-        super.onHit(hitResult)
-        if (!this.level().isClientSide) this.discard()
+    fun spawnParticle() {
+        (this.level() as? ServerLevel)?.sendParticles(
+            particleType,
+            this.x, this.y, this.z,
+            6,
+            0.3, 0.3, 0.3,
+            0.4
+        )
     }
 
     override fun getDefaultGravity(): Double { return 0.03 }

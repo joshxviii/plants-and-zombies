@@ -1,6 +1,7 @@
 package joshxviii.plantz
 
 import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.math.Axis
 import joshxviii.plantz.entity.projectile.PlantProjectile
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.renderer.RenderPipelines
@@ -34,7 +35,7 @@ class ProjectileRenderer(
             poseStack,
             RenderType.create(
                 "plant_projectile",
-                RenderSetup.builder(RenderPipelines.ENTITY_CUTOUT)
+                RenderSetup.builder(RenderPipelines.BREEZE_WIND)// TODO make a custom render pipeline
                     .withTexture("Sampler0", getTextureLocation(state))
                     .useLightmap()
                     .sortOnUpload()
@@ -62,6 +63,7 @@ class ProjectileRenderer(
         val texture = when (state.type) {// change texture based on the projectile type
             PazEntities.PEA -> "pea"
             PazEntities.PEA_ICE -> "pea_ice"
+            PazEntities.PEA_FIRE -> "pea_fire"
             else -> "pea"
         }
         return pazResource("textures/entity/projectile/${texture}.png")

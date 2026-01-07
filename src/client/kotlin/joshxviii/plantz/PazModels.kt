@@ -3,7 +3,7 @@ package joshxviii.plantz
 import joshxviii.plantz.entity.Plant
 import joshxviii.plantz.model.CherryBombModel
 import joshxviii.plantz.model.ChomperModel
-import joshxviii.plantz.model.IcePeaModel
+import joshxviii.plantz.model.IcePeaShooterModel
 import joshxviii.plantz.model.PeaShooterModel
 import joshxviii.plantz.model.PotatoMineModel
 import joshxviii.plantz.model.RepeaterModel
@@ -28,10 +28,12 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(ChomperModel.LAYER_LOCATION) { ChomperModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(CherryBombModel.LAYER_LOCATION) { CherryBombModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(PotatoMineModel.LAYER_LOCATION) { PotatoMineModel.createBodyLayer() }
-        ModelLayerRegistry.registerModelLayer(IcePeaModel.LAYER_LOCATION) { IcePeaModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(IcePeaShooterModel.LAYER_LOCATION) { IcePeaShooterModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(RepeaterModel.LAYER_LOCATION) { RepeaterModel.createBodyLayer() }
 
         ModelLayerRegistry.registerModelLayer(PeaModel.LAYER_LOCATION) { PeaModel.createBodyLayer() }
+
+
 
         // REGISTER ENTITY RENDERERS
         EntityRenderers.register(PazEntities.PEA_SHOOTER) { ctx -> PlantRenderer(PeaShooterModel(ctx.bakeLayer(PeaShooterModel.LAYER_LOCATION)), ctx) }
@@ -40,11 +42,12 @@ object PazModels {
         EntityRenderers.register(PazEntities.CHOMPER) { ctx -> PlantRenderer(ChomperModel(ctx.bakeLayer(ChomperModel.LAYER_LOCATION)), ctx) }
         EntityRenderers.register(PazEntities.CHERRY_BOMB) { ctx -> PlantRenderer(CherryBombModel(ctx.bakeLayer(CherryBombModel.LAYER_LOCATION)), ctx) }
         EntityRenderers.register(PazEntities.POTATO_MINE) { ctx -> PlantRenderer(PotatoMineModel(ctx.bakeLayer(PotatoMineModel.LAYER_LOCATION)), ctx) }
-        EntityRenderers.register(PazEntities.ICE_PEA) { ctx -> PlantRenderer(IcePeaModel(ctx.bakeLayer(IcePeaModel.LAYER_LOCATION)), ctx) }
+        EntityRenderers.register(PazEntities.ICE_PEA_SHOOTER) { ctx -> PlantRenderer(IcePeaShooterModel(ctx.bakeLayer(IcePeaShooterModel.LAYER_LOCATION)), ctx) }
         EntityRenderers.register(PazEntities.REPEATER) { ctx -> PlantRenderer(RepeaterModel(ctx.bakeLayer(RepeaterModel.LAYER_LOCATION)), ctx) }
-
+        EntityRenderers.register(PazEntities.FIRE_PEA_SHOOTER) { ctx -> PlantRenderer(IcePeaShooterModel(ctx.bakeLayer(IcePeaShooterModel.LAYER_LOCATION)), ctx) }
         EntityRenderers.register(PazEntities.PEA) { ctx -> ProjectileRenderer(PeaModel(ctx.bakeLayer(PeaModel.LAYER_LOCATION)), ctx) }
         EntityRenderers.register(PazEntities.PEA_ICE) { ctx -> ProjectileRenderer(PeaModel(ctx.bakeLayer(PeaModel.LAYER_LOCATION)), ctx) }
+        EntityRenderers.register(PazEntities.PEA_FIRE) { ctx -> ProjectileRenderer(PeaModel(ctx.bakeLayer(PeaModel.LAYER_LOCATION)), ctx) }
     }
 
     private fun <M : EntityModel<PlantRenderState>> registerPlant(

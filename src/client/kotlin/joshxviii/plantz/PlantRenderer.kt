@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.client.renderer.state.CameraRenderState
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
+import net.minecraft.world.phys.Vec3
 
 class PlantRenderer(
     model: EntityModel<PlantRenderState>,

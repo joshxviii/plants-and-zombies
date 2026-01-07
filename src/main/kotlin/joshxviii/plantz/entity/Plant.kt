@@ -56,16 +56,14 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val projectile = createProjectile()
         if (projectile==null) return
         val xd = target.x - this.x
-        val yd = target.eyeY + 0.5
+        val yd = target.eyeY
         val zd = target.z - this.z
         val yo = sqrt(xd * xd + zd * zd) * 0.2f
         if (this.level() is ServerLevel) {
             Projectile.spawnProjectile(projectile, this.level() as ServerLevel, ItemStack.EMPTY) {
-                it.shoot(xd, yd + yo - it.y, zd, power * speed, 12.0f)
+                it.shoot(xd, yd + yo - it.y, zd, power * speed, 10.0f)
             }
         }
-
-        // TODO make pea shooting sound
         this.playSound(SoundEvents.BUBBLE_POP, 3.0f, 0.4f / (this.getRandom().nextFloat() * 0.4f + 0.8f))
     }
 
@@ -109,7 +107,12 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     override fun setPos(x: Double, y: Double, z: Double) {
-        super.setPos(Mth.floor(x) + 0.5, y, Mth.floor(z) + 0.5)
+        if (this.isPassenger) super.setPos(x, y, z)
+        else super.setPos(Mth.floor(x) + 0.5, y, Mth.floor(z) + 0.5)
+    }
+
+    override fun getLeashOffset(): Vec3 {
+        return Vec3.ZERO
     }
 
     override fun tick() {

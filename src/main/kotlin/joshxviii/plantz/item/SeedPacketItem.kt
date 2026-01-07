@@ -2,11 +2,13 @@ package joshxviii.plantz.item
 
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazComponents
+import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.entity.Plant
 import joshxviii.plantz.item.component.SeedPacket
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Direction
+import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
@@ -20,6 +22,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.component.TooltipDisplay
+import net.minecraft.world.item.component.TypedEntityData
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.AABB
@@ -88,12 +91,19 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
         stack.addToTooltip(PazComponents.SEED_PACKET, context, display, builder, flag)
     }
 
+
+
     companion object {
         fun stackFor(type: EntityType<*>): ItemStack {
             val stack = ItemStack(PazItems.SEED_PACKET)
             val id = BuiltInRegistries.ENTITY_TYPE.getKey(type)
             stack.set(PazComponents.SEED_PACKET, SeedPacket(id))
             return stack
+        }
+
+        fun typeFromStack(itemStack: ItemStack): EntityType<*>? {
+            val entityId = itemStack.get(PazComponents.SEED_PACKET)?.entityId
+            return if (entityId == null) null else BuiltInRegistries.ENTITY_TYPE.get(entityId).get().value()
         }
     }
 }

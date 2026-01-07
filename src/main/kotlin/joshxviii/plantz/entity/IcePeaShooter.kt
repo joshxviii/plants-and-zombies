@@ -1,0 +1,28 @@
+package joshxviii.plantz.entity
+
+import joshxviii.plantz.PazEntities
+import joshxviii.plantz.entity.projectile.PeaIce
+import joshxviii.plantz.entity.projectile.PlantProjectile
+import joshxviii.plantz.goal.RangedPlantAttackGoal
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.monster.Enemy
+import net.minecraft.world.level.Level
+
+class IcePeaShooter(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.ICE_PEA_SHOOTER, level) {
+
+    override fun createProjectile(): PlantProjectile? {
+        return PeaIce(level= this.level(), owner=this)
+    }
+
+    override fun registerGoals() {
+        super.registerGoals()
+
+        this.goalSelector.addGoal(2, RangedPlantAttackGoal(this, attackIntervalMin = 20))
+        this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->
+            target is Enemy
+        })
+    }
+
+}
