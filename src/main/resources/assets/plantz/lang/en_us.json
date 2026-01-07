@@ -9,13 +9,14 @@
   "item.plantz.seed_packet.entity": "%s Seeds",
 
   "entity.plantz.sunflower": "Sunflower",
-  "entity.plantz.peashooter": "Pea Shooter",
+  "entity.plantz.peashooter": "Peashooter",
   "entity.plantz.wallnut": "Wall Nut",
   "entity.plantz.chomper": "Chomper",
   "entity.plantz.cherrybomb": "Cherry Bomb",
   "entity.plantz.potatomine": "Potatomine",
-  "entity.plantz.icepea": "Ice Pea",
+  "entity.plantz.ice_peashooter": "Ice Peashooter",
   "entity.plantz.repeater": "Repeater",
+  "entity.plantz.fire_peashooter": "Fire Peashooter",
 
   "itemGroup.plantz.plantz_tab": "Plants & Zombies"
 }

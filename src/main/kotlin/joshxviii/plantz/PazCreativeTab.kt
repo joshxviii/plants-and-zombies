@@ -23,7 +23,6 @@ object PazTabs {
             .icon { ItemStack(PazItems.SUN) }
 
             .displayItems { parameters, output ->
-                output.accept(PazItems.SUN)
                 // Seed packets for each plant type
                 output.accept(SeedPacketItem.stackFor(PazEntities.SUNFLOWER))
                 output.accept(SeedPacketItem.stackFor(PazEntities.PEA_SHOOTER))
@@ -33,6 +32,8 @@ object PazTabs {
                 output.accept(SeedPacketItem.stackFor(PazEntities.POTATO_MINE))
                 output.accept(SeedPacketItem.stackFor(PazEntities.ICE_PEA_SHOOTER))
                 output.accept(SeedPacketItem.stackFor(PazEntities.REPEATER))
+                output.accept(SeedPacketItem.stackFor(PazEntities.FIRE_PEA_SHOOTER))
+                output.accept(PazItems.SUN)
                 output.accept(PazBlocks.PLANT_POT)
             }
 

@@ -1,4 +1,4 @@
-package joshxviii.plantz.goal
+package joshxviii.plantz.ai.goal
 
 import net.minecraft.world.entity.ai.goal.Goal
 

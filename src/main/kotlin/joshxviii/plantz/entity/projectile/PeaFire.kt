@@ -18,7 +18,12 @@ class PeaFire(
     owner: Plant? = null,
 ) : PlantProjectile(type, level, owner,
     DamageTypes.IN_FIRE,
-    PazParticles.ICE_PEA_HIT
+    PazParticles.FIRE_PEA_HIT
 ) {
+    override fun onHitEntity(hitResult: EntityHitResult) {
+        val target = hitResult.entity
+        target.igniteForSeconds(2.0f);
 
+        super.onHitEntity(hitResult)
+    }
 }

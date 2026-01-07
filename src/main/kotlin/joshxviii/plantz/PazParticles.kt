@@ -8,6 +8,7 @@ import net.minecraft.core.registries.BuiltInRegistries
 object PazParticles {
     val PEA_HIT: SimpleParticleType = register("pea")
     val ICE_PEA_HIT: SimpleParticleType = register("pea_ice")
+    val FIRE_PEA_HIT: SimpleParticleType = register("pea_fire")
 
     fun register(name: String): SimpleParticleType {
         val particleType = FabricParticleTypes.simple()

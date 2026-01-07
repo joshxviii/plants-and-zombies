@@ -1,4 +1,4 @@
-package joshxviii.plantz.goal
+package joshxviii.plantz.ai.goal
 
 import joshxviii.plantz.entity.Plant
 import net.minecraft.util.Mth

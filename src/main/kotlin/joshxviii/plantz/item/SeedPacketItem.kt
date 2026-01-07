@@ -2,30 +2,32 @@ package joshxviii.plantz.item
 
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazComponents
-import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.entity.Plant
+import joshxviii.plantz.entity.WallNut
 import joshxviii.plantz.item.component.SeedPacket
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Direction
-import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.util.Mth
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.TamableAnimal
+import net.minecraft.world.entity.decoration.ArmorStand
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.component.TooltipDisplay
-import net.minecraft.world.item.component.TypedEntityData
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.AABB
+import org.apache.logging.log4j.core.jmx.Server
 import java.util.function.Consumer
 
 class SeedPacketItem(properties: Properties) : Item(properties) {
@@ -61,13 +63,26 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
         }
         if (!blockBelow.`is`(PazBlocks.PLANTABLE)) return InteractionResult.FAIL
 
-        val entity = if (level is ServerLevel) type.spawn(level, itemStack, player, spawnPos, EntitySpawnReason.SPAWN_ITEM_USE, true, clickedFace == Direction.UP) else null
-        if (entity != null) {
-            itemStack.consume(1, player)
-            entity.playSound(SoundEvents.BIG_DRIPLEAF_PLACE, 1.0f, 1.0f)
-            if (entity is TamableAnimal && player != null) entity.tame(player)
-            level.gameEvent(player, GameEvent.ENTITY_PLACE, spawnPos)
+        val entity = if (level is ServerLevel) type.create(level, null, spawnPos, EntitySpawnReason.SPAWN_ITEM_USE, true, clickedFace == Direction.UP) else null
+
+        // snap rotation
+        if (entity is WallNut) {
+            val yaw = context.horizontalDirection.opposite.toYRot()
+            entity.yBodyRot = yaw
+            entity.yBodyRotO = yaw
+            entity.yHeadRot = yaw
+            entity.yHeadRotO = yaw
         }
+
+        if (entity != null && !level.addFreshEntity(entity)) {
+            entity.discard()
+            return InteractionResult.FAIL
+        }
+
+        itemStack.consume(1, player)
+        entity?.playSound(SoundEvents.BIG_DRIPLEAF_PLACE, 1.0f, 1.0f)
+        if (entity is TamableAnimal && player != null) entity.tame(player)
+        level.gameEvent(player, GameEvent.ENTITY_PLACE, spawnPos)
 
         return InteractionResult.SUCCESS
     }

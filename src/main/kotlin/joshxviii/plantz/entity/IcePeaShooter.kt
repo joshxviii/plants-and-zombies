@@ -3,7 +3,7 @@ package joshxviii.plantz.entity
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.entity.projectile.PeaIce
 import joshxviii.plantz.entity.projectile.PlantProjectile
-import joshxviii.plantz.goal.RangedPlantAttackGoal
+import joshxviii.plantz.ai.goal.RangedPlantAttackGoal
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal

@@ -30,7 +30,6 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.SpawnEggItem
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
@@ -81,6 +80,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         get() { return 1.0f - (this.health / this.maxHealth); }
 
     init {
+        //TODO replace with ambient entity sound
         this.playSound(SoundEvents.BIG_DRIPLEAF_PLACE)
 
         this.lookControl = object : LookControl(this) {
@@ -102,17 +102,12 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         super.defineSynchedData(builder)
     }
 
-    override fun isFood(itemStack: ItemStack): Boolean {
-        return false
-    }
+    override fun isFood(itemStack: ItemStack): Boolean = false
+    override fun getLeashOffset(): Vec3 = Vec3.ZERO
 
     override fun setPos(x: Double, y: Double, z: Double) {
         if (this.isPassenger) super.setPos(x, y, z)
         else super.setPos(Mth.floor(x) + 0.5, y, Mth.floor(z) + 0.5)
-    }
-
-    override fun getLeashOffset(): Vec3 {
-        return Vec3.ZERO
     }
 
     override fun tick() {
@@ -209,7 +204,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             // apply tool damage base on how damaged the plant was
             val shovelCost = ((1.0 - (this.health / this.maxHealth)) * 128).toInt()
             itemStack.hurtAndBreak(shovelCost, player, hand.asEquipmentSlot())
-            run {// Spawn a seed packet item containing this plant's data
+            if (!player.isCreative) run {// Spawn a seed packet item containing this plant's data
                 val stack = SeedPacketItem.stackFor(this.type)
                 val itemEntity = ItemEntity(this.level(), this.x, this.y + 0.5, this.z, stack)
                 this.level().addFreshEntity(itemEntity)
@@ -222,7 +217,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return super.mobInteract(player, hand)
     }
 
-    private fun addParticlesAroundSelf(particle: ParticleOptions = ParticleTypes.SPLASH, amount: Int = 8) {
+    private fun addParticlesAroundSelf(particle: ParticleOptions = ParticleTypes.SPLASH, amount: Int = 4) {
         repeat(amount) {
             val xa = this.random.nextGaussian() * 0.02
             val ya = this.random.nextGaussian() * 0.02

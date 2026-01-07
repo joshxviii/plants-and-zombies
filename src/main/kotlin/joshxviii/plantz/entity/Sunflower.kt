@@ -2,6 +2,7 @@ package joshxviii.plantz.entity
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazLootTables
+import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntityType
@@ -9,27 +10,9 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.gameevent.GameEvent
 
-class Sunflower(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.SUNFLOWER, level) {
-
-    var sunTime = this.random.nextInt(1000)+1000
-
-    override fun aiStep() {
-        super.aiStep()
-
-        if (this.level() is ServerLevel && this.isAlive && --this.sunTime <= 0) {
-            if (this.dropFromGiftLootTable(
-                    level() as ServerLevel,
-                    PazLootTables.SUN_DROP
-                ) { level: ServerLevel?, itemStack: ItemStack? ->
-                    this.spawnAtLocation(level!!, itemStack!!)
-                }
-            ) {
-                this.playSound(SoundEvents.CHICKEN_EGG, 1.0f, 0.5f)
-                this.gameEvent(GameEvent.ENTITY_PLACE)
-            }
-
-            this.sunTime = this.random.nextInt(1000) + 1000
-        }
-    }
-
+class Sunflower(
+    type: EntityType<out Plant>,
+    level: Level,
+) : SunGeneratorPlant(PazEntities.SUNFLOWER, level) {
+    override fun getSunCooldown() = 1500
 }

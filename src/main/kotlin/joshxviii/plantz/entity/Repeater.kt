@@ -2,24 +2,13 @@ package joshxviii.plantz.entity
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.entity.projectile.Pea
-import joshxviii.plantz.entity.projectile.PeaIce
 import joshxviii.plantz.entity.projectile.PlantProjectile
-import joshxviii.plantz.goal.RangedPlantAttackGoal
-import net.minecraft.server.level.ServerLevel
-import net.minecraft.sounds.SoundEvents
+import joshxviii.plantz.ai.goal.RangedPlantAttackGoal
 import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
-import net.minecraft.world.entity.ai.goal.RangedAttackGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.monster.Enemy
-import net.minecraft.world.entity.monster.RangedAttackMob
-import net.minecraft.world.entity.projectile.Projectile
-import net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
-import kotlin.math.sqrt
 
 class Repeater(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.REPEATER, level) {
 

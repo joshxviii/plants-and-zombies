@@ -1,5 +1,6 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.PazParticles.FIRE_PEA_HIT
 import joshxviii.plantz.PazParticles.ICE_PEA_HIT
 import joshxviii.plantz.PazParticles.PEA_HIT
 import net.fabricmc.api.ClientModInitializer
@@ -16,6 +17,9 @@ object PazClient : ClientModInitializer {
 			CritParticle.Provider(spriteSet)
 		}
 		ParticleProviderRegistry.getInstance().register(ICE_PEA_HIT) { spriteSet ->
+			CritParticle.Provider(spriteSet)
+		}
+		ParticleProviderRegistry.getInstance().register(FIRE_PEA_HIT) { spriteSet ->
 			CritParticle.Provider(spriteSet)
 		}
 	}

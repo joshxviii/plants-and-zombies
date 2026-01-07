@@ -46,6 +46,7 @@ public class WallNutModel extends EntityModel<@NotNull PlantRenderState> {
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
+		body.yRot = 0.0F;
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 	}
 }

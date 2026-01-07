@@ -30,7 +30,7 @@ object PazEntities {
     @JvmField val WALL_NUT: EntityType<WallNut> = registerPlant(
         "wallnut",
         EntityType.Builder.of(::WallNut, MobCategory.CREATURE),
-        width = 0.9f,
+        width = 1.0f,
         height = 1.1f
     )
     @JvmField val CHOMPER: EntityType<Chomper> = registerPlant(
@@ -50,7 +50,7 @@ object PazEntities {
         height = 0.35f
     )
     @JvmField val ICE_PEA_SHOOTER: EntityType<IcePeaShooter> = registerPlant(
-        "icepea",
+        "ice_peashooter",
         EntityType.Builder.of(::IcePeaShooter, MobCategory.CREATURE),
     )
     @JvmField val REPEATER: EntityType<Repeater> = registerPlant(
@@ -58,7 +58,7 @@ object PazEntities {
         EntityType.Builder.of(::Repeater, MobCategory.CREATURE),
     )
     @JvmField val FIRE_PEA_SHOOTER: EntityType<FirePeaShooter> = registerPlant(
-        "firepea",
+        "fire_peashooter",
         EntityType.Builder.of(::FirePeaShooter, MobCategory.CREATURE).fireImmune(),
     )
 
