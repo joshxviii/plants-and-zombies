@@ -28,7 +28,7 @@ public class PotatoMineAnimation {
 			))
 			.build();
 
-	public static final AnimationDefinition explode = AnimationDefinition.Builder.withLength(0.44F)
+	public static final AnimationDefinition action = AnimationDefinition.Builder.withLength(0.44F)
 			.addAnimation("potato", new AnimationChannel(AnimationChannel.Targets.POSITION,
 					new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
 					new Keyframe(0.4F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),

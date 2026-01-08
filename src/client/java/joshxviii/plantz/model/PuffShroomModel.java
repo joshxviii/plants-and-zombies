@@ -22,6 +22,7 @@ public class PuffShroomModel extends EntityModel<@NotNull PlantRenderState> {
 	private final ModelPart barrel;
 	private final ModelPart bone;
 	private final KeyframeAnimation idleAnimation;
+	private final KeyframeAnimation actionAnimation;
 
 	public PuffShroomModel(ModelPart root) {
 		super(root);
@@ -30,6 +31,7 @@ public class PuffShroomModel extends EntityModel<@NotNull PlantRenderState> {
 		this.barrel = this.head.getChild("barrel");
 		this.bone = this.head.getChild("bone");
 		this.idleAnimation = PuffShroomAnimation.idle.bake(root);
+		this.actionAnimation = PuffShroomAnimation.action.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -54,5 +56,6 @@ public class PuffShroomModel extends EntityModel<@NotNull PlantRenderState> {
 		super.setupAnim(state);
 		this.body.yRot = state.yRot * (float) (Math.PI / 180.0);
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
+		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
 	}
 }

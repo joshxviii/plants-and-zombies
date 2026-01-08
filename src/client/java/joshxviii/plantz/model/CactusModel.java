@@ -27,6 +27,7 @@ public class CactusModel extends EntityModel<@NotNull PlantRenderState>{
 	private final ModelPart arm_R;
 	private final ModelPart arm_L;
 	private final KeyframeAnimation idleAnimation;
+	private final KeyframeAnimation actionAnimation;
 
 	public CactusModel(ModelPart root) {
 		super(root);
@@ -41,6 +42,7 @@ public class CactusModel extends EntityModel<@NotNull PlantRenderState>{
 		this.arm_R = this.arms.getChild("arm_R");
 		this.arm_L = this.arms.getChild("arm_L");
 		this.idleAnimation = CactusAnimation.idle.bake(root);
+		this.actionAnimation = CactusAnimation.action.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -99,5 +101,6 @@ public class CactusModel extends EntityModel<@NotNull PlantRenderState>{
 		super.setupAnim(state);
 		this.body.yRot = state.yRot * (float) (Math.PI / 180.0);
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
+		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
 	}
 }

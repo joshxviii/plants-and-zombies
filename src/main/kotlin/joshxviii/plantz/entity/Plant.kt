@@ -175,12 +175,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 this.coolDownAnimationState.stop()
             }
             PlantState.ACTION -> {
-                this.idleAnimationState.stop()
                 this.actionAnimationState.startIfStopped(this.tickCount)
                 this.coolDownAnimationState.stop()
             }
             PlantState.COOLDOWN -> {
-                this.idleAnimationState.stop()
                 this.actionAnimationState.stop()
                 this.coolDownAnimationState.startIfStopped(this.tickCount)
             }

@@ -1,11 +1,7 @@
 package joshxviii.plantz.model;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import joshxviii.plantz.PlantRenderState;
 import joshxviii.plantz.animation.ChomperAnimation;
-import joshxviii.plantz.animation.PeaShooterAnimation;
-import joshxviii.plantz.entity.Chomper;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -43,6 +39,8 @@ public class ChomperModel extends EntityModel<@NotNull PlantRenderState> {
 	private final ModelPart leaf_mid_4;
 	private final ModelPart leaf_tip_4;
 	private final KeyframeAnimation idleAnimation;
+	private final KeyframeAnimation actionAnimation;
+	private final KeyframeAnimation cooldownAnimation;
 
 	public ChomperModel(ModelPart root) {
 		super(root);
@@ -71,6 +69,8 @@ public class ChomperModel extends EntityModel<@NotNull PlantRenderState> {
 		this.leaf_mid_4 = this.leaf_4.getChild("leaf_mid_4");
 		this.leaf_tip_4 = this.leaf_mid_4.getChild("leaf_tip_4");
 		this.idleAnimation = ChomperAnimation.idle.bake(root);
+		this.actionAnimation = ChomperAnimation.action.bake(root);
+		this.cooldownAnimation = ChomperAnimation.cooldown.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -158,5 +158,7 @@ public class ChomperModel extends EntityModel<@NotNull PlantRenderState> {
 		this.stem.yRot = state.yRot * (float) (Math.PI / 180.0);
 		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
+		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
+		this.cooldownAnimation.apply(state.getCoolDownAnimationState(), state.ageInTicks);
 	}
 }

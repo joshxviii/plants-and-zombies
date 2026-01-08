@@ -26,7 +26,7 @@ public class CactusAnimation {
 			))
 			.build();
 
-	public static final AnimationDefinition attack = AnimationDefinition.Builder.withLength(0.52F)
+	public static final AnimationDefinition action = AnimationDefinition.Builder.withLength(0.52F)
 			.addAnimation("trunk", new AnimationChannel(AnimationChannel.Targets.ROTATION,
 					new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(0.12F, KeyframeAnimations.degreeVec(-7.5F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),

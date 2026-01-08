@@ -74,7 +74,7 @@ public class SunflowerAnimation {
 			))
 			.build();
 
-	public static final AnimationDefinition attack = AnimationDefinition.Builder.withLength(1.0F)
+	public static final AnimationDefinition action = AnimationDefinition.Builder.withLength(1.0F)
 			.addAnimation("head", new AnimationChannel(AnimationChannel.Targets.ROTATION,
 					new Keyframe(0.0F, KeyframeAnimations.degreeVec(-5.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(0.32F, KeyframeAnimations.degreeVec(-46.5093F, -11.0007F, -10.2608F), AnimationChannel.Interpolations.CATMULLROM),
