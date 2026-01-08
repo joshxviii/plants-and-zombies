@@ -14,6 +14,8 @@ class WallNut(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.WAL
         this.targetSelector.addGoal(1, HurtByTargetGoal(this).setAlertOthers())
     }
 
+    override fun snapSpawnRotation(): Boolean = true
+
     // solid collision
     override fun canBeCollidedWith(other: Entity?): Boolean = this.isAlive
 }

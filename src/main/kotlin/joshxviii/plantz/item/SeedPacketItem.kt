@@ -66,12 +66,11 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
         val entity = if (level is ServerLevel) type.create(level, null, spawnPos, EntitySpawnReason.SPAWN_ITEM_USE, true, clickedFace == Direction.UP) else null
 
         // snap rotation
-        if (entity is WallNut) {
+        if (entity is Plant && entity.snapSpawnRotation()) {
             val yaw = context.horizontalDirection.opposite.toYRot()
-            entity.yBodyRot = yaw
-            entity.yBodyRotO = yaw
             entity.yHeadRot = yaw
-            entity.yHeadRotO = yaw
+            entity.yBodyRot = yaw
+            entity.yRot = yaw
         }
 
         if (entity != null && !level.addFreshEntity(entity)) {

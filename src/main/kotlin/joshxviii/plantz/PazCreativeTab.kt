@@ -33,6 +33,8 @@ object PazTabs {
                 output.accept(SeedPacketItem.stackFor(PazEntities.ICE_PEA_SHOOTER))
                 output.accept(SeedPacketItem.stackFor(PazEntities.REPEATER))
                 output.accept(SeedPacketItem.stackFor(PazEntities.FIRE_PEA_SHOOTER))
+                output.accept(SeedPacketItem.stackFor(PazEntities.CACTUS))
+                output.accept(SeedPacketItem.stackFor(PazEntities.PUFF_SHROOM))
                 output.accept(PazItems.SUN)
                 output.accept(PazBlocks.PLANT_POT)
             }

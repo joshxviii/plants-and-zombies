@@ -40,15 +40,38 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     companion object {
 
         private const val NUTRIENT_SUPPLY_MAX = 120  // 15 seconds before suffocating when on invalid block
-        fun createAttributes(): AttributeSupplier.Builder {
-            return createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 20.0)
-                .add(Attributes.ATTACK_DAMAGE, 4.0)
-                .add(Attributes.MOVEMENT_SPEED, 0.0)
+
+        data class PlantAttributes(
+            val maxHealth: Double = 20.0,
+            val attackDamage: Double = 4.0,
+            val movementSpeed: Double = 0.0,
+            val armor: Double = 0.0
+        ) {
+            fun apply(builder: AttributeSupplier.Builder): AttributeSupplier.Builder {
+                return builder
+                    .add(Attributes.MAX_HEALTH, maxHealth)
+                    .add(Attributes.ATTACK_DAMAGE, attackDamage)
+                    .add(Attributes.MOVEMENT_SPEED, movementSpeed)
+                    .add(Attributes.ARMOR, armor)
+            }
         }
     }
 
-    open fun createProjectile(): PlantProjectile? { return null }
+    init {
+        //TODO replace with ambient entity sound
+        this.playSound(SoundEvents.BIG_DRIPLEAF_PLACE)
+
+        this.lookControl = object : LookControl(this) {
+            override fun clampHeadRotationToBody() {}
+        }
+    }
+    // disable body control
+    override fun createBodyControl(): BodyRotationControl {
+        return object : BodyRotationControl(this) { override fun clientTick() {} }
+    }
+
+    open fun createProjectile(): Projectile? { return null }
+    open fun snapSpawnRotation(): Boolean = false
 
     fun performRangedAttack(target: LivingEntity, power: Float) {
         val speed = 1.5f
@@ -78,20 +101,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     private var nutrientSupply = NUTRIENT_SUPPLY_MAX
     val damage: Float
         get() { return 1.0f - (this.health / this.maxHealth); }
-
-    init {
-        //TODO replace with ambient entity sound
-        this.playSound(SoundEvents.BIG_DRIPLEAF_PLACE)
-
-        this.lookControl = object : LookControl(this) {
-            override fun clampHeadRotationToBody() {}
-        }
-    }
-
-    // disable body control
-    override fun createBodyControl(): BodyRotationControl {
-        return object : BodyRotationControl(this) { override fun clientTick() {} }
-    }
 
     override fun getBreedOffspring(
         level: ServerLevel,

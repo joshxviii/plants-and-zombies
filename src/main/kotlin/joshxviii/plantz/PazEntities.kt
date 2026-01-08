@@ -5,6 +5,8 @@ import joshxviii.plantz.entity.projectile.Pea
 import joshxviii.plantz.entity.projectile.PeaFire
 import joshxviii.plantz.entity.projectile.PeaIce
 import joshxviii.plantz.entity.projectile.PlantProjectile
+import joshxviii.plantz.entity.projectile.Thorn
+import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
@@ -13,8 +15,10 @@ import net.minecraft.tags.TagKey
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob.createMobAttributes
 import net.minecraft.world.entity.MobCategory
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
+import net.minecraft.world.entity.ai.attributes.Attributes
 
 object PazEntities {
 
@@ -31,7 +35,10 @@ object PazEntities {
         "wallnut",
         EntityType.Builder.of(::WallNut, MobCategory.CREATURE),
         width = 1.0f,
-        height = 1.1f
+        height = 1.1f,
+        attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 40.0,
+        )
     )
     @JvmField val CHOMPER: EntityType<Chomper> = registerPlant(
         "chomper",
@@ -61,33 +68,36 @@ object PazEntities {
         "fire_peashooter",
         EntityType.Builder.of(::FirePeaShooter, MobCategory.CREATURE).fireImmune(),
     )
+    @JvmField val CACTUS: EntityType<Cactus> = registerPlant(
+        "cactus",
+        EntityType.Builder.of(::Cactus, MobCategory.CREATURE),
+        width = 0.8f,
+        height = 1.25f
+    )
+    @JvmField val PUFF_SHROOM: EntityType<PuffShroom> = registerPlant(
+        "puffshroom",
+        EntityType.Builder.of(::PuffShroom, MobCategory.CREATURE),
+        width = 0.5f,
+        height = 0.65f
+    )
 
     //Projectiles
     @JvmField val PEA: EntityType<Pea> = registerProjectile("pea", EntityType.Builder.of(::Pea, MobCategory.MISC))
     @JvmField val PEA_ICE: EntityType<PeaIce> = registerProjectile("pea_ice", EntityType.Builder.of(::PeaIce, MobCategory.MISC))
     @JvmField val PEA_FIRE: EntityType<PeaFire> = registerProjectile("pea_fire", EntityType.Builder.of(::PeaFire, MobCategory.MISC))
+    @JvmField val THORN: EntityType<Thorn> = registerProjectile("thorn", EntityType.Builder.of(::Thorn, MobCategory.MISC))
 
-    fun registerAttributes(consumer: (EntityType<out LivingEntity>, AttributeSupplier.Builder) -> Unit) {
-        consumer(SUNFLOWER, Plant.createAttributes())
-        consumer(PEA_SHOOTER, Plant.createAttributes())
-        consumer(WALL_NUT, Plant.createAttributes())
-        consumer(CHOMPER, Plant.createAttributes())
-        consumer(CHERRY_BOMB, Plant.createAttributes())
-        consumer(POTATO_MINE, Plant.createAttributes())
-        consumer(ICE_PEA_SHOOTER, Plant.createAttributes())
-        consumer(REPEATER, Plant.createAttributes())
-        consumer(FIRE_PEA_SHOOTER, Plant.createAttributes())
-
-    }
-
-    private fun <T : Plant> registerPlant(
+    private fun <T : LivingEntity> registerPlant(
         name : String,
         builder: EntityType.Builder<T> = EntityType.Builder.createNothing(MobCategory.CREATURE),
         width: Float = 0.6f,
         height: Float = 1.0f,
+        attributes: Plant.Companion.PlantAttributes = Plant.Companion.PlantAttributes()
     ): EntityType<T> {
         builder.sized(width, height)
-        return register(name, builder)
+        val type = register(name, builder)
+        FabricDefaultAttributeRegistry.register(type, attributes.apply(createMobAttributes()))
+        return type
     }
     private fun <T : PlantProjectile> registerProjectile(
         name : String,

@@ -1,22 +1,19 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.entity.Plant
+import joshxviii.plantz.model.CactusModel
 import joshxviii.plantz.model.CherryBombModel
 import joshxviii.plantz.model.ChomperModel
+import joshxviii.plantz.model.FirePeaShooterModel
 import joshxviii.plantz.model.IcePeaShooterModel
 import joshxviii.plantz.model.PeaShooterModel
 import joshxviii.plantz.model.PotatoMineModel
+import joshxviii.plantz.model.PuffShroomModel
 import joshxviii.plantz.model.RepeaterModel
 import joshxviii.plantz.model.SunflowerModel
 import joshxviii.plantz.model.WallNutModel
 import joshxviii.plantz.model.projectiles.PeaModel
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
-import net.minecraft.client.model.EntityModel
-import net.minecraft.client.model.geom.ModelLayerLocation
-import net.minecraft.client.model.geom.ModelPart
-import net.minecraft.client.model.geom.builders.LayerDefinition
 import net.minecraft.client.renderer.entity.EntityRenderers
-import net.minecraft.world.entity.EntityType
 
 object PazModels {
 
@@ -30,36 +27,29 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(PotatoMineModel.LAYER_LOCATION) { PotatoMineModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(IcePeaShooterModel.LAYER_LOCATION) { IcePeaShooterModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(RepeaterModel.LAYER_LOCATION) { RepeaterModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(FirePeaShooterModel.LAYER_LOCATION) { FirePeaShooterModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(CactusModel.LAYER_LOCATION) { CactusModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(PuffShroomModel.LAYER_LOCATION) { PuffShroomModel.createBodyLayer() }
 
         ModelLayerRegistry.registerModelLayer(PeaModel.LAYER_LOCATION) { PeaModel.createBodyLayer() }
 
 
 
         // REGISTER ENTITY RENDERERS
-        EntityRenderers.register(PazEntities.PEA_SHOOTER) { ctx -> PlantRenderer(PeaShooterModel(ctx.bakeLayer(PeaShooterModel.LAYER_LOCATION)), ctx) }
-        EntityRenderers.register(PazEntities.SUNFLOWER) { ctx -> PlantRenderer(SunflowerModel(ctx.bakeLayer(SunflowerModel.LAYER_LOCATION)), ctx) }
-        EntityRenderers.register(PazEntities.WALL_NUT) { ctx -> PlantRenderer(WallNutModel(ctx.bakeLayer(WallNutModel.LAYER_LOCATION)), ctx) }
-        EntityRenderers.register(PazEntities.CHOMPER) { ctx -> PlantRenderer(ChomperModel(ctx.bakeLayer(ChomperModel.LAYER_LOCATION)), ctx) }
-        EntityRenderers.register(PazEntities.CHERRY_BOMB) { ctx -> PlantRenderer(CherryBombModel(ctx.bakeLayer(CherryBombModel.LAYER_LOCATION)), ctx) }
-        EntityRenderers.register(PazEntities.POTATO_MINE) { ctx -> PlantRenderer(PotatoMineModel(ctx.bakeLayer(PotatoMineModel.LAYER_LOCATION)), ctx) }
-        EntityRenderers.register(PazEntities.ICE_PEA_SHOOTER) { ctx -> PlantRenderer(IcePeaShooterModel(ctx.bakeLayer(IcePeaShooterModel.LAYER_LOCATION)), ctx) }
-        EntityRenderers.register(PazEntities.REPEATER) { ctx -> PlantRenderer(RepeaterModel(ctx.bakeLayer(RepeaterModel.LAYER_LOCATION)), ctx) }
-        EntityRenderers.register(PazEntities.FIRE_PEA_SHOOTER) { ctx -> PlantRenderer(IcePeaShooterModel(ctx.bakeLayer(IcePeaShooterModel.LAYER_LOCATION)), ctx) }
-        EntityRenderers.register(PazEntities.PEA) { ctx -> ProjectileRenderer(PeaModel(ctx.bakeLayer(PeaModel.LAYER_LOCATION)), ctx) }
-        EntityRenderers.register(PazEntities.PEA_ICE) { ctx -> ProjectileRenderer(PeaModel(ctx.bakeLayer(PeaModel.LAYER_LOCATION)), ctx) }
-        EntityRenderers.register(PazEntities.PEA_FIRE) { ctx -> ProjectileRenderer(PeaModel(ctx.bakeLayer(PeaModel.LAYER_LOCATION)), ctx) }
-    }
+        EntityRenderers.register(PazEntities.PEA_SHOOTER) { PlantRenderer(PeaShooterModel(it.bakeLayer(PeaShooterModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.SUNFLOWER) { PlantRenderer(SunflowerModel(it.bakeLayer(SunflowerModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.WALL_NUT) { PlantRenderer(WallNutModel(it.bakeLayer(WallNutModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.CHOMPER) {PlantRenderer(ChomperModel(it.bakeLayer(ChomperModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.CHERRY_BOMB) { PlantRenderer(CherryBombModel(it.bakeLayer(CherryBombModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.POTATO_MINE) { PlantRenderer(PotatoMineModel(it.bakeLayer(PotatoMineModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.ICE_PEA_SHOOTER) { PlantRenderer(IcePeaShooterModel(it.bakeLayer(IcePeaShooterModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.REPEATER) { PlantRenderer(RepeaterModel(it.bakeLayer(RepeaterModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.FIRE_PEA_SHOOTER) { PlantRenderer(FirePeaShooterModel(it.bakeLayer(FirePeaShooterModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.CACTUS) { PlantRenderer(CactusModel(it.bakeLayer(CactusModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.PUFF_SHROOM) { PlantRenderer(PuffShroomModel(it.bakeLayer(PuffShroomModel.LAYER_LOCATION)), it) }
 
-    private fun <M : EntityModel<PlantRenderState>> registerPlant(
-        type: EntityType<out Plant>,
-        layer: ModelLayerLocation,
-        modelFactory: (ModelPart) -> M,
-        layerFactory: () -> LayerDefinition
-    ) {
-        ModelLayerRegistry.registerModelLayer(layer, layerFactory)
-        EntityRenderers.register(type) { context ->
-            val model = modelFactory(context.bakeLayer(layer))
-            PlantRenderer(model, context)
-        }
+        EntityRenderers.register(PazEntities.PEA) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.PEA_ICE) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.PEA_FIRE) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }
     }
 }

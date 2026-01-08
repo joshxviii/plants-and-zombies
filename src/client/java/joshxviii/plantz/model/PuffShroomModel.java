@@ -1,21 +1,35 @@
-// Made with Blockbench 5.0.7
-// Exported for Minecraft version 1.17 or later with Mojang mappings
-// Paste this class into your mod and generate all required imports
+package joshxviii.plantz.model;
+
+import joshxviii.plantz.PlantRenderState;
+import joshxviii.plantz.animation.CherryBombAnimation;
+import joshxviii.plantz.animation.IcePeaAnimation;
+import joshxviii.plantz.animation.PuffShroomAnimation;
+import net.minecraft.client.animation.KeyframeAnimation;
+import net.minecraft.client.animation.definitions.CopperGolemAnimation;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import org.jetbrains.annotations.NotNull;
+import static joshxviii.plantz.UtilsKt.pazResource;
 
 
-public class PuffShroom<T extends Entity> extends EntityModel<T> {
-	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "puffshroom"), "main");
+public class PuffShroomModel extends EntityModel<@NotNull PlantRenderState> {
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("puffshroom"), "main");
 	private final ModelPart body;
 	private final ModelPart head;
 	private final ModelPart barrel;
 	private final ModelPart bone;
+	private final KeyframeAnimation idleAnimation;
 
-	public PuffShroom(ModelPart root) {
+	public PuffShroomModel(ModelPart root) {
+		super(root);
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.barrel = this.head.getChild("barrel");
 		this.bone = this.head.getChild("bone");
+		this.idleAnimation = PuffShroomAnimation.idle.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -36,12 +50,9 @@ public class PuffShroom<T extends Entity> extends EntityModel<T> {
 	}
 
 	@Override
-	public void setupAnim(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-
-	}
-
-	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		body.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+	public void setupAnim(@NotNull PlantRenderState state) {
+		super.setupAnim(state);
+		this.body.yRot = state.yRot * (float) (Math.PI / 180.0);
+		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 	}
 }

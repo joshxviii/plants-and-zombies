@@ -15,6 +15,5 @@ object PazMain : ModInitializer {
 		PazItems.initialize()
 		PazTabs.initialize()
 		PazEntities.initialize()
-		PazEntities.registerAttributes { entityType, builder -> FabricDefaultAttributeRegistry.register(entityType, builder) }
 	}
 }

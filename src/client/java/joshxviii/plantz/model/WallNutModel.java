@@ -1,11 +1,7 @@
 package joshxviii.plantz.model;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import joshxviii.plantz.PlantRenderState;
-import joshxviii.plantz.animation.PeaShooterAnimation;
 import joshxviii.plantz.animation.WallNutAnimation;
-import joshxviii.plantz.entity.WallNut;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;

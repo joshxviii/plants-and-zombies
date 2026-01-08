@@ -13,7 +13,7 @@ import static joshxviii.plantz.UtilsKt.pazResource;
 
 
 public class IcePeaShooterModel extends EntityModel<@NotNull PlantRenderState> {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("icepea"), "main");
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("ice_peashooter"), "main");
 	private final ModelPart body;
 	private final ModelPart stem;
 	private final ModelPart stem_2;

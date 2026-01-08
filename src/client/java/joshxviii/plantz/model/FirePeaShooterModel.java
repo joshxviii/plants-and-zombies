@@ -1,11 +1,20 @@
-// Made with Blockbench 5.0.7
-// Exported for Minecraft version 1.17 or later with Mojang mappings
-// Paste this class into your mod and generate all required imports
+package joshxviii.plantz.model;
 
+import joshxviii.plantz.PlantRenderState;
+import joshxviii.plantz.animation.FirePeaAnimation;
+import joshxviii.plantz.animation.IcePeaAnimation;
+import net.minecraft.client.animation.KeyframeAnimation;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import org.jetbrains.annotations.NotNull;
 
-public class PeaShooterModel<T extends PeaShooter> extends EntityModel<T> {
-	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "peashootermodel"), "main");
+import static joshxviii.plantz.UtilsKt.pazResource;
+
+public class FirePeaShooterModel extends EntityModel<@NotNull PlantRenderState> {
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("fire_peashooter"), "main");
 	private final ModelPart body;
 	private final ModelPart stem;
 	private final ModelPart stem_2;
@@ -20,8 +29,10 @@ public class PeaShooterModel<T extends PeaShooter> extends EntityModel<T> {
 	private final ModelPart leaf_tip_3;
 	private final ModelPart leaf_4;
 	private final ModelPart leaf_tip_4;
+	private final KeyframeAnimation idleAnimation;
 
-	public PeaShooterModel(ModelPart root) {
+	public FirePeaShooterModel(ModelPart root) {
+		super(root);
 		this.body = root.getChild("body");
 		this.stem = this.body.getChild("stem");
 		this.stem_2 = this.stem.getChild("stem_2");
@@ -36,6 +47,7 @@ public class PeaShooterModel<T extends PeaShooter> extends EntityModel<T> {
 		this.leaf_tip_3 = this.leaf_3.getChild("leaf_tip_3");
 		this.leaf_4 = this.leaves.getChild("leaf_4");
 		this.leaf_tip_4 = this.leaf_4.getChild("leaf_tip_4");
+		this.idleAnimation = FirePeaAnimation.idle.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -76,12 +88,10 @@ public class PeaShooterModel<T extends PeaShooter> extends EntityModel<T> {
 	}
 
 	@Override
-	public void setupAnim(PeaShooter entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-
-	}
-
-	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		body.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+	public void setupAnim(@NotNull PlantRenderState state) {
+		super.setupAnim(state);
+		this.stem.yRot = state.yRot * (float) (Math.PI / 180.0);
+		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
+		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 	}
 }

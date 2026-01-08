@@ -1,11 +1,21 @@
-// Made with Blockbench 5.0.7
+package joshxviii.plantz.model;// Made with Blockbench 5.0.7
 // Exported for Minecraft version 1.17 or later with Mojang mappings
 // Paste this class into your mod and generate all required imports
 
+import joshxviii.plantz.PlantRenderState;
+import joshxviii.plantz.animation.CactusAnimation;
+import joshxviii.plantz.animation.CherryBombAnimation;
+import net.minecraft.client.animation.KeyframeAnimation;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import org.jetbrains.annotations.NotNull;
+import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class Cactus<T extends Entity> extends EntityModel<T> {
-	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "cactus"), "main");
+public class CactusModel extends EntityModel<@NotNull PlantRenderState>{
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("cactus"), "main");
 	private final ModelPart body;
 	private final ModelPart trunk;
 	private final ModelPart arms;
@@ -15,8 +25,10 @@ public class Cactus<T extends Entity> extends EntityModel<T> {
 	private final ModelPart eyebrows;
 	private final ModelPart eyebrow_R;
 	private final ModelPart eyebrow_L;
+	private final KeyframeAnimation idleAnimation;
 
-	public Cactus(ModelPart root) {
+	public CactusModel(ModelPart root) {
+		super(root);
 		this.body = root.getChild("body");
 		this.trunk = this.body.getChild("trunk");
 		this.arms = this.trunk.getChild("arms");
@@ -26,6 +38,7 @@ public class Cactus<T extends Entity> extends EntityModel<T> {
 		this.eyebrows = this.trunk.getChild("eyebrows");
 		this.eyebrow_R = this.eyebrows.getChild("eyebrow_R");
 		this.eyebrow_L = this.eyebrows.getChild("eyebrow_L");
+		this.idleAnimation = CactusAnimation.idle.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -74,12 +87,9 @@ public class Cactus<T extends Entity> extends EntityModel<T> {
 	}
 
 	@Override
-	public void setupAnim(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-
-	}
-
-	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		body.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+	public void setupAnim(@NotNull PlantRenderState state) {
+		super.setupAnim(state);
+		this.body.yRot = state.yRot * (float) (Math.PI / 180.0);
+		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 	}
 }

@@ -17,6 +17,8 @@
   "entity.plantz.ice_peashooter": "Ice Peashooter",
   "entity.plantz.repeater": "Repeater",
   "entity.plantz.fire_peashooter": "Fire Peashooter",
+  "entity.plantz.cactus": "Cactus",
+  "entity.plantz.puffshroom": "Puff Shroom",
 
   "itemGroup.plantz.plantz_tab": "Plants & Zombies"
 }

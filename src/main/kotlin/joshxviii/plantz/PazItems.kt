@@ -1,5 +1,6 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.entity.Plant
 import joshxviii.plantz.item.SeedPacketItem
 import joshxviii.plantz.item.component.SeedPacket
 import net.minecraft.core.Direction
@@ -9,6 +10,7 @@ import net.minecraft.core.dispenser.DefaultDispenseItemBehavior
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
+import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
@@ -47,15 +49,28 @@ object PazItems {
                 val plantType = SeedPacketItem.typeFromStack(dispensed)
 
                 if (plantType != null){
-                    plantType.spawn(
+
+                    val entity = plantType.create(
                         serverLevel,
-                        dispensed,
                         null,
                         source.pos().relative(direction),
                         EntitySpawnReason.DISPENSER,
                         direction != Direction.UP,
                         false
                     )
+                    // snap rotation
+                    if (entity is Plant && entity.snapSpawnRotation()) {
+                        val yaw = direction.toYRot()
+                        entity.yHeadRot = yaw
+                        entity.yBodyRot = yaw
+                        entity.yRot = yaw
+                    }
+
+                    if (entity != null && !serverLevel.addFreshEntity(entity)) {
+                        entity.discard()
+                        return dispensed
+                    }
+
                     source.level().gameEvent(null, GameEvent.ENTITY_PLACE, source.pos())
                     dispensed.shrink(1)
                 }
