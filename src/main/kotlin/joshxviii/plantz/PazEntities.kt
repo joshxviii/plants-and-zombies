@@ -4,8 +4,7 @@ import joshxviii.plantz.entity.*
 import joshxviii.plantz.entity.projectile.Pea
 import joshxviii.plantz.entity.projectile.PeaFire
 import joshxviii.plantz.entity.projectile.PeaIce
-import joshxviii.plantz.entity.projectile.PlantProjectile
-import joshxviii.plantz.entity.projectile.Thorn
+import joshxviii.plantz.entity.projectile.Needle
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
@@ -17,8 +16,7 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob.createMobAttributes
 import net.minecraft.world.entity.MobCategory
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier
-import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.projectile.Projectile
 
 object PazEntities {
 
@@ -85,7 +83,17 @@ object PazEntities {
     @JvmField val PEA: EntityType<Pea> = registerProjectile("pea", EntityType.Builder.of(::Pea, MobCategory.MISC))
     @JvmField val PEA_ICE: EntityType<PeaIce> = registerProjectile("pea_ice", EntityType.Builder.of(::PeaIce, MobCategory.MISC))
     @JvmField val PEA_FIRE: EntityType<PeaFire> = registerProjectile("pea_fire", EntityType.Builder.of(::PeaFire, MobCategory.MISC))
-    @JvmField val THORN: EntityType<Thorn> = registerProjectile("thorn", EntityType.Builder.of(::Thorn, MobCategory.MISC))
+    @JvmField val NEEDLE: EntityType<Needle> = registerProjectile("needle", EntityType.Builder.of(::Needle, MobCategory.MISC))
+
+    //Other
+    @JvmField val PLANT_POT_MINECART: EntityType<PlantPotMinecart> = register(
+        "plant_pot_minecart",
+        EntityType.Builder.of(::PlantPotMinecart, MobCategory.MISC)
+            .noLootTable()
+            .sized(0.98F, 0.7F)
+            .passengerAttachments(0.75F)
+            .clientTrackingRange(8)
+    )
 
     private fun <T : LivingEntity> registerPlant(
         name : String,
@@ -99,7 +107,7 @@ object PazEntities {
         FabricDefaultAttributeRegistry.register(type, attributes.apply(createMobAttributes()))
         return type
     }
-    private fun <T : PlantProjectile> registerProjectile(
+    private fun <T : Projectile> registerProjectile(
         name : String,
         builder: EntityType.Builder<T> = EntityType.Builder.createNothing(MobCategory.MISC),
         width: Float = 0.3125f,

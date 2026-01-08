@@ -12,8 +12,10 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.EntitySpawnReason
+import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.MinecartItem
 import net.minecraft.world.level.block.DispenserBlock
 import net.minecraft.world.level.gameevent.GameEvent
 import java.util.function.Function
@@ -25,6 +27,11 @@ object PazItems {
     val SEED_PACKET: Item = registerItem(
         "seed_packet", { p: Item.Properties -> SeedPacketItem(p) },
         Item.Properties().component(PazComponents.SEED_PACKET, SeedPacket(null))
+    )
+    @JvmField
+    val PLANT_POT_MINECART: Item = registerItem(
+        "plant_pot_minecart", { p: Item.Properties -> MinecartItem(PazEntities.PLANT_POT_MINECART ,p) },
+        Item.Properties().stacksTo(1)
     )
 
     private fun registerItem(
@@ -49,7 +56,6 @@ object PazItems {
                 val plantType = SeedPacketItem.typeFromStack(dispensed)
 
                 if (plantType != null){
-
                     val entity = plantType.create(
                         serverLevel,
                         null,

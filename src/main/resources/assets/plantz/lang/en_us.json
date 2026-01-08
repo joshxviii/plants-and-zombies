@@ -5,6 +5,7 @@
 
   "item.plantz.sun": "Sun",
   "item.plantz.plant_pot": "Plant Pot",
+  "item.plantz.plant_pot_minecart": "Minecart with Plant Pot",
   "item.plantz.seed_packet": "Seed Packet",
   "item.plantz.seed_packet.entity": "%s Seeds",
 
@@ -19,6 +20,7 @@
   "entity.plantz.fire_peashooter": "Fire Peashooter",
   "entity.plantz.cactus": "Cactus",
   "entity.plantz.puffshroom": "Puff Shroom",
+  "entity.plantz.plant_pot_minecart": "Minecart with Plant Pot",
 
   "itemGroup.plantz.plantz_tab": "Plants & Zombies"
 }

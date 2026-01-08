@@ -13,10 +13,10 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.phys.EntityHitResult
 
 class PeaIce(
-    type: EntityType<out PlantProjectile> = PazEntities.PEA_ICE,
+    type: EntityType<out PeaProjectile> = PazEntities.PEA_ICE,
     level: Level,
     owner: Plant? = null,
-) : PlantProjectile(type, level, owner,
+) : PeaProjectile(type, level, owner,
     DamageTypes.FREEZE,
     PazParticles.ICE_PEA_HIT
 ) {

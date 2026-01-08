@@ -37,6 +37,7 @@ object PazTabs {
                 output.accept(SeedPacketItem.stackFor(PazEntities.PUFF_SHROOM))
                 output.accept(PazItems.SUN)
                 output.accept(PazBlocks.PLANT_POT)
+                output.accept(PazItems.PLANT_POT_MINECART)
             }
 
             .build()

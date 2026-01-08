@@ -17,7 +17,6 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.entity.projectile.ProjectileUtil
-import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.phys.AABB
@@ -25,8 +24,8 @@ import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 
-abstract class PlantProjectile(
-    type: EntityType<out PlantProjectile>,
+abstract class PeaProjectile(
+    type: EntityType<out PeaProjectile>,
     level: Level,
     owner: Plant? = null,
     val damageType: ResourceKey<DamageType> = DamageTypes.GENERIC,
@@ -138,7 +137,7 @@ abstract class PlantProjectile(
     }
 
     override fun canHitEntity(entity: Entity): Boolean {
-        return if (entity is PlantProjectile || entity is Plant) false
+        return if (entity is Plant) false
         else super.canHitEntity(entity)
     }
 
