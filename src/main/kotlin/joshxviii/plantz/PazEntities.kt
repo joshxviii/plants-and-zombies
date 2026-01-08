@@ -1,14 +1,18 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.entity.*
 import joshxviii.plantz.entity.projectile.Pea
 import joshxviii.plantz.entity.projectile.PeaFire
 import joshxviii.plantz.entity.projectile.PeaIce
 import joshxviii.plantz.entity.projectile.Needle
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
+import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricEntityDataRegistry
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
+import net.minecraft.network.syncher.EntityDataSerializer
+import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.resources.ResourceKey
 import net.minecraft.tags.TagKey
 import net.minecraft.world.entity.Entity
@@ -128,5 +132,9 @@ object PazEntities {
     @JvmField val PLANTS = registerEntityTag("plants")
     private fun registerEntityTag(name: String) = TagKey.create(Registries.ENTITY_TYPE, pazResource(name))
 
-    fun initialize() {}
+    // TODO move Data Serializers to different class if I add more
+    val DATA_PLANT_STATE = EntityDataSerializer.forValueType<PlantState>(PlantState.STREAM_CODEC)
+    fun initialize() {
+        FabricEntityDataRegistry.register(pazResource("plant_state"), DATA_PLANT_STATE)
+    }
 }

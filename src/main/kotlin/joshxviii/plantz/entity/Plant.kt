@@ -2,6 +2,7 @@ package joshxviii.plantz.entity
 
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.PazEntities.DATA_PLANT_STATE
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.item.SeedPacketItem
@@ -35,6 +36,7 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
@@ -50,7 +52,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
         private const val NUTRIENT_SUPPLY_MAX = 140  // ticks before suffocating when on invalid ground
 
-        val PLANT_STATE: EntityDataAccessor<PlantState> = SynchedEntityData.defineId<PlantState>(Plant::class.java, EntityDataSerializer.forValueType<PlantState>(PlantState.STREAM_CODEC))
+        val PLANT_STATE: EntityDataAccessor<PlantState> = SynchedEntityData.defineId<PlantState>(Plant::class.java, DATA_PLANT_STATE)
 
         data class PlantAttributes(
             val maxHealth: Double = 20.0,
@@ -90,9 +92,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     val actionAnimationState = AnimationState()
     val coolDownAnimationState = AnimationState()
 
-    override fun defineSynchedData(builder: SynchedEntityData.Builder) {
-        super.defineSynchedData(builder)
-        entityData.set(PLANT_STATE, PlantState.IDLE)
+    override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
+        super.defineSynchedData(entityData)
+        entityData.define(PLANT_STATE, PlantState.IDLE)
     }
 
     override fun registerGoals() {
@@ -146,6 +148,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun tick() {
         super.tick()
 
+        if (this.level().isClientSide && !this.isNoAi) updateAnimationState()
+
         if (!onValidGround() || isOverlappingWithOther(this.blockPosition())) {
             if (--this.nutrientSupply <= 0) {
                 if (this.tickCount % 20 == 0) {
@@ -163,6 +167,25 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         if (target != null) this.getLookControl().setLookAt(target, 180.0F, 180.0F);
     }
 
+    private fun updateAnimationState() {
+        when ( getState() ) {
+            PlantState.IDLE -> {
+                this.idleAnimationState.startIfStopped(this.tickCount)
+                this.actionAnimationState.stop()
+                this.coolDownAnimationState.stop()
+            }
+            PlantState.ACTION -> {
+                this.idleAnimationState.stop()
+                this.actionAnimationState.startIfStopped(this.tickCount)
+                this.coolDownAnimationState.stop()
+            }
+            PlantState.COOLDOWN -> {
+                this.idleAnimationState.stop()
+                this.actionAnimationState.stop()
+                this.coolDownAnimationState.startIfStopped(this.tickCount)
+            }
+        }
+    }
 
     // if on invalid ground plant should start to suffocate
     fun onValidGround() : Boolean {
@@ -183,6 +206,11 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun mobInteract(player: Player, hand: InteractionHand): InteractionResult {
         val itemStack = player.getItemInHand(hand)
+
+        //TODO debug stuff
+        if (itemStack.`is`(Items.STICK) ) this.setState(PlantState.ACTION)
+        if (itemStack.`is`(Items.BLAZE_ROD) ) this.setState(PlantState.IDLE)
+        if (itemStack.`is`(Items.BREEZE_ROD) ) this.setState(PlantState.COOLDOWN)
 
         // sun iteration
         if (itemStack.`is`(PazItems.SUN) ) {// heal
