@@ -1,8 +1,8 @@
 package joshxviii.plantz.entity
 
 import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
-import joshxviii.plantz.entity.projectile.PlantProjectile
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
@@ -94,7 +94,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         this.goalSelector.addGoal(3, RandomLookAroundGoal(this))
 
         this.targetSelector.addGoal(1, HurtByTargetGoal(this).setAlertOthers())
-        this.targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Mob::class.java, 10, true, false) { target: LivingEntity, level: ServerLevel -> target is Enemy }
+        this.targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target: LivingEntity, level: ServerLevel -> target is Enemy }
         )
     }
 
@@ -111,6 +111,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         super.defineSynchedData(builder)
     }
 
+    override fun canRide(vehicle: Entity): Boolean = false
     override fun isFood(itemStack: ItemStack): Boolean = false
     override fun getLeashOffset(): Vec3 = Vec3.ZERO
 
@@ -159,9 +160,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     fun onValidGround() : Boolean {
         val feetY = this.y - 0.001 // slight offset down to avoid floating point issues
         val blockBelowPos = BlockPos.containing(this.x, feetY, this.z)
-        val blockBelow =  this.level().getBlockState(blockBelowPos)
+        val blockBelow = this.level().getBlockState(blockBelowPos)
 
-        return blockBelow.`is`(PazBlocks.PLANTABLE)
+        return blockBelow.`is`(PazBlocks.PLANTABLE) || this.vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
     }
 
     override fun getDeltaMovement(): Vec3 = Vec3(0.0, super.deltaMovement.y, 0.0)

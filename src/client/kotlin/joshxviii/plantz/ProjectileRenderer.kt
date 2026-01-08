@@ -2,7 +2,6 @@ package joshxviii.plantz
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
-import joshxviii.plantz.entity.projectile.PlantProjectile
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.SubmitNodeCollector
@@ -12,13 +11,14 @@ import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.state.CameraRenderState
 import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
-import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.projectile.Projectile
 
 class ProjectileRenderer(
     val model: EntityModel<ProjectileRenderState>,
     context: EntityRendererProvider.Context
-) : EntityRenderer<PlantProjectile, ProjectileRenderState>(
+) : EntityRenderer<Projectile, ProjectileRenderState>(
     context
 ) {
     override fun submit(
@@ -28,6 +28,8 @@ class ProjectileRenderer(
         camera: CameraRenderState
     ) {
         poseStack.pushPose()
+        poseStack.mulPose(Axis.YP.rotationDegrees(state.yRot - 90.0f))
+        poseStack.mulPose(Axis.ZP.rotationDegrees(state.xRot))
         poseStack.translate(0.0, -1.5, 0.0)
         submitNodeCollector.submitModel(
             this.model,
@@ -54,18 +56,15 @@ class ProjectileRenderer(
         return ProjectileRenderState()
     }
 
-    override fun extractRenderState(entity: PlantProjectile, state: ProjectileRenderState, partialTick: Float) {
+    override fun extractRenderState(entity: Projectile, state: ProjectileRenderState, partialTick: Float) {
         super.extractRenderState(entity, state, partialTick)
-        state.type = entity.type as EntityType<out PlantProjectile>?
+        state.xRot = entity.getXRot(partialTick)
+        state.yRot = entity.getYRot(partialTick)
+        state.texturePath = BuiltInRegistries.ENTITY_TYPE.getKey(entity.type).path
     }
 
     fun getTextureLocation(state: ProjectileRenderState): Identifier {
-        val texture = when (state.type) {// change texture based on the projectile type
-            PazEntities.PEA -> "pea"
-            PazEntities.PEA_ICE -> "pea_ice"
-            PazEntities.PEA_FIRE -> "pea_fire"
-            else -> "pea"
-        }
-        return pazResource("textures/entity/projectile/${texture}.png")
+        val baseTexture = "textures/entity/projectile/${state.texturePath}.png"
+        return pazResource(baseTexture)
     }
 }

@@ -2,7 +2,7 @@ package joshxviii.plantz.entity
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.entity.projectile.PeaIce
-import joshxviii.plantz.entity.projectile.PlantProjectile
+import joshxviii.plantz.entity.projectile.PeaProjectile
 import joshxviii.plantz.ai.goal.RangedPlantAttackGoal
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level
 
 class IcePeaShooter(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.ICE_PEA_SHOOTER, level) {
 
-    override fun createProjectile(): PlantProjectile? {
+    override fun createProjectile(): PeaProjectile? {
         return PeaIce(level= this.level(), owner=this)
     }
 
