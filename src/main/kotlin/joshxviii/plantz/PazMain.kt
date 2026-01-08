@@ -1,8 +1,6 @@
 package joshxviii.plantz
 
 import net.fabricmc.api.ModInitializer
-import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
-import net.minecraft.world.damagesource.DamageType
 import org.apache.logging.log4j.LogManager
 
 object PazMain : ModInitializer {
@@ -13,7 +11,7 @@ object PazMain : ModInitializer {
 		PazParticles.initialize()
 		PazBlocks.initialize()
 		PazItems.initialize()
-		PazTabs.initialize()
+		PazCreativeTab.initialize()
 		PazEntities.initialize()
 	}
 }

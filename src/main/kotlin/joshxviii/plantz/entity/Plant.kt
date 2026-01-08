@@ -3,12 +3,15 @@ package joshxviii.plantz.entity
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
+import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.chat.Component
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializer
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
@@ -25,6 +28,8 @@ import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.player.Player
@@ -36,10 +41,16 @@ import net.minecraft.world.phys.Vec3
 import java.util.*
 import kotlin.math.sqrt
 
+/**
+ * Base class for all the other plant entities.
+ * Provides basic behavior for the plants.
+ */
 abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(type, level) {
     companion object {
 
-        private const val NUTRIENT_SUPPLY_MAX = 120  // 15 seconds before suffocating when on invalid block
+        private const val NUTRIENT_SUPPLY_MAX = 140  // ticks before suffocating when on invalid ground
+
+        val PLANT_STATE: EntityDataAccessor<PlantState> = SynchedEntityData.defineId<PlantState>(Plant::class.java, EntityDataSerializer.forValueType<PlantState>(PlantState.STREAM_CODEC))
 
         data class PlantAttributes(
             val maxHealth: Double = 20.0,
@@ -58,21 +69,45 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     init {
+        setState(PlantState.IDLE)
         //TODO replace with ambient entity sound
         this.playSound(SoundEvents.BIG_DRIPLEAF_PLACE)
-
-        this.lookControl = object : LookControl(this) {
-            override fun clampHeadRotationToBody() {}
-        }
+        this.lookControl = object : LookControl(this) { override fun clampHeadRotationToBody() {} }
     }
-    // disable body control
-    override fun createBodyControl(): BodyRotationControl {
-        return object : BodyRotationControl(this) { override fun clientTick() {} }
+    // disables body control
+    override fun createBodyControl(): BodyRotationControl = object : BodyRotationControl(this) { override fun clientTick() {} }
+    open fun snapSpawnRotation(): Boolean = false
+
+    // only apply up/down movement
+    override fun getDeltaMovement(): Vec3 = Vec3(0.0, super.deltaMovement.y, 0.0)
+    override fun setDeltaMovement(deltaMovement: Vec3) {
+        if (onGround()) return super.setDeltaMovement(deltaMovement)
+    }
+
+    fun getState(): PlantState = this.entityData.get(PLANT_STATE)
+    fun setState(state: PlantState) = this.entityData.set(PLANT_STATE, state)
+    val idleAnimationState = AnimationState()
+    val actionAnimationState = AnimationState()
+    val coolDownAnimationState = AnimationState()
+
+    override fun defineSynchedData(builder: SynchedEntityData.Builder) {
+        super.defineSynchedData(builder)
+        entityData.set(PLANT_STATE, PlantState.IDLE)
+    }
+
+    override fun registerGoals() {
+        this.goalSelector.addGoal(2, LookAtPlayerGoal(this, Player::class.java, 8.0f))
+        this.goalSelector.addGoal(3, RandomLookAroundGoal(this))
+        attackGoals()
+    }
+    open fun attackGoals() {
+        this.targetSelector.addGoal(1, OwnerHurtByTargetGoal(this))
+        this.targetSelector.addGoal(2, OwnerHurtTargetGoal(this))
+        this.targetSelector.addGoal(3, HurtByTargetGoal(this).setAlertOthers())
+        this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target: LivingEntity, level: ServerLevel -> target is Enemy })
     }
 
     open fun createProjectile(): Projectile? { return null }
-    open fun snapSpawnRotation(): Boolean = false
-
     fun performRangedAttack(target: LivingEntity, power: Float) {
         val speed = 1.5f
         val projectile = createProjectile()
@@ -89,17 +124,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         this.playSound(SoundEvents.BUBBLE_POP, 3.0f, 0.4f / (this.getRandom().nextFloat() * 0.4f + 0.8f))
     }
 
-    override fun registerGoals() {
-        this.goalSelector.addGoal(2, LookAtPlayerGoal(this, Player::class.java, 8.0f))
-        this.goalSelector.addGoal(3, RandomLookAroundGoal(this))
-
-        this.targetSelector.addGoal(1, HurtByTargetGoal(this).setAlertOthers())
-        this.targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target: LivingEntity, level: ServerLevel -> target is Enemy }
-        )
-    }
-
     private var nutrientSupply = NUTRIENT_SUPPLY_MAX
-    val damage: Float
+    val damagedPercent: Float
         get() { return 1.0f - (this.health / this.maxHealth); }
 
     override fun getBreedOffspring(
@@ -107,13 +133,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         partner: AgeableMob
     ): AgeableMob? { return this }
 
-    override fun defineSynchedData(builder: SynchedEntityData.Builder) {
-        super.defineSynchedData(builder)
-    }
-
     override fun canRide(vehicle: Entity): Boolean = false
     override fun isFood(itemStack: ItemStack): Boolean = false
     override fun getLeashOffset(): Vec3 = Vec3.ZERO
+    override fun getPickResult(): ItemStack = SeedPacketItem.stackFor(this.type)
 
     override fun setPos(x: Double, y: Double, z: Double) {
         if (this.isPassenger) super.setPos(x, y, z)
@@ -123,38 +146,23 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun tick() {
         super.tick()
 
-        if (onValidGround() && canStayAt(this.blockPosition())) {
-            this.nutrientSupply = NUTRIENT_SUPPLY_MAX
-        } else {
-            this.nutrientSupply--
-
-            if (this.nutrientSupply <= 0) {
+        if (!onValidGround() || isOverlappingWithOther(this.blockPosition())) {
+            if (--this.nutrientSupply <= 0) {
                 if (this.tickCount % 20 == 0) {
                     val level = this.level()
+                    //TODO make "lackOfNutrients" damage type
                     if (level is ServerLevel) this.hurtServer(level, this.damageSources().dryOut(), 2.0f)
                 }
             }
-
-            if (this.nutrientSupply < 100 && this.random.nextInt(10) == 0) {
-                addParticlesAroundSelf()
-            }
+            //panic particles when low on nutrients
+            if (this.nutrientSupply < 100 && this.random.nextInt(10) == 0) addParticlesAroundSelf()
         }
+        else this.nutrientSupply = NUTRIENT_SUPPLY_MAX
 
         val target = this.target
         if (target != null) this.getLookControl().setLookAt(target, 180.0F, 180.0F);
     }
 
-    private fun destroy() {
-        this.playSound(SoundEvents.BIG_DRIPLEAF_BREAK)
-        this.discard()
-    }
-
-    private fun canStayAt(pos: BlockPos): Boolean {
-        // Check if another Plant entity is already occupying this position
-        val aabb = AABB(pos)
-        val entitiesInBlock = this.level().getEntitiesOfClass(Plant::class.java, aabb) { it != this }
-        return entitiesInBlock.isEmpty()
-    }
 
     // if on invalid ground plant should start to suffocate
     fun onValidGround() : Boolean {
@@ -165,16 +173,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return blockBelow.`is`(PazBlocks.PLANTABLE) || this.vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
     }
 
-    override fun getDeltaMovement(): Vec3 = Vec3(0.0, super.deltaMovement.y, 0.0)
-
-    override fun setDeltaMovement(deltaMovement: Vec3) {
-        if (onGround()) return
-        super.setDeltaMovement(deltaMovement)
+    // whether another plant is overlapping with this one
+    private fun isOverlappingWithOther(pos: BlockPos): Boolean {
+        val otherPlantsAtPos = this.level().getEntitiesOfClass(Plant::class.java, AABB(pos)) { it != this }
+        otherPlantsAtPos.forEach { this.boundingBox.intersects(it.boundingBox) }
+        return false
     }
 
-    override fun getPickResult(): ItemStack {
-        return SeedPacketItem.stackFor(this.type)
-    }
 
     override fun mobInteract(player: Player, hand: InteractionHand): InteractionResult {
         val itemStack = player.getItemInHand(hand)
@@ -219,7 +224,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 val itemEntity = ItemEntity(this.level(), this.x, this.y + 0.5, this.z, stack)
                 this.level().addFreshEntity(itemEntity)
             }
-            destroy()
+            this.playSound(SoundEvents.BIG_DRIPLEAF_BREAK)
+            this.discard()
 
             return InteractionResult.SUCCESS
         }

@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.client.renderer.state.CameraRenderState
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
-import net.minecraft.world.phys.Vec3
 
 class PlantRenderer(
     model: EntityModel<PlantRenderState>,
@@ -41,9 +40,11 @@ class PlantRenderer(
     override fun extractRenderState(entity: Plant, state: PlantRenderState, partialTick: Float) {
         super.extractRenderState(entity, state, partialTick)
 
-        state.damage = entity.damage
+        state.damagedAmount = entity.damagedPercent
         state.texturePath = BuiltInRegistries.ENTITY_TYPE.getKey(entity.type).path
-        state.idleAnimationState.start(0)
+        state.idleAnimationState.copyFrom(entity.idleAnimationState)
+        state.actionAnimationState.copyFrom(entity.actionAnimationState)
+        state.coolDownAnimationState.copyFrom(entity.coolDownAnimationState)
     }
 
     override fun getTextureLocation(state: PlantRenderState): Identifier {
@@ -51,7 +52,7 @@ class PlantRenderer(
         val baseTexture = "textures/entity/${state.texturePath}/${state.texturePath}"
 
         val base = pazResource("${baseTexture}.png")
-        val damage = when (state.damage) {// change texture based on damage
+        val damage = when (state.damagedAmount) {// change texture based on damage
             in 0.5f..0.75f -> pazResource("${baseTexture}_damage_low.png")
             in 0.75f..1.0f -> pazResource("${baseTexture}_damage_medium.png")
             else -> base

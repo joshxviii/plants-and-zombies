@@ -11,11 +11,8 @@ import net.minecraft.world.level.Level
 import java.util.*
 
 class WallNut(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.WALL_NUT, level) {
-    
-    override fun registerGoals() {
-        this.targetSelector.addGoal(1, HurtByTargetGoal(this).setAlertOthers())
-    }
 
+    override fun attackGoals() {}
     override fun snapSpawnRotation(): Boolean = true
 
     // solid collision

@@ -4,8 +4,9 @@ import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.world.entity.AnimationState
 
 class PlantRenderState : LivingEntityRenderState() {
-    var damage: Float = 0.0f
+    var damagedAmount: Float = 0.0f
     var texturePath: String = "default"
     val idleAnimationState: AnimationState = AnimationState()
-    val attackAnimationState: AnimationState = AnimationState()
+    val actionAnimationState: AnimationState = AnimationState()
+    val coolDownAnimationState: AnimationState = AnimationState()
 }

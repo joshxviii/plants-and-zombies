@@ -32,6 +32,25 @@ import java.util.function.Consumer
 
 class SeedPacketItem(properties: Properties) : Item(properties) {
 
+    override fun getName(itemStack: ItemStack): Component {
+        val component = itemStack.get(PazComponents.SEED_PACKET) ?: return super.getName(itemStack)
+        val entityId = component.entityId ?: return super.getName(itemStack)
+
+        val entityName = Component.translatable("entity.${entityId.namespace}.${entityId.path}")
+        return Component.translatable("item.plantz.seed_packet.entity", entityName)
+    }
+
+    override fun appendHoverText(
+        stack: ItemStack,
+        context: TooltipContext,
+        display: TooltipDisplay,
+        builder: Consumer<Component>,
+        flag: TooltipFlag
+    ) {
+        super.appendHoverText(stack, context, display, builder, flag)
+        stack.addToTooltip(PazComponents.SEED_PACKET, context, display, builder, flag)
+    }
+
     override fun useOn(context: UseOnContext): InteractionResult {
         val level = context.level
         val player = context.player
@@ -85,27 +104,6 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
 
         return InteractionResult.SUCCESS
     }
-
-    override fun getName(itemStack: ItemStack): Component {
-        val component = itemStack.get(PazComponents.SEED_PACKET) ?: return super.getName(itemStack)
-        val entityId = component.entityId ?: return super.getName(itemStack)
-
-        val entityName = Component.translatable("entity.${entityId.namespace}.${entityId.path}")
-        return Component.translatable("item.plantz.seed_packet.entity", entityName)
-    }
-
-    override fun appendHoverText(
-        stack: ItemStack,
-        context: TooltipContext,
-        display: TooltipDisplay,
-        builder: Consumer<Component>,
-        flag: TooltipFlag
-    ) {
-        super.appendHoverText(stack, context, display, builder, flag)
-        stack.addToTooltip(PazComponents.SEED_PACKET, context, display, builder, flag)
-    }
-
-
 
     companion object {
         fun stackFor(type: EntityType<*>): ItemStack {

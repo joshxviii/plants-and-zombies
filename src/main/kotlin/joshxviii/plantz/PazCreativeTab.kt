@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 
-object PazTabs {
+object PazCreativeTab {
     // Define the key for the custom tab
     private val PAZ_TAB_KEY: ResourceKey<CreativeModeTab> =
         ResourceKey.create(Registries.CREATIVE_MODE_TAB, pazResource("plantz_tab"))
@@ -39,7 +39,6 @@ object PazTabs {
                 output.accept(PazBlocks.PLANT_POT)
                 output.accept(PazItems.PLANT_POT_MINECART)
             }
-
             .build()
     )
 

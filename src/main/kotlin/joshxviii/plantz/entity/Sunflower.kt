@@ -15,4 +15,5 @@ class Sunflower(
     level: Level,
 ) : SunGeneratorPlant(PazEntities.SUNFLOWER, level) {
     override fun getSunCooldown() = 1500
+    override fun attackGoals() {}
 }
