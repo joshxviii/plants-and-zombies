@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.EntityHitResult
+import net.minecraft.world.phys.HitResult
 
 class PeaIce(
     type: EntityType<out PeaProjectile> = PazEntities.PEA_ICE,
@@ -18,7 +19,6 @@ class PeaIce(
     owner: Plant? = null,
 ) : PeaProjectile(type, level, owner,
     DamageTypes.FREEZE,
-    PazParticles.ICE_PEA_HIT
 ) {
     override fun onHitEntity(hitResult: EntityHitResult) {
         val target = hitResult.entity
@@ -27,5 +27,10 @@ class PeaIce(
             target.addEffect(MobEffectInstance(MobEffects.WEAKNESS, 100, 0))
         }
         super.onHitEntity(hitResult)
+    }
+
+    override fun onHit(hitResult: HitResult) {
+        super.onHit(hitResult)
+        spawnParticle(PazParticles.ICE_PEA_HIT)
     }
 }
