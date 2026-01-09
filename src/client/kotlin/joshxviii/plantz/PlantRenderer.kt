@@ -26,9 +26,9 @@ class PlantRenderer(
         camera: CameraRenderState
     ) {
         poseStack.pushPose()
-
+        
         //Add any extra rendering stuff here
-        super.submit(state, poseStack, collector, camera)
+        if (state.ageInTicks>1) super.submit(state, poseStack, collector, camera)
 
         poseStack.popPose()
     }

@@ -20,16 +20,18 @@ public class PuffShroomModel extends EntityModel<@NotNull PlantRenderState> {
 	private final ModelPart body;
 	private final ModelPart head;
 	private final ModelPart barrel;
-	private final ModelPart bone;
+	private final ModelPart cap;
 	private final KeyframeAnimation idleAnimation;
 	private final KeyframeAnimation actionAnimation;
+	private final KeyframeAnimation initAnimation;
 
 	public PuffShroomModel(ModelPart root) {
 		super(root);
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.barrel = this.head.getChild("barrel");
-		this.bone = this.head.getChild("bone");
+		this.cap = this.head.getChild("cap");
+		this.initAnimation = PuffShroomAnimation.init.bake(root);
 		this.idleAnimation = PuffShroomAnimation.idle.bake(root);
 		this.actionAnimation = PuffShroomAnimation.action.bake(root);
 	}
@@ -45,7 +47,7 @@ public class PuffShroomModel extends EntityModel<@NotNull PlantRenderState> {
 
 		PartDefinition barrel = head.addOrReplaceChild("barrel", CubeListBuilder.create().texOffs(24, 25).addBox(-1.5F, -1.5F, -1.0F, 3.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -2.0F, -4.0F));
 
-		PartDefinition bone = head.addOrReplaceChild("bone", CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -6.0F, -5.0F, 10.0F, 6.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -4.5F, 0.0F, -0.1309F, 0.0F, 0.0F));
+		PartDefinition cap = head.addOrReplaceChild("cap", CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -6.0F, -5.0F, 10.0F, 6.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -4.5F, 0.0F, -0.1309F, 0.0F, 0.0F));
 
 		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
@@ -55,6 +57,7 @@ public class PuffShroomModel extends EntityModel<@NotNull PlantRenderState> {
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
 		this.body.yRot = state.yRot * (float) (Math.PI / 180.0);
+		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
 	}

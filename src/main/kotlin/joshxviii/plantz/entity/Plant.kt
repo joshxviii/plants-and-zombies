@@ -71,7 +71,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     init {
-        setState(PlantState.IDLE)
+        setState(PlantState.GROW)
         //TODO replace with ambient entity sound
         this.playSound(SoundEvents.BIG_DRIPLEAF_PLACE)
         this.lookControl = object : LookControl(this) { override fun clampHeadRotationToBody() {} }
@@ -95,7 +95,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
-        entityData.define(PLANT_STATE, PlantState.IDLE)
+        entityData.define(PLANT_STATE, PlantState.GROW)
     }
 
     override fun registerGoals() {
@@ -172,16 +172,25 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         when ( getState() ) {
             PlantState.IDLE -> {
                 this.idleAnimationState.startIfStopped(this.tickCount)
+                this.initAnimationState.stop()
                 this.actionAnimationState.stop()
                 this.coolDownAnimationState.stop()
             }
             PlantState.ACTION -> {
                 this.actionAnimationState.startIfStopped(this.tickCount)
+                this.initAnimationState.stop()
                 this.coolDownAnimationState.stop()
             }
             PlantState.COOLDOWN -> {
                 this.actionAnimationState.stop()
                 this.coolDownAnimationState.startIfStopped(this.tickCount)
+                this.initAnimationState.stop()
+            }
+            PlantState.GROW -> {
+                this.initAnimationState.startIfStopped(0)
+                if (this.tickCount > 20) {
+                    setState(PlantState.IDLE)
+                }
             }
         }
     }

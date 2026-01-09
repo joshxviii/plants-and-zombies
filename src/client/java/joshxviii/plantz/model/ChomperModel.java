@@ -41,6 +41,7 @@ public class ChomperModel extends EntityModel<@NotNull PlantRenderState> {
 	private final KeyframeAnimation idleAnimation;
 	private final KeyframeAnimation actionAnimation;
 	private final KeyframeAnimation cooldownAnimation;
+	private final KeyframeAnimation initAnimation;
 
 	public ChomperModel(ModelPart root) {
 		super(root);
@@ -68,6 +69,7 @@ public class ChomperModel extends EntityModel<@NotNull PlantRenderState> {
 		this.leaf_4 = this.leaves.getChild("leaf_4");
 		this.leaf_mid_4 = this.leaf_4.getChild("leaf_mid_4");
 		this.leaf_tip_4 = this.leaf_mid_4.getChild("leaf_tip_4");
+		this.initAnimation = ChomperAnimation.init.bake(root);
 		this.idleAnimation = ChomperAnimation.idle.bake(root);
 		this.actionAnimation = ChomperAnimation.action.bake(root);
 		this.cooldownAnimation = ChomperAnimation.cooldown.bake(root);
@@ -157,6 +159,7 @@ public class ChomperModel extends EntityModel<@NotNull PlantRenderState> {
 		super.setupAnim(state);
 		this.stem.yRot = state.yRot * (float) (Math.PI / 180.0);
 		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
+		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
 		this.cooldownAnimation.apply(state.getCoolDownAnimationState(), state.ageInTicks);

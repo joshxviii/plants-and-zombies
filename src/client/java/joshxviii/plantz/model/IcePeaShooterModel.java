@@ -31,6 +31,7 @@ public class IcePeaShooterModel extends EntityModel<@NotNull PlantRenderState> {
 	private final ModelPart leaf_tip_4;
 	private final KeyframeAnimation idleAnimation;
 	private final KeyframeAnimation actionAnimation;
+	private final KeyframeAnimation initAnimation;
 
 	public IcePeaShooterModel(ModelPart root) {
 		super(root);
@@ -49,6 +50,7 @@ public class IcePeaShooterModel extends EntityModel<@NotNull PlantRenderState> {
 		this.leaf_tip_3 = this.leaf_3.getChild("leaf_tip_3");
 		this.leaf_4 = this.leaves.getChild("leaf_4");
 		this.leaf_tip_4 = this.leaf_4.getChild("leaf_tip_4");
+		this.initAnimation = IcePeaAnimation.init.bake(root);
 		this.idleAnimation = IcePeaAnimation.idle.bake(root);
 		this.actionAnimation = IcePeaAnimation.action.bake(root);
 	}
@@ -111,6 +113,7 @@ public class IcePeaShooterModel extends EntityModel<@NotNull PlantRenderState> {
 		super.setupAnim(state);
 		this.stem.yRot = state.yRot * (float) (Math.PI / 180.0);
 		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
+		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);	}
 }

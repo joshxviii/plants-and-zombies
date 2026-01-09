@@ -16,12 +16,16 @@ public class WallNutModel extends EntityModel<@NotNull PlantRenderState> {
 	private final ModelPart body;
 	private final ModelPart inner;
 	private final KeyframeAnimation idleAnimation;
+	private final KeyframeAnimation initAnimation;
+	private final KeyframeAnimation actionAnimation;
 
 	public WallNutModel(ModelPart root) {
 		super(root);
 		this.body = root.getChild("body");
 		this.inner = this.body.getChild("inner");
+		this.initAnimation = WallNutAnimation.init.bake(root);
 		this.idleAnimation = WallNutAnimation.idle.bake(root);
+		this.actionAnimation = WallNutAnimation.action.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -43,6 +47,8 @@ public class WallNutModel extends EntityModel<@NotNull PlantRenderState> {
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
 		body.yRot = 0.0F;
+		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
+		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
 	}
 }
