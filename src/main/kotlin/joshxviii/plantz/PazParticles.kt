@@ -5,7 +5,7 @@ import net.minecraft.core.Registry
 import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.core.registries.BuiltInRegistries
 
-object PazParticles {
+object PazServerParticles {
     val PEA_HIT: SimpleParticleType = register("pea")
     val ICE_PEA_HIT: SimpleParticleType = register("pea_ice")
     val FIRE_PEA_HIT: SimpleParticleType = register("pea_fire")

@@ -1,7 +1,7 @@
 package joshxviii.plantz.entity.projectile
 
 import joshxviii.plantz.PazEntities
-import joshxviii.plantz.PazParticles
+import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.entity.Plant
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffectInstance
@@ -31,6 +31,6 @@ class PeaIce(
 
     override fun onHit(hitResult: HitResult) {
         super.onHit(hitResult)
-        spawnParticle(PazParticles.ICE_PEA_HIT)
+        spawnParticle(PazServerParticles.ICE_PEA_HIT)
     }
 }

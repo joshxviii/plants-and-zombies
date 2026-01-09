@@ -152,14 +152,17 @@ abstract class PeaProjectile(
 
     fun spawnParticle(
         particle : ParticleOptions = ParticleTypes.POOF,
-        amount : Int = 6
+        amount : Int = 6,
+        spread: Vec3 = Vec3(0.3, 0.3, 0.3),
+        offset: Vec3 = Vec3.ZERO,
+        speed: Double = 0.4
     ) {
         (this.level() as? ServerLevel)?.sendParticles(
             particle,
-            this.x, this.y, this.z,
+            this.x+offset.x, this.y+offset.y, this.z+offset.z,
             amount,
-            0.3, 0.3, 0.3,
-            0.4
+            spread.x, spread.y, spread.z,
+            speed
         )
     }
 

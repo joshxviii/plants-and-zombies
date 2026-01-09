@@ -1,7 +1,7 @@
 package joshxviii.plantz.entity.projectile
 
 import joshxviii.plantz.PazEntities
-import joshxviii.plantz.PazParticles
+import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.entity.Plant
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.damagesource.DamageTypes
@@ -27,6 +27,6 @@ class PeaFire(
 
     override fun onHit(hitResult: HitResult) {
         super.onHit(hitResult)
-        PazParticles.FIRE_PEA_HIT
+        PazServerParticles.FIRE_PEA_HIT
     }
 }

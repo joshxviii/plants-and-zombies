@@ -11,7 +11,7 @@ object PazMain : ModInitializer {
     private val logger = LogManager.getLogger(MODID)
 
 	override fun onInitialize() {
-		PazParticles.initialize()
+		PazServerParticles.initialize()
 		PazBlocks.initialize()
 		PazItems.initialize()
 		PazCreativeTab.initialize()

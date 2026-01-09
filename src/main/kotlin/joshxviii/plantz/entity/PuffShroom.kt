@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level
 class PuffShroom(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.PUFF_SHROOM, level) {
 
     override fun createProjectile(): PeaProjectile? {
-        return Spore(level= this.level(), owner=this)
+        return Spore(level=this.level(), owner=this)
     }
 
     override fun registerGoals() {

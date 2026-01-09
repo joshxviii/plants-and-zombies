@@ -1,15 +1,16 @@
 package joshxviii.plantz.entity.projectile
 
 import joshxviii.plantz.PazEntities
-import joshxviii.plantz.PazParticles
+import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.entity.Plant
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.HitResult
+import net.minecraft.world.phys.Vec3
 
 class Spore(
-    type: EntityType<out PeaProjectile> = PazEntities.PEA,
+    type: EntityType<out PeaProjectile> = PazEntities.SPORE,
     level: Level,
     owner: Plant? = null,
 ) : PeaProjectile(type, level, owner,
@@ -18,12 +19,15 @@ class Spore(
 
     override fun tick() {
         super.tick()
-        if (tickCount % 2 == 0) spawnParticle(PazParticles.SPORE)
+        spawnParticle(
+            PazServerParticles.SPORE,
+            spread = Vec3(0.1,0.1,0.1)
+        )
     }
 
     override fun onHit(hitResult: HitResult) {
         super.onHit(hitResult)
-        PazParticles.SPORE_HIT
+        PazServerParticles.SPORE_HIT
     }
 
 }
