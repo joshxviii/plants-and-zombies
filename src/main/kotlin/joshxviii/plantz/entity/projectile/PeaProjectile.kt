@@ -4,6 +4,8 @@ import joshxviii.plantz.entity.Plant
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
@@ -28,9 +30,12 @@ abstract class PeaProjectile(
     type: EntityType<out PeaProjectile>,
     level: Level,
     owner: Plant? = null,
-    val damageType: ResourceKey<DamageType> = DamageTypes.GENERIC,
-    val particleType: ParticleOptions = ParticleTypes.POOF
+    val damageType: ResourceKey<DamageType> = DamageTypes.GENERIC
 ) : Projectile(type, level) {
+
+    companion object {
+        val PIERCE_LEVEL: EntityDataAccessor<Byte> = SynchedEntityData.defineId<Byte>(PeaProjectile::class.java, EntityDataSerializers.BYTE)
+    }
 
     init {
         if (owner != null) {
@@ -90,7 +95,12 @@ abstract class PeaProjectile(
         }
     }
 
-    override fun defineSynchedData(entityData: SynchedEntityData.Builder) {}
+    override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
+        entityData.define(PIERCE_LEVEL, 0.toByte())
+    }
+
+    private fun setPierceLevel(pieceLevel: Byte) { this.entityData.set(PIERCE_LEVEL, pieceLevel) }
+    fun getPierceLevel(): Byte =this.entityData.get(PIERCE_LEVEL)
 
     override fun onHitEntity(hitResult: EntityHitResult) {
         super.onHitEntity(hitResult)
@@ -121,7 +131,6 @@ abstract class PeaProjectile(
         super.onHit(hitResult)
         if (!this.level().isClientSide) {
             this.playSound(SoundEvents.HONEY_BLOCK_PLACE, 0.4f, 1.8f)
-            this.spawnParticle()
             this.discard()
         }
     }
@@ -141,13 +150,19 @@ abstract class PeaProjectile(
         else super.canHitEntity(entity)
     }
 
-    fun spawnParticle() {
+    fun spawnParticle(
+        particle : ParticleOptions = ParticleTypes.POOF,
+        amount : Int = 6,
+        spread: Vec3 = Vec3(0.3, 0.3, 0.3),
+        offset: Vec3 = Vec3.ZERO,
+        speed: Double = 0.4
+    ) {
         (this.level() as? ServerLevel)?.sendParticles(
-            particleType,
-            this.x, this.y, this.z,
-            6,
-            0.3, 0.3, 0.3,
-            0.4
+            particle,
+            this.x+offset.x, this.y+offset.y, this.z+offset.z,
+            amount,
+            spread.x, spread.y, spread.z,
+            speed
         )
     }
 

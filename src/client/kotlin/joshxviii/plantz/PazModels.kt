@@ -13,6 +13,7 @@ import joshxviii.plantz.model.SunflowerModel
 import joshxviii.plantz.model.WallNutModel
 import joshxviii.plantz.model.projectiles.NeedleModel
 import joshxviii.plantz.model.projectiles.PeaModel
+import joshxviii.plantz.model.projectiles.SporeModel
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.ModelLayers
@@ -37,6 +38,7 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(PuffShroomModel.LAYER_LOCATION) { PuffShroomModel.createBodyLayer() }
 
         ModelLayerRegistry.registerModelLayer(PeaModel.LAYER_LOCATION) { PeaModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(SporeModel.LAYER_LOCATION) { SporeModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(NeedleModel.LAYER_LOCATION) { NeedleModel.createBodyLayer() }
 
 
@@ -57,6 +59,7 @@ object PazModels {
         EntityRenderers.register(PazEntities.PEA) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.PEA_ICE) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.PEA_FIRE) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.SPORE) { ProjectileRenderer(SporeModel(it.bakeLayer(SporeModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.NEEDLE) { ProjectileRenderer(NeedleModel(it.bakeLayer(NeedleModel.LAYER_LOCATION)), it) }
 
         EntityRenderers.register(PazEntities.PLANT_POT_MINECART) { PlantPotMinecartRenderer(it, ModelLayers.MINECART) }

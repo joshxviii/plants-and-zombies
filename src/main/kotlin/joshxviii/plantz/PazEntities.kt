@@ -6,6 +6,7 @@ import joshxviii.plantz.entity.projectile.Pea
 import joshxviii.plantz.entity.projectile.PeaFire
 import joshxviii.plantz.entity.projectile.PeaIce
 import joshxviii.plantz.entity.projectile.Needle
+import joshxviii.plantz.entity.projectile.Spore
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricEntityDataRegistry
 import net.minecraft.core.Registry
@@ -88,6 +89,7 @@ object PazEntities {
     @JvmField val PEA_ICE: EntityType<PeaIce> = registerProjectile("pea_ice", EntityType.Builder.of(::PeaIce, MobCategory.MISC))
     @JvmField val PEA_FIRE: EntityType<PeaFire> = registerProjectile("pea_fire", EntityType.Builder.of(::PeaFire, MobCategory.MISC))
     @JvmField val NEEDLE: EntityType<Needle> = registerProjectile("needle", EntityType.Builder.of(::Needle, MobCategory.MISC))
+    @JvmField val SPORE: EntityType<Spore> = registerProjectile("spore", EntityType.Builder.of(::Spore, MobCategory.MISC))
 
     //Other
     @JvmField val PLANT_POT_MINECART: EntityType<PlantPotMinecart> = register(
