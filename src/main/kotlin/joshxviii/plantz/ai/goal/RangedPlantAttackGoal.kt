@@ -55,7 +55,7 @@ class RangedPlantAttackGoal(
             if (!hasLineOfSight) return
 
             val dist = sqrt(targetDistSqr).toFloat() / this.attackRadius
-            val power = Mth.clamp(dist, 0.8f, 1.0f)
+            val power = Mth.clamp(dist, 0.2f, 1.0f)
             this.plantEntity.performRangedAttack(this.target!!, power)
             this.attackTime =
                 Mth.floor(dist * (this.attackIntervalMax - this.attackIntervalMin) + this.attackIntervalMin)

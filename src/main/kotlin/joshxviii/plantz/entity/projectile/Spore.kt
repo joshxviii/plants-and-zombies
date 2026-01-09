@@ -21,7 +21,8 @@ class Spore(
         super.tick()
         spawnParticle(
             PazServerParticles.SPORE,
-            spread = Vec3(0.1,0.1,0.1)
+            spread = Vec3(0.01,0.01,0.01),
+            speed = 0.1
         )
     }
 

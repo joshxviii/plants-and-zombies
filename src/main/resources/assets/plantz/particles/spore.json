@@ -1,5 +1,10 @@
 {
   "textures": [
-    "plantz:spore"
+    "plantz:spore_1",
+    "plantz:spore_2",
+    "plantz:spore_3",
+    "plantz:spore_4",
+    "plantz:spore_5",
+    "plantz:spore_6"
   ]
 }

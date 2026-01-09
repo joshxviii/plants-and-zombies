@@ -88,6 +88,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     fun getState(): PlantState = this.entityData.get(PLANT_STATE)
     fun setState(state: PlantState) = this.entityData.set(PLANT_STATE, state)
+    val initAnimationState = AnimationState()
     val idleAnimationState = AnimationState()
     val actionAnimationState = AnimationState()
     val coolDownAnimationState = AnimationState()
@@ -209,6 +210,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         if (itemStack.`is`(Items.STICK) ) this.setState(PlantState.ACTION)
         if (itemStack.`is`(Items.BLAZE_ROD) ) this.setState(PlantState.IDLE)
         if (itemStack.`is`(Items.BREEZE_ROD) ) this.setState(PlantState.COOLDOWN)
+        if (itemStack.`is`(Items.BONE) ) this.setState(PlantState.GROW)
 
         // sun iteration
         if (itemStack.`is`(PazItems.SUN) ) {// heal

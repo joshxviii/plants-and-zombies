@@ -1,41 +1,19 @@
 package joshxviii.plantz.particles
 
 import net.minecraft.client.multiplayer.ClientLevel
+import net.minecraft.client.particle.ExplodeParticle
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.particle.ParticleProvider
-import net.minecraft.client.particle.SingleQuadParticle
 import net.minecraft.client.particle.SpriteSet
 import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.util.RandomSource
 
-class SporeParticle (
-    level: ClientLevel,
-    x: Double,
-    y: Double,
-    z: Double,
-    private val sprites: SpriteSet
-) : SingleQuadParticle(level, x, y, z, sprites.first()) {
+class SporeParticle private constructor(
+    level: ClientLevel, x: Double, y: Double, z: Double, xa: Double, ya: Double, za: Double, sprites: SpriteSet
+) : ExplodeParticle(level, x, y, z, xa, ya, za, sprites) {
     init {
-        this.setSpriteFromAge(sprites)
-        this.lifetime = 12 + this.random.nextInt(4)
-        this.quadSize = 1.0f
-        this.setSize(1.0f, 1.0f)
-    }
-
-    public override fun getLayer(): Layer {
-        return Layer.OPAQUE
-    }
-
-    public override fun getLightCoords(a: Float): Int {
-        return 15728880
-    }
-
-    override fun tick() {
-        if (this.age++ >= this.lifetime) {
-            this.remove()
-        } else {
-            this.setSpriteFromAge(this.sprites)
-        }
+        this.gravity = 0.5f
+        this.lifetime = (2.0 / (this.random.nextFloat() * 0.8 + 0.2)).toInt()
     }
 
     class Provider(private val sprites: SpriteSet) : ParticleProvider<SimpleParticleType> {
@@ -50,8 +28,8 @@ class SporeParticle (
             zAux: Double,
             random: RandomSource
         ): Particle {
-            val particle: Particle = SporeParticle(level, x, y, z, this.sprites)
-            particle.scale(0.15f)
+            val particle =  SporeParticle(level, x, y, z, xAux, yAux, zAux, this.sprites)
+            particle.scale(0.5f)
             return particle
         }
     }

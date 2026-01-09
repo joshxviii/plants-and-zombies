@@ -6,6 +6,7 @@ import net.minecraft.world.entity.AnimationState
 class PlantRenderState : LivingEntityRenderState() {
     var damagedAmount: Float = 0.0f
     var texturePath: String = "default"
+    val initAnimationState: AnimationState = AnimationState()
     val idleAnimationState: AnimationState = AnimationState()
     val actionAnimationState: AnimationState = AnimationState()
     val coolDownAnimationState: AnimationState = AnimationState()

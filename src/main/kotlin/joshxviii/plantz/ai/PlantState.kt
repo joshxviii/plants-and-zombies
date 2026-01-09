@@ -13,8 +13,9 @@ import java.util.function.IntFunction
  */
 enum class PlantState(val title: String, val id: Int) : StringRepresentable {
     IDLE("idle", 0),
-    ACTION("action", 1),
-    COOLDOWN("cooldown", 2);
+    GROW("cooldown", 1),
+    ACTION("action", 2),
+    COOLDOWN("cooldown", 3);
     override fun getSerializedName(): String = this.title
     companion object {
         val CODEC: Codec<PlantState> = StringRepresentable.fromEnum(PlantState::values)

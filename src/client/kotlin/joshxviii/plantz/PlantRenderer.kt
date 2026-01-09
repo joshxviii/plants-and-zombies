@@ -42,6 +42,7 @@ class PlantRenderer(
 
         state.damagedAmount = entity.damagedPercent
         state.texturePath = BuiltInRegistries.ENTITY_TYPE.getKey(entity.type).path
+        state.initAnimationState.copyFrom(entity.initAnimationState)
         state.idleAnimationState.copyFrom(entity.idleAnimationState)
         state.actionAnimationState.copyFrom(entity.actionAnimationState)
         state.coolDownAnimationState.copyFrom(entity.coolDownAnimationState)
