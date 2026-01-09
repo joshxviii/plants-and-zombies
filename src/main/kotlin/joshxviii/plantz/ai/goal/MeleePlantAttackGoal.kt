@@ -2,7 +2,7 @@ package joshxviii.plantz.ai.goal
 
 import net.minecraft.world.entity.ai.goal.Goal
 
-class PlantAttackGoal(
+class MeleePlantAttackGoal(
 
 ) : Goal() {
     override fun canUse(): Boolean {

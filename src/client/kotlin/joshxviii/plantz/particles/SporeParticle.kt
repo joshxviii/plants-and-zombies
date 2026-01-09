@@ -14,6 +14,7 @@ class SporeParticle private constructor(
     init {
         this.gravity = 0.5f
         this.lifetime = (2.0 / (this.random.nextFloat() * 0.8 + 0.2)).toInt()
+        this.scale(0.5f)
     }
 
     class Provider(private val sprites: SpriteSet) : ParticleProvider<SimpleParticleType> {
@@ -28,9 +29,7 @@ class SporeParticle private constructor(
             zAux: Double,
             random: RandomSource
         ): Particle {
-            val particle =  SporeParticle(level, x, y, z, xAux, yAux, zAux, this.sprites)
-            particle.scale(0.5f)
-            return particle
+            return SporeParticle(level, x, y, z, xAux, yAux, zAux, this.sprites)
         }
     }
 }

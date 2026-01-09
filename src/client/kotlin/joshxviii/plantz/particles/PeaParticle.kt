@@ -29,6 +29,7 @@ class PeaParticle private constructor(
         this.bCol = col
         this.quadSize *= 0.75f
         this.lifetime = max((6.0 / (this.random.nextFloat() * 0.8 + 0.6)).toInt(), 1)
+        this.roll = (this.random.nextFloat() * 360.0f)
         this.hasPhysics = false
         this.tick()
     }

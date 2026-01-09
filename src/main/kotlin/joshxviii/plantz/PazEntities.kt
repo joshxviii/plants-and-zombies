@@ -2,18 +2,14 @@ package joshxviii.plantz
 
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.entity.*
-import joshxviii.plantz.entity.projectile.Pea
-import joshxviii.plantz.entity.projectile.PeaFire
-import joshxviii.plantz.entity.projectile.PeaIce
-import joshxviii.plantz.entity.projectile.Needle
-import joshxviii.plantz.entity.projectile.Spore
+import joshxviii.plantz.entity.projectile.*
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricEntityDataRegistry
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
+import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.syncher.EntityDataSerializer
-import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.resources.ResourceKey
 import net.minecraft.tags.TagKey
 import net.minecraft.world.entity.Entity
@@ -81,7 +77,8 @@ object PazEntities {
         "puffshroom",
         EntityType.Builder.of(::PuffShroom, MobCategory.CREATURE),
         width = 0.5f,
-        height = 0.65f
+        height = 0.65f,
+        eyeHeight = 0.3f
     )
 
     //Projectiles
@@ -106,9 +103,10 @@ object PazEntities {
         builder: EntityType.Builder<T> = EntityType.Builder.createNothing(MobCategory.CREATURE),
         width: Float = 0.6f,
         height: Float = 1.0f,
+        eyeHeight: Float = height * 0.85f,
         attributes: Plant.Companion.PlantAttributes = Plant.Companion.PlantAttributes()
     ): EntityType<T> {
-        builder.sized(width, height)
+        builder.sized(width, height).eyeHeight(eyeHeight)
         val type = register(name, builder)
         FabricDefaultAttributeRegistry.register(type, attributes.apply(createMobAttributes()))
         return type
@@ -136,7 +134,9 @@ object PazEntities {
 
     // TODO move Data Serializers to different class if I add more
     val DATA_PLANT_STATE = EntityDataSerializer.forValueType<PlantState>(PlantState.STREAM_CODEC)
+    val DATA_COOLDOWN = EntityDataSerializer.forValueType<Int>(ByteBufCodecs.VAR_INT)
     fun initialize() {
         FabricEntityDataRegistry.register(pazResource("plant_state"), DATA_PLANT_STATE)
+        FabricEntityDataRegistry.register(pazResource("cooldown"), DATA_COOLDOWN)
     }
 }

@@ -2,6 +2,7 @@ package joshxviii.plantz.entity
 
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.PazEntities.DATA_COOLDOWN
 import joshxviii.plantz.PazEntities.DATA_PLANT_STATE
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.ai.PlantState
@@ -53,6 +54,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         private const val NUTRIENT_SUPPLY_MAX = 140  // ticks before suffocating when on invalid ground
 
         val PLANT_STATE: EntityDataAccessor<PlantState> = SynchedEntityData.defineId<PlantState>(Plant::class.java, DATA_PLANT_STATE)
+        val COOLDOWN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_COOLDOWN)
 
         data class PlantAttributes(
             val maxHealth: Double = 20.0,
@@ -70,8 +72,22 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
     }
 
+    private var nutrientSupply = NUTRIENT_SUPPLY_MAX
+
+    val damagedPercent: Float
+        get() { return 1.0f - (this.health / this.maxHealth); }
+
+    var state: PlantState
+        get() = this.entityData.get(PLANT_STATE)
+        private set(value) = this.entityData.set(PLANT_STATE, value)
+
+    var cooldown: Int
+        get() = this.entityData.get(COOLDOWN)
+        set(value) = this.entityData.set(COOLDOWN, value.coerceAtLeast(-1))
+
     init {
-        setState(PlantState.GROW)
+        cooldown = -1
+        state = PlantState.GROW
         //TODO replace with ambient entity sound
         this.playSound(SoundEvents.BIG_DRIPLEAF_PLACE)
         this.lookControl = object : LookControl(this) { override fun clampHeadRotationToBody() {} }
@@ -86,8 +102,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         if (onGround()) return super.setDeltaMovement(deltaMovement)
     }
 
-    fun getState(): PlantState = this.entityData.get(PLANT_STATE)
-    fun setState(state: PlantState) = this.entityData.set(PLANT_STATE, state)
     val initAnimationState = AnimationState()
     val idleAnimationState = AnimationState()
     val actionAnimationState = AnimationState()
@@ -96,6 +110,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
         entityData.define(PLANT_STATE, PlantState.GROW)
+        entityData.define(COOLDOWN, 0)
     }
 
     override fun registerGoals() {
@@ -109,27 +124,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         this.targetSelector.addGoal(3, HurtByTargetGoal(this).setAlertOthers())
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target: LivingEntity, level: ServerLevel -> target is Enemy })
     }
-
-    open fun createProjectile(): Projectile? { return null }
-    fun performRangedAttack(target: LivingEntity, power: Float) {
-        val speed = 1.5f
-        val projectile = createProjectile()
-        if (projectile==null) return
-        val xd = target.x - this.x
-        val yd = target.eyeY
-        val zd = target.z - this.z
-        val yo = sqrt(xd * xd + zd * zd) * 0.2f
-        if (this.level() is ServerLevel) {
-            Projectile.spawnProjectile(projectile, this.level() as ServerLevel, ItemStack.EMPTY) {
-                it.shoot(xd, yd + yo - it.y, zd, power * speed, 10.0f)
-            }
-        }
-        this.playSound(SoundEvents.BUBBLE_POP, 3.0f, 0.4f / (this.getRandom().nextFloat() * 0.4f + 0.8f))
-    }
-
-    private var nutrientSupply = NUTRIENT_SUPPLY_MAX
-    val damagedPercent: Float
-        get() { return 1.0f - (this.health / this.maxHealth); }
 
     override fun getBreedOffspring(
         level: ServerLevel,
@@ -149,8 +143,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun tick() {
         super.tick()
 
-        if (this.level().isClientSide && !this.isNoAi) updateAnimationState()
-
         if (!onValidGround() || isOverlappingWithOther(this.blockPosition())) {
             if (--this.nutrientSupply <= 0) {
                 if (this.tickCount % 20 == 0) {
@@ -164,32 +156,40 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
         else this.nutrientSupply = NUTRIENT_SUPPLY_MAX
 
+        --cooldown
+        if (this.level().isClientSide && !this.isNoAi) { updateAnimationState() }
+
         val target = this.target
         if (target != null) this.getLookControl().setLookAt(target, 180.0F, 180.0F);
     }
 
+    /**
+     * State machine for plant animations
+     */
     private fun updateAnimationState() {
-        when ( getState() ) {
+        when (state) {
             PlantState.IDLE -> {
-                this.idleAnimationState.startIfStopped(this.tickCount)
                 this.initAnimationState.stop()
-                this.actionAnimationState.stop()
+                this.idleAnimationState.startIfStopped(this.tickCount)
+                if (cooldown > 0) {
+                    this.actionAnimationState.stop()
+                    state = PlantState.ACTION
+                }
                 this.coolDownAnimationState.stop()
             }
             PlantState.ACTION -> {
-                this.actionAnimationState.startIfStopped(this.tickCount)
-                this.initAnimationState.stop()
                 this.coolDownAnimationState.stop()
+                this.actionAnimationState.start(this.tickCount)
+                state = PlantState.COOLDOWN
             }
             PlantState.COOLDOWN -> {
-                this.actionAnimationState.stop()
                 this.coolDownAnimationState.startIfStopped(this.tickCount)
-                this.initAnimationState.stop()
+                if (cooldown < 0) state = PlantState.IDLE
             }
             PlantState.GROW -> {
                 this.initAnimationState.startIfStopped(0)
                 if (this.tickCount > 20) {
-                    setState(PlantState.IDLE)
+                    state = PlantState.IDLE
                 }
             }
         }
@@ -214,12 +214,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun mobInteract(player: Player, hand: InteractionHand): InteractionResult {
         val itemStack = player.getItemInHand(hand)
-
-        //TODO debug stuff
-        if (itemStack.`is`(Items.STICK) ) this.setState(PlantState.ACTION)
-        if (itemStack.`is`(Items.BLAZE_ROD) ) this.setState(PlantState.IDLE)
-        if (itemStack.`is`(Items.BREEZE_ROD) ) this.setState(PlantState.COOLDOWN)
-        if (itemStack.`is`(Items.BONE) ) this.setState(PlantState.GROW)
 
         // sun iteration
         if (itemStack.`is`(PazItems.SUN) ) {// heal
