@@ -13,7 +13,8 @@ class Cactus(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CACT
     override fun registerGoals() {
         super.registerGoals()
 
-        this.goalSelector.addGoal(2, RangedPlantAttackGoal(this,
+        this.goalSelector.addGoal(2, RangedPlantAttackGoal(
+            plantEntity = this,
             projectileFactory = { Needle(level= this.level(), owner=this) },
             cooldownTime = 50,
             actionDelay = 6))

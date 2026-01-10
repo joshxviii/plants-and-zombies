@@ -1,20 +1,20 @@
 package joshxviii.plantz.ai.goal
 
 import joshxviii.plantz.PazLootTables
-import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.entity.Plant
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.level.gameevent.GameEvent
 
 class GenerateSunGoal(
     plantEntity: Plant,
     cooldownTime: Int = 200,
     actionDelay: Int = 0,
+    actionStartEffect: () -> Unit = {},
+    actionEndEffect: () -> Unit = {},
     val generateAtNight: Boolean = false,
-): PlantActionGoal(plantEntity, cooldownTime, actionDelay) {
+): PlantActionGoal(plantEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
     override fun canUse(): Boolean = (
         plantEntity.tickCount>cooldownTime &&
         plantEntity.isAlive

@@ -169,30 +169,30 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     private fun updateAnimationState() {
         when (state) {
             PlantState.IDLE -> {
+                this.idleAnimationState.startIfStopped(this.tickCount)
                 this.initAnimationState.stop()
                 this.actionAnimationState.stop()
                 this.coolDownAnimationState.stop()
                 if (cooldown > 0) {
                     state = PlantState.ACTION
                 }
-                this.idleAnimationState.startIfStopped(0)
             }
             PlantState.ACTION -> {
+                this.actionAnimationState.startIfStopped(this.tickCount)
                 this.coolDownAnimationState.stop()
                 state = PlantState.COOLDOWN
-                this.actionAnimationState.startIfStopped(this.tickCount)
             }
             PlantState.COOLDOWN -> {
+                this.coolDownAnimationState.startIfStopped(this.tickCount)
                 if (cooldown <= 0) {
                     state = PlantState.IDLE
                 }
-                this.coolDownAnimationState.startIfStopped(this.tickCount)
             }
             PlantState.GROW -> {
-                if (this.tickCount > 20) {
+                this.initAnimationState.startIfStopped(0)
+                if (this.tickCount >= 19) {
                     state = PlantState.IDLE
                 }
-                this.initAnimationState.startIfStopped(0)
             }
         }
     }

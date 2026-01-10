@@ -10,7 +10,9 @@ import net.minecraft.world.entity.ai.goal.Goal
 abstract class PlantActionGoal(
     val plantEntity: Plant,
     val cooldownTime: Int = 20,
-    val actionDelay: Int = 0
+    val actionDelay: Int = 0,
+    val actionStartEffect: () -> Unit = {},
+    val actionEndEffect: () -> Unit = {}
 ): Goal() {
     private var actionTimer = -1
 
@@ -25,10 +27,12 @@ abstract class PlantActionGoal(
         ) {
             plantEntity.cooldown = cooldownTime // start animation
             actionTimer = actionDelay.coerceAtLeast(0)
+            actionStartEffect()
         }
 
         if (actionTimer > 0) --actionTimer
         if (actionTimer == 0) {// do action
+            actionEndEffect()
             doAction()
 
             actionTimer = -1

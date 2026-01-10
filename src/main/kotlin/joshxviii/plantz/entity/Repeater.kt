@@ -13,7 +13,8 @@ class Repeater(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.RE
     override fun registerGoals() {
         super.registerGoals()
 
-        this.goalSelector.addGoal(2, RangedPlantAttackGoal(this,
+        this.goalSelector.addGoal(2, RangedPlantAttackGoal(
+            plantEntity = this,
             projectileFactory = { Pea(level= this.level(), owner=this) },
             cooldownTime = 8,
             actionDelay = 3))

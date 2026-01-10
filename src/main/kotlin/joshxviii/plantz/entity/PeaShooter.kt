@@ -13,7 +13,8 @@ class PeaShooter(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
     override fun registerGoals() {
         super.registerGoals()
 
-        this.goalSelector.addGoal(2, RangedPlantAttackGoal(this,
+        this.goalSelector.addGoal(2, RangedPlantAttackGoal(
+            plantEntity = this,
             projectileFactory = { Pea(level = level(), owner = this)},
             cooldownTime = 20,
             actionDelay = 3))

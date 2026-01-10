@@ -13,7 +13,8 @@ class IcePeaShooter(type: EntityType<out Plant>, level: Level) : Plant(PazEntiti
     override fun registerGoals() {
         super.registerGoals()
 
-        this.goalSelector.addGoal(2, RangedPlantAttackGoal(this,
+        this.goalSelector.addGoal(2, RangedPlantAttackGoal(
+            plantEntity = this,
             projectileFactory =  { PeaIce(level= this.level(), owner=this) },
             cooldownTime = 20,
             actionDelay = 3))

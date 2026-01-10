@@ -19,11 +19,13 @@ class RangedPlantAttackGoal(
     plantEntity: Plant,
     cooldownTime: Int = 20,
     actionDelay: Int = 0,
+    actionStartEffect: () -> Unit = {},
+    actionEndEffect: () -> Unit = {},
     val projectileFactory: () -> Projectile,
     val velocity : Double = 0.9,
     val inaccuracy: Float = 1.0f,
     val useHighArc: Boolean = false,
-) : PlantActionGoal(plantEntity, cooldownTime, actionDelay) {
+) : PlantActionGoal(plantEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
     var seeTime : Int = 0
     var distanceSqr: Double = 0.0
     var attackRadius : Float = 0.0f
@@ -97,7 +99,7 @@ class RangedPlantAttackGoal(
      * @param velocity Initial projectile speed (blocks/tick)
      * @return Pair(highArcAngle, lowArcAngle) or null if impossible (discriminant < 0)
      */
-    fun calculateProjectileArcs(targetPos: Vec3, gravity: Double, velocity: Double): Pair<Double, Double>? {
+    private fun calculateProjectileArcs(targetPos: Vec3, gravity: Double, velocity: Double): Pair<Double, Double>? {
         val dx = targetPos.x
         val dy = targetPos.y
         val dz = targetPos.z
@@ -111,7 +113,7 @@ class RangedPlantAttackGoal(
         val horiz2_d = horizDist.toDouble() * horizDist
         var discriminant = v4 - g_d * (g_d * horiz2_d + 2.0 * v2 * dy)
 
-        if (discriminant < 0.0) { //impossible shot, use maximum force
+        if (discriminant < 0.0) { //impossible shot, try anyway with full power
             discriminant = 0.0
         }
 

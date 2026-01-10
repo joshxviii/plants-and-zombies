@@ -13,7 +13,8 @@ class PuffShroom(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
     override fun registerGoals() {
         super.registerGoals()
 
-        this.goalSelector.addGoal(2, RangedPlantAttackGoal(this,
+        this.goalSelector.addGoal(2, RangedPlantAttackGoal(
+            plantEntity = this,
             projectileFactory = { Spore(level=this.level(), owner=this) },
             cooldownTime = 20))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->
