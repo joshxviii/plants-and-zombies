@@ -5,7 +5,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.ai.goal.Goal
 
 /**
- * Defines an action goal for plants
+ * Defines an action goal for plants. Used for triggering animations and action timing
  */
 abstract class PlantActionGoal(
     val plantEntity: Plant,
@@ -40,5 +40,5 @@ abstract class PlantActionGoal(
     }
 
     abstract fun canDoAction() : Boolean
-    abstract fun doAction()
+    abstract fun doAction() : Boolean
 }

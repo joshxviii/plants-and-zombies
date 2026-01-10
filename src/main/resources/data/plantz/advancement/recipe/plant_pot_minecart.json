@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "plantz:plant_pot_minecart"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_plant_pot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "plantz:plant_pot"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_then_recipe",
+      "has_plant_pot"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "plantz:plant_pot_minecart"
+    ]
+  }
+}

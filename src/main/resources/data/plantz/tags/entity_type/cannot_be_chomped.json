@@ -1,0 +1,15 @@
+{
+  "values": [
+    "minecraft:player",
+    "minecraft:ender_dragon",
+    "minecraft:warden",
+    "minecraft:wither",
+    "minecraft:elder_guardian",
+    "minecraft:ravager",
+    "minecraft:iron_golem",
+    "minecraft:hoglin",
+    "minecraft:zoglin",
+    "minecraft:ghast",
+    "minecraft:giant"
+  ]
+}

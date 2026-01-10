@@ -44,19 +44,21 @@ object PazEntities {
         EntityType.Builder.of(::Chomper, MobCategory.CREATURE),
         height = 1.5f,
         attributes = Plant.Companion.PlantAttributes(
-            followRange = 8.0,
+            maxHealth = 35.0,
+            attackDamage = 12.0,
+            followRange = 3.75,
         )
     )
     @JvmField val CHERRY_BOMB: EntityType<CherryBomb> = registerPlant(
         "cherrybomb",
         EntityType.Builder.of(::CherryBomb, MobCategory.CREATURE),
-        height = 0.5f
+        height = 0.5f,
     )
     @JvmField val POTATO_MINE: EntityType<PotatoMine> = registerPlant(
         "potatomine",
         EntityType.Builder.of(::PotatoMine, MobCategory.CREATURE),
         width = 0.8f,
-        height = 0.35f
+        height = 0.35f,
     )
     @JvmField val ICE_PEA_SHOOTER: EntityType<IcePeaShooter> = registerPlant(
         "ice_peashooter",
@@ -74,7 +76,8 @@ object PazEntities {
         "cactus",
         EntityType.Builder.of(::Cactus, MobCategory.CREATURE),
         width = 0.8f,
-        height = 1.25f
+        height = 1.25f,
+        eyeHeight = 0.85f,
     )
     @JvmField val PUFF_SHROOM: EntityType<PuffShroom> = registerPlant(
         "puffshroom",
@@ -138,14 +141,9 @@ object PazEntities {
         return Registry.register(BuiltInRegistries.ENTITY_TYPE, id, builder.build(id))
     }
 
-    @JvmField val PLANTS = registerEntityTag("plants")
+    @JvmField val TAG_PLANTS = registerEntityTag("plants")
+    @JvmField val TAG_CANNOT_CHOMP = registerEntityTag("cannot_be_chomped")
     private fun registerEntityTag(name: String) = TagKey.create(Registries.ENTITY_TYPE, pazResource(name))
 
-    // TODO move Data Serializers to different class if I add more
-    val DATA_PLANT_STATE = EntityDataSerializer.forValueType<PlantState>(PlantState.STREAM_CODEC)
-    val DATA_COOLDOWN = EntityDataSerializer.forValueType<Int>(ByteBufCodecs.VAR_INT)
-    fun initialize() {
-        FabricEntityDataRegistry.register(pazResource("plant_state"), DATA_PLANT_STATE)
-        FabricEntityDataRegistry.register(pazResource("cooldown"), DATA_COOLDOWN)
-    }
+    fun initialize() {}
 }

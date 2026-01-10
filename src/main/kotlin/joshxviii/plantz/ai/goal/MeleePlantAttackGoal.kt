@@ -1,18 +1,21 @@
 package joshxviii.plantz.ai.goal
 
+import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.entity.Plant
+import net.minecraft.resources.ResourceKey
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.ai.goal.Goal
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal
-import net.minecraft.world.entity.player.Player
+import net.minecraft.world.entity.ai.attributes.Attributes
 
-class MeleePlantAttackGoal(
+open class MeleePlantAttackGoal(
     plantEntity: Plant,
     cooldownTime: Int = 20,
     actionDelay: Int = 0,
     actionStartEffect: () -> Unit = {},
     actionEndEffect: () -> Unit = {},
-    val attackReach: Double = 1.0,
+    val attackReach : Double = 5.0,
+    val damageType: ResourceKey<DamageType> = PazDamageTypes.PLANT
 ) : PlantActionGoal(plantEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
 
     override fun canUse(): Boolean = (
@@ -27,15 +30,18 @@ class MeleePlantAttackGoal(
         return isInReach(target);
     }
 
-    override fun doAction() {
-        val target = plantEntity.target?: return
-        if (!isInReach(target)) return
+    override fun doAction() : Boolean {
+        val target = plantEntity.target?: return false
+        if (!isInReach(target)) return false
 
-        // TODO make tag list of entities that can not be insta eaten
-        if(target !is Player) target.discard()
+        val damage : Float = plantEntity.attributes.getValue(Attributes.ATTACK_DAMAGE).toFloat()
+        val source = plantEntity.damageSources().source(damageType, plantEntity)
+
+        return target.hurtServer(plantEntity.level() as ServerLevel, source, damage)
     }
 
     private fun isInReach(target: LivingEntity): Boolean {
-        return plantEntity.distanceTo(target) <= attackReach && plantEntity.sensing.hasLineOfSight(target)
+
+        return plantEntity.boundingBox.inflate(attackReach).intersects(target.boundingBox) && plantEntity.sensing.hasLineOfSight(target)
     }
 }

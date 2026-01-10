@@ -26,20 +26,20 @@ class GenerateSunGoal(
 
     override fun canDoAction(): Boolean = generateAtNight || sunIsVisible()
 
-    override fun doAction() = generateSun()
-
-    private fun sunIsVisible() : Boolean = (
-        plantEntity.level().isBrightOutside &&
-        plantEntity.level().canSeeSky(BlockPos.containing(plantEntity.x, plantEntity.eyeY, plantEntity.z))
-    )
-
-    private fun generateSun() {
-        val serverLevel = plantEntity.level() as? ServerLevel ?: return
+    override fun doAction() : Boolean {
+        val serverLevel = plantEntity.level() as? ServerLevel ?: return false
         val dropped = plantEntity.dropFromGiftLootTable(serverLevel, PazLootTables.SUN_DROP, plantEntity::spawnAtLocation)
 
         if (dropped) {
             plantEntity.playSound(SoundEvents.CHICKEN_EGG, 1.0f, 0.5f)
             plantEntity.gameEvent(GameEvent.ENTITY_PLACE)
+            return true
         }
+        return false
     }
+
+    private fun sunIsVisible() : Boolean = (
+        plantEntity.level().isBrightOutside &&
+        plantEntity.level().canSeeSky(BlockPos.containing(plantEntity.x, plantEntity.eyeY, plantEntity.z))
+    )
 }

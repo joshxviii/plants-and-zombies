@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": [
+      "minecraft:brick"
+    ],
+    "@": [
+      "minecraft:dirt"
+    ],
+    "*": [
+      "plantz:sun"
+    ]
+  },
+  "pattern": [
+    " * ",
+    "#@#",
+    " # "
+  ],
+  "result": {
+    "count": 1,
+    "id": "plantz:plant_pot"
+  }
+}

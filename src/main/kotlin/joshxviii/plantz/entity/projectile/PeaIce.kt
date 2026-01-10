@@ -1,9 +1,9 @@
 package joshxviii.plantz.entity.projectile
 
+import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.entity.Plant
-import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.EntityType
@@ -18,7 +18,7 @@ class PeaIce(
     level: Level,
     owner: Plant? = null,
 ) : PeaProjectile(type, level, owner,
-    DamageTypes.FREEZE,
+    PazDamageTypes.FREEZE,
 ) {
     override fun onHitEntity(hitResult: EntityHitResult) {
         val target = hitResult.entity

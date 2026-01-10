@@ -5,7 +5,6 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.world.level.storage.loot.LootTable
 
 object PazLootTables {
-
     // seed packets
     @JvmField
     val SEED_PACKET = registerLootTable("seed_packets")

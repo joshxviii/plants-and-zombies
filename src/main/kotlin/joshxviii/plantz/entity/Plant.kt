@@ -1,9 +1,9 @@
 package joshxviii.plantz.entity
 
+import PazDataSerializers.DATA_COOLDOWN
+import PazDataSerializers.DATA_PLANT_STATE
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazEntities
-import joshxviii.plantz.PazEntities.DATA_COOLDOWN
-import joshxviii.plantz.PazEntities.DATA_PLANT_STATE
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.item.SeedPacketItem
@@ -13,7 +13,6 @@ import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
-import net.minecraft.network.syncher.EntityDataSerializer
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
@@ -35,14 +34,11 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import java.util.*
-import kotlin.math.sqrt
 
 /**
  * Base class for all the other plant entities.
@@ -203,7 +199,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val blockBelowPos = BlockPos.containing(this.x, feetY, this.z)
         val blockBelow = this.level().getBlockState(blockBelowPos)
 
-        return blockBelow.`is`(PazBlocks.PLANTABLE) || this.vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
+        return blockBelow.`is`(PazBlocks.TAG_PLANTABLE) || this.vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
     }
 
     // whether another plant is overlapping with this one

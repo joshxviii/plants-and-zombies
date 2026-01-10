@@ -40,7 +40,7 @@ class RangedPlantAttackGoal(
         seeTime = 0
     }
 
-    override fun canDoAction(): Boolean {
+    override fun canDoAction(): Boolean {// check distance and line of sight
         val target = plantEntity.target ?: return false
         if (!target.isAlive) return false
 
@@ -56,10 +56,8 @@ class RangedPlantAttackGoal(
         return hasLineOfSight && distanceSqr <= (attackRadius * attackRadius)
     }
 
-    override fun doAction() { rangedAttack(plantEntity.target) }
-
-    private fun rangedAttack(target: LivingEntity?) {
-        if (target == null) return
+    override fun doAction() : Boolean {// fire projectile
+       val target = plantEntity.target?: return false
 
         val relativePos = Vec3(
             target.x - plantEntity.x,
@@ -70,17 +68,21 @@ class RangedPlantAttackGoal(
         val level = plantEntity.level() as ServerLevel
         val projectile = projectileFactory()
 
-        val (highArc, lowArc) = calculateProjectileArcs(relativePos, projectile.gravity, velocity) ?: return
-        val chosenArc = if(useHighArc) highArc else lowArc
+        val arcs = calculateProjectileArcs(relativePos, projectile.gravity, velocity)
+        if (arcs==null) {// lose target if unreachable
+           plantEntity.target = null
+           return false
+        }
+
+        val chosenArc = if(useHighArc) arcs.first else arcs.second
 
         val horizDist = relativePos.horizontalDistance()
         val horizUnitX = relativePos.x / horizDist
         val horizUnitZ = relativePos.z / horizDist
         val horizComp = Mth.cos(chosenArc)
-        val vertComp = Mth.sin(chosenArc).toDouble()
 
         val shootX = (horizUnitX * horizComp)
-        val shootY = vertComp
+        val shootY = Mth.sin(chosenArc).toDouble()
         val shootZ = (horizUnitZ * horizComp)
 
         Projectile.spawnProjectile(projectile, level, ItemStack.EMPTY) {
@@ -88,6 +90,7 @@ class RangedPlantAttackGoal(
         }
 
         plantEntity.playSound(SoundEvents.BUBBLE_POP, 3.0f, 0.4f / (plantEntity.random.nextFloat() * 0.4f + 0.8f))
+        return true
     }
 
     /**
@@ -111,11 +114,10 @@ class RangedPlantAttackGoal(
         val v4 = v2 * v2
         val g_d = gravity
         val horiz2_d = horizDist.toDouble() * horizDist
-        var discriminant = v4 - g_d * (g_d * horiz2_d + 2.0 * v2 * dy)
+        val discriminant = v4 - g_d * (g_d * horiz2_d + 2.0 * v2 * dy)
 
-        if (discriminant < 0.0) { //impossible shot, try anyway with full power
-            discriminant = 0.0
-        }
+        //impossible shot
+        if (discriminant < 0.0) return null
 
         val sqrtDisc = sqrt(discriminant)
         val num1 = v2 + sqrtDisc

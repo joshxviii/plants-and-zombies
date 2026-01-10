@@ -4,7 +4,6 @@ import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.entity.Plant
-import joshxviii.plantz.entity.WallNut
 import joshxviii.plantz.item.component.SeedPacket
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Direction
@@ -13,13 +12,10 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.util.Mth
 import net.minecraft.world.InteractionResult
-import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.TamableAnimal
-import net.minecraft.world.entity.decoration.ArmorStand
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
@@ -27,7 +23,6 @@ import net.minecraft.world.item.component.TooltipDisplay
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.AABB
-import org.apache.logging.log4j.core.jmx.Server
 import java.util.function.Consumer
 
 class SeedPacketItem(properties: Properties) : Item(properties) {
@@ -80,7 +75,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             )
             return InteractionResult.FAIL
         }
-        if (!blockBelow.`is`(PazBlocks.PLANTABLE)) return InteractionResult.FAIL
+        if (!blockBelow.`is`(PazBlocks.TAG_PLANTABLE)) return InteractionResult.FAIL
 
         val entity = if (level is ServerLevel) type.create(level, null, spawnPos, EntitySpawnReason.SPAWN_ITEM_USE, true, clickedFace == Direction.UP) else null
 

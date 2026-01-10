@@ -1,5 +1,6 @@
 package joshxviii.plantz.entity.projectile
 
+import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.entity.Plant
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleOptions
@@ -10,8 +11,8 @@ import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageType
-import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.InsideBlockEffectApplier
@@ -19,18 +20,21 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.entity.projectile.ProjectileUtil
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
+import kotlin.math.max
 
 abstract class PeaProjectile(
     type: EntityType<out PeaProjectile>,
     level: Level,
     owner: Plant? = null,
-    val damageType: ResourceKey<DamageType> = DamageTypes.GENERIC
+    val damageType: ResourceKey<DamageType> = PazDamageTypes.PLANT
 ) : Projectile(type, level) {
 
     companion object {
@@ -113,14 +117,9 @@ abstract class PeaProjectile(
             // get damage from attribute
             val damage : Float = owner?.attributes?.getValue(Attributes.ATTACK_DAMAGE)?.toFloat()?:1.0f
 
-            val source = this.damageSources().source(damageType, target, owner)
+            val source = this.damageSources().source(damageType, this, owner)
             if(target.hurtServer(serverLevel, source, damage)) {
-//                owner?.let {// apply knockback
-//                    val knockbackDir = target.position().subtract(it.position()).normalize()
-//                    val strength = 0.6
-//                    target.push(knockbackDir.x * strength, 0.3, knockbackDir.z * strength)
-//                    target.hurtMarked = true
-//                }
+
             }
         }
     }
