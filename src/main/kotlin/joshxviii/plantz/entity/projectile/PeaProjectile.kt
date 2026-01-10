@@ -111,19 +111,16 @@ abstract class PeaProjectile(
             owner?.setLastHurtMob(target)
 
             // get damage from attribute
-            val damage : Float = if (owner?.attributes?.hasAttribute(Attributes.ATTACK_DAMAGE)!=null)
-                owner.attributes.getValue(Attributes.ATTACK_DAMAGE).toFloat()
-            else
-                1.0f
+            val damage : Float = owner?.attributes?.getValue(Attributes.ATTACK_DAMAGE)?.toFloat()?:1.0f
 
             val source = this.damageSources().source(damageType, target, owner)
             if(target.hurtServer(serverLevel, source, damage)) {
-                owner?.let {// apply knockback
-                    val knockbackDir = target.position().subtract(it.position()).normalize()
-                    val strength = 0.6
-                    target.push(knockbackDir.x * strength, 0.3, knockbackDir.z * strength)
-                    target.hurtMarked = true
-                }
+//                owner?.let {// apply knockback
+//                    val knockbackDir = target.position().subtract(it.position()).normalize()
+//                    val strength = 0.6
+//                    target.push(knockbackDir.x * strength, 0.3, knockbackDir.z * strength)
+//                    target.hurtMarked = true
+//                }
             }
         }
     }

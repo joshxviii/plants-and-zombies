@@ -84,8 +84,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
 
         val entity = if (level is ServerLevel) type.create(level, null, spawnPos, EntitySpawnReason.SPAWN_ITEM_USE, true, clickedFace == Direction.UP) else null
 
-        // snap rotation
-        if (entity is Plant && entity.snapSpawnRotation()) {
+        if (entity is Plant) {// snap rotation
             val yaw = context.horizontalDirection.opposite.toYRot()
             entity.yHeadRot = yaw
             entity.yBodyRot = yaw
@@ -98,7 +97,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
         }
 
         itemStack.consume(1, player)
-        entity?.playSound(SoundEvents.BIG_DRIPLEAF_PLACE, 1.0f, 1.0f)
+        entity?.playSound(SoundEvents.BIG_DRIPLEAF_PLACE)
         if (entity is TamableAnimal && player != null) entity.tame(player)
         level.gameEvent(player, GameEvent.ENTITY_PLACE, spawnPos)
 

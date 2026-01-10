@@ -1,14 +1,17 @@
 package joshxviii.plantz.particles
 
+import net.minecraft.client.Camera
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.particle.ParticleProvider
 import net.minecraft.client.particle.SingleQuadParticle
 import net.minecraft.client.particle.SpriteSet
+import net.minecraft.client.renderer.state.QuadParticleRenderState
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
+import org.joml.Quaternionf
 import kotlin.math.max
 
 class PeaParticle private constructor(
@@ -28,9 +31,10 @@ class PeaParticle private constructor(
         this.gCol = col
         this.bCol = col
         this.quadSize *= 0.75f
-        this.lifetime = max((6.0 / (this.random.nextFloat() * 0.8 + 0.6)).toInt(), 1)
-        this.roll = (this.random.nextFloat() * 360.0f)
-        this.hasPhysics = false
+        this.lifetime = max((6.0 / (this.random.nextFloat() * 0.8 + 0.9)).toInt(), 1)
+        this.hasPhysics = true
+        this.roll = random.nextFloat() * (Mth.TWO_PI)
+        this.oRoll = this.roll
         this.tick()
     }
 

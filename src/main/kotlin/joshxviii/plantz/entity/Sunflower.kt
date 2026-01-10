@@ -19,6 +19,8 @@ class Sunflower(
 
     override fun registerGoals() {
         super.registerGoals()
-        this.goalSelector.addGoal(1, GenerateSunGoal(this))
+        this.goalSelector.addGoal(1, GenerateSunGoal(this,
+            actionDelay = 10
+        ))
     }
 }

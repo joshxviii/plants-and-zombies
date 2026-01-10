@@ -89,17 +89,15 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         cooldown = -1
         state = PlantState.GROW
         //TODO replace with ambient entity sound
-        this.playSound(SoundEvents.BIG_DRIPLEAF_PLACE)
         this.lookControl = object : LookControl(this) { override fun clampHeadRotationToBody() {} }
     }
     // disables body control
     override fun createBodyControl(): BodyRotationControl = object : BodyRotationControl(this) { override fun clientTick() {} }
-    open fun snapSpawnRotation(): Boolean = false
 
     // only apply up/down movement
     override fun getDeltaMovement(): Vec3 = Vec3(0.0, super.deltaMovement.y, 0.0)
     override fun setDeltaMovement(deltaMovement: Vec3) {
-        if (onGround()) return super.setDeltaMovement(deltaMovement)
+        if (!onGround()) return super.setDeltaMovement(deltaMovement)
     }
 
     val initAnimationState = AnimationState()
@@ -170,27 +168,29 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         when (state) {
             PlantState.IDLE -> {
                 this.initAnimationState.stop()
-                this.idleAnimationState.startIfStopped(this.tickCount)
+                this.actionAnimationState.stop()
+                this.coolDownAnimationState.stop()
                 if (cooldown > 0) {
-                    this.actionAnimationState.stop()
                     state = PlantState.ACTION
                 }
-                this.coolDownAnimationState.stop()
+                this.idleAnimationState.startIfStopped(0)
             }
             PlantState.ACTION -> {
                 this.coolDownAnimationState.stop()
-                this.actionAnimationState.start(this.tickCount)
                 state = PlantState.COOLDOWN
+                this.actionAnimationState.startIfStopped(this.tickCount)
             }
             PlantState.COOLDOWN -> {
+                if (cooldown <= 0) {
+                    state = PlantState.IDLE
+                }
                 this.coolDownAnimationState.startIfStopped(this.tickCount)
-                if (cooldown < 0) state = PlantState.IDLE
             }
             PlantState.GROW -> {
-                this.initAnimationState.startIfStopped(0)
                 if (this.tickCount > 20) {
                     state = PlantState.IDLE
                 }
+                this.initAnimationState.startIfStopped(0)
             }
         }
     }

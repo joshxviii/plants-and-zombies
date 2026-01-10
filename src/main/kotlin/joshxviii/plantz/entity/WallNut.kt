@@ -13,7 +13,6 @@ import java.util.*
 class WallNut(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.WALL_NUT, level) {
 
     override fun attackGoals() {}
-    override fun snapSpawnRotation(): Boolean = true
 
     // solid collision
     override fun canBeCollidedWith(other: Entity?): Boolean = this.isAlive

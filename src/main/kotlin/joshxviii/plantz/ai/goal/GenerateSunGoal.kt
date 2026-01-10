@@ -10,34 +10,36 @@ import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.level.gameevent.GameEvent
 
 class GenerateSunGoal(
-    val plantEntity: Plant,
+    plantEntity: Plant,
+    cooldownTime: Int = 200,
+    actionDelay: Int = 0,
     val generateAtNight: Boolean = false,
-    val cooldownTime: Int = 20,
-): Goal() {
-    override fun canUse(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    private fun Plant.tryGenerateSun() {
-        if (!this.level().isClientSide
-            && this.isAlive
-            && ( generateAtNight || sunIsVisible() )
-        ) if (cooldown <= 0) generateSun()
-    }
-
-    private fun Plant.sunIsVisible() : Boolean = (
-        this.level().isBrightOutside &&
-        this.level().canSeeSky(BlockPos.containing(this.x, this.eyeY, this.z))
+): PlantActionGoal(plantEntity, cooldownTime, actionDelay) {
+    override fun canUse(): Boolean = (
+        plantEntity.tickCount>cooldownTime &&
+        plantEntity.isAlive
     )
 
-    private fun Plant.generateSun() {
-        val serverLevel = this.level() as? ServerLevel ?: return
-        val dropped = dropFromGiftLootTable(serverLevel, PazLootTables.SUN_DROP, this::spawnAtLocation)
+    override fun stop() {
 
-        if (dropped) {
-            this.playSound(SoundEvents.CHICKEN_EGG, 1.0f, 0.5f)
-            this.gameEvent(GameEvent.ENTITY_PLACE)
-        }
     }
 
+    override fun canDoAction(): Boolean = generateAtNight || sunIsVisible()
+
+    override fun doAction() = generateSun()
+
+    private fun sunIsVisible() : Boolean = (
+        plantEntity.level().isBrightOutside &&
+        plantEntity.level().canSeeSky(BlockPos.containing(plantEntity.x, plantEntity.eyeY, plantEntity.z))
+    )
+
+    private fun generateSun() {
+        val serverLevel = plantEntity.level() as? ServerLevel ?: return
+        val dropped = plantEntity.dropFromGiftLootTable(serverLevel, PazLootTables.SUN_DROP, plantEntity::spawnAtLocation)
+
+        if (dropped) {
+            plantEntity.playSound(SoundEvents.CHICKEN_EGG, 1.0f, 0.5f)
+            plantEntity.gameEvent(GameEvent.ENTITY_PLACE)
+        }
+    }
 }

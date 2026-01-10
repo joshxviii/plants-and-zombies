@@ -10,6 +10,7 @@ import net.minecraft.core.dispenser.DefaultDispenseItemBehavior
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
@@ -64,8 +65,8 @@ object PazItems {
                         direction != Direction.UP,
                         false
                     )
-                    // snap rotation
-                    if (entity is Plant && entity.snapSpawnRotation()) {
+
+                    if (entity is Plant) {// snap rotation
                         val yaw = direction.toYRot()
                         entity.yHeadRot = yaw
                         entity.yBodyRot = yaw
@@ -77,6 +78,7 @@ object PazItems {
                         return dispensed
                     }
 
+                    entity?.playSound(SoundEvents.BIG_DRIPLEAF_PLACE)
                     source.level().gameEvent(null, GameEvent.ENTITY_PLACE, source.pos())
                     dispensed.shrink(1)
                 }

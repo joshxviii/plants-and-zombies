@@ -14,9 +14,9 @@ class Repeater(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.RE
         super.registerGoals()
 
         this.goalSelector.addGoal(2, RangedPlantAttackGoal(this,
-            { Pea(level= this.level(), owner=this) },
+            projectileFactory = { Pea(level= this.level(), owner=this) },
             cooldownTime = 8,
-            actionDelay = 4))
+            actionDelay = 3))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->
             target is Enemy
         })

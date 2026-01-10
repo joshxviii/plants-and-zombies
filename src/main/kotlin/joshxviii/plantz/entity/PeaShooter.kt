@@ -14,9 +14,9 @@ class PeaShooter(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
         super.registerGoals()
 
         this.goalSelector.addGoal(2, RangedPlantAttackGoal(this,
-            { Pea(level = level(), owner = this)},
+            projectileFactory = { Pea(level = level(), owner = this)},
             cooldownTime = 20,
-            actionDelay = 4))
+            actionDelay = 3))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->
             target is Enemy
         })
