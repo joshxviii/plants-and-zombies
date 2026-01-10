@@ -20,12 +20,13 @@ class RangedPlantAttackGoal(
     cooldownTime: Int = 20,
     actionDelay: Int = 0,
     val projectileFactory: () -> Projectile,
-    val velocity : Double = 0.4,
-    val useHighArc: Boolean = false
+    val velocity : Double = 0.9,
+    val inaccuracy: Float = 1.0f,
+    val useHighArc: Boolean = false,
 ) : PlantActionGoal(plantEntity, cooldownTime, actionDelay) {
     var seeTime : Int = 0
     var distanceSqr: Double = 0.0
-    var attackRadius : Float = 16.0f
+    var attackRadius : Float = 0.0f
 
     override fun canUse(): Boolean = (
         plantEntity.tickCount>cooldownTime
@@ -33,6 +34,7 @@ class RangedPlantAttackGoal(
     )
 
     override fun stop() {
+        plantEntity.target = null
         seeTime = 0
     }
 
@@ -52,16 +54,14 @@ class RangedPlantAttackGoal(
         return hasLineOfSight && distanceSqr <= (attackRadius * attackRadius)
     }
 
-    override fun doAction() {
-        rangedAttack(plantEntity.target)
-    }
+    override fun doAction() { rangedAttack(plantEntity.target) }
 
     private fun rangedAttack(target: LivingEntity?) {
         if (target == null) return
 
         val relativePos = Vec3(
             target.x - plantEntity.x,
-            target.eyeY - plantEntity.y,
+            target.y - plantEntity.y,
             target.z - plantEntity.z
         )
 
@@ -82,7 +82,7 @@ class RangedPlantAttackGoal(
         val shootZ = (horizUnitZ * horizComp)
 
         Projectile.spawnProjectile(projectile, level, ItemStack.EMPTY) {
-            it.shoot(shootX, shootY, shootZ, velocity.toFloat(), 0.2f)
+            it.shoot(shootX, shootY, shootZ, velocity.toFloat(), inaccuracy)
         }
 
         plantEntity.playSound(SoundEvents.BUBBLE_POP, 3.0f, 0.4f / (plantEntity.random.nextFloat() * 0.4f + 0.8f))
@@ -109,9 +109,11 @@ class RangedPlantAttackGoal(
         val v4 = v2 * v2
         val g_d = gravity
         val horiz2_d = horizDist.toDouble() * horizDist
-        val discriminant = v4 - g_d * (g_d * horiz2_d + 2.0 * v2 * dy)
+        var discriminant = v4 - g_d * (g_d * horiz2_d + 2.0 * v2 * dy)
 
-        if (discriminant < 0.0) return null// impossible shoot, lose target move on
+        if (discriminant < 0.0) { //impossible shot, use maximum force
+            discriminant = 0.0
+        }
 
         val sqrtDisc = sqrt(discriminant)
         val num1 = v2 + sqrtDisc

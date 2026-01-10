@@ -28,7 +28,11 @@ class Spore(
 
     override fun onHit(hitResult: HitResult) {
         super.onHit(hitResult)
-        PazServerParticles.SPORE_HIT
+        spawnParticle(
+            PazServerParticles.SPORE_HIT,
+            amount = 18,
+            speed = 0.6
+        )
     }
 
 }

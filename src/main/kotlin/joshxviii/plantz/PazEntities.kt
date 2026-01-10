@@ -42,7 +42,10 @@ object PazEntities {
     @JvmField val CHOMPER: EntityType<Chomper> = registerPlant(
         "chomper",
         EntityType.Builder.of(::Chomper, MobCategory.CREATURE),
-        height = 1.5f
+        height = 1.5f,
+        attributes = Plant.Companion.PlantAttributes(
+            followRange = 8.0,
+        )
     )
     @JvmField val CHERRY_BOMB: EntityType<CherryBomb> = registerPlant(
         "cherrybomb",
@@ -79,6 +82,12 @@ object PazEntities {
         width = 0.5f,
         height = 0.65f,
         eyeHeight = 0.3f
+    )
+    @JvmField val FUME_SHROOM: EntityType<FumeShroom> = registerPlant(
+        "fumeshroom",
+        EntityType.Builder.of(::FumeShroom, MobCategory.CREATURE),
+        width = 0.8f,
+        height = 0.8f
     )
 
     //Projectiles

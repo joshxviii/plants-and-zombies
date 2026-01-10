@@ -4,6 +4,7 @@ import joshxviii.plantz.model.CactusModel
 import joshxviii.plantz.model.CherryBombModel
 import joshxviii.plantz.model.ChomperModel
 import joshxviii.plantz.model.FirePeaShooterModel
+import joshxviii.plantz.model.FumeShroomModel
 import joshxviii.plantz.model.IcePeaShooterModel
 import joshxviii.plantz.model.PeaShooterModel
 import joshxviii.plantz.model.PotatoMineModel
@@ -36,6 +37,7 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(FirePeaShooterModel.LAYER_LOCATION) { FirePeaShooterModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(CactusModel.LAYER_LOCATION) { CactusModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(PuffShroomModel.LAYER_LOCATION) { PuffShroomModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(FumeShroomModel.LAYER_LOCATION) { FumeShroomModel.createBodyLayer() }
 
         ModelLayerRegistry.registerModelLayer(PeaModel.LAYER_LOCATION) { PeaModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(SporeModel.LAYER_LOCATION) { SporeModel.createBodyLayer() }
@@ -55,6 +57,7 @@ object PazModels {
         EntityRenderers.register(PazEntities.FIRE_PEA_SHOOTER) { PlantRenderer(FirePeaShooterModel(it.bakeLayer(FirePeaShooterModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.CACTUS) { PlantRenderer(CactusModel(it.bakeLayer(CactusModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.PUFF_SHROOM) { PlantRenderer(PuffShroomModel(it.bakeLayer(PuffShroomModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.FUME_SHROOM) { PlantRenderer(FumeShroomModel(it.bakeLayer(FumeShroomModel.LAYER_LOCATION)), it) }
 
         EntityRenderers.register(PazEntities.PEA) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.PEA_ICE) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }

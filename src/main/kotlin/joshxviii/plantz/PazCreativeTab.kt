@@ -35,6 +35,7 @@ object PazCreativeTab {
                 output.accept(SeedPacketItem.stackFor(PazEntities.FIRE_PEA_SHOOTER))
                 output.accept(SeedPacketItem.stackFor(PazEntities.CACTUS))
                 output.accept(SeedPacketItem.stackFor(PazEntities.PUFF_SHROOM))
+                output.accept(SeedPacketItem.stackFor(PazEntities.FUME_SHROOM))
                 output.accept(PazItems.SUN)
                 output.accept(PazBlocks.PLANT_POT)
                 output.accept(PazItems.PLANT_POT_MINECART)

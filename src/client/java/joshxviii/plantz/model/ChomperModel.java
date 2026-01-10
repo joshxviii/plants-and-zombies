@@ -162,6 +162,6 @@ public class ChomperModel extends EntityModel<@NotNull PlantRenderState> {
 		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
-		this.cooldownAnimation.apply(state.getCoolDownAnimationState(), state.ageInTicks);
+		//this.cooldownAnimation.apply(state.getCoolDownAnimationState(), state.ageInTicks);
 	}
 }

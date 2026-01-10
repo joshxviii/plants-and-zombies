@@ -60,11 +60,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             val maxHealth: Double = 20.0,
             val attackDamage: Double = 4.0,
             val movementSpeed: Double = 0.0,
+            val followRange: Double = 16.0,
             val armor: Double = 0.0
         ) {
             fun apply(builder: AttributeSupplier.Builder): AttributeSupplier.Builder {
                 return builder
                     .add(Attributes.MAX_HEALTH, maxHealth)
+                    .add(Attributes.FOLLOW_RANGE, followRange)
                     .add(Attributes.ATTACK_DAMAGE, attackDamage)
                     .add(Attributes.MOVEMENT_SPEED, movementSpeed)
                     .add(Attributes.ARMOR, armor)
