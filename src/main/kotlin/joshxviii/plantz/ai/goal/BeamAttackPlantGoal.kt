@@ -55,15 +55,12 @@ class BeamAttackPlantGoal(
         val beamAABB = AABB(start, end).inflate(beamWidth / 2.0 + 1.0)
 
         val candidates = plantEntity.level().getEntities(plantEntity, beamAABB) { entity ->
-            entity is LivingEntity &&
-                    entity is Enemy &&
-                    entity != plantEntity &&
-                    entity.isAlive
+            entity is LivingEntity && entity !is Plant && entity.isAlive
         }
 
         for (entity in candidates) {
             val distToRay = distanceToLineSegment(entity.eyePosition, start, end)
-            val entityRadiusApprox = entity.boundingBox.getSize() / 2.0
+            val entityRadiusApprox = entity.boundingBox.size / 2.0
             if (distToRay <= (beamWidth / 2.0 + entityRadiusApprox)) {
 
                 val damage : Float = plantEntity.attributes.getValue(Attributes.ATTACK_DAMAGE).toFloat()

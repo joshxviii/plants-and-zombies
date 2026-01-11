@@ -68,8 +68,6 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
         val spawnPos = if (blockState.getCollisionShape(level, pos).isEmpty) pos
         else pos.relative(clickedFace)
 
-        val blockBelow = level.getBlockState(spawnPos.below())
-
         // Prevent spawn if there's already a Plant in that block
         val aabb = AABB(spawnPos)
         val existingPlants = level.getEntitiesOfClass(Plant::class.java, aabb)
@@ -80,11 +78,14 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             )
             return InteractionResult.FAIL
         }
-        if (!blockBelow.`is`(PazBlocks.TAG_PLANTABLE)) return InteractionResult.FAIL
 
         val entity = if (level is ServerLevel) type.create(level, null, spawnPos, EntitySpawnReason.SPAWN_ITEM_USE, true, clickedFace == Direction.UP) else null
 
-        if (entity is Plant) {// snap rotation
+        if (entity is Plant) {// check if valid block to plant
+            if (!entity.canSurviveOn(spawnPos.below())) {
+                entity.discard()
+                return InteractionResult.FAIL
+            }
             val yaw = context.horizontalDirection.opposite.toYRot()
             entity.yHeadRot = yaw
             entity.yBodyRot = yaw

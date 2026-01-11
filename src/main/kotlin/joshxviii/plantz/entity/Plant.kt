@@ -193,13 +193,17 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
     }
 
-    // if on invalid ground plant should start to suffocate
-    fun onValidGround() : Boolean {
-        val feetY = this.y - 0.001 // slight offset down to avoid floating point issues
-        val blockBelowPos = BlockPos.containing(this.x, feetY, this.z)
-        val blockBelow = this.level().getBlockState(blockBelowPos)
+    open fun canSurviveOn(blockPos: BlockPos) : Boolean {
+        val blockBelow = this.level().getBlockState(blockPos)
+        return blockBelow.`is`(PazBlocks.TAG_PLANTABLE)
+    }
 
-        return blockBelow.`is`(PazBlocks.TAG_PLANTABLE) || this.vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
+    // if on invalid ground plant should start to suffocate
+    private fun onValidGround() : Boolean {
+        val feetY = this.y - 0.001
+        val blockBelowPos = BlockPos.containing(this.x, feetY, this.z)
+
+        return canSurviveOn(blockBelowPos) || this.vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
     }
 
     // whether another plant is overlapping with this one

@@ -49,6 +49,8 @@ object PazModels {
 
 
 
+
+
         // REGISTER ENTITY RENDERERS
         EntityRenderers.register(PazEntities.PEA_SHOOTER) { PlantRenderer(PeaShooterModel(it.bakeLayer(PeaShooterModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.SUNFLOWER) { PlantRenderer(SunflowerModel(it.bakeLayer(SunflowerModel.LAYER_LOCATION)), it) }
@@ -62,8 +64,11 @@ object PazModels {
         EntityRenderers.register(PazEntities.CACTUS) { PlantRenderer(CactusModel(it.bakeLayer(CactusModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.PUFF_SHROOM) { PlantRenderer(PuffShroomModel(it.bakeLayer(PuffShroomModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.FUME_SHROOM) { PlantRenderer(FumeShroomModel(it.bakeLayer(FumeShroomModel.LAYER_LOCATION)), it) }
-        //TODO make baby version when age is < 3000
-        EntityRenderers.register(PazEntities.SUN_SHROOM) { PlantRenderer(SunShroomModel(it.bakeLayer(SunShroomModel.LAYER_LOCATION)), it) }
+
+        EntityRenderers.register(PazEntities.SUN_SHROOM) { PlantRenderer(
+            SunShroomModel(it.bakeLayer(SunShroomModel.LAYER_LOCATION)), it,
+            SunShroomBabyModel(it.bakeLayer(SunShroomBabyModel.LAYER_LOCATION))) }
+
 
         EntityRenderers.register(PazEntities.PEA) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.PEA_ICE) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }

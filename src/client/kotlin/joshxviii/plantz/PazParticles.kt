@@ -5,6 +5,8 @@ import joshxviii.plantz.particles.PeaParticle
 import joshxviii.plantz.particles.SporeParticle
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry
 import net.minecraft.client.particle.CritParticle
+import net.minecraft.client.particle.FlameParticle
+import net.minecraft.client.particle.SingleQuadParticle
 
 object PazParticles {
 
@@ -32,6 +34,10 @@ object PazParticles {
 
         it.register(PazServerParticles.FUME_BUBBLE) { spriteSet ->
             FumeBubbleParticle.Provider(spriteSet)
+        }
+
+        it.register(PazServerParticles.FLAME) { spriteSet ->
+            FlameParticle.Provider(spriteSet)
         }
     }
 

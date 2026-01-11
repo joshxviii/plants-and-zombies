@@ -20,7 +20,7 @@
   },
   "requirements": [
     [
-      "has_then_recipe",
+      "has_the_recipe",
       "has_plant_pot"
     ]
   ],

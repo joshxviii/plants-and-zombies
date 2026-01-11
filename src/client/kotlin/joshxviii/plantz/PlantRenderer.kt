@@ -12,11 +12,12 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
 
 class PlantRenderer(
-    model: EntityModel<PlantRenderState>,
-    context: EntityRendererProvider.Context
+    private val defaultModel: EntityModel<PlantRenderState>,
+    context: EntityRendererProvider.Context,
+    private val babyModel: EntityModel<PlantRenderState>? = null,
 ) : MobRenderer<Plant, PlantRenderState, EntityModel<PlantRenderState>>(
     context,
-    model,
+    defaultModel,
     0.5f
 ) {
     override fun submit(
@@ -25,12 +26,8 @@ class PlantRenderer(
         collector: SubmitNodeCollector,
         camera: CameraRenderState
     ) {
-        poseStack.pushPose()
-        
-        //Add any extra rendering stuff here
+        model = if (state.isBaby && babyModel != null) babyModel else defaultModel
         if (state.ageInTicks>1) super.submit(state, poseStack, collector, camera)
-
-        poseStack.popPose()
     }
 
     override fun createRenderState(): PlantRenderState {
@@ -50,7 +47,7 @@ class PlantRenderer(
 
     override fun getTextureLocation(state: PlantRenderState): Identifier {
 
-        val baseTexture = "textures/entity/${state.texturePath}/${state.texturePath}"
+        val baseTexture = "textures/entity/${state.texturePath}/${state.texturePath}${if(state.isBaby) "_baby" else ""}"
 
         val base = pazResource("${baseTexture}.png")
         val damage = when (state.damagedAmount) {// change texture based on damage

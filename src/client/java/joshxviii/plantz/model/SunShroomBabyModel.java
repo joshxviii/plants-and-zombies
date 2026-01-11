@@ -1,11 +1,8 @@
 package joshxviii.plantz.model;
 
 import joshxviii.plantz.PlantRenderState;
-import joshxviii.plantz.animation.PuffShroomAnimation;
-import joshxviii.plantz.animation.SunShroomAnimation;
 import joshxviii.plantz.animation.SunShroomBabyAnimation;
 import net.minecraft.client.animation.KeyframeAnimation;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -14,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class SunShroomBabyModel extends EntityModel<@NotNull PlantRenderState> {
+public class SunShroomBabyModel extends SunShroomModel {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("sunshroom_baby"), "main");
 	private final ModelPart body;
 	private final ModelPart head;
@@ -39,7 +36,7 @@ public class SunShroomBabyModel extends EntityModel<@NotNull PlantRenderState> {
 
 		PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-		PartDefinition head = body.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 10).addBox(-2.0F, -4.0F, -2.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
+		PartDefinition head = body.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 10).addBox(-2.0F, -4.0F, -2.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
 		PartDefinition cap = head.addOrReplaceChild("cap", CubeListBuilder.create().texOffs(0, 0).addBox(-3.0F, -4.0F, -3.0F, 6.0F, 4.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -3.5F, 0.0F));
 
