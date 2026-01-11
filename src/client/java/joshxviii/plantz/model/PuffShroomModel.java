@@ -52,7 +52,6 @@ public class PuffShroomModel extends EntityModel<@NotNull PlantRenderState> {
 		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
 
-
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);

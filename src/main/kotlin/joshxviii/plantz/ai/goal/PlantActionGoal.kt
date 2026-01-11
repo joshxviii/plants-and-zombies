@@ -1,11 +1,14 @@
 package joshxviii.plantz.ai.goal
 
 import joshxviii.plantz.entity.Plant
-import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.ai.goal.Goal
 
 /**
- * Defines an action goal for plants. Used for triggering animations and action timing
+ * Defines an action goal for plants.
+ * Used for triggering animations and action timing
+ * @param actionDelay amount of time in ticks before [doAction] is called from when the action started.
+ * @param actionStartEffect Callback function used to add effects at the start of the action
+ * @param actionEndEffect Callback function used to add effects at the end of the action
  */
 abstract class PlantActionGoal(
     val plantEntity: Plant,

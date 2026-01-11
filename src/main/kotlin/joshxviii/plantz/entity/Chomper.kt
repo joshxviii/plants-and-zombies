@@ -3,16 +3,14 @@ package joshxviii.plantz.entity
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazServerParticles
-import joshxviii.plantz.ai.goal.MeleePlantAttackGoal
+import joshxviii.plantz.ai.goal.MeleeAttackPlantGoal
 import joshxviii.plantz.pazResource
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
-import java.util.UUID
 
 class Chomper(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CHOMPER, level) {
 
@@ -29,7 +27,7 @@ class Chomper(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CHO
 
     class ChompAttackGoal(
         plantEntity: Plant,
-    ) : MeleePlantAttackGoal(
+    ) : MeleeAttackPlantGoal(
         plantEntity = plantEntity,
         attackReach = 1.85,
         cooldownTime = 60,

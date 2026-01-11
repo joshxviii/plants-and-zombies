@@ -14,10 +14,10 @@ import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
 
 class PeaIce(
-    type: EntityType<out PeaProjectile> = PazEntities.PEA_ICE,
+    type: EntityType<out PlantProjectile> = PazEntities.PEA_ICE,
     level: Level,
     owner: Plant? = null,
-) : PeaProjectile(type, level, owner,
+) : PlantProjectile(type, level, owner,
     PazDamageTypes.FREEZE,
 ) {
     override fun onHitEntity(hitResult: EntityHitResult) {

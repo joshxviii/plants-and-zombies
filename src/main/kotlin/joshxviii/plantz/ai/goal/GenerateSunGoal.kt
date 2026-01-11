@@ -9,7 +9,7 @@ import net.minecraft.world.level.gameevent.GameEvent
 
 class GenerateSunGoal(
     plantEntity: Plant,
-    cooldownTime: Int = 200,
+    cooldownTime: Int = 700,
     actionDelay: Int = 0,
     actionStartEffect: () -> Unit = {},
     actionEndEffect: () -> Unit = {},
@@ -20,9 +20,7 @@ class GenerateSunGoal(
         plantEntity.isAlive
     )
 
-    override fun stop() {
-
-    }
+    override fun stop() {}
 
     override fun canDoAction(): Boolean = generateAtNight || sunIsVisible()
 

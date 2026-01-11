@@ -1,15 +1,19 @@
 package joshxviii.plantz.item
 
+import com.mojang.authlib.minecraft.client.MinecraftClient
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.entity.Plant
 import joshxviii.plantz.item.component.SeedPacket
+import joshxviii.plantz.pazResource
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Direction
+import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
+import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.InteractionResult
@@ -19,6 +23,7 @@ import net.minecraft.world.entity.TamableAnimal
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
+import net.minecraft.world.item.component.CustomModelData
 import net.minecraft.world.item.component.TooltipDisplay
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.gameevent.GameEvent
@@ -103,7 +108,10 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
         fun stackFor(type: EntityType<*>): ItemStack {
             val stack = ItemStack(PazItems.SEED_PACKET)
             val id = BuiltInRegistries.ENTITY_TYPE.getKey(type)
+
             stack.set(PazComponents.SEED_PACKET, SeedPacket(id))
+            //stack.set(DataComponents.CUSTOM_MODEL_DATA, CustomModelData(listOf(), listOf(), listOf(id.path), listOf()))
+
             return stack
         }
 

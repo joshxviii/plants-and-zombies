@@ -4,18 +4,14 @@ import joshxviii.plantz.entity.Plant
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.Mth
-import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.phys.Vec3
-import kotlin.inc
 import kotlin.math.atan
 import kotlin.math.sqrt
-import kotlin.times
 
-class RangedPlantAttackGoal(
+class ProjectileAttackPlantGoal(
     plantEntity: Plant,
     cooldownTime: Int = 20,
     actionDelay: Int = 0,

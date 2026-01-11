@@ -2,7 +2,7 @@ package joshxviii.plantz.entity
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.entity.projectile.Pea
-import joshxviii.plantz.ai.goal.RangedPlantAttackGoal
+import joshxviii.plantz.ai.goal.ProjectileAttackPlantGoal
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
@@ -13,7 +13,7 @@ class PeaShooter(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
     override fun registerGoals() {
         super.registerGoals()
 
-        this.goalSelector.addGoal(2, RangedPlantAttackGoal(
+        this.goalSelector.addGoal(2, ProjectileAttackPlantGoal(
             plantEntity = this,
             projectileFactory = { Pea(level = level(), owner = this)},
             cooldownTime = 20,

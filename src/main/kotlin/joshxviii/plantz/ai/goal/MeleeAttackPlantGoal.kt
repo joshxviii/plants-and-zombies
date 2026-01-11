@@ -8,7 +8,7 @@ import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
 
-open class MeleePlantAttackGoal(
+open class MeleeAttackPlantGoal(
     plantEntity: Plant,
     cooldownTime: Int = 20,
     actionDelay: Int = 0,
