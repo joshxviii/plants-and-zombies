@@ -10,6 +10,8 @@ import joshxviii.plantz.model.PeaShooterModel
 import joshxviii.plantz.model.PotatoMineModel
 import joshxviii.plantz.model.PuffShroomModel
 import joshxviii.plantz.model.RepeaterModel
+import joshxviii.plantz.model.SunShroomBabyModel
+import joshxviii.plantz.model.SunShroomModel
 import joshxviii.plantz.model.SunflowerModel
 import joshxviii.plantz.model.WallNutModel
 import joshxviii.plantz.model.projectiles.NeedleModel
@@ -38,6 +40,8 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(CactusModel.LAYER_LOCATION) { CactusModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(PuffShroomModel.LAYER_LOCATION) { PuffShroomModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(FumeShroomModel.LAYER_LOCATION) { FumeShroomModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(SunShroomModel.LAYER_LOCATION) { SunShroomModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(SunShroomBabyModel.LAYER_LOCATION) { SunShroomBabyModel.createBodyLayer() }
 
         ModelLayerRegistry.registerModelLayer(PeaModel.LAYER_LOCATION) { PeaModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(SporeModel.LAYER_LOCATION) { SporeModel.createBodyLayer() }
@@ -58,11 +62,14 @@ object PazModels {
         EntityRenderers.register(PazEntities.CACTUS) { PlantRenderer(CactusModel(it.bakeLayer(CactusModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.PUFF_SHROOM) { PlantRenderer(PuffShroomModel(it.bakeLayer(PuffShroomModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.FUME_SHROOM) { PlantRenderer(FumeShroomModel(it.bakeLayer(FumeShroomModel.LAYER_LOCATION)), it) }
+        //TODO make baby version when age is < 3000
+        EntityRenderers.register(PazEntities.SUN_SHROOM) { PlantRenderer(SunShroomModel(it.bakeLayer(SunShroomModel.LAYER_LOCATION)), it) }
 
         EntityRenderers.register(PazEntities.PEA) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.PEA_ICE) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.PEA_FIRE) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.SPORE) { ProjectileRenderer(SporeModel(it.bakeLayer(SporeModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.FUME_STREAM) { ProjectileRenderer(SporeModel(it.bakeLayer(SporeModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.NEEDLE) { ProjectileRenderer(NeedleModel(it.bakeLayer(NeedleModel.LAYER_LOCATION)), it) }
 
         EntityRenderers.register(PazEntities.PLANT_POT_MINECART) { PlantPotMinecartRenderer(it, ModelLayers.MINECART) }

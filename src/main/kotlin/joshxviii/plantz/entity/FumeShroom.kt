@@ -1,8 +1,8 @@
 package joshxviii.plantz.entity
 
 import joshxviii.plantz.PazEntities
-import joshxviii.plantz.ai.goal.RangedPlantAttackGoal
-import joshxviii.plantz.entity.projectile.Spore
+import joshxviii.plantz.ai.goal.ProjectileAttackPlantGoal
+import joshxviii.plantz.entity.projectile.FumeStream
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
@@ -13,9 +13,9 @@ class FumeShroom(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
     override fun registerGoals() {
         super.registerGoals()
 
-        this.goalSelector.addGoal(2, RangedPlantAttackGoal(
+        this.goalSelector.addGoal(2, ProjectileAttackPlantGoal(
             plantEntity = this,
-            projectileFactory = { Spore(level=this.level(), owner=this) },
+            projectileFactory = { FumeStream(level = this.level(), owner = this) },
             cooldownTime = 35,
             actionDelay = 8))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->

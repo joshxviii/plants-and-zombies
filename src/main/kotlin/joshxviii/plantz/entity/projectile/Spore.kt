@@ -10,10 +10,10 @@ import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 
 class Spore(
-    type: EntityType<out PeaProjectile> = PazEntities.SPORE,
+    type: EntityType<out PlantProjectile> = PazEntities.SPORE,
     level: Level,
     owner: Plant? = null,
-) : PeaProjectile(type, level, owner,
+) : PlantProjectile(type, level, owner,
     PazDamageTypes.PLANT,
 ) {
 

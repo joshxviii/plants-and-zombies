@@ -1,5 +1,6 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.particles.FumeBubbleParticle
 import joshxviii.plantz.particles.PeaParticle
 import joshxviii.plantz.particles.SporeParticle
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry
@@ -28,5 +29,10 @@ object PazParticles {
         it.register(PazServerParticles.SPORE_HIT) { spriteSet ->
             CritParticle.Provider(spriteSet)
         }
+
+        it.register(PazServerParticles.FUME_BUBBLE) { spriteSet ->
+            FumeBubbleParticle.Provider(spriteSet)
+        }
     }
+
 }

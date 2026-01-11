@@ -11,7 +11,6 @@ import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
@@ -20,25 +19,22 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.entity.projectile.ProjectileUtil
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
-import kotlin.math.max
 
-abstract class PeaProjectile(
-    type: EntityType<out PeaProjectile>,
+abstract class PlantProjectile(
+    type: EntityType<out PlantProjectile>,
     level: Level,
     owner: Plant? = null,
     val damageType: ResourceKey<DamageType> = PazDamageTypes.PLANT
 ) : Projectile(type, level) {
 
     companion object {
-        val PIERCE_LEVEL: EntityDataAccessor<Byte> = SynchedEntityData.defineId<Byte>(PeaProjectile::class.java, EntityDataSerializers.BYTE)
+        val PIERCE_LEVEL: EntityDataAccessor<Byte> = SynchedEntityData.defineId<Byte>(PlantProjectile::class.java, EntityDataSerializers.BYTE)
     }
 
     init {

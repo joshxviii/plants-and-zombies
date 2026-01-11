@@ -1,7 +1,7 @@
 package joshxviii.plantz.entity
 
 import joshxviii.plantz.PazEntities
-import joshxviii.plantz.ai.goal.RangedPlantAttackGoal
+import joshxviii.plantz.ai.goal.ProjectileAttackPlantGoal
 import joshxviii.plantz.entity.projectile.Spore
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
@@ -13,7 +13,7 @@ class PuffShroom(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
     override fun registerGoals() {
         super.registerGoals()
 
-        this.goalSelector.addGoal(2, RangedPlantAttackGoal(
+        this.goalSelector.addGoal(2, ProjectileAttackPlantGoal(
             plantEntity = this,
             projectileFactory = { Spore(level=this.level(), owner=this) },
             cooldownTime = 20))

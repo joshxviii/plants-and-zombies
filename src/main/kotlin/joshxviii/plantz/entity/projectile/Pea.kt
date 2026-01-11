@@ -9,10 +9,10 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.phys.HitResult
 
 class Pea(
-    type: EntityType<out PeaProjectile> = PazEntities.PEA,
+    type: EntityType<out PlantProjectile> = PazEntities.PEA,
     level: Level,
     owner: Plant? = null,
-) : PeaProjectile(type, level, owner,
+) : PlantProjectile(type, level, owner,
     PazDamageTypes.PLANT,
 ) {
     override fun onHit(hitResult: HitResult) {
