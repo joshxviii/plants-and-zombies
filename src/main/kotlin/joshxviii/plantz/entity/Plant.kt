@@ -262,7 +262,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return super.mobInteract(player, hand)
     }
 
-    private fun addParticlesAroundSelf(particle: ParticleOptions = ParticleTypes.SPLASH, amount: Int = 4) {
+    fun addParticlesAroundSelf(particle: ParticleOptions = ParticleTypes.SPLASH, amount: Int = 4) {
         repeat(amount) {
             val xa = this.random.nextGaussian() * 0.02
             val ya = this.random.nextGaussian() * 0.02

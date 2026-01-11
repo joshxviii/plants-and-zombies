@@ -12,9 +12,9 @@ class SporeParticle private constructor(
     level: ClientLevel, x: Double, y: Double, z: Double, xa: Double, ya: Double, za: Double, sprites: SpriteSet
 ) : ExplodeParticle(level, x, y, z, xa, ya, za, sprites) {
     init {
-        this.gravity = 0.5f
-        this.lifetime = (2.0 / (this.random.nextFloat() * 0.8 + 0.2)).toInt()
-        this.scale(0.5f)
+       gravity = 0.5f
+       lifetime = (2.0 / (random.nextFloat() * 0.8 + 0.2)).toInt()
+       scale(0.5f)
     }
 
     class Provider(private val sprites: SpriteSet) : ParticleProvider<SimpleParticleType> {
@@ -29,7 +29,7 @@ class SporeParticle private constructor(
             zAux: Double,
             random: RandomSource
         ): Particle {
-            return SporeParticle(level, x, y, z, xAux, yAux, zAux, this.sprites)
+            return SporeParticle(level, x, y, z, xAux, yAux, zAux, sprites)
         }
     }
 }

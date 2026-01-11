@@ -104,7 +104,6 @@ object PazEntities {
     @JvmField val PEA_FIRE: EntityType<PeaFire> = registerProjectile("pea_fire", EntityType.Builder.of(::PeaFire, MobCategory.MISC))
     @JvmField val NEEDLE: EntityType<Needle> = registerProjectile("needle", EntityType.Builder.of(::Needle, MobCategory.MISC))
     @JvmField val SPORE: EntityType<Spore> = registerProjectile("spore", EntityType.Builder.of(::Spore, MobCategory.MISC))
-    @JvmField val FUME_STREAM: EntityType<FumeStream> = registerProjectile("fume_stream", EntityType.Builder.of(::FumeStream, MobCategory.MISC))
 
     //Other
     @JvmField val PLANT_POT_MINECART: EntityType<PlantPotMinecart> = register(

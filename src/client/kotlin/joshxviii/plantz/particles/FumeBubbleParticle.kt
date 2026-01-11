@@ -7,6 +7,7 @@ import net.minecraft.client.particle.SingleQuadParticle
 import net.minecraft.client.particle.SpriteSet
 import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.util.RandomSource
+import kotlin.math.pow
 
 class FumeBubbleParticle private constructor(
     level: ClientLevel,
@@ -19,29 +20,39 @@ class FumeBubbleParticle private constructor(
     private val sprites: SpriteSet
 ) : SingleQuadParticle(level, x, y, z, sprites.first()) {
     init {
-        this.lifetime = 4
-        this.gravity = 0.008f
-        this.xd = xa
-        this.yd = ya
-        this.zd = za
-        this.setSpriteFromAge(sprites)
+        lifetime = 8
+        gravity = 0.008f
+        xd = xa
+        yd = ya
+        zd = za
+        setSpriteFromAge(sprites)
     }
 
     override fun tick() {
-        this.xo = this.x
-        this.yo = this.y
-        this.zo = this.z
-        if (this.age++ >= this.lifetime) {
-            this.remove()
-        } else {
-            this.yd = this.yd - this.gravity
-            this.move(this.xd, this.yd, this.zd)
-            this.setSpriteFromAge(this.sprites)
+        xo = x
+        yo = y
+        zo = z
+        if (age++ >= lifetime) remove()
+        else {
+            yd = yd - gravity
+            move(xd, yd, zd)
+
+            updateEasedSprite()
         }
     }
 
     public override fun getLayer(): Layer {
         return Layer.OPAQUE
+    }
+
+    private fun updateEasedSprite() {
+        if (removed) return
+
+        val progress = age.toFloat() / lifetime.toFloat()
+        val eased = progress.pow(3.7f)// set easeIn here
+
+        val frameIndex = (eased * (lifetime - 1)).toInt().coerceIn(0, lifetime - 1)
+        setSprite(sprites.get(frameIndex, lifetime))
     }
 
     class Provider(private val sprites: SpriteSet) : ParticleProvider<SimpleParticleType> {
@@ -56,7 +67,7 @@ class FumeBubbleParticle private constructor(
             zAux: Double,
             random: RandomSource
         ): Particle {
-            return FumeBubbleParticle(level, x, y, z, xAux, yAux, zAux, this.sprites)
+            return FumeBubbleParticle(level, x, y, z, xAux, yAux, zAux, sprites)
         }
     }
 }

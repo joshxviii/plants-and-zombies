@@ -17,6 +17,7 @@ abstract class PlantActionGoal(
     val actionStartEffect: () -> Unit = {},
     val actionEndEffect: () -> Unit = {}
 ): Goal() {
+    var isDoingAction = false
     private var actionTimer = -1
 
     final override fun requiresUpdateEveryTick(): Boolean = true
@@ -31,13 +32,14 @@ abstract class PlantActionGoal(
             plantEntity.cooldown = cooldownTime // start animation
             actionTimer = actionDelay.coerceAtLeast(0)
             actionStartEffect()
+            isDoingAction = true
         }
 
         if (actionTimer > 0) --actionTimer
         if (actionTimer == 0) {// do action
             actionEndEffect()
             doAction()
-
+            isDoingAction = false
             actionTimer = -1
         }
     }

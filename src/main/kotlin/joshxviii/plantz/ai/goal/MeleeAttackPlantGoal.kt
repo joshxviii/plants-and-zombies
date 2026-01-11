@@ -41,7 +41,6 @@ open class MeleeAttackPlantGoal(
     }
 
     private fun isInReach(target: LivingEntity): Boolean {
-
         return plantEntity.boundingBox.inflate(attackReach).intersects(target.boundingBox) && plantEntity.sensing.hasLineOfSight(target)
     }
 }
