@@ -20,6 +20,11 @@ abstract class PlantActionGoal(
     var isDoingAction = false
     private var actionTimer = -1
 
+    override fun stop() {
+        isDoingAction = false
+        actionTimer = -1
+    }
+
     final override fun requiresUpdateEveryTick(): Boolean = true
     final override fun canContinueToUse(): Boolean = canUse()
 

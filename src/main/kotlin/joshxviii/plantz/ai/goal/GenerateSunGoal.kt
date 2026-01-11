@@ -20,8 +20,6 @@ class GenerateSunGoal(
         plantEntity.isAlive
     )
 
-    override fun stop() {}
-
     override fun canDoAction(): Boolean = generateAtNight || sunIsVisible()
 
     override fun doAction() : Boolean {

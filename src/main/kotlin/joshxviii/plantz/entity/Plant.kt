@@ -15,11 +15,13 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.ItemTags
 import net.minecraft.util.Mth
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -109,9 +111,21 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         entityData.define(COOLDOWN, 0)
     }
 
+    override fun getHurtSound(source: DamageSource): SoundEvent? {
+        return SoundEvents.GENERIC_HURT// TODO make custom sounds
+    }
+
+    override fun getDeathSound(): SoundEvent? {
+        return SoundEvents.GENERIC_DEATH// TODO make custom sounds
+    }
+
+    open fun getActionSound(): SoundEvent? {
+        return null
+    }
+
     override fun registerGoals() {
-        this.goalSelector.addGoal(2, LookAtPlayerGoal(this, Player::class.java, 8.0f))
         this.goalSelector.addGoal(3, RandomLookAroundGoal(this))
+        this.goalSelector.addGoal(3, LookAtPlayerGoal(this, Player::class.java, 8.0f))
         attackGoals()
     }
     open fun attackGoals() {

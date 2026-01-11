@@ -32,7 +32,7 @@ class FumeShroom(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
         super.tick()
 
         if(sprayTime>=0 || state == PlantState.ACTION) sprayTime++
-        if (sprayTime in 7..20) {
+        if (sprayTime in 7..19 && this.isAlive ) {
             val eyeHeight = eyeHeight.toDouble()
 
             val direction = this.headLookAngle.scale(2.0)
@@ -42,7 +42,7 @@ class FumeShroom(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
             val vy = direction.y * speed
             val vz = direction.z * speed
 
-            repeat(10) {
+            repeat(5) {
                 val spread = 0.07
                 val randomVx = vx + (random.nextGaussian() * spread)
                 val randomVy = vy + (random.nextGaussian() * spread)

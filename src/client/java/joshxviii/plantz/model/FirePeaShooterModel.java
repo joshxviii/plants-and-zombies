@@ -94,6 +94,7 @@ public class FirePeaShooterModel extends EntityModel<@NotNull PlantRenderState> 
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
+
 		this.stem.yRot = state.yRot * (float) (Math.PI / 180.0);
 		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
 		this.initAnimtion.apply(state.getInitAnimationState(), state.ageInTicks);

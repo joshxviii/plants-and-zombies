@@ -32,6 +32,7 @@ class ProjectileAttackPlantGoal(
     )
 
     override fun stop() {
+        super.stop()
         plantEntity.target = null
         seeTime = 0
     }

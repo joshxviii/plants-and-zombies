@@ -1,5 +1,6 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.particles.EmberParticle
 import joshxviii.plantz.particles.FumeBubbleParticle
 import joshxviii.plantz.particles.PeaParticle
 import joshxviii.plantz.particles.SporeParticle
@@ -36,8 +37,8 @@ object PazParticles {
             FumeBubbleParticle.Provider(spriteSet)
         }
 
-        it.register(PazServerParticles.FLAME) { spriteSet ->
-            FlameParticle.Provider(spriteSet)
+        it.register(PazServerParticles.EMBER) { spriteSet ->
+            EmberParticle.Provider(spriteSet)
         }
     }
 

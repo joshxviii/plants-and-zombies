@@ -19,7 +19,7 @@ class Cactus(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CACT
         this.goalSelector.addGoal(2, ProjectileAttackPlantGoal(
             plantEntity = this,
             projectileFactory = { Needle(level= this.level(), owner=this) },
-            cooldownTime = 50,
+            cooldownTime = 40,
             actionDelay = 6))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->
             target is Enemy

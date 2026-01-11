@@ -12,7 +12,7 @@ object PazServerParticles {
     val SPORE: SimpleParticleType = register("spore")
     val SPORE_HIT: SimpleParticleType = register("spore_hit")
     val FUME_BUBBLE: SimpleParticleType = register("fume_bubble")
-    val FLAME: SimpleParticleType = register("flame")
+    val EMBER: SimpleParticleType = register("ember")
 
     fun register(name: String): SimpleParticleType {
         val particleType = FabricParticleTypes.simple()
