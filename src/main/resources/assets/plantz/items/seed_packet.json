@@ -5,91 +5,91 @@
     "component": "plantz:seed_packet",
     "cases": [
       {
-        "when": { "entity": "plantz:sunflower" },
+        "when": { "id": "plantz:sunflower" },
         "model": {
           "type": "minecraft:model",
           "model": "plantz:item/seed_packet_sunflower"
         }
       },
       {
-        "when": { "entity": "plantz:peashooter" },
+        "when": { "id": "plantz:peashooter" },
         "model": {
           "type": "minecraft:model",
           "model": "plantz:item/seed_packet_peashooter"
         }
       },
       {
-        "when": { "entity": "plantz:wallnut" },
+        "when": { "id": "plantz:wallnut" },
         "model": {
           "type": "minecraft:model",
           "model": "plantz:item/seed_packet_wallnut"
         }
       },
       {
-        "when": { "entity": "plantz:chomper" },
+        "when": { "id": "plantz:chomper" },
         "model": {
           "type": "minecraft:model",
           "model": "plantz:item/seed_packet_chomper"
         }
       },
       {
-        "when": { "entity": "plantz:cherrybomb" },
+        "when": { "id": "plantz:cherrybomb" },
         "model": {
           "type": "minecraft:model",
           "model": "plantz:item/seed_packet_cherrybomb"
         }
       },
       {
-        "when": { "entity": "plantz:potatomine" },
+        "when": { "id": "plantz:potatomine" },
         "model": {
           "type": "minecraft:model",
           "model": "plantz:item/seed_packet_potatomine"
         }
       },
       {
-        "when": { "entity": "plantz:ice_peashooter" },
+        "when": { "id": "plantz:ice_peashooter" },
         "model": {
           "type": "minecraft:model",
           "model": "plantz:item/seed_packet_ice_peashooter"
         }
       },
       {
-        "when": { "entity": "plantz:repeater" },
+        "when": { "id": "plantz:repeater" },
         "model": {
           "type": "minecraft:model",
           "model": "plantz:item/seed_packet_repeater"
         }
       },
       {
-        "when": { "entity": "plantz:fire_peashooter" },
+        "when": { "id": "plantz:fire_peashooter" },
         "model": {
           "type": "minecraft:model",
           "model": "plantz:item/seed_packet_fire_peashooter"
         }
       },
       {
-        "when": { "entity": "plantz:cactus" },
+        "when": { "id": "plantz:cactus" },
         "model": {
           "type": "minecraft:model",
           "model": "plantz:item/seed_packet_cactus"
         }
       },
       {
-        "when": { "entity": "plantz:puffshroom" },
+        "when": { "id": "plantz:puffshroom" },
         "model": {
           "type": "minecraft:model",
           "model": "plantz:item/seed_packet_puffshroom"
         }
       },
       {
-        "when": { "entity": "plantz:fumeshroom" },
+        "when": { "id": "plantz:fumeshroom" },
         "model": {
           "type": "minecraft:model",
           "model": "plantz:item/seed_packet_fumeshroom"
         }
       },
       {
-        "when": { "entity": "plantz:sunshroom" },
+        "when": { "id": "plantz:sunshroom" },
         "model": {
           "type": "minecraft:model",
           "model": "plantz:item/seed_packet_sunshroom"

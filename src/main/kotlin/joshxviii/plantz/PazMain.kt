@@ -1,6 +1,18 @@
 package joshxviii.plantz
 
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.client.rendering.v1.ClientTooltipComponentCallback
+import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
+import net.minecraft.core.component.DataComponents
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.entity.EquipmentSlotGroup
+import net.minecraft.world.entity.ai.attributes.AttributeModifier
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.item.Items
+import net.minecraft.world.item.component.ItemAttributeModifiers
+import net.minecraft.world.item.equipment.Equippable
 import org.apache.logging.log4j.LogManager
 
 object PazMain : ModInitializer {
@@ -15,5 +27,23 @@ object PazMain : ModInitializer {
 		PazEntities.initialize()
 		PazDamageTypes.initialize()
 		PazDataSerializers.initialize()
+
+		DefaultItemComponentEvents.MODIFY.register {
+			it.modify(Items.BUCKET) { builder ->
+				builder.set(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
+					.setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)
+					.build()
+				)
+
+				val armorModifier = ItemAttributeModifiers.builder()
+					.add(
+						Attributes.ARMOR,
+						AttributeModifier(pazResource("bucket_armor"), 1.0, AttributeModifier.Operation.ADD_VALUE),
+						EquipmentSlotGroup.HEAD
+					).build()
+
+				builder.set(DataComponents.ATTRIBUTE_MODIFIERS, armorModifier)
+			}
+		}
 	}
 }

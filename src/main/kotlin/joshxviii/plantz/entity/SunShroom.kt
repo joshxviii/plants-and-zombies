@@ -1,6 +1,7 @@
 package joshxviii.plantz.entity
 
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.ai.goal.GenerateSunGoal
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.level.Level
@@ -17,5 +18,13 @@ class SunShroom(
             plantEntity = this,
             actionDelay = 10
         ))
+    }
+
+    override fun stateUpdated(state: PlantState) {
+        super.stateUpdated(state)
+        if (state == PlantState.GROW) {
+            isBaby = true
+            age = -2400
+        }
     }
 }

@@ -22,7 +22,7 @@ class PeaIce(
 ) {
     override fun onHitEntity(hitResult: EntityHitResult) {
         val target = hitResult.entity
-        if (target is LivingEntity && target !is Player) {
+        if (target is LivingEntity) {
             target.addEffect(MobEffectInstance(MobEffects.SLOWNESS, 100, 0))
             target.addEffect(MobEffectInstance(MobEffects.WEAKNESS, 100, 0))
         }

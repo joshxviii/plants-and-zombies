@@ -24,6 +24,6 @@ class PeaFire(
 
     override fun onHit(hitResult: HitResult) {
         super.onHit(hitResult)
-        PazServerParticles.FIRE_PEA_HIT
+        spawnParticle(PazServerParticles.FIRE_PEA_HIT)
     }
 }

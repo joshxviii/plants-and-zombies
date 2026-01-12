@@ -4,6 +4,7 @@ import com.mojang.authlib.minecraft.client.MinecraftClient
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazItems
+import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.entity.Plant
 import joshxviii.plantz.item.component.SeedPacket
 import joshxviii.plantz.pazResource
@@ -34,7 +35,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
 
     override fun getName(itemStack: ItemStack): Component {
         val component = itemStack.get(PazComponents.SEED_PACKET) ?: return super.getName(itemStack)
-        val entityId = component.entityId ?: return super.getName(itemStack)
+        val entityId = component.entityId?: return super.getName(itemStack)
 
         val entityName = Component.translatable("entity.${entityId.namespace}.${entityId.path}")
         return Component.translatable("item.plantz.seed_packet.entity", entityName)
@@ -49,6 +50,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
     ) {
         super.appendHoverText(stack, context, display, builder, flag)
         stack.addToTooltip(PazComponents.SEED_PACKET, context, display, builder, flag)
+        stack.addToTooltip(PazComponents.SUN_COST, context, display, builder, flag)
     }
 
     override fun useOn(context: UseOnContext): InteractionResult {
@@ -57,9 +59,10 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
         val itemStack = context.itemInHand
 
         val component = itemStack.get(PazComponents.SEED_PACKET) ?: return InteractionResult.PASS
-        val entityId: Identifier = component.entityId ?: return InteractionResult.PASS
+        val entityId = component.entityId?: return InteractionResult.FAIL
+        val id = BuiltInRegistries.ENTITY_TYPE.get(entityId)
 
-        val type = BuiltInRegistries.ENTITY_TYPE.get(entityId).get().value()
+        val type = if (!id.isEmpty) id.get().value() else return InteractionResult.FAIL
 
         val pos = context.clickedPos
         val clickedFace = context.clickedFace
@@ -90,6 +93,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             entity.yHeadRot = yaw
             entity.yBodyRot = yaw
             entity.yRot = yaw
+            entity.state = PlantState.GROW
         }
 
         if (entity != null && !level.addFreshEntity(entity)) {
@@ -102,7 +106,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
         if (entity is TamableAnimal && player != null) entity.tame(player)
         level.gameEvent(player, GameEvent.ENTITY_PLACE, spawnPos)
 
-        return InteractionResult.SUCCESS
+        return InteractionResult.SUCCESS_SERVER
     }
 
     companion object {
@@ -111,14 +115,15 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             val id = BuiltInRegistries.ENTITY_TYPE.getKey(type)
 
             stack.set(PazComponents.SEED_PACKET, SeedPacket(id))
-            //stack.set(DataComponents.CUSTOM_MODEL_DATA, CustomModelData(listOf(), listOf(), listOf(id.path), listOf()))
 
             return stack
         }
 
         fun typeFromStack(itemStack: ItemStack): EntityType<*>? {
-            val entityId = itemStack.get(PazComponents.SEED_PACKET)?.entityId
-            return if (entityId == null) null else BuiltInRegistries.ENTITY_TYPE.get(entityId).get().value()
+            val entityId = itemStack.get(PazComponents.SEED_PACKET)?.entityId?: return null
+            val id = BuiltInRegistries.ENTITY_TYPE.get(entityId)
+            val type = if (!id.isEmpty) id.get().value() else return null
+            return type
         }
     }
 }

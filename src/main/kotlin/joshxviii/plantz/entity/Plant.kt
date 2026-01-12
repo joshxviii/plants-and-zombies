@@ -79,18 +79,27 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     var state: PlantState
         get() = this.entityData.get(PLANT_STATE)
-        private set(value) = this.entityData.set(PLANT_STATE, value)
+        set(value) {
+            stateUpdated(value)
+            this.entityData.set(PLANT_STATE, value)
+        }
 
     var cooldown: Int
         get() = this.entityData.get(COOLDOWN)
         set(value) = this.entityData.set(COOLDOWN, value.coerceAtLeast(-1))
 
+    private var idleAnimationStartTick: Int = 0
+    val initAnimationState = AnimationState()
+    val idleAnimationState = AnimationState()
+    val actionAnimationState = AnimationState()
+    val coolDownAnimationState = AnimationState()
+
     init {
         cooldown = -1
-        state = PlantState.GROW
-        //TODO replace with ambient entity sound
         this.lookControl = object : LookControl(this) { override fun clampHeadRotationToBody() {} }
+        idleAnimationStartTick = this.random.nextInt(200, 240)
     }
+
     // disables body control
     override fun createBodyControl(): BodyRotationControl = object : BodyRotationControl(this) { override fun clientTick() {} }
 
@@ -100,15 +109,14 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         if (!onGround()) return super.setDeltaMovement(deltaMovement)
     }
 
-    val initAnimationState = AnimationState()
-    val idleAnimationState = AnimationState()
-    val actionAnimationState = AnimationState()
-    val coolDownAnimationState = AnimationState()
-
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
-        entityData.define(PLANT_STATE, PlantState.GROW)
+        entityData.define(PLANT_STATE, PlantState.IDLE)
         entityData.define(COOLDOWN, 0)
+    }
+
+    override fun getAmbientSound(): SoundEvent? {
+        return super.getAmbientSound()// TODO make custom sounds
     }
 
     override fun getHurtSound(source: DamageSource): SoundEvent? {
@@ -120,7 +128,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     open fun getActionSound(): SoundEvent? {
-        return null
+        return null// TODO make custom sounds
     }
 
     override fun registerGoals() {
@@ -134,6 +142,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         this.targetSelector.addGoal(3, HurtByTargetGoal(this).setAlertOthers())
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target: LivingEntity, level: ServerLevel -> target is Enemy })
     }
+
+    open fun stateUpdated(state: PlantState) {}
 
     override fun getBreedOffspring(
         level: ServerLevel,
@@ -157,7 +167,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             if (--this.nutrientSupply <= 0) {
                 if (this.tickCount % 20 == 0) {
                     val level = this.level()
-                    //TODO make "lackOfNutrients" damage type
                     if (level is ServerLevel) this.hurtServer(level, this.damageSources().dryOut(), 2.0f)
                 }
             }
@@ -179,7 +188,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     private fun updateAnimationState() {
         when (state) {
             PlantState.IDLE -> {
-                this.idleAnimationState.startIfStopped(this.tickCount)
+                this.idleAnimationState.startIfStopped(this.tickCount - idleAnimationStartTick)
                 this.initAnimationState.stop()
                 this.actionAnimationState.stop()
                 this.coolDownAnimationState.stop()
@@ -201,6 +210,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             PlantState.GROW -> {
                 this.initAnimationState.startIfStopped(0)
                 if (this.tickCount >= 19) {
+                    idleAnimationStartTick = 0
                     state = PlantState.IDLE
                 }
             }

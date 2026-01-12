@@ -3,6 +3,7 @@ package joshxviii.plantz
 import joshxviii.plantz.entity.Plant
 import joshxviii.plantz.item.SeedPacketItem
 import joshxviii.plantz.item.component.SeedPacket
+import joshxviii.plantz.item.component.SunCost
 import net.minecraft.core.Direction
 import net.minecraft.core.Registry
 import net.minecraft.core.dispenser.BlockSource
@@ -23,16 +24,20 @@ import java.util.function.Function
 
 object PazItems {
     @JvmField
-    val SUN: Item = registerItem("sun")
+    val SUN: Item = registerItem(
+        "sun",
+        properties = Item.Properties().stacksTo(99))
     @JvmField
     val SEED_PACKET: Item = registerItem(
-        "seed_packet", { p: Item.Properties -> SeedPacketItem(p) },
-        Item.Properties().component(PazComponents.SEED_PACKET, SeedPacket(null))
+        "seed_packet", ::SeedPacketItem,
+        properties = Item.Properties()
+            .component(PazComponents.SEED_PACKET, SeedPacket())
+            .component(PazComponents.SUN_COST, SunCost())
     )
     @JvmField
     val PLANT_POT_MINECART: Item = registerItem(
         "plant_pot_minecart", { p: Item.Properties -> MinecartItem(PazEntities.PLANT_POT_MINECART ,p) },
-        Item.Properties().stacksTo(1)
+        properties = Item.Properties().stacksTo(1)
     )
 
     private fun registerItem(
