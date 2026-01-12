@@ -1,10 +1,10 @@
 package joshxviii.plantz
 
+import PazDataSerializers
 import net.fabricmc.api.ModInitializer
-import net.fabricmc.fabric.api.client.rendering.v1.ClientTooltipComponentCallback
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
+import net.fabricmc.fabric.impl.item.ItemComponentTooltipProviderRegistryImpl
 import net.minecraft.core.component.DataComponents
-import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.EquipmentSlotGroup
@@ -27,6 +27,10 @@ object PazMain : ModInitializer {
 		PazEntities.initialize()
 		PazDamageTypes.initialize()
 		PazDataSerializers.initialize()
+		PazAttributes.initialize()
+
+		ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SEED_PACKET)
+		ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
 
 		DefaultItemComponentEvents.MODIFY.register {
 			it.modify(Items.BUCKET) { builder ->
@@ -39,6 +43,10 @@ object PazMain : ModInitializer {
 					.add(
 						Attributes.ARMOR,
 						AttributeModifier(pazResource("bucket_armor"), 1.0, AttributeModifier.Operation.ADD_VALUE),
+						EquipmentSlotGroup.HEAD
+					).add(
+						Attributes.KNOCKBACK_RESISTANCE,
+						AttributeModifier(pazResource("bucket_knockback_resistance"), 0.1, AttributeModifier.Operation.ADD_VALUE),
 						EquipmentSlotGroup.HEAD
 					).build()
 

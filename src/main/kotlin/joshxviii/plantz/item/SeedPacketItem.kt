@@ -3,10 +3,12 @@ package joshxviii.plantz.item
 import com.mojang.authlib.minecraft.client.MinecraftClient
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazComponents
+import joshxviii.plantz.PazEntities.getSunCostFromType
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.entity.Plant
 import joshxviii.plantz.item.component.SeedPacket
+import joshxviii.plantz.item.component.SunCost
 import joshxviii.plantz.pazResource
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Direction
@@ -39,18 +41,6 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
 
         val entityName = Component.translatable("entity.${entityId.namespace}.${entityId.path}")
         return Component.translatable("item.plantz.seed_packet.entity", entityName)
-    }
-
-    override fun appendHoverText(
-        stack: ItemStack,
-        context: TooltipContext,
-        display: TooltipDisplay,
-        builder: Consumer<Component>,
-        flag: TooltipFlag
-    ) {
-        super.appendHoverText(stack, context, display, builder, flag)
-        stack.addToTooltip(PazComponents.SEED_PACKET, context, display, builder, flag)
-        stack.addToTooltip(PazComponents.SUN_COST, context, display, builder, flag)
     }
 
     override fun useOn(context: UseOnContext): InteractionResult {
@@ -115,6 +105,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             val id = BuiltInRegistries.ENTITY_TYPE.getKey(type)
 
             stack.set(PazComponents.SEED_PACKET, SeedPacket(id))
+            stack.set(PazComponents.SUN_COST, SunCost(getSunCostFromType(type)))
 
             return stack
         }

@@ -2,6 +2,7 @@ package joshxviii.plantz.entity
 
 import PazDataSerializers.DATA_COOLDOWN
 import PazDataSerializers.DATA_PLANT_STATE
+import joshxviii.plantz.PazAttributes
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
@@ -59,7 +60,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             val attackDamage: Double = 4.0,
             val movementSpeed: Double = 0.0,
             val followRange: Double = 16.0,
-            val armor: Double = 0.0
+            val armor: Double = 0.0,
+            val sunCost: Int = 0
         ) {
             fun apply(builder: AttributeSupplier.Builder): AttributeSupplier.Builder {
                 return builder
@@ -68,6 +70,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                     .add(Attributes.ATTACK_DAMAGE, attackDamage)
                     .add(Attributes.MOVEMENT_SPEED, movementSpeed)
                     .add(Attributes.ARMOR, armor)
+                    .add(PazAttributes.SUN_COST, sunCost.toDouble())
             }
         }
     }

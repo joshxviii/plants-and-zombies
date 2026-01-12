@@ -20,10 +20,15 @@ import net.minecraft.world.entity.MobCategory
 import net.minecraft.world.entity.projectile.Projectile
 
 object PazEntities {
+    private val typeToSunCost = mutableMapOf<EntityType<*>, Int>()
+    fun getSunCostFromType(type: EntityType<*>) : Int {
+        return typeToSunCost[type]?: 0
+    }
 
     @JvmField val SUNFLOWER: EntityType<Sunflower> = registerPlant(
         "sunflower",
         EntityType.Builder.of(::Sunflower, MobCategory.CREATURE),
+        sunCost = 10,
         height = 1.3f,
     )
     @JvmField val PEA_SHOOTER: EntityType<PeaShooter> = registerPlant(
@@ -33,6 +38,7 @@ object PazEntities {
     @JvmField val WALL_NUT: EntityType<WallNut> = registerPlant(
         "wallnut",
         EntityType.Builder.of(::WallNut, MobCategory.CREATURE),
+        sunCost = 10,
         width = 1.0f,
         height = 1.1f,
         attributes = Plant.Companion.PlantAttributes(
@@ -42,39 +48,46 @@ object PazEntities {
     @JvmField val CHOMPER: EntityType<Chomper> = registerPlant(
         "chomper",
         EntityType.Builder.of(::Chomper, MobCategory.CREATURE),
+        sunCost = 10,
         height = 1.5f,
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 35.0,
             attackDamage = 12.0,
-            followRange = 3.75,
+            followRange = 3.75
         )
     )
     @JvmField val CHERRY_BOMB: EntityType<CherryBomb> = registerPlant(
         "cherrybomb",
         EntityType.Builder.of(::CherryBomb, MobCategory.CREATURE),
+        sunCost = 10,
         height = 0.5f,
     )
     @JvmField val POTATO_MINE: EntityType<PotatoMine> = registerPlant(
         "potatomine",
         EntityType.Builder.of(::PotatoMine, MobCategory.CREATURE),
+        sunCost = 10,
         width = 0.8f,
         height = 0.35f,
     )
     @JvmField val ICE_PEA_SHOOTER: EntityType<IcePeaShooter> = registerPlant(
         "ice_peashooter",
         EntityType.Builder.of(::IcePeaShooter, MobCategory.CREATURE),
+        sunCost = 10,
     )
     @JvmField val REPEATER: EntityType<Repeater> = registerPlant(
         "repeater",
         EntityType.Builder.of(::Repeater, MobCategory.CREATURE),
+        sunCost = 10,
     )
     @JvmField val FIRE_PEA_SHOOTER: EntityType<FirePeaShooter> = registerPlant(
         "fire_peashooter",
         EntityType.Builder.of(::FirePeaShooter, MobCategory.CREATURE).fireImmune(),
+        sunCost = 10,
     )
     @JvmField val CACTUS: EntityType<Cactus> = registerPlant(
         "cactus",
         EntityType.Builder.of(::Cactus, MobCategory.CREATURE),
+        sunCost = 10,
         width = 0.8f,
         height = 1.25f,
         eyeHeight = 0.85f,
@@ -82,6 +95,7 @@ object PazEntities {
     @JvmField val PUFF_SHROOM: EntityType<PuffShroom> = registerPlant(
         "puffshroom",
         EntityType.Builder.of(::PuffShroom, MobCategory.CREATURE),
+        sunCost = 10,
         width = 0.5f,
         height = 0.65f,
         eyeHeight = 0.3f
@@ -89,12 +103,14 @@ object PazEntities {
     @JvmField val FUME_SHROOM: EntityType<FumeShroom> = registerPlant(
         "fumeshroom",
         EntityType.Builder.of(::FumeShroom, MobCategory.CREATURE),
+        sunCost = 10,
         width = 0.8f,
         height = 0.8f
     )
     @JvmField val SUN_SHROOM: EntityType<SunShroom> = registerPlant(
         "sunshroom",
         EntityType.Builder.of(::SunShroom, MobCategory.CREATURE),
+        sunCost = 10,
         height = 0.85f
     )
 
@@ -118,6 +134,7 @@ object PazEntities {
     private fun <T : LivingEntity> registerPlant(
         name : String,
         builder: EntityType.Builder<T> = EntityType.Builder.createNothing(MobCategory.CREATURE),
+        sunCost: Int = 0,
         width: Float = 0.6f,
         height: Float = 1.0f,
         eyeHeight: Float = height * 0.85f,
@@ -125,7 +142,8 @@ object PazEntities {
     ): EntityType<T> {
         builder.sized(width, height).eyeHeight(eyeHeight)
         val type = register(name, builder)
-        FabricDefaultAttributeRegistry.register(type, attributes.apply(createMobAttributes()))
+        FabricDefaultAttributeRegistry.register(type, attributes.copy(sunCost = sunCost).apply(createMobAttributes()))
+        typeToSunCost[type] = sunCost
         return type
     }
     private fun <T : Projectile> registerProjectile(
