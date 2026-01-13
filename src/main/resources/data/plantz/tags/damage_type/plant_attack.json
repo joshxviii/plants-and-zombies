@@ -1,0 +1,9 @@
+{
+  "values": [
+    "plantz:plant",
+    "plantz:chomp_plant",
+    "plantz:freeze_plant",
+    "plantz:fire_plant",
+    "plantz:fume_plant"
+  ]
+}

@@ -4,6 +4,7 @@
   "message.plantz.not_yours": "You do not own this plant!",
 
   "component.sun_cost": "Sun cost: %s",
+  "item.plantz.zombie_banner": "Brainz Banner",
 
   "item.plantz.sun": "Sun",
   "item.plantz.plant_pot": "Plant Pot",

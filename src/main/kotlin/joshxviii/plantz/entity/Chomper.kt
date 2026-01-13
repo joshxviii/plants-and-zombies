@@ -32,7 +32,7 @@ class Chomper(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CHO
         attackReach = 1.85,
         cooldownTime = 60,
         actionDelay = 10,
-        damageType = PazDamageTypes.CHOMPED,
+        damageType = PazDamageTypes.CHOMP,
         actionStartEffect = {
             plantEntity.playSound(SoundEvents.EVOKER_FANGS_ATTACK, 0.7f, 0.9f)
         }

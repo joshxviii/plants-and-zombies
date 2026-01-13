@@ -21,11 +21,7 @@ import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.entity.projectile.ProjectileUtil
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.phys.AABB
-import net.minecraft.world.phys.EntityHitResult
-import net.minecraft.world.phys.HitResult
-import net.minecraft.world.phys.Vec2
-import net.minecraft.world.phys.Vec3
+import net.minecraft.world.phys.*
 
 abstract class PlantProjectile(
     type: EntityType<out PlantProjectile>,
@@ -115,13 +111,18 @@ abstract class PlantProjectile(
 
             // get damage from attribute
             val damage : Float = owner?.attributes?.getValue(Attributes.ATTACK_DAMAGE)?.toFloat()?:1.0f
+            val knockback : Double = owner?.attributes?.getValue(Attributes.ATTACK_KNOCKBACK)?:0.0
 
             val source = this.damageSources().source(damageType, this, owner)
             if(target.hurtServer(serverLevel, source, damage)) {
-
+                if (target is LivingEntity) {
+                    val knockbackDirection = calculateHorizontalHurtKnockbackDirection(target, source)
+                    target.knockback(knockback, -knockbackDirection.leftDouble(), -knockbackDirection.rightDouble())
+                }
             }
         }
     }
+
     override fun onHit(hitResult: HitResult) {
         super.onHit(hitResult)
         if (!this.level().isClientSide) {

@@ -1,5 +1,6 @@
 package joshxviii.plantz.entity
 
+import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.ai.PlantState
@@ -21,6 +22,7 @@ class FumeShroom(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
             plantEntity = this,
             beamRange = 8.0,
             beamWidth = 2.0,
+            damageType = PazDamageTypes.FUME,
             cooldownTime = 35,
             actionDelay = 12))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->

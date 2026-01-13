@@ -64,9 +64,16 @@ class BeamAttackPlantGoal(
             if (distToRay <= (beamWidth / 2.0 + entityRadiusApprox)) {
 
                 val damage : Float = plantEntity.attributes.getValue(Attributes.ATTACK_DAMAGE).toFloat()
+                val knockback : Double = plantEntity.attributes.getValue(Attributes.ATTACK_KNOCKBACK)
                 val source = plantEntity.damageSources().source(damageType, plantEntity)
 
-                entity.hurtServer(plantEntity.level() as ServerLevel, source, damage)
+                if (entity.hurtServer(plantEntity.level() as ServerLevel, source, damage)){
+                    (entity as LivingEntity).knockback(
+                        knockback,
+                        start.x - entity.x,
+                        start.z - entity.z
+                    )
+                }
                 piercedEntities?.add(entity)
             }
         }

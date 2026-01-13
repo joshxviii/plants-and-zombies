@@ -53,6 +53,7 @@ object PazEntities {
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 35.0,
             attackDamage = 12.0,
+            attackKnockback = 0.1,
             followRange = 3.75
         )
     )
@@ -101,6 +102,7 @@ object PazEntities {
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 50.0,
             attackDamage = 20.0,
+            attackKnockback = 1.5,
             followRange = 20.0
         )
     )
@@ -110,14 +112,20 @@ object PazEntities {
         sunCost = 10,
         width = 0.5f,
         height = 0.65f,
-        eyeHeight = 0.3f
+        eyeHeight = 0.3f,
+        attributes = Plant.Companion.PlantAttributes(
+            attackDamage = 2.0,
+        )
     )
     @JvmField val FUME_SHROOM: EntityType<FumeShroom> = registerPlant(
         "fumeshroom",
         EntityType.Builder.of(::FumeShroom, MobCategory.CREATURE),
         sunCost = 10,
         width = 0.8f,
-        height = 0.8f
+        height = 0.8f,
+        attributes = Plant.Companion.PlantAttributes(
+            attackDamage = 1.0,
+        )
     )
     @JvmField val SUN_SHROOM: EntityType<SunShroom> = registerPlant(
         "sunshroom",

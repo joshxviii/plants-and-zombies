@@ -1,0 +1,59 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:red_banner",
+          "conditions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "minecraft:banner_patterns": [
+                  {
+                    "color": "white",
+                    "pattern": "minecraft:mojang"
+                  },
+                  {
+                    "color": "pink",
+                    "pattern": "minecraft:bricks"
+                  },
+                  {
+                    "color": "pink",
+                    "pattern": "minecraft:globe"
+                  },
+                  {
+                    "color": "red",
+                    "pattern": "minecraft:stripe_top"
+                  },
+                  {
+                    "color": "red",
+                    "pattern": "minecraft:stripe_bottom"
+                  },
+                  {
+                    "color": "red",
+                    "pattern": "minecraft:curly_border"
+                  }
+                ],
+                "minecraft:custom_name": {
+                  "translate": "item.plantz.zombie_banner",
+                  "with": [],
+                  "color": "yellow",
+                  "italic": false
+                },
+                "minecraft:tooltip_display": {
+                  "hidden_components": [
+                    "minecraft:banner_patterns"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

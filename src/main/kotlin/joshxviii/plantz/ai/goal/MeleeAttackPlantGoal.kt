@@ -35,9 +35,19 @@ open class MeleeAttackPlantGoal(
         if (!isInReach(target)) return false
 
         val damage : Float = plantEntity.attributes.getValue(Attributes.ATTACK_DAMAGE).toFloat()
+        val knockback : Double = plantEntity.attributes.getValue(Attributes.ATTACK_KNOCKBACK)
         val source = plantEntity.damageSources().source(damageType, plantEntity)
 
-        return target.hurtServer(plantEntity.level() as ServerLevel, source, damage)
+        if (target.hurtServer(plantEntity.level() as ServerLevel, source, damage)) {
+            target.knockback(
+                knockback,
+                plantEntity.x - target.x,
+                plantEntity.z - target.z
+            )
+            return true
+        }
+
+        return false
     }
 
     private fun isInReach(target: LivingEntity): Boolean {

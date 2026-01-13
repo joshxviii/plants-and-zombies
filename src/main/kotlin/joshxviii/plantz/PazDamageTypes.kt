@@ -7,13 +7,15 @@ import net.minecraft.world.damagesource.DamageType
 object PazDamageTypes {
     // seed packets
     @JvmField
+    val PLANT = registerDamageType("plant")
+    @JvmField
     val FREEZE = registerDamageType("freeze_plant")
     @JvmField
     val FIRE = registerDamageType("fire_plant")
     @JvmField
-    val CHOMPED = registerDamageType("chomp_plant")
+    val CHOMP = registerDamageType("chomp_plant")
     @JvmField
-    val PLANT = registerDamageType("plant")
+    val FUME = registerDamageType("fume_plant")
 
     private fun registerDamageType(
         name: String
