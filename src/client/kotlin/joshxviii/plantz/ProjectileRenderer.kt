@@ -2,8 +2,10 @@ package joshxviii.plantz
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
+import joshxviii.plantz.PazRenderPipelines.EMISSIVE_PROJECTILE
+import joshxviii.plantz.PazRenderPipelines.PLANT_PROJECTILE
+import joshxviii.plantz.entity.projectile.PeaFire
 import net.minecraft.client.model.EntityModel
-import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
@@ -37,7 +39,7 @@ class ProjectileRenderer(
             poseStack,
             RenderType.create(
                 "plant_projectile",
-                RenderSetup.builder(RenderPipelines.BREEZE_WIND)// TODO make a custom render pipeline
+                RenderSetup.builder(if (state.emissive) EMISSIVE_PROJECTILE else PLANT_PROJECTILE)
                     .withTexture("Sampler0", getTextureLocation(state))
                     .useLightmap()
                     .sortOnUpload()
@@ -58,6 +60,7 @@ class ProjectileRenderer(
 
     override fun extractRenderState(entity: Projectile, state: ProjectileRenderState, partialTick: Float) {
         super.extractRenderState(entity, state, partialTick)
+        if (entity is PeaFire) state.emissive = true
         state.xRot = entity.getXRot(partialTick)
         state.yRot = entity.getYRot(partialTick)
         state.texturePath = BuiltInRegistries.ENTITY_TYPE.getKey(entity.type).path

@@ -8,7 +8,7 @@ import net.minecraft.client.animation.KeyframeAnimations;
 /**
  * Made with Blockbench 5.0.7
  * Exported for Minecraft version 1.19 or later with Mojang mappings
- * @author Author
+ * @author Nate
  */
 public class FirePeaAnimation {
 	public static final AnimationDefinition action = AnimationDefinition.Builder.withLength(0.52F)

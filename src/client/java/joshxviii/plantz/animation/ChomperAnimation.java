@@ -8,7 +8,7 @@ import net.minecraft.client.animation.KeyframeAnimations;
 /**
  * Made with Blockbench 5.0.7
  * Exported for Minecraft version 1.19 or later with Mojang mappings
- * @author Author
+ * @author Nate
  */
 public class ChomperAnimation {
 	public static final AnimationDefinition idle = AnimationDefinition.Builder.withLength(4.0F).looping()

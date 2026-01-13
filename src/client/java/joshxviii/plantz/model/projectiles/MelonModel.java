@@ -10,11 +10,11 @@ import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class PeaModel extends EntityModel<@NotNull ProjectileRenderState> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("melon"), "main");
+public class MelonModel extends EntityModel<@NotNull ProjectileRenderState> {
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("pea"), "main");
     private final ModelPart body;
 
-    public PeaModel(ModelPart root) {
+    public MelonModel(ModelPart root) {
         super(root);
         this.body = root.getChild("body");
     }
@@ -23,9 +23,9 @@ public class PeaModel extends EntityModel<@NotNull ProjectileRenderState> {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
 
-        PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 0).addBox(-1.5F, -1.5F, -1.5F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+        PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -6.0F, -7.0F, 12.0F, 11.0F, 14.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 24.5F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
-        return LayerDefinition.create(meshdefinition, 16, 16);
+        return LayerDefinition.create(meshdefinition, 64, 64);
     }
 
     public void setupAnim(final @NotNull ProjectileRenderState state) {
