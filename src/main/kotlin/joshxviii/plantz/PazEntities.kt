@@ -166,6 +166,7 @@ object PazEntities {
 
     @JvmField val TAG_PLANTS = registerEntityTag("plants")
     @JvmField val TAG_CANNOT_CHOMP = registerEntityTag("cannot_be_chomped")
+    @JvmField val ZOMBIE_RAIDERS = registerEntityTag("zombie_raiders")
     private fun registerEntityTag(name: String) = TagKey.create(Registries.ENTITY_TYPE, pazResource(name))
 
     fun initialize() {}
