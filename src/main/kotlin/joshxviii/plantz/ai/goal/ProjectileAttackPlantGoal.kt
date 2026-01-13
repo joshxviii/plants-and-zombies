@@ -21,6 +21,7 @@ class ProjectileAttackPlantGoal(
     val velocity : Double = 0.9,
     val inaccuracy: Float = 1.0f,
     val useHighArc: Boolean = false,
+    val directionOffset: Vec3 = Vec3.ZERO//
 ) : PlantActionGoal(plantEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
     var seeTime : Int = 0
     var distanceSqr: Double = 0.0
@@ -56,6 +57,7 @@ class ProjectileAttackPlantGoal(
     override fun doAction() : Boolean {// fire projectile
        val target = plantEntity.target?: return false
 
+
         val relativePos = Vec3(
             target.x - plantEntity.x,
             target.y - plantEntity.y,
@@ -82,6 +84,7 @@ class ProjectileAttackPlantGoal(
         val shootY = Mth.sin(chosenArc).toDouble()
         val shootZ = (horizUnitZ * horizComp)
 
+
         Projectile.spawnProjectile(projectile, level, ItemStack.EMPTY) {
             it.shoot(shootX, shootY, shootZ, velocity.toFloat(), inaccuracy)
         }
@@ -107,14 +110,14 @@ class ProjectileAttackPlantGoal(
         val horizDist = sqrt(dx * dx + dz * dz).toFloat()
         if (horizDist <= 0f) return null
 
-        val v2: Double = velocity * velocity
+        val v2: Double = velocity
         val v4 = v2 * v2
         val g_d = gravity
         val horiz2_d = horizDist.toDouble() * horizDist
-        val discriminant = v4 - g_d * (g_d * horiz2_d + 2.0 * v2 * dy)
+        var discriminant = v4 - g_d * (g_d * horiz2_d + 2.0 * v2 * dy)
 
         //impossible shot
-        if (discriminant < 0.0) return null
+        if (discriminant < 0.0) discriminant = 0.0
 
         val sqrtDisc = sqrt(discriminant)
         val num1 = v2 + sqrtDisc

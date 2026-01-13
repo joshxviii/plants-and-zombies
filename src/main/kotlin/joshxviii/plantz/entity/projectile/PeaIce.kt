@@ -12,13 +12,16 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
+import net.minecraft.world.phys.Vec2
+import net.minecraft.world.phys.Vec3
 
 class PeaIce(
     type: EntityType<out PlantProjectile> = PazEntities.PEA_ICE,
     level: Level,
     owner: Plant? = null,
-) : PlantProjectile(type, level, owner,
-    PazDamageTypes.FREEZE,
+    spawnOffset: Vec2 = Vec2.ZERO
+) : PlantProjectile(type, level, owner, spawnOffset,
+    PazDamageTypes.FREEZE
 ) {
     override fun onHitEntity(hitResult: EntityHitResult) {
         val target = hitResult.entity

@@ -13,15 +13,19 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.phys.HitResult
+import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
 
 class Melon(
     type: EntityType<out PlantProjectile> = PazEntities.MELON,
     level: Level,
     owner: Plant? = null,
-) : PlantProjectile(type, level, owner,
+    spawnOffset: Vec2 = Vec2.ZERO
+) : PlantProjectile(type, level, owner, spawnOffset,
     PazDamageTypes.PLANT,
 ) {
+    override fun getDefaultGravity(): Double = 0.09
+
     override fun onHit(hitResult: HitResult) {
         super.onHit(hitResult)
         spawnParticle(

@@ -75,6 +75,13 @@
         }
       },
       {
+        "when": { "id": "plantz:melonpult" },
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/seed_packet_melonpult"
+        }
+      },
+      {
         "when": { "id": "plantz:puffshroom" },
         "model": {
           "type": "minecraft:model",

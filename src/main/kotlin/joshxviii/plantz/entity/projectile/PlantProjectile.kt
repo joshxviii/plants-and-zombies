@@ -24,13 +24,15 @@ import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
+import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
 
 abstract class PlantProjectile(
     type: EntityType<out PlantProjectile>,
     level: Level,
     owner: Plant? = null,
-    val damageType: ResourceKey<DamageType> = PazDamageTypes.PLANT
+    val spawnOffset: Vec2 = Vec2.ZERO,
+    val damageType: ResourceKey<DamageType> = PazDamageTypes.PLANT,
 ) : Projectile(type, level) {
 
     companion object {
@@ -40,10 +42,11 @@ abstract class PlantProjectile(
     init {
         if (owner != null) {
             this.setOwner(owner)
+            val direction = owner.headLookAngle
             this.setPos(
-                owner.x,
-                owner.y + owner.eyeHeight,
-                owner.z
+                owner.x+direction.x*spawnOffset.x,
+                owner.y+owner.eyeHeight+spawnOffset.y,
+                owner.z+direction.z*spawnOffset.x
             )
             this.setRot(
                 owner.xRot,
