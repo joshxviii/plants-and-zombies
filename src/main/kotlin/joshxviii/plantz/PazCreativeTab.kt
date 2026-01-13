@@ -34,6 +34,7 @@ object PazCreativeTab {
                 output.accept(SeedPacketItem.stackFor(PazEntities.REPEATER))
                 output.accept(SeedPacketItem.stackFor(PazEntities.FIRE_PEA_SHOOTER))
                 output.accept(SeedPacketItem.stackFor(PazEntities.CACTUS))
+                output.accept(SeedPacketItem.stackFor(PazEntities.MELON_PULT))
                 output.accept(SeedPacketItem.stackFor(PazEntities.PUFF_SHROOM))
                 output.accept(SeedPacketItem.stackFor(PazEntities.FUME_SHROOM))
                 output.accept(SeedPacketItem.stackFor(PazEntities.SUN_SHROOM))

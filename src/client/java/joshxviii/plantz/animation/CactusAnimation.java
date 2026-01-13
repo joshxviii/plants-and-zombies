@@ -10,7 +10,7 @@ import net.minecraft.client.animation.KeyframeAnimations;
 /**
  * Made with Blockbench 5.0.7
  * Exported for Minecraft version 1.19 or later with Mojang mappings
- * @author Author
+ * @author Nate
  */
 public class CactusAnimation {
 	public static final AnimationDefinition idle = AnimationDefinition.Builder.withLength(2.0F).looping()

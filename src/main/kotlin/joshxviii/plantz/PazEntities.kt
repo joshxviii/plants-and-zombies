@@ -92,6 +92,18 @@ object PazEntities {
         height = 1.25f,
         eyeHeight = 0.85f,
     )
+    @JvmField val MELON_PULT: EntityType<MelonPult> = registerPlant(
+        "melonpult",
+        EntityType.Builder.of(::MelonPult, MobCategory.CREATURE),
+        sunCost = 10,
+        width = 0.9f,
+        height = 0.8f,
+        attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 50.0,
+            attackDamage = 20.0,
+            followRange = 20.0
+        )
+    )
     @JvmField val PUFF_SHROOM: EntityType<PuffShroom> = registerPlant(
         "puffshroom",
         EntityType.Builder.of(::PuffShroom, MobCategory.CREATURE),
@@ -120,6 +132,7 @@ object PazEntities {
     @JvmField val PEA_FIRE: EntityType<PeaFire> = registerProjectile("pea_fire", EntityType.Builder.of(::PeaFire, MobCategory.MISC))
     @JvmField val NEEDLE: EntityType<Needle> = registerProjectile("needle", EntityType.Builder.of(::Needle, MobCategory.MISC))
     @JvmField val SPORE: EntityType<Spore> = registerProjectile("spore", EntityType.Builder.of(::Spore, MobCategory.MISC))
+    @JvmField val MELON: EntityType<Melon> = registerProjectile("melon", EntityType.Builder.of(::Melon, MobCategory.MISC), width = 1.0f, height = 0.8f)
 
     //Other
     @JvmField val PLANT_POT_MINECART: EntityType<PlantPotMinecart> = register(
