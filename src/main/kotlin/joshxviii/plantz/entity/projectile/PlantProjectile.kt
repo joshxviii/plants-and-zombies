@@ -26,29 +26,35 @@ import net.minecraft.world.phys.*
 abstract class PlantProjectile(
     type: EntityType<out PlantProjectile>,
     level: Level,
-    owner: Plant? = null,
+    val plantOwner: Plant? = null,
     val spawnOffset: Vec2 = Vec2.ZERO,
     val damageType: ResourceKey<DamageType> = PazDamageTypes.PLANT,
 ) : Projectile(type, level) {
+
+    val damage : Float
+    val knockback : Double
 
     companion object {
         val PIERCE_LEVEL: EntityDataAccessor<Byte> = SynchedEntityData.defineId<Byte>(PlantProjectile::class.java, EntityDataSerializers.BYTE)
     }
 
     init {
-        if (owner != null) {
-            this.setOwner(owner)
-            val direction = owner.headLookAngle
+        if (plantOwner != null) {
+            this.setOwner(plantOwner)
+            val direction = plantOwner.headLookAngle
             this.setPos(
-                owner.x+direction.x*spawnOffset.x,
-                owner.y+owner.eyeHeight+spawnOffset.y,
-                owner.z+direction.z*spawnOffset.x
+                plantOwner.x+direction.x*spawnOffset.x,
+                plantOwner.y+plantOwner.eyeHeight+spawnOffset.y,
+                plantOwner.z+direction.z*spawnOffset.x
             )
             this.setRot(
-                owner.xRot,
-                owner.yRot
+                plantOwner.xRot,
+                plantOwner.yRot
             )
         }
+
+        damage = (getOwner() as? LivingEntity)?.attributes?.getValue(Attributes.ATTACK_DAMAGE)?.toFloat()?:1.0f
+        knockback = (getOwner() as? LivingEntity)?.attributes?.getValue(Attributes.ATTACK_KNOCKBACK)?:0.0
     }
 
     override fun tick() {
@@ -110,9 +116,6 @@ abstract class PlantProjectile(
             owner?.setLastHurtMob(target)
 
             // get damage from attribute
-            val damage : Float = owner?.attributes?.getValue(Attributes.ATTACK_DAMAGE)?.toFloat()?:1.0f
-            val knockback : Double = owner?.attributes?.getValue(Attributes.ATTACK_KNOCKBACK)?:0.0
-
             val source = this.damageSources().source(damageType, this, owner)
             if(target.hurtServer(serverLevel, source, damage)) {
                 if (target is LivingEntity) {

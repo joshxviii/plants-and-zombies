@@ -13,8 +13,8 @@ import net.minecraft.world.phys.Vec3
 class Spore(
     type: EntityType<out PlantProjectile> = PazEntities.SPORE,
     level: Level,
+    spawnOffset: Vec2 = Vec2.ZERO,
     owner: Plant? = null,
-    spawnOffset: Vec2 = Vec2.ZERO
 ) : PlantProjectile(type, level, owner, spawnOffset,
     PazDamageTypes.PLANT,
 ) {

@@ -9,6 +9,9 @@ import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.phys.Vec3
 import kotlin.math.atan
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
 import kotlin.math.sqrt
 
 class ProjectileAttackPlantGoal(
@@ -19,11 +22,10 @@ class ProjectileAttackPlantGoal(
     actionEndEffect: () -> Unit = {},
     val projectileFactory: () -> Projectile,
     val velocity : Double = 0.9,
-    val inaccuracy: Float = 1.0f,
+    val inaccuracy: Float = 0.0f,
     val useHighArc: Boolean = false,
-    val directionOffset: Vec3 = Vec3.ZERO//
+    val dragAdjustment: Double? = null
 ) : PlantActionGoal(plantEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
-    var seeTime : Int = 0
     var distanceSqr: Double = 0.0
     var attackRadius : Float = 0.0f
 
@@ -35,7 +37,6 @@ class ProjectileAttackPlantGoal(
     override fun stop() {
         super.stop()
         plantEntity.target = null
-        seeTime = 0
     }
 
     override fun canDoAction(): Boolean {// check distance and line of sight
@@ -44,50 +45,53 @@ class ProjectileAttackPlantGoal(
 
         distanceSqr = plantEntity.distanceToSqr(target)
         attackRadius = plantEntity.attributes.getValue(Attributes.FOLLOW_RANGE).toFloat()
-        val hasLineOfSight = plantEntity.sensing.hasLineOfSight(target)
-
-        if (hasLineOfSight) seeTime++
-        else seeTime = 0
 
         plantEntity.lookControl.setLookAt(target, 30f, 30f)
 
-        return hasLineOfSight && distanceSqr <= (attackRadius * attackRadius)
+        return distanceSqr <= (attackRadius * attackRadius)
     }
 
     override fun doAction() : Boolean {// fire projectile
        val target = plantEntity.target?: return false
 
-
-        val relativePos = Vec3(
-            target.x - plantEntity.x,
-            target.y - plantEntity.y,
-            target.z - plantEntity.z
-        )
-
         val level = plantEntity.level() as ServerLevel
         val projectile = projectileFactory()
+        Projectile.spawnProjectile(projectile, level, ItemStack.EMPTY)
+
+        val relativePos = Vec3(
+            target.x - projectile.x,
+            target.boundingBox.minY + (target.bbHeight / 3.0) - projectile.y,
+            target.z - projectile.z
+        )
 
         val arcs = calculateProjectileArcs(relativePos, projectile.gravity, velocity)
         if (arcs==null) {// lose target if unreachable
-           plantEntity.target = null
-           return false
+            projectile.discard()
+            plantEntity.target = null
+            return false
         }
 
-        val chosenArc = if(useHighArc) arcs.first else arcs.second
+        val chosenAngle = if(useHighArc) arcs.first else arcs.second
 
         val horizDist = relativePos.horizontalDistance()
+
+        var finalAngle = chosenAngle
+        if(dragAdjustment!=null) {// try to account for the drag that gets added for long airtime
+            val flightTimeEstimate = horizDist / (velocity * cos(chosenAngle)) * dragAdjustment
+            val bias = flightTimeEstimate * projectile.gravity * 0.3
+            val adjustedY = sin(chosenAngle) + bias / velocity
+            finalAngle = atan2(adjustedY, cos(chosenAngle))
+        }
+
         val horizUnitX = relativePos.x / horizDist
         val horizUnitZ = relativePos.z / horizDist
-        val horizComp = Mth.cos(chosenArc)
+        val horizComp = Mth.cos(finalAngle)
 
         val shootX = (horizUnitX * horizComp)
-        val shootY = Mth.sin(chosenArc).toDouble()
+        val shootY = Mth.sin(finalAngle).toDouble()
         val shootZ = (horizUnitZ * horizComp)
 
-
-        Projectile.spawnProjectile(projectile, level, ItemStack.EMPTY) {
-            it.shoot(shootX, shootY, shootZ, velocity.toFloat(), inaccuracy)
-        }
+        projectile.shoot(shootX, shootY, shootZ, velocity.toFloat(), inaccuracy)
 
         plantEntity.playSound(SoundEvents.BUBBLE_POP, 3.0f, 0.4f / (plantEntity.random.nextFloat() * 0.4f + 0.8f))
         return true
@@ -98,34 +102,31 @@ class ProjectileAttackPlantGoal(
      * for a projectile to hit the target position with given initial velocity and gravity.
      *
      * @param targetPos Relative target position from launch point (Vec3)
-     * @param gravity Projectile gravity
+     * @param g Projectile's gravity
      * @param velocity Initial projectile speed (blocks/tick)
-     * @return Pair(highArcAngle, lowArcAngle) or null if impossible (discriminant < 0)
+     * @return Pair(highArcAngle, lowArcAngle)
      */
-    private fun calculateProjectileArcs(targetPos: Vec3, gravity: Double, velocity: Double): Pair<Double, Double>? {
+    private fun calculateProjectileArcs(targetPos: Vec3, g: Double, velocity: Double): Pair<Double, Double>? {
         val dx = targetPos.x
         val dy = targetPos.y
         val dz = targetPos.z
 
-        val horizDist = sqrt(dx * dx + dz * dz).toFloat()
+        val horizDist = sqrt(dx * dx + dz * dz)
         if (horizDist <= 0f) return null
 
-        val v2: Double = velocity
+        val v2: Double = velocity*velocity
         val v4 = v2 * v2
-        val g_d = gravity
-        val horiz2_d = horizDist.toDouble() * horizDist
-        var discriminant = v4 - g_d * (g_d * horiz2_d + 2.0 * v2 * dy)
+        val horiz2_d = horizDist * horizDist
+        var discriminant = v4 - g * (g * horiz2_d + 2.0 * v2 * dy)
 
         //impossible shot
         if (discriminant < 0.0) discriminant = 0.0
 
         val sqrtDisc = sqrt(discriminant)
-        val num1 = v2 + sqrtDisc
-        val num2 = v2 - sqrtDisc
-        val denom = g_d * horizDist.toDouble()
+        val denom = g * horizDist
 
-        val phi1 = atan((num1 / denom))
-        val phi2 = atan((num2 / denom))
+        val phi1 = atan((v2 + sqrtDisc) / denom)
+        val phi2 = atan((v2 - sqrtDisc) / denom)
 
         return phi1 to phi2
     }

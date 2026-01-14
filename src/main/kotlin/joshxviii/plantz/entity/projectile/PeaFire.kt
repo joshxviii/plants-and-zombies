@@ -14,8 +14,8 @@ import net.minecraft.world.phys.Vec3
 class PeaFire(
     type: EntityType<out PlantProjectile> = PazEntities.PEA_FIRE,
     level: Level,
+    spawnOffset: Vec2 = Vec2.ZERO,
     owner: Plant? = null,
-    spawnOffset: Vec2 = Vec2.ZERO
 ) : PlantProjectile(type, level, owner, spawnOffset,
     PazDamageTypes.FIRE,
 ) {

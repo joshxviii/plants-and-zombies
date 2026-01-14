@@ -145,7 +145,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         this.targetSelector.addGoal(1, OwnerHurtByTargetGoal(this))
         this.targetSelector.addGoal(2, OwnerHurtTargetGoal(this))
         this.targetSelector.addGoal(3, HurtByTargetGoal(this).setAlertOthers())
-        this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target: LivingEntity, level: ServerLevel -> target is Enemy })
     }
 
     open fun stateUpdated(state: PlantState) {}

@@ -1,15 +1,11 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.entity.*
 import joshxviii.plantz.entity.projectile.*
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
-import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricEntityDataRegistry
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
-import net.minecraft.network.codec.ByteBufCodecs
-import net.minecraft.network.syncher.EntityDataSerializer
 import net.minecraft.resources.ResourceKey
 import net.minecraft.tags.TagKey
 import net.minecraft.world.entity.Entity
@@ -102,7 +98,7 @@ object PazEntities {
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 50.0,
             attackDamage = 20.0,
-            attackKnockback = 1.5,
+            attackKnockback = 0.5,
             followRange = 20.0
         )
     )
@@ -185,9 +181,10 @@ object PazEntities {
         return Registry.register(BuiltInRegistries.ENTITY_TYPE, id, builder.build(id))
     }
 
-    @JvmField val TAG_PLANTS = registerEntityTag("plants")
+    @JvmField val TAG_PLANT = registerEntityTag("plant")
+    @JvmField val TAG_PLANT_PROJECTILE = registerEntityTag("plant_projectile")
     @JvmField val TAG_CANNOT_CHOMP = registerEntityTag("cannot_be_chomped")
-    @JvmField val ZOMBIE_RAIDERS = registerEntityTag("zombie_raiders")
+    @JvmField val ZOMBIE_RAIDERS = registerEntityTag("zombie_raider")
     private fun registerEntityTag(name: String) = TagKey.create(Registries.ENTITY_TYPE, pazResource(name))
 
     fun initialize() {}
