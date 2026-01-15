@@ -19,7 +19,6 @@ class MelonPult(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.M
             plantEntity = this,
             projectileFactory = { Melon(level = level(), owner = this, spawnOffset = Vec2(-1f, 1f))},
             useHighArc = true,
-            dragAdjustment = -0.58,
             cooldownTime = 70,
             actionDelay = 12))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, false, false) { target, level ->

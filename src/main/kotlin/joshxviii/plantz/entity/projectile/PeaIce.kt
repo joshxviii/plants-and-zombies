@@ -8,12 +8,10 @@ import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec2
-import net.minecraft.world.phys.Vec3
 
 class PeaIce(
     type: EntityType<out PlantProjectile> = PazEntities.PEA_ICE,
@@ -23,13 +21,9 @@ class PeaIce(
 ) : PlantProjectile(type, level, owner, spawnOffset,
     PazDamageTypes.FREEZE
 ) {
-    override fun onHitEntity(hitResult: EntityHitResult) {
-        val target = hitResult.entity
-        if (target is LivingEntity) {
-            target.addEffect(MobEffectInstance(MobEffects.SLOWNESS, 100, 0))
-            target.addEffect(MobEffectInstance(MobEffects.WEAKNESS, 100, 0))
-        }
-        super.onHitEntity(hitResult)
+    override fun afterHitEntityEffect(target: LivingEntity) {
+        target.addEffect(MobEffectInstance(MobEffects.SLOWNESS, 100, 0))
+        target.addEffect(MobEffectInstance(MobEffects.WEAKNESS, 100, 0))
     }
 
     override fun onHit(hitResult: HitResult) {

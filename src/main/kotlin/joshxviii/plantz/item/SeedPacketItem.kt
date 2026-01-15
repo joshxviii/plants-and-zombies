@@ -10,7 +10,9 @@ import joshxviii.plantz.item.component.SeedPacket
 import joshxviii.plantz.item.component.SunCost
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Direction
+import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
@@ -22,7 +24,6 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.gameevent.GameEvent
-import net.minecraft.world.phys.AABB
 
 class SeedPacketItem(properties: Properties) : Item(properties) {
 
@@ -39,70 +40,67 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
         val player = context.player
         val itemStack = context.itemInHand
 
-        // check that player has enough sun to plant
-        val availableSun = player?.inventory?.countItem(PazItems.SUN) ?: 0
-        val sunCost = itemStack.get(PazComponents.SUN_COST)?.sunCost ?: 0
-        if (sunCost > availableSun && player?.isCreative == false) {
-            player.displayClientMessage(
-                Component.translatable("message.plantz.not_enough_sun").withStyle(ChatFormatting.RED), true
+        if (level is ServerLevel) {
+            val entityId = itemStack.get(PazComponents.SEED_PACKET)?.entityId ?: return InteractionResult.FAIL
+            val id = BuiltInRegistries.ENTITY_TYPE.get(entityId)
+
+            val type = if (!id.isEmpty) id.get().value() else return InteractionResult.FAIL
+
+            val pos = context.clickedPos
+            val clickedFace = context.clickedFace
+            val blockState = level.getBlockState(pos)
+
+            val spawnPos = if (blockState.getCollisionShape(level, pos).isEmpty) pos
+            else pos.relative(clickedFace)
+
+            val entity = type.create(
+                level,
+                EntityType.createDefaultStackConfig(level, itemStack, player),
+                spawnPos,
+                EntitySpawnReason.SPAWN_ITEM_USE,
+                true,
+                clickedFace == Direction.UP
             )
-            return InteractionResult.FAIL
-        }
 
-        val entityId = itemStack.get(PazComponents.SEED_PACKET)?.entityId ?: return InteractionResult.FAIL
-        val id = BuiltInRegistries.ENTITY_TYPE.get(entityId)
+            if (entity is Plant) {// check if valid block to plant
+                if (!entity.canSurviveOn(spawnPos.below())) {
+                    entity.discard()
+                    return InteractionResult.FAIL
+                }
+                val yaw = context.horizontalDirection.opposite.toYRot()
+                entity.yHeadRot = yaw
+                entity.yBodyRot = yaw
+                entity.yRot = yaw
+                entity.state = PlantState.GROW
+            }
 
-        val type = if (!id.isEmpty) id.get().value() else return InteractionResult.FAIL
+            // check that player has enough sun to plant
+            val availableSun = player?.inventory?.countItem(PazItems.SUN) ?: 0
+            val sunCost = itemStack.get(PazComponents.SUN_COST)?.sunCost ?: 0
+            if (sunCost > availableSun && player?.isCreative == false) {
+                player.displayClientMessage(
+                    Component.translatable("message.plantz.not_enough_sun", availableSun, sunCost)
+                        .withStyle(ChatFormatting.RED), true
+                )
+                return InteractionResult.FAIL
+            }
 
-        val pos = context.clickedPos
-        val clickedFace = context.clickedFace
-        val blockState = level.getBlockState(pos)
-
-        val spawnPos = if (blockState.getCollisionShape(level, pos).isEmpty) pos
-        else pos.relative(clickedFace)
-
-        // Prevent spawn if there's already a Plant in that block
-        val aabb = AABB(spawnPos)
-        val existingPlants = level.getEntitiesOfClass(Plant::class.java, aabb)
-        if (existingPlants.isNotEmpty()) {
-            player?.displayClientMessage(
-                Component.translatable("message.plantz.already_planted").withStyle(ChatFormatting.RED), true
-            )
-            return InteractionResult.FAIL
-        }
-
-        val entity = if (level is ServerLevel) type.create(
-            level,
-            null,
-            spawnPos,
-            EntitySpawnReason.SPAWN_ITEM_USE,
-            true,
-            clickedFace == Direction.UP
-        ) else null
-
-        if (entity is Plant) {// check if valid block to plant
-            if (!entity.canSurviveOn(spawnPos.below())) {
+            if (entity != null && !level.addFreshEntity(entity)) {
                 entity.discard()
                 return InteractionResult.FAIL
             }
-            val yaw = context.horizontalDirection.opposite.toYRot()
-            entity.yHeadRot = yaw
-            entity.yBodyRot = yaw
-            entity.yRot = yaw
-            entity.state = PlantState.GROW
-        }
 
-        if (entity != null && !level.addFreshEntity(entity)) {
-            entity.discard()
-            return InteractionResult.FAIL
-        }
-
-        if (entity != null) {
-            itemStack.consume(1, player)
-            if (player?.isCreative == false) player.inventory.clearOrCountMatchingItems(Predicate<ItemStack> { it.`is`(PazItems.SUN) }, sunCost, player.inventoryMenu.getCraftSlots());
-            entity.playSound(SoundEvents.BIG_DRIPLEAF_PLACE)
-            if (entity is TamableAnimal && player != null) entity.tame(player)
-            level.gameEvent(player, GameEvent.ENTITY_PLACE, spawnPos)
+            if (entity != null) {
+                itemStack.consume(1, player)
+                if (player?.isCreative == false) player.inventory.clearOrCountMatchingItems(Predicate<ItemStack> {
+                    it.`is`(
+                        PazItems.SUN
+                    )
+                }, sunCost, player.inventoryMenu.getCraftSlots());
+                entity.playSound(SoundEvents.BIG_DRIPLEAF_PLACE)
+                if (entity is TamableAnimal && player != null) entity.tame(player)
+                level.gameEvent(player, GameEvent.ENTITY_PLACE, spawnPos)
+            }
         }
 
         return InteractionResult.SUCCESS_SERVER

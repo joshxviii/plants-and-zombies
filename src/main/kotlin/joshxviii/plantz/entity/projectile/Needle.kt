@@ -1,48 +1,26 @@
 package joshxviii.plantz.entity.projectile
 
+import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.entity.Plant
-import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.projectile.arrow.AbstractArrow
-import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
+import net.minecraft.world.phys.HitResult
+import net.minecraft.world.phys.Vec2
 
-//TODO Use plant projectile class instead
 class Needle(
-    type: EntityType<out AbstractArrow> = PazEntities.NEEDLE,
+    type: EntityType<out PlantProjectile> = PazEntities.NEEDLE,
     level: Level,
+    spawnOffset: Vec2 = Vec2.ZERO,
     owner: Plant? = null,
-) : AbstractArrow(
-    type,
-    owner?.x?:0.0,
-    if (owner!=null) owner.y + owner.eyeHeight else 0.0,
-    owner?.z?:0.0,
-    level,
-    ItemStack.EMPTY,
-    null
+) : PlantProjectile(type, level, owner, spawnOffset,
+    PazDamageTypes.PLANT
 ) {
-
-    init {
-        this.setOwner(owner)
-    }
-
-    override fun tick() {
-        super.tick()
-        if(this.inGroundTime >= 100) discard()
-    }
-
-    override fun canHitEntity(entity: Entity): Boolean {
-        return if (entity is Plant) false
-        else super.canHitEntity(entity)
-    }
-
+    override fun stickInGroundTime(): Int = 100
     override fun getPierceLevel(): Byte = 4
 
-    override fun getDefaultPickupItem(): ItemStack =ItemStack.EMPTY
-
-    override fun getDefaultHitGroundSoundEvent(): SoundEvent = SoundEvents.EMPTY
-
+    override fun onHit(hitResult: HitResult) {
+        super.onHit(hitResult)
+    }
 }

@@ -24,7 +24,6 @@ class ProjectileAttackPlantGoal(
     val velocity : Double = 0.9,
     val inaccuracy: Float = 0.0f,
     val useHighArc: Boolean = false,
-    val dragAdjustment: Double? = null
 ) : PlantActionGoal(plantEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
     var distanceSqr: Double = 0.0
     var attackRadius : Float = 0.0f
@@ -71,17 +70,9 @@ class ProjectileAttackPlantGoal(
             return false
         }
 
-        val chosenAngle = if(useHighArc) arcs.first else arcs.second
+        val finalAngle = if(useHighArc) arcs.first else arcs.second
 
         val horizDist = relativePos.horizontalDistance()
-
-        var finalAngle = chosenAngle
-        if(dragAdjustment!=null) {// try to account for the drag that gets added for long airtime
-            val flightTimeEstimate = horizDist / (velocity * cos(chosenAngle)) * dragAdjustment
-            val bias = flightTimeEstimate * projectile.gravity * 0.3
-            val adjustedY = sin(chosenAngle) + bias / velocity
-            finalAngle = atan2(adjustedY, cos(chosenAngle))
-        }
 
         val horizUnitX = relativePos.x / horizDist
         val horizUnitZ = relativePos.z / horizDist

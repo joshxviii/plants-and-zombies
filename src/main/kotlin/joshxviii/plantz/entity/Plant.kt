@@ -10,6 +10,8 @@ import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
+import net.minecraft.core.component.DataComponents
+import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.chat.Component
@@ -39,6 +41,7 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import java.util.*
@@ -166,18 +169,19 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun tick() {
         super.tick()
+        val level = this.level()
 
-        if (!onValidGround() || isOverlappingWithOther(this.blockPosition())) {
-            if (--this.nutrientSupply <= 0) {
-                if (this.tickCount % 20 == 0) {
-                    val level = this.level()
-                    if (level is ServerLevel) this.hurtServer(level, this.damageSources().dryOut(), 2.0f)
+        if (level is ServerLevel) {
+            if (!onValidGround() || isOverlappingWithOther(this.blockPosition())) {
+                if (--this.nutrientSupply <= 0) {
+                    if (this.tickCount % 20 == 0) {
+                        this.hurtServer(level, this.damageSources().dryOut(), 2.0f)
+                    }
                 }
-            }
-            //panic particles when low on nutrients
-            if (this.nutrientSupply < 100 && this.random.nextInt(10) == 0) addParticlesAroundSelf()
+                //panic particles when low on nutrients
+                if (this.nutrientSupply < 100 && this.random.nextInt(10) == 0) addParticlesAroundSelf(level)
+            } else this.nutrientSupply = NUTRIENT_SUPPLY_MAX
         }
-        else this.nutrientSupply = NUTRIENT_SUPPLY_MAX
 
         --cooldown
         if (this.level().isClientSide && !this.isNoAi) { updateAnimationState() }
@@ -244,63 +248,92 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun mobInteract(player: Player, hand: InteractionHand): InteractionResult {
         val itemStack = player.getItemInHand(hand)
+        val level = this.level()
 
-        // sun iteration
-        if (itemStack.`is`(PazItems.SUN) ) {// heal
-            if (this.isTame && this.health < this.maxHealth) {
-                itemStack.consume(1, player)
-                this.addParticlesAroundSelf(ParticleTypes.HAPPY_VILLAGER)
-                this.heal( this.maxHealth / 10 )
-                return InteractionResult.SUCCESS
-            }
-            else if (!this.isTame) {// try to tame
-                itemStack.consume(1, player)
-                if (this.random.nextInt(4) == 0) {
-                    this.tame(player)
-                    this.target = null
-                    this.level().broadcastEntityEvent(this, 7.toByte())
-                } else {
-                    this.level().broadcastEntityEvent(this, 6.toByte())
+        if (level is ServerLevel) {
+            // sun iteration
+            if (itemStack.`is`(PazItems.SUN) ) {// heal
+                if (this.isTame && this.health < this.maxHealth) {
+                    itemStack.consume(1, player)
+                    this.addParticlesAroundSelf(level, ParticleTypes.HAPPY_VILLAGER)
+                    this.heal( this.maxHealth / 10 )
+                    return InteractionResult.SUCCESS_SERVER
                 }
-                return InteractionResult.SUCCESS
+                else if (!this.isTame) {// try to tame
+                    itemStack.consume(1, player)
+                    if (this.random.nextInt(4) == 0) {
+                        this.tame(player)
+                        this.target = null
+                        level.broadcastEntityEvent(this, 7.toByte())
+                    } else {
+                        level.broadcastEntityEvent(this, 6.toByte())
+                    }
+                    return InteractionResult.SUCCESS_SERVER
+                }
+            }
+
+            // shovel interaction
+            if (itemStack.`is`(ItemTags.SHOVELS)) {
+
+                if (!this.isTame || player != this.owner) {
+                    player.displayClientMessage(
+                        Component.translatable("message.plantz.not_yours", this.name).withStyle(ChatFormatting.RED),
+                        true
+                    )
+                    return InteractionResult.FAIL
+                }
+
+                // apply tool damage base on how damaged the plant was
+                val shovelCost = ((1.0 - (this.health / this.maxHealth)) * 128).toInt()
+                itemStack.hurtAndBreak(shovelCost, player, hand.asEquipmentSlot())
+                if (!player.isCreative) run {// Spawn a seed packet item containing this plant's data
+                    val stack = SeedPacketItem.stackFor(this.type)
+                    stack.set(DataComponents.CUSTOM_NAME, this.name)
+                    val itemEntity = ItemEntity(level, this.x, this.y + 0.5, this.z, stack)
+                    level.addFreshEntity(itemEntity)
+                }
+                this.playSound(SoundEvents.ROOTED_DIRT_BREAK)
+                level.sendParticles(BlockParticleOption(ParticleTypes.BLOCK, Blocks.DIRT.defaultBlockState()), this.x, this.y+0.05, this.z, 16, 0.25,0.0,0.25, 0.4)
+                this.discard()
+
+                return InteractionResult.SUCCESS_SERVER
             }
         }
-
-        // shovel interaction
-        if (itemStack.`is`(ItemTags.SHOVELS)) {
-
-            if (!this.isTame || player != this.owner) {
-                player.displayClientMessage(
-                    Component.translatable("message.plantz.not_yours", this.name).withStyle(ChatFormatting.RED),
-                    true
-                )
-                return InteractionResult.FAIL
-            }
-
-            // apply tool damage base on how damaged the plant was
-            val shovelCost = ((1.0 - (this.health / this.maxHealth)) * 128).toInt()
-            itemStack.hurtAndBreak(shovelCost, player, hand.asEquipmentSlot())
-            if (!player.isCreative) run {// Spawn a seed packet item containing this plant's data
-                val stack = SeedPacketItem.stackFor(this.type)
-                val itemEntity = ItemEntity(this.level(), this.x, this.y + 0.5, this.z, stack)
-                this.level().addFreshEntity(itemEntity)
-            }
-            this.playSound(SoundEvents.BIG_DRIPLEAF_BREAK)
-            this.discard()
-
-            return InteractionResult.SUCCESS
-        }
-        
         return super.mobInteract(player, hand)
     }
 
-    fun addParticlesAroundSelf(particle: ParticleOptions = ParticleTypes.SPLASH, amount: Int = 4) {
-        repeat(amount) {
+    fun addParticlesAroundSelf(
+        level: Level,
+        particle: ParticleOptions = ParticleTypes.SPLASH,
+        amount: Int = 8,
+        horizontalSpreadScale: Double = 0.6,
+        verticalSpreadScale: Double = 1.0
+    ) {
+        if (level is ServerLevel) {
+            level.sendParticles(
+                particle,
+                x, y, z,
+                amount,
+                horizontalSpreadScale, verticalSpreadScale, horizontalSpreadScale,
+                0.0
+            )
+        }
+        else repeat(amount) {
+            // Random offsets for velocity
             val xa = this.random.nextGaussian() * 0.02
             val ya = this.random.nextGaussian() * 0.02
             val za = this.random.nextGaussian() * 0.02
-            this.level()
-                .addParticle(particle, this.getRandomX(0.6), this.position().y + this.eyeHeight, this.getRandomZ(0.6), xa, ya, za)
+
+            // Position inside the bounding box
+            val px = this.getRandomX(horizontalSpreadScale)
+            val py = this.y + this.random.nextDouble() * this.bbHeight * verticalSpreadScale
+            val pz = this.getRandomZ(horizontalSpreadScale)
+
+            level.addParticle(
+                particle,
+                px, py, pz,
+                xa, ya, za
+            )
         }
     }
 }

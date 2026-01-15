@@ -47,8 +47,8 @@ class Melon(
             LivingEntity::class.java,
             this.boundingBox.inflate(3.5)
         ).forEach { nearby: LivingEntity? ->
-            if (nearby is Plant) return@forEach
-            val direction = nearby!!.position().subtract(this.position())
+            if (nearby == null || !canHitEntity(nearby)) return@forEach
+            val direction = nearby.position().subtract(this.position())
             val knockbackVector = direction.normalize().scale(knockback)
             if (knockback > 0.0) {
                 nearby.push(knockbackVector.x, 0.32, knockbackVector.z)

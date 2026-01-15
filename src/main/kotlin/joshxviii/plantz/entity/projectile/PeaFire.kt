@@ -5,6 +5,7 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.entity.Plant
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
@@ -19,9 +20,7 @@ class PeaFire(
 ) : PlantProjectile(type, level, owner, spawnOffset,
     PazDamageTypes.FIRE,
 ) {
-    override fun onHitEntity(hitResult: EntityHitResult) {
-        super.onHitEntity(hitResult)
-        val target = hitResult.entity
+    override fun afterHitEntityEffect(target: LivingEntity) {
         target.igniteForSeconds(3.0f);
     }
 
