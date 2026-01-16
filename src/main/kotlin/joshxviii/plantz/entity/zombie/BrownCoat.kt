@@ -7,6 +7,7 @@ import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.monster.zombie.Zombie
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 
@@ -60,6 +61,10 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : Zombie(type, le
         val difficultyModifier = difficulty.specialMultiplier
         if (spawnReason != EntitySpawnReason.CONVERSION) {
             this.setCanPickUpLoot(random.nextFloat() < 0.55f * difficultyModifier)
+
+            if (random.nextFloat() < 0.25f) {
+                this.setItemSlot(EquipmentSlot.HEAD, Items.BUCKET.defaultInstance)
+            }
         }
 
         return groupData

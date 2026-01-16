@@ -1,6 +1,8 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.PazEntities.BROWN_COAT
 import joshxviii.plantz.entity.plants.Plant
+import joshxviii.plantz.entity.zombie.BrownCoat
 import joshxviii.plantz.item.SeedPacketItem
 import joshxviii.plantz.item.component.SeedPacket
 import joshxviii.plantz.item.component.SunCost
@@ -13,9 +15,12 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntitySpawnReason
+import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraft.world.item.MinecartItem
+import net.minecraft.world.item.SpawnEggItem
 import net.minecraft.world.level.block.DispenserBlock
 import net.minecraft.world.level.gameevent.GameEvent
 import java.util.function.Function
@@ -38,6 +43,9 @@ object PazItems {
         properties = Item.Properties().stacksTo(1)
     )
 
+    @JvmField
+    val BROWN_COAT_SPAWN_EGG: Item = registerSpawnEgg(BROWN_COAT)
+
     private fun registerItem(
         name: String,
         itemFactory: Function<Item.Properties, Item> = { p: Item.Properties -> Item(p) },
@@ -49,6 +57,14 @@ object PazItems {
         Registry.register(BuiltInRegistries.ITEM, key, item)
 
         return item
+    }
+
+    private fun registerSpawnEgg(type: EntityType<*>): Item {
+        return registerItem(
+            EntityType.getKey(type).path + "_spawn_egg",
+            Function { properties: Item.Properties -> SpawnEggItem(properties) },
+            Item.Properties().spawnEgg(type)
+        )
     }
 
     fun initialize() {// Dispenser behavior

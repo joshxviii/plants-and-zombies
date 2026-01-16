@@ -23,6 +23,9 @@ object PazCreativeTab {
             .icon { ItemStack(PazItems.SUN) }
 
             .displayItems { parameters, output ->
+                output.accept(PazItems.SUN)
+                output.accept(PazBlocks.PLANT_POT)
+                output.accept(PazItems.PLANT_POT_MINECART)
                 // Seed packets for each plant type
                 output.accept(SeedPacketItem.stackFor(PazEntities.SUNFLOWER))
                 output.accept(SeedPacketItem.stackFor(PazEntities.PEA_SHOOTER))
@@ -38,9 +41,9 @@ object PazCreativeTab {
                 output.accept(SeedPacketItem.stackFor(PazEntities.PUFF_SHROOM))
                 output.accept(SeedPacketItem.stackFor(PazEntities.FUME_SHROOM))
                 output.accept(SeedPacketItem.stackFor(PazEntities.SUN_SHROOM))
-                output.accept(PazItems.SUN)
-                output.accept(PazBlocks.PLANT_POT)
-                output.accept(PazItems.PLANT_POT_MINECART)
+                // zombie spawn eggs
+                output.accept(PazItems.BROWN_COAT_SPAWN_EGG)
+
             }
             .build()
     )
