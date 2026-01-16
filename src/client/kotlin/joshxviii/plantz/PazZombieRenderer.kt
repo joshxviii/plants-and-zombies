@@ -44,3 +44,7 @@ class PazZombieRenderer(
         return pazResource("${baseTexture}.png")
     }
 }
+
+class PazZombieRenderState : ZombieRenderState() {
+    var texturePath: String = "default"
+}

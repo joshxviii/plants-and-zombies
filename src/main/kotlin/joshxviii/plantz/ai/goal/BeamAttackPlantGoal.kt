@@ -1,7 +1,7 @@
 package joshxviii.plantz.ai.goal
 
 import joshxviii.plantz.PazDamageTypes
-import joshxviii.plantz.entity.plants.Plant
+import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
@@ -29,7 +29,8 @@ class BeamAttackPlantGoal(
 
     override fun canUse(): Boolean = (
         plantEntity.tickCount>cooldownTime
-        && plantEntity.target?.isAlive == true
+            && plantEntity.target?.isAlive == true
+            && !plantEntity.isAsleep
     )
 
     override fun canDoAction(): Boolean {

@@ -3,7 +3,7 @@ package joshxviii.plantz.entity
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.block.PlantPotBlock
-import joshxviii.plantz.entity.plants.Plant
+import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction

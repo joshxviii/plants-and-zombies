@@ -1,4 +1,4 @@
-package joshxviii.plantz.entity.plants
+package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.ai.goal.ProjectileAttackPlantGoal
@@ -10,7 +10,7 @@ import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.level.Level
 
-class PuffShroom(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.PUFF_SHROOM, level) {
+class PuffShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEntities.PUFF_SHROOM, level) {
     override fun registerGoals() {
         super.registerGoals()
 

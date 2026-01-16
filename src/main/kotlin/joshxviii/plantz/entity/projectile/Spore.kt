@@ -4,7 +4,7 @@ import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazServerParticles
-import joshxviii.plantz.entity.plants.Plant
+import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity

@@ -1,6 +1,7 @@
 package joshxviii.plantz.entity.plants
 
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity

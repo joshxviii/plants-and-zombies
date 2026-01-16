@@ -9,6 +9,7 @@ import net.minecraft.client.model.EntityModel
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.client.renderer.entity.state.EntityRenderState
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.state.CameraRenderState
@@ -70,4 +71,11 @@ class ProjectileRenderer(
         val baseTexture = "textures/entity/projectile/${state.texturePath}.png"
         return pazResource(baseTexture)
     }
+}
+
+class ProjectileRenderState : EntityRenderState() {
+    var xRot: Float = 0f
+    var yRot: Float = 0f
+    var texturePath: String = "default"
+    var emissive: Boolean = false
 }

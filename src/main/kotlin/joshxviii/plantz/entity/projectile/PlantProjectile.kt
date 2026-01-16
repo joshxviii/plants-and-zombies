@@ -1,7 +1,7 @@
 package joshxviii.plantz.entity.projectile
 
 import joshxviii.plantz.PazDamageTypes
-import joshxviii.plantz.entity.plants.Plant
+import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes

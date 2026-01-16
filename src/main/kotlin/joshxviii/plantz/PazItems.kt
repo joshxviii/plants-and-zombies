@@ -1,14 +1,12 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.PazEntities.BROWN_COAT
-import joshxviii.plantz.entity.plants.Plant
-import joshxviii.plantz.entity.zombie.BrownCoat
+import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.item.SeedPacketItem
 import joshxviii.plantz.item.component.SeedPacket
 import joshxviii.plantz.item.component.SunCost
 import net.minecraft.core.Direction
 import net.minecraft.core.Registry
-import net.minecraft.core.component.DataComponents
 import net.minecraft.core.dispenser.BlockSource
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior
 import net.minecraft.core.registries.BuiltInRegistries
@@ -17,17 +15,10 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.entity.EquipmentSlotGroup
-import net.minecraft.world.entity.ai.attributes.AttributeModifier
-import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import net.minecraft.world.item.MinecartItem
 import net.minecraft.world.item.SpawnEggItem
-import net.minecraft.world.item.component.ItemAttributeModifiers
-import net.minecraft.world.item.equipment.Equippable
 import net.minecraft.world.level.block.DispenserBlock
 import net.minecraft.world.level.gameevent.GameEvent
 import java.util.function.Function

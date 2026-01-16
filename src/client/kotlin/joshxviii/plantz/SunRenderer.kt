@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.client.renderer.entity.state.EntityRenderState
 import net.minecraft.client.renderer.rendertype.OutputTarget
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
@@ -112,4 +113,9 @@ class SunRenderer(context: EntityRendererProvider.Context) :
                 .setNormal(pose, 0.0f, 1.0f, 0.0f)
         }
     }
+}
+
+class SunRenderState : EntityRenderState() {
+    var icon: Int = 0
+    var value: Int = 0
 }

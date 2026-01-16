@@ -1,7 +1,8 @@
-package joshxviii.plantz.entity.plants
+package joshxviii.plantz.entity.plant
 
 import PazDataSerializers.DATA_COOLDOWN
 import PazDataSerializers.DATA_PLANT_STATE
+import PazDataSerializers.DATA_SLEEPING
 import joshxviii.plantz.PazAttributes
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
@@ -39,6 +40,7 @@ import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.LightLayer
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
@@ -55,6 +57,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
         val PLANT_STATE: EntityDataAccessor<PlantState> = SynchedEntityData.defineId<PlantState>(Plant::class.java, DATA_PLANT_STATE)
         val COOLDOWN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_COOLDOWN)
+        val SLEEPING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, DATA_SLEEPING)
 
         data class PlantAttributes(
             val maxHealth: Double = 20.0,
@@ -80,6 +83,12 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     private var nutrientSupply = NUTRIENT_SUPPLY_MAX
 
+    var isAsleep: Boolean
+        get() = this.entityData.get(SLEEPING)
+        set(value) {
+            this.entityData.set(SLEEPING, value)
+        }
+
     val damagedPercent: Float
         get() { return 1.0f - (this.health / this.maxHealth); }
 
@@ -99,10 +108,17 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     val idleAnimationState = AnimationState()
     val actionAnimationState = AnimationState()
     val coolDownAnimationState = AnimationState()
+    val rechargeAnimationState = AnimationState()
+    val sleepAnimationState = AnimationState()
 
     init {
         cooldown = -1
-        this.lookControl = object : LookControl(this) { override fun clampHeadRotationToBody() {} }
+        this.lookControl = object : LookControl(this) {
+            override fun clampHeadRotationToBody() {}
+            override fun tick() {
+                if (!isAsleep) super.tick()
+            }
+        }
         idleAnimationStartTick = this.random.nextInt(200, 240)
     }
 
@@ -119,6 +135,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         super.defineSynchedData(entityData)
         entityData.define(PLANT_STATE, PlantState.IDLE)
         entityData.define(COOLDOWN, 0)
+        entityData.define(SLEEPING, false)
     }
 
     override fun getAmbientSound(): SoundEvent? {
@@ -201,6 +218,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 this.initAnimationState.stop()
                 this.actionAnimationState.stop()
                 this.coolDownAnimationState.stop()
+                this.rechargeAnimationState.stop()
+                this.sleepAnimationState.stop()
+                if (isAsleep) state = PlantState.SLEEP
                 if (cooldown > 0) {
                     state = PlantState.ACTION
                 }
@@ -211,10 +231,20 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 state = PlantState.COOLDOWN
             }
             PlantState.COOLDOWN -> {
-                this.coolDownAnimationState.startIfStopped(this.tickCount)
+                //this.coolDownAnimationState.startIfStopped(this.tickCount)
                 if (cooldown <= 0) {
                     state = PlantState.IDLE
                 }
+            }
+            PlantState.RECHARGE -> state = PlantState.IDLE
+            PlantState.SLEEP -> {
+                this.sleepAnimationState.startIfStopped(this.tickCount)
+                this.idleAnimationState.stop()
+                this.initAnimationState.stop()
+                this.actionAnimationState.stop()
+                this.coolDownAnimationState.stop()
+                this.rechargeAnimationState.stop()
+                if (!isAsleep) state = PlantState.IDLE
             }
             PlantState.GROW -> {
                 this.initAnimationState.startIfStopped(0)
@@ -244,6 +274,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     // if on invalid ground plant should start to suffocate
     private fun onValidGround() : Boolean {
         return canSurviveOn(getBlockBelow()) || this.vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
+    }
+
+    fun sunIsVisible() : Boolean {
+        return this.level().isBrightOutside && this.level().getBrightness(LightLayer.SKY, BlockPos.containing(x, eyeY, z)) >= 7
     }
 
     fun getBlockBelow(): BlockState {

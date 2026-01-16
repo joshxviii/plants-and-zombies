@@ -1,6 +1,6 @@
 package joshxviii.plantz.ai.goal
 
-import joshxviii.plantz.entity.plants.Plant
+import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.Mth
@@ -27,7 +27,8 @@ class ProjectileAttackPlantGoal(
 
     override fun canUse(): Boolean = (
         plantEntity.tickCount>cooldownTime
-        && plantEntity.target?.isAlive == true
+            && plantEntity.target?.isAlive == true
+            && !plantEntity.isAsleep
     )
 
     override fun stop() {

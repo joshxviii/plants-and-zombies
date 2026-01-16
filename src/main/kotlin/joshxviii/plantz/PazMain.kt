@@ -2,7 +2,7 @@ package joshxviii.plantz
 
 import PazDataSerializers
 import joshxviii.plantz.PazTags.EntityTypes.ATTACKS_PLANTS
-import joshxviii.plantz.entity.plants.Plant
+import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.plants.WallNut
 import joshxviii.plantz.mixin.MobAccessor
 import net.fabricmc.api.ModInitializer

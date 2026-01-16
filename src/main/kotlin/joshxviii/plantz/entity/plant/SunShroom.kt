@@ -1,4 +1,4 @@
-package joshxviii.plantz.entity.plants
+package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.ai.PlantState
@@ -7,9 +7,9 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.level.Level
 
 class SunShroom(
-    type: EntityType<out Plant>,
+    type: EntityType<out Mushroom>,
     level: Level,
-) : Plant(PazEntities.SUN_SHROOM, level) {
+) : Mushroom(PazEntities.SUN_SHROOM, level) {
     override fun attackGoals() {}
 
     override fun registerGoals() {
@@ -17,7 +17,7 @@ class SunShroom(
         this.goalSelector.addGoal(1, GenerateSunGoal(
             plantEntity = this,
             actionDelay = 10,
-            generateAtNight = true
+            generatesAtNight = true
         ))
     }
 

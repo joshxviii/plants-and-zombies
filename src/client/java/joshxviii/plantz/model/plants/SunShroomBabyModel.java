@@ -19,6 +19,7 @@ public class SunShroomBabyModel extends SunShroomModel {
 	private final KeyframeAnimation idleAnimation;
 	private final KeyframeAnimation initAnimation;
 	private final KeyframeAnimation actionAnimation;
+	private final KeyframeAnimation sleepAnimation;
 
 	public SunShroomBabyModel(ModelPart root) {
 		super(root);
@@ -28,6 +29,7 @@ public class SunShroomBabyModel extends SunShroomModel {
 		this.initAnimation = SunShroomBabyAnimation.init.bake(root);
 		this.idleAnimation = SunShroomBabyAnimation.idle.bake(root);
 		this.actionAnimation = SunShroomBabyAnimation.action.bake(root);
+		this.sleepAnimation = SunShroomBabyAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -50,5 +52,6 @@ public class SunShroomBabyModel extends SunShroomModel {
 		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
+		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

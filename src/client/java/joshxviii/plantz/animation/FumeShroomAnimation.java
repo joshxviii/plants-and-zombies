@@ -81,8 +81,8 @@ public class FumeShroomAnimation {
 			.addAnimation("barrel", new AnimationChannel(AnimationChannel.Targets.SCALE,
 					new Keyframe(0.0F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(0.44F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM),
-					new Keyframe(0.52F, KeyframeAnimations.scaleVec(0.8F, 1.0F, 1.5F), AnimationChannel.Interpolations.CATMULLROM),
-					new Keyframe(1.2F, KeyframeAnimations.scaleVec(0.8F, 1.0F, 1.5F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(0.52F, KeyframeAnimations.scaleVec(0.8F, 1.0F, 1.1F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(1.2F, KeyframeAnimations.scaleVec(0.8F, 1.0F, 1.1F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(1.48F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM)
 			))
 			.addAnimation("head", new AnimationChannel(AnimationChannel.Targets.ROTATION,
@@ -180,6 +180,50 @@ public class FumeShroomAnimation {
 					new Keyframe(0.76F, KeyframeAnimations.scaleVec(1.2F, 0.9F, 1.1F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(0.84F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(1.0F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM)
+			))
+			.build();
+
+	public static final AnimationDefinition sleep = AnimationDefinition.Builder.withLength(4.0F).looping()
+			.addAnimation("spout", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+					new Keyframe(0.0F, KeyframeAnimations.degreeVec(37.5F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(1.48F, KeyframeAnimations.degreeVec(37.5F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(2.72F, KeyframeAnimations.degreeVec(17.5F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(3.56F, KeyframeAnimations.degreeVec(40.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(4.0F, KeyframeAnimations.degreeVec(37.5F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
+			))
+			.addAnimation("cap", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+					new Keyframe(0.0F, KeyframeAnimations.degreeVec(9.9539F, -1.0809F, 4.8821F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(1.48F, KeyframeAnimations.degreeVec(4.9937F, -0.7557F, 2.403F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(3.0F, KeyframeAnimations.degreeVec(9.9539F, -1.0809F, 4.8821F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(4.0F, KeyframeAnimations.degreeVec(9.9539F, -1.0809F, 4.8821F), AnimationChannel.Interpolations.CATMULLROM)
+			))
+			.addAnimation("cap", new AnimationChannel(AnimationChannel.Targets.SCALE,
+					new Keyframe(0.0F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(1.48F, KeyframeAnimations.scaleVec(0.9F, 1.0F, 0.9F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(3.0F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(4.0F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM)
+			))
+			.addAnimation("eyebrow_L", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+					new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 10.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(4.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 10.0F), AnimationChannel.Interpolations.CATMULLROM)
+			))
+			.addAnimation("eyebrow_L", new AnimationChannel(AnimationChannel.Targets.POSITION,
+					new Keyframe(0.0F, KeyframeAnimations.posVec(0.25F, -1.25F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(4.0F, KeyframeAnimations.posVec(0.25F, -1.25F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
+			))
+			.addAnimation("eyebrow_R", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+					new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, -10.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(4.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, -10.0F), AnimationChannel.Interpolations.CATMULLROM)
+			))
+			.addAnimation("eyebrow_R", new AnimationChannel(AnimationChannel.Targets.POSITION,
+					new Keyframe(0.0F, KeyframeAnimations.posVec(-0.25F, -1.25F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(4.0F, KeyframeAnimations.posVec(-0.25F, -1.25F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
+			))
+			.addAnimation("head", new AnimationChannel(AnimationChannel.Targets.SCALE,
+					new Keyframe(0.0F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(1.48F, KeyframeAnimations.scaleVec(0.95F, 1.05F, 0.95F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(3.0F, KeyframeAnimations.scaleVec(1.1F, 0.9F, 1.1F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(4.0F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM)
 			))
 			.build();
 }

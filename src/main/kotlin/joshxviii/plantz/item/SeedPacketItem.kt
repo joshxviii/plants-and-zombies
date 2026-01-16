@@ -5,7 +5,7 @@ import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazEntities.getSunCostFromType
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.ai.PlantState
-import joshxviii.plantz.entity.plants.Plant
+import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.item.component.SeedPacket
 import joshxviii.plantz.item.component.SunCost
 import net.minecraft.ChatFormatting

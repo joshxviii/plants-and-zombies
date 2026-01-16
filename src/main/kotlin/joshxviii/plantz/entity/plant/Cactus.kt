@@ -1,4 +1,4 @@
-package joshxviii.plantz.entity.plants
+package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.ai.goal.FurthestAttackableTargetGoal

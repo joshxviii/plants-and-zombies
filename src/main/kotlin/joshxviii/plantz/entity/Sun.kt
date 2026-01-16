@@ -2,7 +2,7 @@ package joshxviii.plantz.entity
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
-import joshxviii.plantz.entity.plants.Plant
+import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor

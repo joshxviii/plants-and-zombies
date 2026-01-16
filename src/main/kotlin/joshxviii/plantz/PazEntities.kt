@@ -1,6 +1,20 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.entity.*
+import joshxviii.plantz.entity.plant.Cactus
+import joshxviii.plantz.entity.plant.CherryBomb
+import joshxviii.plantz.entity.plant.Chomper
+import joshxviii.plantz.entity.plant.FirePeaShooter
+import joshxviii.plantz.entity.plant.FumeShroom
+import joshxviii.plantz.entity.plant.IcePeaShooter
+import joshxviii.plantz.entity.plant.MelonPult
+import joshxviii.plantz.entity.plant.PeaShooter
+import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.entity.plant.PotatoMine
+import joshxviii.plantz.entity.plant.PuffShroom
+import joshxviii.plantz.entity.plant.Repeater
+import joshxviii.plantz.entity.plant.SunShroom
+import joshxviii.plantz.entity.plant.Sunflower
 import joshxviii.plantz.entity.plants.*
 import joshxviii.plantz.entity.projectile.*
 import joshxviii.plantz.entity.zombie.BrownCoat

@@ -1,6 +1,6 @@
 package joshxviii.plantz.ai.goal
 
-import joshxviii.plantz.entity.plants.Plant
+import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.Sun
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
@@ -13,14 +13,15 @@ class GenerateSunGoal(
     actionStartEffect: () -> Unit = {},
     actionEndEffect: () -> Unit = {},
     val sunAmount: Int = 5,
-    val generateAtNight: Boolean = false,
+    val generatesAtNight : Boolean = false
 ): PlantActionGoal(plantEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
     override fun canUse(): Boolean = (
-        plantEntity.tickCount>cooldownTime &&
-        plantEntity.isAlive
+        plantEntity.tickCount>cooldownTime
+            && !plantEntity.isAsleep
+            && plantEntity.isAlive
     )
 
-    override fun canDoAction(): Boolean = generateAtNight || sunIsVisible()
+    override fun canDoAction(): Boolean = (generatesAtNight || plantEntity.sunIsVisible())
 
     override fun doAction() : Boolean {
         val serverLevel = plantEntity.level() as? ServerLevel ?: return false
@@ -28,9 +29,4 @@ class GenerateSunGoal(
         plantEntity.playSound(SoundEvents.CHICKEN_EGG, 1.0f, 0.5f)
         return true
     }
-
-    private fun sunIsVisible() : Boolean = (
-        plantEntity.level().isBrightOutside &&
-        plantEntity.level().canSeeSky(BlockPos.containing(plantEntity.x, plantEntity.eyeY, plantEntity.z))
-    )
 }

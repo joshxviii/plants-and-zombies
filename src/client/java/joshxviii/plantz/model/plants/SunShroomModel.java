@@ -23,6 +23,7 @@ public class SunShroomModel extends EntityModel<@NotNull PlantRenderState> {
 	private final KeyframeAnimation idleAnimation;
 	private final KeyframeAnimation initAnimation;
 	private final KeyframeAnimation actionAnimation;
+	private final KeyframeAnimation sleepAnimation;
 
 	public SunShroomModel(ModelPart root) {
 		super(root);
@@ -32,6 +33,7 @@ public class SunShroomModel extends EntityModel<@NotNull PlantRenderState> {
 		this.initAnimation = SunShroomAnimation.init.bake(root);
 		this.idleAnimation = SunShroomAnimation.idle.bake(root);
 		this.actionAnimation = SunShroomAnimation.action.bake(root);
+		this.sleepAnimation = SunShroomAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -54,5 +56,6 @@ public class SunShroomModel extends EntityModel<@NotNull PlantRenderState> {
 		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
+		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

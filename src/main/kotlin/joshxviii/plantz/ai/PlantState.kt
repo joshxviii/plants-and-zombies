@@ -15,7 +15,9 @@ enum class PlantState(val title: String, val id: Int) : StringRepresentable {
     IDLE("idle", 0),
     GROW("cooldown", 1),
     ACTION("action", 2),
-    COOLDOWN("cooldown", 3);
+    COOLDOWN("cooldown", 3),
+    RECHARGE("recharge", 4),
+    SLEEP("sleep", 5);
     override fun getSerializedName(): String = this.title
     companion object {
         val CODEC: Codec<PlantState> = StringRepresentable.fromEnum(PlantState::values)

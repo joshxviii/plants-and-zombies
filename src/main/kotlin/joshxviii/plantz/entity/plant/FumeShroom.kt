@@ -1,4 +1,4 @@
-package joshxviii.plantz.entity.plants
+package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazEffects
@@ -13,7 +13,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.level.Level
 
-class FumeShroom(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.FUME_SHROOM, level) {
+class FumeShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEntities.FUME_SHROOM, level) {
     var sprayTime = -1
 
     override fun registerGoals() {

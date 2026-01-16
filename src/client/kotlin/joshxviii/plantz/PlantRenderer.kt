@@ -1,15 +1,17 @@
 package joshxviii.plantz
 
 import com.mojang.blaze3d.vertex.PoseStack
-import joshxviii.plantz.entity.plants.Plant
+import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.client.Minecraft
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.MobRenderer
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.client.renderer.state.CameraRenderState
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
+import net.minecraft.world.entity.AnimationState
 
 class PlantRenderer(
     private val defaultModel: EntityModel<PlantRenderState>,
@@ -37,17 +39,22 @@ class PlantRenderer(
     override fun extractRenderState(entity: Plant, state: PlantRenderState, partialTick: Float) {
         super.extractRenderState(entity, state, partialTick)
 
+        state.isAsleep = entity.isAsleep
         state.damagedAmount = entity.damagedPercent
         state.texturePath = BuiltInRegistries.ENTITY_TYPE.getKey(entity.type).path
         state.initAnimationState.copyFrom(entity.initAnimationState)
         state.idleAnimationState.copyFrom(entity.idleAnimationState)
         state.actionAnimationState.copyFrom(entity.actionAnimationState)
         state.coolDownAnimationState.copyFrom(entity.coolDownAnimationState)
+        state.rechargeAnimationState.copyFrom(entity.rechargeAnimationState)
+        state.sleepAnimationState.copyFrom(entity.sleepAnimationState)
     }
 
     override fun getTextureLocation(state: PlantRenderState): Identifier {
 
-        val baseTexture = "textures/entity/plant/${state.texturePath}/${state.texturePath}${if(state.isBaby) "_baby" else ""}"
+        val baseTexture = "textures/entity/plant/${state.texturePath}/${state.texturePath}${
+            if(state.isBaby) "_baby" else ""}${
+            if(state.isAsleep) "_sleep" else ""}"
 
         val base = pazResource("${baseTexture}.png")
         val damage = when (state.damagedAmount) {// change texture based on damage
@@ -60,4 +67,16 @@ class PlantRenderer(
         else
             base
     }
+}
+
+class PlantRenderState : LivingEntityRenderState() {
+    var damagedAmount: Float = 0.0f
+    var isAsleep: Boolean = false
+    var texturePath: String = "default"
+    val initAnimationState: AnimationState = AnimationState()
+    val idleAnimationState: AnimationState = AnimationState()
+    val actionAnimationState: AnimationState = AnimationState()
+    val coolDownAnimationState: AnimationState = AnimationState()
+    val rechargeAnimationState: AnimationState = AnimationState()
+    val sleepAnimationState: AnimationState = AnimationState()
 }
