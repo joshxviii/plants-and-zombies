@@ -40,9 +40,5 @@ object PazBlocks {
         return block
     }
 
-    @JvmField val TAG_PLANTABLE = registerBlockTag("plantable")
-
-    private fun registerBlockTag(name: String) = TagKey.create(Registries.BLOCK, pazResource(name))
-
     fun initialize() {}
 }

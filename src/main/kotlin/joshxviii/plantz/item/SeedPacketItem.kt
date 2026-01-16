@@ -5,14 +5,12 @@ import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazEntities.getSunCostFromType
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.ai.PlantState
-import joshxviii.plantz.entity.Plant
+import joshxviii.plantz.entity.plants.Plant
 import joshxviii.plantz.item.component.SeedPacket
 import joshxviii.plantz.item.component.SunCost
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Direction
-import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
@@ -24,6 +22,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.gameevent.GameEvent
+import net.minecraft.world.phys.AABB
 
 class SeedPacketItem(properties: Properties) : Item(properties) {
 
@@ -63,7 +62,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             )
 
             if (entity is Plant) {// check if valid block to plant
-                if (!entity.canSurviveOn(spawnPos.below())) {
+                if (!entity.canSurviveOn(level.getBlockState(spawnPos.below()))) {
                     entity.discard()
                     return InteractionResult.FAIL
                 }
@@ -80,6 +79,17 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             if (sunCost > availableSun && player?.isCreative == false) {
                 player.displayClientMessage(
                     Component.translatable("message.plantz.not_enough_sun", availableSun, sunCost)
+                        .withStyle(ChatFormatting.RED), true
+                )
+                return InteractionResult.FAIL
+            }
+
+            // Prevent spawn if there's already a Plant in that block
+            val aabb = AABB(spawnPos)
+            val existingPlants = level.getEntitiesOfClass(Plant::class.java, aabb)
+            if (existingPlants.isNotEmpty()) {
+                player?.displayClientMessage(
+                    Component.translatable("message.plantz.already_planted")
                         .withStyle(ChatFormatting.RED), true
                 )
                 return InteractionResult.FAIL

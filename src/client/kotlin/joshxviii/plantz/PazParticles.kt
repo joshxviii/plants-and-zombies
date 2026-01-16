@@ -6,8 +6,7 @@ import joshxviii.plantz.particles.PeaParticle
 import joshxviii.plantz.particles.SporeParticle
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry
 import net.minecraft.client.particle.CritParticle
-import net.minecraft.client.particle.FlameParticle
-import net.minecraft.client.particle.SingleQuadParticle
+import net.minecraft.client.particle.SpellParticle
 
 object PazParticles {
 
@@ -40,6 +39,9 @@ object PazParticles {
         it.register(PazServerParticles.EMBER) { spriteSet ->
             EmberParticle.Provider(spriteSet)
         }
-    }
 
+        it.register(PazServerParticles.ZOMBIE_OMEN) { sprite ->
+            SpellParticle.Provider(sprite)
+        }
+    }
 }

@@ -5,19 +5,45 @@ import joshxviii.plantz.raid.ZombieRaid
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.resources.Identifier
+import net.minecraft.server.level.ServerEntityGetter
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.tags.PoiTypeTags
 import net.minecraft.world.attribute.EnvironmentAttributes
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.ai.village.poi.PoiManager
 import net.minecraft.world.entity.ai.village.poi.PoiType
 import net.minecraft.world.entity.raid.Raid
 import net.minecraft.world.entity.raid.Raids
 import net.minecraft.world.level.gamerules.GameRules
 import net.minecraft.world.phys.Vec3
-import java.util.function.Predicate
 
 fun pazResource(path: String): Identifier = Identifier.fromNamespaceAndPath(MODID, path)
+
+fun <T : LivingEntity?> ServerEntityGetter.getFurthestEntities(
+    entities: MutableList<out T>,
+    targetConditions: TargetingConditions,
+    source: LivingEntity?,
+    x: Double,
+    y: Double,
+    z: Double
+): T? {
+    var best = -1.0
+    var result: T? = null
+
+    for (entity in entities) {
+        if (targetConditions.test(this.level, source, entity!!)) {
+            val dist = entity.distanceToSqr(x, y, z)
+            if (best == -1.0 || dist > best) {
+                best = dist
+                result = entity
+            }
+        }
+    }
+
+    return result
+}
 
 private fun Raids.getOrCreateZombieRaid(level: ServerLevel, pos: BlockPos): ZombieRaid {
     val raid = level.getRaidAt(pos) as? ZombieRaid

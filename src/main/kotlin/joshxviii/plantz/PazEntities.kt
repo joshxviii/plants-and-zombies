@@ -1,18 +1,21 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.entity.*
+import joshxviii.plantz.entity.plants.*
 import joshxviii.plantz.entity.projectile.*
+import joshxviii.plantz.entity.zombie.BrownCoat
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
-import net.minecraft.tags.TagKey
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob.createMobAttributes
 import net.minecraft.world.entity.MobCategory
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier
+import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.projectile.Projectile
 
 object PazEntities {
@@ -21,6 +24,7 @@ object PazEntities {
         return typeToSunCost[type]?: 0
     }
 
+    // region Plants
     @JvmField val SUNFLOWER: EntityType<Sunflower> = registerPlant(
         "sunflower",
         EntityType.Builder.of(::Sunflower, MobCategory.CREATURE),
@@ -88,6 +92,10 @@ object PazEntities {
         width = 0.8f,
         height = 1.25f,
         eyeHeight = 0.85f,
+        attributes = Plant.Companion.PlantAttributes(
+            attackDamage = 1.0,
+            followRange = 34.0
+        )
     )
     @JvmField val MELON_PULT: EntityType<MelonPult> = registerPlant(
         "melonpult",
@@ -97,9 +105,9 @@ object PazEntities {
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 50.0,
-            attackDamage = 15.0,
+            attackDamage = 3.0,
             attackKnockback = 0.5,
-            followRange = 20.0
+            followRange = 24.0
         )
     )
     @JvmField val PUFF_SHROOM: EntityType<PuffShroom> = registerPlant(
@@ -129,16 +137,31 @@ object PazEntities {
         sunCost = 10,
         height = 0.85f
     )
+    // endregion
 
-    //Projectiles
+    // region Zombies
+    @JvmField val BROWN_COAT: EntityType<BrownCoat> =  registerZombie(
+        "browncoat",
+        EntityType.Builder.of(::BrownCoat, MobCategory.MONSTER)
+            .sized(0.6f, 1.95f)
+            .eyeHeight(1.74f)
+            .passengerAttachments(2.075f)
+            .ridingOffset(-0.7f)
+            .clientTrackingRange(8)
+            .notInPeaceful()
+    )
+    // endregion
+
+    //region Projectiles
     @JvmField val PEA: EntityType<Pea> = registerProjectile("pea", EntityType.Builder.of(::Pea, MobCategory.MISC))
     @JvmField val PEA_ICE: EntityType<PeaIce> = registerProjectile("pea_ice", EntityType.Builder.of(::PeaIce, MobCategory.MISC))
     @JvmField val PEA_FIRE: EntityType<PeaFire> = registerProjectile("pea_fire", EntityType.Builder.of(::PeaFire, MobCategory.MISC))
     @JvmField val NEEDLE: EntityType<Needle> = registerProjectile("needle", EntityType.Builder.of(::Needle, MobCategory.MISC))
     @JvmField val SPORE: EntityType<Spore> = registerProjectile("spore", EntityType.Builder.of(::Spore, MobCategory.MISC))
     @JvmField val MELON: EntityType<Melon> = registerProjectile("melon", EntityType.Builder.of(::Melon, MobCategory.MISC), width = 1.0f, height = 0.8f)
+    // endregion
 
-    //Other
+    //region Other
     @JvmField val PLANT_POT_MINECART: EntityType<PlantPotMinecart> = register(
         "plant_pot_minecart",
         EntityType.Builder.of(::PlantPotMinecart, MobCategory.MISC)
@@ -147,6 +170,15 @@ object PazEntities {
             .passengerAttachments(0.75F)
             .clientTrackingRange(8)
     )
+    @JvmField val SUN: EntityType<Sun> = register(
+        "sun",
+        EntityType.Builder.of(::Sun, MobCategory.MISC)
+            .noLootTable()
+            .sized(0.15F, 0.15F)
+            .clientTrackingRange(6)
+            .updateInterval(20)
+    )
+    // endregion
 
     private fun <T : LivingEntity> registerPlant(
         name : String,
@@ -163,6 +195,17 @@ object PazEntities {
         typeToSunCost[type] = sunCost
         return type
     }
+
+    private fun <T : Zombie> registerZombie(
+        name : String,
+        builder: EntityType.Builder<T> = EntityType.Builder.createNothing(MobCategory.MONSTER),
+        attributes: AttributeSupplier.Builder = Zombie.createAttributes()
+    ): EntityType<T> {
+        val type = register(name, builder)
+        FabricDefaultAttributeRegistry.register(type, attributes)
+        return type
+    }
+
     private fun <T : Projectile> registerProjectile(
         name : String,
         builder: EntityType.Builder<T> = EntityType.Builder.createNothing(MobCategory.MISC),
@@ -180,12 +223,6 @@ object PazEntities {
         val id = ResourceKey.create(Registries.ENTITY_TYPE, pazResource(name))
         return Registry.register(BuiltInRegistries.ENTITY_TYPE, id, builder.build(id))
     }
-
-    @JvmField val TAG_PLANT = registerEntityTag("plant")
-    @JvmField val TAG_PLANT_PROJECTILE = registerEntityTag("plant_projectile")
-    @JvmField val TAG_CANNOT_CHOMP = registerEntityTag("cannot_be_chomped")
-    @JvmField val ZOMBIE_RAIDERS = registerEntityTag("zombie_raider")
-    private fun registerEntityTag(name: String) = TagKey.create(Registries.ENTITY_TYPE, pazResource(name))
 
     fun initialize() {}
 }

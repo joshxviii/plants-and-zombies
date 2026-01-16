@@ -1,30 +1,17 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.model.CactusModel
-import joshxviii.plantz.model.CherryBombModel
-import joshxviii.plantz.model.ChomperModel
-import joshxviii.plantz.model.FirePeaShooterModel
-import joshxviii.plantz.model.FumeShroomModel
-import joshxviii.plantz.model.IcePeaShooterModel
-import joshxviii.plantz.model.MelonPultModel
-import joshxviii.plantz.model.PeaShooterModel
-import joshxviii.plantz.model.PotatoMineModel
-import joshxviii.plantz.model.PuffShroomModel
-import joshxviii.plantz.model.RepeaterModel
-import joshxviii.plantz.model.SunShroomBabyModel
-import joshxviii.plantz.model.SunShroomModel
-import joshxviii.plantz.model.SunflowerModel
-import joshxviii.plantz.model.WallNutModel
+import joshxviii.plantz.model.plants.*
 import joshxviii.plantz.model.projectiles.MelonModel
 import joshxviii.plantz.model.projectiles.NeedleModel
 import joshxviii.plantz.model.projectiles.PeaModel
 import joshxviii.plantz.model.projectiles.SporeModel
+import joshxviii.plantz.model.zombies.BrownCoatModel
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
-import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.ModelLayers
-import net.minecraft.client.model.`object`.cart.MinecartModel
+import net.minecraft.client.model.geom.builders.CubeDeformation
+import net.minecraft.client.model.monster.zombie.DrownedModel
+import net.minecraft.client.renderer.entity.AbstractZombieRenderer
 import net.minecraft.client.renderer.entity.EntityRenderers
-import net.minecraft.client.renderer.entity.MinecartRenderer
 
 object PazModels {
 
@@ -51,7 +38,7 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(NeedleModel.LAYER_LOCATION) { NeedleModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(MelonModel.LAYER_LOCATION) { MelonModel.createBodyLayer() }
 
-
+        ModelLayerRegistry.registerModelLayer(BrownCoatModel.LAYER_LOCATION) { BrownCoatModel.createBodyLayer() }
 
 
 
@@ -82,6 +69,10 @@ object PazModels {
         EntityRenderers.register(PazEntities.NEEDLE) { ProjectileRenderer(NeedleModel(it.bakeLayer(NeedleModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.MELON) { ProjectileRenderer(MelonModel(it.bakeLayer(MelonModel.LAYER_LOCATION)), it) }
 
+        EntityRenderers.register(PazEntities.BROWN_COAT) { PazZombieRenderer(it) }
+
+
         EntityRenderers.register(PazEntities.PLANT_POT_MINECART) { PlantPotMinecartRenderer(it, ModelLayers.MINECART) }
+        EntityRenderers.register(PazEntities.SUN) { SunRenderer(it) }
     }
 }

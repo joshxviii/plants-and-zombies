@@ -2,7 +2,7 @@ package joshxviii.plantz.entity.projectile
 
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazEntities
-import joshxviii.plantz.entity.Plant
+import joshxviii.plantz.entity.plants.Plant
 import net.minecraft.core.particles.ItemParticleOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket

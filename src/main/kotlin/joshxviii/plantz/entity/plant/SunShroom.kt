@@ -1,0 +1,31 @@
+package joshxviii.plantz.entity.plants
+
+import joshxviii.plantz.PazEntities
+import joshxviii.plantz.ai.PlantState
+import joshxviii.plantz.ai.goal.GenerateSunGoal
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.level.Level
+
+class SunShroom(
+    type: EntityType<out Plant>,
+    level: Level,
+) : Plant(PazEntities.SUN_SHROOM, level) {
+    override fun attackGoals() {}
+
+    override fun registerGoals() {
+        super.registerGoals()
+        this.goalSelector.addGoal(1, GenerateSunGoal(
+            plantEntity = this,
+            actionDelay = 10,
+            generateAtNight = true
+        ))
+    }
+
+    override fun stateUpdated(state: PlantState) {
+        super.stateUpdated(state)
+        if (state == PlantState.GROW) {
+            isBaby = true
+            age = -2400
+        }
+    }
+}

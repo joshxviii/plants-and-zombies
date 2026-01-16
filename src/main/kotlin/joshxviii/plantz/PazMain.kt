@@ -1,15 +1,22 @@
 package joshxviii.plantz
 
 import PazDataSerializers
+import joshxviii.plantz.PazTags.EntityTypes.ATTACKS_PLANTS
+import joshxviii.plantz.entity.plants.Plant
+import joshxviii.plantz.entity.plants.WallNut
+import joshxviii.plantz.mixin.MobAccessor
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
 import net.fabricmc.fabric.impl.item.ItemComponentTooltipProviderRegistryImpl
 import net.minecraft.core.component.DataComponents
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.EquipmentSlotGroup
+import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.item.equipment.Equippable
@@ -28,9 +35,19 @@ object PazMain : ModInitializer {
 		PazDamageTypes.initialize()
 		PazDataSerializers.initialize()
 		PazAttributes.initialize()
+		PazEffects.initialize()
+
+
 
 		ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SEED_PACKET)
 		ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
+
+		ServerEntityEvents.ENTITY_LOAD.register { entity, level ->
+			if (entity is Mob && entity.`is`(ATTACKS_PLANTS)) {
+				(entity as MobAccessor).targetSelector.addGoal(1, NearestAttackableTargetGoal(entity, WallNut::class.java, 4, true, true) { target, level -> target is WallNut })
+				(entity as MobAccessor).targetSelector.addGoal(4, NearestAttackableTargetGoal(entity, Plant::class.java, 5, true, false) { target, level -> target is Plant })
+			}
+		}
 
 		DefaultItemComponentEvents.MODIFY.register {
 			it.modify(Items.BUCKET) { builder ->

@@ -2,6 +2,7 @@ package joshxviii.plantz
 
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes
 import net.minecraft.core.Registry
+import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.core.registries.BuiltInRegistries
 
@@ -13,6 +14,7 @@ object PazServerParticles {
     val SPORE_HIT: SimpleParticleType = register("spore_hit")
     val FUME_BUBBLE: SimpleParticleType = register("fume_bubble")
     val EMBER: SimpleParticleType = register("ember")
+    val ZOMBIE_OMEN: SimpleParticleType = register("zombie_omen")
 
     fun register(name: String): SimpleParticleType {
         val particleType = FabricParticleTypes.simple()

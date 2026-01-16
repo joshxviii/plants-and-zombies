@@ -1,11 +1,10 @@
 package joshxviii.plantz.ai.goal
 
-import joshxviii.plantz.PazLootTables
-import joshxviii.plantz.entity.Plant
+import joshxviii.plantz.entity.plants.Plant
+import joshxviii.plantz.entity.Sun
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.world.level.gameevent.GameEvent
 
 class GenerateSunGoal(
     plantEntity: Plant,
@@ -13,6 +12,7 @@ class GenerateSunGoal(
     actionDelay: Int = 0,
     actionStartEffect: () -> Unit = {},
     actionEndEffect: () -> Unit = {},
+    val sunAmount: Int = 5,
     val generateAtNight: Boolean = false,
 ): PlantActionGoal(plantEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
     override fun canUse(): Boolean = (
@@ -24,14 +24,9 @@ class GenerateSunGoal(
 
     override fun doAction() : Boolean {
         val serverLevel = plantEntity.level() as? ServerLevel ?: return false
-        val dropped = plantEntity.dropFromGiftLootTable(serverLevel, PazLootTables.SUN_DROP, plantEntity::spawnAtLocation)
-
-        if (dropped) {
-            plantEntity.playSound(SoundEvents.CHICKEN_EGG, 1.0f, 0.5f)
-            plantEntity.gameEvent(GameEvent.ENTITY_PLACE)
-            return true
-        }
-        return false
+        Sun.award(serverLevel, plantEntity.position(), if (plantEntity.isBaby) sunAmount/2 else sunAmount )
+        plantEntity.playSound(SoundEvents.CHICKEN_EGG, 1.0f, 0.5f)
+        return true
     }
 
     private fun sunIsVisible() : Boolean = (

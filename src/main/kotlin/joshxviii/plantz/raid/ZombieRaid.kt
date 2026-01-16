@@ -1,7 +1,7 @@
 package joshxviii.plantz.raid
 
 import com.mojang.serialization.Codec
-import joshxviii.plantz.PazEntities.ZOMBIE_RAIDERS
+import joshxviii.plantz.PazTags.EntityTypes.ZOMBIE_RAIDERS
 import net.minecraft.core.BlockPos
 import net.minecraft.core.BlockPos.MutableBlockPos
 import net.minecraft.core.registries.BuiltInRegistries

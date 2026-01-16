@@ -1,7 +1,7 @@
 package joshxviii.plantz.entity.projectile
 
 import joshxviii.plantz.PazDamageTypes
-import joshxviii.plantz.entity.Plant
+import joshxviii.plantz.entity.plants.Plant
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
@@ -222,7 +222,7 @@ abstract class PlantProjectile(
     override fun canHitEntity(entity: Entity): Boolean {
         val playerOwner = plantOwner?.owner as? Player
         return if (playerOwner!= null && entity.`is`(playerOwner)) false
-        else entity !is Plant && !this.piercingIgnoreEntityIds.contains(entity.id)
+        else entity !is Plant && entity !is Projectile && !this.piercingIgnoreEntityIds.contains(entity.id)
     }
 
     fun spawnParticle(

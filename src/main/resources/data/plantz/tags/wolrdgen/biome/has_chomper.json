@@ -1,0 +1,15 @@
+{
+  "values": [
+    "minecraft:mangrove_swamp",
+    "minecraft:swamp",
+    "#minecraft:is_jungle",
+    {
+      "id": "#c:is_jungle",
+      "required": false
+    },
+    {
+      "id": "#c:is_swamp",
+      "required": false
+    }
+  ]
+}

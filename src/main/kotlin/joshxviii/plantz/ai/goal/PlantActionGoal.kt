@@ -1,6 +1,6 @@
 package joshxviii.plantz.ai.goal
 
-import joshxviii.plantz.entity.Plant
+import joshxviii.plantz.entity.plants.Plant
 import net.minecraft.world.entity.ai.goal.Goal
 
 /**

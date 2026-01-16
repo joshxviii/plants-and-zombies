@@ -1,6 +1,6 @@
 package joshxviii.plantz.ai.goal
 
-import joshxviii.plantz.entity.Plant
+import joshxviii.plantz.entity.plants.Plant
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.Mth
@@ -9,9 +9,6 @@ import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.phys.Vec3
 import kotlin.math.atan
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.sin
 import kotlin.math.sqrt
 
 class ProjectileAttackPlantGoal(

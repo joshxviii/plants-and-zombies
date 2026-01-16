@@ -1,7 +1,7 @@
 package joshxviii.plantz.ai.goal
 
 import joshxviii.plantz.PazDamageTypes
-import joshxviii.plantz.entity.Plant
+import joshxviii.plantz.entity.plants.Plant
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.damagesource.DamageType

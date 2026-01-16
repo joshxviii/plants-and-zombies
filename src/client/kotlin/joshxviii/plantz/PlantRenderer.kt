@@ -1,7 +1,7 @@
 package joshxviii.plantz
 
 import com.mojang.blaze3d.vertex.PoseStack
-import joshxviii.plantz.entity.Plant
+import joshxviii.plantz.entity.plants.Plant
 import net.minecraft.client.Minecraft
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.renderer.SubmitNodeCollector
@@ -47,7 +47,7 @@ class PlantRenderer(
 
     override fun getTextureLocation(state: PlantRenderState): Identifier {
 
-        val baseTexture = "textures/entity/${state.texturePath}/${state.texturePath}${if(state.isBaby) "_baby" else ""}"
+        val baseTexture = "textures/entity/plant/${state.texturePath}/${state.texturePath}${if(state.isBaby) "_baby" else ""}"
 
         val base = pazResource("${baseTexture}.png")
         val damage = when (state.damagedAmount) {// change texture based on damage

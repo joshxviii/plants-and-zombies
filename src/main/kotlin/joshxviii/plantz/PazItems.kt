@@ -1,6 +1,6 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.entity.Plant
+import joshxviii.plantz.entity.plants.Plant
 import joshxviii.plantz.item.SeedPacketItem
 import joshxviii.plantz.item.component.SeedPacket
 import joshxviii.plantz.item.component.SunCost
@@ -12,9 +12,7 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.EntitySpawnReason
-import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.MinecartItem

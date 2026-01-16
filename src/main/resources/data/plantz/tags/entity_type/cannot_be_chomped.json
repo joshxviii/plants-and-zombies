@@ -10,6 +10,12 @@
     "minecraft:hoglin",
     "minecraft:zoglin",
     "minecraft:ghast",
-    "minecraft:giant"
+    "minecraft:giant",
+    "minecraft:camel",
+    "minecraft:camel_husk",
+    {
+      "id": "#c:bosses",
+      "required": false
+    }
   ]
 }
