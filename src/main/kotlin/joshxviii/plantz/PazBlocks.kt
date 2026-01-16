@@ -1,13 +1,22 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.block.ConeBlock
 import joshxviii.plantz.block.PlantPotBlock
 import net.minecraft.core.Registry
+import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.TagKey
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.entity.EquipmentSlotGroup
+import net.minecraft.world.entity.ai.attributes.AttributeModifier
+import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.component.ItemAttributeModifiers
+import net.minecraft.world.item.equipment.Equippable
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.material.PushReaction
@@ -23,10 +32,38 @@ object PazBlocks {
         ::PlantPotBlock
     )
 
+    @JvmField
+    val CONE: Block = registerBlock(
+        "cone",
+        BlockBehaviour.Properties.of()
+            .instabreak()
+            .noOcclusion()
+            .pushReaction(PushReaction.DESTROY),
+        ::ConeBlock,
+        Item.Properties()
+            .component(
+                DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
+                    .setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)
+                    .build()
+            ).component(
+                DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
+                    .add(
+                        Attributes.ARMOR,
+                        AttributeModifier(pazResource("cone_armor"), 0.5, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.HEAD
+                    ).add(
+                        Attributes.KNOCKBACK_RESISTANCE,
+                        AttributeModifier(pazResource("cone_knockback_resistance"), 0.1, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.HEAD
+                    ).build()
+            )
+    )
+
     private fun registerBlock(
         name: String,
         properties: BlockBehaviour.Properties = BlockBehaviour.Properties.of(),
-        blockFactory: (BlockBehaviour.Properties) -> Block = ::Block
+        blockFactory: (BlockBehaviour.Properties) -> Block = ::Block,
+        itemProperties: Item.Properties = Item.Properties()
     ): Block {
         val key = ResourceKey.create(Registries.BLOCK, pazResource(name))
         val block = blockFactory(properties.setId(key))
@@ -34,7 +71,7 @@ object PazBlocks {
 
         // Also register the block item
         val itemKey = ResourceKey.create(Registries.ITEM, pazResource(name))
-        val blockItem = BlockItem(block, Item.Properties().setId(itemKey))
+        val blockItem = BlockItem(block, itemProperties.setId(itemKey))
         Registry.register(BuiltInRegistries.ITEM, itemKey, blockItem)
 
         return block

@@ -4,7 +4,7 @@
   "message.plantz.not_yours": "You do not own this plant!",
   "message.plantz.not_enough_sun": "Not enough sun (%s/%s)",
 
-  "effect.plantz.zombie_omen": "Zombie Raid Omen",
+  "effect.plantz.zombie_omen": "Zombie Omen",
   "effect.plantz.toxic": "Toxic",
 
   "component.sun_cost": "Sun cost: %s",
