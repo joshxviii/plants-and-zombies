@@ -1,5 +1,6 @@
 package joshxviii.plantz.entity.zombie
 
+import joshxviii.plantz.PazBlocks
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -63,6 +64,9 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : Zombie(type, le
             this.setCanPickUpLoot(random.nextFloat() < 0.55f * difficultyModifier)
 
             if (random.nextFloat() < 0.25f) {
+                this.setItemSlot(EquipmentSlot.HEAD, PazBlocks.CONE.asItem().defaultInstance)
+            }
+            if (random.nextFloat() < 0.1f) {
                 this.setItemSlot(EquipmentSlot.HEAD, Items.BUCKET.defaultInstance)
             }
         }

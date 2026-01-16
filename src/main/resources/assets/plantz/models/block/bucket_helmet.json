@@ -2,8 +2,8 @@
 	"format_version": "1.21.11",
 	"texture_size": [64, 64],
 	"textures": {
-		"2": "plantz:item/bucket_helmet",
-		"particle": "plantz:item/bucket_helmet"
+		"2": "plantz:block/bucket_helmet",
+		"particle": "plantz:block/bucket_helmet"
 	},
 	"elements": [
 		{

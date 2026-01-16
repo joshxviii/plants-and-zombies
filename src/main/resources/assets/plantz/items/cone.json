@@ -7,13 +7,13 @@
         "when": "head",
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:block/bucket_helmet"
+          "model": "plantz:block/cone_helmet"
         }
       }
     ],
     "fallback": {
       "type": "minecraft:model",
-      "model": "minecraft:item/bucket"
+      "model": "plantz:item/cone"
     }
   }
 }
