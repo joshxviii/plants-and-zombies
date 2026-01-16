@@ -1,9 +1,12 @@
 package joshxviii.plantz
 
+import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.ModelLayers
 import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.client.model.monster.zombie.ZombieModel
+import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.AbstractZombieRenderer
 import net.minecraft.client.renderer.entity.ArmorModelSet
 import net.minecraft.client.renderer.entity.EntityRendererProvider
@@ -23,10 +26,7 @@ class PazZombieRenderer(
     ZombieModel<ZombieRenderState>(context.bakeLayer(body)),
     ZombieModel<ZombieRenderState>(context.bakeLayer(babyBody)),
     ArmorModelSet.bake<ZombieModel<ZombieRenderState>>(armorSet, context.modelSet) { root: ModelPart -> ZombieModel(root) },
-    ArmorModelSet.bake<ZombieModel<ZombieRenderState>>(
-        babyArmorSet,
-        context.modelSet
-    ) { root: ModelPart -> ZombieModel(root) }
+    ArmorModelSet.bake<ZombieModel<ZombieRenderState>>(babyArmorSet, context.modelSet) { root: ModelPart -> ZombieModel(root) }
 ) {
     override fun createRenderState(): PazZombieRenderState {
         return PazZombieRenderState()

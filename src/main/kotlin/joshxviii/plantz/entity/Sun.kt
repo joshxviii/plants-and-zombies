@@ -153,12 +153,12 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
         if (followingEntity != null) {
             val delta = Vec3(
                 followingEntity!!.x - x,
-                followingEntity!!.y + followingEntity!!.eyeHeight - y,
+                (followingEntity!!.y + followingEntity!!.eyeHeight - y),
                 followingEntity!!.z - z
             )
             val length = delta.lengthSqr()
             val power = 1.0 - sqrt(length) / 8.0
-            deltaMovement = deltaMovement.add(delta.normalize().scale(power * power * 0.1))
+            deltaMovement = deltaMovement.add(delta.normalize().multiply(Vec3(1.0,1.5,1.0)).scale(power * power * 0.1))
             if ( boundingBox.inflate(0.1).intersects(followingEntity!!.boundingBox) ) {
                 touchedEntity(followingEntity)
 

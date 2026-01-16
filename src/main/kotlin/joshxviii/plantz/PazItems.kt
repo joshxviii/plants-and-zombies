@@ -1,6 +1,7 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.PazEntities.BROWN_COAT
+import joshxviii.plantz.PazEntities.ZOMBIE_YETI
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.item.SeedPacketItem
 import joshxviii.plantz.item.component.SeedPacket
@@ -41,8 +42,8 @@ object PazItems {
         properties = Item.Properties().stacksTo(1)
     )
 
-    @JvmField
-    val BROWN_COAT_SPAWN_EGG: Item = registerSpawnEgg(BROWN_COAT)
+    @JvmField val BROWN_COAT_SPAWN_EGG: Item = registerSpawnEgg(BROWN_COAT)
+    @JvmField val ZOMBIE_YETI_SPAWN_EGG: Item = registerSpawnEgg(ZOMBIE_YETI)
 
     private fun registerItem(
         name: String,

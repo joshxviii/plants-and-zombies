@@ -40,6 +40,7 @@ object PazCreativeTab {
                 output.accept(SeedPacketItem.stackFor(PazEntities.SUN_SHROOM))
                 // zombie spawn eggs
                 output.accept(PazItems.BROWN_COAT_SPAWN_EGG)
+                output.accept(PazItems.ZOMBIE_YETI_SPAWN_EGG)
 
                 output.accept(PazItems.SUN)
                 output.accept(PazBlocks.PLANT_POT)

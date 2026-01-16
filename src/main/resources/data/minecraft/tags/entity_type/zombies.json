@@ -1,6 +1,7 @@
 {
   "replace" : false,
   "values": [
-    "plantz:browncoat"
+    "plantz:browncoat",
+    "plantz:zombie_yeti"
   ]
 }

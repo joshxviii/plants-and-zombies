@@ -18,6 +18,7 @@ import joshxviii.plantz.entity.plant.Sunflower
 import joshxviii.plantz.entity.plants.*
 import joshxviii.plantz.entity.projectile.*
 import joshxviii.plantz.entity.zombie.BrownCoat
+import joshxviii.plantz.entity.zombie.ZombieYeti
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
@@ -29,6 +30,7 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob.createMobAttributes
 import net.minecraft.world.entity.MobCategory
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
+import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.projectile.Projectile
 
@@ -163,6 +165,21 @@ object PazEntities {
             .ridingOffset(-0.7f)
             .clientTrackingRange(8)
             .notInPeaceful()
+    )
+    @JvmField val ZOMBIE_YETI: EntityType<ZombieYeti> =  registerZombie(
+        "zombie_yeti",
+        EntityType.Builder.of(::ZombieYeti, MobCategory.MONSTER)
+            .sized(1.1f, 2.5f)
+            .passengerAttachments(2.075f)
+            .ridingOffset(-0.7f)
+            .clientTrackingRange(8)
+            .notInPeaceful(),
+        createMobAttributes()
+            .add(Attributes.MAX_HEALTH, 75.0)
+            .add(Attributes.MOVEMENT_SPEED, 0.4)
+            .add(Attributes.KNOCKBACK_RESISTANCE, 0.5)
+            .add(Attributes.ATTACK_DAMAGE, 15.0)
+            .add(Attributes.STEP_HEIGHT, 1.0)
     )
     // endregion
 

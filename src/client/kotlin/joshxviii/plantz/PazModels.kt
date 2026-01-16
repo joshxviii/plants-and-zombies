@@ -6,9 +6,11 @@ import joshxviii.plantz.model.projectiles.NeedleModel
 import joshxviii.plantz.model.projectiles.PeaModel
 import joshxviii.plantz.model.projectiles.SporeModel
 import joshxviii.plantz.model.zombies.BrownCoatModel
+import joshxviii.plantz.model.zombies.ZombieYetiModel
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
 import net.minecraft.client.model.geom.ModelLayers
 import net.minecraft.client.model.geom.builders.CubeDeformation
+import net.minecraft.client.model.geom.builders.MeshTransformer
 import net.minecraft.client.model.monster.zombie.DrownedModel
 import net.minecraft.client.renderer.entity.AbstractZombieRenderer
 import net.minecraft.client.renderer.entity.EntityRenderers
@@ -39,6 +41,7 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(MelonModel.LAYER_LOCATION) { MelonModel.createBodyLayer() }
 
         ModelLayerRegistry.registerModelLayer(BrownCoatModel.LAYER_LOCATION) { BrownCoatModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(ZombieYetiModel.LAYER_LOCATION) { ZombieYetiModel.createBodyLayer().apply(MeshTransformer.scaling(1.25f)) }
 
 
 
@@ -70,6 +73,7 @@ object PazModels {
         EntityRenderers.register(PazEntities.MELON) { ProjectileRenderer(MelonModel(it.bakeLayer(MelonModel.LAYER_LOCATION)), it) }
 
         EntityRenderers.register(PazEntities.BROWN_COAT) { PazZombieRenderer(it) }
+        EntityRenderers.register(PazEntities.ZOMBIE_YETI) { PazZombieRenderer(it, ZombieYetiModel.LAYER_LOCATION) }
 
 
         EntityRenderers.register(PazEntities.PLANT_POT_MINECART) { PlantPotMinecartRenderer(it, ModelLayers.MINECART) }
