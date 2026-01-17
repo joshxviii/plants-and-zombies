@@ -17,14 +17,14 @@ import net.minecraft.world.entity.monster.zombie.Zombie
 
 class PazZombieRenderer(
     context: EntityRendererProvider.Context,
-    body: ModelLayerLocation = ModelLayers.ZOMBIE,
-    babyBody: ModelLayerLocation = ModelLayers.ZOMBIE_BABY,
+    private val defaultModel: ZombieModel<ZombieRenderState> = ZombieModel(context.bakeLayer(ModelLayers.ZOMBIE)),
+    private val bodyModel: ZombieModel<ZombieRenderState> = ZombieModel(context.bakeLayer(ModelLayers.ZOMBIE_BABY)),
     armorSet: ArmorModelSet<ModelLayerLocation> = ModelLayers.ZOMBIE_ARMOR,
     babyArmorSet: ArmorModelSet<ModelLayerLocation> = ModelLayers.ZOMBIE_BABY_ARMOR
 ) : AbstractZombieRenderer<Zombie, ZombieRenderState, ZombieModel<ZombieRenderState>>(
     context,
-    ZombieModel<ZombieRenderState>(context.bakeLayer(body)),
-    ZombieModel<ZombieRenderState>(context.bakeLayer(babyBody)),
+    defaultModel,
+    bodyModel,
     ArmorModelSet.bake<ZombieModel<ZombieRenderState>>(armorSet, context.modelSet) { root: ModelPart -> ZombieModel(root) },
     ArmorModelSet.bake<ZombieModel<ZombieRenderState>>(babyArmorSet, context.modelSet) { root: ModelPart -> ZombieModel(root) }
 ) {
