@@ -174,11 +174,12 @@ object PazEntities {
             .ridingOffset(-0.7f)
             .clientTrackingRange(8)
             .notInPeaceful(),
-        createMobAttributes()
-            .add(Attributes.MAX_HEALTH, 75.0)
-            .add(Attributes.MOVEMENT_SPEED, 0.4)
+        attributes = Zombie.createAttributes()
+            .add(Attributes.MAX_HEALTH, 80.0)
+            .add(Attributes.MOVEMENT_SPEED, 0.3)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.5)
-            .add(Attributes.ATTACK_DAMAGE, 15.0)
+            .add(Attributes.ENTITY_INTERACTION_RANGE, 2.5)
+            .add(Attributes.ATTACK_DAMAGE, 8.0)
             .add(Attributes.STEP_HEIGHT, 1.0)
     )
     // endregion

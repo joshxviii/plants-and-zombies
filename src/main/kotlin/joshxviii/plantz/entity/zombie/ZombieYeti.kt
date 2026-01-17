@@ -16,9 +16,8 @@ import net.minecraft.world.level.ServerLevelAccessor
 class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : Zombie(type, level) {
 
     override fun isBaby(): Boolean = false
-    override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {
-
-    }
+    override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {}
+    override fun canPickUpLoot(): Boolean = false
 
     override fun isSunSensitive(): Boolean {
         return false
@@ -70,10 +69,7 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : Zombie(type, 
         if (spawnReason != EntitySpawnReason.CONVERSION) {
             this.setCanPickUpLoot(random.nextFloat() < 0.55f * difficultyModifier)
 
-            if (random.nextFloat() < 0.25f) {
-                this.setItemSlot(EquipmentSlot.HEAD, PazBlocks.CONE.asItem().defaultInstance)
-            }
-            if (random.nextFloat() < 0.1f) {
+            if (random.nextFloat() < 0.05f) {
                 this.setItemSlot(EquipmentSlot.HEAD, Items.BUCKET.defaultInstance)
             }
         }

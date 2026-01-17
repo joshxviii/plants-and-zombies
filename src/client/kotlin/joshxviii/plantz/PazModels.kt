@@ -9,10 +9,7 @@ import joshxviii.plantz.model.zombies.BrownCoatModel
 import joshxviii.plantz.model.zombies.ZombieYetiModel
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
 import net.minecraft.client.model.geom.ModelLayers
-import net.minecraft.client.model.geom.builders.CubeDeformation
 import net.minecraft.client.model.geom.builders.MeshTransformer
-import net.minecraft.client.model.monster.zombie.DrownedModel
-import net.minecraft.client.renderer.entity.AbstractZombieRenderer
 import net.minecraft.client.renderer.entity.EntityRenderers
 
 object PazModels {
