@@ -1,0 +1,19 @@
+{
+  "entity.zombie_yeti.ambient": {
+    "sounds": [
+      { "name":  "plantz:entity/zombie_yeti/ambient_1", "volume":  1.0 },
+      { "name":  "plantz:entity/zombie_yeti/ambient_2", "volume":  1.0 },
+      { "name":  "plantz:entity/zombie_yeti/ambient_3", "volume":  1.0 }
+    ]
+  },
+  "entity.zombie_yeti.hurt": {
+    "sounds": [
+      { "name":  "plantz:entity/zombie_yeti/hurt_1", "volume":  1.0 },
+      { "name":  "plantz:entity/zombie_yeti/hurt_2", "volume":  1.0 },
+      { "name":  "plantz:entity/zombie_yeti/hurt_3", "volume":  1.0 }
+    ]
+  },
+  "entity.zombie_yeti.death": {
+    "sounds": [{ "name":  "plantz:entity/zombie_yeti/death", "volume":  1.0 }]
+  }
+}

@@ -36,6 +36,7 @@ object PazMain : ModInitializer {
 		PazDataSerializers.initialize()
 		PazAttributes.initialize()
 		PazEffects.initialize()
+		PazSounds.initialize()
 
 
 

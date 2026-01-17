@@ -1,6 +1,7 @@
 package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.PazSounds
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -24,15 +25,15 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : Zombie(type, 
     }
 
     override fun getAmbientSound(): SoundEvent {
-        return SoundEvents.ZOMBIE_AMBIENT
+        return PazSounds.ZOMBIE_YETI_AMBIENT
     }
 
     override fun getHurtSound(source: DamageSource): SoundEvent {
-        return SoundEvents.ZOMBIE_HURT
+        return PazSounds.ZOMBIE_YETI_HURT
     }
 
     override fun getDeathSound(): SoundEvent {
-        return SoundEvents.ZOMBIE_DEATH
+        return PazSounds.ZOMBIE_YETI_DEATH
     }
 
     override fun getStepSound(): SoundEvent {

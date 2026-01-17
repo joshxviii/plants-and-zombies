@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "plantz:ice_peashooter"
+    "plantz:ice_peashooter",
+    "plantz:zombie_yeti"
   ]
 }

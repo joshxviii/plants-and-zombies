@@ -169,8 +169,7 @@ object PazEntities {
     @JvmField val ZOMBIE_YETI: EntityType<ZombieYeti> =  registerZombie(
         "zombie_yeti",
         EntityType.Builder.of(::ZombieYeti, MobCategory.MONSTER)
-            .sized(1.3f, 2.7f)
-            .eyeHeight(1.8f)
+            .sized(1.25f, 2.6f)
             .passengerAttachments(2.075f)
             .ridingOffset(-0.7f)
             .clientTrackingRange(8)
