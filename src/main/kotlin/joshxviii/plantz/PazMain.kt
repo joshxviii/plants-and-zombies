@@ -4,6 +4,7 @@ import PazDataSerializers
 import joshxviii.plantz.PazTags.EntityTypes.ATTACKS_PLANTS
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.plants.WallNut
+import joshxviii.plantz.item.component.BlocksHeadDamage
 import joshxviii.plantz.mixin.MobAccessor
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
@@ -38,10 +39,9 @@ object PazMain : ModInitializer {
 		PazEffects.initialize()
 		PazSounds.initialize()
 
-
-
 		ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SEED_PACKET)
 		ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
+		ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BLOCKS_HEAD_DAMAGE)
 
 		ServerEntityEvents.ENTITY_LOAD.register { entity, level ->
 			if (entity is Mob && entity.`is`(ATTACKS_PLANTS)) {
@@ -52,6 +52,7 @@ object PazMain : ModInitializer {
 
 		DefaultItemComponentEvents.MODIFY.register {
 			it.modify(Items.BUCKET) { builder ->
+				builder.set(PazComponents.BLOCKS_HEAD_DAMAGE, BlocksHeadDamage(breakChance = .05f))
 				builder.set(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
 					.setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)
 					.build()

@@ -8,6 +8,8 @@
   "effect.plantz.toxic": "Toxic",
 
   "component.sun_cost": "Sun cost: %s",
+  "component.blocks_damage.desc": "Blocks Projectiles:",
+  "component.blocks_damage": "Break Chance: %s%%",
   "item.plantz.zombie_banner": "Brainz Banner",
 
   "item.plantz.sun": "Sun",

@@ -2,13 +2,13 @@ package joshxviii.plantz
 
 import joshxviii.plantz.block.ConeBlock
 import joshxviii.plantz.block.PlantPotBlock
+import joshxviii.plantz.item.component.BlocksHeadDamage
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.tags.TagKey
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
@@ -18,6 +18,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.item.equipment.Equippable
 import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.material.PushReaction
 
@@ -26,6 +27,7 @@ object PazBlocks {
     val PLANT_POT: Block = registerBlock(
         "plant_pot",
         BlockBehaviour.Properties.of()
+            .sound(SoundType.STONE)
             .instabreak()
             .noOcclusion()
             .pushReaction(PushReaction.DESTROY),
@@ -36,14 +38,16 @@ object PazBlocks {
     val CONE: Block = registerBlock(
         "cone",
         BlockBehaviour.Properties.of()
+            .sound(SoundType.CANDLE)
             .instabreak()
             .noOcclusion()
             .pushReaction(PushReaction.DESTROY),
         ::ConeBlock,
         Item.Properties()
+            .component(PazComponents.BLOCKS_HEAD_DAMAGE, BlocksHeadDamage(breakChance = .1f))
             .component(
                 DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
-                    .setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)
+                    .setEquipSound(SoundEvents.ARMOR_EQUIP_LEATHER)
                     .build()
             ).component(
                 DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()

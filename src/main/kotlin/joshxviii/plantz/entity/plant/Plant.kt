@@ -6,7 +6,7 @@ import PazDataSerializers.DATA_SLEEPING
 import joshxviii.plantz.PazAttributes
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
-import joshxviii.plantz.PazTags.BlockTags.TAG_PLANTABLE
+import joshxviii.plantz.PazTags.BlockTags.PLANTABLE
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.ChatFormatting
@@ -268,7 +268,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     open fun canSurviveOn(block: BlockState) : Boolean {
-        return block.`is`(TAG_PLANTABLE)
+        return block.`is`(PLANTABLE)
     }
 
     // if on invalid ground plant should start to suffocate

@@ -1,15 +1,13 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.item.component.BlocksHeadDamage
 import joshxviii.plantz.item.component.SeedPacket
 import joshxviii.plantz.item.component.SunCost
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponentType
-import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
-import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.resources.ResourceKey
-import net.minecraft.util.ExtraCodecs
 import java.util.function.UnaryOperator
 
 object PazComponents {
@@ -30,6 +28,17 @@ object PazComponents {
         DataComponentType.builder<SunCost>()
             .persistent(SunCost.CODEC)
             .networkSynchronized(SunCost.STREAM_CODEC)
+            .cacheEncoding()
+    }
+
+
+    @JvmField
+    val BLOCKS_HEAD_DAMAGE: DataComponentType<BlocksHeadDamage> = register(
+        "blocks_head_damage"
+    ) { b: DataComponentType.Builder<BlocksHeadDamage> ->
+        DataComponentType.builder<BlocksHeadDamage>()
+            .persistent(BlocksHeadDamage.CODEC)
+            .networkSynchronized(BlocksHeadDamage.STREAM_CODEC)
             .cacheEncoding()
     }
 

@@ -3,7 +3,7 @@ package joshxviii.plantz.entity.plant
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazServerParticles
-import joshxviii.plantz.PazTags.EntityTypes.TAG_CANNOT_CHOMP
+import joshxviii.plantz.PazTags.EntityTypes.CANNOT_CHOMP
 import joshxviii.plantz.ai.goal.MeleeAttackPlantGoal
 import joshxviii.plantz.pazResource
 import net.minecraft.server.level.ServerLevel
@@ -47,7 +47,7 @@ class Chomper(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CHO
     ) {
         override fun doAction() : Boolean {
             val target = plantEntity.target?: return false
-            if(!target.`is`(TAG_CANNOT_CHOMP)) {
+            if(!target.`is`(CANNOT_CHOMP)) {
                 //Add modifier to increase damage for insta kills
                 plantEntity.getAttribute(Attributes.ATTACK_DAMAGE)?.addOrUpdateTransientModifier(CHOMP_ATTACK_MODIFIER)
             }

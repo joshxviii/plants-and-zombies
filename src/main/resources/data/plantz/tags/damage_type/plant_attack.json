@@ -1,9 +1,6 @@
 {
   "values": [
-    "plantz:plant",
-    "plantz:plant_chomp",
-    "plantz:plant_freeze",
-    "plantz:plant_fire",
-    "plantz:plant_fume"
+    "#plantz:plant_projectile",
+    "plantz:plant_chomp"
   ]
 }

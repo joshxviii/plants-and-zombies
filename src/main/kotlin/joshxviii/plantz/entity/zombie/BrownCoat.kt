@@ -1,6 +1,7 @@
 package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.PazSounds
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -18,17 +19,14 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : Zombie(type, le
     }
 
     override fun getAmbientSound(): SoundEvent {
-        return SoundEvents.ZOMBIE_AMBIENT
+        return PazSounds.BROWNCOAT_AMBIENT
     }
-
     override fun getHurtSound(source: DamageSource): SoundEvent {
-        return SoundEvents.ZOMBIE_HURT
+        return PazSounds.BROWNCOAT_HURT
     }
-
     override fun getDeathSound(): SoundEvent {
-        return SoundEvents.ZOMBIE_DEATH
+        return PazSounds.BROWNCOAT_DEATH
     }
-
     override fun getStepSound(): SoundEvent {
         return SoundEvents.ZOMBIE_STEP
     }

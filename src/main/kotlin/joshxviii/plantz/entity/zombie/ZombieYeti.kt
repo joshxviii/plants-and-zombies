@@ -1,6 +1,5 @@
 package joshxviii.plantz.entity.zombie
 
-import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazSounds
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
@@ -27,15 +26,12 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : Zombie(type, 
     override fun getAmbientSound(): SoundEvent {
         return PazSounds.ZOMBIE_YETI_AMBIENT
     }
-
     override fun getHurtSound(source: DamageSource): SoundEvent {
         return PazSounds.ZOMBIE_YETI_HURT
     }
-
     override fun getDeathSound(): SoundEvent {
         return PazSounds.ZOMBIE_YETI_DEATH
     }
-
     override fun getStepSound(): SoundEvent {
         return SoundEvents.ZOMBIE_STEP
     }
@@ -68,10 +64,19 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : Zombie(type, 
         groupData = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
         val difficultyModifier = difficulty.specialMultiplier
         if (spawnReason != EntitySpawnReason.CONVERSION) {
-            this.setCanPickUpLoot(random.nextFloat() < 0.55f * difficultyModifier)
 
-            if (random.nextFloat() < 0.05f) {
+            if (random.nextFloat() < 0.08f) {
                 this.setItemSlot(EquipmentSlot.HEAD, Items.BUCKET.defaultInstance)
+            }
+
+            if (random.nextFloat() < 0.05) {
+                val polarBear = EntityType.POLAR_BEAR.create(this.level(), EntitySpawnReason.JOCKEY)
+                if (polarBear != null) {
+                    polarBear.snapTo(this.x, this.y, this.z, this.yRot, 0.0f)
+                    polarBear.finalizeSpawn(level, difficulty, EntitySpawnReason.JOCKEY, null)
+                    this.startRiding(polarBear, false, false)
+                    level.addFreshEntity(polarBear)
+                }
             }
         }
 
