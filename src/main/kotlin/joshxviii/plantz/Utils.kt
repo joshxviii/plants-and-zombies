@@ -45,6 +45,16 @@ fun <T : LivingEntity?> ServerEntityGetter.getFurthestEntities(
     return result
 }
 
+fun List<String>.permutationsDescending(): List<String> = buildList {
+    add(joinToString(""))
+
+    for (i in size - 1 downTo 1) {
+        add(subList(0, i).joinToString(""))
+    }
+
+    add("")
+}
+
 private fun Raids.getOrCreateZombieRaid(level: ServerLevel, pos: BlockPos): ZombieRaid {
     val raid = level.getRaidAt(pos) as? ZombieRaid
     return raid ?: ZombieRaid(pos, level.difficulty)

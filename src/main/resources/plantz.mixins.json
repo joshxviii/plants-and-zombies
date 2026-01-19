@@ -6,7 +6,8 @@
   "mixins": [
     "ExampleMixin",
     "LivingEntityMixin",
-    "MobAccessor"
+    "MobAccessor",
+    "SpawnPlacementsInvoker"
   ],
   "injectors": {
     "defaultRequire": 1

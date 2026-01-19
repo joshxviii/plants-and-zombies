@@ -51,21 +51,25 @@ class PlantRenderer(
     }
 
     override fun getTextureLocation(state: PlantRenderState): Identifier {
+        val base = "textures/entity/plant/${state.texturePath}/${state.texturePath}"
+        val rm = Minecraft.getInstance().resourceManager
 
-        val baseTexture = "textures/entity/plant/${state.texturePath}/${state.texturePath}${
-            if(state.isBaby) "_baby" else ""}${
-            if(state.isAsleep) "_sleep" else ""}"
+        val suffixes = buildList {
+            if (state.isBaby)   add("_baby")
+            if (state.isAsleep) add("_sleep")
 
-        val base = pazResource("${baseTexture}.png")
-        val damage = when (state.damagedAmount) {// change texture based on damage
-            in 0.5f..0.75f -> pazResource("${baseTexture}_damage_low.png")
-            in 0.75f..1.0f -> pazResource("${baseTexture}_damage_medium.png")
-            else -> base
+            when {
+                state.damagedAmount >= 0.75f -> add("_damage_medium")
+                state.damagedAmount >= 0.5f  -> add("_damage_low")
+            }
         }
-        return if (Minecraft.getInstance().resourceManager.getResource(damage).isPresent)
-            damage
-        else
-            base
+
+        for (suffix in suffixes.permutationsDescending()) {
+            val candidate = pazResource("$base$suffix.png")
+            if (rm.getResource(candidate).isPresent) return candidate
+        }
+
+        return pazResource("$base.png")
     }
 }
 

@@ -2,12 +2,20 @@ package joshxviii.plantz
 
 import joshxviii.plantz.PazEntities.BROWN_COAT
 import joshxviii.plantz.PazEntities.ZOMBIE_YETI
+import joshxviii.plantz.PazTags.EntityTypes.ATTACKS_PLANTS
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.entity.plants.WallNut
 import joshxviii.plantz.item.SeedPacketItem
+import joshxviii.plantz.item.component.BlocksHeadDamage
 import joshxviii.plantz.item.component.SeedPacket
 import joshxviii.plantz.item.component.SunCost
+import joshxviii.plantz.mixin.MobAccessor
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
+import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
+import net.fabricmc.fabric.impl.item.ItemComponentTooltipProviderRegistryImpl
 import net.minecraft.core.Direction
 import net.minecraft.core.Registry
+import net.minecraft.core.component.DataComponents
 import net.minecraft.core.dispenser.BlockSource
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior
 import net.minecraft.core.registries.BuiltInRegistries
@@ -16,10 +24,19 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.entity.EquipmentSlotGroup
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.ai.attributes.AttributeModifier
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraft.world.item.MinecartItem
 import net.minecraft.world.item.SpawnEggItem
+import net.minecraft.world.item.component.ItemAttributeModifiers
+import net.minecraft.world.item.equipment.Equippable
 import net.minecraft.world.level.block.DispenserBlock
 import net.minecraft.world.level.gameevent.GameEvent
 import java.util.function.Function
@@ -66,7 +83,44 @@ object PazItems {
         )
     }
 
-    fun initialize() {// Dispenser behavior
+    fun initialize() {
+
+        // Modify components
+        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SEED_PACKET)
+        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
+        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BLOCKS_HEAD_DAMAGE)
+
+        ServerEntityEvents.ENTITY_LOAD.register { entity, level ->
+            if (entity is Mob && entity.`is`(ATTACKS_PLANTS)) {
+                (entity as MobAccessor).targetSelector.addGoal(1, NearestAttackableTargetGoal(entity, WallNut::class.java, 4, true, true) { target, level -> target is WallNut })
+                (entity as MobAccessor).targetSelector.addGoal(4, NearestAttackableTargetGoal(entity, Plant::class.java, 5, true, false) { target, level -> target is Plant })
+            }
+        }
+
+        DefaultItemComponentEvents.MODIFY.register {
+            it.modify(Items.BUCKET) { builder ->
+                builder.set(PazComponents.BLOCKS_HEAD_DAMAGE, BlocksHeadDamage(breakChance = .05f))
+                builder.set(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
+                    .setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)
+                    .build()
+                )
+
+                val armorModifier = ItemAttributeModifiers.builder()
+                    .add(
+                        Attributes.ARMOR,
+                        AttributeModifier(pazResource("bucket_armor"), 1.0, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.HEAD
+                    ).add(
+                        Attributes.KNOCKBACK_RESISTANCE,
+                        AttributeModifier(pazResource("bucket_knockback_resistance"), 0.1, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.HEAD
+                    ).build()
+
+                builder.set(DataComponents.ATTRIBUTE_MODIFIERS, armorModifier)
+            }
+        }
+
+        // Dispenser behavior
         DispenserBlock.registerBehavior(
             SEED_PACKET, object : DefaultDispenseItemBehavior() {
             public override fun execute(source: BlockSource, dispensed: ItemStack): ItemStack {

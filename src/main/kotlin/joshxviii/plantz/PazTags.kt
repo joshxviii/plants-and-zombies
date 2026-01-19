@@ -2,17 +2,21 @@ package joshxviii.plantz
 
 import net.minecraft.core.registries.Registries
 import net.minecraft.tags.TagKey
+import net.minecraft.world.damagesource.DamageType
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.item.Item
+import net.minecraft.world.level.biome.Biome
+import net.minecraft.world.level.block.Block
 
 object PazTags {
     object BlockTags {
         @JvmField val PLANTABLE = tag("plantable")
-        private fun tag(name: String) = TagKey.create(Registries.BLOCK, pazResource(name))
+        private fun tag(name: String): TagKey<Block> = TagKey.create(Registries.BLOCK, pazResource(name))
     }
 
     object ItemTags {
         @JvmField val BLOCKS_PLANT_PROJECTILE = tag("blocks_plant_projectile")
-
-        private fun tag(name: String) = TagKey.create(Registries.ITEM, pazResource(name))
+        private fun tag(name: String): TagKey<Item> = TagKey.create(Registries.ITEM, pazResource(name))
     }
 
     object EntityTypes {
@@ -21,19 +25,36 @@ object PazTags {
         @JvmField val CANNOT_CHOMP = tag("cannot_be_chomped")
         @JvmField val ZOMBIE_RAIDERS = tag("zombie_raider")
         @JvmField val ATTACKS_PLANTS = tag("attacks_plants")
-        private fun tag(name: String) = TagKey.create(Registries.ENTITY_TYPE, pazResource(name))
+        private fun tag(name: String): TagKey<EntityType<*>> = TagKey.create(Registries.ENTITY_TYPE, pazResource(name))
     }
 
     object DamageTypes {
         @JvmField val PLANT_PROJECTILE = tag("plant_projectile")
         @JvmField val BLOCKABLE_WITH_HELMET = tag("blockable_with_helmet")
-
-        private fun tag(name: String) = TagKey.create(Registries.DAMAGE_TYPE, pazResource(name))
+        private fun tag(name: String): TagKey<DamageType> = TagKey.create(Registries.DAMAGE_TYPE, pazResource(name))
     }
 
     object Biomes {
 
-        private fun tag(name: String) = TagKey.create(Registries.BIOME, pazResource(name))
+        val HAS_CACTUS = tag("plant/has_cactus")
+        val HAS_CHERRYBOMB = tag("plant/has_cherrybomb")
+        val HAS_CHOMPER = tag("plant/has_chomper")
+        val HAS_FIRE_PEASHOOTER = tag("plant/has_fire_peashooter")
+        val HAS_FUMESHROOM = tag("plant/has_fumeshroom")
+        val HAS_ICE_PEASHOOTER = tag("plant/has_ice_peashooter")
+        val HAS_MELONPULT = tag("plant/has_melonpult")
+        val HAS_PEASHOOTER = tag("plant/has_peashooter")
+        val HAS_POTATOMINE = tag("plant/has_potatomine")
+        val HAS_PUFFSHROOM = tag("plant/has_puffshroom")
+        val HAS_REPEATER = tag("plant/has_repeater")
+        val HAS_SUNFLOWER = tag("plant/has_sunflower")
+        val HAS_SUNSHROOM = tag("plant/has_sunshroom")
+        val HAS_WALLNUT = tag("plant/has_wallnut")
+
+        val HAS_BROWNCOAT = tag("zombie/has_browncoat")
+        val HAS_ZOMBIE_YETI = tag("zombie/has_zombie_yeti")
+
+        private fun tag(name: String): TagKey<Biome>  = TagKey.create(Registries.BIOME, pazResource(name))
     }
 
     fun initialize() {}

@@ -1,0 +1,15 @@
+{
+  "values": [
+    "minecraft:ice_spikes",
+    "minecraft:frozen_peaks",
+    {
+      "id": "#c:is_icy",
+      "required": false
+    },
+
+    {
+      "id": "#c:is_badlands",
+      "required": false
+    }
+  ]
+}
