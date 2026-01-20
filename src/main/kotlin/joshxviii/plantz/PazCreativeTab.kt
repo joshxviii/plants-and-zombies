@@ -45,6 +45,9 @@ object PazCreativeTab {
                 output.accept(PazItems.BROWN_COAT_SPAWN_EGG)
                 output.accept(PazItems.ZOMBIE_YETI_SPAWN_EGG)
 
+                //gnome
+                output.accept(PazItems.GNOME_SPAWN_EGG)
+
                 //other
                 output.accept(PazItems.SUN)
                 output.accept(PazBlocks.PLANT_POT)

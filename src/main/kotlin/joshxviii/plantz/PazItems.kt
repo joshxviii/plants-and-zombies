@@ -1,6 +1,7 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.PazEntities.BROWN_COAT
+import joshxviii.plantz.PazEntities.GNOME
 import joshxviii.plantz.PazEntities.ZOMBIE_YETI
 import joshxviii.plantz.PazTags.EntityTypes.ATTACKS_PLANTS
 import joshxviii.plantz.entity.plant.Plant
@@ -24,6 +25,8 @@ import net.minecraft.core.dispenser.BlockSource
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
+import net.minecraft.network.chat.CommonComponents
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntitySpawnReason
@@ -67,6 +70,7 @@ object PazItems {
 
     @JvmField val BROWN_COAT_SPAWN_EGG: Item = registerSpawnEgg(BROWN_COAT)
     @JvmField val ZOMBIE_YETI_SPAWN_EGG: Item = registerSpawnEgg(ZOMBIE_YETI)
+    @JvmField val GNOME_SPAWN_EGG: Item = registerSpawnEgg(GNOME)
 
     private fun registerItem(
         name: String,
@@ -82,9 +86,10 @@ object PazItems {
     }
 
     private fun registerSpawnEgg(type: EntityType<*>): Item {
+        val entityId = EntityType.getKey(type).path
+        val entityName = Component.translatable("entity.plantz.${entityId}")
         return registerItem(
-            EntityType.getKey(type).path + "_spawn_egg",
-            { properties: Item.Properties -> SpawnEggItem(properties) },
+           "${entityId}_spawn_egg", ::SpawnEggItem,
             Item.Properties().spawnEgg(type)
         )
     }

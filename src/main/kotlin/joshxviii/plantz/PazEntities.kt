@@ -2,22 +2,15 @@ package joshxviii.plantz
 
 import joshxviii.plantz.PazTags.EntityTypes.ATTACKS_PLANTS
 import joshxviii.plantz.PazTags.EntityTypes.IGNORED_BY_PLANT_ATTACKERS
-import joshxviii.plantz.entity.*
-import joshxviii.plantz.entity.plant.Cactus
-import joshxviii.plantz.entity.plant.CherryBomb
-import joshxviii.plantz.entity.plant.Chomper
-import joshxviii.plantz.entity.plant.FirePeaShooter
-import joshxviii.plantz.entity.plant.FumeShroom
-import joshxviii.plantz.entity.plant.IcePeaShooter
-import joshxviii.plantz.entity.plant.MelonPult
-import joshxviii.plantz.entity.plant.PeaShooter
-import joshxviii.plantz.entity.plant.Plant
-import joshxviii.plantz.entity.plant.PotatoMine
-import joshxviii.plantz.entity.plant.PuffShroom
-import joshxviii.plantz.entity.plant.Repeater
-import joshxviii.plantz.entity.plant.SunShroom
-import joshxviii.plantz.entity.plant.Sunflower
-import joshxviii.plantz.entity.plants.*
+import joshxviii.plantz.entity.PlantPotMinecart
+import joshxviii.plantz.entity.Sun
+import joshxviii.plantz.entity.gnome.Gnome
+import joshxviii.plantz.entity.gnome.GnomeSoundVariant
+import joshxviii.plantz.entity.gnome.GnomeSoundVariants
+import joshxviii.plantz.entity.gnome.GnomeVariant
+import joshxviii.plantz.entity.gnome.GnomeVariants
+import joshxviii.plantz.entity.plant.*
+import joshxviii.plantz.entity.plants.WallNut
 import joshxviii.plantz.entity.projectile.*
 import joshxviii.plantz.entity.zombie.BrownCoat
 import joshxviii.plantz.entity.zombie.ZombieYeti
@@ -25,15 +18,13 @@ import joshxviii.plantz.mixin.MobAccessor
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.minecraft.core.Registry
+import net.minecraft.core.RegistryAccess
+import net.minecraft.core.RegistrySetBuilder
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
-import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.*
 import net.minecraft.world.entity.Mob.createMobAttributes
-import net.minecraft.world.entity.MobCategory
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
@@ -43,6 +34,11 @@ import net.minecraft.world.entity.projectile.Projectile
 object PazEntities {
 
     fun initialize() {
+        RegistrySetBuilder()
+            .add(GNOME_SOUND_VARIANT, GnomeSoundVariants::bootstrap)
+            .add(GNOME_VARIANT, GnomeVariants::bootstrap)
+            .build(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY))
+
         ServerEntityEvents.ENTITY_LOAD.register { entity, level ->
             if (entity is Mob && entity.`is`(ATTACKS_PLANTS)) {
                 (entity as MobAccessor).targetSelector.addGoal(1, NearestAttackableTargetGoal(entity, WallNut::class.java, 4, true, true) { target, level -> target is WallNut })
@@ -204,6 +200,19 @@ object PazEntities {
     )
     // endregion
 
+    @JvmField val GNOME: EntityType<Gnome> =  registerGnome(
+        "gnome",
+        EntityType.Builder.of(::Gnome, MobCategory.MONSTER),
+        attributes = Mob.createMobAttributes()
+            .add(Attributes.MAX_HEALTH, 20.0)
+            .add(Attributes.MOVEMENT_SPEED, 0.9)
+            .add(Attributes.KNOCKBACK_RESISTANCE, 0.3)
+            .add(Attributes.ATTACK_DAMAGE, 2.0)
+    )
+    @JvmField val GNOME_VARIANT = ResourceKey.createRegistryKey<GnomeVariant>(pazResource("gnome_variant"))
+    @JvmField val GNOME_SOUND_VARIANT = ResourceKey.createRegistryKey<GnomeSoundVariant>(pazResource("gnome_sound_variant"))
+
+
     //region Projectiles
     @JvmField val PEA: EntityType<Pea> = registerProjectile("pea", EntityType.Builder.of(::Pea, MobCategory.MISC))
     @JvmField val PEA_ICE: EntityType<PeaIce> = registerProjectile("pea_ice", EntityType.Builder.of(::PeaIce, MobCategory.MISC))
@@ -252,6 +261,16 @@ object PazEntities {
         name : String,
         builder: EntityType.Builder<T> = EntityType.Builder.createNothing(MobCategory.MONSTER),
         attributes: AttributeSupplier.Builder = Zombie.createAttributes()
+    ): EntityType<T> {
+        val type = register(name, builder)
+        FabricDefaultAttributeRegistry.register(type, attributes)
+        return type
+    }
+
+    private fun <T : Gnome> registerGnome(
+        name : String,
+        builder: EntityType.Builder<T> = EntityType.Builder.createNothing(MobCategory.MONSTER),
+        attributes: AttributeSupplier.Builder = Mob.createMobAttributes()
     ): EntityType<T> {
         val type = register(name, builder)
         FabricDefaultAttributeRegistry.register(type, attributes)

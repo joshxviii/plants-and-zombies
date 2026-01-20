@@ -1,8 +1,15 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.entity.gnome.GnomeSoundVariant
+import joshxviii.plantz.entity.gnome.GnomeSoundVariants
+import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.resources.Identifier
 import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundEvents
+import java.util.stream.Collectors
+import java.util.stream.Stream
 
 object PazSounds {
 
@@ -18,6 +25,26 @@ object PazSounds {
     fun register(name: String): SoundEvent {
         val soundId = pazResource(name)
         return Registry.register(BuiltInRegistries.SOUND_EVENT, soundId, SoundEvent.createVariableRangeEvent(soundId))
+    }
+
+    fun registerForHolder(name: String): Holder.Reference<SoundEvent> {
+        val soundId = pazResource(name)
+        return Registry.registerForHolder(BuiltInRegistries.SOUND_EVENT, soundId, SoundEvent.createVariableRangeEvent(soundId))
+    }
+
+    var GNOME_SOUNDS: Map<GnomeSoundVariants.SoundSet, GnomeSoundVariant> = registerGnomeSoundVariants()
+
+    private fun registerGnomeSoundVariants(): Map<GnomeSoundVariants.SoundSet, GnomeSoundVariant> {
+        return GnomeSoundVariants.SoundSet.entries.associateWith { soundSet ->
+            val id = soundSet.id
+            val sounds = GnomeSoundVariant.GnomeSoundSet(
+                ambientSound = registerForHolder("entity.$id.ambient"),
+                deathSound   = registerForHolder("entity.$id.death"),
+                hurtSound    = registerForHolder("entity.$id.hurt"),
+                stepSound    = SoundEvents.WOLF_STEP
+            )
+            GnomeSoundVariant(sounds)
+        }
     }
 
     fun initialize() {}

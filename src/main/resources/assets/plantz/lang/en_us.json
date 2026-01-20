@@ -25,6 +25,10 @@
   "item.plantz.plant_pot_minecart": "Minecart with Plant Pot",
   "item.plantz.seed_packet": "Seed Packet",
   "item.plantz.seed_packet.entity": "%s Seeds",
+  
+  "item.plantz.gnome_spawn_egg": "Gnome Spawn Egg",
+  "item.plantz.zombie_yeti_spawn_egg": "Zombie Yeti Spawn Egg",
+  "item.plantz.browncoat_spawn_egg": "Brown Coat Spawn Egg",
 
   "entity.plantz.empty": "Empty",
   "entity.plantz.sunflower": "Sunflower",
