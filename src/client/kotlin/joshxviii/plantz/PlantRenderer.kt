@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.client.renderer.state.CameraRenderState
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
+import net.minecraft.util.Mth
 import net.minecraft.world.entity.AnimationState
 
 class PlantRenderer(
@@ -32,6 +33,10 @@ class PlantRenderer(
         if (state.ageInTicks>1) super.submit(state, poseStack, collector, camera)
     }
 
+    override fun getWhiteOverlayProgress(state: PlantRenderState): Float {
+        return 0f
+    }
+
     override fun createRenderState(): PlantRenderState {
         return PlantRenderState()
     }
@@ -39,6 +44,7 @@ class PlantRenderer(
     override fun extractRenderState(entity: Plant, state: PlantRenderState, partialTick: Float) {
         super.extractRenderState(entity, state, partialTick)
 
+        state.cooldown = entity.cooldown
         state.isAsleep = entity.isAsleep
         state.damagedAmount = entity.damagedPercent
         state.texturePath = BuiltInRegistries.ENTITY_TYPE.getKey(entity.type).path
@@ -55,17 +61,18 @@ class PlantRenderer(
         val rm = Minecraft.getInstance().resourceManager
 
         val suffixes = buildList {
-            if (state.isBaby)   add("_baby")
-            if (state.isAsleep) add("_sleep")
+            if (state.isBaby)   add("baby")
+            if (state.isAsleep) add("sleep")
 
             when {
-                state.damagedAmount >= 0.75f -> add("_damage_medium")
-                state.damagedAmount >= 0.5f  -> add("_damage_low")
+                state.damagedAmount >= 0.75f -> add("damage_medium")
+                state.damagedAmount >= 0.5f  -> add("damage_low")
             }
         }
 
         for (suffix in suffixes.permutationsDescending()) {
-            val candidate = pazResource("$base$suffix.png")
+            if (suffix.isEmpty()) break
+            val candidate = pazResource("${base}_${suffix}.png")
             if (rm.getResource(candidate).isPresent) return candidate
         }
 
@@ -74,6 +81,8 @@ class PlantRenderer(
 }
 
 class PlantRenderState : LivingEntityRenderState() {
+    var lastCooldownTime: Int = 0
+    var cooldown: Int = 0
     var damagedAmount: Float = 0.0f
     var isAsleep: Boolean = false
     var texturePath: String = "default"

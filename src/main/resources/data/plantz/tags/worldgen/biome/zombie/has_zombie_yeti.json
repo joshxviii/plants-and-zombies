@@ -2,13 +2,14 @@
   "values": [
     "minecraft:ice_spikes",
     "minecraft:frozen_peaks",
+    "minecraft:frozen_ocean",
+    "minecraft:snowy_slopes",
     {
-      "id": "#c:is_icy",
+      "id": "#c:is_mountain/peak",
       "required": false
     },
-
     {
-      "id": "#c:is_badlands",
+      "id": "#c:is_icy",
       "required": false
     }
   ]

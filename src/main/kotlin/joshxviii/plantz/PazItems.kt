@@ -6,13 +6,17 @@ import joshxviii.plantz.PazTags.EntityTypes.ATTACKS_PLANTS
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.plants.WallNut
 import joshxviii.plantz.item.SeedPacketItem
+import joshxviii.plantz.item.SunItem
 import joshxviii.plantz.item.component.BlocksHeadDamage
 import joshxviii.plantz.item.component.SeedPacket
 import joshxviii.plantz.item.component.SunCost
 import joshxviii.plantz.mixin.MobAccessor
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
+import net.fabricmc.fabric.api.registry.FuelValueEvents
+import net.fabricmc.fabric.impl.content.registry.FuelRegistryEventsContextImpl
 import net.fabricmc.fabric.impl.item.ItemComponentTooltipProviderRegistryImpl
+import net.fabricmc.fabric.mixin.content.registry.FuelValuesMixin
 import net.minecraft.core.Direction
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponents
@@ -36,6 +40,7 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.item.MinecartItem
 import net.minecraft.world.item.SpawnEggItem
 import net.minecraft.world.item.component.ItemAttributeModifiers
+import net.minecraft.world.item.component.UseCooldown
 import net.minecraft.world.item.equipment.Equippable
 import net.minecraft.world.level.block.DispenserBlock
 import net.minecraft.world.level.gameevent.GameEvent
@@ -44,7 +49,7 @@ import java.util.function.Function
 object PazItems {
     @JvmField
     val SUN: Item = registerItem(
-        "sun",
+        "sun", ::SunItem,
         properties = Item.Properties().stacksTo(99))
     @JvmField
     val SEED_PACKET: Item = registerItem(
@@ -52,6 +57,7 @@ object PazItems {
         properties = Item.Properties()
             .component(PazComponents.SEED_PACKET, SeedPacket())
             .component(PazComponents.SUN_COST, SunCost())
+            .component(DataComponents.USE_COOLDOWN, UseCooldown(100.0f))
     )
     @JvmField
     val PLANT_POT_MINECART: Item = registerItem(
@@ -85,17 +91,14 @@ object PazItems {
 
     fun initialize() {
 
+        FuelValueEvents.BUILD.register { builder, context ->
+            builder.add(SUN, context.baseSmeltTime())
+        }
+
         // Modify components
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SEED_PACKET)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BLOCKS_HEAD_DAMAGE)
-
-        ServerEntityEvents.ENTITY_LOAD.register { entity, level ->
-            if (entity is Mob && entity.`is`(ATTACKS_PLANTS)) {
-                (entity as MobAccessor).targetSelector.addGoal(1, NearestAttackableTargetGoal(entity, WallNut::class.java, 4, true, true) { target, level -> target is WallNut })
-                (entity as MobAccessor).targetSelector.addGoal(4, NearestAttackableTargetGoal(entity, Plant::class.java, 5, true, false) { target, level -> target is Plant })
-            }
-        }
 
         DefaultItemComponentEvents.MODIFY.register {
             it.modify(Items.BUCKET) { builder ->

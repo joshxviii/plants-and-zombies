@@ -1,5 +1,7 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.PazTags.EntityTypes.ATTACKS_PLANTS
+import joshxviii.plantz.PazTags.EntityTypes.IGNORED_BY_PLANT_ATTACKERS
 import joshxviii.plantz.entity.*
 import joshxviii.plantz.entity.plant.Cactus
 import joshxviii.plantz.entity.plant.CherryBomb
@@ -19,6 +21,8 @@ import joshxviii.plantz.entity.plants.*
 import joshxviii.plantz.entity.projectile.*
 import joshxviii.plantz.entity.zombie.BrownCoat
 import joshxviii.plantz.entity.zombie.ZombieYeti
+import joshxviii.plantz.mixin.MobAccessor
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
@@ -27,14 +31,28 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.Mob.createMobAttributes
 import net.minecraft.world.entity.MobCategory
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.projectile.Projectile
 
 object PazEntities {
+
+    fun initialize() {
+        ServerEntityEvents.ENTITY_LOAD.register { entity, level ->
+            if (entity is Mob && entity.`is`(ATTACKS_PLANTS)) {
+                (entity as MobAccessor).targetSelector.addGoal(1, NearestAttackableTargetGoal(entity, WallNut::class.java, 4, true, true) { target, level -> target is WallNut })
+                (entity as MobAccessor).targetSelector.addGoal(4, NearestAttackableTargetGoal(entity, Plant::class.java, 5, true, false) { target, level ->
+                    target is Plant && !target.`is`(IGNORED_BY_PLANT_ATTACKERS) })
+            }
+        }
+    }
+
+
     private val typeToSunCost = mutableMapOf<EntityType<*>, Int>()
     fun getSunCostFromType(type: EntityType<*>) : Int {
         return typeToSunCost[type]?: 0
@@ -45,7 +63,7 @@ object PazEntities {
         "sunflower",
         EntityType.Builder.of(::Sunflower, MobCategory.CREATURE),
         sunCost = 10,
-        height = 1.3f,
+        height = 1.1f,
     )
     @JvmField val PEA_SHOOTER: EntityType<PeaShooter> = registerPlant(
         "peashooter",
@@ -127,14 +145,15 @@ object PazEntities {
         )
     )
     @JvmField val PUFF_SHROOM: EntityType<PuffShroom> = registerPlant(
-        "puffshroom",
-        EntityType.Builder.of(::PuffShroom, MobCategory.CREATURE),
-        sunCost = 10,
+        "puffshroom", EntityType.Builder.of(::PuffShroom, MobCategory.CREATURE),
+        sunCost = 0,
         width = 0.5f,
         height = 0.65f,
         eyeHeight = 0.3f,
         attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 10.0,
             attackDamage = 2.0,
+            followRange = 10.0
         )
     )
     @JvmField val FUME_SHROOM: EntityType<FumeShroom> = registerPlant(
@@ -256,6 +275,4 @@ object PazEntities {
         val id = ResourceKey.create(Registries.ENTITY_TYPE, pazResource(name))
         return Registry.register(BuiltInRegistries.ENTITY_TYPE, id, builder.build(id))
     }
-
-    fun initialize() {}
 }

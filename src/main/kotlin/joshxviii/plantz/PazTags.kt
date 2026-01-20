@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.Block
 object PazTags {
     object BlockTags {
         @JvmField val PLANTABLE = tag("plantable")
+        @JvmField val YETI_SPAWNABLE_ON = tag("yeti_spawnable_on")
         private fun tag(name: String): TagKey<Block> = TagKey.create(Registries.BLOCK, pazResource(name))
     }
 
@@ -25,6 +26,7 @@ object PazTags {
         @JvmField val CANNOT_CHOMP = tag("cannot_be_chomped")
         @JvmField val ZOMBIE_RAIDERS = tag("zombie_raider")
         @JvmField val ATTACKS_PLANTS = tag("attacks_plants")
+        @JvmField val IGNORED_BY_PLANT_ATTACKERS = tag("ignored_by_plant_attackers")
         private fun tag(name: String): TagKey<EntityType<*>> = TagKey.create(Registries.ENTITY_TYPE, pazResource(name))
     }
 
@@ -53,6 +55,7 @@ object PazTags {
 
         val HAS_BROWNCOAT = tag("zombie/has_browncoat")
         val HAS_ZOMBIE_YETI = tag("zombie/has_zombie_yeti")
+        val HAS_ZOMBIE_YETI_ALT = tag("zombie/has_zombie_yeti_alt")
 
         private fun tag(name: String): TagKey<Biome>  = TagKey.create(Registries.BIOME, pazResource(name))
     }

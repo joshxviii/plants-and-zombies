@@ -19,7 +19,7 @@ class ProjectileAttackPlantGoal(
     actionEndEffect: () -> Unit = {},
     val projectileFactory: () -> Projectile,
     val velocity : Double = 0.9,
-    val inaccuracy: Float = 0.0f,
+    val inaccuracy: Float = 0.8f,
     val useHighArc: Boolean = false,
 ) : PlantActionGoal(plantEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
     var distanceSqr: Double = 0.0

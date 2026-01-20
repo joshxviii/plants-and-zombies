@@ -28,7 +28,7 @@ class FumeShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEnt
             actionDelay = 12,
             afterHitEntityEffect = {
                 it.addEffect(MobEffectInstance(PazEffects.TOXIC, 100, 0))
-            }))
+        }))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->
             target is Enemy
             && target !is Plant

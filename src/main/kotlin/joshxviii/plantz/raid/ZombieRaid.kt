@@ -4,7 +4,10 @@ import com.mojang.serialization.Codec
 import joshxviii.plantz.PazTags.EntityTypes.ZOMBIE_RAIDERS
 import net.minecraft.core.BlockPos
 import net.minecraft.core.BlockPos.MutableBlockPos
+import net.minecraft.core.HolderGetter
+import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
@@ -12,6 +15,14 @@ import net.minecraft.util.StringRepresentable
 import net.minecraft.world.Difficulty
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.raid.Raid
+import net.minecraft.world.item.DyeColor
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
+import net.minecraft.world.item.Rarity
+import net.minecraft.world.item.component.TooltipDisplay
+import net.minecraft.world.level.block.entity.BannerPattern
+import net.minecraft.world.level.block.entity.BannerPatternLayers
+import net.minecraft.world.level.block.entity.BannerPatterns
 import net.minecraft.world.level.levelgen.Heightmap
 
 class ZombieRaid(
@@ -21,6 +32,28 @@ class ZombieRaid(
     center,
     difficulty
 ) {
+    companion object {
+        public fun getBrainzBannerInstance(patternGetter: HolderGetter<BannerPattern>): ItemStack {
+            val banner = ItemStack(Items.RED_BANNER)
+            val patterns = BannerPatternLayers.Builder()
+                .add(patternGetter.getOrThrow(BannerPatterns.MOJANG), DyeColor.WHITE)
+                .add(patternGetter.getOrThrow(BannerPatterns.BRICKS), DyeColor.PINK)
+                .add(patternGetter.getOrThrow(BannerPatterns.GLOBE), DyeColor.PINK)
+                .add(patternGetter.getOrThrow(BannerPatterns.STRIPE_TOP), DyeColor.RED)
+                .add(patternGetter.getOrThrow(BannerPatterns.STRIPE_BOTTOM), DyeColor.RED)
+                .add(patternGetter.getOrThrow(BannerPatterns.CURLY_BORDER), DyeColor.RED)
+                .build()
+            banner.set<BannerPatternLayers>(DataComponents.BANNER_PATTERNS, patterns)
+            banner.set<TooltipDisplay>(
+                DataComponents.TOOLTIP_DISPLAY,
+                TooltipDisplay.DEFAULT.withHidden(DataComponents.BANNER_PATTERNS, true)
+            )
+            banner.set<Component>(DataComponents.ITEM_NAME, Component.translatable("item.plantz.zombie_banner"))
+            banner.set<Rarity>(DataComponents.RARITY, Rarity.UNCOMMON)
+            return banner
+        }
+    }
+
     private val random = RandomSource.create()
     private var raidCooldownTicks = 0
     private val numGroups = 0

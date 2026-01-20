@@ -7,14 +7,18 @@ import joshxviii.plantz.PazTags.EntityTypes.CANNOT_CHOMP
 import joshxviii.plantz.ai.goal.MeleeAttackPlantGoal
 import joshxviii.plantz.pazResource
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.animal.chicken.Chicken
 import net.minecraft.world.entity.animal.fish.AbstractFish
 import net.minecraft.world.entity.monster.Enemy
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 
 class Chomper(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CHOMPER, level) {
@@ -28,8 +32,12 @@ class Chomper(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CHO
     override fun registerGoals() {
         super.registerGoals()
         this.goalSelector.addGoal(1, ChompAttackGoal(this))
-        this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->
-            (target is Enemy || target is AbstractFish) && target !is Plant
+        this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, LivingEntity::class.java, 5, true, false) { target, level ->
+            target !is Plant
+                    && (target is Enemy
+                    || target is AbstractFish
+                    || target is Chicken
+                    || (target is Player && !isTame))
         })
     }
 

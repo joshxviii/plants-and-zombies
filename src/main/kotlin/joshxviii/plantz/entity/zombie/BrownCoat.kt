@@ -33,19 +33,11 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : Zombie(type, le
 
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         val result = super.doHurtTarget(level, target)
-
         return result
     }
 
     override fun convertsInWater(): Boolean {
         return false
-    }
-
-    override fun doUnderWaterConversion(level: ServerLevel) {
-        this.convertToZombieType(level, EntityType.ZOMBIE)
-        if (!this.isSilent) {
-            level.levelEvent(null, 1041, this.blockPosition(), 0)
-        }
     }
 
     override fun finalizeSpawn(
@@ -59,13 +51,15 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : Zombie(type, le
         groupData = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
         val difficultyModifier = difficulty.specialMultiplier
         if (spawnReason != EntitySpawnReason.CONVERSION) {
-            this.setCanPickUpLoot(random.nextFloat() < 0.55f * difficultyModifier)
+            setCanPickUpLoot(random.nextFloat() < 0.55f * difficultyModifier)
 
-            if (random.nextFloat() < 0.25f) {
-                this.setItemSlot(EquipmentSlot.HEAD, PazBlocks.CONE.asItem().defaultInstance)
-            }
-            if (random.nextFloat() < 0.1f) {
-                this.setItemSlot(EquipmentSlot.HEAD, Items.BUCKET.defaultInstance)
+            if (getItemBySlot(EquipmentSlot.HEAD).isEmpty){
+                if (random.nextFloat() < 0.25) {
+                    setItemSlot(EquipmentSlot.HEAD, PazBlocks.CONE.asItem().defaultInstance)
+                }
+                if (random.nextFloat() < 0.1 && getItemBySlot(EquipmentSlot.HEAD).isEmpty) {
+                    setItemSlot(EquipmentSlot.HEAD, Items.BUCKET.defaultInstance)
+                }
             }
         }
 

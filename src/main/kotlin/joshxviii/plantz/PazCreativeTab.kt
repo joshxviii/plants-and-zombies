@@ -1,6 +1,7 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.item.SeedPacketItem
+import joshxviii.plantz.raid.ZombieRaid
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
@@ -8,6 +9,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.block.entity.BannerPattern
 
 object PazCreativeTab {
     // Define the key for the custom tab
@@ -23,7 +25,7 @@ object PazCreativeTab {
             .icon { ItemStack(PazItems.SUN) }
 
             .displayItems { parameters, output ->
-                // Seed packets for each plant type
+                // seed packets
                 output.accept(SeedPacketItem.stackFor(PazEntities.SUNFLOWER))
                 output.accept(SeedPacketItem.stackFor(PazEntities.PEA_SHOOTER))
                 output.accept(SeedPacketItem.stackFor(PazEntities.WALL_NUT))
@@ -38,14 +40,17 @@ object PazCreativeTab {
                 output.accept(SeedPacketItem.stackFor(PazEntities.PUFF_SHROOM))
                 output.accept(SeedPacketItem.stackFor(PazEntities.FUME_SHROOM))
                 output.accept(SeedPacketItem.stackFor(PazEntities.SUN_SHROOM))
+
                 // zombie spawn eggs
                 output.accept(PazItems.BROWN_COAT_SPAWN_EGG)
                 output.accept(PazItems.ZOMBIE_YETI_SPAWN_EGG)
 
+                //other
                 output.accept(PazItems.SUN)
                 output.accept(PazBlocks.PLANT_POT)
                 output.accept(PazItems.PLANT_POT_MINECART)
                 output.accept(PazBlocks.CONE)
+                output.accept(ZombieRaid.getBrainzBannerInstance(parameters.holders().lookupOrThrow(Registries.BANNER_PATTERN)))
             }
             .build()
     )

@@ -6,7 +6,6 @@
       "id": "#c:desert",
       "required": false
     },
-
     {
       "id": "#c:is_badlands",
       "required": false

@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow
 import net.minecraft.world.entity.projectile.arrow.ThrownTrident
 import net.minecraft.world.level.Level
@@ -21,5 +22,10 @@ class WallNut(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.WAL
         val entity = source.directEntity
         return if (entity is AbstractArrow && entity !is ThrownTrident) false
         else super.hurtServer(level, source, damage)
+    }
+
+    override fun actuallyHurt(level: ServerLevel, source: DamageSource, dmg: Float) {
+        val reducedDamage = if (source.entity is Zombie) dmg*0.5f else dmg
+        super.actuallyHurt(level, source, reducedDamage)
     }
 }

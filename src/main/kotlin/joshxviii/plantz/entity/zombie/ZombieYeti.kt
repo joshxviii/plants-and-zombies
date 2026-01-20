@@ -1,10 +1,13 @@
 package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazSounds
+import joshxviii.plantz.PazTags
+import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.RandomSource
+import net.minecraft.world.Difficulty
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
@@ -14,6 +17,26 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 
 class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : Zombie(type, level) {
+
+    companion object {
+        fun checkZombieYetiSpawnRules(
+            type: EntityType<out Mob>,
+            level: ServerLevelAccessor,
+            spawnReason: EntitySpawnReason,
+            pos: BlockPos,
+            random: RandomSource
+        ): Boolean {
+            val below = pos.below()
+            return level.difficulty != Difficulty.PEACEFUL
+                    && (EntitySpawnReason.ignoresLightRequirements(spawnReason) || isDarkEnoughToSpawn(level, pos, random))
+                    && checkMobSpawnRules(type, level, spawnReason, pos, random) || level.getBlockState(below).`is`(PazTags.BlockTags.YETI_SPAWNABLE_ON)
+                    && pos.y > level.seaLevel
+        }
+    }
+
+    init {
+       xpReward = 15
+    }
 
     override fun isBaby(): Boolean = false
     override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {}
@@ -46,13 +69,6 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : Zombie(type, 
         return false
     }
 
-    override fun doUnderWaterConversion(level: ServerLevel) {
-        this.convertToZombieType(level, EntityType.ZOMBIE)
-        if (!this.isSilent) {
-            level.levelEvent(null, 1041, this.blockPosition(), 0)
-        }
-    }
-
     override fun finalizeSpawn(
         level: ServerLevelAccessor,
         difficulty: DifficultyInstance,
@@ -65,16 +81,16 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : Zombie(type, 
         val difficultyModifier = difficulty.specialMultiplier
         if (spawnReason != EntitySpawnReason.CONVERSION) {
 
-            if (random.nextFloat() < 0.08f) {
-                this.setItemSlot(EquipmentSlot.HEAD, Items.BUCKET.defaultInstance)
+            if (random.nextFloat() < 0.08 && getItemBySlot(EquipmentSlot.HEAD).isEmpty) {
+                setItemSlot(EquipmentSlot.HEAD, Items.BUCKET.defaultInstance)
             }
 
             if (random.nextFloat() < 0.05) {
-                val polarBear = EntityType.POLAR_BEAR.create(this.level(), EntitySpawnReason.JOCKEY)
+                val polarBear = EntityType.POLAR_BEAR.create(level(), EntitySpawnReason.JOCKEY)
                 if (polarBear != null) {
-                    polarBear.snapTo(this.x, this.y, this.z, this.yRot, 0.0f)
+                    polarBear.snapTo(x, y, z, yRot, 0.0f)
                     polarBear.finalizeSpawn(level, difficulty, EntitySpawnReason.JOCKEY, null)
-                    this.startRiding(polarBear, false, false)
+                    startRiding(polarBear, false, false)
                     level.addFreshEntity(polarBear)
                 }
             }

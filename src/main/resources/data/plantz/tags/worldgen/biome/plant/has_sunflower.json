@@ -1,0 +1,19 @@
+{
+  "values": [
+    "minecraft:flower_forest",
+    "minecraft:plains",
+    "minecraft:sunflower_plains",
+    {
+      "id": "#c:is_flower_forest",
+      "required": false
+    },
+    {
+      "id": "#c:is_floral",
+      "required": false
+    },
+    {
+      "id": "#c:is_birch_forest",
+      "required": false
+    }
+  ]
+}

@@ -14,8 +14,11 @@ abstract class Mushroom(type: EntityType<out Mushroom>, level: Level) : Plant(ty
     private class MushroomSleepGoal(
         val mushroomEntity: Mushroom,
     ) : Goal() {
+        private var countdownAfter = 0
+        private var countdownBefore = 0
+
         companion object {
-            private val WAIT_TIME_BEFORE_SLEEP = Goal.reducedTickDelay(140)
+            private val SLEEP_WAIT_TIME = reducedTickDelay(140)
         }
 
         override fun canUse(): Boolean {
@@ -27,14 +30,18 @@ abstract class Mushroom(type: EntityType<out Mushroom>, level: Level) : Plant(ty
         }
 
         fun canSleep(): Boolean {
-            return mushroomEntity.sunIsVisible()
+            return if (this.countdownBefore-- > 0) false
+            else if (this.countdownAfter-- > 0) true
+                else mushroomEntity.sunIsVisible()
         }
 
         override fun stop() {
+            this.countdownBefore = mushroomEntity.random.nextInt(SLEEP_WAIT_TIME)
             mushroomEntity.isAsleep = false
         }
 
         override fun start() {
+            this.countdownAfter = mushroomEntity.random.nextInt(SLEEP_WAIT_TIME)
             mushroomEntity.isAsleep = true
         }
     }

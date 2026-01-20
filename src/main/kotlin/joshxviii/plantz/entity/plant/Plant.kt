@@ -4,14 +4,16 @@ import PazDataSerializers.DATA_COOLDOWN
 import PazDataSerializers.DATA_PLANT_STATE
 import PazDataSerializers.DATA_SLEEPING
 import joshxviii.plantz.PazAttributes
+import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
+import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.PazTags.BlockTags.PLANTABLE
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Direction
+import net.minecraft.core.Holder
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleOptions
@@ -29,6 +31,7 @@ import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -40,6 +43,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal
 import net.minecraft.world.entity.item.ItemEntity
+import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
@@ -64,10 +68,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             pos: BlockPos,
             random: RandomSource
         ): Boolean {
-
             val below = pos.below()
-            return EntitySpawnReason.isSpawner(spawnReason) || level.getBlockState(below)
-                .isValidSpawn(level, below, type)
+            return EntitySpawnReason.isSpawner(spawnReason) || level.getBlockState(below).isValidSpawn(level, below, type)
+
         }
 
         private const val NUTRIENT_SUPPLY_MAX = 140  // ticks before suffocating when on invalid ground
@@ -77,8 +80,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val SLEEPING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, DATA_SLEEPING)
 
         data class PlantAttributes(
-            val maxHealth: Double = 20.0,
-            val attackDamage: Double = 0.5,
+            val maxHealth: Double = 10.0,
+            val attackDamage: Double = 0.75,
             val attackKnockback: Double = 0.07,
             val movementSpeed: Double = 0.0,
             val followRange: Double = 14.0,
@@ -160,11 +163,12 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     override fun getHurtSound(source: DamageSource): SoundEvent? {
-        return SoundEvents.GENERIC_HURT// TODO make custom sounds
+        if (source.entity is Zombie) return SoundEvents.PLAYER_BURP
+        return SoundEvents.ROOTED_DIRT_HIT// TODO make custom sounds
     }
 
     override fun getDeathSound(): SoundEvent? {
-        return SoundEvents.GENERIC_DEATH// TODO make custom sounds
+        return SoundEvents.ROOTED_DIRT_BREAK// TODO make custom sounds
     }
 
     open fun getActionSound(): SoundEvent? {
@@ -197,6 +201,18 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return (target !is Plant || target.owner != owner)
     }
 
+    override fun actuallyHurt(level: ServerLevel, source: DamageSource, dmg: Float) {
+        super.actuallyHurt(
+            level,
+            if (source.entity is Zombie) DamageSource(
+                level.registryAccess().get<DamageType>(PazDamageTypes.ZOMBIE_EAT).get(),
+                source.directEntity,
+                source.entity
+            ) else source,
+            dmg
+        )
+    }
+
     override fun setPos(x: Double, y: Double, z: Double) {
         if (this.isPassenger) super.setPos(x, y, z)
         else super.setPos(Mth.floor(x) + 0.5, y, Mth.floor(z) + 0.5)
@@ -223,6 +239,17 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
         val target = this.target
         if (target != null) this.getLookControl().setLookAt(target, 180.0F, 180.0F);
+
+        if (isAsleep && tickCount % 10 == 0 && random.nextFloat()>0.6 && tickCount > 18 && isAlive) {
+            val direction = calculateViewVector(this.xRot, this.yHeadRot).scale(this.boundingBox.xsize)
+            this.level().addParticle(
+                PazServerParticles.SLEEP,
+                direction.x + this.getRandomX(0.2),
+                direction.y.toFloat() + this.y + eyeHeight.toDouble() - 0.1,
+                direction.z + this.getRandomZ(0.2),
+                0.0, 0.0, 0.0,
+            )
+        }
     }
 
     /**
@@ -307,7 +334,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     // whether another plant is overlapping with this one
     private fun isOverlappingWithOther(pos: BlockPos): Boolean {
         val otherPlantsAtPos = this.level().getEntitiesOfClass(Plant::class.java, AABB(pos)) { it != this }
-        otherPlantsAtPos.forEach { if(this.boundingBox.intersects(it.boundingBox)) return true }
+        otherPlantsAtPos.forEach {
+            if (!it.isAlive || it.isDeadOrDying) return false
+            if(this.boundingBox.intersects(it.boundingBox)) return true
+        }
         return false
     }
 
@@ -316,7 +346,11 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         difficulty: DifficultyInstance,
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
-    ): SpawnGroupData? { return null }
+    ): SpawnGroupData? {
+        if (spawnReason == EntitySpawnReason.NATURAL
+            && (!onValidGround() || isOverlappingWithOther(this.blockPosition()))) this.discard()
+        return groupData
+    }
 
     override fun mobInteract(player: Player, hand: InteractionHand): InteractionResult {
         val itemStack = player.getItemInHand(hand)
@@ -333,7 +367,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 }
                 else if (!this.isTame) {// try to tame
                     itemStack.consume(1, player)
-                    if (this.random.nextInt(4) == 0) {
+                    if (this.random.nextFloat() < 0.1) {
                         this.tame(player)
                         this.target = null
                         level.broadcastEntityEvent(this, 7.toByte())

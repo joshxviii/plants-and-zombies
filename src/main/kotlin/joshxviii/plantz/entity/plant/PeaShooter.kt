@@ -20,9 +20,9 @@ class PeaShooter(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
             cooldownTime = 20,
             actionDelay = 3))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->
-            target is Enemy
-            && target !is Creeper
-            && target !is Plant
+            target !is Plant
+                    && target !is Creeper
+                    && target is Enemy
         })
     }
 }

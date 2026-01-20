@@ -7,7 +7,8 @@
     "ExampleMixin",
     "LivingEntityMixin",
     "MobAccessor",
-    "SpawnPlacementsInvoker"
+    "SpawnPlacementsInvoker",
+    "ZombieMixin"
   ],
   "injectors": {
     "defaultRequire": 1

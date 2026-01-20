@@ -9,7 +9,9 @@ object PazLootTables {
     @JvmField
     val SEED_PACKET = registerLootTable("seed_packets")
     @JvmField
-    val SUN_DROP = registerLootTable("sun")
+    val SUN = registerLootTable("sun")
+    @JvmField
+    val BRAINZ_BANNER = registerLootTable("brainz_banner")
 
     private fun registerLootTable(
         name: String

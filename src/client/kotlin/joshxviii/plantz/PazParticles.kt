@@ -3,6 +3,7 @@ package joshxviii.plantz
 import joshxviii.plantz.particles.EmberParticle
 import joshxviii.plantz.particles.FumeBubbleParticle
 import joshxviii.plantz.particles.PeaParticle
+import joshxviii.plantz.particles.SleepParticle
 import joshxviii.plantz.particles.SporeParticle
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry
 import net.minecraft.client.particle.CritParticle
@@ -38,6 +39,10 @@ object PazParticles {
 
         it.register(PazServerParticles.EMBER) { spriteSet ->
             EmberParticle.Provider(spriteSet)
+        }
+
+        it.register(PazServerParticles.SLEEP) { spriteSet ->
+            SleepParticle.Provider(spriteSet)
         }
 
         it.register(PazServerParticles.ZOMBIE_OMEN) { sprite ->

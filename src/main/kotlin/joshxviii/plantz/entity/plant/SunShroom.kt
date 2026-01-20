@@ -25,7 +25,7 @@ class SunShroom(
         super.stateUpdated(state)
         if (state == PlantState.GROW) {
             isBaby = true
-            age = -2400
+            age = -3400
         }
     }
 }

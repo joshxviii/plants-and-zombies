@@ -136,7 +136,7 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
             }
 
             age++
-            if (age >= 2000) discard()
+            if (age >= 1000) discard()
         }
     }
 
@@ -176,7 +176,7 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
                     (!entity.isCreative && entity.inventory.add(itemStack))
                     || entity.isCreative
                 ) {
-                    this.playSound(SoundEvents.ITEM_PICKUP)
+                    playPickupSound()
                     discard()
                 }
             }
@@ -184,7 +184,7 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
         else if (entity is Plant && !entity.isDeadOrDying) {
             this.value -= entity.sunHeal(this.value).toInt()
             entity.addParticlesAroundSelf(particle = ParticleTypes.HAPPY_VILLAGER)
-            this.playSound(SoundEvents.ITEM_PICKUP)
+            playPickupSound()
         }
         if (value <= 0) discard()
     }
@@ -210,6 +210,14 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
         }
 
         return result
+    }
+
+    private fun playPickupSound() {
+        this.playSound(
+            SoundEvents.ITEM_PICKUP,
+            0.2F,
+            ((random.nextFloat() - random.nextFloat()) * 0.7F + 1.0F) * 2.0F
+        )
     }
 
     override fun getBlockPosBelowThatAffectsMyMovement(): BlockPos {
