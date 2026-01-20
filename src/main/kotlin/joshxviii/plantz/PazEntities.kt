@@ -6,9 +6,7 @@ import joshxviii.plantz.entity.PlantPotMinecart
 import joshxviii.plantz.entity.Sun
 import joshxviii.plantz.entity.gnome.Gnome
 import joshxviii.plantz.entity.gnome.GnomeSoundVariant
-import joshxviii.plantz.entity.gnome.GnomeSoundVariants
 import joshxviii.plantz.entity.gnome.GnomeVariant
-import joshxviii.plantz.entity.gnome.GnomeVariants
 import joshxviii.plantz.entity.plant.*
 import joshxviii.plantz.entity.plants.WallNut
 import joshxviii.plantz.entity.projectile.*
@@ -17,6 +15,7 @@ import joshxviii.plantz.entity.zombie.ZombieYeti
 import joshxviii.plantz.mixin.MobAccessor
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
+import net.minecraft.core.HolderLookup
 import net.minecraft.core.Registry
 import net.minecraft.core.RegistryAccess
 import net.minecraft.core.RegistrySetBuilder
@@ -34,11 +33,6 @@ import net.minecraft.world.entity.projectile.Projectile
 object PazEntities {
 
     fun initialize() {
-        RegistrySetBuilder()
-            .add(GNOME_SOUND_VARIANT, GnomeSoundVariants::bootstrap)
-            .add(GNOME_VARIANT, GnomeVariants::bootstrap)
-            .build(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY))
-
         ServerEntityEvents.ENTITY_LOAD.register { entity, level ->
             if (entity is Mob && entity.`is`(ATTACKS_PLANTS)) {
                 (entity as MobAccessor).targetSelector.addGoal(1, NearestAttackableTargetGoal(entity, WallNut::class.java, 4, true, true) { target, level -> target is WallNut })
@@ -202,16 +196,14 @@ object PazEntities {
 
     @JvmField val GNOME: EntityType<Gnome> =  registerGnome(
         "gnome",
-        EntityType.Builder.of(::Gnome, MobCategory.MONSTER),
-        attributes = Mob.createMobAttributes()
+        EntityType.Builder.of(::Gnome, MobCategory.MONSTER)
+            .sized(0.33f, 0.7f),
+        attributes = createMobAttributes()
             .add(Attributes.MAX_HEALTH, 20.0)
             .add(Attributes.MOVEMENT_SPEED, 0.9)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.3)
             .add(Attributes.ATTACK_DAMAGE, 2.0)
     )
-    @JvmField val GNOME_VARIANT = ResourceKey.createRegistryKey<GnomeVariant>(pazResource("gnome_variant"))
-    @JvmField val GNOME_SOUND_VARIANT = ResourceKey.createRegistryKey<GnomeSoundVariant>(pazResource("gnome_sound_variant"))
-
 
     //region Projectiles
     @JvmField val PEA: EntityType<Pea> = registerProjectile("pea", EntityType.Builder.of(::Pea, MobCategory.MISC))
@@ -270,7 +262,7 @@ object PazEntities {
     private fun <T : Gnome> registerGnome(
         name : String,
         builder: EntityType.Builder<T> = EntityType.Builder.createNothing(MobCategory.MONSTER),
-        attributes: AttributeSupplier.Builder = Mob.createMobAttributes()
+        attributes: AttributeSupplier.Builder = createMobAttributes()
     ): EntityType<T> {
         val type = register(name, builder)
         FabricDefaultAttributeRegistry.register(type, attributes)

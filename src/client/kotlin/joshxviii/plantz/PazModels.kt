@@ -1,5 +1,6 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.model.GnomeModel
 import joshxviii.plantz.model.plants.*
 import joshxviii.plantz.model.projectiles.MelonModel
 import joshxviii.plantz.model.projectiles.NeedleModel
@@ -41,6 +42,8 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(BrownCoatModel.LAYER_LOCATION) { BrownCoatModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(ZombieYetiModel.LAYER_LOCATION) { ZombieYetiModel.createBodyLayer() }
 
+        ModelLayerRegistry.registerModelLayer(GnomeModel.LAYER_LOCATION) { GnomeModel.createBodyLayer() }
+
 
 
         // REGISTER ENTITY RENDERERS
@@ -73,6 +76,7 @@ object PazModels {
         EntityRenderers.register(PazEntities.BROWN_COAT) { PazZombieRenderer(it) }
         EntityRenderers.register(PazEntities.ZOMBIE_YETI) { PazZombieRenderer(it, ZombieYetiModel(it.bakeLayer(ZombieYetiModel.LAYER_LOCATION))) }
 
+        EntityRenderers.register(PazEntities.GNOME) { GnomeRenderer(GnomeModel(it.bakeLayer(GnomeModel.LAYER_LOCATION)), it) }
 
         EntityRenderers.register(PazEntities.PLANT_POT_MINECART) { PlantPotMinecartRenderer(it, ModelLayers.MINECART) }
         EntityRenderers.register(PazEntities.SUN) { SunRenderer(it) }

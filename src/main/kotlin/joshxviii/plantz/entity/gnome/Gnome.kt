@@ -2,26 +2,18 @@ package joshxviii.plantz.entity.gnome
 
 import PazDataSerializers.GNOME_SOUND_VARIANT
 import PazDataSerializers.GNOME_VARIANT
-import joshxviii.plantz.PazEntities
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Holder
-import net.minecraft.core.registries.Registries
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
-import net.minecraft.resources.Identifier
 import net.minecraft.sounds.SoundEvent
-import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.RandomSource
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
-import net.minecraft.world.entity.animal.wolf.*
-import net.minecraft.world.entity.monster.zombie.Zombie
-import net.minecraft.world.entity.variant.VariantUtils
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
-import java.util.function.Supplier
+import net.minecraft.world.level.block.state.BlockState
 
 class Gnome(type: EntityType<out Gnome>, level: Level) : Mob(type, level) {
 
@@ -38,51 +30,45 @@ class Gnome(type: EntityType<out Gnome>, level: Level) : Mob(type, level) {
                     && pos.y < level.seaLevel
         }
 
-        val DATA_VARIANT_ID: EntityDataAccessor<Holder<GnomeVariant>> = SynchedEntityData.defineId(Gnome::class.java, GNOME_VARIANT)
-        val DATA_SOUND_VARIANT_ID: EntityDataAccessor<Holder<GnomeSoundVariant>> = SynchedEntityData.defineId(Gnome::class.java, GNOME_SOUND_VARIANT)
+        val DATA_VARIANT_ID: EntityDataAccessor<GnomeVariant> = SynchedEntityData.defineId(Gnome::class.java, GNOME_VARIANT)
+        val DATA_SOUND_VARIANT_ID: EntityDataAccessor<GnomeSoundVariant> = SynchedEntityData.defineId(Gnome::class.java, GNOME_SOUND_VARIANT)
     }
 
-    fun getTexture(): Identifier {
-        val variant: GnomeVariant = variant.value()
-        val assetInfo = variant.modelAndTexture.asset()
-        return assetInfo.texturePath
-    }
-
-    var variant: Holder<GnomeVariant>
+    var variant: GnomeVariant
         get() = this.entityData.get(DATA_VARIANT_ID)
         set(value) = this.entityData.set(DATA_VARIANT_ID, value)
 
-    var soundVariant: Holder<GnomeSoundVariant>
+    var soundVariant: GnomeSoundVariant
         get() = this.entityData.get(DATA_SOUND_VARIANT_ID)
         set(value) = this.entityData.set(DATA_SOUND_VARIANT_ID, value)
 
-    private fun getSoundSet(): GnomeSoundVariant.GnomeSoundSet {
-        return soundVariant.value().sounds
-    }
+    val soundSet = soundVariant.getSoundSet()
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
         entityData.define(
             DATA_VARIANT_ID,
-            GnomeVariants.pickRandomVariant(this.registryAccess(), random)
+            GnomeVariant.pickRandomVariant()
         )
         entityData.define(
             DATA_SOUND_VARIANT_ID,
-            GnomeSoundVariants.pickRandomSoundVariant(this.registryAccess(), random)
+            GnomeSoundVariant.pickRandomVariant()
         )
     }
 
     override fun getAmbientSound(): SoundEvent? {
-        return super.getAmbientSound()// TODO make custom sounds
+        return soundSet.ambientSound.value()
     }
 
     override fun getHurtSound(source: DamageSource): SoundEvent? {
-        if (source.entity is Zombie) return SoundEvents.PLAYER_BURP
-        return SoundEvents.ROOTED_DIRT_HIT// TODO make custom sounds
+        return soundSet.hurtSound.value()
     }
 
     override fun getDeathSound(): SoundEvent? {
-        return SoundEvents.ROOTED_DIRT_BREAK// TODO make custom sounds
+        return soundSet.deathSound.value()
     }
 
+    override fun playStepSound(pos: BlockPos, blockState: BlockState) {
+        this.playSound(soundSet.stepSound.value(), 0.15f, 1.0f)
+    }
 }

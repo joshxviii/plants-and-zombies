@@ -13,8 +13,8 @@ object PazDataSerializers {
     val DATA_PLANT_STATE = EntityDataSerializer.forValueType<PlantState>(PlantState.STREAM_CODEC)
     val DATA_COOLDOWN = EntityDataSerializer.forValueType<Int>(ByteBufCodecs.VAR_INT)
     val DATA_SLEEPING = EntityDataSerializer.forValueType<Boolean>(ByteBufCodecs.BOOL)
-    val GNOME_VARIANT = EntityDataSerializer.forValueType<Holder<GnomeVariant>>(GnomeVariant.STREAM_CODEC)
-    val GNOME_SOUND_VARIANT = EntityDataSerializer.forValueType<Holder<GnomeSoundVariant>>(GnomeSoundVariant.STREAM_CODEC)
+    val GNOME_VARIANT = EntityDataSerializer.forValueType<GnomeVariant>(GnomeVariant.STREAM_CODEC)
+    val GNOME_SOUND_VARIANT = EntityDataSerializer.forValueType<GnomeSoundVariant>(GnomeSoundVariant.STREAM_CODEC)
 
     fun initialize() {
         FabricEntityDataRegistry.register(pazResource("plant_state"), DATA_PLANT_STATE)
