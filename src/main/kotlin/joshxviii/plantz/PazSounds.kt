@@ -37,6 +37,7 @@ object PazSounds {
                 ambientSound = registerForHolder("entity.$id.ambient"),
                 deathSound   = registerForHolder("entity.$id.death"),
                 hurtSound    = registerForHolder("entity.$id.hurt"),
+                jumpSound    = registerForHolder("entity.$id.jump"),
                 stepSound    = SoundEvents.WOLF_STEP
             )
         }

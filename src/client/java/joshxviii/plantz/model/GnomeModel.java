@@ -1,16 +1,24 @@
 package joshxviii.plantz.model;
 
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import joshxviii.plantz.GnomeRenderState;
+import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HeadedModel;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.HumanoidArm;
 import org.jetbrains.annotations.NotNull;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import org.jspecify.annotations.NonNull;
+
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class GnomeModel extends EntityModel<@NotNull GnomeRenderState> {
+public class GnomeModel<T extends GnomeRenderState> extends EntityModel<T> implements ArmedModel<T>, HeadedModel {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("gnome"), "main");
 	private final ModelPart body;
 	private final ModelPart torso;
@@ -79,6 +87,32 @@ public class GnomeModel extends EntityModel<@NotNull GnomeRenderState> {
 
 	@Override
 	public void setupAnim(@NotNull GnomeRenderState state) {
-		/*TODO*/
+		head.xRot = state.xRot * (float) (Math.PI / 180.0);
+		head.yRot = state.yRot * (float) (Math.PI / 180.0);
+		float animationPos = state.walkAnimationPos;
+		float animationSpeed = state.walkAnimationSpeed;
+		arm_L.xRot = Mth.cos(animationPos * 0.6662F) * 1.4F * animationSpeed;
+		arm_R.xRot = Mth.cos(animationPos * 0.6662F + (float) Math.PI) * 1.4F * animationSpeed;
 	}
+
+	@Override
+	public void translateToHand(T state, @NonNull HumanoidArm arm, @NonNull PoseStack poseStack) {
+		root.translateAndRotate(poseStack);
+		body.translateAndRotate(poseStack);
+		torso.translateAndRotate(poseStack);
+		arms.translateAndRotate(poseStack);
+		getArm(arm).translateAndRotate(poseStack);
+		poseStack.scale(0.55F, 0.55F, 0.55F);
+		poseStack.translate(0.046875 * (arm == HumanoidArm.LEFT? 1f : -1f), -0.12, 0.078125);
+	}
+
+	@Override
+	public @NonNull ModelPart getHead() {
+		return this.head;
+	}
+
+	public ModelPart getArm(final HumanoidArm arm) {
+		return arm == HumanoidArm.LEFT ? this.arm_L : this.arm_R;
+	}
+
 }

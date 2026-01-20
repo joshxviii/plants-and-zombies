@@ -57,7 +57,7 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : Zombie(type, le
                 if (random.nextFloat() < 0.25) {
                     setItemSlot(EquipmentSlot.HEAD, PazBlocks.CONE.asItem().defaultInstance)
                 }
-                if (random.nextFloat() < 0.1 && getItemBySlot(EquipmentSlot.HEAD).isEmpty) {
+                else if (random.nextFloat() < 0.1 && getItemBySlot(EquipmentSlot.HEAD).isEmpty) {
                     setItemSlot(EquipmentSlot.HEAD, Items.BUCKET.defaultInstance)
                 }
             }

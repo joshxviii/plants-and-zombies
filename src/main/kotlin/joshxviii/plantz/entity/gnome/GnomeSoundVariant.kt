@@ -12,7 +12,7 @@ import net.minecraft.util.StringRepresentable
 import java.util.function.IntFunction
 
 /**
- * Each variant maps to a pre-determined set of sounds.
+ * Each voice variant maps to a pre-determined set of sounds.
  */
 enum class GnomeSoundVariant(val variant: String, val id: Int, ) : StringRepresentable {
     VOICE_1("voice_1", 0),
@@ -43,6 +43,7 @@ enum class GnomeSoundVariant(val variant: String, val id: Int, ) : StringReprese
         val ambientSound: Holder<SoundEvent>,
         val deathSound: Holder<SoundEvent>,
         val hurtSound: Holder<SoundEvent>,
+        val jumpSound: Holder<SoundEvent>,
         val stepSound: Holder<SoundEvent>
     )
 }
