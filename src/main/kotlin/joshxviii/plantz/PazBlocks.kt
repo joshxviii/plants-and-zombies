@@ -1,5 +1,6 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.block.BrainzFlagBlock
 import joshxviii.plantz.block.ConeBlock
 import joshxviii.plantz.block.PlantPotBlock
 import joshxviii.plantz.item.component.BlocksHeadDamage
@@ -59,6 +60,30 @@ object PazBlocks {
                         Attributes.KNOCKBACK_RESISTANCE,
                         AttributeModifier(pazResource("cone_knockback_resistance"), 0.1, AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.HEAD
+                    ).build()
+            )
+    )
+
+    @JvmField
+    val BRAINZ_FLAG: Block = registerBlock(
+        "brainz_flag",
+        BlockBehaviour.Properties.of()
+            .sound(SoundType.WOOD)
+            .instabreak()
+            .noCollision()
+            .pushReaction(PushReaction.DESTROY),
+        ::BrainzFlagBlock,
+        Item.Properties()
+            .component(
+                DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
+                    .add(
+                        Attributes.SPAWN_REINFORCEMENTS_CHANCE,
+                        AttributeModifier(pazResource("zombie_leader_flag"), 1.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+                        EquipmentSlotGroup.HAND
+                    ).add(
+                        Attributes.FOLLOW_RANGE,
+                        AttributeModifier(pazResource("zombie_leader_flag"), 1.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+                        EquipmentSlotGroup.HAND
                     ).build()
             )
     )

@@ -14,7 +14,7 @@ class Sunflower(
     override fun registerGoals() {
         super.registerGoals()
         this.goalSelector.addGoal(1, GenerateSunGoal(
-            plantEntity = this,
+            usingEntity = this,
             actionDelay = 10
         ))
     }

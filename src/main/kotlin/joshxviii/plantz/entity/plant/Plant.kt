@@ -10,6 +10,7 @@ import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.PazTags.BlockTags.PLANTABLE
 import joshxviii.plantz.ai.PlantState
+import joshxviii.plantz.entity.gnome.Gnome
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
@@ -183,7 +184,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     open fun attackGoals() {
         this.targetSelector.addGoal(1, OwnerHurtByTargetGoal(this))
         this.targetSelector.addGoal(2, OwnerHurtTargetGoal(this))
-        this.targetSelector.addGoal(3, HurtByTargetGoal(this).setAlertOthers())
+        this.targetSelector.addGoal(3, HurtByTargetGoal(this, Plant::class.java).setAlertOthers())
     }
 
     open fun stateUpdated(state: PlantState) {}

@@ -15,7 +15,7 @@ class PuffShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEnt
         super.registerGoals()
 
         this.goalSelector.addGoal(2, ProjectileAttackPlantGoal(
-            plantEntity = this,
+            usingEntity = this,
             projectileFactory = { Spore(level=this.level(), owner=this) },
             cooldownTime = 20))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->

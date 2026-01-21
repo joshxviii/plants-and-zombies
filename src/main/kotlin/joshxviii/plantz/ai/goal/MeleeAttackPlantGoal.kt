@@ -6,44 +6,45 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.attributes.Attributes
 
 open class MeleeAttackPlantGoal(
-    plantEntity: Plant,
+    usingEntity: PathfinderMob,
     cooldownTime: Int = 20,
     actionDelay: Int = 0,
     actionStartEffect: () -> Unit = {},
     actionEndEffect: () -> Unit = {},
     val attackReach : Double = 5.0,
     val damageType: ResourceKey<DamageType> = PazDamageTypes.PLANT
-) : PlantActionGoal(plantEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
+) : PlantActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
 
     override fun canUse(): Boolean = (
-        plantEntity.tickCount>cooldownTime
-            && plantEntity.target?.isAlive == true
-            && !plantEntity.isAsleep
+        usingEntity.tickCount>cooldownTime
+            && usingEntity.target?.isAlive == true
+            && !(usingEntity is Plant && usingEntity.isAsleep)
     )
 
     override fun canDoAction(): Boolean {
-        val target = plantEntity.target?: return false
-        plantEntity.lookControl.setLookAt(target, 30f, 30f)
+        val target = usingEntity.target?: return false
+        usingEntity.lookControl.setLookAt(target, 30f, 30f)
 
         return isInReach(target);
     }
 
     override fun doAction() : Boolean {
-        val target = plantEntity.target?: return false
+        val target = usingEntity.target?: return false
         if (!isInReach(target)) return false
 
-        val damage : Float = plantEntity.attributes.getValue(Attributes.ATTACK_DAMAGE).toFloat()
-        val knockback : Double = plantEntity.attributes.getValue(Attributes.ATTACK_KNOCKBACK)
-        val source = plantEntity.damageSources().source(damageType, plantEntity)
+        val damage : Float = usingEntity.attributes.getValue(Attributes.ATTACK_DAMAGE).toFloat()
+        val knockback : Double = usingEntity.attributes.getValue(Attributes.ATTACK_KNOCKBACK)
+        val source = usingEntity.damageSources().source(damageType, usingEntity)
 
-        if (target.hurtServer(plantEntity.level() as ServerLevel, source, damage)) {
+        if (target.hurtServer(usingEntity.level() as ServerLevel, source, damage)) {
             target.knockback(
                 knockback,
-                plantEntity.x - target.x,
-                plantEntity.z - target.z
+                usingEntity.x - target.x,
+                usingEntity.z - target.z
             )
             return true
         }
@@ -52,6 +53,6 @@ open class MeleeAttackPlantGoal(
     }
 
     private fun isInReach(target: LivingEntity): Boolean {
-        return plantEntity.boundingBox.inflate(attackReach).intersects(target.boundingBox) && plantEntity.sensing.hasLineOfSight(target)
+        return usingEntity.boundingBox.inflate(attackReach).intersects(target.boundingBox) && usingEntity.sensing.hasLineOfSight(target)
     }
 }

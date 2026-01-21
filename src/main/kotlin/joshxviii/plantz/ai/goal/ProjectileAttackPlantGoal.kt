@@ -4,15 +4,20 @@ import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.Mth
+import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.monster.Monster
 import net.minecraft.world.entity.projectile.Projectile
+import net.minecraft.world.entity.projectile.ProjectileUtil
+import net.minecraft.world.item.BowItem
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraft.world.phys.Vec3
 import kotlin.math.atan
 import kotlin.math.sqrt
 
 class ProjectileAttackPlantGoal(
-    plantEntity: Plant,
+    usingEntity: PathfinderMob,
     cooldownTime: Int = 20,
     actionDelay: Int = 0,
     actionStartEffect: () -> Unit = {},
@@ -21,37 +26,57 @@ class ProjectileAttackPlantGoal(
     val velocity : Double = 0.9,
     val inaccuracy: Float = 0.8f,
     val useHighArc: Boolean = false,
-) : PlantActionGoal(plantEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
+) : PlantActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
     var distanceSqr: Double = 0.0
     var attackRadius : Float = 0.0f
 
     override fun canUse(): Boolean = (
-        plantEntity.tickCount>cooldownTime
-            && plantEntity.target?.isAlive == true
-            && !plantEntity.isAsleep
+        usingEntity.tickCount>cooldownTime
+            && usingEntity.target?.isAlive == true
+            && !(usingEntity is Plant && usingEntity.isAsleep)
     )
 
     override fun stop() {
         super.stop()
-        plantEntity.target = null
+        usingEntity.isAggressive = false
+        usingEntity.stopUsingItem()
+        usingEntity.target = null
     }
 
     override fun canDoAction(): Boolean {// check distance and line of sight
-        val target = plantEntity.target ?: return false
+        val target = usingEntity.target ?: return false
         if (!target.isAlive) return false
 
-        distanceSqr = plantEntity.distanceToSqr(target)
-        attackRadius = plantEntity.attributes.getValue(Attributes.FOLLOW_RANGE).toFloat()
+        distanceSqr = usingEntity.distanceToSqr(target)
+        attackRadius = usingEntity.attributes.getValue(Attributes.FOLLOW_RANGE).toFloat()
 
-        plantEntity.lookControl.setLookAt(target, 30f, 30f)
+        usingEntity.lookControl.setLookAt(target, 30f, 30f)
+        usingEntity.isAggressive = true
 
         return distanceSqr <= (attackRadius * attackRadius)
     }
 
-    override fun doAction() : Boolean {// fire projectile
-       val target = plantEntity.target?: return false
+    override fun tick() {
+        super.tick()
 
-        val level = plantEntity.level() as ServerLevel
+        if (usingEntity.isUsingItem) {
+            if (!canDoAction()) {
+                usingEntity.isAggressive = false
+                usingEntity.stopUsingItem()
+            }
+            else {
+                val pullTime: Int = usingEntity.ticksUsingItem
+                if (pullTime >= actionDelay-1) {
+                    usingEntity.stopUsingItem()
+                }
+            }
+        } else usingEntity.startUsingItem(ProjectileUtil.getWeaponHoldingHand(usingEntity, Items.BOW))
+    }
+
+    override fun doAction() : Boolean {// fire projectile
+       val target = usingEntity.target?: return false
+
+        val level = usingEntity.level() as ServerLevel
         val projectile = projectileFactory()
         Projectile.spawnProjectile(projectile, level, ItemStack.EMPTY)
 
@@ -64,7 +89,7 @@ class ProjectileAttackPlantGoal(
         val arcs = calculateProjectileArcs(relativePos, projectile.gravity, velocity)
         if (arcs==null) {// lose target if unreachable
             projectile.discard()
-            plantEntity.target = null
+            usingEntity.target = null
             return false
         }
 
@@ -82,7 +107,7 @@ class ProjectileAttackPlantGoal(
 
         projectile.shoot(shootX, shootY, shootZ, velocity.toFloat(), inaccuracy)
 
-        plantEntity.playSound(SoundEvents.BUBBLE_POP, 3.0f, 0.4f / (plantEntity.random.nextFloat() * 0.4f + 0.8f))
+        usingEntity.playSound(SoundEvents.BUBBLE_POP, 3.0f, 0.4f / (usingEntity.random.nextFloat() * 0.4f + 0.8f))
         return true
     }
 

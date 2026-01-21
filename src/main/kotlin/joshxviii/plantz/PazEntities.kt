@@ -5,8 +5,6 @@ import joshxviii.plantz.PazTags.EntityTypes.IGNORED_BY_PLANT_ATTACKERS
 import joshxviii.plantz.entity.PlantPotMinecart
 import joshxviii.plantz.entity.Sun
 import joshxviii.plantz.entity.gnome.Gnome
-import joshxviii.plantz.entity.gnome.GnomeSoundVariant
-import joshxviii.plantz.entity.gnome.GnomeVariant
 import joshxviii.plantz.entity.plant.*
 import joshxviii.plantz.entity.plants.WallNut
 import joshxviii.plantz.entity.projectile.*
@@ -15,10 +13,7 @@ import joshxviii.plantz.entity.zombie.ZombieYeti
 import joshxviii.plantz.mixin.MobAccessor
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
-import net.minecraft.core.HolderLookup
 import net.minecraft.core.Registry
-import net.minecraft.core.RegistryAccess
-import net.minecraft.core.RegistrySetBuilder
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
@@ -200,10 +195,11 @@ object PazEntities {
     @JvmField val GNOME: EntityType<Gnome> =  registerGnome(
         "gnome",
         EntityType.Builder.of(::Gnome, MobCategory.MONSTER)
-            .sized(0.33f, 0.7f),
+            .sized(0.33f, 0.7f)
+            .ridingOffset(-0.15f),
         attributes = createMobAttributes()
             .add(Attributes.MAX_HEALTH, 30.0)
-            .add(Attributes.MOVEMENT_SPEED, 0.9)
+            .add(Attributes.MOVEMENT_SPEED, 0.6)
             .add(Attributes.JUMP_STRENGTH, 0.4)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.3)
             .add(Attributes.ATTACK_DAMAGE, 2.0)

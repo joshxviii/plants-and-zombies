@@ -20,7 +20,7 @@ class FumeShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEnt
         super.registerGoals()
 
         this.goalSelector.addGoal(2, BeamAttackPlantGoal(
-            plantEntity = this,
+            usingEntity = this,
             beamRange = 8.0,
             beamWidth = 2.0,
             damageType = PazDamageTypes.FUME,

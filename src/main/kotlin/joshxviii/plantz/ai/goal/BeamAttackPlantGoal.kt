@@ -9,12 +9,13 @@ import net.minecraft.util.Mth
 import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 
 class BeamAttackPlantGoal(
-    plantEntity: Plant,
+    usingEntity: PathfinderMob,
     cooldownTime: Int = 20,
     actionDelay: Int = 0,
     actionStartEffect: () -> Unit = {},
@@ -24,29 +25,29 @@ class BeamAttackPlantGoal(
     val damageType: ResourceKey<DamageType> = PazDamageTypes.PLANT,
     val beamParticles : ParticleOptions? = null,
     val afterHitEntityEffect: (target: LivingEntity) -> Unit = {}
-) : PlantActionGoal(plantEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
+) : PlantActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
     private var piercedEntities: MutableList<Entity>? = null
 
     override fun canUse(): Boolean = (
-        plantEntity.tickCount>cooldownTime
-            && plantEntity.target?.isAlive == true
-            && !plantEntity.isAsleep
+        usingEntity.tickCount>cooldownTime
+            && usingEntity.target?.isAlive == true
+            && !(usingEntity is Plant && usingEntity.isAsleep)
     )
 
     override fun canDoAction(): Boolean {
-        val target = plantEntity.target?: return false
-        plantEntity.lookControl.setLookAt(target, 30f, 30f)
+        val target = usingEntity.target?: return false
+        usingEntity.lookControl.setLookAt(target, 30f, 30f)
 
         return isInReach(target);
     }
 
     override fun doAction(): Boolean {
-        val target = plantEntity.target ?: return false
+        val target = usingEntity.target ?: return false
         if (!target.isAlive) return false
 
         piercedEntities = mutableListOf()
 
-        val start = plantEntity.position().add(0.0, plantEntity.eyeHeight.toDouble(), 0.0)
+        val start = usingEntity.position().add(0.0, usingEntity.eyeHeight.toDouble(), 0.0)
 
         val direction = target.eyePosition.subtract(start).normalize()
 
@@ -54,21 +55,21 @@ class BeamAttackPlantGoal(
 
         val beamAABB = AABB(start, end).inflate(beamWidth / 2.0 + 1.0)
 
-        val candidates = plantEntity.level().getEntities(plantEntity, beamAABB) { entity ->
+        val candidates = usingEntity.level().getEntities(usingEntity, beamAABB) { entity ->
             entity is LivingEntity && entity !is Plant && entity.isAlive
         }
 
         for (entity in candidates) {
-            if (!plantEntity.canAttack(entity)) break
+            if (!usingEntity.canAttack(entity)) break
             val distToRay = distanceToLineSegment(entity.eyePosition, start, end)
             val entityRadiusApprox = entity.boundingBox.size / 2.0
             if (distToRay <= (beamWidth / 2.0 + entityRadiusApprox)) {
 
-                val damage : Float = plantEntity.attributes.getValue(Attributes.ATTACK_DAMAGE).toFloat()
-                val knockback : Double = plantEntity.attributes.getValue(Attributes.ATTACK_KNOCKBACK)
-                val source = plantEntity.damageSources().source(damageType, plantEntity)
+                val damage : Float = usingEntity.attributes.getValue(Attributes.ATTACK_DAMAGE).toFloat()
+                val knockback : Double = usingEntity.attributes.getValue(Attributes.ATTACK_KNOCKBACK)
+                val source = usingEntity.damageSources().source(damageType, usingEntity)
 
-                if (entity.hurtServer(plantEntity.level() as ServerLevel, source, damage) && entity is LivingEntity) {
+                if (entity.hurtServer(usingEntity.level() as ServerLevel, source, damage) && entity is LivingEntity) {
                     afterHitEntityEffect(entity)
                     entity.knockback(
                         knockback,
@@ -85,8 +86,8 @@ class BeamAttackPlantGoal(
     }
 
     private fun isInReach(target: LivingEntity): Boolean {
-        return plantEntity.boundingBox.inflate(beamRange).intersects(target.boundingBox) &&
-                plantEntity.sensing.hasLineOfSight(target)
+        return usingEntity.boundingBox.inflate(beamRange).intersects(target.boundingBox) &&
+                usingEntity.sensing.hasLineOfSight(target)
     }
 
     private fun distanceToLineSegment(point: Vec3, lineStart: Vec3, lineEnd: Vec3): Double {
@@ -108,7 +109,7 @@ class BeamAttackPlantGoal(
          var pos = start
          for (i in 0 until steps) {
 
-             (plantEntity.level() as ServerLevel).sendParticles(
+             (usingEntity.level() as ServerLevel).sendParticles(
                  beamParticles,
                  pos.x, pos.y, pos.z,
                  2,

@@ -6,6 +6,7 @@ import joshxviii.plantz.entity.gnome.Gnome
 import joshxviii.plantz.entity.gnome.GnomeVariant
 import joshxviii.plantz.model.GnomeArmorModel
 import joshxviii.plantz.model.GnomeModel
+import net.minecraft.client.model.HumanoidModel.ArmPose
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.MobRenderer
@@ -19,10 +20,15 @@ import net.minecraft.client.renderer.state.CameraRenderState
 import net.minecraft.client.resources.model.EquipmentClientInfo.LayerType
 import net.minecraft.core.component.DataComponents
 import net.minecraft.resources.Identifier
+import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.entity.HumanoidArm
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
+import net.minecraft.world.item.SwingAnimationType
+import net.minecraft.world.item.component.SwingAnimation
 
 class GnomeRenderer(
     context: EntityRendererProvider.Context,
@@ -58,14 +64,26 @@ class GnomeRenderer(
         return GnomeRenderState()
     }
 
+    fun getArmPose(mob: Gnome, arm: HumanoidArm): ArmPose {
+        val itemHeldByArm: ItemStack = mob.getItemHeldByArm(arm)
+        val anim = itemHeldByArm.get<SwingAnimation>(DataComponents.SWING_ANIMATION)
+        return if (anim != null && anim.type() == SwingAnimationType.STAB && mob.swinging) ArmPose.SPEAR
+        else if (itemHeldByArm.`is`(ItemTags.SPEARS)) ArmPose.SPEAR
+        else if (itemHeldByArm.`is`(Items.BOW) && mob.isAggressive) ArmPose.BOW_AND_ARROW else ArmPose.EMPTY
+    }
+
     override fun extractRenderState(entity: Gnome, state: GnomeRenderState, partialTicks: Float) {
         super.extractRenderState(entity, state, partialTicks)
         ArmedEntityRenderState.extractArmedEntityRenderState(entity, state, this.itemModelResolver, partialTicks)
         state.variant = entity.variant
+        state.isPassenger = entity.isPassenger
+        state.isUsingItem = entity.isUsingItem
         state.headEquipment = getEquipmentIfRenderable(entity, EquipmentSlot.HEAD)
         state.chestEquipment = getEquipmentIfRenderable(entity, EquipmentSlot.CHEST)
         state.legsEquipment = getEquipmentIfRenderable(entity, EquipmentSlot.LEGS)
         state.feetEquipment = getEquipmentIfRenderable(entity, EquipmentSlot.FEET)
+        state.leftArmPose = getArmPose(entity, HumanoidArm.LEFT)
+        state.rightArmPose = getArmPose(entity, HumanoidArm.RIGHT)
     }
 
     private fun getEquipmentIfRenderable(entity: LivingEntity, slot: EquipmentSlot): ItemStack {
@@ -135,6 +153,8 @@ class GnomeArmorLayer(
 }
 
 class GnomeRenderState : ArmedEntityRenderState() {
+    var isPassenger: Boolean = false
+    var isUsingItem: Boolean = false
     var variant: GnomeVariant = GnomeVariant.BLUE
     var headEquipment: ItemStack = ItemStack.EMPTY
     var chestEquipment: ItemStack = ItemStack.EMPTY

@@ -2,11 +2,16 @@ package joshxviii.plantz.entity.gnome
 
 import PazDataSerializers.GNOME_SOUND_VARIANT
 import PazDataSerializers.GNOME_VARIANT
+import joshxviii.plantz.PazTags
+import joshxviii.plantz.ai.goal.ProjectileAttackPlantGoal
+import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.core.BlockPos
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
+import net.minecraft.tags.ItemTags
+import net.minecraft.tags.TagKey
 import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
 import net.minecraft.world.DifficultyInstance
@@ -18,7 +23,12 @@ import net.minecraft.world.entity.ai.goal.*
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.monster.Monster
+import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.entity.projectile.ProjectileUtil
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
@@ -50,6 +60,17 @@ class Gnome(type: EntityType<out Gnome>, level: Level) : Monster(type, level) {
     private var jumpDuration = 0
     private var wasOnGround = false
     private var jumpDelayTicks = 0
+    private val bowGoal = ProjectileAttackPlantGoal(
+        usingEntity = this,
+        projectileFactory = { getArrow() },
+        actionDelay = 40)
+    private val meleeGoal = MeleeAttackGoal(this, 1.2, false)
+
+    fun getArrow(): AbstractArrow {
+        val bowItem = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, Items.BOW))
+        val projectile = this.getProjectile(bowItem)
+        return ProjectileUtil.getMobArrow(this, projectile, 1.0f, bowItem)
+    }
 
     var variant: GnomeVariant
         get() = this.entityData.get(DATA_VARIANT_ID)
@@ -68,15 +89,35 @@ class Gnome(type: EntityType<out Gnome>, level: Level) : Monster(type, level) {
     }
 
     override fun registerGoals() {
-        this.goalSelector.addGoal(3, RandomLookAroundGoal(this))
-        this.goalSelector.addGoal(3, LookAtPlayerGoal(this, Player::class.java, 8.0f))
-        this.goalSelector.addGoal(5, MeleeAttackGoal(this, 1.0, true))
+        this.goalSelector.addGoal(3, SpearUseGoal(this, 1.0, 1.0, 10.0f, 2.0f))
+        this.goalSelector.addGoal(4, RandomLookAroundGoal(this))
+        this.goalSelector.addGoal(4, LookAtPlayerGoal(this, Player::class.java, 8.0f))
         this.goalSelector.addGoal(6, WaterAvoidingRandomStrollGoal(this, 0.6))
-        this.goalSelector.addGoal(2, SpearUseGoal(this, 1.0, 1.0, 10.0f, 2.0f))
-        this.targetSelector.addGoal(1, HurtByTargetGoal(this).setAlertOthers())
+        this.targetSelector.addGoal(1, HurtByTargetGoal(this, Gnome::class.java).setAlertOthers())
         this.targetSelector.addGoal(2, NearestAttackableTargetGoal(this, LivingEntity::class.java, true) { target, level ->
             target !is Gnome
+                    && target is Plant
+                    || target is Zombie
+                    || target is Player
         })
+    }
+
+    fun reassessWeaponGoal() {
+        if (this.level() != null && !this.level().isClientSide) {
+            this.goalSelector.removeGoal(this.meleeGoal)
+            this.goalSelector.removeGoal(this.bowGoal)
+            val usedWeapon = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, Items.BOW))
+            if (usedWeapon.`is`(Items.BOW)) {
+                this.goalSelector.addGoal(3, this.bowGoal)
+            } else {
+                this.goalSelector.addGoal(3, this.meleeGoal)
+            }
+        }
+    }
+
+    override fun onEquipItem(slot: EquipmentSlot, oldStack: ItemStack, stack: ItemStack) {
+        super.onEquipItem(slot, oldStack, stack)
+        if (!this.level().isClientSide) this.reassessWeaponGoal()
     }
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
@@ -100,6 +141,7 @@ class Gnome(type: EntityType<out Gnome>, level: Level) : Monster(type, level) {
         super.readAdditionalSaveData(input)
         variant = input.read<GnomeVariant>("color_variant", GnomeVariant.CODEC).get()
         soundVariant = input.read<GnomeSoundVariant>("sound_variant", GnomeSoundVariant.CODEC).get()
+        this.reassessWeaponGoal()
     }
 
     override fun finalizeSpawn(
@@ -114,6 +156,7 @@ class Gnome(type: EntityType<out Gnome>, level: Level) : Monster(type, level) {
         variant = GnomeVariant.pickRandomVariant()
         soundVariant = GnomeSoundVariant.pickRandomVariant()
 
+        this.reassessWeaponGoal()
         return groupData
     }
 
@@ -130,6 +173,8 @@ class Gnome(type: EntityType<out Gnome>, level: Level) : Monster(type, level) {
     protected fun getJumpSound(): SoundEvent {
         return soundSet.deathSound.value()
     }
+
+    override fun getPreferredWeaponType(): TagKey<Item> = PazTags.ItemTags.GNOME_PREFERRED_WEAPONS
 
     public override fun customServerAiStep(level: ServerLevel) {
         if (jumpDelayTicks > 0) jumpDelayTicks--
@@ -232,6 +277,7 @@ class Gnome(type: EntityType<out Gnome>, level: Level) : Monster(type, level) {
         isJumping = true
         jumpDuration = 15
         jumpTicks = 0
+
     }
 
     class GnomeJumpControl(private val gnome: Gnome) : JumpControl(gnome) {

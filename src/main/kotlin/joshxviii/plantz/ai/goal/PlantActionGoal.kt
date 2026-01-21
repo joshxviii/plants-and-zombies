@@ -1,6 +1,7 @@
 package joshxviii.plantz.ai.goal
 
 import joshxviii.plantz.entity.plant.Plant
+import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.goal.Goal
 
 /**
@@ -11,14 +12,14 @@ import net.minecraft.world.entity.ai.goal.Goal
  * @param actionEndEffect Callback function used to add effects at the end of the action
  */
 abstract class PlantActionGoal(
-    val plantEntity: Plant,
+    val usingEntity: PathfinderMob,
     val cooldownTime: Int = 20,
     val actionDelay: Int = 0,
     val actionStartEffect: () -> Unit = {},
     val actionEndEffect: () -> Unit = {}
 ): Goal() {
     var isDoingAction = false
-    private var actionTimer = -1
+    var actionTimer = -1
 
     override fun stop() {
         isDoingAction = false
@@ -28,13 +29,13 @@ abstract class PlantActionGoal(
     final override fun requiresUpdateEveryTick(): Boolean = true
     final override fun canContinueToUse(): Boolean = canUse()
 
-    final override fun tick() {
+    override fun tick() {
         if (
             canDoAction()
-            && plantEntity.cooldown <= 0
+            && !(usingEntity is Plant && usingEntity.cooldown > 0)
             && actionTimer == -1
         ) {
-            plantEntity.cooldown = cooldownTime // start animation
+            (usingEntity as? Plant)?.cooldown = cooldownTime // start animation
             actionTimer = actionDelay.coerceAtLeast(0)
             actionStartEffect()
             isDoingAction = true

@@ -7,11 +7,9 @@ import joshxviii.plantz.PazTags.EntityTypes.CANNOT_CHOMP
 import joshxviii.plantz.ai.goal.MeleeAttackPlantGoal
 import joshxviii.plantz.pazResource
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
@@ -44,7 +42,7 @@ class Chomper(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CHO
     class ChompAttackGoal(
         plantEntity: Plant,
     ) : MeleeAttackPlantGoal(
-        plantEntity = plantEntity,
+        usingEntity = plantEntity,
         attackReach = 1.85,
         cooldownTime = 60,
         actionDelay = 10,
@@ -54,18 +52,18 @@ class Chomper(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CHO
         }
     ) {
         override fun doAction() : Boolean {
-            val target = plantEntity.target?: return false
+            val target = usingEntity.target?: return false
             if(!target.`is`(CANNOT_CHOMP)) {
                 //Add modifier to increase damage for insta kills
-                plantEntity.getAttribute(Attributes.ATTACK_DAMAGE)?.addOrUpdateTransientModifier(CHOMP_ATTACK_MODIFIER)
+                usingEntity.getAttribute(Attributes.ATTACK_DAMAGE)?.addOrUpdateTransientModifier(CHOMP_ATTACK_MODIFIER)
             }
 
             !super.doAction()
 
             //remove modifier if it was added
-            plantEntity.getAttribute(Attributes.ATTACK_DAMAGE)?.removeModifier(CHOMP_ATTACK_MODIFIER)
+            usingEntity.getAttribute(Attributes.ATTACK_DAMAGE)?.removeModifier(CHOMP_ATTACK_MODIFIER)
             if (!target.isAlive) {
-                (plantEntity.level() as ServerLevel).sendParticles(
+                (usingEntity.level() as ServerLevel).sendParticles(
                     PazServerParticles.SPORE_HIT, target.x,target.y+target.eyeHeight,target.z,
                     30,
                     0.2, 0.2, 0.2,

@@ -53,6 +53,7 @@ object PazCreativeTab {
                 output.accept(PazBlocks.PLANT_POT)
                 output.accept(PazItems.PLANT_POT_MINECART)
                 output.accept(PazBlocks.CONE)
+                output.accept(PazBlocks.BRAINZ_FLAG)
                 output.accept(ZombieRaid.getBrainzBannerInstance(parameters.holders().lookupOrThrow(Registries.BANNER_PATTERN)))
             }
             .build()

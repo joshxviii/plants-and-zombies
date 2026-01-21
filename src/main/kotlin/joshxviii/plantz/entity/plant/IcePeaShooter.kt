@@ -17,7 +17,7 @@ class IcePeaShooter(type: EntityType<out Plant>, level: Level) : Plant(PazEntiti
         super.registerGoals()
 
         this.goalSelector.addGoal(2, ProjectileAttackPlantGoal(
-            plantEntity = this,
+            usingEntity = this,
             projectileFactory =  { PeaIce(level= this.level(), owner=this) },
             cooldownTime = 20,
             actionDelay = 3))

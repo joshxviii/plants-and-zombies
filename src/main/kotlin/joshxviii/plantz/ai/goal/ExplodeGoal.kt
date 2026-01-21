@@ -3,12 +3,13 @@ package joshxviii.plantz.ai.goal
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.level.gameevent.GameEvent
 import java.util.*
 
 class ExplodeGoal(
-    private val plantEntity: Plant
+    private val plantEntity: PathfinderMob
 ) : Goal() {
     private var target: LivingEntity? = null
     private var oldSwell = 0

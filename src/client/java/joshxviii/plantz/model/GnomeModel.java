@@ -6,6 +6,7 @@ import joshxviii.plantz.GnomeRenderState;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HeadedModel;
+import net.minecraft.client.model.effects.SpearAnimations;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import org.jetbrains.annotations.NotNull;
@@ -98,6 +99,55 @@ public class GnomeModel<T extends GnomeRenderState> extends EntityModel<T> imple
 		float animationSpeed = state.walkAnimationSpeed;
 		arm_L.xRot = Mth.cos(animationPos * 0.6662F) * 1.4F * animationSpeed;
 		arm_R.xRot = Mth.cos(animationPos * 0.6662F + (float) Math.PI) * 1.4F * animationSpeed;
+
+		if (state.isPassenger()) {
+			this.leg_R.xRot = -1.4137167F;
+			this.leg_R.yRot = (float) (Math.PI / 10);
+			this.leg_R.zRot = 0.07853982F;
+			this.leg_L.xRot = -1.4137167F;
+			this.leg_L.yRot = (float) (-Math.PI / 10);
+			this.leg_L.zRot = -0.07853982F;
+		}
+		else {
+			this.leg_R.xRot = 0f;
+			this.leg_R.yRot = 0f;
+			this.leg_R.zRot = 0f;
+			this.leg_L.xRot = 0f;
+			this.leg_L.yRot = 0f;
+			this.leg_L.zRot = 0f;
+		}
+
+		switch (state.rightArmPose) {
+			case EMPTY:
+				this.arm_R.yRot = 0.0F;
+				break;
+			case BOW_AND_ARROW:
+				this.arm_R.yRot = -0.1F + this.head.yRot;
+				this.arm_L.yRot = 0.1F + this.head.yRot + 0.4F;
+				this.arm_R.xRot = (float) (-Math.PI / 2) + this.head.xRot;
+				this.arm_L.xRot = (float) (-Math.PI / 2) + this.head.xRot;
+				break;
+			case SPEAR:
+				this.arm_R.yRot = (float) (Math.PI / 180.0) * Math.clamp((180.0F / (float)Math.PI) * arm_R.yRot, -60.0F, 60.0F);
+				this.arm_R.xRot = (float) (Math.PI / 180.0) * Math.clamp((180.0F / (float)Math.PI) * arm_R.xRot, -120.0F, 30.0F);
+				break;
+		}
+
+		switch (state.leftArmPose) {
+			case EMPTY:
+				this.arm_L.yRot = 0.0F;
+				break;
+			case BOW_AND_ARROW:
+				this.arm_L.yRot = -0.1F + this.head.yRot;
+				this.arm_R.yRot = 0.1F + this.head.yRot + 0.4F;
+				this.arm_L.xRot = (float) (-Math.PI / 2) + this.head.xRot;
+				this.arm_R.xRot = (float) (-Math.PI / 2) + this.head.xRot;
+				break;
+			case SPEAR:
+				this.arm_L.yRot = (float) (Math.PI / 180.0) * Math.clamp((180.0F / (float)Math.PI) * arm_L.yRot, -60.0F, 60.0F);
+				this.arm_L.xRot = (float) (Math.PI / 180.0) * Math.clamp((180.0F / (float)Math.PI) * arm_L.xRot, -120.0F, 30.0F);
+				break;
+		}
 	}
 
 	@Override
