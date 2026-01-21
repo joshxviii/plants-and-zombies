@@ -3,8 +3,6 @@ package joshxviii.plantz.entity.gnome
 import PazDataSerializers.GNOME_SOUND_VARIANT
 import PazDataSerializers.GNOME_VARIANT
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Holder
-import net.minecraft.core.registries.Registries
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
@@ -16,13 +14,11 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.control.JumpControl
 import net.minecraft.world.entity.ai.control.MoveControl
-import net.minecraft.world.entity.ai.goal.FloatGoal
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal
-import net.minecraft.world.entity.animal.cow.CowVariant
+import net.minecraft.world.entity.ai.goal.*
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.monster.Monster
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.entity.variant.VariantUtils
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
@@ -31,7 +27,7 @@ import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
 
-class Gnome(type: EntityType<out Gnome>, level: Level) : PathfinderMob(type, level) {
+class Gnome(type: EntityType<out Gnome>, level: Level) : Monster(type, level) {
 
     companion object {
         fun checkGnomeSpawnRules(
@@ -74,7 +70,13 @@ class Gnome(type: EntityType<out Gnome>, level: Level) : PathfinderMob(type, lev
     override fun registerGoals() {
         this.goalSelector.addGoal(3, RandomLookAroundGoal(this))
         this.goalSelector.addGoal(3, LookAtPlayerGoal(this, Player::class.java, 8.0f))
+        this.goalSelector.addGoal(5, MeleeAttackGoal(this, 1.0, true))
         this.goalSelector.addGoal(6, WaterAvoidingRandomStrollGoal(this, 0.6))
+        this.goalSelector.addGoal(2, SpearUseGoal(this, 1.0, 1.0, 10.0f, 2.0f))
+        this.targetSelector.addGoal(1, HurtByTargetGoal(this).setAlertOthers())
+        this.targetSelector.addGoal(2, NearestAttackableTargetGoal(this, LivingEntity::class.java, true) { target, level ->
+            target !is Gnome
+        })
     }
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
@@ -115,11 +117,11 @@ class Gnome(type: EntityType<out Gnome>, level: Level) : PathfinderMob(type, lev
         return groupData
     }
 
-    override fun getAmbientSound(): SoundEvent? = soundSet.ambientSound.value()
+    override fun getAmbientSound(): SoundEvent = soundSet.ambientSound.value()
 
-    override fun getHurtSound(source: DamageSource): SoundEvent? = soundSet.hurtSound.value()
+    override fun getHurtSound(source: DamageSource): SoundEvent = soundSet.hurtSound.value()
 
-    override fun getDeathSound(): SoundEvent? = soundSet.deathSound.value()
+    override fun getDeathSound(): SoundEvent = soundSet.deathSound.value()
 
     override fun playStepSound(pos: BlockPos, blockState: BlockState) {
         playSound(soundSet.stepSound.value(), 0.15f, 1.0f)

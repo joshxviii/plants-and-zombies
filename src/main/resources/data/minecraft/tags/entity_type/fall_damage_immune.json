@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "#plantz:plant"
+    "#plantz:plant",
+    "plantz:gnome"
   ]
 }

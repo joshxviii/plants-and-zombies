@@ -204,7 +204,7 @@ object PazEntities {
         attributes = createMobAttributes()
             .add(Attributes.MAX_HEALTH, 30.0)
             .add(Attributes.MOVEMENT_SPEED, 0.9)
-            .add(Attributes.JUMP_STRENGTH, 0.35)
+            .add(Attributes.JUMP_STRENGTH, 0.4)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.3)
             .add(Attributes.ATTACK_DAMAGE, 2.0)
     )
