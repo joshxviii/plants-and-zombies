@@ -1,5 +1,6 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.model.GnomeArmorModel
 import joshxviii.plantz.model.GnomeModel
 import joshxviii.plantz.model.plants.*
 import joshxviii.plantz.model.projectiles.MelonModel
@@ -9,12 +10,23 @@ import joshxviii.plantz.model.projectiles.SporeModel
 import joshxviii.plantz.model.zombies.BrownCoatModel
 import joshxviii.plantz.model.zombies.ZombieYetiModel
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
+import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.ModelLayers
-import net.minecraft.client.model.geom.builders.MeshTransformer
-import net.minecraft.client.model.monster.zombie.ZombieModel
 import net.minecraft.client.renderer.entity.EntityRenderers
 
 object PazModels {
+
+    val ARMOR_LAYER_HEAD   = ModelLayerLocation(pazResource("gnome_armor"), "head")
+    val ARMOR_LAYER_CHEST  = ModelLayerLocation(pazResource("gnome_armor"), "chest")
+    val ARMOR_LAYER_LEGS   = ModelLayerLocation(pazResource("gnome_armor"), "legs")
+    val ARMOR_LAYER_FEET   = ModelLayerLocation(pazResource("gnome_armor"), "boots")
+
+    val ARMOR_LAYER_LOCATION = GnomeArmorSet(
+        head  = ARMOR_LAYER_HEAD,
+        chest = ARMOR_LAYER_CHEST,
+        legs  = ARMOR_LAYER_LEGS,
+        feet  = ARMOR_LAYER_FEET
+    )
 
     fun registerAll() {
         // REGISTER MODELS
@@ -43,6 +55,10 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(ZombieYetiModel.LAYER_LOCATION) { ZombieYetiModel.createBodyLayer() }
 
         ModelLayerRegistry.registerModelLayer(GnomeModel.LAYER_LOCATION) { GnomeModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(ARMOR_LAYER_LOCATION.head)  { GnomeArmorModel.createHeadLayer() }
+        ModelLayerRegistry.registerModelLayer(ARMOR_LAYER_LOCATION.chest) { GnomeArmorModel.createChestLayer() }
+        ModelLayerRegistry.registerModelLayer(ARMOR_LAYER_LOCATION.legs)  { GnomeArmorModel.createLegsLayer() }
+        ModelLayerRegistry.registerModelLayer(ARMOR_LAYER_LOCATION.feet)  { GnomeArmorModel.createBootsLayer() }
 
 
 
@@ -76,7 +92,7 @@ object PazModels {
         EntityRenderers.register(PazEntities.BROWN_COAT) { PazZombieRenderer(it) }
         EntityRenderers.register(PazEntities.ZOMBIE_YETI) { PazZombieRenderer(it, ZombieYetiModel(it.bakeLayer(ZombieYetiModel.LAYER_LOCATION))) }
 
-        EntityRenderers.register(PazEntities.GNOME) { GnomeRenderer(GnomeModel(it.bakeLayer(GnomeModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.GNOME) { GnomeRenderer(it, GnomeModel(it.bakeLayer(GnomeModel.LAYER_LOCATION)))}
 
         EntityRenderers.register(PazEntities.PLANT_POT_MINECART) { PlantPotMinecartRenderer(it, ModelLayers.MINECART) }
         EntityRenderers.register(PazEntities.SUN) { SunRenderer(it) }

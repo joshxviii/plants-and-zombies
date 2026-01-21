@@ -173,7 +173,9 @@ object PazEntities {
             .passengerAttachments(2.075f)
             .ridingOffset(-0.7f)
             .clientTrackingRange(8)
-            .notInPeaceful()
+            .notInPeaceful(),
+        attributes = Zombie.createAttributes()
+            .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 10.0)
     )
     @JvmField val ZOMBIE_YETI: EntityType<ZombieYeti> =  registerZombie(
         "zombie_yeti",
@@ -184,13 +186,14 @@ object PazEntities {
             .clientTrackingRange(8)
             .notInPeaceful(),
         attributes = Zombie.createAttributes()
-            .add(Attributes.SCALE, 1.25)
+            .add(Attributes.ATTACK_DAMAGE, 8.0)
             .add(Attributes.MAX_HEALTH, 80.0)
             .add(Attributes.MOVEMENT_SPEED, 0.3)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.5)
-            .add(Attributes.ENTITY_INTERACTION_RANGE, 2.5)
-            .add(Attributes.ATTACK_DAMAGE, 8.0)
+            .add(Attributes.SCALE, 1.25)
             .add(Attributes.STEP_HEIGHT, 1.0)
+            .add(Attributes.ENTITY_INTERACTION_RANGE, 2.5)
+            .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.0)
     )
     // endregion
 
@@ -199,8 +202,9 @@ object PazEntities {
         EntityType.Builder.of(::Gnome, MobCategory.MONSTER)
             .sized(0.33f, 0.7f),
         attributes = createMobAttributes()
-            .add(Attributes.MAX_HEALTH, 20.0)
+            .add(Attributes.MAX_HEALTH, 30.0)
             .add(Attributes.MOVEMENT_SPEED, 0.9)
+            .add(Attributes.JUMP_STRENGTH, 0.35)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.3)
             .add(Attributes.ATTACK_DAMAGE, 2.0)
     )

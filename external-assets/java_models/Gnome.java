@@ -9,6 +9,7 @@ public class Gnome<T extends Entity> extends EntityModel<T> {
 	private final ModelPart body;
 	private final ModelPart torso;
 	private final ModelPart head;
+	private final ModelPart hat;
 	private final ModelPart eyebrows;
 	private final ModelPart eyebrow_L;
 	private final ModelPart eyebrow_R;
@@ -23,6 +24,7 @@ public class Gnome<T extends Entity> extends EntityModel<T> {
 		this.body = root.getChild("body");
 		this.torso = this.body.getChild("torso");
 		this.head = this.torso.getChild("head");
+		this.hat = this.head.getChild("hat");
 		this.eyebrows = this.head.getChild("eyebrows");
 		this.eyebrow_L = this.eyebrows.getChild("eyebrow_L");
 		this.eyebrow_R = this.eyebrows.getChild("eyebrow_R");
@@ -43,11 +45,12 @@ public class Gnome<T extends Entity> extends EntityModel<T> {
 		PartDefinition torso = body.addOrReplaceChild("torso", CubeListBuilder.create().texOffs(0, 13).addBox(-2.0F, -4.0F, -1.0F, 4.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -3.0F, 0.0F));
 
 		PartDefinition head = torso.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-2.0F, -4.0F, -2.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(0.0F))
-		.texOffs(12, 2).addBox(-0.5F, -2.0F, -3.0F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(12, 13).addBox(-1.5F, -6.0F, -1.5F, 3.0F, 2.0F, 3.0F, new CubeDeformation(0.0F))
-		.texOffs(24, 14).addBox(-0.5F, -7.0F, -0.5F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -4.0F, 0.0F));
+		.texOffs(12, 2).addBox(-0.5F, -2.0F, -3.0F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -4.0F, 0.0F));
 
 		PartDefinition cube_r1 = head.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(0, 8).addBox(-2.5F, -1.5F, -1.0F, 5.0F, 3.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.25F, -2.0F, -0.5236F, 0.0F, 0.0F));
+
+		PartDefinition hat = head.addOrReplaceChild("hat", CubeListBuilder.create().texOffs(24, 14).addBox(0.0F, -1.0F, -2.0F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F))
+		.texOffs(12, 13).addBox(-1.0F, 0.0F, -3.0F, 3.0F, 2.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(-0.5F, -6.0F, 1.5F));
 
 		PartDefinition eyebrows = head.addOrReplaceChild("eyebrows", CubeListBuilder.create(), PartPose.offset(0.0F, -3.0F, -2.05F));
 

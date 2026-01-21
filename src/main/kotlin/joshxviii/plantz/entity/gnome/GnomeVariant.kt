@@ -18,16 +18,13 @@ enum class GnomeVariant(val color: String, val id: Int) : StringRepresentable {
     BLUE("blue", 0),
     RED("red", 1),
     GREEN("green", 2),
-    YELLOW("yellow", 3),
-    GOLDEN("golden", 4);
+    YELLOW("yellow", 3);
 
-    override fun getSerializedName(): String = this.name
-    fun getTexture(): Identifier {
-        return ClientAsset.ResourceTexture(pazResource("entity/gnome/${this.color}")).texturePath!!
-    }
+    override fun getSerializedName(): String = color
+    fun getTexture(): Identifier = ClientAsset.ResourceTexture(pazResource("entity/gnome/${color}")).texturePath!!
 
     companion object {
-
+        fun getDefault(): GnomeVariant = BLUE
         fun pickRandomVariant(): GnomeVariant = entries.random()
 
         val CODEC: Codec<GnomeVariant> = StringRepresentable.fromEnum(GnomeVariant::values)

@@ -24,11 +24,10 @@ enum class GnomeSoundVariant(val variant: String, val id: Int, ) : StringReprese
     VOICE_7("voice_7", 6);
 
     override fun getSerializedName(): String = variant
-
     fun getSoundSet(): GnomeSoundSet = PazSounds.GNOME_SOUNDS[this]!!
 
     companion object {
-
+        fun getDefault(): GnomeSoundVariant = VOICE_1
         fun pickRandomVariant(): GnomeSoundVariant = entries.random()
 
         val CODEC: Codec<GnomeSoundVariant> = StringRepresentable.fromEnum(::values)

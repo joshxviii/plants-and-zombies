@@ -2,8 +2,9 @@ package joshxviii.plantz.entity.gnome
 
 import PazDataSerializers.GNOME_SOUND_VARIANT
 import PazDataSerializers.GNOME_VARIANT
-import joshxviii.plantz.PazBlocks
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Holder
+import net.minecraft.core.registries.Registries
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
@@ -12,23 +13,22 @@ import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.entity.EntitySpawnReason
-import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.entity.Mob
-import net.minecraft.world.entity.PathfinderMob
-import net.minecraft.world.entity.SpawnGroupData
+import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.control.JumpControl
 import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.entity.ai.goal.FloatGoal
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal
+import net.minecraft.world.entity.animal.cow.CowVariant
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.entity.variant.VariantUtils
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
 
 class Gnome(type: EntityType<out Gnome>, level: Level) : PathfinderMob(type, level) {
@@ -72,7 +72,6 @@ class Gnome(type: EntityType<out Gnome>, level: Level) : PathfinderMob(type, lev
     }
 
     override fun registerGoals() {
-        this.goalSelector.addGoal(1, FloatGoal(this))
         this.goalSelector.addGoal(3, RandomLookAroundGoal(this))
         this.goalSelector.addGoal(3, LookAtPlayerGoal(this, Player::class.java, 8.0f))
         this.goalSelector.addGoal(6, WaterAvoidingRandomStrollGoal(this, 0.6))
@@ -82,12 +81,23 @@ class Gnome(type: EntityType<out Gnome>, level: Level) : PathfinderMob(type, lev
         super.defineSynchedData(entityData)
         entityData.define(
             DATA_VARIANT_ID,
-            GnomeVariant.pickRandomVariant()
+            GnomeVariant.getDefault()
         )
         entityData.define(
             DATA_SOUND_VARIANT_ID,
-            GnomeSoundVariant.pickRandomVariant()
+            GnomeSoundVariant.getDefault()
         )
+    }
+
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+        output.store("color_variant", GnomeVariant.CODEC, variant)
+        output.store("sound_variant", GnomeSoundVariant.CODEC, soundVariant)
+    }
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+        variant = input.read<GnomeVariant>("color_variant", GnomeVariant.CODEC).get()
+        soundVariant = input.read<GnomeSoundVariant>("sound_variant", GnomeSoundVariant.CODEC).get()
     }
 
     override fun finalizeSpawn(
@@ -96,26 +106,20 @@ class Gnome(type: EntityType<out Gnome>, level: Level) : PathfinderMob(type, lev
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        setCanPickUpLoot(random.nextFloat() < 0.9f)
+        setCanPickUpLoot(true)
 
-        if (random.nextFloat() < 0.25) {
-            setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_PICKAXE.defaultInstance)
-        }
+        if (random.nextFloat() < 0.25) setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_PICKAXE.defaultInstance)
+        variant = GnomeVariant.pickRandomVariant()
+        soundVariant = GnomeSoundVariant.pickRandomVariant()
 
         return groupData
     }
 
-    override fun getAmbientSound(): SoundEvent? {
-        return soundSet.ambientSound.value()
-    }
+    override fun getAmbientSound(): SoundEvent? = soundSet.ambientSound.value()
 
-    override fun getHurtSound(source: DamageSource): SoundEvent? {
-        return soundSet.hurtSound.value()
-    }
+    override fun getHurtSound(source: DamageSource): SoundEvent? = soundSet.hurtSound.value()
 
-    override fun getDeathSound(): SoundEvent? {
-        return soundSet.deathSound.value()
-    }
+    override fun getDeathSound(): SoundEvent? = soundSet.deathSound.value()
 
     override fun playStepSound(pos: BlockPos, blockState: BlockState) {
         playSound(soundSet.stepSound.value(), 0.15f, 1.0f)
@@ -150,7 +154,6 @@ class Gnome(type: EntityType<out Gnome>, level: Level) : PathfinderMob(type, lev
                 }
             } else if (!jumpControl.canJump) enableJumpControl()
         }
-
         this.wasOnGround = this.onGround()
     }
 
@@ -186,19 +189,16 @@ class Gnome(type: EntityType<out Gnome>, level: Level) : PathfinderMob(type, lev
     }
 
     override fun getJumpPower(): Float {
-        var baseJumpPower = 0.3f
+        var baseJumpPower = 0.4f
         if (moveControl.getSpeedModifier() <= 0.6) baseJumpPower = 0.2f
-
         val path = navigation.getPath()
         if (path != null && !path.isDone) {
             val currentPos = path.getNextEntityPos(this)
             if (currentPos.y > y + 0.5)  baseJumpPower = 0.5f
         }
-
         if (horizontalCollision || jumping && moveControl.getWantedY() > y + 0.5) {
             baseJumpPower = 0.5f
         }
-
         return super.getJumpPower(baseJumpPower / 0.42f)
     }
 
@@ -209,7 +209,6 @@ class Gnome(type: EntityType<out Gnome>, level: Level) : PathfinderMob(type, lev
             val current = deltaMovement.horizontalDistanceSqr()
             if (current < 0.01) moveRelative(0.1f, Vec3(0.0, 1.5, 1.0))
         }
-
         if (!level().isClientSide) {
             level().broadcastEntityEvent(this, 1.toByte())
         }
@@ -235,9 +234,7 @@ class Gnome(type: EntityType<out Gnome>, level: Level) : PathfinderMob(type, lev
 
     class GnomeJumpControl(private val gnome: Gnome) : JumpControl(gnome) {
         var canJump = false
-
         fun wantJump(): Boolean = jump
-
         override fun tick() {
             if (jump) {
                 gnome.startJumping()
@@ -252,17 +249,14 @@ class Gnome(type: EntityType<out Gnome>, level: Level) : PathfinderMob(type, lev
         override fun tick() {
             if (gnome.onGround() && !gnome.jumping && !(gnome.jumpControl as GnomeJumpControl).wantJump()) gnome.setSpeedModifier(0.0)
             else if (hasWanted() || operation == Operation.JUMPING) gnome.setSpeedModifier(nextJumpSpeed)
-
             super.tick()
         }
 
         override fun setWantedPosition(x: Double, y: Double, z: Double, speedModifier: Double) {
             var speedModifier = speedModifier
             if (gnome.isInWater) speedModifier = 1.5
-
             super.setWantedPosition(x, y, z, speedModifier)
             if (speedModifier > 0.0)  nextJumpSpeed = speedModifier
         }
     }
-
 }
