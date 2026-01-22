@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "ExampleMixin",
+    "LivingEntityAccessor",
     "LivingEntityMixin",
     "MobAccessor",
     "SpawnPlacementsInvoker",

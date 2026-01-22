@@ -1,8 +1,8 @@
 package joshxviii.plantz.entity.plant
 
-import PazDataSerializers.DATA_COOLDOWN
-import PazDataSerializers.DATA_PLANT_STATE
-import PazDataSerializers.DATA_SLEEPING
+import joshxviii.plantz.PazDataSerializers.DATA_COOLDOWN
+import joshxviii.plantz.PazDataSerializers.DATA_PLANT_STATE
+import joshxviii.plantz.PazDataSerializers.DATA_SLEEPING
 import joshxviii.plantz.PazAttributes
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazEntities
@@ -11,11 +11,9 @@ import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.PazTags.BlockTags.PLANTABLE
 import joshxviii.plantz.ai.PlantState
-import joshxviii.plantz.entity.gnome.Gnome
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Holder
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleOptions
@@ -55,7 +53,6 @@ import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
-import net.minecraft.world.scores.Scoreboard
 
 /**
  * Base class for all the other plant entities.

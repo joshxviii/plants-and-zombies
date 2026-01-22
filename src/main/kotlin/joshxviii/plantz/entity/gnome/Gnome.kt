@@ -1,7 +1,7 @@
 package joshxviii.plantz.entity.gnome
 
-import PazDataSerializers.GNOME_SOUND_VARIANT
-import PazDataSerializers.GNOME_VARIANT
+import joshxviii.plantz.PazDataSerializers.GNOME_SOUND_VARIANT
+import joshxviii.plantz.PazDataSerializers.GNOME_VARIANT
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.entity.plant.Plant
