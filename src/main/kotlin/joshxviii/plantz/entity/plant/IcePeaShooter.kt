@@ -2,7 +2,7 @@ package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.entity.projectile.PeaIce
-import joshxviii.plantz.ai.goal.ProjectileAttackPlantGoal
+import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import net.minecraft.tags.BlockTags
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
@@ -16,7 +16,7 @@ class IcePeaShooter(type: EntityType<out Plant>, level: Level) : Plant(PazEntiti
     override fun registerGoals() {
         super.registerGoals()
 
-        this.goalSelector.addGoal(2, ProjectileAttackPlantGoal(
+        this.goalSelector.addGoal(2, ProjectileAttackGoal(
             usingEntity = this,
             projectileFactory =  { PeaIce(level= this.level(), owner=this) },
             cooldownTime = 20,

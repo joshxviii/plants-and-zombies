@@ -9,7 +9,9 @@ import net.minecraft.sounds.SoundEvents
 
 object PazSounds {
 
-    // TODO INCREASE THE VOLUME
+    //TODO hypno sound
+    @JvmField val HYPNOTIZED = register("event.mob_effect.hypnotized")
+
     @JvmField val ZOMBIE_YETI_AMBIENT = register("entity.zombie_yeti.ambient")
     @JvmField val ZOMBIE_YETI_HURT = register("entity.zombie_yeti.hurt")
     @JvmField val ZOMBIE_YETI_DEATH = register("entity.zombie_yeti.death")

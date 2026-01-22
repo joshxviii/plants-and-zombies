@@ -11,7 +11,7 @@ import net.minecraft.world.entity.ai.goal.Goal
  * @param actionStartEffect Callback function used to add effects at the start of the action
  * @param actionEndEffect Callback function used to add effects at the end of the action
  */
-abstract class PlantActionGoal(
+abstract class ActionGoal(
     val usingEntity: PathfinderMob,
     val cooldownTime: Int = 20,
     val actionDelay: Int = 0,

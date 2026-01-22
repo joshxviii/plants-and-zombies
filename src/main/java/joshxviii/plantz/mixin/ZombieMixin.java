@@ -1,5 +1,7 @@
 package joshxviii.plantz.mixin;
 
+import joshxviii.plantz.PazBlocks;
+import joshxviii.plantz.PazItems;
 import joshxviii.plantz.raid.ZombieRaid;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -31,7 +33,7 @@ public class ZombieMixin {
         var isLeader = Objects.requireNonNull(entity.getAttribute(Attributes.MAX_HEALTH)).hasModifier(Identifier.withDefaultNamespace("leader_zombie_bonus"));
 
         if(isLeader) {
-            entity.setItemSlot(EquipmentSlot.HEAD, ZombieRaid.Companion.getBrainzBannerInstance(entity.registryAccess().lookupOrThrow(Registries.BANNER_PATTERN)));
+            entity.setItemSlot(EquipmentSlot.OFFHAND, PazBlocks.BRAINZ_FLAG.asItem().getDefaultInstance());
         }
     }
 

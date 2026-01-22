@@ -15,7 +15,8 @@ class Sunflower(
         super.registerGoals()
         this.goalSelector.addGoal(1, GenerateSunGoal(
             usingEntity = this,
-            actionDelay = 10
+            actionDelay = 10,
+            generatesAtNight = true
         ))
     }
 }

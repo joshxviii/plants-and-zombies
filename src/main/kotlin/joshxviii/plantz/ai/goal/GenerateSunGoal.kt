@@ -7,13 +7,13 @@ import net.minecraft.sounds.SoundEvents
 
 class GenerateSunGoal(
     usingEntity: Plant,
-    cooldownTime: Int = 700,
+    cooldownTime: Int = 420,
     actionDelay: Int = 0,
     actionStartEffect: () -> Unit = {},
     actionEndEffect: () -> Unit = {},
     val sunAmount: Int = 5,
     val generatesAtNight : Boolean = false
-): PlantActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
+): ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
     override fun canUse(): Boolean = (
         usingEntity.tickCount>cooldownTime
             && usingEntity.isAlive

@@ -6,6 +6,7 @@ import PazDataSerializers.DATA_SLEEPING
 import joshxviii.plantz.PazAttributes
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.PazEntities.PLANT_TEAM
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.PazTags.BlockTags.PLANTABLE
@@ -54,6 +55,7 @@ import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
+import net.minecraft.world.scores.Scoreboard
 
 /**
  * Base class for all the other plant entities.
@@ -71,7 +73,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         ): Boolean {
             val below = pos.below()
             return EntitySpawnReason.isSpawner(spawnReason) || level.getBlockState(below).isValidSpawn(level, below, type)
-
         }
 
         private const val NUTRIENT_SUPPLY_MAX = 140  // ticks before suffocating when on invalid ground
@@ -350,6 +351,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     ): SpawnGroupData? {
         if (spawnReason == EntitySpawnReason.NATURAL
             && (!onValidGround() || isOverlappingWithOther(this.blockPosition()))) this.discard()
+
+        level.server?.scoreboard?.addPlayerToTeam(this.scoreboardName, PLANT_TEAM)
+
         return groupData
     }
 

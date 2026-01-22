@@ -13,6 +13,7 @@
 
   "effect.plantz.zombie_omen": "Zombie Omen",
   "effect.plantz.toxic": "Toxic",
+  "effect.plantz.hypnotize": "Hypnotized",
 
   "component.sun_cost": "Sun cost: %s",
   "component.blocks_damage.desc": "Blocks Projectiles:",
@@ -21,6 +22,7 @@
 
   "item.plantz.sun": "Sun",
   "item.plantz.cone": "Cone",
+  "item.plantz.brainz_flag": "Brainz Flag",
   "item.plantz.plant_pot": "Plant Pot",
   "item.plantz.plant_pot_minecart": "Minecart with Plant Pot",
   "item.plantz.seed_packet": "Seed Packet",
@@ -49,7 +51,7 @@
   "entity.plantz.browncoat": "Brown Coat",
   "entity.plantz.zombie_yeti": "Zombie Yeti",
 
-  "entity.plantz.gnome": "Gnome",
+  "entity.plantz.gnome": "Garden Gnome",
 
   "entity.plantz.plant_pot_minecart": "Minecart with Plant Pot",
 

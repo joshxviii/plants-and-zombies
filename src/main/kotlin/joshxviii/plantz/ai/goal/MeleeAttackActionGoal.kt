@@ -9,7 +9,7 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.attributes.Attributes
 
-open class MeleeAttackPlantGoal(
+open class MeleeAttackActionGoal(
     usingEntity: PathfinderMob,
     cooldownTime: Int = 20,
     actionDelay: Int = 0,
@@ -17,7 +17,7 @@ open class MeleeAttackPlantGoal(
     actionEndEffect: () -> Unit = {},
     val attackReach : Double = 5.0,
     val damageType: ResourceKey<DamageType> = PazDamageTypes.PLANT
-) : PlantActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
+) : ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
 
     override fun canUse(): Boolean = (
         usingEntity.tickCount>cooldownTime

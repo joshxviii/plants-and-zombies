@@ -14,7 +14,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 
-class BeamAttackPlantGoal(
+class BeamAttackGoal(
     usingEntity: PathfinderMob,
     cooldownTime: Int = 20,
     actionDelay: Int = 0,
@@ -25,7 +25,7 @@ class BeamAttackPlantGoal(
     val damageType: ResourceKey<DamageType> = PazDamageTypes.PLANT,
     val beamParticles : ParticleOptions? = null,
     val afterHitEntityEffect: (target: LivingEntity) -> Unit = {}
-) : PlantActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
+) : ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
     private var piercedEntities: MutableList<Entity>? = null
 
     override fun canUse(): Boolean = (

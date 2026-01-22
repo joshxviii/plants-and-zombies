@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "plantz:block/brainz_flag_block", "y": 270},
+    "facing=south": { "model": "plantz:block/brainz_flag_block", "y": 90 },
+    "facing=east":  { "model": "plantz:block/brainz_flag_block", "y": 0 },
+    "facing=west":  { "model": "plantz:block/brainz_flag_block", "y": 180 }
+  }
+}

@@ -31,9 +31,7 @@ class PlantPotBlock(properties: Properties) : HorizontalDirectionalBlock(propert
     }
 
     init {
-        this.registerDefaultState(
-            this.stateDefinition.any().setValue(FACING, Direction.NORTH)
-        )
+        registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH))
     }
 
     override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
@@ -51,6 +49,6 @@ class PlantPotBlock(properties: Properties) : HorizontalDirectionalBlock(propert
     }
 
     override fun getStateForPlacement(context: BlockPlaceContext): BlockState {
-        return this.defaultBlockState().setValue(FACING, context.horizontalDirection.opposite)
+        return defaultBlockState().setValue(FACING, context.horizontalDirection.opposite)
     }
 }

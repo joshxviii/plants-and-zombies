@@ -2,7 +2,7 @@ package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.entity.projectile.Pea
-import joshxviii.plantz.ai.goal.ProjectileAttackPlantGoal
+import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
@@ -14,7 +14,7 @@ class Repeater(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.RE
     override fun registerGoals() {
         super.registerGoals()
 
-        this.goalSelector.addGoal(2, ProjectileAttackPlantGoal(
+        this.goalSelector.addGoal(2, ProjectileAttackGoal(
             usingEntity = this,
             projectileFactory = { Pea(level= this.level(), owner=this) },
             cooldownTime = 8,

@@ -12,6 +12,7 @@ import joshxviii.plantz.entity.zombie.BrownCoat
 import joshxviii.plantz.entity.zombie.ZombieYeti
 import joshxviii.plantz.mixin.MobAccessor
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
@@ -24,11 +25,27 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.projectile.Projectile
+import net.minecraft.world.scores.PlayerTeam
+import net.minecraft.world.scores.Scoreboard
 
 object PazEntities {
+    private fun Scoreboard.createPlantTeam(): PlayerTeam {
+        val plantTeam = this.addPlayerTeam("plantz")
+        plantTeam.setSeeFriendlyInvisibles(false)
+        plantTeam.isAllowFriendlyFire = false
+        return plantTeam
+    }
 
     fun initialize() {
+        ServerLevelEvents.LOAD.register { server, level ->
+            val scoreboard: Scoreboard = server.scoreboard
+            PLANT_TEAM = scoreboard.getPlayerTeam("plantz")?: scoreboard.createPlantTeam()
+        }
+
         ServerEntityEvents.ENTITY_LOAD.register { entity, level ->
+
+            if (entity is Zombie) (entity as MobAccessor).targetSelector.addGoal(4, NearestAttackableTargetGoal(entity, Gnome::class.java, 5, true, false, null))
+
             if (entity is Mob && entity.`is`(ATTACKS_PLANTS)) {
                 (entity as MobAccessor).targetSelector.addGoal(1, NearestAttackableTargetGoal(entity, WallNut::class.java, 4, true, true) { target, level -> target is WallNut })
                 (entity as MobAccessor).targetSelector.addGoal(4, NearestAttackableTargetGoal(entity, Plant::class.java, 5, true, false) { target, level ->
@@ -37,27 +54,25 @@ object PazEntities {
         }
     }
 
-
     private val typeToSunCost = mutableMapOf<EntityType<*>, Int>()
-    fun getSunCostFromType(type: EntityType<*>) : Int {
-        return typeToSunCost[type]?: 0
-    }
+    fun getSunCostFromType(type: EntityType<*>) : Int = typeToSunCost[type]?: 0
 
     // region Plants
     @JvmField val SUNFLOWER: EntityType<Sunflower> = registerPlant(
         "sunflower",
         EntityType.Builder.of(::Sunflower, MobCategory.CREATURE),
-        sunCost = 10,
+        sunCost = 5,
         height = 1.1f,
     )
     @JvmField val PEA_SHOOTER: EntityType<PeaShooter> = registerPlant(
         "peashooter",
         EntityType.Builder.of(::PeaShooter, MobCategory.CREATURE),
+        sunCost = 5,
     )
     @JvmField val WALL_NUT: EntityType<WallNut> = registerPlant(
         "wallnut",
         EntityType.Builder.of(::WallNut, MobCategory.CREATURE),
-        sunCost = 10,
+        sunCost = 5,
         width = 1.0f,
         height = 1.1f,
         attributes = Plant.Companion.PlantAttributes(
@@ -67,7 +82,7 @@ object PazEntities {
     @JvmField val CHOMPER: EntityType<Chomper> = registerPlant(
         "chomper",
         EntityType.Builder.of(::Chomper, MobCategory.CREATURE),
-        sunCost = 10,
+        sunCost = 7,
         height = 1.5f,
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 35.0,
@@ -85,34 +100,34 @@ object PazEntities {
     @JvmField val POTATO_MINE: EntityType<PotatoMine> = registerPlant(
         "potatomine",
         EntityType.Builder.of(::PotatoMine, MobCategory.CREATURE),
-        sunCost = 10,
+        sunCost = 5,
         width = 0.8f,
         height = 0.35f,
     )
     @JvmField val ICE_PEA_SHOOTER: EntityType<IcePeaShooter> = registerPlant(
         "ice_peashooter",
         EntityType.Builder.of(::IcePeaShooter, MobCategory.CREATURE),
-        sunCost = 10,
+        sunCost = 7,
     )
     @JvmField val REPEATER: EntityType<Repeater> = registerPlant(
         "repeater",
         EntityType.Builder.of(::Repeater, MobCategory.CREATURE),
-        sunCost = 10,
+        sunCost = 7,
     )
     @JvmField val FIRE_PEA_SHOOTER: EntityType<FirePeaShooter> = registerPlant(
         "fire_peashooter",
         EntityType.Builder.of(::FirePeaShooter, MobCategory.CREATURE).fireImmune(),
-        sunCost = 10,
+        sunCost = 7,
     )
     @JvmField val CACTUS: EntityType<Cactus> = registerPlant(
         "cactus",
         EntityType.Builder.of(::Cactus, MobCategory.CREATURE),
-        sunCost = 10,
+        sunCost = 7,
         width = 0.8f,
         height = 1.25f,
         eyeHeight = 0.85f,
         attributes = Plant.Companion.PlantAttributes(
-            attackDamage = 1.0,
+            attackDamage = 2.0,
             followRange = 34.0
         )
     )
@@ -144,7 +159,7 @@ object PazEntities {
     @JvmField val FUME_SHROOM: EntityType<FumeShroom> = registerPlant(
         "fumeshroom",
         EntityType.Builder.of(::FumeShroom, MobCategory.CREATURE),
-        sunCost = 10,
+        sunCost = 7,
         width = 0.8f,
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
@@ -154,7 +169,7 @@ object PazEntities {
     @JvmField val SUN_SHROOM: EntityType<SunShroom> = registerPlant(
         "sunshroom",
         EntityType.Builder.of(::SunShroom, MobCategory.CREATURE),
-        sunCost = 10,
+        sunCost = 3,
         height = 0.85f
     )
     // endregion
@@ -188,18 +203,19 @@ object PazEntities {
             .add(Attributes.SCALE, 1.25)
             .add(Attributes.STEP_HEIGHT, 1.0)
             .add(Attributes.ENTITY_INTERACTION_RANGE, 2.5)
-            .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.0)
+            .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, -10.0)
     )
     // endregion
 
     @JvmField val GNOME: EntityType<Gnome> =  registerGnome(
         "gnome",
         EntityType.Builder.of(::Gnome, MobCategory.MONSTER)
-            .sized(0.33f, 0.7f)
+            .sized(0.4f, 0.78f)
             .ridingOffset(-0.15f),
         attributes = createMobAttributes()
-            .add(Attributes.MAX_HEALTH, 30.0)
-            .add(Attributes.MOVEMENT_SPEED, 0.6)
+            .add(Attributes.STEP_HEIGHT, 1.0)
+            .add(Attributes.MAX_HEALTH, 25.0)
+            .add(Attributes.MOVEMENT_SPEED, 0.5)
             .add(Attributes.JUMP_STRENGTH, 0.4)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.3)
             .add(Attributes.ATTACK_DAMAGE, 2.0)
@@ -286,4 +302,6 @@ object PazEntities {
         val id = ResourceKey.create(Registries.ENTITY_TYPE, pazResource(name))
         return Registry.register(BuiltInRegistries.ENTITY_TYPE, id, builder.build(id))
     }
+
+    lateinit var PLANT_TEAM : PlayerTeam
 }

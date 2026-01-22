@@ -3,7 +3,7 @@ package joshxviii.plantz.entity.plant
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.entity.projectile.PeaFire
-import joshxviii.plantz.ai.goal.ProjectileAttackPlantGoal
+import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
@@ -15,7 +15,7 @@ class FirePeaShooter(type: EntityType<out Plant>, level: Level) : Plant(PazEntit
     override fun registerGoals() {
         super.registerGoals()
 
-        this.goalSelector.addGoal(2, ProjectileAttackPlantGoal(
+        this.goalSelector.addGoal(2, ProjectileAttackGoal(
             usingEntity = this,
             projectileFactory = { PeaFire(level = this.level(), owner = this) },
             cooldownTime = 20,

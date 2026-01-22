@@ -6,17 +6,15 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.monster.Monster
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.entity.projectile.ProjectileUtil
-import net.minecraft.world.item.BowItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.phys.Vec3
 import kotlin.math.atan
 import kotlin.math.sqrt
 
-class ProjectileAttackPlantGoal(
+class ProjectileAttackGoal(
     usingEntity: PathfinderMob,
     cooldownTime: Int = 20,
     actionDelay: Int = 0,
@@ -26,7 +24,7 @@ class ProjectileAttackPlantGoal(
     val velocity : Double = 0.9,
     val inaccuracy: Float = 0.8f,
     val useHighArc: Boolean = false,
-) : PlantActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
+) : ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
     var distanceSqr: Double = 0.0
     var attackRadius : Float = 0.0f
 

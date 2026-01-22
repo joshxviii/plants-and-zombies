@@ -2,7 +2,7 @@ package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.ai.goal.FurthestAttackableTargetGoal
-import joshxviii.plantz.ai.goal.ProjectileAttackPlantGoal
+import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.entity.projectile.Needle
 import net.minecraft.tags.BlockTags
 import net.minecraft.world.entity.EntityType
@@ -16,7 +16,7 @@ class Cactus(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CACT
     override fun registerGoals() {
         super.registerGoals()
 
-        this.goalSelector.addGoal(2, ProjectileAttackPlantGoal(
+        this.goalSelector.addGoal(2, ProjectileAttackGoal(
             usingEntity = this,
             projectileFactory = { Needle(level= this.level(), owner=this) },
             velocity = 1.4,

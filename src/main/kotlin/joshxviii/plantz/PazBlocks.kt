@@ -10,6 +10,8 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.util.Util
+import net.minecraft.util.datafix.fixes.References
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
@@ -20,8 +22,12 @@ import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.item.equipment.Equippable
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.SoundType
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.entity.BlockEntityType
+import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.material.PushReaction
+import java.util.Set
 
 object PazBlocks {
     @JvmField
@@ -78,11 +84,11 @@ object PazBlocks {
                 DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
                     .add(
                         Attributes.SPAWN_REINFORCEMENTS_CHANCE,
-                        AttributeModifier(pazResource("zombie_leader_flag"), 1.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+                        AttributeModifier(pazResource("zombie_leader_flag"), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
                         EquipmentSlotGroup.HAND
                     ).add(
                         Attributes.FOLLOW_RANGE,
-                        AttributeModifier(pazResource("zombie_leader_flag"), 1.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+                        AttributeModifier(pazResource("zombie_leader_flag"), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
                         EquipmentSlotGroup.HAND
                     ).build()
             )

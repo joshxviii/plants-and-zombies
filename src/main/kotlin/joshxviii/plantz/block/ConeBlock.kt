@@ -19,7 +19,7 @@ import net.minecraft.world.phys.shapes.CubeVoxelShape
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 
-class ConeBlock(properties: Properties) : HorizontalDirectionalBlock(properties) {
+class ConeBlock(properties: Properties) : Block(properties) {
     companion object {
         val CODEC: MapCodec<ConeBlock> = simpleCodec(::ConeBlock)
         val SHAPE: VoxelShape = Util.make {

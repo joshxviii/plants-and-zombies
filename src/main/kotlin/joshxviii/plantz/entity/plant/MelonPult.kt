@@ -1,7 +1,7 @@
 package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
-import joshxviii.plantz.ai.goal.ProjectileAttackPlantGoal
+import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.entity.projectile.Melon
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
@@ -16,7 +16,7 @@ class MelonPult(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.M
     override fun registerGoals() {
         super.registerGoals()
 
-        this.goalSelector.addGoal(2, ProjectileAttackPlantGoal(
+        this.goalSelector.addGoal(2, ProjectileAttackGoal(
             usingEntity = this,
             projectileFactory = { Melon(level = level(), owner = this, spawnOffset = Vec2(-1f, 1f))},
             useHighArc = true,

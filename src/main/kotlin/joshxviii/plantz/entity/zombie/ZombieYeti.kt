@@ -75,10 +75,7 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : Zombie(type, 
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        var groupData = groupData
         val random = level.random
-        groupData = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
-        val difficultyModifier = difficulty.specialMultiplier
         if (spawnReason != EntitySpawnReason.CONVERSION) {
 
             if (random.nextFloat() < 0.08 && getItemBySlot(EquipmentSlot.HEAD).isEmpty) {

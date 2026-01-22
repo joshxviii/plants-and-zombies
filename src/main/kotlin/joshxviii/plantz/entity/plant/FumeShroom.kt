@@ -5,7 +5,7 @@ import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.ai.PlantState
-import joshxviii.plantz.ai.goal.BeamAttackPlantGoal
+import joshxviii.plantz.ai.goal.BeamAttackGoal
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
@@ -19,7 +19,7 @@ class FumeShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEnt
     override fun registerGoals() {
         super.registerGoals()
 
-        this.goalSelector.addGoal(2, BeamAttackPlantGoal(
+        this.goalSelector.addGoal(2, BeamAttackGoal(
             usingEntity = this,
             beamRange = 8.0,
             beamWidth = 2.0,
