@@ -32,6 +32,10 @@
   "item.plantz.zombie_yeti_spawn_egg": "Zombie Yeti Spawn Egg",
   "item.plantz.browncoat_spawn_egg": "Brown Coat Spawn Egg",
 
+  "item.minecraft.potion.effect.hypnotize": "Potion of Hypnosis",
+  "item.minecraft.splash_potion.effect.hypnotize": "Splash Potion of Hypnosis",
+  "item.minecraft.lingering_potion.effect.hypnotize": "Lingering Potion of Hypnosis",
+
   "entity.plantz.empty": "Empty",
   "entity.plantz.sunflower": "Sunflower",
   "entity.plantz.peashooter": "Peashooter",

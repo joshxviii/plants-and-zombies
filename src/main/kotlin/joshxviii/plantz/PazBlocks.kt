@@ -51,7 +51,7 @@ object PazBlocks {
             .pushReaction(PushReaction.DESTROY),
         ::ConeBlock,
         Item.Properties()
-            .component(PazComponents.BLOCKS_HEAD_DAMAGE, BlocksHeadDamage(breakChance = .1f))
+            .component(PazComponents.BLOCKS_HEAD_DAMAGE, BlocksHeadDamage(breakChance = 0.2f))
             .component(
                 DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
                     .setEquipSound(SoundEvents.ARMOR_EQUIP_LEATHER)

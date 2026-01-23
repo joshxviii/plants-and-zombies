@@ -11,7 +11,9 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectCategory
+import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.ai.goal.Goal
+import net.minecraft.world.item.alchemy.Potion
 
 object PazEffects {
 
@@ -32,9 +34,18 @@ object PazEffects {
         )
     }
 
+    @JvmField val HYPNOTIZE_POTION: Holder<Potion> = registerPotion("hypnotize", MobEffectInstance(HYPNOTIZE, 3600))
+    fun registerPotion(name: String, effects: MobEffectInstance): Holder<Potion> {
+        val potion = Potion(name, effects)
+        return Registry.registerForHolder(
+            BuiltInRegistries.POTION,
+            pazResource(name),
+            potion
+        )
+    }
+
     val HYPNOTIZED_GOAL_ATTACHMENT: AttachmentType<Goal> =
-        AttachmentRegistryImpl.builder<Goal>()
-            .buildAndRegister(pazResource("hypnotized_goal"))
+        AttachmentRegistryImpl.builder<Goal>().buildAndRegister(pazResource("hypnotized_goal"))
 
     fun initialize() {
 

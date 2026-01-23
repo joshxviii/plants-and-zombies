@@ -87,7 +87,6 @@ object PazItems {
 
     private fun registerSpawnEgg(type: EntityType<*>): Item {
         val entityId = EntityType.getKey(type).path
-        val entityName = Component.translatable("entity.plantz.${entityId}")
         return registerItem(
            "${entityId}_spawn_egg", ::SpawnEggItem,
             Item.Properties().spawnEgg(type)
