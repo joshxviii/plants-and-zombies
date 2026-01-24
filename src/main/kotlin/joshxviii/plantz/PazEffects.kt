@@ -8,7 +8,6 @@ import net.fabricmc.fabric.impl.attachment.AttachmentRegistryImpl
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectCategory
 import net.minecraft.world.effect.MobEffectInstance
@@ -24,7 +23,7 @@ object PazEffects {
             .withSoundOnAdded(PazSounds.HYPNOTIZED))
     @JvmField val ZOMBIE_OMEN : Holder<MobEffect> = register("zombie_omen",
         ZombieOmenMobEffect(MobEffectCategory.NEUTRAL, 1297708, PazServerParticles.ZOMBIE_OMEN)
-            .withSoundOnAdded(SoundEvents.APPLY_EFFECT_RAID_OMEN))
+            .withSoundOnAdded(PazSounds.APPLY_ZOMBIE_OMEN))
 
     fun register(name: String, mobEffect: MobEffect): Holder<MobEffect> {
         return Registry.registerForHolder(

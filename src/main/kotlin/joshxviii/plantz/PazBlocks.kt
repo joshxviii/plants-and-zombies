@@ -80,6 +80,7 @@ object PazBlocks {
             .pushReaction(PushReaction.DESTROY),
         ::BrainzFlagBlock,
         Item.Properties()
+            .equippableUnswappable(EquipmentSlot.OFFHAND)
             .component(
                 DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
                     .add(

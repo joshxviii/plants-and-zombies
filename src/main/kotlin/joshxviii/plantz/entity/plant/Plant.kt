@@ -9,6 +9,7 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazEntities.PLANT_TEAM
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazServerParticles
+import joshxviii.plantz.PazSounds
 import joshxviii.plantz.PazTags.BlockTags.PLANTABLE
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.item.SeedPacketItem
@@ -162,7 +163,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     override fun getHurtSound(source: DamageSource): SoundEvent? {
-        if (source.entity is Zombie) return SoundEvents.PLAYER_BURP
+        if (source.entity is Zombie) return PazSounds.ZOMBIE_EATS
         return SoundEvents.ROOTED_DIRT_HIT// TODO make custom sounds
     }
 

@@ -3,6 +3,7 @@ package joshxviii.plantz.entity.plant
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazServerParticles
+import joshxviii.plantz.PazSounds
 import joshxviii.plantz.PazTags.EntityTypes.CANNOT_CHOMP
 import joshxviii.plantz.ai.goal.MeleeAttackActionGoal
 import joshxviii.plantz.pazResource
@@ -48,7 +49,7 @@ class Chomper(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CHO
         actionDelay = 10,
         damageType = PazDamageTypes.CHOMP,
         actionStartEffect = {
-            plantEntity.playSound(SoundEvents.EVOKER_FANGS_ATTACK, 0.7f, 0.9f)
+            plantEntity.playSound(PazSounds.CHOMPER_ATTACK)
         }
     ) {
         override fun doAction() : Boolean {

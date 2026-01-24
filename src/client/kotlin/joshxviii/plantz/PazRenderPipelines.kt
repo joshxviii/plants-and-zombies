@@ -22,6 +22,7 @@ object PazRenderPipelines {
         RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
             .withLocation("pipeline/emissive_projectile")
             .withShaderDefine("ALPHA_CUTOUT", 0.1F)
+            .withShaderDefine("APPLY_TEXTURE_MATRIX")
             .withShaderDefine("EMISSIVE")
             .withShaderDefine("NO_OVERLAY")
             .withShaderDefine("NO_CARDINAL_LIGHTING")

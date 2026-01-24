@@ -9,8 +9,12 @@ import net.minecraft.sounds.SoundEvents
 
 object PazSounds {
 
-    //TODO hypno sound
-    @JvmField val HYPNOTIZED = register("event.mob_effect.hypnotized")
+    @JvmField val PROJECTILE_FIRE = register("entity.projectile.fire")
+    @JvmField val PROJECTILE_HIT_CONE = register("entity.projectile.hit_cone")
+    @JvmField val PROJECTILE_HIT_BUCKET = register("entity.projectile.hit_bucket")
+    @JvmField val CHOMPER_ATTACK = register("entity.chomper.attack")
+
+    @JvmField val ZOMBIE_EATS = register("entity.zombie.eat")
 
     @JvmField val ZOMBIE_YETI_AMBIENT = register("entity.zombie_yeti.ambient")
     @JvmField val ZOMBIE_YETI_HURT = register("entity.zombie_yeti.hurt")
@@ -22,6 +26,22 @@ object PazSounds {
 
     @JvmField var GNOME_SOUNDS: Map<GnomeSoundVariant, GnomeSoundVariant.GnomeSoundSet> = registerGnomeSoundVariants()
 
+    @JvmField val HYPNOTIZED = register("event.mob_effect.hypnotized")
+    @JvmField val APPLY_ZOMBIE_OMEN = register("event.mob_effect.zombie_omen")
+
+    private fun registerGnomeSoundVariants(): Map<GnomeSoundVariant, GnomeSoundVariant.GnomeSoundSet> {
+        return GnomeSoundVariant.entries.associateWith { soundVariant ->
+            val id = soundVariant.serializedName
+            GnomeSoundVariant.GnomeSoundSet(
+                ambientSound = registerForHolder("entity.gnome.$id.ambient"),
+                deathSound   = registerForHolder("entity.gnome.$id.death"),
+                hurtSound    = registerForHolder("entity.gnome.$id.hurt"),
+                jumpSound    = registerForHolder("entity.gnome.$id.jump"),
+                stepSound    = SoundEvents.WOLF_STEP
+            )
+        }
+    }
+
     fun register(name: String): SoundEvent {
         val soundId = pazResource(name)
         return Registry.register(BuiltInRegistries.SOUND_EVENT, soundId, SoundEvent.createVariableRangeEvent(soundId))
@@ -30,19 +50,6 @@ object PazSounds {
     fun registerForHolder(name: String): Holder.Reference<SoundEvent> {
         val soundId = pazResource(name)
         return Registry.registerForHolder(BuiltInRegistries.SOUND_EVENT, soundId, SoundEvent.createVariableRangeEvent(soundId))
-    }
-
-    private fun registerGnomeSoundVariants(): Map<GnomeSoundVariant, GnomeSoundVariant.GnomeSoundSet> {
-        return GnomeSoundVariant.entries.associateWith { variant ->
-            val id = variant.serializedName
-            GnomeSoundVariant.GnomeSoundSet(
-                ambientSound = registerForHolder("entity.$id.ambient"),
-                deathSound   = registerForHolder("entity.$id.death"),
-                hurtSound    = registerForHolder("entity.$id.hurt"),
-                jumpSound    = registerForHolder("entity.$id.jump"),
-                stepSound    = SoundEvents.WOLF_STEP
-            )
-        }
     }
 
     fun initialize() {}

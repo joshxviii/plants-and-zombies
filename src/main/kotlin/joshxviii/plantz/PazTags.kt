@@ -25,9 +25,11 @@ object PazTags {
         @JvmField val PLANT = tag("plant")
         @JvmField val PLANT_PROJECTILE = tag("plant_projectile")
         @JvmField val CANNOT_CHOMP = tag("cannot_be_chomped")
+        @JvmField val CANNOT_HYPNOTIZE = tag("cannot_be_hypnotized")
         @JvmField val ZOMBIE_RAIDERS = tag("zombie_raider")
         @JvmField val ATTACKS_PLANTS = tag("attacks_plants")
         @JvmField val IGNORED_BY_PLANT_ATTACKERS = tag("ignored_by_plant_attackers")
+        @JvmField val GNOME_RIDEABLE = tag("gnome_rideable")
         private fun tag(name: String): TagKey<EntityType<*>> = TagKey.create(Registries.ENTITY_TYPE, pazResource(name))
     }
 

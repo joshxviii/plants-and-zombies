@@ -51,7 +51,7 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : Zombie(type, le
         groupData = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
         val difficultyModifier = difficulty.specialMultiplier
         if (spawnReason != EntitySpawnReason.CONVERSION) {
-            setCanPickUpLoot(random.nextFloat() < 0.55f * difficultyModifier)
+            setCanPickUpLoot(true)
             setCanBreakDoors(true)
 
             //getAttribute(Attributes.SPAWN_REINFORCEMENTS_CHANCE)?.addPermanentModifier(AttributeModifier(pazResource("browncoat"), this.random.nextDouble() * 10.25 + 0.5, AttributeModifier.Operation.ADD_VALUE))
