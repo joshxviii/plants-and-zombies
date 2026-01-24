@@ -1,8 +1,9 @@
 package joshxviii.plantz.ai.goal
 
+import joshxviii.plantz.PazSounds
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundEvent
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -24,6 +25,7 @@ class ProjectileAttackGoal(
     val velocity : Double = 0.9,
     val inaccuracy: Float = 0.8f,
     val useHighArc: Boolean = false,
+    val soundEvent: SoundEvent = PazSounds.PROJECTILE_FIRE
 ) : ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
     var distanceSqr: Double = 0.0
     var attackRadius : Float = 0.0f
@@ -105,7 +107,7 @@ class ProjectileAttackGoal(
 
         projectile.shoot(shootX, shootY, shootZ, velocity.toFloat(), inaccuracy)
 
-        usingEntity.playSound(SoundEvents.BUBBLE_POP, 3.0f, 0.4f / (usingEntity.random.nextFloat() * 0.4f + 0.8f))
+        usingEntity.playSound(soundEvent, 3.0f, 0.4f / (usingEntity.random.nextFloat() * 0.4f + 0.8f))
         return true
     }
 

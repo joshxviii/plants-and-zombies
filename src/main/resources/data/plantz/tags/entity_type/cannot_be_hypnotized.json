@@ -1,0 +1,9 @@
+{
+  "values": [
+    "#plantz:plant",
+    {
+      "id": "#c:bosses",
+      "required": false
+    }
+  ]
+}
