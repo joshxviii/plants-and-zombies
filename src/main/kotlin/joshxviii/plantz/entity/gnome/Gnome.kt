@@ -22,6 +22,7 @@ import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.entity.ai.goal.*
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.monster.Monster
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
@@ -94,7 +95,8 @@ class Gnome(type: EntityType<out Gnome>, level: Level) :Monster(type, level) {
         this.goalSelector.addGoal(2, RandomLookAroundGoal(this))
         this.goalSelector.addGoal(2, LookAtPlayerGoal(this, Player::class.java, 8.0f))
         this.goalSelector.addGoal(3, WaterAvoidingRandomStrollGoal(this, 0.6))
-        this.goalSelector.addGoal(7, FollowMobGoal(this, 1.0, 3.0f, 7.0f))
+        this.goalSelector.addGoal(4, FindAndRideAnimalGoal(this))
+        //this.goalSelector.addGoal(7, FollowMobGoal(this, 1.0, 3.0f, 7.0f))
         this.targetSelector.addGoal(1, HurtByTargetGoal(this, Gnome::class.java).setAlertOthers())
         this.targetSelector.addGoal(2, NearestAttackableTargetGoal(this, LivingEntity::class.java, true) { target, level ->
             target !is Gnome
@@ -333,6 +335,52 @@ class Gnome(type: EntityType<out Gnome>, level: Level) :Monster(type, level) {
             if (gnome.isInWater) speedModifier = 1.5
             super.setWantedPosition(x, y, z, speedModifier)
             if (speedModifier > 0.0)  nextJumpSpeed = speedModifier
+        }
+    }
+
+    private class FindAndRideAnimalGoal(
+        val gnome: Gnome,
+        val searchDistance: Float = 8f
+    ) : Goal() {
+        val speedModifier = 0.8
+        var nearestRideable: LivingEntity? = null
+        var pathTick: Int = 0
+        val targeting: TargetingConditions = TargetingConditions.forCombat()
+            .range(searchDistance.toDouble())
+            .selector { entity, level ->  entity.passengers.isEmpty() && !(entity is AgeableMob && entity.age<0) }
+
+        override fun canUse(): Boolean {
+            nearestRideable = getServerLevel(gnome)
+                .getNearestEntity(
+                    PazTags.EntityTypes.GNOME_RIDEABLE, targeting,
+                    gnome, gnome.x, gnome.y, gnome.z,
+                    gnome.boundingBox.inflate(searchDistance.toDouble(), 3.5, searchDistance.toDouble())
+                )?: return false
+            return !gnome.isPassenger
+        }
+
+        override fun canContinueToUse(): Boolean {
+            return !gnome.isPassenger
+                    && nearestRideable != null
+                    && nearestRideable?.isAlive == true
+                    && nearestRideable?.passengers?.isEmpty()==true
+        }
+
+        override fun stop() { nearestRideable = null }
+
+        private fun checkAndRide(target: LivingEntity) {
+            val canRide = gnome.isWithinMeleeAttackRange(target) && gnome.sensing.hasLineOfSight(target)
+            if (canRide) gnome.startRiding(target)
+        }
+
+        override fun tick() {
+            if (nearestRideable!=null) {
+                if (--pathTick <= 0) {
+                    pathTick = adjustedTickDelay(6)
+                    gnome.getNavigation().moveTo(nearestRideable!!, speedModifier)
+                    checkAndRide(nearestRideable!!)
+                }
+            }
         }
     }
 }
