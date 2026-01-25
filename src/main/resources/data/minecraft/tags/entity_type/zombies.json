@@ -2,6 +2,7 @@
   "replace" : false,
   "values": [
     "plantz:browncoat",
+    "plantz:miner",
     "plantz:zombie_yeti"
   ]
 }

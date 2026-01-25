@@ -8,6 +8,7 @@ import joshxviii.plantz.model.projectiles.NeedleModel
 import joshxviii.plantz.model.projectiles.PeaModel
 import joshxviii.plantz.model.projectiles.SporeModel
 import joshxviii.plantz.model.zombies.BrownCoatModel
+import joshxviii.plantz.model.zombies.MinerModel
 import joshxviii.plantz.model.zombies.ZombieYetiModel
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
 import net.minecraft.client.model.geom.ModelLayerLocation
@@ -54,6 +55,7 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(MelonModel.LAYER_LOCATION) { MelonModel.createBodyLayer() }
 
         ModelLayerRegistry.registerModelLayer(BrownCoatModel.LAYER_LOCATION) { BrownCoatModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(MinerModel.LAYER_LOCATION) { MinerModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(ZombieYetiModel.LAYER_LOCATION) { ZombieYetiModel.createBodyLayer() }
 
         ModelLayerRegistry.registerModelLayer(GnomeModel.LAYER_LOCATION) { GnomeModel.createBodyLayer() }
@@ -94,6 +96,7 @@ object PazModels {
         EntityRenderers.register(PazEntities.MELON) { ProjectileRenderer(MelonModel(it.bakeLayer(MelonModel.LAYER_LOCATION)), it) }
 
         EntityRenderers.register(PazEntities.BROWN_COAT) { PazZombieRenderer(it) }
+        EntityRenderers.register(PazEntities.MINER) { PazZombieRenderer(it, MinerModel(it.bakeLayer(MinerModel.LAYER_LOCATION))) }
         EntityRenderers.register(PazEntities.ZOMBIE_YETI) { PazZombieRenderer(it, ZombieYetiModel(it.bakeLayer(ZombieYetiModel.LAYER_LOCATION))) }
 
         EntityRenderers.register(PazEntities.GNOME) { GnomeRenderer(it, GnomeModel(it.bakeLayer(GnomeModel.LAYER_LOCATION)))}

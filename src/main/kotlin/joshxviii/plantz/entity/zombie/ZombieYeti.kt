@@ -38,14 +38,6 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : Zombie(type, 
        xpReward = 15
     }
 
-    override fun isBaby(): Boolean = false
-    override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {}
-    override fun canPickUpLoot(): Boolean = false
-
-    override fun isSunSensitive(): Boolean {
-        return false
-    }
-
     override fun getAmbientSound(): SoundEvent {
         return PazSounds.ZOMBIE_YETI_AMBIENT
     }
@@ -59,14 +51,15 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : Zombie(type, 
         return SoundEvents.ZOMBIE_STEP
     }
 
+    override fun isBaby(): Boolean = false
+    override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {}
+    override fun canPickUpLoot(): Boolean = false
+    override fun isSunSensitive(): Boolean = false
+    override fun convertsInWater(): Boolean = false
+
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         val result = super.doHurtTarget(level, target)
-
         return result
-    }
-
-    override fun convertsInWater(): Boolean {
-        return false
     }
 
     override fun finalizeSpawn(

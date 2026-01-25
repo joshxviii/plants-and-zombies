@@ -2,22 +2,17 @@ package joshxviii.plantz
 
 import joshxviii.plantz.PazEntities.BROWN_COAT
 import joshxviii.plantz.PazEntities.GNOME
+import joshxviii.plantz.PazEntities.MINER
 import joshxviii.plantz.PazEntities.ZOMBIE_YETI
-import joshxviii.plantz.PazTags.EntityTypes.ATTACKS_PLANTS
 import joshxviii.plantz.entity.plant.Plant
-import joshxviii.plantz.entity.plants.WallNut
 import joshxviii.plantz.item.SeedPacketItem
 import joshxviii.plantz.item.SunItem
 import joshxviii.plantz.item.component.BlocksHeadDamage
 import joshxviii.plantz.item.component.SeedPacket
 import joshxviii.plantz.item.component.SunCost
-import joshxviii.plantz.mixin.MobAccessor
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
 import net.fabricmc.fabric.api.registry.FuelValueEvents
-import net.fabricmc.fabric.impl.content.registry.FuelRegistryEventsContextImpl
 import net.fabricmc.fabric.impl.item.ItemComponentTooltipProviderRegistryImpl
-import net.fabricmc.fabric.mixin.content.registry.FuelValuesMixin
 import net.minecraft.core.Direction
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponents
@@ -25,18 +20,14 @@ import net.minecraft.core.dispenser.BlockSource
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
-import net.minecraft.network.chat.CommonComponents
-import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.EquipmentSlotGroup
-import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -69,6 +60,7 @@ object PazItems {
     )
 
     @JvmField val BROWN_COAT_SPAWN_EGG: Item = registerSpawnEgg(BROWN_COAT)
+    @JvmField val MINER_SPAWN_EGG: Item = registerSpawnEgg(MINER)
     @JvmField val ZOMBIE_YETI_SPAWN_EGG: Item = registerSpawnEgg(ZOMBIE_YETI)
     @JvmField val GNOME_SPAWN_EGG: Item = registerSpawnEgg(GNOME)
 

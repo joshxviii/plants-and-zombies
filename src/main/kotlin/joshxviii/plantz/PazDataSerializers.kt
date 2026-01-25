@@ -5,11 +5,7 @@ import joshxviii.plantz.entity.gnome.GnomeSoundVariant
 import joshxviii.plantz.entity.gnome.GnomeVariant
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricEntityDataRegistry
 import net.minecraft.network.codec.ByteBufCodecs
-import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializer
-import net.minecraft.network.syncher.EntityDataSerializers
-import net.minecraft.network.syncher.SynchedEntityData
-import net.minecraft.world.entity.LivingEntity
 
 object PazDataSerializers {
     @JvmField val DATA_PLANT_STATE = EntityDataSerializer.forValueType<PlantState>(PlantState.STREAM_CODEC)
