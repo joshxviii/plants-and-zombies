@@ -9,6 +9,7 @@ import joshxviii.plantz.entity.plant.*
 import joshxviii.plantz.entity.plants.WallNut
 import joshxviii.plantz.entity.projectile.*
 import joshxviii.plantz.entity.zombie.BrownCoat
+import joshxviii.plantz.entity.zombie.DiscoZombie
 import joshxviii.plantz.entity.zombie.Miner
 import joshxviii.plantz.entity.zombie.ZombieYeti
 import joshxviii.plantz.mixin.MobAccessor
@@ -213,7 +214,7 @@ object PazEntities {
     @JvmField val MINER: EntityType<Miner> =  registerZombie(
         "miner",
         EntityType.Builder.of(::Miner, MobCategory.MONSTER)
-            .sized(0.6f, 1.95f)
+            .sized(0.63f, 1.95f)
             .eyeHeight(1.74f)
             .passengerAttachments(2.075f)
             .ridingOffset(-0.7f)
@@ -221,7 +222,7 @@ object PazEntities {
             .notInPeaceful(),
         attributes = Zombie.createAttributes()
             .add(Attributes.MAX_HEALTH, 25.0)
-            .add(Attributes.MOVEMENT_SPEED, 0.2)
+            .add(Attributes.MOVEMENT_SPEED, 0.21)
     )
     @JvmField val ZOMBIE_YETI: EntityType<ZombieYeti> =  registerZombie(
         "zombie_yeti",
@@ -240,6 +241,19 @@ object PazEntities {
             .add(Attributes.STEP_HEIGHT, 1.0)
             .add(Attributes.ENTITY_INTERACTION_RANGE, 2.5)
             .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, -10.0)
+    )
+    @JvmField val DISCO_ZOMBIE: EntityType<DiscoZombie> =  registerZombie(
+        "disco_zombie",
+        EntityType.Builder.of(::DiscoZombie, MobCategory.MONSTER)
+            .sized(0.64f, 2.0f)
+            .eyeHeight(1.74f)
+            .passengerAttachments(2.075f)
+            .ridingOffset(-0.7f)
+            .clientTrackingRange(8)
+            .notInPeaceful(),
+        attributes = Zombie.createAttributes()
+            .add(Attributes.MAX_HEALTH, 30.0)
+            .add(Attributes.MOVEMENT_SPEED, 0.32)
     )
     // endregion
 

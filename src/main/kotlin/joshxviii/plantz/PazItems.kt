@@ -1,6 +1,7 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.PazEntities.BROWN_COAT
+import joshxviii.plantz.PazEntities.DISCO_ZOMBIE
 import joshxviii.plantz.PazEntities.GNOME
 import joshxviii.plantz.PazEntities.MINER
 import joshxviii.plantz.PazEntities.ZOMBIE_YETI
@@ -62,6 +63,8 @@ object PazItems {
     @JvmField val BROWN_COAT_SPAWN_EGG: Item = registerSpawnEgg(BROWN_COAT)
     @JvmField val MINER_SPAWN_EGG: Item = registerSpawnEgg(MINER)
     @JvmField val ZOMBIE_YETI_SPAWN_EGG: Item = registerSpawnEgg(ZOMBIE_YETI)
+    @JvmField val DISCO_ZOMBIE_SPAWN_EGG: Item = registerSpawnEgg(DISCO_ZOMBIE)
+
     @JvmField val GNOME_SPAWN_EGG: Item = registerSpawnEgg(GNOME)
 
     private fun registerItem(

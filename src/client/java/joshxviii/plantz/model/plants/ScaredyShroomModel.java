@@ -23,7 +23,7 @@ public class ScaredyShroomModel extends EntityModel<@NotNull PlantRenderState> {
 	private final KeyframeAnimation idleAnimation;
 	private final KeyframeAnimation actionAnimation;
 	private final KeyframeAnimation initAnimation;
-	//private final KeyframeAnimation sleepAnimation;
+	private final KeyframeAnimation sleepAnimation;
 
 	public ScaredyShroomModel(ModelPart root) {
 		super(root);
@@ -34,7 +34,7 @@ public class ScaredyShroomModel extends EntityModel<@NotNull PlantRenderState> {
 		this.initAnimation = ScaredyShroomAnimation.init.bake(root);
 		this.idleAnimation = ScaredyShroomAnimation.idle.bake(root);
 		this.actionAnimation = ScaredyShroomAnimation.action.bake(root);
-		//this.sleepAnimation = ScaredyShroomAnimation.sleep.bake(root);
+		this.sleepAnimation = ScaredyShroomAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -61,6 +61,6 @@ public class ScaredyShroomModel extends EntityModel<@NotNull PlantRenderState> {
 		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
-		//this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
+		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

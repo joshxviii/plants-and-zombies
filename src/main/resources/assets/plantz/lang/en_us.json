@@ -28,9 +28,12 @@
   "item.plantz.seed_packet": "Seed Packet",
   "item.plantz.seed_packet.entity": "%s Seeds",
 
-  "item.plantz.gnome_spawn_egg": "Gnome Spawn Egg",
-  "item.plantz.zombie_yeti_spawn_egg": "Zombie Yeti Spawn Egg",
   "item.plantz.browncoat_spawn_egg": "Brown Coat Spawn Egg",
+  "item.plantz.miner_spawn_egg": "Miner Spawn Egg",
+  "item.plantz.zombie_yeti_spawn_egg": "Zombie Yeti Spawn Egg",
+  "item.plantz.disco_zombie_spawn_egg": "Disco Zombie Spawn Egg",
+
+  "item.plantz.gnome_spawn_egg": "Gnome Spawn Egg",
 
   "item.minecraft.potion.effect.hypnotize": "Potion of Hypnosis",
   "item.minecraft.splash_potion.effect.hypnotize": "Splash Potion of Hypnosis",
@@ -54,7 +57,9 @@
   "entity.plantz.scaredyshroom": "Scaredy Shroom",
   "entity.plantz.hypnoshroom": "Hypno Shroom",
   "entity.plantz.browncoat": "Brown Coat",
+  "entity.plantz.miner": "Miner",
   "entity.plantz.zombie_yeti": "Zombie Yeti",
+  "entity.plantz.disco_zombie": "Disco Zombie",
   "entity.plantz.gnome": "Garden Gnome",
   "entity.plantz.plant_pot_minecart": "Minecart with Plant Pot",
 
@@ -71,7 +76,16 @@
   "plantz.subtitles.entity.browncoat.ambient": "Browncoat groans",
   "plantz.subtitles.entity.browncoat.death": "Browncoat dies",
   "plantz.subtitles.entity.browncoat.hurt": "Browncoat hurt",
+  "plantz.subtitles.entity.miner.ambient": "Miner groans",
+  "plantz.subtitles.entity.miner.death": "Miner dies",
+  "plantz.subtitles.entity.miner.hurt": "Miner hurt",
   "plantz.subtitles.entity.zombie_yeti.ambient": "Zombie Yeti groans",
   "plantz.subtitles.entity.zombie_yeti.death": "Zombie Yeti dies",
-  "plantz.subtitles.entity.zombie_yeti.hurt": "Zombie Yeti hurt"
+  "plantz.subtitles.entity.zombie_yeti.hurt": "Zombie Yeti hurt",
+  "plantz.subtitles.entity.disco_zombie.ambient": "Disco Zombie groans",
+  "plantz.subtitles.entity.disco_zombie.death": "Disco Zombie  dies",
+  "plantz.subtitles.entity.disco_zombie.hurt": "Disco Zombie  hurt",
+
+  "plantz.subtitles.event.mob_effect.hypnotized": "Hypnotized mob",
+  "plantz.subtitles.event.mob_effect.zombie_omen": "Zombie raid omen"
 }

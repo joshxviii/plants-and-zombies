@@ -25,6 +25,9 @@ object PazSounds {
     @JvmField val ZOMBIE_YETI_AMBIENT = register("entity.zombie_yeti.ambient")
     @JvmField val ZOMBIE_YETI_HURT = register("entity.zombie_yeti.hurt")
     @JvmField val ZOMBIE_YETI_DEATH = register("entity.zombie_yeti.death")
+    @JvmField val DISCO_ZOMBIE_AMBIENT = register("entity.disco_zombie.ambient")
+    @JvmField val DISCO_ZOMBIE_HURT = register("entity.disco_zombie.hurt")
+    @JvmField val DISCO_ZOMBIE_DEATH = register("entity.disco_zombie.death")
 
     @JvmField var GNOME_SOUNDS: Map<GnomeSoundVariant, GnomeSoundVariant.GnomeSoundSet> = registerGnomeSoundVariants()
 
