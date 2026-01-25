@@ -347,7 +347,7 @@ class Gnome(type: EntityType<out Gnome>, level: Level) :Monster(type, level) {
         var pathTick: Int = 0
         val targeting: TargetingConditions = TargetingConditions.forCombat()
             .range(searchDistance.toDouble())
-            .selector { entity, level ->  entity.passengers.isEmpty() && !(entity is AgeableMob && entity.age<0) }
+            .selector { entity, _ ->  entity.passengers.isEmpty() && !(entity is AgeableMob && entity.age<0) }
 
         override fun canUse(): Boolean {
             nearestRideable = getServerLevel(gnome)

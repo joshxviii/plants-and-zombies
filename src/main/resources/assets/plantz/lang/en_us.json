@@ -48,16 +48,30 @@
   "entity.plantz.fire_peashooter": "Fire Peashooter",
   "entity.plantz.cactus": "Cactus",
   "entity.plantz.melonpult": "Melon Pult",
+  "entity.plantz.sunshroom": "Sun Shroom",
   "entity.plantz.puffshroom": "Puff Shroom",
   "entity.plantz.fumeshroom": "Fume Shroom",
-  "entity.plantz.sunshroom": "Sun Shroom",
-
+  "entity.plantz.scaredyshroom": "Scaredy Shroom",
+  "entity.plantz.hypnoshroom": "Hypno Shroom",
   "entity.plantz.browncoat": "Brown Coat",
   "entity.plantz.zombie_yeti": "Zombie Yeti",
-
   "entity.plantz.gnome": "Garden Gnome",
-
   "entity.plantz.plant_pot_minecart": "Minecart with Plant Pot",
 
-  "itemGroup.plantz.plantz_tab": "Plants & Zombies"
+  "itemGroup.plantz.plantz_tab": "Plants & Zombies",
+
+
+
+  "plantz.subtitles.projectile.deflected": "Projectile deflected",
+  "plantz.subtitles.projectile.fire": "Projectile fired",
+
+  "plantz.subtitles.entity.chomper.attack": "Chomper bites",
+  "plantz.subtitles.entity.zombie.eat": "Zombie bites",
+
+  "plantz.subtitles.entity.browncoat.ambient": "Browncoat groans",
+  "plantz.subtitles.entity.browncoat.death": "Browncoat dies",
+  "plantz.subtitles.entity.browncoat.hurt": "Browncoat hurt",
+  "plantz.subtitles.entity.zombie_yeti.ambient": "Zombie Yeti groans",
+  "plantz.subtitles.entity.zombie_yeti.death": "Zombie Yeti dies",
+  "plantz.subtitles.entity.zombie_yeti.hurt": "Zombie Yeti hurt"
 }

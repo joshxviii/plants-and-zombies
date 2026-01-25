@@ -95,7 +95,8 @@ object PazEntities {
         "cherrybomb",
         EntityType.Builder.of(::CherryBomb, MobCategory.CREATURE),
         sunCost = 10,
-        height = 0.5f,
+        width = 0.8f,
+        height = 0.76f,
     )
     @JvmField val POTATO_MINE: EntityType<PotatoMine> = registerPlant(
         "potatomine",
@@ -156,6 +157,16 @@ object PazEntities {
             followRange = 10.0
         )
     )
+    @JvmField val SCAREDY_SHROOM: EntityType<ScaredyShroom> = registerPlant(
+        "scaredyshroom", EntityType.Builder.of(::ScaredyShroom, MobCategory.CREATURE),
+        sunCost = 3,
+        width = 0.45f,
+        height = 0.9f,
+        eyeHeight = 0.5f,
+        attributes = Plant.Companion.PlantAttributes(
+            followRange = 5.0
+        )
+    )
     @JvmField val FUME_SHROOM: EntityType<FumeShroom> = registerPlant(
         "fumeshroom",
         EntityType.Builder.of(::FumeShroom, MobCategory.CREATURE),
@@ -171,6 +182,17 @@ object PazEntities {
         EntityType.Builder.of(::SunShroom, MobCategory.CREATURE),
         sunCost = 3,
         height = 0.85f
+    )
+    @JvmField val HYPNOSHROOM: EntityType<HypnoShroom> = registerPlant(
+        "hypnoshroom", EntityType.Builder.of(::HypnoShroom, MobCategory.CREATURE),
+        sunCost = 7,
+        width = 0.6f,
+        height = 1.3f,
+        eyeHeight = 0.3f,
+        attributes = Plant.Companion.PlantAttributes(
+            attackDamage = 2.0,
+            followRange = 20.0
+        )
     )
     // endregion
 

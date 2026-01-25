@@ -96,10 +96,24 @@
         }
       },
       {
+        "when": { "id": "plantz:scaredyshroom" },
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/seed_packet_scaredyshroom"
+        }
+      },
+      {
         "when": { "id": "plantz:sunshroom" },
         "model": {
           "type": "minecraft:model",
           "model": "plantz:item/seed_packet_sunshroom"
+        }
+      },
+      {
+        "when": { "id": "plantz:hypnoshroom" },
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/seed_packet_hypnoshroom"
         }
       }
     ],

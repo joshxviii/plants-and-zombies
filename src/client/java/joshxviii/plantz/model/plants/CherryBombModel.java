@@ -15,6 +15,7 @@ public class CherryBombModel extends EntityModel<@NotNull PlantRenderState> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("cherrybomb"), "main");
 	private final ModelPart body;
 	private final ModelPart stem;
+	private final ModelPart stem2;
 	private final ModelPart leaves;
 	private final ModelPart leaf1;
 	private final ModelPart leaf1_tip_2;
@@ -29,6 +30,7 @@ public class CherryBombModel extends EntityModel<@NotNull PlantRenderState> {
 		super(root);
 		this.body = root.getChild("body");
 		this.stem = this.body.getChild("stem");
+		this.stem2 = this.stem.getChild("stem2");
 		this.leaves = this.stem.getChild("leaves");
 		this.leaf1 = this.leaves.getChild("leaf1");
 		this.leaf1_tip_2 = this.leaf1.getChild("leaf1_tip_2");
@@ -44,9 +46,11 @@ public class CherryBombModel extends EntityModel<@NotNull PlantRenderState> {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, -1.0F));
+		PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(1.0F, 6.0F, -1.0F));
 
-		PartDefinition stem = body.addOrReplaceChild("stem", CubeListBuilder.create().texOffs(32, 0).addBox(-6.0F, -0.125F, -0.25F, 12.0F, 11.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -17.875F, 1.25F));
+		PartDefinition stem = body.addOrReplaceChild("stem", CubeListBuilder.create(), PartPose.offset(-1.0F, 0.125F, 1.25F));
+
+		PartDefinition stem2 = stem.addOrReplaceChild("stem2", CubeListBuilder.create().texOffs(32, 0).addBox(-6.0F, -11.0F, 0.0F, 12.0F, 11.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 10.875F, -0.25F));
 
 		PartDefinition leaves = stem.addOrReplaceChild("leaves", CubeListBuilder.create(), PartPose.offset(1.0F, -0.125F, -0.25F));
 
