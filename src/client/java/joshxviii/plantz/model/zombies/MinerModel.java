@@ -5,20 +5,30 @@
 
 package joshxviii.plantz.model.zombies;
 
+import joshxviii.plantz.animation.plants.CactusAnimation;
+import joshxviii.plantz.animation.zombies.MinerAnimation;
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.model.monster.zombie.ZombieModel;
 import net.minecraft.client.renderer.entity.state.ZombieRenderState;
+import net.minecraft.world.entity.AnimationState;
+import net.minecraft.world.item.SwingAnimationType;
 import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
 public class MinerModel extends ZombieModel<@NotNull ZombieRenderState> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("miner"), "main");
+	private final KeyframeAnimation actionAnimation;
+	private final AnimationState mineAnimationState = new AnimationState();
+
+
 	public MinerModel(final ModelPart root) {
 		super(root.getChild("root"));
+		this.actionAnimation = MinerAnimation.action.bake(root.getChild("root"));
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -50,8 +60,14 @@ public class MinerModel extends ZombieModel<@NotNull ZombieRenderState> {
 		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
 
+	//TODO fix swing animation
 	@Override
 	public void setupAnim(@NotNull ZombieRenderState state) {
+		float tempAttackTime = state.attackTime;
+		state.attackTime = 0;
 		super.setupAnim(state);
+		state.attackTime = tempAttackTime;
+		actionAnimation.applyWalk(state.attackTime*16f, 1.0f, 1.0f, 0.4f);
+
 	}
 }

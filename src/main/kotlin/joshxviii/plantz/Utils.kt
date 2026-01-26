@@ -45,8 +45,6 @@ fun <T : LivingEntity?> ServerEntityGetter.getFurthestEntities(
     return result
 }
 
-
-
 fun List<String>.permutationsDescending(): List<String> = buildList {
     add(this@permutationsDescending.joinToString("_"))
     for (i in size - 1 downTo 1) {

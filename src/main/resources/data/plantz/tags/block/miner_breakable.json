@@ -1,0 +1,8 @@
+{
+  "values": [
+    "minecraft:pointed_dripstone",
+    "#minecraft:sculk_replaceable",
+    "#minecraft:overworld_carver_replaceables",
+    "#minecraft:nether_carver_replaceables"
+  ]
+}

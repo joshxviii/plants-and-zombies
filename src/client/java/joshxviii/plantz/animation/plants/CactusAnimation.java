@@ -1,9 +1,8 @@
-package joshxviii.plantz.animation;
+package joshxviii.plantz.animation.plants;
 
 import net.minecraft.client.animation.AnimationDefinition;
 
 import net.minecraft.client.animation.AnimationChannel;
-import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
 import net.minecraft.client.animation.KeyframeAnimations;
 

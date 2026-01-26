@@ -1,7 +1,7 @@
 package joshxviii.plantz.model.plants;
 
 import joshxviii.plantz.PlantRenderState;
-import joshxviii.plantz.animation.PuffShroomAnimation;
+import joshxviii.plantz.animation.plants.PuffShroomAnimation;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;

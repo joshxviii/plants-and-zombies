@@ -3,7 +3,7 @@ package joshxviii.plantz.model.plants;// Made with Blockbench 5.0.7
 // Paste this class into your mod and generate all required imports
 
 import joshxviii.plantz.PlantRenderState;
-import joshxviii.plantz.animation.CactusAnimation;
+import joshxviii.plantz.animation.plants.CactusAnimation;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;

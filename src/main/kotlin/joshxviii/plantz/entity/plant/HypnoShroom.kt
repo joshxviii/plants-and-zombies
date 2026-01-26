@@ -31,7 +31,7 @@ class HypnoShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEn
     override fun actuallyHurt(level: ServerLevel, source: DamageSource, dmg: Float) {
         super.actuallyHurt(level, source, dmg)
         val attacker = source.entity
-        if (attacker is LivingEntity) {
+        if (attacker is LivingEntity && !attacker.isInvulnerable) {
             attacker.addEffect(MobEffectInstance(PazEffects.HYPNOTIZE, 800, 0))
         }
     }

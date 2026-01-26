@@ -4,7 +4,7 @@ package joshxviii.plantz.model.plants;// Made with Blockbench 5.0.7
 
 
 import joshxviii.plantz.PlantRenderState;
-import joshxviii.plantz.animation.SunShroomAnimation;
+import joshxviii.plantz.animation.plants.SunShroomAnimation;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;

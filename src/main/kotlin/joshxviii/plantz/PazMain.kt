@@ -1,6 +1,7 @@
 package joshxviii.plantz
 
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.registry.LandPathTypeRegistry
 import org.apache.logging.log4j.LogManager
 
 
