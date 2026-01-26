@@ -15,7 +15,7 @@ import kotlin.math.min
 class MineBlocksToTargetGoal(
     val miner: PathfinderMob,
     private val maxBreakRange: Float = 2.25f,
-    private val verticalBlockRange: Int = 4,
+    private val verticalBlockRange: Int = 3,
     private val breakCooldown: Int = 40
 ) : Goal() {
     private val level = miner.level() as ServerLevel
@@ -45,9 +45,10 @@ class MineBlocksToTargetGoal(
         val targetPos = miner.target?.blockPosition() ?: return false
 
         val minerPos = miner.blockPosition()
-        if ( abs(minerPos.y - targetPos.y) < verticalBlockRange
-            && minerPos.x == targetPos.x
-            && minerPos.z == targetPos.z) {
+        if ( abs(minerPos.y - targetPos.y)>1
+            && abs(minerPos.x - targetPos.x)<2
+            && abs(minerPos.z - targetPos.z)<2
+        ) {
             for (i in 0..min(abs(minerPos.y - targetPos.y), verticalBlockRange)) {
                 val testBlock = if (minerPos.y < targetPos.y) minerPos.above(i) else minerPos.below(i)
                 //level.levelEvent(LevelEvent.PARTICLES_ELECTRIC_SPARK, testBlock, 15)
@@ -82,10 +83,11 @@ class MineBlocksToTargetGoal(
         super.tick()
         val targetBlock = breakTargetPos ?: return
         if (!isBlockMineable(targetBlock)) return
+        val targetBlockState = level.getBlockState(targetBlock)
         if (breakTime>=0) {
-            level.levelEvent(LevelEvent.PARTICLES_ELECTRIC_SPARK, targetBlock, 15)
+            //level.levelEvent(LevelEvent.PARTICLES_ELECTRIC_SPARK, targetBlock, 15)
             if (!miner.swinging) {
-                level.playSound(null, targetBlock, level.getBlockState(targetBlock).soundType.hitSound, SoundSource.BLOCKS, 0.3f,
+                level.playSound(null, targetBlock, targetBlockState.soundType.hitSound, SoundSource.BLOCKS, 0.3f,
                     level.random.nextFloat() * 0.2f + 0.5f)
                 miner.swing(miner.usedItemHand)
             }
@@ -94,16 +96,20 @@ class MineBlocksToTargetGoal(
 
         val blockBreakTime = getBlockBreakTime(breakTargetPos)
 
-        val progress = (this.breakTime  * 10f / blockBreakTime).toInt()
+        val progress = if (blockBreakTime>0) (this.breakTime * 10 / blockBreakTime) else -1
         if (progress != this.lastBreakProgress) {
             level.destroyBlockProgress(miner.id, targetBlock, progress)
             this.lastBreakProgress = progress
         }
 
-        if (breakTime >= blockBreakTime) {// break block
+        if (progress >= 10) {// break block
             breakTime=0
-            level.destroyBlock(targetBlock, true, miner)
-            level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, targetBlock, Block.getId(level.getBlockState(targetBlock)))
+            level.destroyBlock(
+                targetBlock,
+                !targetBlockState.requiresCorrectToolForDrops() || miner.mainHandItem.isCorrectToolForDrops(targetBlockState),
+                miner
+            )
+            level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, targetBlock, Block.getId(targetBlockState))
         }
     }
 
@@ -114,8 +120,11 @@ class MineBlocksToTargetGoal(
 
     private fun getBlockBreakTime(pos: BlockPos?): Int {
         if (pos == null) return -1
-        val destroyTime = level.getBlockState(pos).getDestroySpeed(level, pos)
-        return (destroyTime * 20).toInt()
+        val blockState = level.getBlockState(pos)
+        val itemSpeed = miner.mainHandItem.getDestroySpeed(blockState)
+        val destroyTime = blockState.getDestroySpeed(level, pos)
+        val finalBreakTime = ((destroyTime / itemSpeed)*75).toInt()
+        return finalBreakTime
     }
 
     private fun isBlockWithinRange(pos: BlockPos?): Boolean {
@@ -126,7 +135,9 @@ class MineBlocksToTargetGoal(
 
     private fun isBlockMineable(pos: BlockPos?) : Boolean {
         if (pos == null) return false
+
         val blockState = miner.level().getBlockState(pos)
+        if(!blockState.isAir) return true
         return (blockState.`is`(PazTags.BlockTags.MINER_BREAKABLE))
     }
 

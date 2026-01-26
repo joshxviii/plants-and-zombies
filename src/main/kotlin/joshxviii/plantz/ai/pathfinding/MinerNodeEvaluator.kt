@@ -22,6 +22,11 @@ class MinerNodeEvaluator : WalkNodeEvaluator() {
         return blockState.`is`(PazTags.BlockTags.MINER_BREAKABLE)
     }
 
+    override fun isDiagonalValid(diagonal: Node?): Boolean {
+        if (userMiner) return false
+        return super.isDiagonalValid(diagonal)
+    }
+
     override fun getPathType(mob: Mob, pos: BlockPos): PathType {
         return super.getPathType(mob, pos)
     }

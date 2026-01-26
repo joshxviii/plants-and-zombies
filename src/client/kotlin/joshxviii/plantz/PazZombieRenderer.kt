@@ -19,8 +19,8 @@ class PazZombieRenderer(
     context: EntityRendererProvider.Context,
     private val defaultModel: ZombieModel<ZombieRenderState> = ZombieModel(context.bakeLayer(ModelLayers.ZOMBIE)),
     private val bodyModel: ZombieModel<ZombieRenderState> = ZombieModel(context.bakeLayer(ModelLayers.ZOMBIE_BABY)),
-    armorSet: ArmorModelSet<ModelLayerLocation> = ModelLayers.ZOMBIE_ARMOR,
-    babyArmorSet: ArmorModelSet<ModelLayerLocation> = ModelLayers.ZOMBIE_BABY_ARMOR
+    armorSet: ArmorModelSet<ModelLayerLocation>? = ModelLayers.ZOMBIE_ARMOR,
+    babyArmorSet: ArmorModelSet<ModelLayerLocation>? = ModelLayers.ZOMBIE_BABY_ARMOR
 ) : AbstractZombieRenderer<Zombie, ZombieRenderState, ZombieModel<ZombieRenderState>>(
     context,
     defaultModel,
