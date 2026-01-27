@@ -40,13 +40,9 @@ class PazZombieRenderer(
         (state as PazZombieRenderState)
         state.texturePath = BuiltInRegistries.ENTITY_TYPE.getKey(entity.type).path
         state.initAnimationState.startIfStopped(0)
-        if (entity is DiscoZombie) {
-            state.actionTime = entity.summonTime
-        }
-        else state.actionTime = 0
-        if (state.actionTime > 0) {
-            state.initAnimationState.startIfStopped(0)
-        }
+//        if (entity is DiscoZombie) state.actionTime = entity.summonTime
+//        state.actionAnimationState.startIfStopped(state.actionTime)
+//        if (state.actionTime<=0) state.actionAnimationState.stop()
     }
 
     override fun getTextureLocation(state: ZombieRenderState): Identifier {
