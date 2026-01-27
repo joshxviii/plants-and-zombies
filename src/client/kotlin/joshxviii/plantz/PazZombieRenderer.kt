@@ -14,17 +14,18 @@ import net.minecraft.client.renderer.entity.state.ZombieRenderState
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.monster.zombie.Zombie
+import org.joml.Vector3f
 
 class PazZombieRenderer(
     context: EntityRendererProvider.Context,
     private val defaultModel: ZombieModel<ZombieRenderState> = ZombieModel(context.bakeLayer(ModelLayers.ZOMBIE)),
-    private val bodyModel: ZombieModel<ZombieRenderState> = ZombieModel(context.bakeLayer(ModelLayers.ZOMBIE_BABY)),
-    armorSet: ArmorModelSet<ModelLayerLocation>? = ModelLayers.ZOMBIE_ARMOR,
-    babyArmorSet: ArmorModelSet<ModelLayerLocation>? = ModelLayers.ZOMBIE_BABY_ARMOR
+    private val babyModel: ZombieModel<ZombieRenderState> = ZombieModel(context.bakeLayer(ModelLayers.ZOMBIE_BABY)),
+    armorSet: ArmorModelSet<ModelLayerLocation> = ModelLayers.ZOMBIE_ARMOR,
+    babyArmorSet: ArmorModelSet<ModelLayerLocation> = ModelLayers.ZOMBIE_BABY_ARMOR
 ) : AbstractZombieRenderer<Zombie, ZombieRenderState, ZombieModel<ZombieRenderState>>(
     context,
     defaultModel,
-    bodyModel,
+    babyModel,
     ArmorModelSet.bake<ZombieModel<ZombieRenderState>>(armorSet, context.modelSet) { root: ModelPart -> ZombieModel(root) },
     ArmorModelSet.bake<ZombieModel<ZombieRenderState>>(babyArmorSet, context.modelSet) { root: ModelPart -> ZombieModel(root) }
 ) {

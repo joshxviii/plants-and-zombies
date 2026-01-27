@@ -9,6 +9,7 @@ import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.LevelEvent
+import net.minecraft.world.level.gamerules.GameRules
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -42,6 +43,7 @@ class MineBlocksToTargetGoal(
 
     override fun canUse(): Boolean {
         if (miner.isDeadOrDying) return false
+        if (level.gameRules.get(GameRules.MOB_GRIEFING)==false) return false
         val targetPos = miner.target?.blockPosition() ?: return false
 
         val minerPos = miner.blockPosition()
@@ -64,8 +66,8 @@ class MineBlocksToTargetGoal(
 
         for (i in path.nextNodeIndex until min(path.nextNodeIndex + 2, path.nodeCount)) {
             val node = path.getNode(i)
-            // Check vertical positions (top then bottom)
-            listOf(node.y+1, node.y).forEach { y ->
+            // Check vertical positions (middle, top then bottom)
+            listOf(node.y+1, node.y+2, node.y).forEach { y ->
                 val testBlock = BlockPos(node.x, y, node.z)
                 //level.levelEvent(LevelEvent.PARTICLES_ELECTRIC_SPARK, testBlock, 15)
 
@@ -110,6 +112,8 @@ class MineBlocksToTargetGoal(
                 miner
             )
             level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, targetBlock, Block.getId(targetBlockState))
+            (miner.navigation.nodeEvaluator as? MinerNodeEvaluator)?.userMiner = false
+            miner.navigation.recomputePath()
         }
     }
 
@@ -122,8 +126,9 @@ class MineBlocksToTargetGoal(
         if (pos == null) return -1
         val blockState = level.getBlockState(pos)
         val itemSpeed = miner.mainHandItem.getDestroySpeed(blockState)
+        val modifier = if (miner.mainHandItem.isCorrectToolForDrops(blockState)) 0.5f else 1.0f
         val destroyTime = blockState.getDestroySpeed(level, pos)
-        val finalBreakTime = ((destroyTime / itemSpeed)*75).toInt()
+        val finalBreakTime = ((destroyTime / itemSpeed)*75*modifier).toInt()
         return finalBreakTime
     }
 
@@ -135,9 +140,7 @@ class MineBlocksToTargetGoal(
 
     private fun isBlockMineable(pos: BlockPos?) : Boolean {
         if (pos == null) return false
-
         val blockState = miner.level().getBlockState(pos)
-        if(!blockState.isAir) return true
         return (blockState.`is`(PazTags.BlockTags.MINER_BREAKABLE))
     }
 

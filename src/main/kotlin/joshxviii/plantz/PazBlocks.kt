@@ -35,7 +35,7 @@ object PazBlocks {
         "plant_pot",
         BlockBehaviour.Properties.of()
             .sound(SoundType.STONE)
-            .instabreak()
+            .strength(0.2F)
             .noOcclusion()
             .pushReaction(PushReaction.DESTROY),
         ::PlantPotBlock
