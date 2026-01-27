@@ -17,6 +17,7 @@ import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
@@ -39,7 +40,7 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : Zombie(type
         val SUMMON_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(DiscoZombie::class.java, EntityDataSerializers.INT)
     }
 
-    var isSummoning = false
+    val summonAnimation : AnimationState = AnimationState()
     var summonTime: Int
         get() = this.entityData.get(SUMMON_TIME_ID)
         set(value) = this.entityData.set(SUMMON_TIME_ID, value)
@@ -55,15 +56,18 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : Zombie(type
 
     override fun tick() {
         super.tick()
-        if(isSummoning) summonTime++
-        if (summonTime>=40) {
+        if(summonTime>0) {
+            summonAnimation.startIfStopped(tickCount)
+            summonTime++
+        }
+        if (summonTime>40) {
+            summonAnimation.stop()
             summonTime=0
-            isSummoning = false
         }
     }
 
     override fun getMoveControl(): MoveControl {
-        if (isSummoning) return noMoveControl
+        if (summonTime>0) return noMoveControl
         return super.getMoveControl()
     }
 
@@ -123,7 +127,7 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : Zombie(type
 
         override fun tick() {
             super.tick()
-            if (--summonTime == 0) summoner.isSummoning = true
+            if (--summonTime == 0) summoner.summonTime++
             if (summonTime<-8) trySummonBackup()
         }
 
