@@ -1,9 +1,6 @@
 {
   "replace" : false,
   "values": [
-    "plantz:browncoat",
-    "plantz:miner",
-    "plantz:zombie_yeti",
-    "plantz:disco_zombie"
+    "#plantz:zombie_raider"
   ]
 }

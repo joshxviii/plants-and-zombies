@@ -1,6 +1,7 @@
 package joshxviii.plantz
 
 import com.mojang.blaze3d.vertex.PoseStack
+import joshxviii.plantz.entity.zombie.DiscoZombie
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.ModelLayers
@@ -13,6 +14,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.state.ZombieRenderState
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
+import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.entity.monster.zombie.Zombie
 import org.joml.Vector3f
 
@@ -37,6 +39,14 @@ class PazZombieRenderer(
         super.extractRenderState(entity, state, partialTicks)
         (state as PazZombieRenderState)
         state.texturePath = BuiltInRegistries.ENTITY_TYPE.getKey(entity.type).path
+        state.initAnimationState.startIfStopped(0)
+        if (entity is DiscoZombie) {
+            state.actionTime = entity.summonTime
+        }
+        else state.actionTime = 0
+        if (state.actionTime > 0) {
+            state.initAnimationState.startIfStopped(0)
+        }
     }
 
     override fun getTextureLocation(state: ZombieRenderState): Identifier {
@@ -48,4 +58,7 @@ class PazZombieRenderer(
 
 class PazZombieRenderState : ZombieRenderState() {
     var texturePath: String = "default"
+    var actionTime: Int = 0
+    val initAnimationState: AnimationState = AnimationState()
+    val actionAnimationState: AnimationState = AnimationState()
 }

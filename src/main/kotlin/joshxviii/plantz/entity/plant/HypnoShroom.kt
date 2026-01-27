@@ -2,6 +2,7 @@ package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.PazSounds
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.entity.projectile.Spore
 import net.minecraft.server.level.ServerLevel
@@ -33,6 +34,7 @@ class HypnoShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEn
         val attacker = source.entity
         if (attacker is LivingEntity && !attacker.isInvulnerable) {
             attacker.addEffect(MobEffectInstance(PazEffects.HYPNOTIZE, 800, 0))
+            playSound(PazSounds.HYPNOTIZED)
         }
     }
 }

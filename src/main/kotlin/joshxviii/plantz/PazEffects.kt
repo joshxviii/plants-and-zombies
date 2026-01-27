@@ -19,8 +19,7 @@ object PazEffects {
     @JvmField val TOXIC: Holder<MobEffect> = register("toxic",
         ToxicMobEffect(MobEffectCategory.HARMFUL, 10762143))
     @JvmField val HYPNOTIZE: Holder<MobEffect> = register("hypnotize",
-        HypnotizedMobEffect(MobEffectCategory.NEUTRAL, 15841255)
-            .withSoundOnAdded(PazSounds.HYPNOTIZED))
+        HypnotizedMobEffect(MobEffectCategory.NEUTRAL, 15841255))
     @JvmField val ZOMBIE_OMEN : Holder<MobEffect> = register("zombie_omen",
         ZombieOmenMobEffect(MobEffectCategory.NEUTRAL, 1297708, PazServerParticles.ZOMBIE_OMEN)
             .withSoundOnAdded(PazSounds.APPLY_ZOMBIE_OMEN))

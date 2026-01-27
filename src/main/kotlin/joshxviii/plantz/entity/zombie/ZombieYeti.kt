@@ -102,10 +102,11 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : Zombie(type, 
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
+        val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
         val random = level.random
         if (spawnReason != EntitySpawnReason.CONVERSION) {
 
-            if (random.nextFloat() < 0.08 && getItemBySlot(EquipmentSlot.HEAD).isEmpty) {
+            if (random.nextFloat() < 0.06 && getItemBySlot(EquipmentSlot.HEAD).isEmpty) {
                 setItemSlot(EquipmentSlot.HEAD, Items.BUCKET.defaultInstance)
             }
 
@@ -120,6 +121,6 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : Zombie(type, 
             }
         }
 
-        return groupData
+        return data
     }
 }

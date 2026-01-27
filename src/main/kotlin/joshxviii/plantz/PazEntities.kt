@@ -222,9 +222,10 @@ object PazEntities {
             .clientTrackingRange(8)
             .notInPeaceful(),
         attributes = Zombie.createAttributes()
+            .add(Attributes.ATTACK_DAMAGE, 2.0)
             .add(Attributes.MAX_HEALTH, 25.0)
             .add(Attributes.MOVEMENT_SPEED, 0.21)
-            .add(Attributes.FOLLOW_RANGE, 10.0)
+            .add(Attributes.FOLLOW_RANGE, 9.0)
     )
     @JvmField val ZOMBIE_YETI: EntityType<ZombieYeti> =  registerZombie(
         "zombie_yeti",
@@ -254,8 +255,8 @@ object PazEntities {
             .clientTrackingRange(8)
             .notInPeaceful(),
         attributes = Zombie.createAttributes()
-            .add(Attributes.MAX_HEALTH, 30.0)
-            .add(Attributes.MOVEMENT_SPEED, 0.32)
+            .add(Attributes.MAX_HEALTH, 35.0)
+            .add(Attributes.MOVEMENT_SPEED, 0.24)
     )
     @JvmField val BACKUP_DANCER: EntityType<BackupDancer> =  registerZombie(
         "backup_dancer",
@@ -267,8 +268,10 @@ object PazEntities {
             .clientTrackingRange(8)
             .notInPeaceful(),
         attributes = Zombie.createAttributes()
-            .add(Attributes.MAX_HEALTH, 20.0)
+            .add(Attributes.ATTACK_DAMAGE, 2.0)
+            .add(Attributes.MAX_HEALTH, 10.0)
             .add(Attributes.MOVEMENT_SPEED, 0.3)
+            .add(Attributes.FOLLOW_RANGE, 16.0)
     )
     // endregion
 

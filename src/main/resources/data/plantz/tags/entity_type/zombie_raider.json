@@ -1,9 +1,9 @@
 {
   "values": [
-    "#minecraft:zombies",
     "plantz:browncoat",
     "plantz:miner",
     "plantz:zombie_yeti",
-    "plantz:disco_zombie"
+    "plantz:disco_zombie",
+    "plantz:backup_dancer"
   ]
 }

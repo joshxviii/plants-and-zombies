@@ -5,20 +5,31 @@
 
 package joshxviii.plantz.model.zombies;
 
+import joshxviii.plantz.PazEntities;
+import joshxviii.plantz.PazZombieRenderState;
+import joshxviii.plantz.animation.zombies.DiscoZombieAnimation;
+import joshxviii.plantz.animation.zombies.MinerAnimation;
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.model.monster.zombie.ZombieModel;
 import net.minecraft.client.renderer.entity.state.ZombieRenderState;
+import net.minecraft.world.entity.AnimationState;
 import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
 public class DiscoZombieModel extends ZombieModel<@NotNull ZombieRenderState> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("disco_zombie"), "main");
+	private final KeyframeAnimation initAnimation;
+	private final KeyframeAnimation actionAnimation;
+
 	public DiscoZombieModel(final ModelPart root) {
 		super(root.getChild("root"));
+		this.initAnimation = DiscoZombieAnimation.init.bake(root.getChild("root"));
+		this.actionAnimation = DiscoZombieAnimation.dance.bake(root.getChild("root"));
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -54,5 +65,10 @@ public class DiscoZombieModel extends ZombieModel<@NotNull ZombieRenderState> {
 	@Override
 	public void setupAnim(@NotNull ZombieRenderState state) {
 		super.setupAnim(state);
+		PazZombieRenderState pazState = (PazZombieRenderState) state;
+		if (pazState.entityType == PazEntities.BACKUP_DANCER) {
+			initAnimation.apply(pazState.getInitAnimationState(), pazState.ageInTicks);
+		}
+		actionAnimation.apply(pazState.getActionAnimationState(),  pazState.ageInTicks);
 	}
 }

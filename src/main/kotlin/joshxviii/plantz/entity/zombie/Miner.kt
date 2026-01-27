@@ -74,14 +74,13 @@ class Miner(type: EntityType<out Miner>, level: Level) : Zombie(type, level) {
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        var groupData = groupData
-        groupData = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
+        val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
         if (spawnReason != EntitySpawnReason.CONVERSION) {
             isLeftHanded = false
             setCanBreakDoors(true)
             setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_PICKAXE.defaultInstance)
         }
 
-        return groupData
+        return data
     }
 }

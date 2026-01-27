@@ -356,7 +356,7 @@ class Gnome(type: EntityType<out Gnome>, level: Level) :Monster(type, level) {
                     gnome, gnome.x, gnome.y, gnome.z,
                     gnome.boundingBox.inflate(searchDistance.toDouble(), 3.5, searchDistance.toDouble())
                 )?: return false
-            return !gnome.isPassenger
+            return !gnome.isPassenger && !gnome.isDeadOrDying
         }
 
         override fun canContinueToUse(): Boolean {

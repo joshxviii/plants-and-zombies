@@ -1,6 +1,9 @@
 package joshxviii.plantz.entity.zombie
 
+import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazSounds
+import net.minecraft.core.particles.BlockParticleOption
+import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -8,12 +11,21 @@ import net.minecraft.util.RandomSource
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
+import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.entity.monster.zombie.Zombie
-import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.phys.Vec3
 
-class BackupDancer(type: EntityType<out BackupDancer>, level: Level) : Zombie(type, level) {
+class BackupDancer(type: EntityType<out BackupDancer> = PazEntities.BACKUP_DANCER, level: Level, position: Vec3? = null,) : Zombie(type, level) {
+
+    init {
+        if (position != null) setPos(position)
+    }
+
+    private val noMoveControl = object : MoveControl(this) {
+        override fun getSpeedModifier(): Double = 0.0
+    }
 
     override fun getAmbientSound(): SoundEvent {
         return PazSounds.DISCO_ZOMBIE_AMBIENT
@@ -39,18 +51,33 @@ class BackupDancer(type: EntityType<out BackupDancer>, level: Level) : Zombie(ty
     override fun isSunSensitive(): Boolean = false
     override fun convertsInWater(): Boolean = false
 
+    override fun getMoveControl(): MoveControl {
+        if (tickCount < 40) return noMoveControl
+        return super.getMoveControl()
+    }
+
+    override fun tick() {
+        super.tick()
+        val level = this.level()
+        if (tickCount < 15) {// dig out of ground animation
+            if (level is ServerLevel) level.sendParticles(
+                BlockParticleOption(ParticleTypes.BLOCK, level.getBlockState(blockPosition().below())),
+                this.x, this.y + 0.05, this.z, 8, 0.25, 0.0, 0.25, 0.4
+            )
+        }
+    }
+
     override fun finalizeSpawn(
         level: ServerLevelAccessor,
         difficulty: DifficultyInstance,
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        var groupData = groupData
-        groupData = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
+        val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
         if (spawnReason != EntitySpawnReason.CONVERSION) {
             setCanBreakDoors(true)
         }
 
-        return groupData
+        return data
     }
 }
