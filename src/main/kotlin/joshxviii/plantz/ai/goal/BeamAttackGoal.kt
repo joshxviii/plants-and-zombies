@@ -13,6 +13,7 @@ import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
+import java.util.function.Predicate
 
 class BeamAttackGoal(
     usingEntity: PathfinderMob,
@@ -20,12 +21,13 @@ class BeamAttackGoal(
     actionDelay: Int = 0,
     actionStartEffect: () -> Unit = {},
     actionEndEffect: () -> Unit = {},
+    actionPredicate: Predicate<PathfinderMob> = Predicate { true },
     val beamRange : Double = 10.0,
     val beamWidth : Double = 3.25,
     val damageType: ResourceKey<DamageType> = PazDamageTypes.PLANT,
     val beamParticles : ParticleOptions? = null,
-    val afterHitEntityEffect: (target: LivingEntity) -> Unit = {}
-) : ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
+    val afterHitEntityEffect: (target: LivingEntity) -> Unit = {},
+) : ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect, actionPredicate) {
     private var piercedEntities: MutableList<Entity>? = null
 
     override fun canUse(): Boolean = (

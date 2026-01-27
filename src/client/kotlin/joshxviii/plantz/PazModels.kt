@@ -114,6 +114,7 @@ object PazModels {
         EntityRenderers.register(PazEntities.BROWN_COAT) { PazZombieRenderer(it) }
         EntityRenderers.register(PazEntities.MINER) { PazZombieRenderer(it, MinerModel(it.bakeLayer(MinerModel.LAYER_LOCATION))) }
         EntityRenderers.register(PazEntities.ZOMBIE_YETI) { PazZombieRenderer(it, ZombieYetiModel(it.bakeLayer(ZombieYetiModel.LAYER_LOCATION)))}
+        EntityRenderers.register(PazEntities.BACKUP_DANCER) { PazZombieRenderer(it, DiscoZombieModel(it.bakeLayer(DiscoZombieModel.LAYER_LOCATION))) }
         EntityRenderers.register(PazEntities.DISCO_ZOMBIE) { PazZombieRenderer(it, DiscoZombieModel(it.bakeLayer(DiscoZombieModel.LAYER_LOCATION))) }
 
         EntityRenderers.register(PazEntities.GNOME) { GnomeRenderer(it, GnomeModel(it.bakeLayer(GnomeModel.LAYER_LOCATION)))}

@@ -67,7 +67,7 @@ public class MinerModel extends ZombieModel<@NotNull ZombieRenderState> {
 		state.attackTime = 0;
 		super.setupAnim(state);
 		state.attackTime = tempAttackTime;
-		actionAnimation.applyWalk(state.attackTime*16f, 1.0f, 0.7f, 0.9f);
+		actionAnimation.applyWalk(state.attackTime*6f, 1.0f, 1.0f, 1.0f);
 
 	}
 }

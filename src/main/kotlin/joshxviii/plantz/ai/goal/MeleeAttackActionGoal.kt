@@ -8,6 +8,7 @@ import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.attributes.Attributes
+import java.util.function.Predicate
 
 open class MeleeAttackActionGoal(
     usingEntity: PathfinderMob,
@@ -15,9 +16,10 @@ open class MeleeAttackActionGoal(
     actionDelay: Int = 0,
     actionStartEffect: () -> Unit = {},
     actionEndEffect: () -> Unit = {},
+    actionPredicate: Predicate<PathfinderMob> = Predicate { true },
     val attackReach : Double = 5.0,
-    val damageType: ResourceKey<DamageType> = PazDamageTypes.PLANT
-) : ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
+    val damageType: ResourceKey<DamageType> = PazDamageTypes.PLANT,
+) : ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect, actionPredicate) {
 
     override fun canUse(): Boolean = (
         usingEntity.tickCount>cooldownTime

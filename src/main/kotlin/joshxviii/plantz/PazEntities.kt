@@ -8,6 +8,7 @@ import joshxviii.plantz.entity.gnome.Gnome
 import joshxviii.plantz.entity.plant.*
 import joshxviii.plantz.entity.plants.WallNut
 import joshxviii.plantz.entity.projectile.*
+import joshxviii.plantz.entity.zombie.BackupDancer
 import joshxviii.plantz.entity.zombie.BrownCoat
 import joshxviii.plantz.entity.zombie.DiscoZombie
 import joshxviii.plantz.entity.zombie.Miner
@@ -236,7 +237,7 @@ object PazEntities {
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 8.0)
             .add(Attributes.MAX_HEALTH, 80.0)
-            .add(Attributes.MOVEMENT_SPEED, 0.3)
+            .add(Attributes.MOVEMENT_SPEED, 0.27)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.5)
             .add(Attributes.SCALE, 1.25)
             .add(Attributes.STEP_HEIGHT, 1.0)
@@ -255,6 +256,19 @@ object PazEntities {
         attributes = Zombie.createAttributes()
             .add(Attributes.MAX_HEALTH, 30.0)
             .add(Attributes.MOVEMENT_SPEED, 0.32)
+    )
+    @JvmField val BACKUP_DANCER: EntityType<BackupDancer> =  registerZombie(
+        "backup_dancer",
+        EntityType.Builder.of(::BackupDancer, MobCategory.MONSTER)
+            .sized(0.64f, 2.0f)
+            .eyeHeight(1.74f)
+            .passengerAttachments(2.075f)
+            .ridingOffset(-0.7f)
+            .clientTrackingRange(8)
+            .notInPeaceful(),
+        attributes = Zombie.createAttributes()
+            .add(Attributes.MAX_HEALTH, 20.0)
+            .add(Attributes.MOVEMENT_SPEED, 0.3)
     )
     // endregion
 

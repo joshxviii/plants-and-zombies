@@ -5,6 +5,7 @@ import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.util.Mth
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.projectile.Projectile
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.projectile.ProjectileUtil
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.phys.Vec3
+import java.util.function.Predicate
 import kotlin.math.atan
 import kotlin.math.sqrt
 
@@ -21,12 +23,13 @@ class ProjectileAttackGoal(
     actionDelay: Int = 0,
     actionStartEffect: () -> Unit = {},
     actionEndEffect: () -> Unit = {},
-    val projectileFactory: () -> Projectile,
+    actionPredicate: Predicate<PathfinderMob> = Predicate { true },
+    val projectileFactory: () -> Entity,
     val velocity : Double = 0.9,
     val inaccuracy: Float = 0.8f,
     val useHighArc: Boolean = false,
-    val soundEvent: SoundEvent = PazSounds.PROJECTILE_FIRE
-) : ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
+    val soundEvent: SoundEvent = PazSounds.PROJECTILE_FIRE,
+) : ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect, actionPredicate) {
     var distanceSqr: Double = 0.0
     var attackRadius : Float = 0.0f
 
@@ -78,7 +81,8 @@ class ProjectileAttackGoal(
 
         val level = usingEntity.level() as ServerLevel
         val projectile = projectileFactory()
-        Projectile.spawnProjectile(projectile, level, ItemStack.EMPTY)
+        if (projectile is Projectile) Projectile.spawnProjectile(projectile, level, ItemStack.EMPTY)
+        else level.addFreshEntity(projectile)
 
         val relativePos = Vec3(
             target.x - projectile.x,
@@ -105,7 +109,11 @@ class ProjectileAttackGoal(
         val shootY = Mth.sin(finalAngle).toDouble()
         val shootZ = (horizUnitZ * horizComp)
 
-        projectile.shoot(shootX, shootY, shootZ, velocity.toFloat(), inaccuracy)
+        if (projectile is Projectile) projectile.shoot(shootX, shootY, shootZ, velocity.toFloat(), inaccuracy)
+        else {
+            projectile.deltaMovement = getMovementToShoot(shootX, shootY, shootZ, velocity.toFloat(), inaccuracy)
+            projectile.needsSync = true
+        }
 
         usingEntity.playSound(soundEvent, 3.0f, 0.4f / (usingEntity.random.nextFloat() * 0.4f + 0.8f))
         return true
@@ -143,5 +151,16 @@ class ProjectileAttackGoal(
         val phi2 = atan((v2 - sqrtDisc) / denom)
 
         return phi1 to phi2
+    }
+
+    fun getMovementToShoot(xd: Double, yd: Double, zd: Double, pow: Float, uncertainty: Float): Vec3 {
+        return Vec3(xd, yd, zd)
+            .normalize()
+            .add(
+                usingEntity.random.triangle(0.0, 0.0172275 * uncertainty),
+                usingEntity.random.triangle(0.0, 0.0172275 * uncertainty),
+                usingEntity.random.triangle(0.0, 0.0172275 * uncertainty)
+            )
+            .scale(pow.toDouble())
     }
 }

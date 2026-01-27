@@ -3,6 +3,7 @@ package joshxviii.plantz.ai.goal
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.goal.Goal
+import java.util.function.Predicate
 
 /**
  * Defines an action goal for plants.
@@ -16,7 +17,8 @@ abstract class ActionGoal(
     val cooldownTime: Int = 20,
     val actionDelay: Int = 0,
     val actionStartEffect: () -> Unit = {},
-    val actionEndEffect: () -> Unit = {}
+    val actionEndEffect: () -> Unit = {},
+    val actionPredicate: Predicate<PathfinderMob> = Predicate { true }
 ): Goal() {
     var isDoingAction = false
     var actionTimer = -1
@@ -43,8 +45,7 @@ abstract class ActionGoal(
 
         if (actionTimer > 0) --actionTimer
         if (actionTimer == 0) {// do action
-            actionEndEffect()
-            doAction()
+            if (actionPredicate.test(usingEntity)) if (doAction()) actionEndEffect()
             isDoingAction = false
             actionTimer = -1
         }

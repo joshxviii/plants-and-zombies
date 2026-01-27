@@ -417,7 +417,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         particle: ParticleOptions = ParticleTypes.SPLASH,
         amount: Int = 8,
         horizontalSpreadScale: Double = 0.3,
-        verticalSpreadScale: Double = 1.0
+        verticalSpreadScale: Double = 0.5
     ) {
         if (level is ServerLevel) {
             level.sendParticles(

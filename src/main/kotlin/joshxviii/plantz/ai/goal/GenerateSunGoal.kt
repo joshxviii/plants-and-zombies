@@ -4,6 +4,8 @@ import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.Sun
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.world.entity.PathfinderMob
+import java.util.function.Predicate
 
 class GenerateSunGoal(
     usingEntity: Plant,
@@ -11,9 +13,10 @@ class GenerateSunGoal(
     actionDelay: Int = 0,
     actionStartEffect: () -> Unit = {},
     actionEndEffect: () -> Unit = {},
+    actionPredicate: Predicate<PathfinderMob> = Predicate { true },
     val sunAmount: Int = 5,
-    val generatesAtNight : Boolean = false
-): ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect) {
+    val generatesAtNight : Boolean = false,
+): ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect, actionPredicate) {
     override fun canUse(): Boolean = (
         usingEntity.tickCount>cooldownTime
             && usingEntity.isAlive
