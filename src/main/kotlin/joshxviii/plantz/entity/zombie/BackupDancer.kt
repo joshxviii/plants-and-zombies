@@ -10,17 +10,25 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.RandomSource
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.entity.*
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EntitySpawnReason
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.SpawnGroupData
 import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.phys.Vec3
 
-class BackupDancer(type: EntityType<out BackupDancer> = PazEntities.BACKUP_DANCER, level: Level, position: Vec3? = null,) : Zombie(type, level) {
+class BackupDancer(type: EntityType<out BackupDancer> = PazEntities.BACKUP_DANCER, level: Level, position: Vec3? = null, rotation: Float? = null) : Zombie(type, level) {
 
     init {
         if (position != null) setPos(position)
+        if (rotation != null) {
+            yRot = rotation
+            yBodyRot = rotation
+            yHeadRot = rotation
+        }
     }
 
     private val noMoveControl = object : MoveControl(this) {
@@ -40,6 +48,8 @@ class BackupDancer(type: EntityType<out BackupDancer> = PazEntities.BACKUP_DANCE
         return SoundEvents.ZOMBIE_STEP
     }
 
+    override fun handleAttributes(difficultyModifier: Float, spawnReason: EntitySpawnReason) {}
+
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         val result = super.doHurtTarget(level, target)
         return result
@@ -50,6 +60,7 @@ class BackupDancer(type: EntityType<out BackupDancer> = PazEntities.BACKUP_DANCE
     override fun canPickUpLoot(): Boolean = false
     override fun isSunSensitive(): Boolean = false
     override fun convertsInWater(): Boolean = false
+    override fun randomizeReinforcementsChance() {}
 
     override fun getMoveControl(): MoveControl {
         if (tickCount < 40) return noMoveControl
@@ -74,9 +85,7 @@ class BackupDancer(type: EntityType<out BackupDancer> = PazEntities.BACKUP_DANCE
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
-        if (spawnReason != EntitySpawnReason.CONVERSION) {
-            setCanBreakDoors(true)
-        }
+        setCanBreakDoors(false)
 
         return data
     }

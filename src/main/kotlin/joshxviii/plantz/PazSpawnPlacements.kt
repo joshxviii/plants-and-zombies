@@ -1,6 +1,7 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.entity.zombie.Miner
 import joshxviii.plantz.entity.zombie.ZombieYeti
 import joshxviii.plantz.mixin.SpawnPlacementsInvoker
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications
@@ -46,10 +47,13 @@ object PazSpawnPlacements {
 
         // region ZOMBIES
         addBiomeSpawn(PazTags.Biomes.HAS_ZOMBIE_YETI, PazEntities.ZOMBIE_YETI, category = MobCategory.MONSTER,
-            weight = 500, minGroupSize = 1, maxGroupSize = 2)
+            weight = 50, minGroupSize = 1, maxGroupSize = 2)
         addBiomeSpawn(PazTags.Biomes.HAS_ZOMBIE_YETI_ALT, PazEntities.ZOMBIE_YETI, category = MobCategory.MONSTER,
             weight = 10, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.ZOMBIE_YETI, ZombieYeti::checkZombieYetiSpawnRules)
+        addBiomeSpawn(PazTags.Biomes.HAS_MINER, PazEntities.MINER, category = MobCategory.MONSTER,
+            weight = 10, minGroupSize = 1, maxGroupSize = 1)
+        registerSpawnPlacement(PazEntities.MINER, Miner::checkMinerSpawnRules)
         // endregion
     }
 

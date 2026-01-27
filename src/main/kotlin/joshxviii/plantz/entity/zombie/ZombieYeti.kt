@@ -4,6 +4,7 @@ import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
+import joshxviii.plantz.canReachTarget
 import joshxviii.plantz.entity.projectile.PowderSnowChunk
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleOptions
@@ -50,7 +51,7 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : Zombie(type, 
     }
 
     init {
-       xpReward = 15
+        xpReward = 20
     }
 
     override fun registerGoals() {
@@ -68,7 +69,11 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : Zombie(type, 
             actionEndEffect = {
                 this.swing(this.usedItemHand)
             },
-            actionPredicate = { it.random.nextDouble() < 0.2 && it.target!=null && it.distanceTo(it.target!!) > 12f },
+            actionPredicate = { it.random.nextDouble() < 0.25
+                                && it.target!=null
+                                && it.distanceTo(it.target!!) > 6.5f
+                                && !this.navigation.path.canReachTarget(target!!.blockPosition())
+                              },
             actionDelay = 35))
     }
 
@@ -90,6 +95,7 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : Zombie(type, 
     override fun canPickUpLoot(): Boolean = false
     override fun isSunSensitive(): Boolean = false
     override fun convertsInWater(): Boolean = false
+    override fun randomizeReinforcementsChance() {}
 
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         val result = super.doHurtTarget(level, target)

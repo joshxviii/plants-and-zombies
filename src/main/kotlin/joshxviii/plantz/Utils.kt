@@ -4,6 +4,7 @@ import joshxviii.plantz.PazMain.MODID
 import joshxviii.plantz.raid.ZombieRaid
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
+import net.minecraft.core.Vec3i
 import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerEntityGetter
 import net.minecraft.server.level.ServerLevel
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.ai.village.poi.PoiType
 import net.minecraft.world.entity.raid.Raid
 import net.minecraft.world.entity.raid.Raids
 import net.minecraft.world.level.gamerules.GameRules
+import net.minecraft.world.level.pathfinder.Path
 import net.minecraft.world.phys.Vec3
 
 fun pazResource(path: String): Identifier = Identifier.fromNamespaceAndPath(MODID, path)
@@ -43,6 +45,13 @@ fun <T : LivingEntity?> ServerEntityGetter.getFurthestEntities(
     }
 
     return result
+}
+
+fun Path?.canReachTarget(target: BlockPos?): Boolean {
+    if (target==null) return false
+    return this?.endNode?.let {
+        target.distSqr(Vec3i(it.x, it.y, it.z)) <= 2.25
+    }?: false
 }
 
 fun List<String>.permutationsDescending(): List<String> = buildList {

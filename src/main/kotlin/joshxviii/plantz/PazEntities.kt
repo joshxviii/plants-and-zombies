@@ -225,7 +225,7 @@ object PazEntities {
             .add(Attributes.ATTACK_DAMAGE, 2.0)
             .add(Attributes.MAX_HEALTH, 25.0)
             .add(Attributes.MOVEMENT_SPEED, 0.21)
-            .add(Attributes.FOLLOW_RANGE, 9.0)
+            .add(Attributes.FOLLOW_RANGE, 16.0)
     )
     @JvmField val ZOMBIE_YETI: EntityType<ZombieYeti> =  registerZombie(
         "zombie_yeti",
@@ -236,14 +236,14 @@ object PazEntities {
             .clientTrackingRange(8)
             .notInPeaceful(),
         attributes = Zombie.createAttributes()
-            .add(Attributes.ATTACK_DAMAGE, 8.0)
+            .add(Attributes.ATTACK_DAMAGE, 10.0)
             .add(Attributes.MAX_HEALTH, 80.0)
             .add(Attributes.MOVEMENT_SPEED, 0.27)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.5)
             .add(Attributes.SCALE, 1.25)
             .add(Attributes.STEP_HEIGHT, 1.0)
             .add(Attributes.ENTITY_INTERACTION_RANGE, 2.5)
-            .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, -10.0)
+            .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.0)
     )
     @JvmField val DISCO_ZOMBIE: EntityType<DiscoZombie> =  registerZombie(
         "disco_zombie",
@@ -255,8 +255,10 @@ object PazEntities {
             .clientTrackingRange(8)
             .notInPeaceful(),
         attributes = Zombie.createAttributes()
+            .add(Attributes.ATTACK_DAMAGE, 5.0)
             .add(Attributes.MAX_HEALTH, 35.0)
             .add(Attributes.MOVEMENT_SPEED, 0.24)
+            .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.0)
     )
     @JvmField val BACKUP_DANCER: EntityType<BackupDancer> =  registerZombie(
         "backup_dancer",
@@ -268,10 +270,11 @@ object PazEntities {
             .clientTrackingRange(8)
             .notInPeaceful(),
         attributes = Zombie.createAttributes()
-            .add(Attributes.ATTACK_DAMAGE, 2.0)
+            .add(Attributes.ATTACK_DAMAGE, 2.5)
             .add(Attributes.MAX_HEALTH, 10.0)
             .add(Attributes.MOVEMENT_SPEED, 0.3)
             .add(Attributes.FOLLOW_RANGE, 16.0)
+            .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.0)
     )
     // endregion
 

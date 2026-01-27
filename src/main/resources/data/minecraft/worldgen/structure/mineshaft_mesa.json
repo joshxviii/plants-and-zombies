@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:mineshaft",
+  "biomes": "#minecraft:has_structure/mineshaft_mesa",
+  "mineshaft_type": "mesa",
+  "spawn_overrides": {
+    "monster": {
+      "bounding_box": "full",
+      "spawns": [
+        {
+          "type": "plantz:miner",
+          "maxCount": 4,
+          "minCount": 2,
+          "weight": 1
+        }
+      ]
+    }
+  },
+  "step": "underground_structures"
+}

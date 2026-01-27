@@ -4,12 +4,14 @@ import joshxviii.plantz.PazSounds
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.ai.goal.MineBlocksToTargetGoal
 import joshxviii.plantz.ai.pathfinding.MinerNavigation
+import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.ItemTags
 import net.minecraft.tags.TagKey
 import net.minecraft.util.RandomSource
+import net.minecraft.world.Difficulty
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
@@ -23,6 +25,22 @@ import net.minecraft.world.level.ServerLevelAccessor
 
 
 class Miner(type: EntityType<out Miner>, level: Level) : Zombie(type, level) {
+
+    companion object {
+        fun checkMinerSpawnRules(
+            type: EntityType<out Mob>,
+            level: ServerLevelAccessor,
+            spawnReason: EntitySpawnReason,
+            pos: BlockPos,
+            random: RandomSource
+        ): Boolean {
+            val below = pos.below()
+            return level.difficulty != Difficulty.PEACEFUL
+                    && (EntitySpawnReason.ignoresLightRequirements(spawnReason) || isDarkEnoughToSpawn(level, pos, random))
+                    && checkMobSpawnRules(type, level, spawnReason, pos, random) || level.getBlockState(below).`is`(PazTags.BlockTags.YETI_SPAWNABLE_ON)
+                    && pos.y < 10
+        }
+    }
 
     override fun registerGoals() {
         super.registerGoals()

@@ -1,5 +1,6 @@
 package joshxviii.plantz.ai.pathfinding
 
+import joshxviii.plantz.canReachTarget
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
 import net.minecraft.server.level.ServerLevel
@@ -30,14 +31,12 @@ class MinerNavigation(entity: PathfinderMob, level: Level) : GroundPathNavigatio
         reachRange: Int,
         maxPathLength: Float
     ): Path? {
-        val testPath = super.createPath(targets, radiusOffset, above, reachRange, maxPathLength)
+        val path = super.createPath(targets, radiusOffset, above, reachRange, maxPathLength)
         val canBreakBlocks = (mob.level() as? ServerLevel)?.gameRules?.get(GameRules.MOB_GRIEFING)?: false
-        val canReachTarget = testPath?.endNode?.let {
-            targets.last().distSqr(Vec3i(it.x, it.y, it.z)) <= 2.25
-        }?: false
+        val canReachTarget = path.canReachTarget(targets.last())
 
         (this.nodeEvaluator as? MinerNodeEvaluator)?.userMiner = (!canReachTarget && mob.isAggressive && canBreakBlocks)
 
-        return testPath
+        return path
     }
 }

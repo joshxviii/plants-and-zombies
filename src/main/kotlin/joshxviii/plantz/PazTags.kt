@@ -59,6 +59,8 @@ object PazTags {
         val HAS_WALLNUT = tag("plant/has_wallnut")
 
         val HAS_BROWNCOAT = tag("zombie/has_browncoat")
+        val HAS_MINER = tag("zombie/has_miner")
+        val HAS_MINER_ALT = tag("zombie/has_miner_alt")
         val HAS_ZOMBIE_YETI = tag("zombie/has_zombie_yeti")
         val HAS_ZOMBIE_YETI_ALT = tag("zombie/has_zombie_yeti_alt")
 

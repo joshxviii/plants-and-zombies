@@ -1,7 +1,16 @@
 {
   "values": [
     "plantz:plant_pot",
-    "#minecraft:mineable/pickaxe",
-    "#minecraft:mineable/shovel"
+    "minecraft:pointed_dripstone",
+    "#minecraft:dirt",
+    "#minecraft:sand",
+    "#minecraft:terracotta",
+    "#minecraft:sculk_replaceable",
+    "#minecraft:overworld_carver_replaceables",
+    "#minecraft:nether_carver_replaceables",
+    {
+      "id": "#c:cobblestones",
+      "required": false
+    }
   ]
 }
