@@ -47,7 +47,7 @@ object PazBlocks {
         "mailbox",
         BlockBehaviour.Properties.of()
             .sound(SoundType.LANTERN)
-            .strength(0.65F)
+            .strength(1.3F)
             .noOcclusion()
             .pushReaction(PushReaction.BLOCK),
         ::MailboxBlock

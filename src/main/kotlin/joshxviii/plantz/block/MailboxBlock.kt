@@ -9,11 +9,7 @@ import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.ScheduledTickAccess
-import net.minecraft.world.level.block.BaseEntityBlock
-import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.block.HorizontalDirectionalBlock
-import net.minecraft.world.level.block.Rotation
+import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
@@ -31,16 +27,16 @@ class MailboxBlock(properties: Properties) : BaseEntityBlock(properties) {
     companion object {
         val CODEC: MapCodec<MailboxBlock> = simpleCodec(::MailboxBlock)
         val FACING: EnumProperty<Direction> = HorizontalDirectionalBlock.FACING
-        val ATTACH_FACE: EnumProperty<AttachFace> = BlockStateProperties.ATTACH_FACE
+        val FACE: EnumProperty<AttachFace> = BlockStateProperties.ATTACH_FACE
         val WATERLOGGED: BooleanProperty = BlockStateProperties.WATERLOGGED
         val OPEN: BooleanProperty = BlockStateProperties.OPEN
         val SHAPE: VoxelShape = column(8.0, 12.0, 0.0, 8.0)
         var SHAPES: MutableMap<Direction.Axis, VoxelShape> = Shapes.rotateHorizontalAxis(SHAPE)
-        var SHAPES_ON_WALL: MutableMap<Direction.Axis, VoxelShape> = Shapes.rotateHorizontalAxis(SHAPE.move(10.0,0.0,0.0))
+        var SHAPES_WALL: MutableMap<Direction, VoxelShape> = Shapes.rotateHorizontal(SHAPE.move(0.0,0.25,0.125))
     }
 
     init {
-        registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(OPEN, false))
+        registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(FACE, AttachFace.FLOOR).setValue(WATERLOGGED, false).setValue(OPEN, false))
     }
 
     override fun newBlockEntity(worldPosition: BlockPos, blockState: BlockState): BlockEntity {
@@ -48,27 +44,49 @@ class MailboxBlock(properties: Properties) : BaseEntityBlock(properties) {
     }
 
     override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
-        val axis = (state.getValue(HorizontalDirectionalBlock.FACING) as Direction).axis
-        return SHAPES[axis] as VoxelShape
+        val facing = state.getValue(FACING)
+        return if (state.getValue(FACE) == AttachFace.WALL)
+            SHAPES_WALL[facing] as VoxelShape
+        else
+            SHAPES[facing.axis] as VoxelShape
     }
 
     override fun rotate(state: BlockState, rotation: Rotation): BlockState {
-        return state.setValue<Direction, Direction>(FACING, rotation.rotate(state.getValue<Direction>(FACING)))
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)))
     }
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
-        builder.add(FACING, WATERLOGGED, OPEN)
+        builder.add(FACING, FACE, WATERLOGGED, OPEN)
     }
 
     override fun getFluidState(state: BlockState): FluidState {
         return if (state.getValue(WATERLOGGED)) Fluids.WATER.getSource(false) else super.getFluidState(state)
     }
 
-    override fun getStateForPlacement(context: BlockPlaceContext): BlockState {
-        val replacedFluidState = context.level.getFluidState(context.clickedPos)
-        return defaultBlockState()
-            .setValue(FACING, context.horizontalDirection.opposite)
-            .setValue(WATERLOGGED, replacedFluidState.`is`(Fluids.WATER))
+    override fun getStateForPlacement(context: BlockPlaceContext): BlockState? {
+
+//        return defaultBlockState()
+//            .setValue(FACING, context.horizontalDirection.opposite)
+//            .setValue(WATERLOGGED, replacedFluidState.`is`(Fluids.WATER))
+        val facing = context.horizontalDirection.opposite
+        for (direction in context.getNearestLookingDirections()) {
+            var state: BlockState
+            if (direction.axis === Direction.Axis.Y) {
+                state = defaultBlockState().setValue(FACE, AttachFace.FLOOR)
+                    .setValue(FACING, facing)
+            } else {
+                state = defaultBlockState()
+                    .setValue(FaceAttachedHorizontalDirectionalBlock.FACE, AttachFace.WALL)
+                    .setValue(HorizontalDirectionalBlock.FACING, direction.opposite)
+            }
+
+            if (state.canSurvive(context.level, context.clickedPos)) {
+                val replacedFluidState = context.level.getFluidState(context.clickedPos)
+                return state.setValue(WATERLOGGED, replacedFluidState.`is`(Fluids.WATER))
+            }
+        }
+
+        return null
     }
 
     override fun updateShape(
@@ -82,15 +100,28 @@ class MailboxBlock(properties: Properties) : BaseEntityBlock(properties) {
         random: RandomSource
     ): BlockState {
         if (state.getValue(WATERLOGGED)) ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level))
-        return if (directionToNeighbour == Direction.DOWN && !state.canSurvive(level, pos))
+        return if (getConnectedDirection(state).opposite == directionToNeighbour && !state.canSurvive(level, pos))
             Blocks.AIR.defaultBlockState()
         else
             super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random)
     }
 
     override fun canSurvive(state: BlockState, level: LevelReader, pos: BlockPos): Boolean {
-        val direction = Direction.DOWN
-        return canSupportCenter(level, pos.relative(direction), direction.opposite)
+        return canAttach(level, pos, getConnectedDirection(state).opposite)
+    }
+
+    fun canAttach(level: LevelReader, pos: BlockPos, direction: Direction): Boolean {
+        val relative = pos.relative(direction)
+        return if (direction == Direction.DOWN) canSupportCenter(level, relative, direction.opposite)
+        else level.getBlockState(relative).isFaceSturdy(level, relative, direction.opposite)
+    }
+
+    fun getConnectedDirection(state: BlockState): Direction {
+        return when (state.getValue(FACE)) {
+            AttachFace.CEILING -> Direction.UP
+            AttachFace.FLOOR -> Direction.UP
+            else -> state.getValue(FACING)
+        }
     }
 
     override fun codec(): MapCodec<out MailboxBlock> { return CODEC }
