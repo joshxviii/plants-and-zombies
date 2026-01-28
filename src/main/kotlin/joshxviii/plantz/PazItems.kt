@@ -10,7 +10,7 @@ import joshxviii.plantz.PazEntities.ZOMBIE_YETI
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.item.SeedPacketItem
 import joshxviii.plantz.item.SunItem
-import joshxviii.plantz.item.component.BlocksHeadDamage
+import joshxviii.plantz.item.component.BlocksProjectileDamage
 import joshxviii.plantz.item.component.SeedPacket
 import joshxviii.plantz.item.component.SunCost
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
@@ -51,7 +51,24 @@ object PazItems {
     @JvmField
     val NEWSPAPER: Item = registerItem(
         "newspaper", ::Item,
-        properties = Item.Properties())
+        properties = Item.Properties()
+            .component(PazComponents.BLOCKS_PROJECTILE_DAMAGE, BlocksProjectileDamage(breakChance = 0.15f))
+            .component(
+                DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
+                    .add(
+                        Attributes.KNOCKBACK_RESISTANCE,
+                        AttributeModifier(pazResource("newspaper_knockback_resistance"), 0.2, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.HAND)
+                    .add(
+                        Attributes.MOVEMENT_SPEED,
+                        AttributeModifier(pazResource("reading_newspaper"), -0.45, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+                        EquipmentSlotGroup.HAND
+                    ).add(
+                        Attributes.FOLLOW_RANGE,
+                        AttributeModifier(pazResource("reading_newspaper"), -0.75, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+                        EquipmentSlotGroup.HAND
+                    ).build()
+            ))
     @JvmField
     val SEED_PACKET: Item = registerItem(
         "seed_packet", ::SeedPacketItem,
@@ -105,11 +122,11 @@ object PazItems {
         // Modify components
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SEED_PACKET)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
-        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BLOCKS_HEAD_DAMAGE)
+        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BLOCKS_PROJECTILE_DAMAGE)
 
         DefaultItemComponentEvents.MODIFY.register {
             it.modify(Items.BUCKET) { builder ->
-                builder.set(PazComponents.BLOCKS_HEAD_DAMAGE, BlocksHeadDamage(breakChance = .05f))
+                builder.set(PazComponents.BLOCKS_PROJECTILE_DAMAGE, BlocksProjectileDamage(breakChance = .05f))
                 builder.set(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
                     .setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)
                     .build()

@@ -5,12 +5,8 @@ import joshxviii.plantz.block.ConeBlock
 import joshxviii.plantz.block.MailboxBlock
 import joshxviii.plantz.block.PlantPotBlock
 import joshxviii.plantz.block.entity.MailboxBlockEntity
-import joshxviii.plantz.item.component.BlocksHeadDamage
-import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup
-import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityType
+import joshxviii.plantz.item.component.BlocksProjectileDamage
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
-import net.fabricmc.fabric.mixin.blockview.BlockEntityMixin
-import net.fabricmc.fabric.mixin.lookup.BlockEntityTypeAccessor
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponents
@@ -50,8 +46,8 @@ object PazBlocks {
     val MAILBOX: Block = registerBlock(
         "mailbox",
         BlockBehaviour.Properties.of()
-            .sound(SoundType.WOOD)
-            .strength(0.5F)
+            .sound(SoundType.LANTERN)
+            .strength(0.65F)
             .noOcclusion()
             .pushReaction(PushReaction.BLOCK),
         ::MailboxBlock
@@ -72,7 +68,7 @@ object PazBlocks {
             .pushReaction(PushReaction.DESTROY),
         ::ConeBlock,
         Item.Properties()
-            .component(PazComponents.BLOCKS_HEAD_DAMAGE, BlocksHeadDamage(breakChance = 0.2f))
+            .component(PazComponents.BLOCKS_PROJECTILE_DAMAGE, BlocksProjectileDamage(breakChance = 0.2f))
             .component(
                 DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
                     .setEquipSound(SoundEvents.ARMOR_EQUIP_LEATHER)

@@ -22,16 +22,20 @@
 
   "item.plantz.sun": "Sun",
   "item.plantz.cone": "Cone",
+  "item.plantz.newspaper": "Newspaper",
   "item.plantz.brainz_flag": "Brainz Flag",
   "item.plantz.plant_pot": "Plant Pot",
   "item.plantz.plant_pot_minecart": "Minecart with Plant Pot",
+  "item.plantz.mailbox": "Mailbox",
   "item.plantz.seed_packet": "Seed Packet",
   "item.plantz.seed_packet.entity": "%s Seeds",
 
   "item.plantz.browncoat_spawn_egg": "Brown Coat Spawn Egg",
+  "item.plantz.newspaper_zombie_spawn_egg": "Newspaper Zombie Spawn Egg",
   "item.plantz.miner_spawn_egg": "Miner Spawn Egg",
   "item.plantz.zombie_yeti_spawn_egg": "Zombie Yeti Spawn Egg",
   "item.plantz.disco_zombie_spawn_egg": "Disco Zombie Spawn Egg",
+  "item.plantz.backup_dancer_spawn_egg": "Backup Dancer Spawn Egg",
 
   "item.plantz.gnome_spawn_egg": "Gnome Spawn Egg",
 

@@ -11,7 +11,7 @@ import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.component.TooltipProvider
 import java.util.function.Consumer
 
-class BlocksHeadDamage(
+class BlocksProjectileDamage(
     val breakChance: Float = 0.15f
 ) : TooltipProvider {
 
@@ -26,15 +26,15 @@ class BlocksHeadDamage(
     }
 
     companion object {
-        lateinit var TYPE: DataComponentType<BlocksHeadDamage>
+        lateinit var TYPE: DataComponentType<BlocksProjectileDamage>
 
         val CODEC = Codec.FLOAT.xmap(
-            { BlocksHeadDamage(it) },
+            { BlocksProjectileDamage(it) },
             { it.breakChance }
         )
 
         val STREAM_CODEC = ByteBufCodecs.FLOAT.map(
-            { BlocksHeadDamage(it) },
+            { BlocksProjectileDamage(it) },
             { it.breakChance }
         )
     }

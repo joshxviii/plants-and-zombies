@@ -31,6 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 @Mixin(LivingEntity.class)
 abstract public class LivingEntityMixin {
@@ -75,14 +76,7 @@ abstract public class LivingEntityMixin {
 
     @Inject(method = "actuallyHurt", at = @At(value = "HEAD"), cancellable = true)
     public void paz$blockProjectile(ServerLevel level, DamageSource source, float dmg, CallbackInfo ci) {
-        LivingEntity entity = (LivingEntity) (Object) this;
-        if( canArmorAbsorbDamage(source) ) {
-            ItemStack helmet = entity.getItemBySlot(EquipmentSlot.HEAD);
-            float breakChance = Objects.requireNonNull(helmet.getComponents().get(PazComponents.BLOCKS_HEAD_DAMAGE)).getBreakChance();
-            if (entity.getRandom().nextFloat() < breakChance) {
-                helmet.shrink(1);
-                entity.makeSound(SoundEvents.ITEM_BREAK.value());
-            }
+        if( canArmorAbsorbDamage(source, true) ) {
             ci.cancel();
         }
     }
@@ -90,8 +84,7 @@ abstract public class LivingEntityMixin {
     @Inject(method = "playHurtSound", at = @At(value = "HEAD"), cancellable = true)
     public void paz$blockProjectileSound(DamageSource source, CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
-
-        if (canArmorAbsorbDamage(source)) {
+        if (canArmorAbsorbDamage(source, false)) {
             if (entity.getItemBySlot(EquipmentSlot.HEAD).is(Items.BUCKET)) entity.makeSound(PazSounds.PROJECTILE_HIT_BUCKET);
             else entity.makeSound(PazSounds.PROJECTILE_HIT_CONE);
             ci.cancel();
@@ -99,8 +92,25 @@ abstract public class LivingEntityMixin {
     }
 
     @Unique
-    private boolean canArmorAbsorbDamage(final DamageSource source) {
+    private boolean canArmorAbsorbDamage(final DamageSource source, boolean tryBreak) {
         LivingEntity entity = (LivingEntity) (Object) this;
-        return entity.getItemBySlot(EquipmentSlot.HEAD).getComponents().has(PazComponents.BLOCKS_HEAD_DAMAGE) && source.is(PazTags.DamageTypes.BLOCKABLE_WITH_HELMET);
+        for (EquipmentSlot slot : slots) {
+            ItemStack item = entity.getItemBySlot(slot);
+            boolean canAbsorb = item.getComponents().has(PazComponents.BLOCKS_PROJECTILE_DAMAGE) && source.is(PazTags.DamageTypes.BLOCKABLE_DAMAGE);
+            if(canAbsorb) {
+                if(tryBreak) {
+                    float breakChance = Objects.requireNonNull(item.getComponents().get(PazComponents.BLOCKS_PROJECTILE_DAMAGE)).getBreakChance();
+                    if (entity.getRandom().nextFloat() < breakChance) {
+                        item.shrink(1);
+                        entity.makeSound(SoundEvents.ITEM_BREAK.value());
+                    }
+                }
+                return canAbsorb;
+            }
+        }
+        return false;
     }
+
+    @Unique
+    Set<EquipmentSlot> slots = Set.of(EquipmentSlot.HEAD,EquipmentSlot.CHEST,EquipmentSlot.LEGS, EquipmentSlot.FEET, EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND);
 }

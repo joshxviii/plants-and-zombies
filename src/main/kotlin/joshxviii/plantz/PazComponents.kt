@@ -1,6 +1,6 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.item.component.BlocksHeadDamage
+import joshxviii.plantz.item.component.BlocksProjectileDamage
 import joshxviii.plantz.item.component.SeedPacket
 import joshxviii.plantz.item.component.SunCost
 import net.minecraft.core.Registry
@@ -33,12 +33,12 @@ object PazComponents {
 
 
     @JvmField
-    val BLOCKS_HEAD_DAMAGE: DataComponentType<BlocksHeadDamage> = register(
-        "blocks_head_damage"
-    ) { b: DataComponentType.Builder<BlocksHeadDamage> ->
-        DataComponentType.builder<BlocksHeadDamage>()
-            .persistent(BlocksHeadDamage.CODEC)
-            .networkSynchronized(BlocksHeadDamage.STREAM_CODEC)
+    val BLOCKS_PROJECTILE_DAMAGE: DataComponentType<BlocksProjectileDamage> = register(
+        "blocks_projectile_damage"
+    ) { b: DataComponentType.Builder<BlocksProjectileDamage> ->
+        DataComponentType.builder<BlocksProjectileDamage>()
+            .persistent(BlocksProjectileDamage.CODEC)
+            .networkSynchronized(BlocksProjectileDamage.STREAM_CODEC)
             .cacheEncoding()
     }
 

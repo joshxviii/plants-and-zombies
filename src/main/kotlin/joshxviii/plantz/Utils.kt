@@ -11,17 +11,32 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.tags.PoiTypeTags
 import net.minecraft.world.attribute.EnvironmentAttributes
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.ai.village.poi.PoiManager
 import net.minecraft.world.entity.ai.village.poi.PoiType
 import net.minecraft.world.entity.raid.Raid
 import net.minecraft.world.entity.raid.Raids
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.gamerules.GameRules
 import net.minecraft.world.level.pathfinder.Path
 import net.minecraft.world.phys.Vec3
 
 fun pazResource(path: String): Identifier = Identifier.fromNamespaceAndPath(MODID, path)
+
+fun ItemStack.canBlockDamage(source: DamageSource): Boolean {
+    return this.components.has(PazComponents.BLOCKS_PROJECTILE_DAMAGE) && source.`is`(PazTags.DamageTypes.BLOCKABLE_DAMAGE)
+}
+
+fun LivingEntity.canArmorAbsorbDamage(source: DamageSource): Boolean {
+    val slots = setOf(EquipmentSlot.HEAD,EquipmentSlot.CHEST,EquipmentSlot.LEGS, EquipmentSlot.FEET, EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND)
+    slots.forEach { slot ->
+       if (this.getItemBySlot(slot).canBlockDamage(source)) return true
+    }
+    return false
+}
 
 fun <T : LivingEntity?> ServerEntityGetter.getFurthestEntities(
     entities: MutableList<out T>,
