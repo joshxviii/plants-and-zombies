@@ -1,5 +1,6 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.block.MailboxBlock
 import joshxviii.plantz.item.SeedPacketItem
 import joshxviii.plantz.raid.ZombieRaid
 import net.minecraft.core.Registry
@@ -48,6 +49,12 @@ object PazCreativeTab {
                 output.accept(SeedPacketItem.stackFor(PazEntities.SCAREDY_SHROOM))
                 output.accept(SeedPacketItem.stackFor(PazEntities.HYPNOSHROOM))
 
+                //other
+                output.accept(PazItems.SUN)
+                output.accept(PazBlocks.PLANT_POT)
+                output.accept(PazItems.PLANT_POT_MINECART)
+                PazBlocks.ALL_MAILBOXES.forEach { output.accept(it) }
+
                 // zombie spawn eggs
                 output.accept(PazItems.BROWN_COAT_SPAWN_EGG)
                 output.accept(PazItems.NEWSPAPER_ZOMBIE_SPAWN_EGG)
@@ -59,11 +66,6 @@ object PazCreativeTab {
                 //gnome
                 output.accept(PazItems.GNOME_SPAWN_EGG)
 
-                //other
-                output.accept(PazItems.SUN)
-                output.accept(PazBlocks.PLANT_POT)
-                output.accept(PazItems.PLANT_POT_MINECART)
-                output.accept(PazBlocks.MAILBOX)
                 output.accept(PazBlocks.CONE)
                 output.accept(Items.BUCKET)
                 output.accept(PazItems.NEWSPAPER)

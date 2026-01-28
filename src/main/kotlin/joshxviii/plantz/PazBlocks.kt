@@ -1,8 +1,10 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.block.BrainzFlagBlock
 import joshxviii.plantz.block.ConeBlock
 import joshxviii.plantz.block.MailboxBlock
+import joshxviii.plantz.block.MailboxBlock.Companion.mailboxByColor
 import joshxviii.plantz.block.PlantPotBlock
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.item.component.BlocksProjectileDamage
@@ -19,15 +21,18 @@ import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.BlockItem
+import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.item.equipment.Equippable
 import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.level.material.PushReaction
 
 object PazBlocks {
@@ -42,20 +47,44 @@ object PazBlocks {
         ::PlantPotBlock
     )
 
-    @JvmField
-    val MAILBOX: Block = registerBlock(
-        "mailbox",
-        BlockBehaviour.Properties.of()
-            .sound(SoundType.LANTERN)
-            .strength(1.3F)
-            .noOcclusion()
-            .pushReaction(PushReaction.BLOCK),
-        ::MailboxBlock
+    @JvmField val MAILBOX: Block = registerBlock("mailbox", mailboxProperties(), ::MailboxBlock)
+    @JvmField val LIGHT_GRAY_MAILBOX: Block = registerBlock("light_gray_mailbox", mailboxProperties(MapColor.COLOR_LIGHT_GRAY), {MailboxBlock(it, DyeColor.LIGHT_GRAY)})
+    @JvmField val GRAY_MAILBOX: Block = registerBlock("gray_mailbox", mailboxProperties(MapColor.COLOR_GRAY), {MailboxBlock(it, DyeColor.GRAY)})
+    @JvmField val BLACK_MAILBOX: Block = registerBlock("black_mailbox", mailboxProperties(MapColor.COLOR_BLACK), {MailboxBlock(it, DyeColor.BLACK)})
+    @JvmField val BROWN_MAILBOX: Block = registerBlock("brown_mailbox", mailboxProperties(MapColor.COLOR_BROWN), {MailboxBlock(it, DyeColor.BROWN)})
+    @JvmField val RED_MAILBOX: Block = registerBlock("red_mailbox", mailboxProperties(MapColor.COLOR_RED), {MailboxBlock(it, DyeColor.RED)})
+    @JvmField val ORANGE_MAILBOX: Block = registerBlock("orange_mailbox", mailboxProperties(MapColor.COLOR_ORANGE), {MailboxBlock(it, DyeColor.ORANGE)})
+    @JvmField val YELLOW_MAILBOX: Block = registerBlock("yellow_mailbox", mailboxProperties(MapColor.COLOR_YELLOW), {MailboxBlock(it, DyeColor.YELLOW)})
+    @JvmField val LIME_MAILBOX: Block = registerBlock("lime_mailbox", mailboxProperties(MapColor.COLOR_LIGHT_GREEN), {MailboxBlock(it, DyeColor.LIME)})
+    @JvmField val GREEN_MAILBOX: Block = registerBlock("green_mailbox", mailboxProperties(MapColor.COLOR_GREEN), {MailboxBlock(it, DyeColor.GREEN)})
+    @JvmField val CYAN_MAILBOX: Block = registerBlock("cyan_mailbox", mailboxProperties(MapColor.COLOR_CYAN), {MailboxBlock(it, DyeColor.CYAN)})
+    @JvmField val LIGHT_BLUE_MAILBOX: Block = registerBlock("light_blue_mailbox", mailboxProperties(MapColor.COLOR_LIGHT_BLUE), {MailboxBlock(it, DyeColor.LIGHT_BLUE)})
+    @JvmField val BLUE_MAILBOX: Block = registerBlock("blue_mailbox", mailboxProperties(MapColor.COLOR_BLUE), {MailboxBlock(it, DyeColor.BLUE)})
+    @JvmField val PURPLE_MAILBOX: Block = registerBlock("purple_mailbox", mailboxProperties(MapColor.COLOR_PURPLE), {MailboxBlock(it, DyeColor.PURPLE)})
+    @JvmField val MAGENTA_MAILBOX: Block = registerBlock("magenta_mailbox", mailboxProperties(MapColor.COLOR_MAGENTA), {MailboxBlock(it, DyeColor.MAGENTA)})
+    @JvmField val PINK_MAILBOX: Block = registerBlock("pink_mailbox", mailboxProperties(MapColor.COLOR_PINK), {MailboxBlock(it, DyeColor.PINK)})
+    val ALL_MAILBOXES = arrayOf(
+        MAILBOX,
+        LIGHT_GRAY_MAILBOX,
+        GRAY_MAILBOX,
+        BLACK_MAILBOX,
+        BROWN_MAILBOX,
+        RED_MAILBOX,
+        ORANGE_MAILBOX,
+        YELLOW_MAILBOX,
+        LIME_MAILBOX,
+        GREEN_MAILBOX,
+        CYAN_MAILBOX,
+        LIGHT_BLUE_MAILBOX,
+        BLUE_MAILBOX,
+        PURPLE_MAILBOX,
+        MAGENTA_MAILBOX,
+        PINK_MAILBOX,
     )
     val MAILBOX_ENTITY: BlockEntityType<MailboxBlockEntity> = registerBlockEntity(
         "mailbox",
         ::MailboxBlockEntity,
-        MAILBOX // TODO add colored blocks
+        *ALL_MAILBOXES
     )
 
     @JvmField
@@ -134,7 +163,7 @@ object PazBlocks {
     private fun <T : BlockEntity> registerBlockEntity(
         name: String,
         factory: (BlockPos, BlockState) -> T,
-        vararg validBlocks: Block
+        vararg validBlocks: Block,
     ): BlockEntityType<T> {
         val key = ResourceKey.create(Registries.BLOCK_ENTITY_TYPE, pazResource(name))
         val builder = FabricBlockEntityTypeBuilder.create(
@@ -146,6 +175,14 @@ object PazBlocks {
         return blockEntity
     }
 
-    fun initialize() {
+    private fun mailboxProperties(mapColor: MapColor = MapColor.SNOW): BlockBehaviour.Properties {
+        return BlockBehaviour.Properties.of()
+            .mapColor(mapColor)
+            .sound(SoundType.LANTERN)
+            .strength(1.3F)
+            .noOcclusion()
+            .pushReaction(PushReaction.BLOCK)
     }
+
+    fun initialize() {}
 }

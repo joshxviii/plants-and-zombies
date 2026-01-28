@@ -1,0 +1,6 @@
+{
+	"parent": "plantz:block/mailbox/mailbox",
+	"textures": {
+		"0": "plantz:block/mailbox/light_blue_mailbox_open"
+	}
+}

@@ -2,8 +2,8 @@
 	"format_version": "1.21.11",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "plantz:block/mailbox",
-		"particle": "plantz:block/mailbox"
+		"0": "plantz:block/mailbox/mailbox",
+		"particle": "plantz:block/mailbox/mailbox"
 	},
 	"elements": [
 		{

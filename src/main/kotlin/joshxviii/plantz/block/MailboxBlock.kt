@@ -1,10 +1,13 @@
 package joshxviii.plantz.block
 
 import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.util.RandomSource
+import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.LevelReader
@@ -23,9 +26,18 @@ import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 
-class MailboxBlock(properties: Properties) : BaseEntityBlock(properties) {
+class MailboxBlock(
+    properties: Properties,
+    color: DyeColor = DyeColor.WHITE
+) : BaseEntityBlock(properties) {
     companion object {
-        val CODEC: MapCodec<MailboxBlock> = simpleCodec(::MailboxBlock)
+        val CODEC: MapCodec<MailboxBlock> = RecordCodecBuilder.mapCodec {
+            it.group(
+                DyeColor.CODEC.fieldOf("color").forGetter { b -> b.color },
+                propertiesCodec()
+            ).apply(it) { color, properties -> MailboxBlock(properties, color) }
+        }
+
         val FACING: EnumProperty<Direction> = HorizontalDirectionalBlock.FACING
         val FACE: EnumProperty<AttachFace> = BlockStateProperties.ATTACH_FACE
         val WATERLOGGED: BooleanProperty = BlockStateProperties.WATERLOGGED
@@ -33,14 +45,33 @@ class MailboxBlock(properties: Properties) : BaseEntityBlock(properties) {
         val SHAPE: VoxelShape = column(8.0, 12.0, 0.0, 8.0)
         var SHAPES: MutableMap<Direction.Axis, VoxelShape> = Shapes.rotateHorizontalAxis(SHAPE)
         var SHAPES_WALL: MutableMap<Direction, VoxelShape> = Shapes.rotateHorizontal(SHAPE.move(0.0,0.25,0.125))
+        val mailboxByColor = mapOf<DyeColor, Block>(
+            DyeColor.WHITE to      PazBlocks.MAILBOX,
+            DyeColor.LIGHT_GRAY to PazBlocks.LIGHT_GRAY_MAILBOX,
+            DyeColor.GRAY to       PazBlocks.GRAY_MAILBOX,
+            DyeColor.BLACK to      PazBlocks.BLACK_MAILBOX,
+            DyeColor.BROWN to      PazBlocks.BROWN_MAILBOX,
+            DyeColor.RED to        PazBlocks.RED_MAILBOX,
+            DyeColor.ORANGE to     PazBlocks.ORANGE_MAILBOX,
+            DyeColor.YELLOW to     PazBlocks.YELLOW_MAILBOX,
+            DyeColor.LIME to       PazBlocks.LIME_MAILBOX,
+            DyeColor.GREEN to      PazBlocks.GREEN_MAILBOX,
+            DyeColor.CYAN to       PazBlocks.CYAN_MAILBOX,
+            DyeColor.LIGHT_BLUE to PazBlocks.LIGHT_BLUE_MAILBOX,
+            DyeColor.BLUE to       PazBlocks.BLUE_MAILBOX,
+            DyeColor.PURPLE to     PazBlocks.PURPLE_MAILBOX,
+            DyeColor.MAGENTA to    PazBlocks.MAGENTA_MAILBOX,
+            DyeColor.PINK to       PazBlocks.PINK_MAILBOX,
+        )
     }
+    private val color: DyeColor = DyeColor.WHITE
 
     init {
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(FACE, AttachFace.FLOOR).setValue(WATERLOGGED, false).setValue(OPEN, false))
     }
 
     override fun newBlockEntity(worldPosition: BlockPos, blockState: BlockState): BlockEntity {
-        return MailboxBlockEntity(worldPosition, blockState)
+        return MailboxBlockEntity(worldPosition, blockState, color)
     }
 
     override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {

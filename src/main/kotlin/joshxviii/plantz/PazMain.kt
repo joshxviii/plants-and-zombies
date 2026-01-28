@@ -13,12 +13,12 @@ object PazMain : ModInitializer {
 		PazServerParticles.initialize()
 		PazBlocks.initialize()
 		PazItems.initialize()
+		PazEffects.initialize()
 		PazCreativeTab.initialize()
 		PazEntities.initialize()
 		PazDamageTypes.initialize()
 		PazDataSerializers.initialize()
 		PazAttributes.initialize()
-		PazEffects.initialize()
 		PazSounds.initialize()
 		PazSpawnPlacements.initialize()
 	}

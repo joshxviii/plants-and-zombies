@@ -1,16 +1,23 @@
 {
   "variants": {
-    "face=floor,facing=north": { "model": "plantz:block/mailbox" },
-    "face=floor,facing=south": { "model": "plantz:block/mailbox", "y": 180 },
-    "face=floor,facing=east":  { "model": "plantz:block/mailbox", "y": 90 },
-    "face=floor,facing=west":  { "model": "plantz:block/mailbox", "y": 270 },
-    "face=wall,facing=north": { "model": "plantz:block/mailbox_wall" },
-    "face=wall,facing=south": { "model": "plantz:block/mailbox_wall", "y": 180 },
-    "face=wall,facing=east":  { "model": "plantz:block/mailbox_wall", "y": 90 },
-    "face=wall,facing=west":  { "model": "plantz:block/mailbox_wall", "y": 270 },
-    "face=ceiling,facing=north": { "model": "plantz:block/mailbox" },
-    "face=ceiling,facing=south": { "model": "plantz:block/mailbox", "y": 180 },
-    "face=ceiling,facing=east":  { "model": "plantz:block/mailbox", "y": 90 },
-    "face=ceiling,facing=west":  { "model": "plantz:block/mailbox", "y": 270 }
+    "face=ceiling": { "model": "plantz:block/mailbox/mailbox" },
+
+    "open=false,face=floor,facing=north": { "model": "plantz:block/mailbox/mailbox" },
+    "open=false,face=floor,facing=south": { "model": "plantz:block/mailbox/mailbox", "y": 180 },
+    "open=false,face=floor,facing=east":  { "model": "plantz:block/mailbox/mailbox", "y": 90 },
+    "open=false,face=floor,facing=west":  { "model": "plantz:block/mailbox/mailbox", "y": 270 },
+    "open=false,face=wall,facing=north": { "model": "plantz:block/mailbox/mailbox_wall" },
+    "open=false,face=wall,facing=south": { "model": "plantz:block/mailbox/mailbox_wall", "y": 180 },
+    "open=false,face=wall,facing=east":  { "model": "plantz:block/mailbox/mailbox_wall", "y": 90 },
+    "open=false,face=wall,facing=west":  { "model": "plantz:block/mailbox/mailbox_wall", "y": 270 },
+
+    "open=true,face=floor,facing=north": { "model": "plantz:block/mailbox/mailbox_open" },
+    "open=true,face=floor,facing=south": { "model": "plantz:block/mailbox/mailbox_open", "y": 180 },
+    "open=true,face=floor,facing=east":  { "model": "plantz:block/mailbox/mailbox_open", "y": 90 },
+    "open=true,face=floor,facing=west":  { "model": "plantz:block/mailbox/mailbox_open", "y": 270 },
+    "open=true,face=wall,facing=north": { "model": "plantz:block/mailbox/mailbox_wall_open" },
+    "open=true,face=wall,facing=south": { "model": "plantz:block/mailbox/mailbox_wall_open", "y": 180 },
+    "open=true,face=wall,facing=east":  { "model": "plantz:block/mailbox/mailbox_wall_open", "y": 90 },
+    "open=true,face=wall,facing=west":  { "model": "plantz:block/mailbox/mailbox_wall_open", "y": 270 }
   }
 }
