@@ -2,6 +2,7 @@ package joshxviii.plantz.ai.goal
 
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.ai.pathfinding.MinerNodeEvaluator
+import joshxviii.plantz.canReachTarget
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundSource
@@ -10,6 +11,7 @@ import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.LevelEvent
 import net.minecraft.world.level.gamerules.GameRules
+import net.minecraft.world.level.pathfinder.PathType
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -17,10 +19,15 @@ class MineBlocksToTargetGoal(
     val miner: PathfinderMob,
     private val maxBreakRange: Float = 2.25f,
     private val verticalBlockRange: Int = 3,
-    private val breakCooldown: Int = 40
 ) : Goal() {
+
+    companion object {
+        private const val BREAK_COOLDOWN: Int = 8
+    }
+
     private val level = miner.level() as ServerLevel
     var breakTime: Int = 0
+    var breakCooldownTime: Int = 0
     var lastBreakProgress: Int = -1
     private var breakTargetPos: BlockPos? = null
     set(value) {
@@ -42,9 +49,14 @@ class MineBlocksToTargetGoal(
     }
 
     override fun canUse(): Boolean {
+        if (--breakCooldownTime > 0) return false
         if (miner.isDeadOrDying) return false
         if (level.gameRules.get(GameRules.MOB_GRIEFING)==false) return false
         val targetPos = miner.target?.blockPosition() ?: return false
+
+        breakTargetPos?.let {
+            if (!miner.navigation.path.canReachTarget(targetPos)) return true
+        }
 
         val minerPos = miner.blockPosition()
         if ( abs(minerPos.y - targetPos.y)>1
@@ -65,18 +77,20 @@ class MineBlocksToTargetGoal(
         val path = miner.navigation.path ?: return false
 
         for (i in path.nextNodeIndex until min(path.nextNodeIndex + 2, path.nodeCount)) {
-            val node = path.getNode(i)
-            // Check vertical positions (middle, top then bottom)
-            listOf(node.y+1, node.y+2, node.y).forEach { y ->
-                val testBlock = BlockPos(node.x, y, node.z)
-                //level.levelEvent(LevelEvent.PARTICLES_ELECTRIC_SPARK, testBlock, 15)
+             val node = path.getNode(i)
 
-                if (isBlockWithinRange(testBlock) && isBlockMineable(testBlock)) {
-                    breakTargetPos = testBlock
-                    return true
-                }
-            }
-        }
+             // Check vertical positions (middle, top then bottom)
+            listOf(node.y+1, node.y+2, if(targetPos.y>miner.y) null else node.y ).forEach { y ->
+                 if (y==null) return@forEach
+                 val testBlock = BlockPos(node.x, y, node.z)
+                 //level.levelEvent(LevelEvent.PARTICLES_ELECTRIC_SPARK, testBlock, 15)
+
+                 if (isBlockWithinRange(testBlock) && isBlockMineable(testBlock)) {
+                     breakTargetPos = testBlock
+                     return true
+                 }
+             }
+         }
 
         return false
     }
@@ -105,6 +119,8 @@ class MineBlocksToTargetGoal(
         }
 
         if (progress >= 10) {// break block
+            breakCooldownTime = BREAK_COOLDOWN
+            breakTargetPos = null
             breakTime=0
             level.destroyBlock(
                 targetBlock,
