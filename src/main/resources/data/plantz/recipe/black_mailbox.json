@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_transmute",
+  "group": "mailbox_dye",
+  "category": "misc",
+  "input": "#plantz:mailboxes",
+  "material": "minecraft:black_dye",
+  "result": {
+    "count": 1,
+    "id": "plantz:black_mailbox"
+  }
+}

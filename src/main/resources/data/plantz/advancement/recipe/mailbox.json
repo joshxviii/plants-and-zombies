@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "plantz:mailbox"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_newspaper": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "plantz:newspaper"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_newspaper"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "plantz:mailbox"
+    ]
+  }
+}

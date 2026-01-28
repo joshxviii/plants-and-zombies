@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "plantz:mailbox"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_mailbox": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "plantz:mailbox"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_mailbox"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "plantz:light_gray_mailbox",
+      "plantz:gray_mailbox",
+      "plantz:black_mailbox",
+      "plantz:brown_mailbox",
+      "plantz:red_mailbox",
+      "plantz:orange_mailbox",
+      "plantz:yellow_mailbox",
+      "plantz:lime_mailbox",
+      "plantz:green_mailbox",
+      "plantz:cyan_mailbox",
+      "plantz:light_blue_mailbox",
+      "plantz:blue_mailbox",
+      "plantz:purple_mailbox",
+      "plantz:magenta_mailbox",
+      "plantz:pink_mailbox"
+    ]
+  }
+}
