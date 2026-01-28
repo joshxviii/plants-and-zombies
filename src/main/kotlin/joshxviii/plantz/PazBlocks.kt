@@ -2,16 +2,22 @@ package joshxviii.plantz
 
 import joshxviii.plantz.block.BrainzFlagBlock
 import joshxviii.plantz.block.ConeBlock
+import joshxviii.plantz.block.MailboxBlock
 import joshxviii.plantz.block.PlantPotBlock
+import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.item.component.BlocksHeadDamage
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup
+import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityType
+import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
+import net.fabricmc.fabric.mixin.blockview.BlockEntityMixin
+import net.fabricmc.fabric.mixin.lookup.BlockEntityTypeAccessor
+import net.minecraft.core.BlockPos
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.util.Util
-import net.minecraft.util.datafix.fixes.References
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
@@ -24,10 +30,9 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
-import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier
 import net.minecraft.world.level.block.state.BlockBehaviour
+import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.material.PushReaction
-import java.util.Set
 
 object PazBlocks {
     @JvmField
@@ -37,8 +42,24 @@ object PazBlocks {
             .sound(SoundType.STONE)
             .strength(0.2F)
             .noOcclusion()
-            .pushReaction(PushReaction.DESTROY),
+            .pushReaction(PushReaction.NORMAL),
         ::PlantPotBlock
+    )
+
+    @JvmField
+    val MAILBOX: Block = registerBlock(
+        "mailbox",
+        BlockBehaviour.Properties.of()
+            .sound(SoundType.WOOD)
+            .strength(0.5F)
+            .noOcclusion()
+            .pushReaction(PushReaction.BLOCK),
+        ::MailboxBlock
+    )
+    val MAILBOX_ENTITY: BlockEntityType<MailboxBlockEntity> = registerBlockEntity(
+        "mailbox",
+        ::MailboxBlockEntity,
+        MAILBOX // TODO add colored blocks
     )
 
     @JvmField
@@ -113,5 +134,22 @@ object PazBlocks {
         return block
     }
 
-    fun initialize() {}
+
+    private fun <T : BlockEntity> registerBlockEntity(
+        name: String,
+        factory: (BlockPos, BlockState) -> T,
+        vararg validBlocks: Block
+    ): BlockEntityType<T> {
+        val key = ResourceKey.create(Registries.BLOCK_ENTITY_TYPE, pazResource(name))
+        val builder = FabricBlockEntityTypeBuilder.create(
+            factory,
+            *validBlocks
+        )
+        val blockEntity = builder.build()
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, key, blockEntity)
+        return blockEntity
+    }
+
+    fun initialize() {
+    }
 }

@@ -50,9 +50,11 @@ object PazCreativeTab {
 
                 // zombie spawn eggs
                 output.accept(PazItems.BROWN_COAT_SPAWN_EGG)
+                output.accept(PazItems.NEWSPAPER_ZOMBIE_SPAWN_EGG)
                 output.accept(PazItems.MINER_SPAWN_EGG)
                 output.accept(PazItems.ZOMBIE_YETI_SPAWN_EGG)
                 output.accept(PazItems.DISCO_ZOMBIE_SPAWN_EGG)
+                output.accept(PazItems.BACKUP_DANCER_SPAWN_EGG)
 
                 //gnome
                 output.accept(PazItems.GNOME_SPAWN_EGG)
@@ -61,8 +63,10 @@ object PazCreativeTab {
                 output.accept(PazItems.SUN)
                 output.accept(PazBlocks.PLANT_POT)
                 output.accept(PazItems.PLANT_POT_MINECART)
+                output.accept(PazBlocks.MAILBOX)
                 output.accept(PazBlocks.CONE)
                 output.accept(Items.BUCKET)
+                output.accept(PazItems.NEWSPAPER)
                 output.accept(PazBlocks.BRAINZ_FLAG)
 
                 //output.accept(ZombieRaid.getBrainzBannerInstance(parameters.holders().lookupOrThrow(Registries.BANNER_PATTERN)))

@@ -1,0 +1,57 @@
+{
+	"format_version": "1.21.11",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "plantz:item/newspaper",
+		"particle": "plantz:item/newspaper"
+	},
+	"elements": [
+		{
+			"from": [8, 0, 8],
+			"to": [17, 15, 8],
+			"rotation": {"angle": -37.5, "axis": "y", "origin": [8, 7.5, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 4.5, 7.5], "texture": "#0"},
+				"east": {"uv": [0, 0, 0, 7.5], "texture": "#0"},
+				"south": {"uv": [4.5, 0, 9, 7.5], "texture": "#0"},
+				"west": {"uv": [0, 0, 0, 7.5], "texture": "#0"},
+				"up": {"uv": [4.5, 0, 0, 0], "texture": "#0"},
+				"down": {"uv": [4.5, 0, 0, 0], "texture": "#0"}
+			}
+		},
+		{
+			"from": [-1, 0, 8],
+			"to": [8, 15, 8],
+			"rotation": {"angle": 37.5, "axis": "y", "origin": [8, 7.5, 8]},
+			"faces": {
+				"north": {"uv": [0, 7.5, 4.5, 15], "texture": "#0"},
+				"east": {"uv": [0, 0, 0, 7.5], "texture": "#0"},
+				"south": {"uv": [4.5, 7.5, 9, 15], "texture": "#0"},
+				"west": {"uv": [0, 0, 0, 7.5], "texture": "#0"},
+				"up": {"uv": [4.5, 0, 0, 0], "texture": "#0"},
+				"down": {"uv": [4.5, 0, 0, 0], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"translation": [-5, 2, -4.25]
+		},
+		"thirdperson_lefthand": {
+			"translation": [-6.75, 2, -4.25]
+		},
+		"head": {
+			"rotation": [91, 0, 0],
+			"translation": [0, 11.75, 0.5],
+			"scale": [1.5, 1.5, 1.5]
+		}
+	},
+	"groups": [
+		{
+			"name": "item",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0, 1]
+		}
+	]
+}

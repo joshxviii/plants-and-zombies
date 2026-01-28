@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "plantz:block/mailbox" },
+    "facing=south": { "model": "plantz:block/mailbox", "y": 180 },
+    "facing=east":  { "model": "plantz:block/mailbox", "y": 90 },
+    "facing=west":  { "model": "plantz:block/mailbox", "y": 270 }
+  }
+}

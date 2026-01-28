@@ -2,6 +2,7 @@ package joshxviii.plantz
 
 import com.mojang.blaze3d.vertex.PoseStack
 import joshxviii.plantz.entity.zombie.DiscoZombie
+import joshxviii.plantz.model.zombies.PazZombieModel
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.ModelLayers
@@ -20,8 +21,8 @@ import org.joml.Vector3f
 
 class PazZombieRenderer(
     context: EntityRendererProvider.Context,
-    private val defaultModel: ZombieModel<ZombieRenderState> = ZombieModel(context.bakeLayer(ModelLayers.ZOMBIE)),
-    private val babyModel: ZombieModel<ZombieRenderState> = ZombieModel(context.bakeLayer(ModelLayers.ZOMBIE_BABY)),
+    private val defaultModel: PazZombieModel = PazZombieModel(context.bakeLayer(PazZombieModel.LAYER_LOCATION)),
+    private val babyModel: PazZombieModel = PazZombieModel(context.bakeLayer(ModelLayers.ZOMBIE_BABY)),
     armorSet: ArmorModelSet<ModelLayerLocation> = ModelLayers.ZOMBIE_ARMOR,
     babyArmorSet: ArmorModelSet<ModelLayerLocation> = ModelLayers.ZOMBIE_BABY_ARMOR
 ) : AbstractZombieRenderer<Zombie, ZombieRenderState, ZombieModel<ZombieRenderState>>(

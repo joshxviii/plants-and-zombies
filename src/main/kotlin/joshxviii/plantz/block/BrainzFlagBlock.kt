@@ -8,10 +8,7 @@ import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.ScheduledTickAccess
-import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.block.HorizontalDirectionalBlock
-import net.minecraft.world.level.block.Rotation
+import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.EnumProperty
@@ -55,17 +52,15 @@ class BrainzFlagBlock(properties: Properties) : Block(properties) {
         neighbourState: BlockState,
         random: RandomSource
     ): BlockState {
-        return if (!state.canSurvive(level, pos)) Blocks.AIR.defaultBlockState() else super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random)
+        return if (directionToNeighbour == Direction.DOWN && !state.canSurvive(level, pos))
+            Blocks.AIR.defaultBlockState()
+        else
+            super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random)
     }
 
     override fun canSurvive(state: BlockState, level: LevelReader, pos: BlockPos): Boolean {
-        val below = pos.below()
-        val belowState = level.getBlockState(below)
-        return this.canSurviveOn(level, below, belowState)
-    }
-
-    private fun canSurviveOn(level: BlockGetter, relativePos: BlockPos, relativeState: BlockState): Boolean {
-        return relativeState.isFaceSturdy(level, relativePos, Direction.UP)
+        val direction = Direction.DOWN
+        return canSupportCenter(level, pos.relative(direction), direction.opposite)
     }
 
     override fun codec(): MapCodec<out BrainzFlagBlock> { return CODEC }

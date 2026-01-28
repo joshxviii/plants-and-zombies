@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class ZombieYetiModel extends ZombieModel<@NotNull ZombieRenderState> {
+public class ZombieYetiModel extends PazZombieModel {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("zombie_yeti"), "main");
 	private final KeyframeAnimation actionAnimation;
 

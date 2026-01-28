@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class MinerModel extends ZombieModel<@NotNull ZombieRenderState> {
+public class MinerModel extends PazZombieModel {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("miner"), "main");
 	private final KeyframeAnimation actionAnimation;
 	private final AnimationState mineAnimationState = new AnimationState();
