@@ -10,7 +10,6 @@ import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.monster.zombie.Zombie
-import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 
@@ -40,6 +39,11 @@ class NewspaperZombie(type: EntityType<out NewspaperZombie>, level: Level) : Zom
     override fun isSunSensitive(): Boolean = false
     override fun convertsInWater(): Boolean = false
 
+    override fun dropEquipment(level: ServerLevel) {
+        super.dropEquipment(level)
+    }
+
+
     override fun finalizeSpawn(
         level: ServerLevelAccessor,
         difficulty: DifficultyInstance,
@@ -50,6 +54,7 @@ class NewspaperZombie(type: EntityType<out NewspaperZombie>, level: Level) : Zom
         setCanPickUpLoot(true)
         setCanBreakDoors(true)
         setItemSlot(EquipmentSlot.MAINHAND, PazItems.NEWSPAPER.defaultInstance)
+        setDropChance(EquipmentSlot.MAINHAND, 0.0f)
         return data
     }
 }

@@ -44,16 +44,13 @@ data class SeedPacket(
         val CODEC: Codec<SeedPacket> = RecordCodecBuilder.create { inst ->
             inst.group(
                 Identifier.CODEC.optionalFieldOf("id").forGetter { Optional.ofNullable(it.entityId) }
-            ).apply(inst) { idOpt: Optional<Identifier> ->
-                SeedPacket(entityId = idOpt.orElse(null))
-            }
+            ).apply(inst) { SeedPacket(entityId = it.orElse(null)) }
         }
 
         val STREAM_CODEC: StreamCodec<ByteBuf, SeedPacket> = StreamCodec.composite(
-            ByteBufCodecs.optional(Identifier.STREAM_CODEC), { Optional.ofNullable(it.entityId) },
-            { idOpt: Optional<Identifier> ->
-                SeedPacket(entityId = idOpt.orElse(null))
-            }
+            ByteBufCodecs.optional(Identifier.STREAM_CODEC),
+            { Optional.ofNullable(it.entityId) },
+            { SeedPacket(it.orElse(null)) }
         )
     }
 }

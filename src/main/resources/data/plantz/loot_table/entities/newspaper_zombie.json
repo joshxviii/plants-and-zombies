@@ -9,7 +9,7 @@
           "conditions": [
             {
               "condition": "minecraft:random_chance",
-              "chance": 0.35
+              "chance": 0.25
             }
           ],
           "functions": [
@@ -18,7 +18,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "stick"
+          "name": "plantz:newspaper"
         }
       ],
       "rolls": 1,

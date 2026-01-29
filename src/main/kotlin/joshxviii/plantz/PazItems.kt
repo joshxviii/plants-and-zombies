@@ -52,7 +52,10 @@ object PazItems {
     val NEWSPAPER: Item = registerItem(
         "newspaper", ::Item,
         properties = Item.Properties()
-            .component(PazComponents.BLOCKS_PROJECTILE_DAMAGE, BlocksProjectileDamage(breakChance = 0.15f))
+            .component(PazComponents.BLOCKS_PROJECTILE_DAMAGE, BlocksProjectileDamage(
+                slot = EquipmentSlotGroup.HAND,
+                breakChance = 0.15f
+            ))
             .component(
                 DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
                     .add(

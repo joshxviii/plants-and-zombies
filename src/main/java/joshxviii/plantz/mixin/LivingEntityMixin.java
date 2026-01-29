@@ -4,6 +4,7 @@ import joshxviii.plantz.PazComponents;
 import joshxviii.plantz.PazEffects;
 import joshxviii.plantz.PazSounds;
 import joshxviii.plantz.PazTags;
+import joshxviii.plantz.item.component.BlocksProjectileDamage;
 import net.minecraft.core.Holder;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -15,6 +16,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
@@ -96,10 +98,14 @@ abstract public class LivingEntityMixin {
         LivingEntity entity = (LivingEntity) (Object) this;
         for (EquipmentSlot slot : slots) {
             ItemStack item = entity.getItemBySlot(slot);
-            boolean canAbsorb = item.getComponents().has(PazComponents.BLOCKS_PROJECTILE_DAMAGE) && source.is(PazTags.DamageTypes.BLOCKABLE_DAMAGE);
+            BlocksProjectileDamage component = item.getComponents().get(PazComponents.BLOCKS_PROJECTILE_DAMAGE);
+            if (component==null) continue;
+
+            EquipmentSlotGroup validSlot = component.getSlot();
+            boolean canAbsorb = validSlot.test(slot)  && source.is(PazTags.DamageTypes.BLOCKABLE_DAMAGE);
             if(canAbsorb) {
                 if(tryBreak) {
-                    float breakChance = Objects.requireNonNull(item.getComponents().get(PazComponents.BLOCKS_PROJECTILE_DAMAGE)).getBreakChance();
+                    float breakChance = component.getBreakChance();
                     if (entity.getRandom().nextFloat() < breakChance) {
                         item.shrink(1);
                         entity.makeSound(SoundEvents.ITEM_BREAK.value());

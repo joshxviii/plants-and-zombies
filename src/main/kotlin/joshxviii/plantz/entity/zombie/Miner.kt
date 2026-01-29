@@ -97,6 +97,7 @@ class Miner(type: EntityType<out Miner>, level: Level) : Zombie(type, level) {
             isLeftHanded = false
             setCanBreakDoors(true)
             setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_PICKAXE.defaultInstance)
+            setDropChance(EquipmentSlot.MAINHAND, 0.0f)
         }
 
         return data
