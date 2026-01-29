@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "plantz:block/mailbox/cyan_mailbox"
+    "model": "plantz:block/mailbox/cyan_mailbox_flag"
   }
 }

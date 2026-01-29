@@ -15,6 +15,7 @@ object PazServerParticles {
     @JvmField val FUME_BUBBLE: SimpleParticleType = register("fume_bubble")
     @JvmField val EMBER: SimpleParticleType = register("ember")
     @JvmField val SLEEP: SimpleParticleType = register("sleep")
+    @JvmField val NOTIFY: SimpleParticleType = register("notify")
     @JvmField val ZOMBIE_OMEN: SimpleParticleType = register("zombie_omen")
 
     fun register(name: String): SimpleParticleType {

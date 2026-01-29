@@ -23,6 +23,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.Rarity
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.item.equipment.Equippable
 import net.minecraft.world.level.block.Block
@@ -126,6 +127,7 @@ object PazBlocks {
             .pushReaction(PushReaction.DESTROY),
         ::BrainzFlagBlock,
         Item.Properties()
+            .rarity(Rarity.RARE)
             .equippableUnswappable(EquipmentSlot.OFFHAND)
             .component(
                 DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()

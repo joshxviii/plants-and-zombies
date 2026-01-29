@@ -1,0 +1,6 @@
+{
+	"parent": "plantz:block/mailbox/mailbox_wall_flag",
+	"textures": {
+		"0": "plantz:block/mailbox/blue_mailbox"
+	}
+}

@@ -2,6 +2,7 @@ package joshxviii.plantz
 
 import joshxviii.plantz.particles.EmberParticle
 import joshxviii.plantz.particles.FumeBubbleParticle
+import joshxviii.plantz.particles.NotifyParticle
 import joshxviii.plantz.particles.PeaParticle
 import joshxviii.plantz.particles.SleepParticle
 import joshxviii.plantz.particles.SporeParticle
@@ -43,6 +44,10 @@ object PazParticles {
 
         it.register(PazServerParticles.SLEEP) { spriteSet ->
             SleepParticle.Provider(spriteSet)
+        }
+
+        it.register(PazServerParticles.NOTIFY) { spriteSet ->
+            NotifyParticle.Provider(spriteSet)
         }
 
         it.register(PazServerParticles.ZOMBIE_OMEN) { sprite ->
