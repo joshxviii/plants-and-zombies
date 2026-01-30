@@ -81,7 +81,7 @@ class NewspaperZombie(type: EntityType<out NewspaperZombie>, level: Level) : Paz
             .addTransientModifier(
                 AttributeModifier(
                     ANGRY_BONUS_ID,
-                    0.09,
+                    0.1,
                     AttributeModifier.Operation.ADD_VALUE
                 )
             )
@@ -89,7 +89,7 @@ class NewspaperZombie(type: EntityType<out NewspaperZombie>, level: Level) : Paz
             .addTransientModifier(
                 AttributeModifier(
                     ANGRY_BONUS_ID,
-                    1.0,
+                    1.5,
                     AttributeModifier.Operation.ADD_VALUE
                 )
             )

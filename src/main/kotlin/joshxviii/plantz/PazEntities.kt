@@ -223,7 +223,7 @@ object PazEntities {
             .clientTrackingRange(8)
             .notInPeaceful(),
         attributes = Zombie.createAttributes()
-            .add(Attributes.MOVEMENT_SPEED, 0.24)
+            .add(Attributes.MOVEMENT_SPEED, 0.22)
             .add(Attributes.MAX_HEALTH, 22.0)
     )
     @JvmField val MINER: EntityType<Miner> =  registerZombie(
@@ -238,7 +238,7 @@ object PazEntities {
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 2.0)
             .add(Attributes.MAX_HEALTH, 25.0)
-            .add(Attributes.MOVEMENT_SPEED, 0.21)
+            .add(Attributes.MOVEMENT_SPEED, 0.225)
             .add(Attributes.FOLLOW_RANGE, 16.0)
     )
     @JvmField val ZOMBIE_YETI: EntityType<ZombieYeti> =  registerZombie(

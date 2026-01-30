@@ -33,10 +33,20 @@
 		"firstperson_lefthand": {
 			"translation": [-9, 2.75, 0]
 		},
+		"gui": {
+			"translation": [0, -1.75, 0]
+		},
 		"head": {
-			"rotation": [91, 0, 0],
-			"translation": [0, 11.75, 0.5],
-			"scale": [1.5, 1.5, 1.5]
+			"rotation": [0, -180, 0],
+			"translation": [0, -0.75, -7.25]
+		},
+		"fixed": {
+			"rotation": [0, -180, 0],
+			"translation": [0, -2, 0.25],
+			"scale": [1.25, 1.25, 1.25]
+		},
+		"on_shelf": {
+			"scale": [1.24, 1.24, 1.24]
 		}
 	},
 	"groups": [
