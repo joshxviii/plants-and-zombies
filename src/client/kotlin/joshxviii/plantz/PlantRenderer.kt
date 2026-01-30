@@ -70,13 +70,7 @@ class PlantRenderer(
             }
         }
 
-        for (suffix in suffixes.permutationsDescending()) {
-            if (suffix.isEmpty()) break
-            val candidate = pazResource("${base}_${suffix}.png")
-            if (rm.getResource(candidate).isPresent) return candidate
-        }
-
-        return pazResource("$base.png")
+        return resolveTextureLocation(base, suffixes, rm) ?: pazResource("$base.png")
     }
 }
 

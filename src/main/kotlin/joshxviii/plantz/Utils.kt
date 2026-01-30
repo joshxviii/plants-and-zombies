@@ -9,6 +9,7 @@ import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerEntityGetter
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.tags.PoiTypeTags
 import net.minecraft.world.attribute.EnvironmentAttributes
 import net.minecraft.world.damagesource.DamageSource
@@ -75,6 +76,15 @@ fun List<String>.permutationsDescending(): List<String> = buildList {
         add(this@permutationsDescending.subList(0, i).joinToString(""))
     }
     add("")
+}
+
+fun resolveTextureLocation(base: String, suffixes: List<String>, rm: ResourceManager): Identifier? {
+    for (suffix in suffixes.permutationsDescending()) {
+        if (suffix.isEmpty()) break
+        val candidate = pazResource("${base}_${suffix}.png")
+        if (rm.getResource(candidate).isPresent) return candidate
+    }
+    return null
 }
 
 private fun Raids.getOrCreateZombieRaid(level: ServerLevel, pos: BlockPos): ZombieRaid {

@@ -1,0 +1,7 @@
+{
+	"parent": "plantz:item/newspaper/article_1",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "plantz:item/newspaper/article_7"
+	}
+}

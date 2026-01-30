@@ -1,22 +1,104 @@
 {
   "model": {
-    "type": "minecraft:select",
-    "property": "minecraft:display_context",
-    "cases": [
-      {
-        "when": [
-          "thirdperson_righthand",
-          "thirdperson_lefthand"
-        ],
-        "model": {
-          "type": "minecraft:model",
-          "model": "plantz:item/newspaper"
+    "type": "minecraft:condition",
+    "property": "minecraft:using_item",
+    "on_true": {
+      "type": "minecraft:select",
+      "property": "minecraft:display_context",
+      "cases": [
+        {
+          "when": [
+            "firstperson_righthand",
+            "firstperson_lefthand"
+          ],
+          "model": {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:time",
+            "source": "moon_phase",
+            "wobble": false,
+            "entries": [
+              {
+                "threshold": 0.875,
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "plantz:item/newspaper/article_8"
+                }
+              },
+              {
+                "threshold": 0.75,
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "plantz:item/newspaper/article_7"
+                }
+              },
+              {
+                "threshold": 0.625,
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "plantz:item/newspaper/article_6"
+                }
+              },
+              {
+                "threshold": 0.5,
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "plantz:item/newspaper/article_5"
+                }
+              },
+              {
+                "threshold": 0.375,
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "plantz:item/newspaper/article_4"
+                }
+              },
+              {
+                "threshold": 0.25,
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "plantz:item/newspaper/article_3"
+                }
+              },
+              {
+                "threshold": 0.125,
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "plantz:item/newspaper/article_2"
+                }
+              },
+              {
+                "threshold": 0,
+                "model": {
+                  "type": "minecraft:model",
+                  "model": "plantz:item/newspaper/article_1"
+                }
+              }
+            ],
+            "fallback": {
+              "type": "minecraft:model",
+              "model": "plantz:item/newspaper/article_1"
+            }
+          }
+        },
+        {
+          "when": [
+            "thirdperson_righthand",
+            "thirdperson_lefthand"
+          ],
+          "model": {
+            "type": "minecraft:model",
+            "model": "plantz:item/newspaper/newspaper"
+          }
         }
+      ],
+      "fallback": {
+        "type": "minecraft:model",
+        "model": "plantz:item/newspaper/item"
       }
-    ],
-    "fallback": {
+    },
+    "on_false": {
       "type": "minecraft:model",
-      "model": "plantz:item/newspaper_item"
+      "model": "plantz:item/newspaper/item"
     }
   }
 }

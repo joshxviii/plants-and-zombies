@@ -8,6 +8,7 @@ import joshxviii.plantz.PazEntities.MINER
 import joshxviii.plantz.PazEntities.NEWSPAPER_ZOMBIE
 import joshxviii.plantz.PazEntities.ZOMBIE_YETI
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.item.NewspaperItem
 import joshxviii.plantz.item.SeedPacketItem
 import joshxviii.plantz.item.SunItem
 import joshxviii.plantz.item.component.BlocksProjectileDamage
@@ -17,6 +18,8 @@ import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
 import net.fabricmc.fabric.api.registry.FuelValueEvents
 import net.fabricmc.fabric.impl.item.ItemComponentTooltipProviderRegistryImpl
 import net.minecraft.core.Direction
+import net.minecraft.core.Holder
+import net.minecraft.core.HolderSet
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.dispenser.BlockSource
@@ -24,23 +27,34 @@ import net.minecraft.core.dispenser.DefaultDispenseItemBehavior
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
+import net.minecraft.server.MinecraftServer
+import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.tags.DamageTypeTags
+import net.minecraft.tags.TagEntry
+import net.minecraft.tags.TagKey
+import net.minecraft.tags.TagLoader
+import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
-import net.minecraft.world.item.MinecartItem
-import net.minecraft.world.item.SpawnEggItem
+import net.minecraft.world.item.*
+import net.minecraft.world.item.component.BlocksAttacks
+import net.minecraft.world.item.component.BlocksAttacks.DamageReduction
+import net.minecraft.world.item.component.BlocksAttacks.ItemDamageFunction
+import net.minecraft.world.item.component.Consumable
+import net.minecraft.world.item.component.Consumables
 import net.minecraft.world.item.component.ItemAttributeModifiers
+import net.minecraft.world.item.component.Tool
 import net.minecraft.world.item.component.UseCooldown
 import net.minecraft.world.item.equipment.Equippable
 import net.minecraft.world.level.block.DispenserBlock
 import net.minecraft.world.level.gameevent.GameEvent
+import java.util.*
+import java.util.List
 import java.util.function.Function
 
 object PazItems {
@@ -50,28 +64,13 @@ object PazItems {
         properties = Item.Properties().stacksTo(99))
     @JvmField
     val NEWSPAPER: Item = registerItem(
-        "newspaper", ::Item,
+        "newspaper", ::NewspaperItem,
         properties = Item.Properties()
             .component(PazComponents.BLOCKS_PROJECTILE_DAMAGE, BlocksProjectileDamage(
                 slot = EquipmentSlotGroup.HAND,
-                breakChance = 0.15f
-            ))
-            .component(
-                DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
-                    .add(
-                        Attributes.KNOCKBACK_RESISTANCE,
-                        AttributeModifier(pazResource("newspaper_knockback_resistance"), 0.2, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.HAND)
-                    .add(
-                        Attributes.MOVEMENT_SPEED,
-                        AttributeModifier(pazResource("reading_newspaper"), -0.45, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
-                        EquipmentSlotGroup.HAND
-                    ).add(
-                        Attributes.FOLLOW_RANGE,
-                        AttributeModifier(pazResource("reading_newspaper"), -0.75, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
-                        EquipmentSlotGroup.HAND
-                    ).build()
-            ))
+                breakChance = 0.15f)
+            ).component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
+)
     @JvmField
     val SEED_PACKET: Item = registerItem(
         "seed_packet", ::SeedPacketItem,
@@ -120,6 +119,7 @@ object PazItems {
 
         FuelValueEvents.BUILD.register { builder, context ->
             builder.add(SUN, context.baseSmeltTime())
+            builder.add(NEWSPAPER, context.baseSmeltTime())
         }
 
         // Modify components

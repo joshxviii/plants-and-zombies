@@ -20,7 +20,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.phys.Vec3
 
-class BackupDancer(type: EntityType<out BackupDancer> = PazEntities.BACKUP_DANCER, level: Level, position: Vec3? = null, rotation: Float? = null) : Zombie(type, level) {
+class BackupDancer(type: EntityType<out BackupDancer> = PazEntities.BACKUP_DANCER, level: Level, position: Vec3? = null, rotation: Float? = null) : PazZombie(type, level) {
 
     init {
         if (position != null) setPos(position)

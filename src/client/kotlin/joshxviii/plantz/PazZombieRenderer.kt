@@ -2,7 +2,10 @@ package joshxviii.plantz
 
 import com.mojang.blaze3d.vertex.PoseStack
 import joshxviii.plantz.entity.zombie.DiscoZombie
+import joshxviii.plantz.entity.zombie.NewspaperZombie
+import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.model.zombies.PazZombieModel
+import net.minecraft.client.Minecraft
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.ModelLayers
@@ -38,22 +41,32 @@ class PazZombieRenderer(
 
     override fun extractRenderState(entity: Zombie, state: ZombieRenderState, partialTicks: Float) {
         super.extractRenderState(entity, state, partialTicks)
+        (entity as PazZombie)
         (state as PazZombieRenderState)
         state.texturePath = BuiltInRegistries.ENTITY_TYPE.getKey(entity.type).path
         state.initAnimationState.startIfStopped(0)
         if (entity is DiscoZombie) state.actionAnimationState.copyFrom(entity.summonAnimation)
+        if (entity is NewspaperZombie) state.isAngry = entity.isAngry()
     }
 
     override fun getTextureLocation(state: ZombieRenderState): Identifier {
         (state as PazZombieRenderState)
-        val baseTexture = "textures/entity/zombie/${state.texturePath}/${state.texturePath}"
-        return pazResource("${baseTexture}.png")
+
+        val base = "textures/entity/zombie/${state.texturePath}/${state.texturePath}"
+        val rm = Minecraft.getInstance().resourceManager
+
+        val suffixes = buildList {
+            if (state.isAngry) add("angry")
+        }
+
+        return resolveTextureLocation(base, suffixes, rm) ?: pazResource("$base.png")
     }
 }
 
 class PazZombieRenderState : ZombieRenderState() {
     var texturePath: String = "default"
     var actionTime: Int = 0
+    var isAngry: Boolean = false
     val initAnimationState: AnimationState = AnimationState()
     val actionAnimationState: AnimationState = AnimationState()
 }

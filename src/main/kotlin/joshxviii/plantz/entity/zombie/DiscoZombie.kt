@@ -27,7 +27,7 @@ import net.minecraft.world.phys.Vec3
 import kotlin.math.max
 import kotlin.math.min
 
-class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : Zombie(type, level) {
+class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(type, level) {
 
     companion object {
         val SUMMON_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(DiscoZombie::class.java, EntityDataSerializers.INT)

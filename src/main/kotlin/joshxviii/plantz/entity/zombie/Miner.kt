@@ -24,7 +24,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 
 
-class Miner(type: EntityType<out Miner>, level: Level) : Zombie(type, level) {
+class Miner(type: EntityType<out Miner>, level: Level) : PazZombie(type, level) {
 
     companion object {
         fun checkMinerSpawnRules(

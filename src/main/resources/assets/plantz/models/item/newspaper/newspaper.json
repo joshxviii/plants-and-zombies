@@ -2,8 +2,8 @@
 	"format_version": "1.21.11",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "plantz:item/newspaper",
-		"particle": "plantz:item/newspaper"
+		"0": "plantz:item/newspaper/newspaper",
+		"particle": "plantz:item/newspaper/newspaper"
 	},
 	"elements": [
 		{

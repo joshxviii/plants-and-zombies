@@ -13,7 +13,7 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 
-class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : Zombie(type, level) {
+class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type, level) {
     override fun isSunSensitive(): Boolean {
         return false
     }

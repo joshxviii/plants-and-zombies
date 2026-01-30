@@ -32,7 +32,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.BlockState
 import org.apache.logging.log4j.core.jmx.Server
 
-class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : Zombie(type, level) {
+class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : PazZombie(type, level) {
 
     companion object {
         fun checkZombieYetiSpawnRules(

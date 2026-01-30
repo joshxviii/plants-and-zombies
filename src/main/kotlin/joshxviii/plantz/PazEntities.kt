@@ -262,7 +262,7 @@ object PazEntities {
     @JvmField val DISCO_ZOMBIE: EntityType<DiscoZombie> =  registerZombie(
         "disco_zombie",
         EntityType.Builder.of(::DiscoZombie, MobCategory.MONSTER)
-            .sized(0.64f, 2.0f)
+            .sized(0.64f, 2.2f)
             .eyeHeight(1.74f)
             .passengerAttachments(2.075f)
             .ridingOffset(-0.7f)
@@ -277,7 +277,7 @@ object PazEntities {
     @JvmField val BACKUP_DANCER: EntityType<BackupDancer> =  registerZombie(
         "backup_dancer",
         EntityType.Builder.of(::BackupDancer, MobCategory.MONSTER)
-            .sized(0.64f, 2.0f)
+            .sized(0.64f, 1.96f)
             .eyeHeight(1.74f)
             .passengerAttachments(2.075f)
             .ridingOffset(-0.7f)
