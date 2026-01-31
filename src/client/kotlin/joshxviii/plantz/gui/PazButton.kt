@@ -17,8 +17,8 @@ open class PazButton(
     val texture: Identifier,
     val hoverTexture: Identifier = texture,
     val disabledTexture: Identifier = texture,
-    private val enabledRequirement: ((button: PazButton) -> Boolean) = { true },
-    private val clickRequirement: ((button: PazButton) -> Boolean) = enabledRequirement,
+    val enabledRequirement: ((button: PazButton) -> Boolean) = { true },
+    val clickRequirement: ((button: PazButton) -> Boolean) = enabledRequirement,
     val text: Component = Component.empty(),
 ) : Button(buttonX, buttonY, buttonWidth, buttonHeight, text, clickAction, DEFAULT_NARRATION) {
 
@@ -37,7 +37,7 @@ open class PazButton(
             buttonX, buttonY, 0.0f, 0.0f, buttonWidth, buttonHeight, buttonWidth, buttonHeight
         )
 
-        val line = font.split(text, buttonWidth).firstOrNull()
+        val line = font.split(text, buttonWidth-8).firstOrNull()
         if (line!=null) graphics.drawString(font, line, buttonX + if(press) 3 else 2, buttonY+3, -1, false)
     }
 

@@ -9,6 +9,7 @@ import net.minecraft.client.particle.SpriteSet
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.util.LightCoordsUtil
+import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
 import kotlin.math.pow
 
@@ -17,36 +18,46 @@ class NotifyParticle private constructor(
 ) : SingleQuadParticle(level, x, y, z, xd, yd, zd, sprite) {
 
     init {
-        lifetime = 32
-        gravity = -0.08f
+        lifetime = 5
+        gravity = 0f
+
+        quadSize = 0.1f
+        hasPhysics = false
+
+        this.xd = xd * 0.02 + (random.nextFloat() - 0.5f) * 0.03
+        this.yd = 0.12 + (random.nextFloat() - 0.5f) * 0.04
+        this.zd = zd * 0.02 + (random.nextFloat() - 0.5f) * 0.03
     }
 
     override fun tick() {
         xo = x
         yo = y
         zo = z
-        if (age++ >= lifetime) remove()
-        else {
-            move(xd, yd*30, zd)
+
+        if (age++ >= lifetime) {
+            remove()
+            return
         }
+
+        move(xd, yd, zd)
+
+        xd *= 0.5f
+        yd *= 0.5f
+        zd *= 0.5f
+
+        val progress = age*1.0 / lifetime
+        //quadSize = Mth.lerp(progress, 0.4, 1.0).toFloat()  // Grow fast to full size
+        //quadSize = ((age + a) / (halfLife)).pow(0.1f)
     }
 
-    public override fun getLayer(): Layer {
-        return Layer.OPAQUE
-    }
+    override fun getLayer(): Layer = Layer.OPAQUE  // Or TRANSLUCENT if you want additive glow
 
-    override fun move(xa: Double, ya: Double, za: Double) {
-        this.boundingBox = this.boundingBox.move(xa, ya, za)
-        this.setLocationFromBoundingbox()
-    }
+    // Optional: brighter/overlay blend if using translucent layer
+    // override fun getRenderType(): ParticleRenderType = ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
 
     override fun getQuadSize(a: Float): Float {
-        val halfLife = lifetime/2
-        val s = if (age<halfLife)
-                ((age + a) / (halfLife)).pow(0.1f)
-        else
-                1-((age + a - (halfLife)) / (lifetime-halfLife)).pow(1.0f)
-        return this.quadSize * (s)
+        val s = ((age + a) / lifetime).pow(0.2f)
+        return this.quadSize * (s) + 0.1f
     }
 
     class Provider(private val sprites: SpriteSet) : ParticleProvider<SimpleParticleType> {

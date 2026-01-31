@@ -1,7 +1,10 @@
 package joshxviii.plantz.inventory
 
+import joshxviii.plantz.MailboxData
 import joshxviii.plantz.PazMenus
 import joshxviii.plantz.PazTags
+import joshxviii.plantz.block.MailboxBlock
+import joshxviii.plantz.block.MailboxBlock.Companion.FACING
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.block.entity.MailboxManager
 import net.minecraft.core.BlockPos
@@ -21,12 +24,14 @@ import java.util.function.BiConsumer
 class MailboxMenu(
     containerId: Int,
     val inventory: Inventory,
+    val blockPos: BlockPos,
     private val access: ContainerLevelAccess = ContainerLevelAccess.NULL
 ) : AbstractContainerMenu(PazMenus.MAILBOX_MENU, containerId) {
 
     private var slotUpdateListener = Runnable {}
     var selectedMailboxIndex: Int? = null
     val mailSlot: Slot
+    var showIsFullMessage: Boolean = false
     private var availableMailboxes: List<MailboxBlockEntity> = emptyList()
     var filteredMailboxes: List<MailboxBlockEntity> = emptyList()
     var searchFilter: String = ""
@@ -35,10 +40,6 @@ class MailboxMenu(
             updateFilteredMailboxes()
             this.slotUpdateListener.run()
         }
-
-    init {
-
-    }
 
     private val inputContainer: Container = object : SimpleContainer(1) {
         init { Objects.requireNonNull<MailboxMenu>(this@MailboxMenu) }
@@ -75,8 +76,7 @@ class MailboxMenu(
         val level = inventory.player.level()
 
         availableMailboxes = MailboxManager.getMailboxesInLevel(level)
-            //TODO find a way to get the blockPos of this mailbox from the menu
-            .filterNot { mailbox -> mailbox.blockPos.distSqr(inventory.player.blockPosition()) < 32 }
+            .filterNot { mailbox -> mailbox.blockPos == blockPos }
         updateFilteredMailboxes()
     }
 
@@ -87,27 +87,12 @@ class MailboxMenu(
     override fun slotsChanged(container: Container) {
         val mailStack = this.mailSlot.item
         if (!mailStack.isEmpty) {
-            //TODO
             this.broadcastChanges()
         }
     }
 
     fun registerUpdateListener(slotUpdateListener: Runnable) {
         this.slotUpdateListener = slotUpdateListener
-    }
-
-    fun sendMail(): Boolean {
-        if (selectedMailboxIndex == null || mailSlot.item.isEmpty) return false
-
-        val targetMailbox = getMailbox(selectedMailboxIndex)
-        if (targetMailbox != null) {
-            // TODO: Implement mail transfer
-            targetMailbox.setItem(0, mailSlot.item.copy())
-
-            mailSlot.set(ItemStack.EMPTY)
-        }
-
-        return true
     }
 
     override fun quickMoveStack(player: Player, slotIndex: Int): ItemStack {

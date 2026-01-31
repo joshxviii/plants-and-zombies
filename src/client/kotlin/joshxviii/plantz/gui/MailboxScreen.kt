@@ -2,7 +2,10 @@ package joshxviii.plantz.gui
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes
 import joshxviii.plantz.inventory.MailboxMenu
+import joshxviii.plantz.networking.SendMailPayload
 import joshxviii.plantz.pazResource
+import kotlinx.coroutines.delay
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
@@ -18,7 +21,7 @@ import net.minecraft.world.entity.player.Inventory
 class MailboxScreen(
     val menu: MailboxMenu,
     val inventory: Inventory,
-    title: Component
+    title: Component,
 ) : AbstractContainerScreen<MailboxMenu>(menu, inventory, title, 176, 180) {
     private lateinit var addressSearch: EditBox
     private lateinit var sendButton: Button
@@ -42,10 +45,6 @@ class MailboxScreen(
         val SCROLLER_DISABLED: Identifier = pazResource("textures/gui/mailbox/scroller_disabled.png")
     }
 
-    init {
-        //TODO get all active in level mailboxes from MailboxMenu
-    }
-
     fun initSearchBar(x: Int, y: Int): EditBox {
         val txt = EditBox(font, x, y, 94, 12, Component.translatable("container.plantz.address_search"));
         txt.setCanLoseFocus(false)
@@ -55,7 +54,6 @@ class MailboxScreen(
         txt.setBordered(false)
         txt.setMaxLength(50)
         txt.setResponder(this::onSearchUpdated)
-        //txt.setValue("")
         txt.setEditable(true)
         addRenderableWidget(txt)
         return txt
@@ -84,7 +82,6 @@ class MailboxScreen(
     }
 
     private fun rebuildAddressButtons() {
-        // Clear existing buttons
         addressButtons.forEach { removeWidget(it) }
         addressButtons.clear()
 
@@ -94,13 +91,12 @@ class MailboxScreen(
         val visibleCount = menu.filteredMailboxes.size.coerceAtMost(4)
         for (i in 0 until visibleCount) {
             val mailboxIndex = startIndex + i
-            val mailbox  = menu.getMailbox(mailboxIndex)
+            val mailbox = menu.getMailbox(mailboxIndex)
             if (mailbox != null) {
                 val button = AddressButton(
-                    address = mailbox.name,
-                    color = mailbox.color,
-                    buttonX = xo + 52,
-                    buttonY = yo + 28 + i * 14,
+                    address = mailbox,
+                    buttonX = xo+52,
+                    buttonY = yo+28 + i * 14,
                     clickAction = {
                         if (menu.selectedMailboxIndex == mailboxIndex) menu.selectedMailboxIndex = null else menu.selectedMailboxIndex = mailboxIndex
                         rebuildAddressButtons()
@@ -126,13 +122,16 @@ class MailboxScreen(
 
         val sy = (41.0f * scrollOffs).toInt()
         val sprite = if (isScrollBarActive()) SCROLLER else SCROLLER_DISABLED
-        val scrollerX = xo + 152
-        val scrollerY = yo + 28 + sy
+        val scrollerX = xo+152
+        val scrollerY = yo+28 + sy
         graphics.blit(RenderPipelines.GUI_TEXTURED, sprite, scrollerX, scrollerY, 0f, 0f, 12, 15, 12, 15)
         if (xm >= scrollerX && xm < scrollerX + 12 && ym >= scrollerY && ym < scrollerY + 15) {
             graphics.requestCursor(if (scrolling) CursorTypes.RESIZE_NS else CursorTypes.POINTING_HAND)
         }
+        // show message when no addresses are available
+        if (addressButtons.isEmpty()) graphics.drawWordWrap(font, Component.translatable("container.plantz.no_address"), xo+52, yo+28, 96, -1)
 
+        if(menu.showIsFullMessage) graphics.drawWordWrap(font, Component.translatable("container.plantz.mailbox_full"), xo, yo, 96, -1)
     }
 
     override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {
@@ -145,11 +144,11 @@ class MailboxScreen(
 
     override fun mouseDragged(event: MouseButtonEvent, dx: Double, dy: Double): Boolean {
         if (scrolling && isScrollBarActive()) {
-            val yscr = topPos + 14
+            val yscr = topPos + 29
             val yscr2 = yscr + 54
             scrollOffs = (event.y().toFloat() - yscr - 7.5f) / (yscr2 - yscr - 15.0f)
             scrollOffs = Mth.clamp(scrollOffs, 0.0f, 1.0f)
-            startIndex = (scrollOffs * getOffscreenRows() + 0.5).toInt() * 4
+            startIndex = (scrollOffs * getOffscreenRows() + 0.5).toInt()
             return true
         } else return super.mouseDragged(event, dx, dy)
     }
@@ -166,17 +165,15 @@ class MailboxScreen(
                 val offscreenRows: Int = getOffscreenRows()
                 val scrolledDelta = scrollY.toFloat() / offscreenRows
                 scrollOffs = Mth.clamp(scrollOffs - scrolledDelta, 0.0f, 1.0f)
-                startIndex = (scrollOffs * offscreenRows + 0.5).toInt() * 4
+                startIndex = (scrollOffs * offscreenRows + 0.5).toInt()
             }
             return true
         }
     }
 
     fun onSendPressed() {
-        if (menu.sendMail()) {
-            //TODO
-            //minecraft?.player?.closeContainer()
-        }
+        val targetMailbox = menu.getMailbox(menu.selectedMailboxIndex) ?: return
+        ClientPlayNetworking.send(SendMailPayload(targetMailbox.blockPos))
     }
 
     fun onSearchUpdated(searchString: String) {
@@ -201,7 +198,7 @@ class MailboxScreen(
 
     private fun isScrollBarActive(): Boolean = menu.filteredMailboxes.size > 4
 
-    private fun getOffscreenRows(): Int = (menu.filteredMailboxes.size - 4).coerceAtLeast(0)
+    private fun getOffscreenRows(): Int = (menu.filteredMailboxes.size - 1).coerceAtLeast(0)
 
     private fun containerChanged() {
         rebuildAddressButtons()

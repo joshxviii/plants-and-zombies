@@ -103,8 +103,9 @@
   "itemGroup.plantz.plantz_tab": "Plants & Zombies",
 
   "container.plantz.send_mail": "Send Mail",
-  "container.plantz.mailbox_coords": "(%d, %d, %d)",
+  "container.plantz.mailbox_coords": "%d, %d, %d",
   "container.plantz.address_search": "Search mailboxes...",
+  "container.plantz.no_address": "No other mailboxes found.",
 
 
   "plantz.subtitles.projectile.deflected": "Projectile deflected",

@@ -22,6 +22,7 @@ object PazMain : ModInitializer {
 		PazSounds.initialize()
 		PazSpawnPlacements.initialize()
 		PazMenus.initialize()
+		PazNetwork.initialize()
 	}
 }
 

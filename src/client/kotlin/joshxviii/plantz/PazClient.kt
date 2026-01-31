@@ -14,5 +14,6 @@ object PazClient : ClientModInitializer {
 		PazParticles.registerAll()
 		PazScreens.registerAll()
 		PazRenderPipelines.initialize()
+		PazClientNetwork.initialize()
 	}
 }

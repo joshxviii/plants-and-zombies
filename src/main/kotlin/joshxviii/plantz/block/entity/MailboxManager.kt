@@ -2,6 +2,7 @@ package joshxviii.plantz.block.entity
 
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.HoverEvent
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
 import net.minecraft.network.chat.TextColor
@@ -43,7 +44,7 @@ object MailboxManager {
             Component.translatable(
                 "container.plantz.mailbox_coords",
                 pos.x, pos.y, pos.z
-            ).withStyle(Style.EMPTY.withColor(TextColor.fromRgb(mailbox.color.textColor)))
+            ).withStyle(Style.EMPTY)
         }
     }
 
