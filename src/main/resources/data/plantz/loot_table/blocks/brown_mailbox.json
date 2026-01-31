@@ -11,7 +11,19 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "plantz:brown_mailbox"
+          "name": "plantz:brown_mailbox",
+          "functions": [
+            {
+              "function": "minecraft:copy_components",
+              "source": "block_entity",
+              "include": [
+                "minecraft:custom_name",
+                "minecraft:item_name",
+                "minecraft:tooltip_display",
+                "minecraft:rarity"
+              ]
+            }
+          ]
         }
       ],
       "rolls": 1.0

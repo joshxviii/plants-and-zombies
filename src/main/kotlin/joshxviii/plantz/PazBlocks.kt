@@ -1,10 +1,8 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.block.BrainzFlagBlock
 import joshxviii.plantz.block.ConeBlock
 import joshxviii.plantz.block.MailboxBlock
-import joshxviii.plantz.block.MailboxBlock.Companion.mailboxByColor
 import joshxviii.plantz.block.PlantPotBlock
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.item.component.BlocksProjectileDamage
@@ -27,7 +25,6 @@ import net.minecraft.world.item.Rarity
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.item.equipment.Equippable
 import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -64,28 +61,28 @@ object PazBlocks {
     @JvmField val PURPLE_MAILBOX: Block = registerBlock("purple_mailbox", mailboxProperties(MapColor.COLOR_PURPLE), {MailboxBlock(it, DyeColor.PURPLE)})
     @JvmField val MAGENTA_MAILBOX: Block = registerBlock("magenta_mailbox", mailboxProperties(MapColor.COLOR_MAGENTA), {MailboxBlock(it, DyeColor.MAGENTA)})
     @JvmField val PINK_MAILBOX: Block = registerBlock("pink_mailbox", mailboxProperties(MapColor.COLOR_PINK), {MailboxBlock(it, DyeColor.PINK)})
-    val ALL_MAILBOXES = arrayOf(
-        MAILBOX,
-        LIGHT_GRAY_MAILBOX,
-        GRAY_MAILBOX,
-        BLACK_MAILBOX,
-        BROWN_MAILBOX,
-        RED_MAILBOX,
-        ORANGE_MAILBOX,
-        YELLOW_MAILBOX,
-        LIME_MAILBOX,
-        GREEN_MAILBOX,
-        CYAN_MAILBOX,
-        LIGHT_BLUE_MAILBOX,
-        BLUE_MAILBOX,
-        PURPLE_MAILBOX,
-        MAGENTA_MAILBOX,
-        PINK_MAILBOX,
+    val mailboxByColor = mapOf(
+        DyeColor.WHITE to      MAILBOX,
+        DyeColor.LIGHT_GRAY to LIGHT_GRAY_MAILBOX,
+        DyeColor.GRAY to       GRAY_MAILBOX,
+        DyeColor.BLACK to      BLACK_MAILBOX,
+        DyeColor.BROWN to      BROWN_MAILBOX,
+        DyeColor.RED to        RED_MAILBOX,
+        DyeColor.ORANGE to     ORANGE_MAILBOX,
+        DyeColor.YELLOW to     YELLOW_MAILBOX,
+        DyeColor.LIME to       LIME_MAILBOX,
+        DyeColor.GREEN to      GREEN_MAILBOX,
+        DyeColor.CYAN to       CYAN_MAILBOX,
+        DyeColor.LIGHT_BLUE to LIGHT_BLUE_MAILBOX,
+        DyeColor.BLUE to       BLUE_MAILBOX,
+        DyeColor.PURPLE to     PURPLE_MAILBOX,
+        DyeColor.MAGENTA to    MAGENTA_MAILBOX,
+        DyeColor.PINK to       PINK_MAILBOX,
     )
     val MAILBOX_ENTITY: BlockEntityType<MailboxBlockEntity> = registerBlockEntity(
         "mailbox",
         ::MailboxBlockEntity,
-        *ALL_MAILBOXES
+        *mailboxByColor.values.toTypedArray()
     )
 
     @JvmField

@@ -69,7 +69,7 @@ object PazCreativeTab {
                 output.accept(PazItems.SUN)
                 output.accept(PazBlocks.PLANT_POT)
                 output.accept(PazItems.PLANT_POT_MINECART)
-                PazBlocks.ALL_MAILBOXES.forEach { output.accept(it) }
+                PazBlocks.mailboxByColor.forEach { output.accept(it.value) }
 
                 //output.accept(ZombieRaid.getBrainzBannerInstance(parameters.holders().lookupOrThrow(Registries.BANNER_PATTERN)))
             }

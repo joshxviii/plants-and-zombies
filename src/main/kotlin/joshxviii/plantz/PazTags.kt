@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.Block
 
 object PazTags {
     object BlockTags {
+        @JvmField val MAILBOX = tag("mailbox")
         @JvmField val PLANTABLE = tag("plantable")
         @JvmField val YETI_SPAWNABLE_ON = tag("yeti_spawnable_on")
         @JvmField val MINER_BREAKABLE = tag("miner_breakable")

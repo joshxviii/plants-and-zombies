@@ -2,15 +2,23 @@ package joshxviii.plantz.block
 
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.block.entity.MailboxBlockEntity
+import joshxviii.plantz.inventory.MailboxMenu
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.RandomSource
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.MenuProvider
+import net.minecraft.world.SimpleMenuProvider
+import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.inventory.AbstractContainerMenu
+import net.minecraft.world.inventory.ContainerLevelAccess
+import net.minecraft.world.inventory.MenuConstructor
+import net.minecraft.world.inventory.StonecutterMenu
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.BlockPlaceContext
@@ -20,7 +28,6 @@ import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.ScheduledTickAccess
 import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.entity.BlockEntity
-import net.minecraft.world.level.block.entity.vault.VaultBlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.AttachFace
@@ -36,7 +43,7 @@ import net.minecraft.world.phys.shapes.VoxelShape
 
 class MailboxBlock(
     properties: Properties,
-    color: DyeColor = DyeColor.WHITE
+    val color: DyeColor = DyeColor.WHITE
 ) : BaseEntityBlock(properties) {
     companion object {
         val CODEC: MapCodec<MailboxBlock> = RecordCodecBuilder.mapCodec { it.group(DyeColor.CODEC.fieldOf("color").forGetter { b -> b.color }, propertiesCodec()).apply(it) { color, properties -> MailboxBlock(properties, color) } }
@@ -49,26 +56,7 @@ class MailboxBlock(
         val SHAPE: VoxelShape = column(8.0, 12.0, 0.0, 8.0)
         var SHAPES: MutableMap<Direction.Axis, VoxelShape> = Shapes.rotateHorizontalAxis(SHAPE)
         var SHAPES_WALL: MutableMap<Direction, VoxelShape> = Shapes.rotateHorizontal(SHAPE.move(0.0,0.25,0.125))
-        val mailboxByColor = mapOf(
-            DyeColor.WHITE to      PazBlocks.MAILBOX,
-            DyeColor.LIGHT_GRAY to PazBlocks.LIGHT_GRAY_MAILBOX,
-            DyeColor.GRAY to       PazBlocks.GRAY_MAILBOX,
-            DyeColor.BLACK to      PazBlocks.BLACK_MAILBOX,
-            DyeColor.BROWN to      PazBlocks.BROWN_MAILBOX,
-            DyeColor.RED to        PazBlocks.RED_MAILBOX,
-            DyeColor.ORANGE to     PazBlocks.ORANGE_MAILBOX,
-            DyeColor.YELLOW to     PazBlocks.YELLOW_MAILBOX,
-            DyeColor.LIME to       PazBlocks.LIME_MAILBOX,
-            DyeColor.GREEN to      PazBlocks.GREEN_MAILBOX,
-            DyeColor.CYAN to       PazBlocks.CYAN_MAILBOX,
-            DyeColor.LIGHT_BLUE to PazBlocks.LIGHT_BLUE_MAILBOX,
-            DyeColor.BLUE to       PazBlocks.BLUE_MAILBOX,
-            DyeColor.PURPLE to     PazBlocks.PURPLE_MAILBOX,
-            DyeColor.MAGENTA to    PazBlocks.MAGENTA_MAILBOX,
-            DyeColor.PINK to       PazBlocks.PINK_MAILBOX,
-        )
     }
-    private val color: DyeColor = DyeColor.WHITE
     override fun codec(): MapCodec<out MailboxBlock> { return CODEC }
 
     init {
@@ -88,10 +76,29 @@ class MailboxBlock(
         hand: InteractionHand,
         hitResult: BlockHitResult
     ): InteractionResult {
+        return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult)
+        // TODO when the mail box has mail using it should eject to mail inside and NOT open the mailbox menu
+        getMailboxEntity(level, pos)?.tryToGetMail()
+        return InteractionResult.TRY_WITH_EMPTY_HAND
+    }
 
+    fun getMailboxEntity(level : Level, pos: BlockPos): MailboxBlockEntity? {
         val mailbox = (level as? ServerLevel)?.getBlockEntity(pos) as? MailboxBlockEntity
-        mailbox?.tryToGetMail()
+        return mailbox
+    }
 
+    override fun useWithoutItem(
+        state: BlockState,
+        level: Level,
+        pos: BlockPos,
+        player: Player,
+        hitResult: BlockHitResult
+    ): InteractionResult {
+        if (!level.isClientSide) {
+            (level.getBlockEntity(pos) as? MailboxBlockEntity).let {
+                player.openMenu(it)
+            }
+        }
         return InteractionResult.SUCCESS
     }
 
@@ -167,5 +174,10 @@ class MailboxBlock(
             AttachFace.FLOOR -> Direction.UP
             else -> state.getValue(FACING)
         }
+    }
+
+    override fun getCloneItemStack(level: LevelReader, pos: BlockPos, state: BlockState, includeData: Boolean): ItemStack {
+        return (level.getBlockEntity(pos) as? MailboxBlockEntity)?.getItem()?:
+        super.getCloneItemStack(level, pos, state, includeData)
     }
 }
