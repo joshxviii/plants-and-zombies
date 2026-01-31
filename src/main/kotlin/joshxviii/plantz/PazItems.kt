@@ -18,8 +18,6 @@ import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
 import net.fabricmc.fabric.api.registry.FuelValueEvents
 import net.fabricmc.fabric.impl.item.ItemComponentTooltipProviderRegistryImpl
 import net.minecraft.core.Direction
-import net.minecraft.core.Holder
-import net.minecraft.core.HolderSet
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.dispenser.BlockSource
@@ -27,14 +25,7 @@ import net.minecraft.core.dispenser.DefaultDispenseItemBehavior
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
-import net.minecraft.server.MinecraftServer
-import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.tags.DamageTypeTags
-import net.minecraft.tags.TagEntry
-import net.minecraft.tags.TagKey
-import net.minecraft.tags.TagLoader
-import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.EquipmentSlot
@@ -42,19 +33,11 @@ import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.*
-import net.minecraft.world.item.component.BlocksAttacks
-import net.minecraft.world.item.component.BlocksAttacks.DamageReduction
-import net.minecraft.world.item.component.BlocksAttacks.ItemDamageFunction
-import net.minecraft.world.item.component.Consumable
-import net.minecraft.world.item.component.Consumables
 import net.minecraft.world.item.component.ItemAttributeModifiers
-import net.minecraft.world.item.component.Tool
 import net.minecraft.world.item.component.UseCooldown
 import net.minecraft.world.item.equipment.Equippable
 import net.minecraft.world.level.block.DispenserBlock
 import net.minecraft.world.level.gameevent.GameEvent
-import java.util.*
-import java.util.List
 import java.util.function.Function
 
 object PazItems {

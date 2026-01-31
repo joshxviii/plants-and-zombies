@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "plantz:plantz_flag"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_flag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "plantz:brainz_flag"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_flag"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "plantz:plantz_flag"
+    ]
+  }
+}

@@ -4,6 +4,7 @@ import joshxviii.plantz.block.BrainzFlagBlock
 import joshxviii.plantz.block.ConeBlock
 import joshxviii.plantz.block.MailboxBlock
 import joshxviii.plantz.block.PlantPotBlock
+import joshxviii.plantz.block.PlantzFlagBlock
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.item.component.BlocksProjectileDamage
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
@@ -124,6 +125,7 @@ object PazBlocks {
             .pushReaction(PushReaction.DESTROY),
         ::BrainzFlagBlock,
         Item.Properties()
+            .stacksTo(1)
             .rarity(Rarity.RARE)
             .equippableUnswappable(EquipmentSlot.OFFHAND)
             .component(
@@ -135,6 +137,32 @@ object PazBlocks {
                     ).add(
                         Attributes.FOLLOW_RANGE,
                         AttributeModifier(pazResource("zombie_leader_flag"), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+                        EquipmentSlotGroup.HAND
+                    ).build()
+            )
+    )
+    @JvmField
+    val PLANTZ_FLAG: Block = registerBlock(
+        "plantz_flag",
+        BlockBehaviour.Properties.of()
+            .sound(SoundType.WOOD)
+            .instabreak()
+            .noCollision()
+            .pushReaction(PushReaction.DESTROY),
+        ::PlantzFlagBlock,
+        Item.Properties()
+            .stacksTo(1)
+            .rarity(Rarity.RARE)
+            .equippableUnswappable(EquipmentSlot.OFFHAND)
+            .component(
+                DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
+                    .add(
+                        Attributes.MOVEMENT_SPEED,
+                        AttributeModifier(pazResource("plantz_flag"), 0.4, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+                        EquipmentSlotGroup.HAND
+                    ).add(
+                        Attributes.ATTACK_SPEED,
+                        AttributeModifier(pazResource("plantz_flag"), 0.4, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
                         EquipmentSlotGroup.HAND
                     ).build()
             )

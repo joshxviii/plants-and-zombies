@@ -65,7 +65,7 @@ object PazCreativeTab {
                 output.accept(Items.BUCKET)
                 output.accept(PazItems.NEWSPAPER)
                 output.accept(PazBlocks.BRAINZ_FLAG)
-
+                output.accept(PazBlocks.PLANTZ_FLAG)
                 output.accept(PazItems.SUN)
                 output.accept(PazBlocks.PLANT_POT)
                 output.accept(PazItems.PLANT_POT_MINECART)
