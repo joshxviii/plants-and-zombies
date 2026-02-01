@@ -9,6 +9,7 @@ import net.minecraft.core.Holder
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NbtOps
 import net.minecraft.nbt.Tag
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.VisibleForDebug
@@ -22,6 +23,10 @@ import net.minecraft.world.level.saveddata.SavedData
 import net.minecraft.world.level.saveddata.SavedDataType
 import java.util.*
 import java.util.function.Function
+
+fun ServerLevel.getZombieRaids(): ZombieRaids {
+    return dataStorage.computeIfAbsent(ZombieRaids.TYPE)
+}
 
 class ZombieRaids(
     val zombieRaidMap: Int2ObjectMap<ZombieRaid> = Int2ObjectOpenHashMap<ZombieRaid>(),
@@ -74,28 +79,29 @@ class ZombieRaids(
         else {
             val level = player.level()
             if (!level.gameRules.get<Boolean>(GameRules.RAIDS)!!) return null
-            else {
 
-                val raid = this.getOrCreateRaid(level, flagPosition)
-                if (!raid.started && !this.zombieRaidMap.containsValue(raid)) {
-                    this.zombieRaidMap.put(this.uniqueId, raid)
+            val raid = this.getOrCreateRaid(level, flagPosition)
+
+            if (!raid.started && !this.zombieRaidMap.containsValue(raid)) {
+                zombieRaidMap.put(this.uniqueId, raid)
+                level.players().filter { it.blockPosition().distSqr(flagPosition) < 96 } .forEach {
+                    it.sendSystemMessage(Component.translatable("event.plantz.zombie_raid.start"))
+                    raid.zombieRaidEvent.addPlayer(it)
                 }
-
-                if (!raid.started || raid.zombieRaidOmenLevel > 0) {
-                    raid.absorbRaidOmen(player)
-                }
-
-                this.setDirty()
-                return raid
             }
+
+            if (!raid.started || raid.zombieRaidOmenLevel > 0) {
+                raid.absorbRaidOmen(player)
+            }
+
+            this.setDirty()
+            return raid
         }
     }
 
     private fun getOrCreateRaid(level: ServerLevel, pos: BlockPos): ZombieRaid {
-
-//        val raid = level.getRaidAt(pos)
-//        return if (raid != null) raid else
-        return ZombieRaid(center = pos, difficulty = level.getDifficulty())
+        val zombieRaid = level.getZombieRaids().getNearbyRaid(pos, 64)
+        return zombieRaid ?: ZombieRaid(center = pos, difficulty = level.difficulty)
     }
 
     private val uniqueId: Int
@@ -117,7 +123,7 @@ class ZombieRaids(
     }
 
     @VisibleForDebug
-    fun getRaidCentersInChunk(chunkPos: ChunkPos): MutableList<BlockPos?> {
+    fun getRaidCentersInChunk(chunkPos: ChunkPos): MutableList<BlockPos> {
         return this.zombieRaidMap.values.stream().map<BlockPos> { obj: ZombieRaid -> obj.center }
             .filter { chunkPos.contains(it) }.toList()
     }
@@ -139,13 +145,13 @@ class ZombieRaids(
     }
 
     companion object {
-        private const val RAID_FILE_ID = "raids"
+        private const val RAID_FILE_ID = "zombie_raids"
         val CODEC: Codec<ZombieRaids> = RecordCodecBuilder.create<ZombieRaids>(
             Function { i: RecordCodecBuilder.Instance<ZombieRaids> ->
                 i.group(
                     ZombieRaidWithId.CODEC
                         .listOf()
-                        .optionalFieldOf("raids", mutableListOf<ZombieRaidWithId>())
+                        .optionalFieldOf("zombie_raids", mutableListOf<ZombieRaidWithId>())
                         .forGetter<ZombieRaids> { r: ZombieRaids ->
                             r.zombieRaidMap.int2ObjectEntrySet().stream()
                                 .map<ZombieRaidWithId> { entry: Int2ObjectMap.Entry<ZombieRaid> ->
@@ -158,9 +164,9 @@ class ZombieRaids(
             }
         )
         val TYPE: SavedDataType<ZombieRaids> =
-            SavedDataType<ZombieRaids>("raids", ::ZombieRaids, CODEC, DataFixTypes.SAVED_DATA_RAIDS)
+            SavedDataType<ZombieRaids>("zombie_raids", ::ZombieRaids, CODEC, DataFixTypes.SAVED_DATA_RAIDS)
         val TYPE_END: SavedDataType<ZombieRaids> =
-            SavedDataType<ZombieRaids>("raids_end", ::ZombieRaids, CODEC, DataFixTypes.SAVED_DATA_RAIDS)
+            SavedDataType<ZombieRaids>("zombie_raids_end", ::ZombieRaids, CODEC, DataFixTypes.SAVED_DATA_RAIDS)
 
         fun getType(type: Holder<DimensionType>): SavedDataType<ZombieRaids> {
             return if (type.`is`(BuiltinDimensionTypes.END)) TYPE_END else TYPE

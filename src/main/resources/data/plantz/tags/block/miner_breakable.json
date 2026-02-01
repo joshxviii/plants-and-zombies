@@ -11,6 +11,10 @@
     {
       "id": "#c:cobblestones",
       "required": false
+    },
+    {
+      "id": "#c:concretes",
+      "required": false
     }
   ]
 }

@@ -11,6 +11,7 @@ import joshxviii.plantz.entity.projectile.*
 import joshxviii.plantz.entity.zombie.BackupDancer
 import joshxviii.plantz.entity.zombie.BrownCoat
 import joshxviii.plantz.entity.zombie.DiscoZombie
+import joshxviii.plantz.entity.zombie.Gargantuar
 import joshxviii.plantz.entity.zombie.Miner
 import joshxviii.plantz.entity.zombie.NewspaperZombie
 import joshxviii.plantz.entity.zombie.ZombieYeti
@@ -250,7 +251,7 @@ object PazEntities {
             .clientTrackingRange(8)
             .notInPeaceful(),
         attributes = Zombie.createAttributes()
-            .add(Attributes.ATTACK_DAMAGE, 10.0)
+            .add(Attributes.ATTACK_DAMAGE, 12.0)
             .add(Attributes.MAX_HEALTH, 80.0)
             .add(Attributes.MOVEMENT_SPEED, 0.27)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.5)
@@ -269,7 +270,7 @@ object PazEntities {
             .clientTrackingRange(8)
             .notInPeaceful(),
         attributes = Zombie.createAttributes()
-            .add(Attributes.ATTACK_DAMAGE, 5.0)
+            .add(Attributes.ATTACK_DAMAGE, 7.0)
             .add(Attributes.MAX_HEALTH, 35.0)
             .add(Attributes.MOVEMENT_SPEED, 0.24)
             .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.0)
@@ -284,10 +285,28 @@ object PazEntities {
             .clientTrackingRange(8)
             .notInPeaceful(),
         attributes = Zombie.createAttributes()
-            .add(Attributes.ATTACK_DAMAGE, 2.5)
+            .add(Attributes.ATTACK_DAMAGE, 3.0)
             .add(Attributes.MAX_HEALTH, 10.0)
             .add(Attributes.MOVEMENT_SPEED, 0.3)
             .add(Attributes.FOLLOW_RANGE, 16.0)
+            .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.0)
+    )
+    @JvmField val GARGANTUAR: EntityType<Gargantuar> =  registerZombie(
+        "gargantuar",
+        EntityType.Builder.of(::Gargantuar, MobCategory.MONSTER)
+            .sized(1.8f, 3.8f)
+            .passengerAttachments(2.075f)
+            .ridingOffset(-0.7f)
+            .clientTrackingRange(8)
+            .notInPeaceful(),
+        attributes = Zombie.createAttributes()
+            .add(Attributes.ATTACK_DAMAGE, 22.0)
+            .add(Attributes.MAX_HEALTH, 250.0)
+            .add(Attributes.MOVEMENT_SPEED, 0.26)
+            .add(Attributes.KNOCKBACK_RESISTANCE, 0.3)
+            .add(Attributes.SCALE, 1.5)
+            .add(Attributes.STEP_HEIGHT, 1.0)
+            .add(Attributes.ENTITY_INTERACTION_RANGE, 2.5)
             .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.0)
     )
     // endregion

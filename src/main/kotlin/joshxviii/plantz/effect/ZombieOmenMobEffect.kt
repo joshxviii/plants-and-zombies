@@ -1,6 +1,7 @@
 package joshxviii.plantz.effect
 
 import joshxviii.plantz.PazBlocks.PLANTZ_FLAG_POI
+import joshxviii.plantz.raid.getZombieRaids
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.particles.ParticleOptions
@@ -36,9 +37,7 @@ class ZombieOmenMobEffect(
         ).orElse(null)
 
         if (flagPoi != null) {
-            // TODO create a zombieRaids storage in level
-            //level.getRaids().createOrExtendZombieRaid(mob, flagPoi)
-            mob.clearRaidOmenPosition()
+            level.getZombieRaids().createOrExtendZombieRaid(mob, flagPoi)
             return false
         }
 

@@ -61,7 +61,7 @@ class ZombieRaid(
         const val DEFAULT_PRE_RAID_TICKS: Int = 300
         const val POST_RAID_TICK_LIMIT: Int = 40
     }
-    private val zombieRaidEvent = ServerBossEvent(ZOMBIE_RAID_NAME, BossEvent.BossBarColor.GREEN, BossEvent.BossBarOverlay.NOTCHED_10)
+    val zombieRaidEvent = ServerBossEvent(ZOMBIE_RAID_NAME, BossEvent.BossBarColor.GREEN, BossEvent.BossBarOverlay.NOTCHED_10)
     private var raidStatus: ZombieRaidStatus = ZombieRaidStatus.ONGOING
     private val waveZombieMap: MutableMap<Int, MutableSet<Zombie>> = Maps.newHashMap<Int, MutableSet<Zombie>>()
     private val random = RandomSource.create()
@@ -87,7 +87,42 @@ class ZombieRaid(
     }
 
     fun tick(level: ServerLevel) {
+        if (!active) return
+        ticksActive++
 
+        if (raidCooldownTicks > 0) {
+            raidCooldownTicks--
+            return
+        }
+
+        if (shouldSpawnNextWave()) {
+            val spawnPos = findRandomSpawnPos(level, 20) ?: center
+            spawnNextWave(level, spawnPos)
+            raidCooldownTicks = 200 + random.nextInt(200)  // Delay next wave 10-20s
+        }
+
+        updateBossbar()
+
+        // Victory check
+        if (getTotalZombiesAlive() == 0 && wavesSpawned >= numWaves) {
+            status = ZombieRaidStatus.VICTORY
+            zombieRaidEvent.progress = 1.0f
+            zombieRaidEvent.color = BossEvent.BossBarColor.YELLOW
+            zombieRaidEvent.name = ZOMBIE_RAID_BAR_VICTORY
+            postRaidTicks = POST_RAID_TICK_LIMIT
+            level.players().forEach { it.sendSystemMessage(ZOMBIE_RAID_BAR_VICTORY) }
+        }
+
+        if (postRaidTicks > 0) {
+            postRaidTicks--
+            if (postRaidTicks <= 0) {
+                stop()
+            }
+        }
+
+        zombieRaidEvent.players.forEach { p ->
+            if (p.blockPosition().distSqr(center) > 96) zombieRaidEvent.removePlayer(p)
+        }
     }
 
     fun absorbRaidOmen(player: ServerPlayer): Boolean {
@@ -108,7 +143,9 @@ class ZombieRaid(
 
             val entity = entityType.create(level, EntitySpawnReason.EVENT) ?: continue
             entity.moveOrInterpolateTo(Vec3(pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5), level.random.nextFloat() * 360f, 0f)
-            level.addFreshEntity(entity)
+            if(level.addFreshEntity(entity) && entity is Zombie) {
+                addWaveMob(level, i, entity)
+            }
         }
         wavesSpawned++
     }
@@ -131,14 +168,14 @@ class ZombieRaid(
         }
 
         zombies.add(zombie)
-        this.totalHealth += zombie.health
+        totalHealth += zombie.health
 
-        this.updateBossbar()
+        updateBossbar()
         return true
     }
 
     fun updateBossbar() {
-        this.zombieRaidEvent.setProgress(Mth.clamp(getHealthOfZombies() / this.totalHealth, 0.0f, 1.0f))
+        zombieRaidEvent.setProgress(Mth.clamp(getHealthOfZombies() / totalHealth, 0.0f, 1.0f))
     }
 
     fun getTotalZombiesAlive(): Int = waveZombieMap.values.stream().mapToInt { it.size }.sum()
@@ -176,9 +213,9 @@ class ZombieRaid(
     }
 
     fun stop() {
-        this.active = false
-        this.zombieRaidEvent.removeAllPlayers()
-        this.status = ZombieRaidStatus.STOPPED
+        active = false
+        zombieRaidEvent.removeAllPlayers()
+        status = ZombieRaidStatus.STOPPED
     }
 
     fun isStopped(): Boolean = status == ZombieRaidStatus.STOPPED

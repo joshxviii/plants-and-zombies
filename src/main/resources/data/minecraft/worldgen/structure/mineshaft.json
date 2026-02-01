@@ -8,8 +8,8 @@
       "spawns": [
         {
           "type": "plantz:miner",
-          "maxCount": 4,
-          "minCount": 2,
+          "maxCount": 2,
+          "minCount": 1,
           "weight": 1
         }
       ]

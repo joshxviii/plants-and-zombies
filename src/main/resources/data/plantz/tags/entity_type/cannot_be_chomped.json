@@ -13,6 +13,7 @@
     "minecraft:giant",
     "minecraft:camel",
     "minecraft:camel_husk",
+    "plantz:gargantuar",
     {
       "id": "#c:bosses",
       "required": false

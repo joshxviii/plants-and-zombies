@@ -1,6 +1,7 @@
 {
   "values": [
     "#plantz:plant",
+    "plantz:gargantuar",
     {
       "id": "#c:bosses",
       "required": false
