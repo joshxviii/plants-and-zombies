@@ -96,7 +96,7 @@ class MailboxBlockEntity(
         val currentState = blockState.getValue(STATE)
         return when (currentState) {
             MailboxState.HAS_MAIL -> {
-                val dropPos = blockState.getValue(FACING).unitVec3.scale(0.5).add(blockPos.center)
+                val dropPos = blockState.getValue(FACING).unitVec3.scale(0.75).add(blockPos.center)
                 items.forEach {
                     Containers.dropItemStack(level!!, dropPos.x, dropPos.y, dropPos.z, it)
                 }

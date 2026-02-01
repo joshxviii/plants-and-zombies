@@ -1,24 +1,23 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.block.BrainzFlagBlock
-import joshxviii.plantz.block.ConeBlock
-import joshxviii.plantz.block.MailboxBlock
-import joshxviii.plantz.block.PlantPotBlock
-import joshxviii.plantz.block.PlantzFlagBlock
+import joshxviii.plantz.block.*
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.item.component.BlocksProjectileDamage
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
+import net.fabricmc.fabric.api.`object`.builder.v1.world.poi.PoiHelper
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
+import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.village.poi.PoiType
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.Item
@@ -35,8 +34,7 @@ import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.level.material.PushReaction
 
 object PazBlocks {
-    @JvmField
-    val PLANT_POT: Block = registerBlock(
+    @JvmField val PLANT_POT: Block = registerBlock(
         "plant_pot",
         BlockBehaviour.Properties.of()
             .sound(SoundType.STONE)
@@ -86,8 +84,7 @@ object PazBlocks {
         *mailboxByColor.values.toTypedArray()
     )
 
-    @JvmField
-    val CONE: Block = registerBlock(
+    @JvmField val CONE: Block = registerBlock(
         "cone",
         BlockBehaviour.Properties.of()
             .sound(SoundType.CANDLE)
@@ -115,8 +112,7 @@ object PazBlocks {
             )
     )
 
-    @JvmField
-    val BRAINZ_FLAG: Block = registerBlock(
+    @JvmField val BRAINZ_FLAG: Block = registerBlock(
         "brainz_flag",
         BlockBehaviour.Properties.of()
             .sound(SoundType.WOOD)
@@ -141,8 +137,7 @@ object PazBlocks {
                     ).build()
             )
     )
-    @JvmField
-    val PLANTZ_FLAG: Block = registerBlock(
+    @JvmField val PLANTZ_FLAG: Block = registerBlock(
         "plantz_flag",
         BlockBehaviour.Properties.of()
             .sound(SoundType.WOOD)
@@ -167,6 +162,7 @@ object PazBlocks {
                     ).build()
             )
     )
+    @JvmField val PLANTZ_FLAG_POI = PoiHelper.register(pazResource("plantz_flag"), 8, 32, PLANTZ_FLAG)
 
     private fun registerBlock(
         name: String,
@@ -211,5 +207,7 @@ object PazBlocks {
             .pushReaction(PushReaction.BLOCK)
     }
 
-    fun initialize() {}
+    fun initialize() {
+
+    }
 }

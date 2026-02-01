@@ -1,21 +1,14 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.block.MailboxBlock
 import joshxviii.plantz.item.SeedPacketItem
-import joshxviii.plantz.raid.ZombieRaid
 import net.minecraft.core.Registry
-import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
-import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
-import net.minecraft.world.item.alchemy.Potion
-import net.minecraft.world.item.alchemy.PotionContents
-import net.minecraft.world.level.block.entity.BannerPattern
 
 object PazCreativeTab {
     // Define the key for the custom tab
@@ -70,8 +63,6 @@ object PazCreativeTab {
                 output.accept(PazBlocks.PLANT_POT)
                 output.accept(PazItems.PLANT_POT_MINECART)
                 PazBlocks.mailboxByColor.forEach { output.accept(it.value) }
-
-                //output.accept(ZombieRaid.getBrainzBannerInstance(parameters.holders().lookupOrThrow(Registries.BANNER_PATTERN)))
             }
             .build()
     )
