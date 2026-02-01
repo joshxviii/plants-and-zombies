@@ -85,7 +85,7 @@ class ZombieRaids(
             if (!raid.started && !this.zombieRaidMap.containsValue(raid)) {
                 zombieRaidMap.put(this.uniqueId, raid)
                 level.players().filter { it.blockPosition().distSqr(flagPosition) < 96 } .forEach {
-                    it.sendSystemMessage(Component.translatable("event.plantz.zombie_raid.start"))
+                    it.sendSystemMessage(ZombieRaid.ZOMBIE_RAID_BAR_START)
                     raid.zombieRaidEvent.addPlayer(it)
                 }
             }
