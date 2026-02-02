@@ -7,6 +7,7 @@ import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.canReachTarget
 import joshxviii.plantz.entity.projectile.PowderSnowChunk
 import net.minecraft.core.BlockPos
+import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleType
 import net.minecraft.core.particles.ParticleTypes
@@ -19,6 +20,8 @@ import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.ai.control.LookControl
+import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.entity.item.FallingBlockEntity
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball
@@ -57,6 +60,38 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
                                 && !this.navigation.path.canReachTarget(target!!.blockPosition())
                               },
             actionDelay = 35))
+    }
+
+    private val noMoveControl = object : MoveControl(this) { override fun getSpeedModifier(): Double = 0.0 }
+
+    private val noLookControl = object : LookControl(this) {}
+
+    override fun getLookControl(): LookControl =  if (tickCount < 60) noLookControl else super.getLookControl()
+    override fun getMoveControl(): MoveControl = if (tickCount < 60) noMoveControl else super.getMoveControl()
+
+    override fun tick() {
+        super.tick()
+        val level = level()
+        if (tickCount < 26) {
+            if (level is ServerLevel) level.sendParticles(
+                BlockParticleOption(ParticleTypes.BLOCK, level.getBlockState(blockPosition().below())),
+                x, y + 0.05, z, 10, 0.6, 0.0, 0.6, 0.4
+            )
+        }
+        if (tickCount in 43..<55) {
+            val direction = calculateViewVector(0f, this.yRot-35).scale(2.5)
+            val pos = Vec3(
+                direction.x + x,
+                direction.y + y,
+                direction.z + z
+            )
+            if (level is ServerLevel) level.sendParticles(
+//                ParticleTypes.CLOUD,
+                BlockParticleOption(ParticleTypes.BLOCK, level.getBlockState(BlockPos.containing(pos).below())),
+                pos.x, pos.y, pos.z,
+                5, 0.3, 0.0, 0.3, 0.0
+            )
+        }
     }
 
     override fun getAmbientSound(): SoundEvent {

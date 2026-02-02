@@ -92,11 +92,11 @@ class ZombieRaid(
         if (!active) return
         ticksActive++
 
-        if (postRaidTicks-- > 0) {//post-loading time
+        if (postRaidTicks > 0) { postRaidTicks--//post-loading time
             if (postRaidTicks <= 0) stop()
             return
         }
-        if (raidCooldownTicks-- > 0) {//pre-loading time
+        if (raidCooldownTicks > 0) { raidCooldownTicks--//pre-loading time
             zombieRaidEvent.progress += 1f/PRE_RAID_TICKS
             if (raidCooldownTicks <= 0) zombieRaidEvent.name = ZOMBIE_RAID_BAR
             return

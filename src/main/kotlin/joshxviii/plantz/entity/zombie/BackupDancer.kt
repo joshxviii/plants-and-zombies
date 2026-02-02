@@ -69,11 +69,11 @@ class BackupDancer(type: EntityType<out BackupDancer> = PazEntities.BACKUP_DANCE
 
     override fun tick() {
         super.tick()
-        val level = this.level()
+        val level = level()
         if (tickCount < 15) {// dig out of ground animation
             if (level is ServerLevel) level.sendParticles(
                 BlockParticleOption(ParticleTypes.BLOCK, level.getBlockState(blockPosition().below())),
-                this.x, this.y + 0.05, this.z, 8, 0.25, 0.0, 0.25, 0.4
+                x, y + 0.05, z, 8, 0.25, 0.0, 0.25, 0.4
             )
         }
     }

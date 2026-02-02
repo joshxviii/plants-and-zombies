@@ -294,7 +294,7 @@ object PazEntities {
     @JvmField val GARGANTUAR: EntityType<Gargantuar> =  registerZombie(
         "gargantuar",
         EntityType.Builder.of(::Gargantuar, MobCategory.MONSTER)
-            .sized(1.8f, 3.8f)
+            .sized(1.8f, 3.4f)
             .passengerAttachments(2.075f)
             .ridingOffset(-0.7f)
             .clientTrackingRange(8)
@@ -303,8 +303,9 @@ object PazEntities {
             .add(Attributes.ATTACK_DAMAGE, 22.0)
             .add(Attributes.MAX_HEALTH, 250.0)
             .add(Attributes.MOVEMENT_SPEED, 0.26)
-            .add(Attributes.KNOCKBACK_RESISTANCE, 0.3)
-            .add(Attributes.SCALE, 1.5)
+            .add(Attributes.KNOCKBACK_RESISTANCE, 0.7)
+            .add(Attributes.EXPLOSION_KNOCKBACK_RESISTANCE, 0.7)
+            .add(Attributes.SCALE, 1.33)
             .add(Attributes.STEP_HEIGHT, 1.0)
             .add(Attributes.ENTITY_INTERACTION_RANGE, 2.5)
             .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.0)

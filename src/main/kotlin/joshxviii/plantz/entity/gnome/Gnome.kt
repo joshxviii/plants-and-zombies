@@ -82,7 +82,10 @@ class Gnome(type: EntityType<out Gnome>, level: Level) :Monster(type, level) {
         get() = this.entityData.get(DATA_SOUND_VARIANT_ID)
         set(value) = this.entityData.set(DATA_SOUND_VARIANT_ID, value)
 
-    val soundSet = soundVariant.getSoundSet()
+    val soundSet: GnomeSoundVariant.GnomeSoundSet
+        get() {
+            return soundVariant.getSoundSet()
+        }
 
     init {
         jumpControl = GnomeJumpControl(this)
@@ -163,6 +166,8 @@ class Gnome(type: EntityType<out Gnome>, level: Level) :Monster(type, level) {
         return groupData
     }
 
+    fun getJumpSound(): SoundEvent = soundSet.jumpSound.value()
+
     override fun getAmbientSound(): SoundEvent = soundSet.ambientSound.value()
 
     override fun getHurtSound(source: DamageSource): SoundEvent = soundSet.hurtSound.value()
@@ -173,9 +178,6 @@ class Gnome(type: EntityType<out Gnome>, level: Level) :Monster(type, level) {
         playSound(soundSet.stepSound.value(), 0.15f, 1.0f)
     }
 
-    protected fun getJumpSound(): SoundEvent {
-        return soundSet.deathSound.value()
-    }
 
     override fun getPreferredWeaponType(): TagKey<Item> = PazTags.ItemTags.GNOME_PREFERRED_WEAPONS
 
