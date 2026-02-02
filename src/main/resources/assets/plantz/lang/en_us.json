@@ -126,6 +126,10 @@
   "plantz.subtitles.entity.chomper.attack": "Chomper bites",
   "plantz.subtitles.entity.zombie.eat": "Zombie bites",
 
+  "plantz.subtitles.entity.gnome.ambient": "Gnome hoos",
+  "plantz.subtitles.entity.gnome.death": "Gnome dies",
+  "plantz.subtitles.entity.gnome.hurt": "Gnome hurt",
+
   "plantz.subtitles.entity.zombie_yeti.ambient": "Zombie Yeti groans",
   "plantz.subtitles.entity.zombie_yeti.death": "Zombie Yeti dies",
   "plantz.subtitles.entity.zombie_yeti.hurt": "Zombie Yeti hurt",

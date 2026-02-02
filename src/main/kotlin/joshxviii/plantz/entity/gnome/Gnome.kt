@@ -2,6 +2,7 @@ package joshxviii.plantz.entity.gnome
 
 import joshxviii.plantz.PazDataSerializers.GNOME_SOUND_VARIANT
 import joshxviii.plantz.PazDataSerializers.GNOME_VARIANT
+import joshxviii.plantz.PazSounds.GNOME_JUMP
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.entity.plant.Plant
@@ -166,7 +167,7 @@ class Gnome(type: EntityType<out Gnome>, level: Level) :Monster(type, level) {
         return groupData
     }
 
-    fun getJumpSound(): SoundEvent = soundSet.jumpSound.value()
+    fun getJumpSound(): SoundEvent = GNOME_JUMP
 
     override fun getAmbientSound(): SoundEvent = soundSet.ambientSound.value()
 

@@ -21,10 +21,11 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.gameevent.GameEvent
+import net.minecraft.world.phys.Vec3
 
 class PlantPotMinecart(type: EntityType<out AbstractMinecart>, level: Level) : AbstractMinecart(type, level) {
 
-    override fun interact(player: Player, hand: InteractionHand): InteractionResult {
+    override fun interact(player: Player, hand: InteractionHand, location: Vec3): InteractionResult {
         val itemStack = player.getItemInHand(hand)
         val serverLevel = this.level()
 

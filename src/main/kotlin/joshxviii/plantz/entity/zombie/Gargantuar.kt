@@ -79,7 +79,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
             )
         }
         if (tickCount in 43..<55) {
-            val direction = calculateViewVector(0f, this.yRot-35).scale(2.5)
+            val direction = calculateViewVector(0f, yBodyRot-35).scale(2.5)
             val pos = Vec3(
                 direction.x + x,
                 direction.y + y,
@@ -95,16 +95,16 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
     }
 
     override fun getAmbientSound(): SoundEvent {
-        return PazSounds.ZOMBIE_YETI_AMBIENT
+        return PazSounds.GARGANTUAR_AMBIENT
     }
     override fun getHurtSound(source: DamageSource): SoundEvent {
-        return PazSounds.ZOMBIE_YETI_HURT
+        return PazSounds.GARGANTUAR_HURT
     }
     override fun getDeathSound(): SoundEvent {
-        return PazSounds.ZOMBIE_YETI_DEATH
+        return PazSounds.GARGANTUAR_DEATH
     }
     override fun getStepSound(): SoundEvent {
-        return SoundEvents.ZOMBIE_STEP
+        return SoundEvents.WARDEN_STEP
     }
 
     override fun isBaby(): Boolean = false
@@ -113,8 +113,11 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
     override fun isSunSensitive(): Boolean = false
     override fun convertsInWater(): Boolean = false
     override fun randomizeReinforcementsChance() {}
+
     override fun getPassengerRidingPosition(passenger: Entity): Vec3 {
-        return super.getPassengerRidingPosition(passenger)
+        val direction = calculateViewVector(0f, yBodyRot-180).scale(0.8)
+        val pos = super.getPassengerRidingPosition(passenger)
+        return pos.add(direction)
     }
 
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {

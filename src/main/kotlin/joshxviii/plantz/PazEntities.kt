@@ -295,7 +295,7 @@ object PazEntities {
         "gargantuar",
         EntityType.Builder.of(::Gargantuar, MobCategory.MONSTER)
             .sized(1.8f, 3.4f)
-            .passengerAttachments(2.075f)
+            .passengerAttachments(2.0f)
             .ridingOffset(-0.7f)
             .clientTrackingRange(8)
             .notInPeaceful(),
@@ -319,7 +319,7 @@ object PazEntities {
             .ridingOffset(-0.15f),
         attributes = createMobAttributes()
             .add(Attributes.STEP_HEIGHT, 1.0)
-            .add(Attributes.MAX_HEALTH, 25.0)
+            .add(Attributes.MAX_HEALTH, 18.0)
             .add(Attributes.MOVEMENT_SPEED, 0.5)
             .add(Attributes.JUMP_STRENGTH, 0.4)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.3)

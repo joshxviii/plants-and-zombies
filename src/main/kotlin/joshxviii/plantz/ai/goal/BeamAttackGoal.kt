@@ -62,7 +62,7 @@ class BeamAttackGoal(
         }
 
         for (entity in candidates) {
-            if (!usingEntity.canAttack(entity)) break
+            if (!usingEntity.canAttack(entity as LivingEntity)) break
             val distToRay = distanceToLineSegment(entity.eyePosition, start, end)
             val entityRadiusApprox = entity.boundingBox.size / 2.0
             if (distToRay <= (beamWidth / 2.0 + entityRadiusApprox)) {
@@ -71,7 +71,7 @@ class BeamAttackGoal(
                 val knockback : Double = usingEntity.attributes.getValue(Attributes.ATTACK_KNOCKBACK)
                 val source = usingEntity.damageSources().source(damageType, usingEntity)
 
-                if (entity.hurtServer(usingEntity.level() as ServerLevel, source, damage) && entity is LivingEntity) {
+                if (entity.hurtServer(usingEntity.level() as ServerLevel, source, damage)) {
                     afterHitEntityEffect(entity)
                     entity.knockback(
                         knockback,

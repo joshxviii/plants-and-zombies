@@ -33,7 +33,7 @@ class Melon(
         spawnParticle(
             ItemParticleOption(
                 ParticleTypes.ITEM,
-                Items.MELON_SLICE.defaultInstance
+                Items.MELON_SLICE
             ),
             amount = 45,
             speed = 0.13,

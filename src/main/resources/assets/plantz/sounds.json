@@ -111,9 +111,7 @@
   "entity.gnome.voice_7.jump": {"sounds": [{ "name": "plantz:entity/gnome/voice_7/jump", "volume": 1.0 }], "subtitle": "entity.gnome.jump"},
   "entity.gnome.voice_7.death": {"sounds": [{ "name": "plantz:entity/gnome/voice_7/death", "volume": 1.0 }], "subtitle": "entity.gnome.death"},
 
-  "entity.zombie.eat": {
-    "sounds": [{ "name": "random/burp", "volume": 1.0, "pitch": 0.9 }], "subtitle": "plantz.subtitles.entity.zombie.eat"
-  },
+  "entity.gnome.jump": {"sounds": [{ "name": "plantz:entity/gnome/jump", "volume": 0.2, "pitch": 1.2}], "subtitle": "entity.gnome.jump"},
 
   "entity.browncoat.ambient": {
     "sounds": [
@@ -210,6 +208,10 @@
   },
   "entity.gargantuar.death": {
     "sounds": [{ "name": "plantz:entity/gargantuar/death", "volume": 1.0 }], "subtitle": "subtitles"
+  },
+
+  "entity.zombie.eat": {
+    "sounds": [{ "name": "random/burp", "volume": 1.0, "pitch": 0.9 }], "subtitle": "plantz.subtitles.entity.zombie.eat"
   },
 
   "event.mob_effect.hypnotized": {
