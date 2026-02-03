@@ -35,6 +35,11 @@ class PazZombieRenderer(
     ArmorModelSet.bake<ZombieModel<ZombieRenderState>>(armorSet, context.modelSet) { root: ModelPart -> ZombieModel(root) },
     ArmorModelSet.bake<ZombieModel<ZombieRenderState>>(babyArmorSet, context.modelSet) { root: ModelPart -> ZombieModel(root) }
 ) {
+
+    init {
+
+    }
+
     override fun createRenderState(): PazZombieRenderState {
         return PazZombieRenderState()
     }

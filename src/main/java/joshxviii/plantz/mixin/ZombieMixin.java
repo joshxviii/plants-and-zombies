@@ -1,6 +1,8 @@
 package joshxviii.plantz.mixin;
 
 import joshxviii.plantz.PazBlocks;
+import joshxviii.plantz.entity.zombie.Gargantuar;
+import joshxviii.plantz.entity.zombie.ZombieYeti;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -32,8 +34,14 @@ public class ZombieMixin {
         var isLeader = Objects.requireNonNull(entity.getAttribute(Attributes.MAX_HEALTH)).hasModifier(Identifier.withDefaultNamespace(LEADER_MODIFIER_ID));
 
         if(isLeader) {
-            entity.setItemSlot(EquipmentSlot.OFFHAND, PazBlocks.BRAINZ_FLAG.asItem().getDefaultInstance());
-            entity.setDropChance(EquipmentSlot.OFFHAND, 1.0F);
+            if (entity instanceof Gargantuar || entity instanceof ZombieYeti) {
+                entity.setItemSlot(EquipmentSlot.HEAD, PazBlocks.BRAINZ_FLAG.asItem().getDefaultInstance());
+                entity.setDropChance(EquipmentSlot.HEAD, 1.0F);
+            }
+            else {
+                entity.setItemSlot(EquipmentSlot.OFFHAND, PazBlocks.BRAINZ_FLAG.asItem().getDefaultInstance());
+                entity.setDropChance(EquipmentSlot.OFFHAND, 1.0F);
+            }
         }
     }
 }

@@ -34,6 +34,7 @@ object PazSounds {
     @JvmField val GARGANTUAR_AMBIENT = register("entity.gargantuar.ambient")
     @JvmField val GARGANTUAR_HURT = register("entity.gargantuar.hurt")
     @JvmField val GARGANTUAR_DEATH = register("entity.gargantuar.death")
+    @JvmField val GARGANTUAR_DIG = register("entity.gargantuar.dig")
 
     @JvmField var GNOME_SOUNDS: Map<GnomeSoundVariant, GnomeSoundVariant.GnomeSoundSet> = registerGnomeSoundVariants()
     @JvmField var GNOME_JUMP = register("entity.gnome.jump")

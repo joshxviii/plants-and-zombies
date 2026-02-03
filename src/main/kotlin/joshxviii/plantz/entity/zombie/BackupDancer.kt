@@ -71,6 +71,7 @@ class BackupDancer(type: EntityType<out BackupDancer> = PazEntities.BACKUP_DANCE
         super.tick()
         val level = level()
         if (tickCount < 15) {// dig out of ground animation
+            if(tickCount==1) playSound(SoundEvents.ROOTED_DIRT_HIT, 1.0f, 0.2f)
             if (level is ServerLevel) level.sendParticles(
                 BlockParticleOption(ParticleTypes.BLOCK, level.getBlockState(blockPosition().below())),
                 x, y + 0.05, z, 8, 0.25, 0.0, 0.25, 0.4

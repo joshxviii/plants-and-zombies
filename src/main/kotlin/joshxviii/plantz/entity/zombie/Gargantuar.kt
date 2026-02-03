@@ -72,13 +72,16 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
     override fun tick() {
         super.tick()
         val level = level()
+
         if (tickCount < 26) {
+            if(tickCount % 9 == 1) playSound(SoundEvents.ROOTED_DIRT_BREAK, 1.0f, 0.4f)
             if (level is ServerLevel) level.sendParticles(
                 BlockParticleOption(ParticleTypes.BLOCK, level.getBlockState(blockPosition().below())),
                 x, y + 0.05, z, 10, 0.6, 0.0, 0.6, 0.4
             )
         }
         if (tickCount in 43..<55) {
+            if(tickCount==46) playSound(SoundEvents.ROOTED_DIRT_BREAK, 1.0f, 0.7f)
             val direction = calculateViewVector(0f, yBodyRot-35).scale(2.5)
             val pos = Vec3(
                 direction.x + x,

@@ -2,6 +2,8 @@ package joshxviii.plantz
 
 import joshxviii.plantz.PazTags.EntityTypes.ATTACKS_PLANTS
 import joshxviii.plantz.PazTags.EntityTypes.IGNORED_BY_PLANT_ATTACKERS
+import joshxviii.plantz.PazTags.EntityTypes.ZOMBIE_RAIDERS
+import joshxviii.plantz.ai.goal.DestroyFlagGoal
 import joshxviii.plantz.entity.PlantPotMinecart
 import joshxviii.plantz.entity.Sun
 import joshxviii.plantz.entity.gnome.Gnome
@@ -50,6 +52,10 @@ object PazEntities {
         ServerEntityEvents.ENTITY_LOAD.register { entity, level ->
 
             if (entity is Zombie) (entity as MobAccessor).targetSelector.addGoal(4, NearestAttackableTargetGoal(entity, Gnome::class.java, 5, true, false, null))
+
+            if (entity is PathfinderMob && entity.`is`(ZOMBIE_RAIDERS)) {
+                (entity as MobAccessor).targetSelector.addGoal(5, DestroyFlagGoal(entity))
+            }
 
             if (entity is Mob && entity.`is`(ATTACKS_PLANTS)) {
                 (entity as MobAccessor).targetSelector.addGoal(1, NearestAttackableTargetGoal(entity, WallNut::class.java, 4, true, true) { target, level -> target is WallNut })

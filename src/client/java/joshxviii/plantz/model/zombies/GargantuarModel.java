@@ -2,8 +2,6 @@ package joshxviii.plantz.model.zombies;
 
 import joshxviii.plantz.PazZombieRenderState;
 import joshxviii.plantz.animation.zombies.GargantuarAnimation;
-import joshxviii.plantz.animation.zombies.ZombieYetiAnimation;
-import joshxviii.plantz.entity.zombie.Gargantuar;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -35,7 +33,7 @@ public class GargantuarModel extends PazZombieModel {
 
 		PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create().texOffs(46, 63).addBox(-5.0F, -9.2648F, -9.591F, 10.0F, 11.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -16.7352F, -4.409F));
 
-		PartDefinition hat = head.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+		PartDefinition hat = head.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.offset(0.0F, -9.0F, -3.75F));
 
 		PartDefinition body = root.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 0).addBox(-10.0F, -13.0593F, -5.3701F, 20.0F, 13.0F, 12.0F, new CubeDeformation(0.0F))
 				.texOffs(64, 0).addBox(-6.0F, -14.0593F, -6.3701F, 12.0F, 9.0F, 6.0F, new CubeDeformation(0.0F))

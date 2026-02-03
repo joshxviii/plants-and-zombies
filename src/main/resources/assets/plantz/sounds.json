@@ -209,6 +209,9 @@
   "entity.gargantuar.death": {
     "sounds": [{ "name": "plantz:entity/gargantuar/death", "volume": 1.0 }], "subtitle": "subtitles"
   },
+  "entity.gargantuar.dig": {
+    "sounds": [{ "name": "plantz:entity/gargantuar/dig", "volume": 1.0 }], "subtitle": "plantz.subtitles.entity.gargantuar.dig"
+  },
 
   "entity.zombie.eat": {
     "sounds": [{ "name": "random/burp", "volume": 1.0, "pitch": 0.9 }], "subtitle": "plantz.subtitles.entity.zombie.eat"
