@@ -64,6 +64,8 @@ fun Path?.canReachTarget(target: BlockPos?): Boolean {
     }?: false
 }
 
+fun Path?.getEndPos(): BlockPos? = this?.endNode?.let { BlockPos(it.x, it.y, it.z) }
+
 fun PathNavigation.moveToBlockPos(blockPos: BlockPos, speedModifier: Double) = this.moveTo(blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble(), speedModifier)
 
 fun List<String>.permutationsDescending(): List<String> = buildList {

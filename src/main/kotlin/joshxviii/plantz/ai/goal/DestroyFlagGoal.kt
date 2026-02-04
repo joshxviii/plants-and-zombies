@@ -55,11 +55,13 @@ class DestroyFlagGoal(
     }
 
     override fun stop() {
+        mob.isAggressive = false
         targetFlagPos = null
         mob.navigation.stop()
     }
 
     override fun start() {
+        mob.isAggressive = true
         mob.navigation.moveTo(path, 1.0)
     }
 

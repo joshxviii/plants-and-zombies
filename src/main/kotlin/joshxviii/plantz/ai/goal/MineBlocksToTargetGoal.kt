@@ -3,6 +3,7 @@ package joshxviii.plantz.ai.goal
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.ai.pathfinding.MinerNodeEvaluator
 import joshxviii.plantz.canReachTarget
+import joshxviii.plantz.getEndPos
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundSource
@@ -50,9 +51,9 @@ class MineBlocksToTargetGoal(
 
     override fun canUse(): Boolean {
         if (--breakCooldownTime > 0) return false
-        if (miner.isDeadOrDying) return false
+        if (miner.isDeadOrDying || !miner.isAggressive) return false
         if (level.gameRules.get(GameRules.MOB_GRIEFING)==false) return false
-        val targetPos = miner.target?.blockPosition() ?: return false
+        val targetPos = miner.navigation.path.getEndPos() ?: miner.target?.blockPosition()?: return false
 
         breakTargetPos?.let {
             if (!miner.navigation.path.canReachTarget(targetPos)) return true
