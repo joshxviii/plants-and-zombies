@@ -46,5 +46,13 @@ object PazRenderPipelines {
             .build()
     )
 
+    val FLAG = RenderPipelines.register(
+        RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
+            .withLocation("pipeline/flag")
+            .withShaderDefine("APPLY_TEXTURE_MATRIX")
+            .withSampler("Sampler0")
+            .build()
+    )
+
     fun initialize() {}
 }

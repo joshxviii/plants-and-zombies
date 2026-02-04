@@ -1,6 +1,8 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.block.entity.FlagBlockEntity
 import joshxviii.plantz.entity.zombie.Gargantuar
+import joshxviii.plantz.model.FlagBlockModel
 import joshxviii.plantz.model.GnomeArmorModel
 import joshxviii.plantz.model.GnomeModel
 import joshxviii.plantz.model.plants.*
@@ -13,13 +15,13 @@ import joshxviii.plantz.model.zombies.GargantuarModel
 import joshxviii.plantz.model.zombies.MinerModel
 import joshxviii.plantz.model.zombies.PazZombieModel
 import joshxviii.plantz.model.zombies.ZombieYetiModel
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.ModelLayers
-import net.minecraft.client.model.geom.builders.CubeDefinition
-import net.minecraft.client.model.geom.builders.CubeDeformation
 import net.minecraft.client.model.geom.builders.LayerDefinition
 import net.minecraft.client.model.geom.builders.MeshDefinition
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers
 import net.minecraft.client.renderer.entity.ArmorModelSet
 import net.minecraft.client.renderer.entity.EntityRenderers
 
@@ -49,7 +51,6 @@ object PazModels {
     fun registerAll() {
         ModelLayerRegistry.registerModelLayer(EMPTY_LAYER) { LayerDefinition.create(MeshDefinition(), 0, 0) }
 
-        
 
         // REGISTER MODELS
         ModelLayerRegistry.registerModelLayer(PeaShooterModel.LAYER_LOCATION) { PeaShooterModel.createBodyLayer() }
@@ -86,6 +87,8 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(ARMOR_LAYER_LOCATION.chest) { GnomeArmorModel.createChestLayer() }
         ModelLayerRegistry.registerModelLayer(ARMOR_LAYER_LOCATION.legs)  { GnomeArmorModel.createLegsLayer() }
         ModelLayerRegistry.registerModelLayer(ARMOR_LAYER_LOCATION.feet)  { GnomeArmorModel.createBootsLayer() }
+
+        ModelLayerRegistry.registerModelLayer(FlagBlockModel.LAYER_LOCATION) { FlagBlockModel.createBodyLayer() }
 
 
 
@@ -130,5 +133,7 @@ object PazModels {
 
         EntityRenderers.register(PazEntities.PLANT_POT_MINECART) { PlantPotMinecartRenderer(it, ModelLayers.MINECART) }
         EntityRenderers.register(PazEntities.SUN) { SunRenderer(it) }
+
+        BlockEntityRenderers.register<FlagBlockEntity, FlagRenderState>(PazBlocks.FLAG_BLOCK_ENTITY) { FlagRenderer(FlagBlockModel(it.bakeLayer(FlagBlockModel.LAYER_LOCATION))) }
     }
 }

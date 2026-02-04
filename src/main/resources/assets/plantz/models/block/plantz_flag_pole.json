@@ -1,0 +1,9 @@
+{
+	"parent": "plantz:block/brainz_flag_pole",
+	"format_version": "1.21.11",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "plantz:block/plantz_flag_block",
+		"particle": "plantz:block/plantz_flag_block"
+	}
+}

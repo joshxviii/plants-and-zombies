@@ -9,6 +9,8 @@ import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.control.LookControl
+import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.pathfinder.Path
@@ -51,12 +53,18 @@ fun <T : LivingEntity?> ServerEntityGetter.getFurthestEntities(
     return result
 }
 
+fun LookControl.lookAtBlockPos(pos: BlockPos) {
+    this.setLookAt(pos.x.toDouble() + 0.5, pos.y.toDouble() + 0.5, pos.z.toDouble() + 0.5, 10.0f, 10.0f)
+}
+
 fun Path?.canReachTarget(target: BlockPos?): Boolean {
     if (target==null) return false
     return this?.endNode?.let {
         target.distSqr(Vec3i(it.x, it.y, it.z)) <= 2.25
     }?: false
 }
+
+fun PathNavigation.moveToBlockPos(blockPos: BlockPos, speedModifier: Double) = this.moveTo(blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble(), speedModifier)
 
 fun List<String>.permutationsDescending(): List<String> = buildList {
     add(this@permutationsDescending.joinToString("_"))

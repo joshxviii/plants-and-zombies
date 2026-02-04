@@ -1,6 +1,7 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.block.*
+import joshxviii.plantz.block.entity.FlagBlockEntity
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.item.component.BlocksProjectileDamage
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
@@ -119,7 +120,7 @@ object PazBlocks {
             .instabreak()
             .noCollision()
             .pushReaction(PushReaction.DESTROY),
-        ::BrainzFlagBlock,
+        ::FlagBlock,
         Item.Properties()
             .stacksTo(1)
             .rarity(Rarity.RARE)
@@ -144,7 +145,7 @@ object PazBlocks {
             .instabreak()
             .noCollision()
             .pushReaction(PushReaction.DESTROY),
-        ::PlantzFlagBlock,
+        ::FlagBlock,
         Item.Properties()
             .stacksTo(1)
             .rarity(Rarity.RARE)
@@ -161,6 +162,11 @@ object PazBlocks {
                         EquipmentSlotGroup.HAND
                     ).build()
             )
+    )
+    val FLAG_BLOCK_ENTITY: BlockEntityType<FlagBlockEntity> = registerBlockEntity(
+        "flag_block",
+        ::FlagBlockEntity,
+        PLANTZ_FLAG, BRAINZ_FLAG
     )
     @JvmField val PLANTZ_FLAG_POI = PoiHelper.register(pazResource("plantz_flag"), 8, 32, PLANTZ_FLAG)
 

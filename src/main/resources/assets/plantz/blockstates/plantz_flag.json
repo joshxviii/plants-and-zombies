@@ -1,8 +1,7 @@
 {
   "variants": {
-    "facing=north": { "model": "plantz:block/plantz_flag_block", "y": 270},
-    "facing=south": { "model": "plantz:block/plantz_flag_block", "y": 90 },
-    "facing=east":  { "model": "plantz:block/plantz_flag_block", "y": 0 },
-    "facing=west":  { "model": "plantz:block/plantz_flag_block", "y": 180 }
+    "": {
+      "model": "plantz:block/plantz_flag_pole"
+    }
   }
 }
