@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import static joshxviii.plantz.UtilsKt.pazResource;
 
 public class PeaModel extends EntityModel<@NotNull ProjectileRenderState> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("melon"), "main");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("pea"), "main");
     private final ModelPart body;
 
     public PeaModel(ModelPart root) {

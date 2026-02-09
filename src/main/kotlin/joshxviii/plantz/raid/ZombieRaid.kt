@@ -41,20 +41,20 @@ class ZombieRaid(
 ) {
     companion object {
         fun getWaveSpawnCount(difficulty: Difficulty): Int = 3 + difficulty.id * 2
-        val MAP_CODEC : MapCodec<ZombieRaid> = RecordCodecBuilder.mapCodec {
-            it.group(
-                BlockPos.CODEC.fieldOf("center").forGetter<ZombieRaid> { r: ZombieRaid -> r.center },
-                Codec.BOOL.fieldOf("started").forGetter<ZombieRaid> { r: ZombieRaid -> r.started },
-                Codec.BOOL.fieldOf("active").forGetter<ZombieRaid> { r: ZombieRaid -> r.active },
-                Codec.LONG.fieldOf("ticks_active").forGetter<ZombieRaid> { r: ZombieRaid -> r.ticksActive },
-                Codec.INT.fieldOf("raid_omen_level").forGetter<ZombieRaid> { r: ZombieRaid -> r.zombieRaidOmenLevel },
-                Codec.INT.fieldOf("waves_spawned").forGetter<ZombieRaid> { r: ZombieRaid -> r.wavesSpawned },
-                Codec.INT.fieldOf("cooldown_ticks").forGetter<ZombieRaid> { r: ZombieRaid -> r.raidCooldownTicks },
-                Codec.INT.fieldOf("post_raid_ticks").forGetter<ZombieRaid> { r: ZombieRaid -> r.postRaidTicks },
-                Codec.FLOAT.fieldOf("total_health").forGetter<ZombieRaid> { r: ZombieRaid -> r.totalHealth },
-                Codec.INT.fieldOf("wave_count").forGetter<ZombieRaid> { r: ZombieRaid -> r.numWaves },
-                ZombieRaidStatus.CODEC.fieldOf("status").forGetter<ZombieRaid> { r: ZombieRaid -> r.status },
-            ).apply<ZombieRaid>(it, ::ZombieRaid )
+        val MAP_CODEC : MapCodec<ZombieRaid> = RecordCodecBuilder.mapCodec { r ->
+            r.group(
+                BlockPos.CODEC.fieldOf("center").forGetter<ZombieRaid> { it.center },
+                Codec.BOOL.fieldOf("started").forGetter<ZombieRaid> { it.started },
+                Codec.BOOL.fieldOf("active").forGetter<ZombieRaid> { it.active },
+                Codec.LONG.fieldOf("ticks_active").forGetter<ZombieRaid> { it.ticksActive },
+                Codec.INT.fieldOf("raid_omen_level").forGetter<ZombieRaid> { it.zombieRaidOmenLevel },
+                Codec.INT.fieldOf("waves_spawned").forGetter<ZombieRaid> { it.wavesSpawned },
+                Codec.INT.fieldOf("cooldown_ticks").forGetter<ZombieRaid> { it.raidCooldownTicks },
+                Codec.INT.fieldOf("post_raid_ticks").forGetter<ZombieRaid> { it.postRaidTicks },
+                Codec.FLOAT.fieldOf("total_health").forGetter<ZombieRaid> { it.totalHealth },
+                Codec.INT.fieldOf("wave_count").forGetter<ZombieRaid> { it.numWaves },
+                ZombieRaidStatus.CODEC.fieldOf("status").forGetter<ZombieRaid> { it.status },
+            ).apply<ZombieRaid>(r, ::ZombieRaid )
         }
         val ZOMBIE_RAID_BAR: Component = Component.translatable("event.plantz.zombie_raid")
         val ZOMBIE_RAID_BAR_START: Component = Component.translatable("event.plantz.zombie_raid.start")
@@ -92,11 +92,11 @@ class ZombieRaid(
         if (!active) return
         ticksActive++
 
-        if (postRaidTicks > 0) { postRaidTicks--//post-loading time
+        if (postRaidTicks > 0) { postRaidTicks-- // post-loading time
             if (postRaidTicks <= 0) stop()
             return
         }
-        if (raidCooldownTicks > 0) { raidCooldownTicks--//pre-loading time
+        if (raidCooldownTicks > 0) { raidCooldownTicks-- // pre-loading time
             zombieRaidEvent.progress += 1f/PRE_RAID_TICKS
             if (raidCooldownTicks <= 0) zombieRaidEvent.name = ZOMBIE_RAID_BAR
             return
@@ -105,7 +105,7 @@ class ZombieRaid(
         if (shouldSpawnNextWave()) {
             val spawnPos = findRandomSpawnPos(level, 20) ?: center
             spawnNextWave(level, spawnPos)
-            //raidCooldownTicks = 200 + random.nextInt(200)  // Delay next wave 10-20s
+            //raidCooldownTicks = 200 + random.nextInt(200)  // Delay next wave
         }
 
         updateBossbar()

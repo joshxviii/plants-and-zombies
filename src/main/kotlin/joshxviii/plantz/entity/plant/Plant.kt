@@ -128,8 +128,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     val idleAnimationState = AnimationState()
     val actionAnimationState = AnimationState()
     val coolDownAnimationState = AnimationState()
-    val rechargeAnimationState = AnimationState()
     val sleepAnimationState = AnimationState()
+    val specialAnimation = AnimationState()
 
     init {
         cooldown = -1
@@ -262,7 +262,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 this.initAnimationState.stop()
                 this.actionAnimationState.stop()
                 this.coolDownAnimationState.stop()
-                this.rechargeAnimationState.stop()
+                this.specialAnimation.stop()
                 this.sleepAnimationState.stop()
                 if (isAsleep) state = PlantState.SLEEP
                 if (cooldown > 0) {
@@ -287,7 +287,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 this.initAnimationState.stop()
                 this.actionAnimationState.stop()
                 this.coolDownAnimationState.stop()
-                this.rechargeAnimationState.stop()
+                this.specialAnimation.stop()
                 if (!isAsleep) state = PlantState.IDLE
             }
             PlantState.GROW -> {

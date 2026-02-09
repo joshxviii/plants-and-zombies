@@ -18,7 +18,7 @@ class IcePeaShooter(type: EntityType<out Plant>, level: Level) : Plant(PazEntiti
 
         this.goalSelector.addGoal(2, ProjectileAttackGoal(
             usingEntity = this,
-            projectileFactory =  { PeaIce(level= this.level(), owner=this) },
+            projectileFactory =  { PeaIce(level(), this) },
             cooldownTime = 20,
             actionDelay = 3))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->

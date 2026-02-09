@@ -18,7 +18,7 @@ class Cactus(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CACT
 
         this.goalSelector.addGoal(2, ProjectileAttackGoal(
             usingEntity = this,
-            projectileFactory = { Needle(level= this.level(), owner=this) },
+            projectileFactory = { Needle(level(), this) },
             velocity = 1.4,
             cooldownTime = 40,
             actionDelay = 6))

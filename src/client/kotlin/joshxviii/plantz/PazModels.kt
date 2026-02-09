@@ -5,6 +5,9 @@ import joshxviii.plantz.model.FlagBlockModel
 import joshxviii.plantz.model.GnomeArmorModel
 import joshxviii.plantz.model.GnomeModel
 import joshxviii.plantz.model.plants.*
+import joshxviii.plantz.model.projectiles.ButterModel
+import joshxviii.plantz.model.projectiles.CabbageModel
+import joshxviii.plantz.model.projectiles.KernelModel
 import joshxviii.plantz.model.projectiles.MelonModel
 import joshxviii.plantz.model.projectiles.NeedleModel
 import joshxviii.plantz.model.projectiles.PeaModel
@@ -74,6 +77,9 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(PeaModel.LAYER_LOCATION) { PeaModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(SporeModel.LAYER_LOCATION) { SporeModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(NeedleModel.LAYER_LOCATION) { NeedleModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(CabbageModel.LAYER_LOCATION) { CabbageModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(KernelModel.LAYER_LOCATION) { KernelModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(ButterModel.LAYER_LOCATION) { ButterModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(MelonModel.LAYER_LOCATION) { MelonModel.createBodyLayer() }
 
         ModelLayerRegistry.registerModelLayer(PazZombieModel.LAYER_LOCATION) { PazZombieModel.createBodyLayer() }
@@ -121,6 +127,9 @@ object PazModels {
         EntityRenderers.register(PazEntities.PEA_FIRE) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.SPORE) { ProjectileRenderer(SporeModel(it.bakeLayer(SporeModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.NEEDLE) { ProjectileRenderer(NeedleModel(it.bakeLayer(NeedleModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.CABBAGE) { ProjectileRenderer(CabbageModel(it.bakeLayer(CabbageModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.KERNEL) { ProjectileRenderer(KernelModel(it.bakeLayer(KernelModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.BUTTER) { ProjectileRenderer(ButterModel(it.bakeLayer(ButterModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.MELON) { ProjectileRenderer(MelonModel(it.bakeLayer(MelonModel.LAYER_LOCATION)), it) }
 
         EntityRenderers.register(PazEntities.BROWN_COAT) { PazZombieRenderer(it) }

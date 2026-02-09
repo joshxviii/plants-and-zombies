@@ -8,6 +8,8 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.AnimationState;
 import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
@@ -23,6 +25,7 @@ public class ScaredyShroomModel extends EntityModel<@NotNull PlantRenderState> {
 	private final KeyframeAnimation actionAnimation;
 	private final KeyframeAnimation initAnimation;
 	private final KeyframeAnimation sleepAnimation;
+	private final KeyframeAnimation hideAnimation;
 
 	public ScaredyShroomModel(ModelPart root) {
 		super(root);
@@ -34,6 +37,8 @@ public class ScaredyShroomModel extends EntityModel<@NotNull PlantRenderState> {
 		this.idleAnimation = ScaredyShroomAnimation.idle.bake(root);
 		this.actionAnimation = ScaredyShroomAnimation.action.bake(root);
 		this.sleepAnimation = ScaredyShroomAnimation.sleep.bake(root);
+
+		this.hideAnimation = ScaredyShroomAnimation.hide.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -61,5 +66,10 @@ public class ScaredyShroomModel extends EntityModel<@NotNull PlantRenderState> {
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
 		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
+
+		this.hideAnimation.apply(state.getSpecialAnimation(), state.ageInTicks);
+		if (state.getSpecialAnimation().isStarted()) {
+			this.body.yRot += (float)(Math.cos((double)((float) Mth.floor(state.ageInTicks) * 3.25F)) * Math.PI * (double)0.015F);
+		}
 	}
 }

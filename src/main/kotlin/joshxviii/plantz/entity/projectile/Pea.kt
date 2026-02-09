@@ -10,11 +10,10 @@ import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec2
 
 class Pea(
-    type: EntityType<out PlantProjectile> = PazEntities.PEA,
     level: Level,
-    spawnOffset: Vec2 = Vec2.ZERO,
     owner: Plant? = null,
-) : PlantProjectile(type, level, owner, spawnOffset,
+    spawnOffset: Vec2 = Vec2.ZERO,
+) : PlantProjectile(PazEntities.PEA, level, owner, spawnOffset,
     PazDamageTypes.PLANT
 ) {
     override fun onHit(hitResult: HitResult) {

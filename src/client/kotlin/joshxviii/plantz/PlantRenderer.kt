@@ -52,7 +52,7 @@ class PlantRenderer(
         state.idleAnimationState.copyFrom(entity.idleAnimationState)
         state.actionAnimationState.copyFrom(entity.actionAnimationState)
         state.coolDownAnimationState.copyFrom(entity.coolDownAnimationState)
-        state.rechargeAnimationState.copyFrom(entity.rechargeAnimationState)
+        state.specialAnimation.copyFrom(entity.specialAnimation)
         state.sleepAnimationState.copyFrom(entity.sleepAnimationState)
     }
 
@@ -64,7 +64,7 @@ class PlantRenderer(
             if (state.isBaby)   add("baby")
             if (state.isAsleep) add("sleep")
 
-            when {
+            if (state.entityType == PazEntities.WALL_NUT) when {
                 state.damagedAmount >= 0.75f -> add("damage_medium")
                 state.damagedAmount >= 0.5f  -> add("damage_low")
             }
@@ -72,6 +72,7 @@ class PlantRenderer(
 
         return resolveTextureLocation(base, suffixes, rm) ?: pazResource("$base.png")
     }
+
 }
 
 class PlantRenderState : LivingEntityRenderState() {
@@ -84,6 +85,6 @@ class PlantRenderState : LivingEntityRenderState() {
     val idleAnimationState: AnimationState = AnimationState()
     val actionAnimationState: AnimationState = AnimationState()
     val coolDownAnimationState: AnimationState = AnimationState()
-    val rechargeAnimationState: AnimationState = AnimationState()
+    val specialAnimation: AnimationState = AnimationState()
     val sleepAnimationState: AnimationState = AnimationState()
 }

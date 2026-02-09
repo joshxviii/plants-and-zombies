@@ -63,10 +63,7 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
         }
     }
 
-    override fun getMoveControl(): MoveControl {
-        if (summoningTime>0) return noMoveControl
-        return super.getMoveControl()
-    }
+    override fun getMoveControl(): MoveControl= if (summoningTime>0) noMoveControl else super.getMoveControl()
 
     override fun registerGoals() {
         super.registerGoals()

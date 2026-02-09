@@ -146,27 +146,25 @@ object PazEntities {
     @JvmField val CABBAGE_PULT: EntityType<CabbagePult> = registerPlant(
         "cabbagepult",
         EntityType.Builder.of(::CabbagePult, MobCategory.CREATURE),
-        sunCost = 10,
+        sunCost = 5,
         width = 0.9f,
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
-            maxHealth = 50.0,
             attackDamage = 3.0,
             attackKnockback = 0.5,
-            followRange = 24.0
+            followRange = 20.0
         )
     )
     @JvmField val KERNEL_PULT: EntityType<KernelPult> = registerPlant(
         "kernelpult",
         EntityType.Builder.of(::KernelPult, MobCategory.CREATURE),
-        sunCost = 10,
+        sunCost = 7,
         width = 0.9f,
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
-            maxHealth = 50.0,
             attackDamage = 3.0,
             attackKnockback = 0.5,
-            followRange = 24.0
+            followRange = 22.0
         )
     )
     @JvmField val MELON_PULT: EntityType<MelonPult> = registerPlant(
@@ -177,9 +175,8 @@ object PazEntities {
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 50.0,
-            attackDamage = 3.0,
-            attackKnockback = 0.5,
-            followRange = 24.0
+            attackDamage = 5.0,
+            followRange = 28.0
         )
     )
     @JvmField val PUFF_SHROOM: EntityType<PuffShroom> = registerPlant(
@@ -201,7 +198,7 @@ object PazEntities {
         height = 0.9f,
         eyeHeight = 0.5f,
         attributes = Plant.Companion.PlantAttributes(
-            followRange = 5.0
+            followRange = 16.0
         )
     )
     @JvmField val FUME_SHROOM: EntityType<FumeShroom> = registerPlant(
@@ -359,12 +356,15 @@ object PazEntities {
     )
 
     //region Projectiles
-    @JvmField val PEA: EntityType<Pea> = registerProjectile("pea", EntityType.Builder.of(::Pea, MobCategory.MISC))
-    @JvmField val PEA_ICE: EntityType<PeaIce> = registerProjectile("pea_ice", EntityType.Builder.of(::PeaIce, MobCategory.MISC))
-    @JvmField val PEA_FIRE: EntityType<PeaFire> = registerProjectile("pea_fire", EntityType.Builder.of(::PeaFire, MobCategory.MISC))
-    @JvmField val NEEDLE: EntityType<Needle> = registerProjectile("needle", EntityType.Builder.of(::Needle, MobCategory.MISC))
-    @JvmField val SPORE: EntityType<Spore> = registerProjectile("spore", EntityType.Builder.of(::Spore, MobCategory.MISC))
-    @JvmField val MELON: EntityType<Melon> = registerProjectile("melon", EntityType.Builder.of(::Melon, MobCategory.MISC), width = 1.0f, height = 0.8f)
+    @JvmField val PEA: EntityType<Pea> = registerProjectile("pea", EntityType.Builder.of({_,l->Pea(l)}, MobCategory.MISC))
+    @JvmField val PEA_ICE: EntityType<PeaIce> = registerProjectile("pea_ice", EntityType.Builder.of({_,l->PeaIce(l)}, MobCategory.MISC))
+    @JvmField val PEA_FIRE: EntityType<PeaFire> = registerProjectile("pea_fire", EntityType.Builder.of({_,l->PeaFire(l)}, MobCategory.MISC))
+    @JvmField val NEEDLE: EntityType<Needle> = registerProjectile("needle", EntityType.Builder.of({_,l->Needle(l)}, MobCategory.MISC))
+    @JvmField val SPORE: EntityType<Spore> = registerProjectile("spore", EntityType.Builder.of({_,l->Spore(l)}, MobCategory.MISC))
+    @JvmField val CABBAGE: EntityType<Cabbage> = registerProjectile("cabbage", EntityType.Builder.of({_,l->Cabbage(l)}, MobCategory.MISC), width = 0.5f, height = 0.5f)
+    @JvmField val KERNEL: EntityType<Kernel> = registerProjectile("kernel", EntityType.Builder.of({_,l->Kernel(l)}, MobCategory.MISC))
+    @JvmField val BUTTER: EntityType<Butter> = registerProjectile("butter", EntityType.Builder.of({_,l->Butter(l)}, MobCategory.MISC), width = 0.7f, height = 0.5f)
+    @JvmField val MELON: EntityType<Melon> = registerProjectile("melon", EntityType.Builder.of({_,l->Melon(l)}, MobCategory.MISC), width = 1.0f, height = 0.8f)
     // endregion
 
     //region Other

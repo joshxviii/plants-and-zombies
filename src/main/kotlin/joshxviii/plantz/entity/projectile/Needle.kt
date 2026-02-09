@@ -9,11 +9,10 @@ import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec2
 
 class Needle(
-    type: EntityType<out PlantProjectile> = PazEntities.NEEDLE,
     level: Level,
-    spawnOffset: Vec2 = Vec2.ZERO,
     owner: Plant? = null,
-) : PlantProjectile(type, level, owner, spawnOffset,
+    spawnOffset: Vec2 = Vec2.ZERO,
+) : PlantProjectile(PazEntities.NEEDLE, level, owner, spawnOffset,
     PazDamageTypes.PLANT
 ) {
     override fun stickInGroundTime(): Int = 100

@@ -10,11 +10,11 @@ import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class MelonModel extends EntityModel<@NotNull ProjectileRenderState> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("melon"), "main");
+public class CabbageModel extends EntityModel<@NotNull ProjectileRenderState> {
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("cabbage"), "main");
     private final ModelPart body;
 
-    public MelonModel(ModelPart root) {
+    public CabbageModel(ModelPart root) {
         super(root);
         this.body = root.getChild("body");
     }

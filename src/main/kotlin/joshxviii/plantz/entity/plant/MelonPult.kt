@@ -18,7 +18,7 @@ class MelonPult(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.M
 
         this.goalSelector.addGoal(2, ProjectileAttackGoal(
             usingEntity = this,
-            projectileFactory = { Melon(level = level(), owner = this, spawnOffset = Vec2(-1f, 1f))},
+            projectileFactory = { Melon(level(), this, spawnOffset = Vec2(-1f, 1f))},
             useHighArc = true,
             cooldownTime = 70,
             actionDelay = 12))

@@ -2,6 +2,7 @@ package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
+import joshxviii.plantz.entity.projectile.Cabbage
 import joshxviii.plantz.entity.projectile.Melon
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
@@ -18,7 +19,7 @@ class CabbagePult(type: EntityType<out Plant>, level: Level) : Plant(PazEntities
 
         this.goalSelector.addGoal(2, ProjectileAttackGoal(
             usingEntity = this,
-            projectileFactory = { Melon(level = level(), owner = this, spawnOffset = Vec2(-1f, 1f))},
+            projectileFactory = { Cabbage(level(), this, spawnOffset = Vec2(-1f, 1f)) },
             useHighArc = true,
             cooldownTime = 70,
             actionDelay = 12))

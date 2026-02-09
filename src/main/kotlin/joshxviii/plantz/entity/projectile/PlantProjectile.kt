@@ -5,11 +5,13 @@ import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.damagesource.DamageType
@@ -33,10 +35,10 @@ abstract class PlantProjectile(
     val plantOwner: Plant? = null,
     val spawnOffset: Vec2 = Vec2.ZERO,
     val damageType: ResourceKey<DamageType> = PazDamageTypes.PLANT,
+    var damage : Float = (plantOwner as? LivingEntity)?.attributes?.getValue(Attributes.ATTACK_DAMAGE)?.toFloat()?:1.0f,
+    var knockback : Double = (plantOwner as? LivingEntity)?.attributes?.getValue(Attributes.ATTACK_KNOCKBACK)?:0.0
 ) : Projectile(type, level) {
 
-    val damage : Float
-    val knockback : Double
     protected var inGroundTime: Int = 0
     private var piercingIgnoreEntityIds = mutableSetOf<Int>()
 
@@ -59,9 +61,6 @@ abstract class PlantProjectile(
                 plantOwner.yRot
             )
         }
-
-        damage = (getOwner() as? LivingEntity)?.attributes?.getValue(Attributes.ATTACK_DAMAGE)?.toFloat()?:1.0f
-        knockback = (getOwner() as? LivingEntity)?.attributes?.getValue(Attributes.ATTACK_KNOCKBACK)?:0.0
     }
 
     override fun tick() {
@@ -168,7 +167,7 @@ abstract class PlantProjectile(
     private fun setPierceLevel(pieceLevel: Byte) = this.entityData.set(PIERCE_LEVEL, pieceLevel)
     open fun getPierceLevel(): Byte = this.entityData.get(PIERCE_LEVEL)
 
-    open fun getHitSound(): SoundEvent = SoundEvents.HONEY_BLOCK_PLACE// TODO make custom sounds
+    open fun getHitSound(): SoundEvent = SoundEvents.HONEY_BLOCK_BREAK
     open fun stickInGroundTime(): Int = 0
 
     private fun shouldFall(): Boolean {
@@ -183,6 +182,27 @@ abstract class PlantProjectile(
             (this.random.nextFloat() * 0.2f).toDouble(),
             (this.random.nextFloat() * 0.2f).toDouble()
         )
+    }
+
+    protected fun knockbackNearby() {
+        val serverLevel = this.level() as? ServerLevel?: return
+        serverLevel.getEntitiesOfClass(
+            LivingEntity::class.java,
+            this.boundingBox.inflate(3.5)
+        ).forEach { nearby: LivingEntity? ->
+            if (nearby == null || !canHitEntity(nearby)) return@forEach
+            val direction = nearby.position().subtract(this.position())
+            val knockbackVector = direction.normalize().scale(knockback)
+            if (knockback > 0.0) {
+                nearby.push(knockbackVector.x, 0.08, knockbackVector.z)
+                val source = this.damageSources().source(damageType, this, plantOwner)
+                if(nearby.hurtServer(serverLevel, source, damage/direction.length().toFloat()*10)) {
+                    val knockbackDirection = calculateHorizontalHurtKnockbackDirection(nearby, source)
+                    nearby.knockback(knockback, -knockbackDirection.leftDouble(), -knockbackDirection.rightDouble())
+                    if (nearby is ServerPlayer) nearby.connection.send(ClientboundSetEntityMotionPacket(nearby))
+                }
+            }
+        }
     }
 
     private fun applyInertia() {
