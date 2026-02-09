@@ -50,6 +50,7 @@ object PazTags {
         val HAS_CHOMPER = tag("plant/has_chomper")
         val HAS_FIRE_PEASHOOTER = tag("plant/has_fire_peashooter")
         val HAS_FUMESHROOM = tag("plant/has_fumeshroom")
+        val HAS_HYPNOSHROOM = tag("plant/has_hypnoshroom")
         val HAS_ICE_PEASHOOTER = tag("plant/has_ice_peashooter")
         val HAS_CABBAGEPULT = tag("plant/has_cabbagepult")
         val HAS_KERNELPULT = tag("plant/has_kernelpult")
@@ -58,15 +59,18 @@ object PazTags {
         val HAS_POTATOMINE = tag("plant/has_potatomine")
         val HAS_PUFFSHROOM = tag("plant/has_puffshroom")
         val HAS_REPEATER = tag("plant/has_repeater")
+        val HAS_SCAREDYSHROOM = tag("plant/has_scaredyshroom")
         val HAS_SUNFLOWER = tag("plant/has_sunflower")
         val HAS_SUNSHROOM = tag("plant/has_sunshroom")
         val HAS_WALLNUT = tag("plant/has_wallnut")
 
         val HAS_BROWNCOAT = tag("zombie/has_browncoat")
+        val HAS_NEWSPAPER_ZOMBIE = tag("zombie/has_newspaper_zombie")
         val HAS_DIGGER = tag("zombie/has_digger")
         val HAS_DIGGER_ALT = tag("zombie/has_digger_alt")
         val HAS_ZOMBIE_YETI = tag("zombie/has_zombie_yeti")
         val HAS_ZOMBIE_YETI_ALT = tag("zombie/has_zombie_yeti_alt")
+        val HAS_DISCO_ZOMBIE = tag("zombie/has_disco_zombie")
 
         private fun tag(name: String): TagKey<Biome>  = TagKey.create(Registries.BIOME, pazResource(name))
     }
