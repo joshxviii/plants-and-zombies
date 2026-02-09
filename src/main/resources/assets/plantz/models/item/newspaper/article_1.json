@@ -28,10 +28,10 @@
 			"translation": [-6.75, 2, -4.25]
 		},
 		"firstperson_righthand": {
-			"translation": [-9, 2.75, 0]
+			"translation": [-8.99, 5.75, -1.5]
 		},
 		"firstperson_lefthand": {
-			"translation": [-9, 2.75, 0]
+			"translation": [-9.09, 5.75, -1.5]
 		},
 		"gui": {
 			"translation": [0, -1.75, 0]

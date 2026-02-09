@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "plantz:item/seed_packet",
-    "layer1": "plantz:item/fire_peashooter_overlay"
-  }
-}

@@ -143,6 +143,32 @@ object PazEntities {
             followRange = 34.0
         )
     )
+    @JvmField val CABBAGE_PULT: EntityType<CabbagePult> = registerPlant(
+        "cabbagepult",
+        EntityType.Builder.of(::CabbagePult, MobCategory.CREATURE),
+        sunCost = 10,
+        width = 0.9f,
+        height = 0.8f,
+        attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 50.0,
+            attackDamage = 3.0,
+            attackKnockback = 0.5,
+            followRange = 24.0
+        )
+    )
+    @JvmField val KERNEL_PULT: EntityType<KernelPult> = registerPlant(
+        "kernelpult",
+        EntityType.Builder.of(::KernelPult, MobCategory.CREATURE),
+        sunCost = 10,
+        width = 0.9f,
+        height = 0.8f,
+        attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 50.0,
+            attackDamage = 3.0,
+            attackKnockback = 0.5,
+            followRange = 24.0
+        )
+    )
     @JvmField val MELON_PULT: EntityType<MelonPult> = registerPlant(
         "melonpult",
         EntityType.Builder.of(::MelonPult, MobCategory.CREATURE),

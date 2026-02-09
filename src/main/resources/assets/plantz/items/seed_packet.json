@@ -8,118 +8,132 @@
         "when": { "id": "plantz:sunflower" },
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:item/seed_packet_sunflower"
+          "model": "plantz:item/seed_packet/sunflower"
         }
       },
       {
         "when": { "id": "plantz:peashooter" },
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:item/seed_packet_peashooter"
+          "model": "plantz:item/seed_packet/peashooter"
         }
       },
       {
         "when": { "id": "plantz:wallnut" },
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:item/seed_packet_wallnut"
+          "model": "plantz:item/seed_packet/wallnut"
         }
       },
       {
         "when": { "id": "plantz:chomper" },
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:item/seed_packet_chomper"
+          "model": "plantz:item/seed_packet/chomper"
         }
       },
       {
         "when": { "id": "plantz:cherrybomb" },
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:item/seed_packet_cherrybomb"
+          "model": "plantz:item/seed_packet/cherrybomb"
         }
       },
       {
         "when": { "id": "plantz:potatomine" },
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:item/seed_packet_potatomine"
+          "model": "plantz:item/seed_packet/potatomine"
         }
       },
       {
         "when": { "id": "plantz:ice_peashooter" },
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:item/seed_packet_ice_peashooter"
+          "model": "plantz:item/seed_packet/ice_peashooter"
         }
       },
       {
         "when": { "id": "plantz:repeater" },
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:item/seed_packet_repeater"
+          "model": "plantz:item/seed_packet/repeater"
         }
       },
       {
         "when": { "id": "plantz:fire_peashooter" },
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:item/seed_packet_fire_peashooter"
+          "model": "plantz:item/seed_packet/fire_peashooter"
         }
       },
       {
         "when": { "id": "plantz:cactus" },
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:item/seed_packet_cactus"
+          "model": "plantz:item/seed_packet/cactus"
+        }
+      },
+      {
+        "when": { "id": "plantz:cabbagepult" },
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/seed_packet/cabbagepult"
+        }
+      },
+      {
+        "when": { "id": "plantz:kernelpult" },
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/seed_packet/kernelpult"
         }
       },
       {
         "when": { "id": "plantz:melonpult" },
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:item/seed_packet_melonpult"
+          "model": "plantz:item/seed_packet/melonpult"
         }
       },
       {
         "when": { "id": "plantz:puffshroom" },
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:item/seed_packet_puffshroom"
+          "model": "plantz:item/seed_packet/puffshroom"
         }
       },
       {
         "when": { "id": "plantz:fumeshroom" },
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:item/seed_packet_fumeshroom"
+          "model": "plantz:item/seed_packet/fumeshroom"
         }
       },
       {
         "when": { "id": "plantz:scaredyshroom" },
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:item/seed_packet_scaredyshroom"
+          "model": "plantz:item/seed_packet/scaredyshroom"
         }
       },
       {
         "when": { "id": "plantz:sunshroom" },
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:item/seed_packet_sunshroom"
+          "model": "plantz:item/seed_packet/sunshroom"
         }
       },
       {
         "when": { "id": "plantz:hypnoshroom" },
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:item/seed_packet_hypnoshroom"
+          "model": "plantz:item/seed_packet/hypnoshroom"
         }
       }
     ],
     "fallback": {
       "type": "minecraft:model",
-      "model": "plantz:item/seed_packet"
+      "model": "plantz:item/seed_packet/seed_packet"
     }
   }
 }

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "plantz:item/seed_packet"
+    "layer0": "plantz:item/seed_packet/seed_packet"
   }
 }
