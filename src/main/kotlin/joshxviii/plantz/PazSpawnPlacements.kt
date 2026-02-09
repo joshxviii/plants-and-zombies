@@ -1,7 +1,7 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.entity.plant.Plant
-import joshxviii.plantz.entity.zombie.Miner
+import joshxviii.plantz.entity.zombie.DiggerZombie
 import joshxviii.plantz.entity.zombie.ZombieYeti
 import joshxviii.plantz.mixin.SpawnPlacementsInvoker
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications
@@ -12,7 +12,6 @@ import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.MobCategory
 import net.minecraft.world.entity.SpawnPlacementTypes
 import net.minecraft.world.entity.SpawnPlacements
-import net.minecraft.world.entity.monster.Monster
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.levelgen.Heightmap
 
@@ -21,15 +20,23 @@ object PazSpawnPlacements {
     fun initialize() {
         // region PLANTS
         addBiomeSpawn(PazTags.Biomes.HAS_CACTUS, PazEntities.CACTUS,
-            weight = 10, minGroupSize = 1, maxGroupSize = 4)
+            weight = 6, minGroupSize = 1, maxGroupSize = 3)
         registerSpawnPlacement(PazEntities.CACTUS, Plant::checkPlantSpawnRules)
 
-        addBiomeSpawn(PazTags.Biomes.HAS_CHOMPER, PazEntities.CHOMPER,
+        addBiomeSpawn(PazTags.Biomes.HAS_CHERRYBOMB, PazEntities.CHERRY_BOMB,
             weight = 10, minGroupSize = 1, maxGroupSize = 1)
+        registerSpawnPlacement(PazEntities.CHERRY_BOMB, Plant::checkPlantSpawnRules)
+
+        addBiomeSpawn(PazTags.Biomes.HAS_CHOMPER, PazEntities.CHOMPER,
+            weight = 8, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.CHOMPER, Plant::checkPlantSpawnRules)
 
+        addBiomeSpawn(PazTags.Biomes.HAS_FIRE_PEASHOOTER, PazEntities.FIRE_PEA_SHOOTER,
+            weight = 10, minGroupSize = 1, maxGroupSize = 1)
+        registerSpawnPlacement(PazEntities.FIRE_PEA_SHOOTER, Plant::checkPlantSpawnRules)
+
         addBiomeSpawn(PazTags.Biomes.HAS_SUNFLOWER, PazEntities.SUNFLOWER,
-            weight = 20, minGroupSize = 2, maxGroupSize = 4)
+            weight = 10, minGroupSize = 2, maxGroupSize = 3)
         registerSpawnPlacement(PazEntities.SUNFLOWER, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_PUFFSHROOM, PazEntities.PUFF_SHROOM,
@@ -51,9 +58,9 @@ object PazSpawnPlacements {
         addBiomeSpawn(PazTags.Biomes.HAS_ZOMBIE_YETI_ALT, PazEntities.ZOMBIE_YETI, category = MobCategory.MONSTER,
             weight = 10, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.ZOMBIE_YETI, ZombieYeti::checkZombieYetiSpawnRules)
-        addBiomeSpawn(PazTags.Biomes.HAS_MINER, PazEntities.MINER, category = MobCategory.MONSTER,
+        addBiomeSpawn(PazTags.Biomes.HAS_DIGGER, PazEntities.DIGGER_ZOMBIE, category = MobCategory.MONSTER,
             weight = 10, minGroupSize = 1, maxGroupSize = 1)
-        registerSpawnPlacement(PazEntities.MINER, Miner::checkMinerSpawnRules)
+        registerSpawnPlacement(PazEntities.DIGGER_ZOMBIE, DiggerZombie::checkMinerSpawnRules)
         // endregion
     }
 

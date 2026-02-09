@@ -8,7 +8,7 @@ import net.minecraft.client.animation.KeyframeAnimations;
 /**
  * @author Josh
  */
-public class MinerAnimation {
+public class DiggerZombieAnimation {
         public static final AnimationDefinition action = AnimationDefinition.Builder.withLength(0.32F)
                 .addAnimation("body", new AnimationChannel(AnimationChannel.Targets.ROTATION,
                         new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),

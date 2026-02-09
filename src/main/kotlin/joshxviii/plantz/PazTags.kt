@@ -13,14 +13,14 @@ object PazTags {
         @JvmField val MAILBOX = tag("mailbox")
         @JvmField val PLANTABLE = tag("plantable")
         @JvmField val YETI_SPAWNABLE_ON = tag("yeti_spawnable_on")
-        @JvmField val MINER_BREAKABLE = tag("miner_breakable")
+        @JvmField val DIGGER_BREAKABLE = tag("digger_breakable")
         private fun tag(name: String): TagKey<Block> = TagKey.create(Registries.BLOCK, pazResource(name))
     }
 
     object ItemTags {
         @JvmField val BLOCKS_PLANT_PROJECTILE = tag("blocks_plant_projectile")
         @JvmField val GNOME_PREFERRED_WEAPONS = tag("gnome_preferred_weapons")
-        @JvmField val MINER_PREFERRED_WEAPONS = tag("miner_preferred_weapons")
+        @JvmField val DIGGER_PREFERRED_WEAPONS = tag("digger_preferred_weapons")
         @JvmField val NEWSPAPER_ZOMBIE_PREFERRED_WEAPONS = tag("newspaper_zombie_preferred_weapons")
         private fun tag(name: String): TagKey<Item> = TagKey.create(Registries.ITEM, pazResource(name))
     }
@@ -51,6 +51,8 @@ object PazTags {
         val HAS_FIRE_PEASHOOTER = tag("plant/has_fire_peashooter")
         val HAS_FUMESHROOM = tag("plant/has_fumeshroom")
         val HAS_ICE_PEASHOOTER = tag("plant/has_ice_peashooter")
+        val HAS_CABBAGEPULT = tag("plant/has_cabbagepult")
+        val HAS_KERNELPULT = tag("plant/has_kernelpult")
         val HAS_MELONPULT = tag("plant/has_melonpult")
         val HAS_PEASHOOTER = tag("plant/has_peashooter")
         val HAS_POTATOMINE = tag("plant/has_potatomine")
@@ -61,8 +63,8 @@ object PazTags {
         val HAS_WALLNUT = tag("plant/has_wallnut")
 
         val HAS_BROWNCOAT = tag("zombie/has_browncoat")
-        val HAS_MINER = tag("zombie/has_miner")
-        val HAS_MINER_ALT = tag("zombie/has_miner_alt")
+        val HAS_DIGGER = tag("zombie/has_digger")
+        val HAS_DIGGER_ALT = tag("zombie/has_digger_alt")
         val HAS_ZOMBIE_YETI = tag("zombie/has_zombie_yeti")
         val HAS_ZOMBIE_YETI_ALT = tag("zombie/has_zombie_yeti_alt")
 

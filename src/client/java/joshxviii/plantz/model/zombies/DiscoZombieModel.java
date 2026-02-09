@@ -8,15 +8,12 @@ package joshxviii.plantz.model.zombies;
 import joshxviii.plantz.PazEntities;
 import joshxviii.plantz.PazZombieRenderState;
 import joshxviii.plantz.animation.zombies.DiscoZombieAnimation;
-import joshxviii.plantz.animation.zombies.MinerAnimation;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.model.monster.zombie.ZombieModel;
 import net.minecraft.client.renderer.entity.state.ZombieRenderState;
-import net.minecraft.world.entity.AnimationState;
 import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;

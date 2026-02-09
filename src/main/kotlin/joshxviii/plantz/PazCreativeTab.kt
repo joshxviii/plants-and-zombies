@@ -47,7 +47,7 @@ object PazCreativeTab {
                 // zombie spawn eggs
                 output.accept(PazItems.BROWN_COAT_SPAWN_EGG)
                 output.accept(PazItems.NEWSPAPER_ZOMBIE_SPAWN_EGG)
-                output.accept(PazItems.MINER_SPAWN_EGG)
+                output.accept(PazItems.DIGGER_ZOMBIE_SPAWN_EGG)
                 output.accept(PazItems.ZOMBIE_YETI_SPAWN_EGG)
                 output.accept(PazItems.DISCO_ZOMBIE_SPAWN_EGG)
                 output.accept(PazItems.BACKUP_DANCER_SPAWN_EGG)

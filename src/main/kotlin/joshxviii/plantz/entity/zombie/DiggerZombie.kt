@@ -16,7 +16,6 @@ import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.navigation.PathNavigation
-import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -24,7 +23,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 
 
-class Miner(type: EntityType<out Miner>, level: Level) : PazZombie(type, level) {
+class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie(type, level) {
 
     companion object {
         fun checkMinerSpawnRules(
@@ -48,13 +47,13 @@ class Miner(type: EntityType<out Miner>, level: Level) : PazZombie(type, level) 
     }
 
     override fun getAmbientSound(): SoundEvent {
-        return PazSounds.MINER_AMBIENT
+        return PazSounds.DIGGER_ZOMBIE_AMBIENT
     }
     override fun getHurtSound(source: DamageSource): SoundEvent {
-        return PazSounds.MINER_HURT
+        return PazSounds.DIGGER_ZOMBIE_HURT
     }
     override fun getDeathSound(): SoundEvent {
-        return PazSounds.MINER_DEATH
+        return PazSounds.DIGGER_ZOMBIE_DEATH
     }
     override fun getStepSound(): SoundEvent {
         return SoundEvents.ZOMBIE_STEP
@@ -80,7 +79,7 @@ class Miner(type: EntityType<out Miner>, level: Level) : PazZombie(type, level) 
     override fun canPickUpLoot(): Boolean = true
     override fun isSunSensitive(): Boolean = false
     override fun convertsInWater(): Boolean = false
-    override fun getPreferredWeaponType(): TagKey<Item> = PazTags.ItemTags.MINER_PREFERRED_WEAPONS
+    override fun getPreferredWeaponType(): TagKey<Item> = PazTags.ItemTags.DIGGER_PREFERRED_WEAPONS
     override fun wantsToPickUp(level: ServerLevel, itemStack: ItemStack): Boolean {
         if(itemStack.`is`(ItemTags.ARMOR_ENCHANTABLE)) return false
         return super.wantsToPickUp(level, itemStack)

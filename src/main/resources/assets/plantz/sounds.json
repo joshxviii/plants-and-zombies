@@ -156,22 +156,22 @@
     "sounds": [{ "name": "plantz:entity/newspaper_zombie/death", "volume": 0.8 }], "subtitle": "plantz.subtitles.entity.newspaper_zombie.death"
   },
 
-  "entity.miner.ambient": {
+  "entity.digger_zombie.ambient": {
     "sounds": [
-      { "name": "plantz:entity/miner/ambient_1", "volume": 0.8 },
-      { "name": "plantz:entity/miner/ambient_2", "volume": 0.8 },
-      { "name": "plantz:entity/miner/ambient_3", "volume": 0.8 }
-    ], "subtitle": "plantz.subtitles.entity.miner.ambient"
+      { "name": "plantz:entity/digger_zombie/ambient_1", "volume": 0.8 },
+      { "name": "plantz:entity/digger_zombie/ambient_2", "volume": 0.8 },
+      { "name": "plantz:entity/digger_zombie/ambient_3", "volume": 0.8 }
+    ], "subtitle": "plantz.subtitles.entity.digger_zombie.ambient"
   },
-  "entity.miner.hurt": {
+  "entity.digger_zombie.hurt": {
     "sounds": [
-      { "name": "plantz:entity/miner/hurt_1", "volume": 0.9 },
-      { "name": "plantz:entity/miner/hurt_2", "volume": 0.9 },
-      { "name": "plantz:entity/miner/hurt_3", "volume": 0.9 }
-    ], "subtitle": "plantz.subtitles.entity.miner.hurt"
+      { "name": "plantz:entity/digger_zombie/hurt_1", "volume": 0.9 },
+      { "name": "plantz:entity/digger_zombie/hurt_2", "volume": 0.9 },
+      { "name": "plantz:entity/digger_zombie/hurt_3", "volume": 0.9 }
+    ], "subtitle": "plantz.subtitles.entity.digger_zombie.hurt"
   },
-  "entity.miner.death": {
-    "sounds": [{ "name": "plantz:entity/miner/death", "volume": 0.9 }], "subtitle": "plantz.subtitles.entity.miner.death"
+  "entity.digger_zombie.death": {
+    "sounds": [{ "name": "plantz:entity/digger_zombie/death", "volume": 0.9 }], "subtitle": "plantz.subtitles.entity.digger_zombie.death"
   },
 
   "entity.zombie_yeti.ambient": {

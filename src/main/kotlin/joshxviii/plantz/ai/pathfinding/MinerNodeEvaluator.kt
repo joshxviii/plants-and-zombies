@@ -19,7 +19,7 @@ class MinerNodeEvaluator : WalkNodeEvaluator() {
 
     private fun isBreakable(context: PathfindingContext, pos: BlockPos): Boolean {
         val blockState = context.getBlockState(pos)
-        return blockState.`is`(PazTags.BlockTags.MINER_BREAKABLE)
+        return blockState.`is`(PazTags.BlockTags.DIGGER_BREAKABLE)
     }
 
     override fun isDiagonalValid(diagonal: Node?): Boolean {

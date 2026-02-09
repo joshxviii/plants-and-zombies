@@ -12,7 +12,6 @@ import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.LevelEvent
 import net.minecraft.world.level.gamerules.GameRules
-import net.minecraft.world.level.pathfinder.PathType
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -158,7 +157,7 @@ class MineBlocksToTargetGoal(
     private fun isBlockMineable(pos: BlockPos?) : Boolean {
         if (pos == null) return false
         val blockState = miner.level().getBlockState(pos)
-        return (blockState.`is`(PazTags.BlockTags.MINER_BREAKABLE))
+        return (blockState.`is`(PazTags.BlockTags.DIGGER_BREAKABLE))
     }
 
 }

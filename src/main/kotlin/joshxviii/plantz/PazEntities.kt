@@ -14,7 +14,7 @@ import joshxviii.plantz.entity.zombie.BackupDancer
 import joshxviii.plantz.entity.zombie.BrownCoat
 import joshxviii.plantz.entity.zombie.DiscoZombie
 import joshxviii.plantz.entity.zombie.Gargantuar
-import joshxviii.plantz.entity.zombie.Miner
+import joshxviii.plantz.entity.zombie.DiggerZombie
 import joshxviii.plantz.entity.zombie.NewspaperZombie
 import joshxviii.plantz.entity.zombie.ZombieYeti
 import joshxviii.plantz.mixin.MobAccessor
@@ -259,9 +259,9 @@ object PazEntities {
             .add(Attributes.MOVEMENT_SPEED, 0.22)
             .add(Attributes.MAX_HEALTH, 22.0)
     )
-    @JvmField val MINER: EntityType<Miner> =  registerZombie(
-        "miner",
-        EntityType.Builder.of(::Miner, MobCategory.MONSTER)
+    @JvmField val DIGGER_ZOMBIE: EntityType<DiggerZombie> =  registerZombie(
+        "digger_zombie",
+        EntityType.Builder.of(::DiggerZombie, MobCategory.MONSTER)
             .sized(0.63f, 1.95f)
             .eyeHeight(1.74f)
             .passengerAttachments(2.075f)

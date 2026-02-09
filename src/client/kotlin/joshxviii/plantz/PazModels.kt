@@ -1,7 +1,6 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.block.entity.FlagBlockEntity
-import joshxviii.plantz.entity.zombie.Gargantuar
 import joshxviii.plantz.model.FlagBlockModel
 import joshxviii.plantz.model.GnomeArmorModel
 import joshxviii.plantz.model.GnomeModel
@@ -12,10 +11,9 @@ import joshxviii.plantz.model.projectiles.PeaModel
 import joshxviii.plantz.model.projectiles.SporeModel
 import joshxviii.plantz.model.zombies.DiscoZombieModel
 import joshxviii.plantz.model.zombies.GargantuarModel
-import joshxviii.plantz.model.zombies.MinerModel
+import joshxviii.plantz.model.zombies.DiggerZombieModel
 import joshxviii.plantz.model.zombies.PazZombieModel
 import joshxviii.plantz.model.zombies.ZombieYetiModel
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.ModelLayers
@@ -79,7 +77,7 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(MelonModel.LAYER_LOCATION) { MelonModel.createBodyLayer() }
 
         ModelLayerRegistry.registerModelLayer(PazZombieModel.LAYER_LOCATION) { PazZombieModel.createBodyLayer() }
-        ModelLayerRegistry.registerModelLayer(MinerModel.LAYER_LOCATION) { MinerModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(DiggerZombieModel.LAYER_LOCATION) { DiggerZombieModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(ZombieYetiModel.LAYER_LOCATION) { ZombieYetiModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(DiscoZombieModel.LAYER_LOCATION) { DiscoZombieModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(GargantuarModel.LAYER_LOCATION) { GargantuarModel.createBodyLayer() }
@@ -127,7 +125,7 @@ object PazModels {
 
         EntityRenderers.register(PazEntities.BROWN_COAT) { PazZombieRenderer(it) }
         EntityRenderers.register(PazEntities.NEWSPAPER_ZOMBIE) { PazZombieRenderer(it) }
-        EntityRenderers.register(PazEntities.MINER) { PazZombieRenderer(it, MinerModel(it.bakeLayer(MinerModel.LAYER_LOCATION))) }
+        EntityRenderers.register(PazEntities.DIGGER_ZOMBIE) { PazZombieRenderer(it, DiggerZombieModel(it.bakeLayer(DiggerZombieModel.LAYER_LOCATION))) }
         EntityRenderers.register(PazEntities.ZOMBIE_YETI) { PazZombieRenderer(it, ZombieYetiModel(it.bakeLayer(ZombieYetiModel.LAYER_LOCATION)))}
         EntityRenderers.register(PazEntities.BACKUP_DANCER) { PazZombieRenderer(it, DiscoZombieModel(it.bakeLayer(DiscoZombieModel.LAYER_LOCATION))) }
         EntityRenderers.register(PazEntities.DISCO_ZOMBIE) { PazZombieRenderer(it, DiscoZombieModel(it.bakeLayer(DiscoZombieModel.LAYER_LOCATION))) }

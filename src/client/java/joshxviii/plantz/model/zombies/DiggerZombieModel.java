@@ -5,30 +5,27 @@
 
 package joshxviii.plantz.model.zombies;
 
-import joshxviii.plantz.animation.plants.CactusAnimation;
-import joshxviii.plantz.animation.zombies.MinerAnimation;
+import joshxviii.plantz.animation.zombies.DiggerZombieAnimation;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.model.monster.zombie.ZombieModel;
 import net.minecraft.client.renderer.entity.state.ZombieRenderState;
 import net.minecraft.world.entity.AnimationState;
-import net.minecraft.world.item.SwingAnimationType;
 import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class MinerModel extends PazZombieModel {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("miner"), "main");
+public class DiggerZombieModel extends PazZombieModel {
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("digger"), "main");
 	private final KeyframeAnimation actionAnimation;
 	private final AnimationState mineAnimationState = new AnimationState();
 
 
-	public MinerModel(final ModelPart root) {
+	public DiggerZombieModel(final ModelPart root) {
 		super(root.getChild("root"));
-		this.actionAnimation = MinerAnimation.action.bake(root.getChild("root"));
+		this.actionAnimation = DiggerZombieAnimation.action.bake(root.getChild("root"));
 	}
 
 	public static LayerDefinition createBodyLayer() {
