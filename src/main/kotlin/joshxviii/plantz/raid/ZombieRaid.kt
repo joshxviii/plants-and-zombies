@@ -7,23 +7,28 @@ import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazEffects
-import joshxviii.plantz.PazTags.EntityTypes.ZOMBIE_RAIDERS
+import joshxviii.plantz.PazEntities
 import net.minecraft.core.BlockPos
 import net.minecraft.core.BlockPos.MutableBlockPos
-import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerBossEvent
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
 import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
 import net.minecraft.util.StringRepresentable
 import net.minecraft.world.BossEvent
 import net.minecraft.world.Difficulty
 import net.minecraft.world.entity.EntitySpawnReason
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.entity.SpawnGroupData
 import net.minecraft.world.entity.monster.zombie.Zombie
+import net.minecraft.world.entity.raid.Raid
+import net.minecraft.world.entity.raid.Raider
 import net.minecraft.world.level.levelgen.Heightmap
-import net.minecraft.world.phys.Vec3
 
 class ZombieRaid(
     val center: BlockPos,
@@ -63,6 +68,8 @@ class ZombieRaid(
         const val PRE_RAID_TICKS: Int = 300
         const val POST_RAID_TICKS: Int = 80
     }
+
+    private val waveToLeaderMap: MutableMap<Int, Zombie> = Maps.newHashMap<Int, Zombie>()
     val zombieRaidEvent = ServerBossEvent(ZOMBIE_RAID_BAR_START, BossEvent.BossBarColor.GREEN, BossEvent.BossBarOverlay.NOTCHED_10)
     private var raidStatus: ZombieRaidStatus = ZombieRaidStatus.ONGOING
     private val waveZombieMap: MutableMap<Int, MutableSet<Zombie>> = Maps.newHashMap<Int, MutableSet<Zombie>>()
@@ -91,6 +98,8 @@ class ZombieRaid(
     fun tick(level: ServerLevel) {
         if (!active) return
         ticksActive++
+
+        level.playSound(null, center, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.4f, 0.4f)
 
         if (postRaidTicks > 0) { postRaidTicks-- // post-loading time
             if (postRaidTicks <= 0) stop()
@@ -127,9 +136,9 @@ class ZombieRaid(
             postRaidTicks = POST_RAID_TICKS
         }
 
-//        zombieRaidEvent.players.forEach { p ->
-//            if (p.blockPosition().distSqr(center) > 96) zombieRaidEvent.removePlayer(p)
-//        }
+        zombieRaidEvent.players.forEach { p ->
+            //if (p.blockPosition().distSqr(center) > 96) zombieRaidEvent.removePlayer(p)
+        }
 
     }
 
@@ -141,19 +150,62 @@ class ZombieRaid(
 
 
     private fun spawnNextWave(level: ServerLevel, pos: BlockPos) {
-        for (i in 0..getWaveSpawnCount(difficulty)) {
+//        for (i in 0..getWaveSpawnCount(difficulty)) {
+//
+//            val tag = BuiltInRegistries.ENTITY_TYPE.get(ZOMBIE_RAIDERS)
+//            val entityType = if (!tag.isEmpty) tag.get().getRandomElement(level.random).get().value() else return
+//
+//            val entity = entityType.create(level, EntitySpawnReason.EVENT) ?: continue
+//            entity.moveOrInterpolateTo(Vec3(pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5), level.random.nextFloat() * 360f, 0f)
+//            if(level.addFreshEntity(entity) && entity is Zombie) {
+//                addWaveMob(level, i, entity)
+//            }
+//        }
+        //totalHealth = 0f
 
-            val tag = BuiltInRegistries.ENTITY_TYPE.get(ZOMBIE_RAIDERS)
-            val entityType = if (!tag.isEmpty) tag.get().getRandomElement(level.random).get().value() else return
 
-            val entity = entityType.create(level, EntitySpawnReason.EVENT) ?: continue
-            entity.moveOrInterpolateTo(Vec3(pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5), level.random.nextFloat() * 360f, 0f)
-            if(level.addFreshEntity(entity) && entity is Zombie) {
-                addWaveMob(level, i, entity)
+        var leaderSet = false
+        val waveNumber = wavesSpawned + 1
+        for (zombieType in ZombieRaiderType.VALUES) {
+            val numSpawns = zombieType.spawnsPerWaveBeforeBonus[waveNumber] + getPotentialBonusSpawns(zombieType, random)
+
+            for (i in 0..<numSpawns) {
+                val zombie = zombieType.entityType.create(level, EntitySpawnReason.EVENT) ?: break
+
+                if (!leaderSet) {
+                    setLeader(numWaves, zombie)
+                    leaderSet = true
+                }
+
+                joinRaid(level, waveNumber, zombie, pos, false)
             }
         }
         wavesSpawned++
     }
+
+    fun joinRaid(level: ServerLevel, waveNumber: Int, zombie: Zombie, pos: BlockPos?, exists: Boolean) {
+        val added = addWaveMob(level, waveNumber, zombie)
+        if (added) {
+            if (!exists && pos != null) {
+                zombie.setPos(pos.x.toDouble() + 0.5, pos.y.toDouble() + 1.0, pos.z.toDouble() + 0.5)
+                zombie.finalizeSpawn(
+                    level,
+                    level.getCurrentDifficultyAt(pos),
+                    EntitySpawnReason.EVENT,
+                    null as SpawnGroupData?
+                )
+                zombie.setOnGround(true)
+                level.addFreshEntityWithPassengers(zombie)
+            }
+        }
+    }
+
+    fun setLeader(wave: Int, zombie: Zombie) {
+        waveToLeaderMap[wave] = zombie
+        zombie.setItemSlot(EquipmentSlot.OFFHAND, PazBlocks.BRAINZ_FLAG.asItem().defaultInstance)
+        zombie.setDropChance(EquipmentSlot.OFFHAND, 2.0f)
+    }
+    fun getLeader(wave: Int): Zombie? = waveToLeaderMap[wave]
 
     fun addWaveMob(level: ServerLevel, wave: Int, zombie: Zombie): Boolean {
         waveZombieMap.computeIfAbsent(wave) { Sets.newHashSet<Zombie>() }
@@ -173,7 +225,7 @@ class ZombieRaid(
         }
 
         zombies.add(zombie)
-        totalHealth += zombie.health
+        totalHealth += zombie.maxHealth
 
         updateBossbar()
         return true
@@ -183,14 +235,15 @@ class ZombieRaid(
         zombieRaidEvent.setProgress(Mth.clamp(getHealthOfZombies() / totalHealth, 0.0f, 1.0f))
     }
 
-    fun getTotalZombiesAlive(): Int = waveZombieMap.values.stream().mapToInt { it.size }.sum()
-    fun getHealthOfZombies(): Float = waveZombieMap.values.map { it.map { it.health }.sum() }.sum()
+    fun getTotalZombiesAlive(): Int = waveZombieMap.values.stream().mapToInt { it.map { if (it.isAlive) 1 else 0 }.sum() }.sum()
+    fun getHealthOfZombies(): Float = waveZombieMap.values.map { it.map { if (it.isAlive) it.health else 0f }.sum() }.sum()
 
     private fun shouldSpawnNextWave(): Boolean {
         return getTotalZombiesAlive() == 0
-                && status == ZombieRaidStatus.ONGOING
-                && wavesSpawned < numWaves
+            && status == ZombieRaidStatus.ONGOING
+            && wavesSpawned < numWaves
     }
+
 
     private fun findRandomSpawnPos(level: ServerLevel, maxTries: Int): BlockPos? {
         val secondsRemaining = raidCooldownTicks / 20
@@ -228,4 +281,51 @@ class ZombieRaid(
     }
 
     fun isStopped(): Boolean = status == ZombieRaidStatus.STOPPED
+
+    private fun getDefaultNumSpawns(type: ZombieRaiderType): Int {
+        return type.spawnsPerWaveBeforeBonus[numWaves]
+    }
+
+    private fun getPotentialBonusSpawns(
+        type: ZombieRaiderType,
+        random: RandomSource,
+    ): Int {
+        val isEasy = difficulty == Difficulty.EASY
+        val isNormal = difficulty == Difficulty.NORMAL
+        val wave = wavesSpawned
+        val bonusSpawns: Int
+        when (type) {
+            ZombieRaiderType.BROWN_COAT -> bonusSpawns =
+                if (isEasy) random.nextInt(2)
+                else if (isNormal) 3
+                else 4
+            ZombieRaiderType.NEWSPAPER_ZOMBIE -> return 0
+            ZombieRaiderType.DIGGER_ZOMBIE -> return 0
+            ZombieRaiderType.DISCO_ZOMBIE -> {
+                if (isEasy || wave <= 2 || wave == 4) return 0
+                bonusSpawns = 1
+            }
+
+            ZombieRaiderType.ZOMBIE_YETI -> bonusSpawns = if (!isEasy && wave > 3) 1 else 0
+            ZombieRaiderType.GARGANTUAR -> return 0
+        }
+
+        return if (bonusSpawns > 0) random.nextInt(bonusSpawns + 1) else 0
+    }
+
+    enum class ZombieRaiderType(
+        val entityType: EntityType<out Zombie>,
+        val spawnsPerWaveBeforeBonus: IntArray
+    ) {
+        BROWN_COAT(PazEntities.BROWN_COAT, intArrayOf(5, 5, 7, 9, 9, 12, 16, 19)),
+        NEWSPAPER_ZOMBIE(PazEntities.NEWSPAPER_ZOMBIE, intArrayOf(0, 1, 0, 1, 0, 1, 2, 1)),
+        DIGGER_ZOMBIE(PazEntities.DIGGER_ZOMBIE, intArrayOf(0, 0, 1, 0, 4, 1, 1, 2)),
+        DISCO_ZOMBIE(PazEntities.DISCO_ZOMBIE, intArrayOf(0, 0, 1, 3, 4, 4, 4, 2)),
+        ZOMBIE_YETI(PazEntities.ZOMBIE_YETI, intArrayOf(0, 0, 0, 1, 3, 0, 2, 1)),
+        GARGANTUAR(PazEntities.GARGANTUAR, intArrayOf(0, 0, 0, 1, 0, 1, 0, 2));
+
+        companion object {
+            val VALUES = entries.toTypedArray()
+        }
+    }
 }
