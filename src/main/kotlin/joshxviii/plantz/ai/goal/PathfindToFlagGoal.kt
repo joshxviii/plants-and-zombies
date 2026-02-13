@@ -3,10 +3,9 @@ package joshxviii.plantz.ai.goal
 import joshxviii.plantz.PazBlocks.PLANTZ_FLAG
 import joshxviii.plantz.PazBlocks.PLANTZ_FLAG_POI
 import joshxviii.plantz.PazEntities.PLANT_TEAM
-import joshxviii.plantz.block.entity.FlagBlockEntity
-import joshxviii.plantz.canReachTarget
 import joshxviii.plantz.lookAtBlockPos
 import joshxviii.plantz.moveToBlockPos
+import joshxviii.plantz.raid.getZombieRaids
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.server.level.ServerLevel
@@ -15,14 +14,15 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.entity.ai.village.poi.PoiManager.Occupancy
 import net.minecraft.world.entity.ai.village.poi.PoiType
+import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.pathfinder.Path
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
-class DestroyFlagGoal(
+class PathfindToFlagGoal(
     val mob: PathfinderMob,
-    val searchRange: Int = 64
+    var targetFlagPos: BlockPos? = null
 ) : Goal(){
     companion object {
         const val SEARCH_COOLDOWN = 20
@@ -30,39 +30,36 @@ class DestroyFlagGoal(
 
     var path: Path? = null
     var ticksUntilNextPathRecalculation = 0
-    var searchCooldown: Int = SEARCH_COOLDOWN
-    var targetFlagPos: BlockPos? = null
+    var navCooldown: Int = SEARCH_COOLDOWN
 
     init {
         flags = EnumSet.of<Flag>(Flag.MOVE, Flag.LOOK)
     }
 
     override fun canUse(): Boolean {
-        if (searchCooldown > 0) {
-            searchCooldown--
-            if (searchCooldown <= 0) {
-                targetFlagPos = findNearbyFlag()
-                val flagPos = targetFlagPos ?: return false
-                path = mob.getNavigation().createPath(flagPos, 0)
+        if (navCooldown > 0) { navCooldown--
+            if (navCooldown <= 0) {
+                navCooldown = SEARCH_COOLDOWN
+                val level = mob.level() as ServerLevel
+                val zombieRaid = level.getZombieRaids().getNearbyRaid(mob.blockPosition(), 99999)
+                if (zombieRaid != null && mob is Zombie) zombieRaid.joinRaid(level, mob)
+                targetFlagPos = zombieRaid?.center
             }
         }
-        return targetFlagPos!=null && path != null && mob.team != PLANT_TEAM
-    }
-
-    override fun canContinueToUse(): Boolean {
-        val flagPos = targetFlagPos?: return false
-        val isValid = mob.level().getBlockState(flagPos).`is`(PLANTZ_FLAG)
-        return isValid
+        val targetPos = targetFlagPos ?: return false
+        path = mob.getNavigation().createPath(targetPos, 0)
+        val isValid = mob.level().getBlockState(targetPos).`is`(PLANTZ_FLAG)
+        return targetPos.distSqr(mob.blockPosition()) > 96 && isValid && !mob.isAggressive && path != null && mob.team != PLANT_TEAM
     }
 
     override fun stop() {
-        mob.isAggressive = false
-        targetFlagPos = null
+        //targetFlagPos = null
+        //mob.isAggressive = false
         mob.navigation.stop()
     }
 
     override fun start() {
-        mob.isAggressive = true
+        //mob.isAggressive = true
         mob.navigation.moveTo(path, 1.0)
     }
 
@@ -84,30 +81,6 @@ class DestroyFlagGoal(
             ticksUntilNextPathRecalculation = adjustedTickDelay(ticksUntilNextPathRecalculation)
         }
 
-        if (flagPos.distSqr(mob.blockPosition()) < if (mob.navigation.path.canReachTarget(flagPos)) 3.0 else 10.0) {
-            if (!mob.swinging) {
-                damageFlag(flagPos)
-                mob.swing(mob.usedItemHand)
-            }
-        }
     }
 
-    fun damageFlag(flagPos: BlockPos) {
-        val flag = mob.level().getBlockEntity(flagPos) as? FlagBlockEntity ?: return
-        val damage = mob.getAttribute(Attributes.ATTACK_DAMAGE)?.value?.toFloat()?: return
-        flag.hurt(damage)
-    }
-
-    fun findNearbyFlag(): BlockPos? {
-        searchCooldown = SEARCH_COOLDOWN
-        val followRange = mob.getAttribute(Attributes.FOLLOW_RANGE)?.value?.toInt()
-        val poiManager = (mob.level() as ServerLevel).poiManager
-        val flagPoi: BlockPos? = poiManager.findClosest(
-            { p: Holder<PoiType> -> p.value() == PLANTZ_FLAG_POI },
-            mob.blockPosition(),
-            min(searchRange, followRange?:8),
-            Occupancy.ANY
-        ).orElse(null)
-        return flagPoi
-    }
 }

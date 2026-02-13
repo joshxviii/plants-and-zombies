@@ -43,6 +43,7 @@ class FlagBlockEntity(
                 level.addFreshEntity(item)
             }
             level.destroyBlock(pos, false)
+            level.destroyBlockProgress(0, pos, -1)
         } else if (health < MAX_HEALTH) level.destroyBlockProgress(0, pos, healthToDestroyProgress())
     }
 

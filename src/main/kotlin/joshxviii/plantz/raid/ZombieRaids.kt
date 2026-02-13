@@ -35,22 +35,22 @@ class ZombieRaids(
 ) : SavedData() {
 
     init {
-        this.setDirty()
+        setDirty()
     }
 
     private constructor(raids: MutableList<ZombieRaidWithId>, nextId: Int, tick: Int) : this() {
         for (raid in raids) {
-            this.zombieRaidMap.put(raid.id, raid.raid)
+            zombieRaidMap.put(raid.id, raid.raid)
         }
 
         this.nextId = nextId
         this.tick = tick
     }
 
-    fun get(raidId: Int): ZombieRaid = this.zombieRaidMap.get(raidId)
+    fun get(raidId: Int): ZombieRaid = zombieRaidMap.get(raidId)
 
     fun getId(raid: ZombieRaid): OptionalInt {
-        for (entry in this.zombieRaidMap.int2ObjectEntrySet()) {
+        for (entry in zombieRaidMap.int2ObjectEntrySet()) {
             if (entry.value === raid) return OptionalInt.of(entry.intKey)
         }
 
@@ -58,7 +58,7 @@ class ZombieRaids(
     }
 
     fun tick(level: ServerLevel) {
-        this.tick++
+        tick++
         val raidIterator: MutableIterator<ZombieRaid> = zombieRaidMap.values.iterator()
 
         while (raidIterator.hasNext()) {
@@ -67,11 +67,11 @@ class ZombieRaids(
 
             if (raid.isStopped()) {
                 raidIterator.remove()
-                this.setDirty()
+                setDirty()
             } else raid.tick(level)
         }
 
-        if (this.tick % 200 == 0) this.setDirty()
+        if (tick % 200 == 0) setDirty()
     }
 
     fun createOrExtendZombieRaid(player: ServerPlayer, flagPosition: BlockPos): ZombieRaid? {
@@ -80,10 +80,10 @@ class ZombieRaids(
             val level = player.level()
             if (!level.gameRules.get<Boolean>(GameRules.RAIDS)!!) return null
 
-            val raid = this.getOrCreateRaid(level, flagPosition)
+            val raid = getOrCreateRaid(level, flagPosition)
 
-            if (!raid.started && !this.zombieRaidMap.containsValue(raid)) {
-                zombieRaidMap.put(this.uniqueId, raid)
+            if (!raid.started && !zombieRaidMap.containsValue(raid)) {
+                zombieRaidMap.put(uniqueId, raid)
                 level.players().filter { it.blockPosition().distSqr(flagPosition) < 96 } .forEach {
                     it.sendSystemMessage(ZombieRaid.ZOMBIE_RAID_BAR_START)
                     raid.zombieRaidEvent.addPlayer(it)
@@ -94,7 +94,7 @@ class ZombieRaids(
                 raid.absorbRaidOmen(player)
             }
 
-            this.setDirty()
+            setDirty()
             return raid
         }
     }
@@ -105,13 +105,14 @@ class ZombieRaids(
     }
 
     private val uniqueId: Int
-        get() = ++this.nextId
+        get() = ++nextId
 
     fun getNearbyRaid(pos: BlockPos, maxDistSqr: Int): ZombieRaid? {
+        if (zombieRaidMap.isEmpty()) return null
         var closest: ZombieRaid? = null
         var closestDistanceSqr = maxDistSqr.toDouble()
 
-        for (raid in this.zombieRaidMap.values) {
+        for (raid in zombieRaidMap.values) {
             val distance = raid.center.distSqr(pos)
             if (raid.active && distance < closestDistanceSqr) {
                 closest = raid
@@ -124,7 +125,7 @@ class ZombieRaids(
 
     @VisibleForDebug
     fun getRaidCentersInChunk(chunkPos: ChunkPos): MutableList<BlockPos> {
-        return this.zombieRaidMap.values.stream().map<BlockPos> { obj: ZombieRaid -> obj.center }
+        return zombieRaidMap.values.stream().map<BlockPos> { obj: ZombieRaid -> obj.center }
             .filter { chunkPos.contains(it) }.toList()
     }
 
