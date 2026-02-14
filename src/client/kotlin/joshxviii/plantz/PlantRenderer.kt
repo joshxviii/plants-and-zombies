@@ -1,7 +1,9 @@
 package joshxviii.plantz
 
 import com.mojang.blaze3d.vertex.PoseStack
+import joshxviii.plantz.entity.plant.KernelPult
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.entity.plants.WallNut
 import net.minecraft.client.Minecraft
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.renderer.SubmitNodeCollector
@@ -54,6 +56,16 @@ class PlantRenderer(
         state.coolDownAnimationState.copyFrom(entity.coolDownAnimationState)
         state.specialAnimation.copyFrom(entity.specialAnimation)
         state.sleepAnimationState.copyFrom(entity.sleepAnimationState)
+        state.texturePathExtra =
+            when (entity) {
+                is WallNut -> when {
+                    state.damagedAmount >= 0.75f -> "damage_medium"
+                    state.damagedAmount >= 0.5f  -> "damage_low"
+                    else -> ""
+                }
+                is KernelPult -> if (entity.hasButterShot) "butter" else ""
+                else -> ""
+            }
     }
 
     override fun getTextureLocation(state: PlantRenderState): Identifier {
@@ -63,11 +75,7 @@ class PlantRenderer(
         val suffixes = buildList {
             if (state.isBaby)   add("baby")
             if (state.isAsleep) add("sleep")
-
-            if (state.entityType == PazEntities.WALL_NUT) when {
-                state.damagedAmount >= 0.75f -> add("damage_medium")
-                state.damagedAmount >= 0.5f  -> add("damage_low")
-            }
+            add(state.texturePathExtra)
         }
 
         return resolveTextureLocation(base, suffixes, rm) ?: pazResource("$base.png")
@@ -81,6 +89,7 @@ class PlantRenderState : LivingEntityRenderState() {
     var damagedAmount: Float = 0.0f
     var isAsleep: Boolean = false
     var texturePath: String = "default"
+    var texturePathExtra: String = ""
     val initAnimationState: AnimationState = AnimationState()
     val idleAnimationState: AnimationState = AnimationState()
     val actionAnimationState: AnimationState = AnimationState()

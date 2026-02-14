@@ -2,10 +2,13 @@ package joshxviii.plantz.ai.goal
 
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.entity.plant.Plant
+import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.projectile.Projectile
@@ -84,13 +87,8 @@ class ProjectileAttackGoal(
         if (projectile is Projectile) Projectile.spawnProjectile(projectile, level, ItemStack.EMPTY)
         else level.addFreshEntity(projectile)
 
-        val relativePos = Vec3(
-            target.x - projectile.x,
-            target.boundingBox.minY + (target.bbHeight / 3.0) - projectile.y,
-            target.z - projectile.z
-        )
-
-        val arcs = calculateProjectileArcs(relativePos, projectile.gravity, velocity)
+        val targetPos = calculateMovingTargetPosition(target, projectile)
+        val arcs = calculateProjectileArcs(targetPos, projectile.gravity, velocity)
         if (arcs==null) {// lose target if unreachable
             projectile.discard()
             usingEntity.target = null
@@ -99,10 +97,10 @@ class ProjectileAttackGoal(
 
         val finalAngle = if(useHighArc) arcs.first else arcs.second
 
-        val horizDist = relativePos.horizontalDistance()
+        val horizDist = targetPos.horizontalDistance()
 
-        val horizUnitX = relativePos.x / horizDist
-        val horizUnitZ = relativePos.z / horizDist
+        val horizUnitX = targetPos.x / horizDist
+        val horizUnitZ = targetPos.z / horizDist
         val horizComp = Mth.cos(finalAngle)
 
         val shootX = (horizUnitX * horizComp)
@@ -117,6 +115,47 @@ class ProjectileAttackGoal(
 
         usingEntity.playSound(soundEvent, 3.0f, 0.4f / (usingEntity.random.nextFloat() * 0.4f + 0.8f))
         return true
+    }
+
+    private fun calculateMovingTargetPosition(target: LivingEntity, projectile: Entity): Vec3 {
+        val basePos = Vec3(
+            target.x - projectile.x,
+            target.boundingBox.minY + (target.bbHeight / 3.0) - projectile.y,
+            target.z - projectile.z
+        )
+
+        val targetVel: Vec3 = target.deltaMovement
+
+        var predicted = basePos
+
+        val g = projectile.gravity
+        val v = velocity
+
+        val maxLeadTicks = 60.0
+        val iterations = 10
+        val epsilon = 1.0e-3
+
+        for (i in 0 until iterations) {
+            val arcs = calculateProjectileArcs(predicted, g, v) ?: break
+            val angle = if (useHighArc) arcs.first else arcs.second
+
+            val horizDist = predicted.horizontalDistance()
+            if (horizDist < 1.0e-6) break
+
+            val cos = Mth.cos(angle).toDouble()
+            if (cos <= 1.0e-6) break
+
+            val t = (horizDist / (v * cos)).coerceIn(0.0, maxLeadTicks)
+
+            val next = basePos.add(targetVel.scale(t))
+            if (next.distanceTo(predicted) < epsilon) {
+                predicted = next
+                break
+            }
+            predicted = next
+        }
+
+        return predicted
     }
 
     /**

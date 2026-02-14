@@ -1,21 +1,11 @@
-package joshxviii.plantz.model.plants;
-
-import joshxviii.plantz.PlantRenderState;
-import joshxviii.plantz.animation.plants.KernelPultAnimation;
-import joshxviii.plantz.animation.plants.MelonPultAnimation;
-import net.minecraft.client.animation.KeyframeAnimation;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.*;
-import org.jetbrains.annotations.NotNull;
-
-import static joshxviii.plantz.UtilsKt.pazResource;
+// Made with Blockbench 5.0.7
+// Exported for Minecraft version 1.17 or later with Mojang mappings
+// Paste this class into your mod and generate all required imports
 
 
-public class KernelPultModel extends EntityModel<@NotNull PlantRenderState> {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("kernelpult"), "main");
+public class KernelPult<T extends Entity> extends EntityModel<T> {
+	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "kernelpult"), "main");
 	private final ModelPart body;
 	private final ModelPart head;
 	private final ModelPart eyebrows;
@@ -34,12 +24,8 @@ public class KernelPultModel extends EntityModel<@NotNull PlantRenderState> {
 	private final ModelPart leaf_tip_3;
 	private final ModelPart leaf_4;
 	private final ModelPart leaf_tip_4;
-	private final KeyframeAnimation idleAnimation;
-	private final KeyframeAnimation actionAnimation;
-	private final KeyframeAnimation initAnimation;
 
-	public KernelPultModel(ModelPart root) {
-		super(root);
+	public KernelPult(ModelPart root) {
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.eyebrows = this.head.getChild("eyebrows");
@@ -58,9 +44,6 @@ public class KernelPultModel extends EntityModel<@NotNull PlantRenderState> {
 		this.leaf_tip_3 = this.leaf_3.getChild("leaf_tip_3");
 		this.leaf_4 = this.leaves.getChild("leaf_4");
 		this.leaf_tip_4 = this.leaf_4.getChild("leaf_tip_4");
-		this.initAnimation = KernelPultAnimation.init.bake(root);
-		this.idleAnimation = KernelPultAnimation.idle.bake(root);
-		this.actionAnimation = KernelPultAnimation.action.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -70,8 +53,8 @@ public class KernelPultModel extends EntityModel<@NotNull PlantRenderState> {
 		PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
 
 		PartDefinition head = body.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 22).addBox(-5.0F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new CubeDeformation(0.0F))
-				.texOffs(40, 36).addBox(-4.0F, -14.0F, -4.0F, 8.0F, 4.0F, 8.0F, new CubeDeformation(0.0F))
-				.texOffs(28, 42).addBox(-1.5F, -16.0F, -1.5F, 3.0F, 2.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+		.texOffs(40, 36).addBox(-4.0F, -14.0F, -4.0F, 8.0F, 4.0F, 8.0F, new CubeDeformation(0.0F))
+		.texOffs(28, 42).addBox(-1.5F, -16.0F, -1.5F, 3.0F, 2.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
 		PartDefinition eyebrows = head.addOrReplaceChild("eyebrows", CubeListBuilder.create(), PartPose.offset(0.0F, -5.0F, 0.0F));
 
@@ -86,15 +69,15 @@ public class KernelPultModel extends EntityModel<@NotNull PlantRenderState> {
 		PartDefinition coil_2 = coil.addOrReplaceChild("coil_2", CubeListBuilder.create().texOffs(12, 55).addBox(0.0F, -10.0F, -1.0F, 0.0F, 10.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -10.0F, 0.0F));
 
 		PartDefinition basket = coil_2.addOrReplaceChild("basket", CubeListBuilder.create().texOffs(0, 42).addBox(-4.0F, -8.0F, 2.0F, 8.0F, 8.0F, 1.0F, new CubeDeformation(0.0F))
-				.texOffs(1, 58).addBox(-4.0F, -7.0F, -2.0F, 1.0F, 6.0F, 4.0F, new CubeDeformation(0.0F))
-				.texOffs(1, 52).addBox(-4.0F, -8.0F, -2.0F, 8.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -10.0F, 0.0F));
+		.texOffs(1, 58).addBox(-4.0F, -7.0F, -2.0F, 1.0F, 6.0F, 4.0F, new CubeDeformation(0.0F))
+		.texOffs(1, 52).addBox(-4.0F, -8.0F, -2.0F, 8.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -10.0F, 0.0F));
 
 		PartDefinition cube_r2 = basket.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(1, 58).addBox(-0.5F, -3.0F, -2.5F, 1.0F, 6.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(3.5F, -4.0F, 0.5F, 0.0F, 0.0F, -3.1416F));
 
 		PartDefinition cube_r3 = basket.addOrReplaceChild("cube_r3", CubeListBuilder.create().texOffs(1, 52).addBox(-4.0F, -0.5F, -2.5F, 8.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -0.5F, 0.5F, 0.0F, 0.0F, -3.1416F));
 
 		PartDefinition projectile = basket.addOrReplaceChild("projectile", CubeListBuilder.create().texOffs(74, 0).addBox(-6.0F, -3.5F, -2.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(0.0F))
-				.texOffs(74, 8).addBox(-10.0F, -4.0F, -3.0F, 9.0F, 5.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -2.5F, 3.0F, 0.0F, -1.5708F, 0.0F));
+		.texOffs(74, 8).addBox(-10.0F, -4.0F, -3.0F, 9.0F, 5.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -2.5F, 3.0F, 0.0F, -1.5708F, 0.0F));
 
 		PartDefinition leaves = body.addOrReplaceChild("leaves", CubeListBuilder.create().texOffs(0, 0).addBox(-5.5F, -10.1F, -5.5F, 11.0F, 11.0F, 11.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -0.4F, 0.0F));
 
@@ -117,13 +100,13 @@ public class KernelPultModel extends EntityModel<@NotNull PlantRenderState> {
 		return LayerDefinition.create(meshdefinition, 128, 128);
 	}
 
+	@Override
+	public void setupAnim(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+
+	}
 
 	@Override
-	public void setupAnim(@NotNull PlantRenderState state) {
-		super.setupAnim(state);
-		this.head.yRot = state.yRot * (float) (Math.PI / 180.0);
-		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
-		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
-		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		body.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 }

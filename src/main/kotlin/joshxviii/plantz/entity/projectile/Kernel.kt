@@ -38,9 +38,9 @@ class Kernel(
                 ParticleTypes.BLOCK,
                 Blocks.HONEYCOMB_BLOCK.defaultBlockState()
             ),
-            amount = 16,
+            amount = 4,
             speed = 0.1,
-            spread = Vec3(0.2, 0.2, 0.2)
+            spread = Vec3(0.1, 0.1, 0.1)
         )
     }
 }

@@ -38,13 +38,14 @@ class KernelPult(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
         this.goalSelector.addGoal(2, ProjectileAttackGoal(
             usingEntity = this,
             projectileFactory = {
-                hasButterShot = random.nextFloat() < 0.25
                 if (hasButterShot) Butter(level(), this, spawnOffset = Vec2(-1f, 1f))
                 else Kernel(level(), this, spawnOffset = Vec2(-1f, 1f))
             },
+            velocity = 0.7,
             useHighArc = true,
-            cooldownTime = 70,
-            actionDelay = 12))
+            cooldownTime = 30,
+            actionDelay = 12,
+            actionStartEffect = { hasButterShot = random.nextFloat() < 0.25 }))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, false, false) { target, level ->
             target is Enemy
             && target !is Creeper

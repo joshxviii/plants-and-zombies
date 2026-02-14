@@ -11,6 +11,8 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.Items
@@ -27,10 +29,24 @@ class Butter(
 ) : PlantProjectile(
     PazEntities.BUTTER, level, owner, spawnOffset,
     PazDamageTypes.PLANT,
-    damage = 3.0f,
+    damage = 3.5f,
     knockback = 0.2
 ) {
     override fun getDefaultGravity(): Double = 0.03
+
+    override fun afterHitEntityEffect(target: LivingEntity) {
+        target.addEffect(MobEffectInstance(MobEffects.SLOWNESS, 60, 25))
+    }
+
+    override fun tick() {
+        super.tick()
+        if (tickCount % 3 == 0) spawnParticle(
+            ParticleTypes.LANDING_HONEY,
+            amount = 2,
+            speed = 0.1,
+            spread = Vec3(0.1, 0.2, 0.1)
+        )
+    }
 
     override fun onHit(hitResult: HitResult) {
         super.onHit(hitResult)
