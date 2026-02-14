@@ -7,6 +7,7 @@ import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.core.registries.BuiltInRegistries
 
 object PazServerParticles {
+    @JvmField val BUTTER_DRIP: SimpleParticleType = register("butter_drip")
     @JvmField val PEA_HIT: SimpleParticleType = register("pea")
     @JvmField val ICE_PEA_HIT: SimpleParticleType = register("pea_ice")
     @JvmField val FIRE_PEA_HIT: SimpleParticleType = register("pea_fire")
@@ -16,6 +17,9 @@ object PazServerParticles {
     @JvmField val EMBER: SimpleParticleType = register("ember")
     @JvmField val SLEEP: SimpleParticleType = register("sleep")
     @JvmField val NOTIFY: SimpleParticleType = register("notify")
+    @JvmField val NEEDS_WATER: SimpleParticleType = register("needs_water")
+    @JvmField val NEEDS_SUN: SimpleParticleType = register("needs_sun")
+    @JvmField val NEEDS_TIME: SimpleParticleType = register("needs_time")
     @JvmField val ZOMBIE_OMEN: SimpleParticleType = register("zombie_omen")
 
     fun register(name: String): SimpleParticleType {

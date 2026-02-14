@@ -1,7 +1,9 @@
 package joshxviii.plantz.entity.projectile
 
 import joshxviii.plantz.PazDamageTypes
+import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ItemParticleOption
@@ -35,22 +37,22 @@ class Butter(
     override fun getDefaultGravity(): Double = 0.03
 
     override fun afterHitEntityEffect(target: LivingEntity) {
-        target.addEffect(MobEffectInstance(MobEffects.SLOWNESS, 60, 25))
+        target.addEffect(MobEffectInstance(PazEffects.BUTTERED, 100, 0))
     }
 
     override fun tick() {
         super.tick()
         if (tickCount % 3 == 0) spawnParticle(
-            ParticleTypes.LANDING_HONEY,
-            amount = 2,
-            speed = 0.1,
-            spread = Vec3(0.1, 0.2, 0.1)
+            PazServerParticles.BUTTER_DRIP,
+            amount = 1,
+            speed = 0.01,
+            spread = Vec3(0.0, 0.0, 0.0)
         )
     }
 
     override fun onHit(hitResult: HitResult) {
         super.onHit(hitResult)
-        knockbackNearby()
+        knockbackNearby(damage = 1.0f)
         spawnParticle(
             BlockParticleOption(
                 ParticleTypes.BLOCK,

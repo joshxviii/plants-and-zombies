@@ -184,11 +184,11 @@ abstract class PlantProjectile(
         )
     }
 
-    protected fun knockbackNearby() {
+    protected fun knockbackNearby(damage: Float = this.damage, distance: Double = 3.0) {
         val serverLevel = this.level() as? ServerLevel?: return
         serverLevel.getEntitiesOfClass(
             LivingEntity::class.java,
-            this.boundingBox.inflate(3.5)
+            this.boundingBox.inflate(distance)
         ).forEach { nearby: LivingEntity? ->
             if (nearby == null || !canHitEntity(nearby)) return@forEach
             val direction = nearby.position().subtract(this.position())
@@ -196,7 +196,7 @@ abstract class PlantProjectile(
             if (knockback > 0.0) {
                 nearby.push(knockbackVector.x, 0.08, knockbackVector.z)
                 val source = this.damageSources().source(damageType, this, plantOwner)
-                if(nearby.hurtServer(serverLevel, source, damage/direction.length().toFloat()*10)) {
+                if(nearby.hurtServer(serverLevel, source, (damage/direction.length()*distance).toFloat())) {
                     val knockbackDirection = calculateHorizontalHurtKnockbackDirection(nearby, source)
                     nearby.knockback(knockback, -knockbackDirection.leftDouble(), -knockbackDirection.rightDouble())
                     if (nearby is ServerPlayer) nearby.connection.send(ClientboundSetEntityMotionPacket(nearby))

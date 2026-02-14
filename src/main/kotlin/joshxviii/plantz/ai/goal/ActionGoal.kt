@@ -18,7 +18,8 @@ abstract class ActionGoal(
     val actionDelay: Int = 0,
     val actionStartEffect: () -> Unit = {},
     val actionEndEffect: () -> Unit = {},
-    val actionPredicate: Predicate<PathfinderMob> = Predicate { true }
+    val actionPredicate: Predicate<PathfinderMob> = Predicate { true },
+    val cooldownVariationRange: IntRange = 0..0
 ): Goal() {
     var isDoingAction = false
     var actionTimer = -1
@@ -37,7 +38,7 @@ abstract class ActionGoal(
             && !(usingEntity is Plant && usingEntity.cooldown > 0)
             && actionTimer == -1
         ) {
-            (usingEntity as? Plant)?.cooldown = cooldownTime // start animation
+            (usingEntity as? Plant)?.cooldown = cooldownTime+cooldownVariationRange.random() // start animation
             actionTimer = actionDelay.coerceAtLeast(0)
             actionStartEffect()
             isDoingAction = true

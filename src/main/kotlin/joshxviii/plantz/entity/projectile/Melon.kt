@@ -31,7 +31,7 @@ class Melon(
 
     override fun onHit(hitResult: HitResult) {
         super.onHit(hitResult)
-        knockbackNearby()
+        knockbackNearby(distance = 3.5)
         spawnParticle(
             ItemParticleOption(
                 ParticleTypes.ITEM,

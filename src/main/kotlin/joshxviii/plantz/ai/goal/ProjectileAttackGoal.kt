@@ -39,7 +39,7 @@ class ProjectileAttackGoal(
     override fun canUse(): Boolean = (
         usingEntity.tickCount>cooldownTime
             && usingEntity.target?.isAlive == true
-            && !(usingEntity is Plant && usingEntity.isAsleep)
+            && !(usingEntity is Plant && (usingEntity.isAsleep || usingEntity.isGrowingSeeds))
     )
 
     override fun stop() {
@@ -123,6 +123,8 @@ class ProjectileAttackGoal(
             target.boundingBox.minY + (target.bbHeight / 3.0) - projectile.y,
             target.z - projectile.z
         )
+        return basePos
+        //TODO
 
         val targetVel: Vec3 = target.deltaMovement
 

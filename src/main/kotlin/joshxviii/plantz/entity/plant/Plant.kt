@@ -1,15 +1,11 @@
 package joshxviii.plantz.entity.plant
 
+import joshxviii.plantz.*
 import joshxviii.plantz.PazDataSerializers.DATA_COOLDOWN
 import joshxviii.plantz.PazDataSerializers.DATA_PLANT_STATE
+import joshxviii.plantz.PazDataSerializers.DATA_SEED_GROW_COOLDOWN
 import joshxviii.plantz.PazDataSerializers.DATA_SLEEPING
-import joshxviii.plantz.PazAttributes
-import joshxviii.plantz.PazDamageTypes
-import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazEntities.PLANT_TEAM
-import joshxviii.plantz.PazItems
-import joshxviii.plantz.PazServerParticles
-import joshxviii.plantz.PazSounds
 import joshxviii.plantz.PazTags.BlockTags.PLANTABLE
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.item.SeedPacketItem
@@ -51,9 +47,14 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.LightLayer
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.state.properties.BlockStateProperties
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
+import kotlin.jvm.optionals.getOrElse
 
 /**
  * Base class for all the other plant entities.
@@ -77,6 +78,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
         val PLANT_STATE: EntityDataAccessor<PlantState> = SynchedEntityData.defineId<PlantState>(Plant::class.java, DATA_PLANT_STATE)
         val COOLDOWN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_COOLDOWN)
+        val SEED_GROW_COOLDOWN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_SEED_GROW_COOLDOWN)
         val SLEEPING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, DATA_SLEEPING)
 
         data class PlantAttributes(
@@ -103,6 +105,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     private var nutrientSupply = NUTRIENT_SUPPLY_MAX
 
+    val isGrowingSeeds: Boolean
+        get() = testGrowConditions() != PlantGrowNeeds.SOIL
+
     var isAsleep: Boolean
         get() = this.entityData.get(SLEEPING)
         set(value) {
@@ -123,6 +128,15 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         get() = this.entityData.get(COOLDOWN)
         set(value) = this.entityData.set(COOLDOWN, value.coerceAtLeast(-1))
 
+    var seedGrowCooldown: Int
+        get() = this.entityData.get(SEED_GROW_COOLDOWN)
+        set(value) = this.entityData.set(SEED_GROW_COOLDOWN, value.coerceAtLeast(0))
+
+    fun getSeedGrowCooldownDelay() : Int {
+        val sunCost = PazEntities.getSunCostFromType(this.type)
+        return 200 + (sunCost*400)
+    }
+
     private var idleAnimationStartTick: Int = 0
     val initAnimationState = AnimationState()
     val idleAnimationState = AnimationState()
@@ -135,9 +149,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         cooldown = -1
         this.lookControl = object : LookControl(this) {
             override fun clampHeadRotationToBody() {}
-            override fun tick() {
-                if (!isAsleep) super.tick()
-            }
+            override fun tick() { if (!isAsleep) super.tick() }
         }
         idleAnimationStartTick = this.random.nextInt(200, 240)
     }
@@ -155,7 +167,18 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         super.defineSynchedData(entityData)
         entityData.define(PLANT_STATE, PlantState.IDLE)
         entityData.define(COOLDOWN, 0)
+        entityData.define(SEED_GROW_COOLDOWN, getSeedGrowCooldownDelay())
         entityData.define(SLEEPING, false)
+    }
+
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+        output.putInt("SeedGrowTime", seedGrowCooldown)
+    }
+
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+        seedGrowCooldown = input.getInt("SeedGrowTime").getOrElse { getSeedGrowCooldownDelay() }
     }
 
     override fun getAmbientSound(): SoundEvent? {
@@ -223,32 +246,35 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val level = this.level()
 
         if (level is ServerLevel) {
-            if (!onValidGround() || isOverlappingWithOther(this.blockPosition())) {
-                if (--this.nutrientSupply <= 0) {
-                    if (this.tickCount % 20 == 0) {
-                        this.hurtServer(level, this.damageSources().dryOut(), 2.0f)
-                    }
+            if (!onValidGround() || isOverlappingWithOther(blockPosition())) {
+                if (--nutrientSupply <= 0) {
+                    if (tickCount % 20 == 0) hurtServer(level, damageSources().dryOut(), 2.0f)
                 }
                 //panic particles when low on nutrients
-                if (this.nutrientSupply < 100 && this.random.nextInt(10) == 0) addParticlesAroundSelf(level)
-            } else this.nutrientSupply = NUTRIENT_SUPPLY_MAX
+                if (nutrientSupply < 100 && random.nextInt(10) == 0) addParticlesAroundSelf(level)
+            } else nutrientSupply = NUTRIENT_SUPPLY_MAX
         }
 
         --cooldown
         if (this.level().isClientSide && !this.isNoAi) { updateAnimationState() }
 
         val target = this.target
-        if (target != null) this.getLookControl().setLookAt(target, 180.0F, 180.0F);
+        if (target != null) getLookControl().setLookAt(target, 180.0F, 180.0F);
 
         if (isAsleep && tickCount % 10 == 0 && random.nextFloat()>0.6 && tickCount > 18 && isAlive) {
-            val direction = calculateViewVector(this.xRot, this.yHeadRot).scale(this.boundingBox.xsize)
-            this.level().addParticle(
+            val direction = calculateViewVector(xRot, yHeadRot).scale(boundingBox.xsize)
+            level().addParticle(
                 PazServerParticles.SLEEP,
-                direction.x + this.getRandomX(0.2),
-                direction.y.toFloat() + this.y + eyeHeight.toDouble() - 0.1,
-                direction.z + this.getRandomZ(0.2),
+                direction.x + getRandomX(0.2),
+                direction.y.toFloat() + y + eyeHeight.toDouble() - 0.1,
+                direction.z + getRandomZ(0.2),
                 0.0, 0.0, 0.0,
             )
+        }
+
+        val needs = testGrowConditions()
+        if (tickCount%20==0 && needs == PlantGrowNeeds.SUN) {
+            level().addParticle(PazServerParticles.NOTIFY, x, y+eyeHeight+0.5, z, 0.0, 0.0, 0.0)
         }
     }
 
@@ -315,28 +341,39 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return block.`is`(PLANTABLE)
     }
 
+    fun testGrowConditions(): PlantGrowNeeds {
+        val farmBlock = getBlockBelow()
+        if (!farmBlock.`is`(Blocks.FARMLAND)) return PlantGrowNeeds.SOIL
+        if (farmBlock.getValue(BlockStateProperties.MOISTURE) < 7) return PlantGrowNeeds.WATER
+        if (seedGrowCooldown > 0 && !isAsleep) {
+            --seedGrowCooldown
+            return PlantGrowNeeds.TIME
+        }
+        return PlantGrowNeeds.SUN
+    }
+
     // if on invalid ground plant should start to suffocate
     private fun onValidGround() : Boolean {
-        return canSurviveOn(getBlockBelow()) || this.vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
+        return canSurviveOn(getBlockBelow()) || vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
     }
 
     fun sunIsVisible() : Boolean {
-        return this.level().isBrightOutside && this.level().getBrightness(LightLayer.SKY, BlockPos.containing(x, eyeY, z)) >= 7
+        return level().isBrightOutside && level().getBrightness(LightLayer.SKY, BlockPos.containing(x, eyeY, z)) >= 7
     }
 
     fun getBlockBelow(): BlockState {
-        val feetY = this.y - 0.001
-        val blockBelowPos = BlockPos.containing(this.x, feetY, this.z)
-        val blockBelow = this.level().getBlockState(blockBelowPos)
+        val feetY = y - 0.001
+        val blockBelowPos = BlockPos.containing(x, feetY, z)
+        val blockBelow = level().getBlockState(blockBelowPos)
         return blockBelow
     }
 
     // whether another plant is overlapping with this one
     private fun isOverlappingWithOther(pos: BlockPos): Boolean {
-        val otherPlantsAtPos = this.level().getEntitiesOfClass(Plant::class.java, AABB(pos)) { it != this }
+        val otherPlantsAtPos = level().getEntitiesOfClass(Plant::class.java, AABB(pos)) { it != this }
         otherPlantsAtPos.forEach {
             if (!it.isAlive || it.isDeadOrDying) return false
-            if(this.boundingBox.intersects(it.boundingBox)) return true
+            if(boundingBox.intersects(it.boundingBox)) return true
         }
         return false
     }
@@ -348,7 +385,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         if (spawnReason == EntitySpawnReason.NATURAL
-            && (!onValidGround() || isOverlappingWithOther(this.blockPosition()))) this.discard()
+            && (!onValidGround() || isOverlappingWithOther(blockPosition()))) this.discard()
 
         level.server?.scoreboard?.addPlayerToTeam(this.scoreboardName, PLANT_TEAM)
 
@@ -357,26 +394,33 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun mobInteract(player: Player, hand: InteractionHand): InteractionResult {
         val itemStack = player.getItemInHand(hand)
-        val level = this.level()
+        val level = level()
 
         if (level is ServerLevel) {
             // sun iteration
             if (itemStack.`is`(PazItems.SUN) ) {// heal
-                if (this.isTame && this.health < this.maxHealth) {
+                if (isTame && health < maxHealth) {
                     itemStack.consume(1, player)
-                    this.sunHeal(1)
-                    this.addParticlesAroundSelf(level, ParticleTypes.HAPPY_VILLAGER)
+                    sunHeal(1)
+                    addParticlesAroundSelf(level, ParticleTypes.HAPPY_VILLAGER)
                     return InteractionResult.SUCCESS_SERVER
                 }
-                else if (!this.isTame) {// try to tame
+                else if (!isTame) {// try to tame
                     itemStack.consume(1, player)
-                    if (this.random.nextFloat() < 0.1) {
-                        this.tame(player)
+                    if (random.nextFloat() < 0.1) {
+                        tame(player)
                         this.target = null
                         level.broadcastEntityEvent(this, 7.toByte())
-                    } else {
-                        level.broadcastEntityEvent(this, 6.toByte())
-                    }
+                    } else level.broadcastEntityEvent(this, 6.toByte())
+                    return InteractionResult.SUCCESS_SERVER
+                }
+                else if (testGrowConditions() == PlantGrowNeeds.SUN) {// grow seeds
+                    itemStack.consume(1, player)
+                    seedGrowCooldown = getSeedGrowCooldownDelay()
+                    val stack = SeedPacketItem.stackFor(this.type)
+                    val itemEntity = ItemEntity(level, x, y + 0.5, z, stack)
+                    level.addFreshEntity(itemEntity)
+                    playSound(SoundEvents.ROOTED_DIRT_BREAK)
                     return InteractionResult.SUCCESS_SERVER
                 }
             }
@@ -384,7 +428,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             // shovel interaction
             if (itemStack.`is`(ItemTags.SHOVELS)) {
 
-                if (!this.isTame || player != this.owner) {
+                if (!isTame || player != owner) {
                     player.displayClientMessage(
                         Component.translatable("message.plantz.not_yours", this.name).withStyle(ChatFormatting.RED),
                         true
@@ -394,16 +438,16 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
                 // apply tool damage base on how damaged the plant was
                 itemStack.hurtAndBreak(4, player, hand.asEquipmentSlot())
-                if (!player.isCreative || this.customName!=null) run {// Spawn a seed packet item containing this plant's data
+                if (!player.isCreative || customName!=null) run {// Spawn a seed packet item containing this plant's data
                     val stack = SeedPacketItem.stackFor(this.type)
-                    if (this.customName!=null) stack.set(DataComponents.CUSTOM_NAME, this.customName)
-                    val itemEntity = ItemEntity(level, this.x, this.y + 0.5, this.z, stack)
+                    if (customName!=null) stack.set(DataComponents.CUSTOM_NAME, customName)
+                    val itemEntity = ItemEntity(level, x, y + 0.5, z, stack)
                     level.addFreshEntity(itemEntity)
                 }
-                this.playSound(SoundEvents.ROOTED_DIRT_BREAK)
+                playSound(SoundEvents.ROOTED_DIRT_BREAK)
                 level.sendParticles(BlockParticleOption(
                     ParticleTypes.BLOCK, getBlockBelow()),
-                    this.x, this.y+0.05, this.z, 16, 0.25,0.0,0.25, 0.4)
+                    x, y+0.05, z, 16, 0.25,0.0,0.25, 0.4)
                 this.discard()
 
                 return InteractionResult.SUCCESS_SERVER
@@ -413,7 +457,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     fun addParticlesAroundSelf(
-        level: Level = this.level(),
+        level: Level = level(),
         particle: ParticleOptions = ParticleTypes.SPLASH,
         amount: Int = 8,
         horizontalSpreadScale: Double = 0.3,
@@ -430,14 +474,14 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
         else repeat(amount) {
             // Random offsets for velocity
-            val xa = this.random.nextGaussian() * 0.02
-            val ya = this.random.nextGaussian() * 0.02
-            val za = this.random.nextGaussian() * 0.02
+            val xa = random.nextGaussian() * 0.02
+            val ya = random.nextGaussian() * 0.02
+            val za = random.nextGaussian() * 0.02
 
             // Position inside the bounding box
-            val px = this.getRandomX(horizontalSpreadScale)
-            val py = this.y + this.random.nextDouble() * this.bbHeight * verticalSpreadScale
-            val pz = this.getRandomZ(horizontalSpreadScale)
+            val px = getRandomX(horizontalSpreadScale)
+            val py = y + random.nextDouble() * bbHeight * verticalSpreadScale
+            val pz = getRandomZ(horizontalSpreadScale)
 
             level.addParticle(
                 particle,
@@ -446,4 +490,11 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             )
         }
     }
+}
+
+enum class PlantGrowNeeds {
+    SOIL,
+    SUN,
+    WATER,
+    TIME;
 }

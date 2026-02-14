@@ -9,18 +9,18 @@ import java.util.function.Predicate
 
 class GenerateSunGoal(
     usingEntity: Plant,
-    cooldownTime: Int = 420,
+    cooldownTime: Int = 680,
     actionDelay: Int = 0,
     actionStartEffect: () -> Unit = {},
     actionEndEffect: () -> Unit = {},
     actionPredicate: Predicate<PathfinderMob> = Predicate { true },
-    val sunAmount: Int = 5,
+    val sunAmount: Int = 1,
     val generatesAtNight : Boolean = false,
-): ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect, actionPredicate) {
+): ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect, actionPredicate, -10..20) {
     override fun canUse(): Boolean = (
         usingEntity.tickCount>cooldownTime
             && usingEntity.isAlive
-            && !(usingEntity is Plant && usingEntity.isAsleep)
+            && !(usingEntity is Plant && (usingEntity.isAsleep || usingEntity.isGrowingSeeds))
     )
 
     override fun canDoAction(): Boolean = (generatesAtNight || (usingEntity as? Plant)?.sunIsVisible() == true)

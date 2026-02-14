@@ -9,11 +9,16 @@ import joshxviii.plantz.particles.SporeParticle
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry
 import net.minecraft.client.particle.CritParticle
 import net.minecraft.client.particle.SpellParticle
+import net.minecraft.client.particle.SplashParticle
 
 object PazParticles {
 
     fun registerAll() {
         val it = ParticleProviderRegistry.getInstance()
+        it.register(PazServerParticles.BUTTER_DRIP) { sprite ->
+            SplashParticle.Provider(sprite)
+        }
+
         it.register(PazServerParticles.PEA_HIT) { spriteSet ->
             PeaParticle.Provider(spriteSet)
         }
@@ -47,6 +52,15 @@ object PazParticles {
         }
 
         it.register(PazServerParticles.NOTIFY) { spriteSet ->
+            NotifyParticle.Provider(spriteSet)
+        }
+        it.register(PazServerParticles.NEEDS_SUN) { spriteSet ->
+            NotifyParticle.Provider(spriteSet)
+        }
+        it.register(PazServerParticles.NEEDS_WATER) { spriteSet ->
+            NotifyParticle.Provider(spriteSet)
+        }
+        it.register(PazServerParticles.NEEDS_TIME) { spriteSet ->
             NotifyParticle.Provider(spriteSet)
         }
 

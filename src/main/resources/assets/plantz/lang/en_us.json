@@ -20,6 +20,7 @@
   "effect.plantz.zombie_omen": "Zombie Omen",
   "effect.plantz.toxic": "Toxic",
   "effect.plantz.hypnotize": "Hypnotized",
+  "effect.plantz.buttered": "Buttered",
 
   "component.sun_cost": "Sun cost: %s",
   "component.blocks_damage.desc": "Blocks Projectiles:",
@@ -73,6 +74,9 @@
   "item.minecraft.potion.effect.hypnotize": "Potion of Hypnosis",
   "item.minecraft.splash_potion.effect.hypnotize": "Splash Potion of Hypnosis",
   "item.minecraft.lingering_potion.effect.hypnotize": "Lingering Potion of Hypnosis",
+  "item.minecraft.potion.effect.buttered": "Potion of Buttered",
+  "item.minecraft.splash_potion.effect.buttered": "Splash Potion of Buttered",
+  "item.minecraft.lingering_potion.effect.buttered": "Lingering Potion of Buttered",
 
   "item.plantz.browncoat_spawn_egg": "Brown Coat Spawn Egg",
   "item.plantz.newspaper_zombie_spawn_egg": "Newspaper Zombie Spawn Egg",

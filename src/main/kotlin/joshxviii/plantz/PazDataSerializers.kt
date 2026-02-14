@@ -10,6 +10,7 @@ import net.minecraft.network.syncher.EntityDataSerializer
 object PazDataSerializers {
     @JvmField val DATA_PLANT_STATE = EntityDataSerializer.forValueType<PlantState>(PlantState.STREAM_CODEC)
     @JvmField val DATA_COOLDOWN = EntityDataSerializer.forValueType<Int>(ByteBufCodecs.VAR_INT)
+    @JvmField val DATA_SEED_GROW_COOLDOWN = EntityDataSerializer.forValueType<Int>(ByteBufCodecs.VAR_INT)
     @JvmField val DATA_SLEEPING = EntityDataSerializer.forValueType<Boolean>(ByteBufCodecs.BOOL)
     @JvmField val GNOME_VARIANT = EntityDataSerializer.forValueType<GnomeVariant>(GnomeVariant.STREAM_CODEC)
     @JvmField val GNOME_SOUND_VARIANT = EntityDataSerializer.forValueType<GnomeSoundVariant>(GnomeSoundVariant.STREAM_CODEC)
@@ -17,6 +18,7 @@ object PazDataSerializers {
     fun initialize() {
         FabricEntityDataRegistry.register(pazResource("plant_state"), DATA_PLANT_STATE)
         FabricEntityDataRegistry.register(pazResource("cooldown"), DATA_COOLDOWN)
+        FabricEntityDataRegistry.register(pazResource("seed_grow_cooldown"), DATA_SEED_GROW_COOLDOWN)
         FabricEntityDataRegistry.register(pazResource("sleeping"), DATA_SLEEPING)
         FabricEntityDataRegistry.register(pazResource("gnome_variant"), GNOME_VARIANT)
         FabricEntityDataRegistry.register(pazResource("gnome_sound_variant"), GNOME_SOUND_VARIANT)

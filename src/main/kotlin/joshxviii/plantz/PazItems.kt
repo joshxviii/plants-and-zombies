@@ -52,7 +52,7 @@ object PazItems {
         properties = Item.Properties()
             .component(PazComponents.BLOCKS_PROJECTILE_DAMAGE, BlocksProjectileDamage(
                 slot = EquipmentSlotGroup.HAND,
-                breakChance = 0.15f)
+                breakChance = 0.1f)
             ).component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
 )
     @JvmField
@@ -127,7 +127,7 @@ object PazItems {
                         EquipmentSlotGroup.HEAD
                     ).add(
                         Attributes.KNOCKBACK_RESISTANCE,
-                        AttributeModifier(pazResource("bucket_knockback_resistance"), 0.1, AttributeModifier.Operation.ADD_VALUE),
+                        AttributeModifier(pazResource("bucket_knockback_resistance"), 0.05, AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.HEAD
                     ).build()
 
