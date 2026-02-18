@@ -49,14 +49,14 @@ abstract class PlantProjectile(
 
     init {
         if (plantOwner != null) {
-            this.setOwner(plantOwner)
+            setOwner(plantOwner)
             val direction = plantOwner.headLookAngle
-            this.setPos(
+            setPos(
                 plantOwner.x+direction.x*spawnOffset.x,
                 plantOwner.y+plantOwner.eyeHeight+spawnOffset.y,
                 plantOwner.z+direction.z*spawnOffset.x
             )
-            this.setRot(
+            setRot(
                 plantOwner.xRot,
                 plantOwner.yRot
             )

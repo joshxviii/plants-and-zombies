@@ -5,6 +5,7 @@ import joshxviii.plantz.PazDataSerializers.DATA_COOLDOWN
 import joshxviii.plantz.PazDataSerializers.DATA_PLANT_STATE
 import joshxviii.plantz.PazDataSerializers.DATA_SEED_GROW_COOLDOWN
 import joshxviii.plantz.PazDataSerializers.DATA_SLEEPING
+import joshxviii.plantz.PazDataSerializers.DATA_SWELL_DIR
 import joshxviii.plantz.PazEntities.PLANT_TEAM
 import joshxviii.plantz.PazTags.BlockTags.PLANTABLE
 import joshxviii.plantz.ai.PlantState
@@ -40,6 +41,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal
 import net.minecraft.world.entity.item.ItemEntity
+import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
@@ -50,6 +52,7 @@ import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
+import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.AABB
@@ -77,6 +80,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         private const val NUTRIENT_SUPPLY_MAX = 140  // ticks before suffocating when on invalid ground
 
         val PLANT_STATE: EntityDataAccessor<PlantState> = SynchedEntityData.defineId<PlantState>(Plant::class.java, DATA_PLANT_STATE)
+        val SWELL_DIR: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_SWELL_DIR)
         val COOLDOWN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_COOLDOWN)
         val SEED_GROW_COOLDOWN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_SEED_GROW_COOLDOWN)
         val SLEEPING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, DATA_SLEEPING)
@@ -102,6 +106,15 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }
         }
     }
+
+    var maxSwell = 30; var oldSwell = 0; var swell = 0
+    fun getSwelling(a: Float): Float = Mth.lerp(a, oldSwell.toFloat(), swell.toFloat()) / (maxSwell - 2).toFloat()
+
+    var swellDir: Int
+        get() = this.entityData.get(SWELL_DIR)
+        set(value) {
+            this.entityData.set(SWELL_DIR, value)
+        }
 
     private var nutrientSupply = NUTRIENT_SUPPLY_MAX
 
@@ -166,6 +179,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
         entityData.define(PLANT_STATE, PlantState.IDLE)
+        entityData.define(SWELL_DIR, 0)
         entityData.define(COOLDOWN, 0)
         entityData.define(SEED_GROW_COOLDOWN, getSeedGrowCooldownDelay())
         entityData.define(SLEEPING, false)
@@ -179,6 +193,11 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
         seedGrowCooldown = input.getInt("SeedGrowTime").getOrElse { getSeedGrowCooldownDelay() }
+    }
+
+    fun calculateSwell() {
+        oldSwell = swell
+        swell = (swell + swellDir).coerceIn(0, maxSwell)
     }
 
     override fun getAmbientSound(): SoundEvent? {
@@ -254,6 +273,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 if (nutrientSupply < 100 && random.nextInt(10) == 0) addParticlesAroundSelf(level)
             } else nutrientSupply = NUTRIENT_SUPPLY_MAX
         }
+
+        calculateSwell()
 
         --cooldown
         if (this.level().isClientSide && !this.isNoAi) { updateAnimationState() }

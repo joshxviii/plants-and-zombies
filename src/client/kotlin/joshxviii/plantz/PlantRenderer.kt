@@ -15,6 +15,7 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.AnimationState
+import kotlin.math.pow
 
 class PlantRenderer(
     private val defaultModel: EntityModel<PlantRenderState>,
@@ -35,17 +36,27 @@ class PlantRenderer(
         if (state.ageInTicks>1) super.submit(state, poseStack, collector, camera)
     }
 
-    override fun getWhiteOverlayProgress(state: PlantRenderState): Float {
-        return 0f
+    override fun scale(state: PlantRenderState, poseStack: PoseStack) {
+        super.scale(state, poseStack)
+        var g = state.swelling
+        val wobble = 1.0f + Mth.sin((g * 100.0f).toDouble()) * g * 0.01f
+        g = Mth.clamp(g, 0.0f, 1.0f)
+        val s = (1.0f + g.pow(6) * 0.4f) * wobble
+        val hs = (1.0f + g.pow(6) * 0.1f) / wobble
+        poseStack.scale(s, hs, s)
     }
 
-    override fun createRenderState(): PlantRenderState {
-        return PlantRenderState()
+    override fun getWhiteOverlayProgress(state: PlantRenderState): Float {
+        val step = state.swelling
+        return if ((step * 10.0f).toInt() % 2 == 0) 0.0f else Mth.clamp(step, 0.5f, 1.0f)
     }
+
+    override fun createRenderState(): PlantRenderState = PlantRenderState()
 
     override fun extractRenderState(entity: Plant, state: PlantRenderState, partialTick: Float) {
         super.extractRenderState(entity, state, partialTick)
 
+        state.swelling = entity.getSwelling(partialTick)
         state.cooldown = entity.cooldown
         state.isAsleep = entity.isAsleep
         state.damagedAmount = entity.damagedPercent
@@ -84,6 +95,7 @@ class PlantRenderer(
 }
 
 class PlantRenderState : LivingEntityRenderState() {
+    var swelling: Float = 0f
     var lastCooldownTime: Int = 0
     var cooldown: Int = 0
     var damagedAmount: Float = 0.0f

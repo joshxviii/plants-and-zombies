@@ -18,7 +18,7 @@ class PotatoMine(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
         ))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->
             target is Enemy
-                    && target !is Plant
+            && target !is Plant
         })
     }
 
