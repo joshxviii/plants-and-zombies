@@ -6,6 +6,7 @@ import joshxviii.plantz.PazEntities.DISCO_ZOMBIE
 import joshxviii.plantz.PazEntities.GARGANTUAR
 import joshxviii.plantz.PazEntities.GNOME
 import joshxviii.plantz.PazEntities.DIGGER_ZOMBIE
+import joshxviii.plantz.PazEntities.IMP
 import joshxviii.plantz.PazEntities.NEWSPAPER_ZOMBIE
 import joshxviii.plantz.PazEntities.ZOMBIE_YETI
 import joshxviii.plantz.entity.plant.Plant
@@ -75,6 +76,7 @@ object PazItems {
     @JvmField val ZOMBIE_YETI_SPAWN_EGG: Item = registerSpawnEgg(ZOMBIE_YETI)
     @JvmField val DISCO_ZOMBIE_SPAWN_EGG: Item = registerSpawnEgg(DISCO_ZOMBIE)
     @JvmField val BACKUP_DANCER_SPAWN_EGG: Item = registerSpawnEgg(BACKUP_DANCER)
+    @JvmField val IMP_SPAWN_EGG: Item = registerSpawnEgg(IMP)
     @JvmField val GARGANTUAR_SPAWN_EGG: Item = registerSpawnEgg(GARGANTUAR)
 
     @JvmField val GNOME_SPAWN_EGG: Item = registerSpawnEgg(GNOME)

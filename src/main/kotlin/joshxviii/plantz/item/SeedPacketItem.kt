@@ -84,9 +84,9 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             val availableSun = player?.inventory?.countItem(PazItems.SUN) ?: 0
             val sunCost = itemStack.get(PazComponents.SUN_COST)?.sunCost ?: 0
             if (sunCost > availableSun && player?.isCreative == false) {
-                player.displayClientMessage(
+                player.sendSystemMessage(
                     Component.translatable("message.plantz.not_enough_sun", availableSun, sunCost)
-                        .withStyle(ChatFormatting.RED), true
+                        .withStyle(ChatFormatting.RED)
                 )
                 return InteractionResult.FAIL
             }
@@ -95,9 +95,9 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             val aabb = AABB(spawnPos)
             val existingPlants = level.getEntitiesOfClass(Plant::class.java, aabb)
             if (existingPlants.isNotEmpty()) {
-                player?.displayClientMessage(
+                player?.sendSystemMessage(
                     Component.translatable("message.plantz.already_planted")
-                        .withStyle(ChatFormatting.RED), true
+                        .withStyle(ChatFormatting.RED)
                 )
                 return InteractionResult.FAIL
             }

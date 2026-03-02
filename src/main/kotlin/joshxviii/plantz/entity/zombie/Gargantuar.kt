@@ -1,5 +1,6 @@
 package joshxviii.plantz.entity.zombie
 
+import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.PazTags
@@ -38,6 +39,8 @@ import org.apache.logging.log4j.core.jmx.Server
 
 class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(type, level) {
 
+    val imp: Imp = Imp(PazEntities.IMP, level())
+
     init {
         xpReward = 200
     }
@@ -47,7 +50,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
         goalSelector.addGoal(2, ProjectileAttackGoal(
             usingEntity = this,
             projectileFactory = {
-                PowderSnowChunk(level(), this)
+                Imp(PazEntities.IMP, level())
             },
             velocity = 1.0,
             inaccuracy = 1.2f,
@@ -95,6 +98,15 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
                 5, 0.3, 0.0, 0.3, 0.0
             )
         }
+        if(level is ServerLevel && tickCount==60) {
+            val imp = PazEntities.IMP.create(level(), EntitySpawnReason.JOCKEY)
+            if (imp != null) {
+                imp.snapTo(x, y, z, yRot, 0.0f)
+                imp.finalizeSpawn(level, level.getCurrentDifficultyAt(this.blockPosition()), EntitySpawnReason.JOCKEY, null)
+                imp.startRiding(this, true, false)
+                level.addFreshEntity(imp)
+            }
+        }
     }
 
     override fun getAmbientSound(): SoundEvent {
@@ -135,6 +147,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
+
         return data
     }
 }

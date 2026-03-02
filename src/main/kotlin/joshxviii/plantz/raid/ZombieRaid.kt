@@ -70,10 +70,10 @@ class ZombieRaid(
     }
 
     private val waveToLeaderMap: MutableMap<Int, Zombie> = Maps.newHashMap<Int, Zombie>()
-    val zombieRaidEvent = ServerBossEvent(ZOMBIE_RAID_BAR_START, BossEvent.BossBarColor.GREEN, BossEvent.BossBarOverlay.NOTCHED_10)
+    private val random: RandomSource = RandomSource.create()
+    val zombieRaidEvent = ServerBossEvent(Mth.createInsecureUUID(random), ZOMBIE_RAID_BAR_START, BossEvent.BossBarColor.GREEN, BossEvent.BossBarOverlay.NOTCHED_10)
     private var raidStatus: ZombieRaidStatus = ZombieRaidStatus.ONGOING
     private val waveZombieMap: MutableMap<Int, MutableSet<Zombie>> = Maps.newHashMap<Int, MutableSet<Zombie>>()
-    private val random = RandomSource.create()
     var waveSpawnPos : BlockPos? = null
 
     enum class ZombieRaidStatus(private val state: String) : StringRepresentable {
@@ -82,7 +82,7 @@ class ZombieRaid(
         LOSS("loss"),
         STOPPED("stopped");
 
-        override fun getSerializedName(): String = this.state
+        override fun getSerializedName(): String = state
 
         companion object {
             val CODEC: Codec<ZombieRaidStatus> = StringRepresentable.fromEnum<ZombieRaidStatus> { entries.toTypedArray() }

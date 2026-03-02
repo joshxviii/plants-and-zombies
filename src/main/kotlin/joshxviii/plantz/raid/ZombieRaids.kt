@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
+import joshxviii.plantz.pazResource
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.nbt.CompoundTag
@@ -146,7 +147,7 @@ class ZombieRaids(
     }
 
     companion object {
-        private const val RAID_FILE_ID = "zombie_raids"
+        private val RAID_FILE_ID = pazResource("zombie_raids")
         val CODEC: Codec<ZombieRaids> = RecordCodecBuilder.create<ZombieRaids>(
             Function { i: RecordCodecBuilder.Instance<ZombieRaids> ->
                 i.group(
@@ -165,12 +166,11 @@ class ZombieRaids(
             }
         )
         val TYPE: SavedDataType<ZombieRaids> =
-            SavedDataType<ZombieRaids>("zombie_raids", ::ZombieRaids, CODEC, DataFixTypes.SAVED_DATA_RAIDS)
-        val TYPE_END: SavedDataType<ZombieRaids> =
-            SavedDataType<ZombieRaids>("zombie_raids_end", ::ZombieRaids, CODEC, DataFixTypes.SAVED_DATA_RAIDS)
+            SavedDataType<ZombieRaids>(RAID_FILE_ID, ::ZombieRaids, CODEC, DataFixTypes.SAVED_DATA_RAIDS)
+
 
         fun getType(type: Holder<DimensionType>): SavedDataType<ZombieRaids> {
-            return if (type.`is`(BuiltinDimensionTypes.END)) TYPE_END else TYPE
+            return TYPE
         }
 
         fun canJoinRaid(zombie: Zombie): Boolean {

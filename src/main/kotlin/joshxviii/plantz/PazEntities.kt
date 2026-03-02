@@ -16,6 +16,7 @@ import joshxviii.plantz.entity.zombie.BrownCoat
 import joshxviii.plantz.entity.zombie.DiscoZombie
 import joshxviii.plantz.entity.zombie.Gargantuar
 import joshxviii.plantz.entity.zombie.DiggerZombie
+import joshxviii.plantz.entity.zombie.Imp
 import joshxviii.plantz.entity.zombie.NewspaperZombie
 import joshxviii.plantz.entity.zombie.ZombieYeti
 import joshxviii.plantz.mixin.MobAccessor
@@ -322,11 +323,24 @@ object PazEntities {
             .add(Attributes.FOLLOW_RANGE, 16.0)
             .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.0)
     )
+    @JvmField val IMP: EntityType<Imp> =  registerZombie(
+        "imp",
+        EntityType.Builder.of(::Imp, MobCategory.MONSTER)
+            .sized(0.45f, 0.95f)
+            .passengerAttachments(2.075f)
+            .ridingOffset(-0.7f)
+            .clientTrackingRange(8)
+            .notInPeaceful(),
+        attributes = Zombie.createAttributes()
+            .add(Attributes.ATTACK_DAMAGE, 1.0)
+            .add(Attributes.MAX_HEALTH, 15.0)
+            .add(Attributes.MOVEMENT_SPEED, 0.3)
+    )
     @JvmField val GARGANTUAR: EntityType<Gargantuar> =  registerZombie(
         "gargantuar",
         EntityType.Builder.of(::Gargantuar, MobCategory.MONSTER)
             .sized(1.8f, 3.4f)
-            .passengerAttachments(2.0f)
+            .passengerAttachments(2.3f)
             .ridingOffset(-0.7f)
             .clientTrackingRange(8)
             .notInPeaceful(),

@@ -12,9 +12,10 @@ import joshxviii.plantz.model.projectiles.MelonModel
 import joshxviii.plantz.model.projectiles.NeedleModel
 import joshxviii.plantz.model.projectiles.PeaModel
 import joshxviii.plantz.model.projectiles.SporeModel
+import joshxviii.plantz.model.zombies.ImpModel
+import joshxviii.plantz.model.zombies.DiggerZombieModel
 import joshxviii.plantz.model.zombies.DiscoZombieModel
 import joshxviii.plantz.model.zombies.GargantuarModel
-import joshxviii.plantz.model.zombies.DiggerZombieModel
 import joshxviii.plantz.model.zombies.PazZombieModel
 import joshxviii.plantz.model.zombies.ZombieYetiModel
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
@@ -86,6 +87,7 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(DiggerZombieModel.LAYER_LOCATION) { DiggerZombieModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(ZombieYetiModel.LAYER_LOCATION) { ZombieYetiModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(DiscoZombieModel.LAYER_LOCATION) { DiscoZombieModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(ImpModel.LAYER_LOCATION) { ImpModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(GargantuarModel.LAYER_LOCATION) { GargantuarModel.createBodyLayer() }
 
         ModelLayerRegistry.registerModelLayer(GnomeModel.LAYER_LOCATION) { GnomeModel.createBodyLayer() }
@@ -138,6 +140,7 @@ object PazModels {
         EntityRenderers.register(PazEntities.ZOMBIE_YETI) { PazZombieRenderer(it, ZombieYetiModel(it.bakeLayer(ZombieYetiModel.LAYER_LOCATION)))}
         EntityRenderers.register(PazEntities.BACKUP_DANCER) { PazZombieRenderer(it, DiscoZombieModel(it.bakeLayer(DiscoZombieModel.LAYER_LOCATION))) }
         EntityRenderers.register(PazEntities.DISCO_ZOMBIE) { PazZombieRenderer(it, DiscoZombieModel(it.bakeLayer(DiscoZombieModel.LAYER_LOCATION))) }
+        EntityRenderers.register(PazEntities.IMP) { PazZombieRenderer(it, ImpModel(it.bakeLayer(ImpModel.LAYER_LOCATION)), ImpModel(it.bakeLayer(ImpModel.LAYER_LOCATION))) }
         EntityRenderers.register(PazEntities.GARGANTUAR) { PazZombieRenderer(it, GargantuarModel(it.bakeLayer(GargantuarModel.LAYER_LOCATION))) }
 
         EntityRenderers.register(PazEntities.GNOME) { GnomeRenderer(it, GnomeModel(it.bakeLayer(GnomeModel.LAYER_LOCATION)))}

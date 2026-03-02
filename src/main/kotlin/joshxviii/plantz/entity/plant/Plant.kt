@@ -450,9 +450,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             if (itemStack.`is`(ItemTags.SHOVELS)) {
 
                 if (!isTame || player != owner) {
-                    player.displayClientMessage(
-                        Component.translatable("message.plantz.not_yours", this.name).withStyle(ChatFormatting.RED),
-                        true
+                    player.sendSystemMessage(
+                        Component.translatable("message.plantz.not_yours", this.name).withStyle(ChatFormatting.RED)
                     )
                     return InteractionResult.FAIL
                 }
