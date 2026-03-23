@@ -51,16 +51,17 @@ object PazCreativeTab {
                 output.accept(PazItems.ZOMBIE_YETI_SPAWN_EGG)
                 output.accept(PazItems.DISCO_ZOMBIE_SPAWN_EGG)
                 output.accept(PazItems.BACKUP_DANCER_SPAWN_EGG)
+                output.accept(PazItems.ALL_STAR_SPAWN_EGG)
                 output.accept(PazItems.IMP_SPAWN_EGG)
                 output.accept(PazItems.GARGANTUAR_SPAWN_EGG)
 
-                //gnome
+                // gnome
                 output.accept(PazItems.GNOME_SPAWN_EGG)
 
-                //other
+                // other
                 output.accept(PazBlocks.CONE)
-                output.accept(Items.BUCKET)
                 output.accept(PazItems.NEWSPAPER)
+                output.accept(PazItems.FOOTBALL_HELMET)
                 output.accept(PazBlocks.BRAINZ_FLAG)
                 output.accept(PazBlocks.PLANTZ_FLAG)
                 output.accept(PazItems.SUN)

@@ -10,9 +10,9 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer
 import net.minecraft.client.renderer.rendertype.RenderTypes
-import net.minecraft.client.renderer.state.CameraRenderState
+import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.client.renderer.texture.OverlayTexture
-import net.minecraft.client.resources.model.SpriteId
+import net.minecraft.client.resources.model.sprite.SpriteId
 import net.minecraft.world.level.block.state.properties.RotationSegment
 import net.minecraft.world.phys.Vec3
 

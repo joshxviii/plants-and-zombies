@@ -6,7 +6,7 @@ import joshxviii.plantz.networking.SendMailPayload
 import joshxviii.plantz.pazResource
 import kotlinx.coroutines.delay
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
@@ -110,12 +110,7 @@ class MailboxScreen(
         }
     }
 
-    override fun renderBg(
-        graphics: GuiGraphics,
-        a: Float,
-        xm: Int,
-        ym: Int
-    ) {
+    override fun extractBackground(graphics: GuiGraphicsExtractor, xm: Int, ym: Int, a: Float) {
         val xo = leftPos
         val yo = topPos
         graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, xo, yo, 0f, 0f, imageWidth, imageHeight, 256, 256)
@@ -129,9 +124,9 @@ class MailboxScreen(
             graphics.requestCursor(if (scrolling) CursorTypes.RESIZE_NS else CursorTypes.POINTING_HAND)
         }
         // show message when no addresses are available
-        if (addressButtons.isEmpty()) graphics.drawWordWrap(font, Component.translatable("container.plantz.no_address"), xo+52, yo+28, 96, -1)
+        if (addressButtons.isEmpty()) graphics.textWithWordWrap(font, Component.translatable("container.plantz.no_address"), xo+52, yo+28, 96, -1)
 
-        if(menu.showIsFullMessage) graphics.drawWordWrap(font, Component.translatable("container.plantz.mailbox_full"), xo, yo, 96, -1)
+        if(menu.showIsFullMessage) graphics.textWithWordWrap(font, Component.translatable("container.plantz.mailbox_full"), xo, yo, 96, -1)
     }
 
     override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {

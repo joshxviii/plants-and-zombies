@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "plantz:item/all_star_spawn_egg"
+  }
+}

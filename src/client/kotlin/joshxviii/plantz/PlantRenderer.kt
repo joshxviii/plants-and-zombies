@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
-import net.minecraft.client.renderer.state.CameraRenderState
+import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
@@ -86,10 +86,11 @@ class PlantRenderer(
         val suffixes = buildList {
             if (state.isBaby)   add("baby")
             if (state.isAsleep) add("sleep")
-            add(state.texturePathExtra)
+            if (!state.texturePathExtra.isEmpty()) add(state.texturePathExtra)
         }
 
-        return resolveTextureLocation(base, suffixes, rm) ?: pazResource("$base.png")
+        val textureLocation = resolveTextureLocation(base, suffixes, rm)
+        return textureLocation ?: pazResource("$base.png")
     }
 
 }

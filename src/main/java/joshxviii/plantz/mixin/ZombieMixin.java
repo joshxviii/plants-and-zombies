@@ -4,7 +4,9 @@ import joshxviii.plantz.PazBlocks;
 import joshxviii.plantz.entity.zombie.Gargantuar;
 import joshxviii.plantz.entity.zombie.ZombieYeti;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.SpawnGroupData;
@@ -27,6 +29,11 @@ public class ZombieMixin {
 
     @Unique
     static private final String LEADER_MODIFIER_ID = "leader_zombie_bonus";
+
+    @Inject(method = "hurtServer", at = @At("HEAD"), cancellable = true)
+    public void hurtServer(final ServerLevel level, final DamageSource source, final float damage, CallbackInfoReturnable<Boolean> cir) {
+
+    }
 
     @Inject( method = "finalizeSpawn", at = @At("RETURN"))
     public void checkForLeader(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnReason, SpawnGroupData groupData, CallbackInfoReturnable<SpawnGroupData> cir) {

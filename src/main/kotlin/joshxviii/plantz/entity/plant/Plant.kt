@@ -107,8 +107,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
     }
 
-    var maxSwell = 30; var oldSwell = 0; var swell = 0
-    fun getSwelling(a: Float): Float = Mth.lerp(a, oldSwell.toFloat(), swell.toFloat()) / (maxSwell - 2).toFloat()
+    open fun getMaxSwell() : Int = 30
+    var oldSwell = 0; var swell = 0
+    fun getSwelling(a: Float): Float = Mth.lerp(a, oldSwell.toFloat(), swell.toFloat()) / (getMaxSwell() - 2).toFloat()
 
     var swellDir: Int
         get() = this.entityData.get(SWELL_DIR)
@@ -197,7 +198,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     fun calculateSwell() {
         oldSwell = swell
-        swell = (swell + swellDir).coerceIn(0, maxSwell)
+        swell = (swell + swellDir).coerceIn(0, getMaxSwell())
     }
 
     override fun getAmbientSound(): SoundEvent? {
@@ -243,11 +244,23 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return (target !is Plant || target.owner != owner)
     }
 
+    override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
+        return if (source.type() == level.registryAccess().get(PazDamageTypes.EXPLODE).get().value()) false
+        else super.hurtServer(level, source, damage)
+    }
+
+    override fun hurtClient(source: DamageSource): Boolean {
+        return if (source.type() == this.level().registryAccess().get(PazDamageTypes.EXPLODE).get().value()) false
+        else super.hurtClient(source)
+    }
+
     override fun actuallyHurt(level: ServerLevel, source: DamageSource, dmg: Float) {
+        val type = level.registryAccess().get(PazDamageTypes.EXPLODE).get().value()
+        if (source.type() == type) return
         super.actuallyHurt(
             level,
             if (source.entity is Zombie) DamageSource(
-                level.registryAccess().get<DamageType>(PazDamageTypes.ZOMBIE_EAT).get(),
+                level.registryAccess().get(PazDamageTypes.ZOMBIE_EAT).get(),
                 source.directEntity,
                 source.entity
             ) else source,

@@ -1,7 +1,7 @@
 package joshxviii.plantz.gui
 
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.client.renderer.RenderPipelines
@@ -22,8 +22,8 @@ open class PazButton(
     val text: Component = Component.empty(),
 ) : Button(buttonX, buttonY, buttonWidth, buttonHeight, text, clickAction, DEFAULT_NARRATION) {
 
-    override fun renderContents(
-        graphics: GuiGraphics,
+    override fun extractContents(
+        graphics: GuiGraphicsExtractor,
         mx: Int,
         my: Int,
         a: Float
@@ -38,7 +38,7 @@ open class PazButton(
         )
 
         val line = font.split(text, buttonWidth-8).firstOrNull()
-        if (line!=null) graphics.drawString(font, line, buttonX + if(press) 3 else 2, buttonY+3, -1, false)
+        if (line!=null) graphics.text(font, line, buttonX + if(press) 3 else 2, buttonY+3, -1, false)
     }
 
     override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {

@@ -21,8 +21,8 @@ class CabbagePult(type: EntityType<out Plant>, level: Level) : Plant(PazEntities
             usingEntity = this,
             projectileFactory = { Cabbage(level(), this, spawnOffset = Vec2(-1f, 1f)) },
             useHighArc = true,
-            cooldownTime = 70,
-            actionDelay = 12))
+            cooldownTime = 32,
+            actionDelay = 9))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, false, false) { target, level ->
             target is Enemy
             && target !is Creeper

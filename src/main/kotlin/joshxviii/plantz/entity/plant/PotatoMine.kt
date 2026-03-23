@@ -1,6 +1,7 @@
 package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.ai.goal.ExplodeGoal
 import joshxviii.plantz.ai.goal.GenerateSunGoal
 import net.minecraft.world.entity.Entity
@@ -15,6 +16,7 @@ class PotatoMine(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
         super.registerGoals()
         this.goalSelector.addGoal(1, ExplodeGoal(
             plantEntity = this,
+            actionPredicate = { this.state != PlantState.COOLDOWN }
         ))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->
             target is Enemy
@@ -22,5 +24,10 @@ class PotatoMine(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
         })
     }
 
+    init {
+        cooldown = 100
+    }
+
+    override fun getMaxSwell() = 8
     override fun doPush(entity: Entity) {}
 }

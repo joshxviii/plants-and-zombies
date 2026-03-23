@@ -73,7 +73,6 @@ fun List<String>.permutationsDescending(): List<String> = buildList {
     for (i in size - 1 downTo 1) {
         add(this@permutationsDescending.subList(0, i).joinToString(""))
     }
-    add("")
 }
 
 fun resolveTextureLocation(base: String, suffixes: List<String>, rm: ResourceManager): Identifier? {

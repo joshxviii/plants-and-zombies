@@ -11,6 +11,7 @@ import joshxviii.plantz.entity.gnome.Gnome
 import joshxviii.plantz.entity.plant.*
 import joshxviii.plantz.entity.plants.WallNut
 import joshxviii.plantz.entity.projectile.*
+import joshxviii.plantz.entity.zombie.AllStar
 import joshxviii.plantz.entity.zombie.BackupDancer
 import joshxviii.plantz.entity.zombie.BrownCoat
 import joshxviii.plantz.entity.zombie.DiscoZombie
@@ -111,6 +112,9 @@ object PazEntities {
         sunCost = 10,
         width = 0.8f,
         height = 0.76f,
+        attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 50.0,
+        )
     )
     @JvmField val POTATO_MINE: EntityType<PotatoMine> = registerPlant(
         "potatomine",
@@ -241,8 +245,7 @@ object PazEntities {
             .eyeHeight(1.74f)
             .passengerAttachments(2.075f)
             .ridingOffset(-0.7f)
-            .clientTrackingRange(8)
-            .notInPeaceful(),
+            .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 10.0)
     )
@@ -253,8 +256,7 @@ object PazEntities {
             .eyeHeight(1.74f)
             .passengerAttachments(2.075f)
             .ridingOffset(-0.7f)
-            .clientTrackingRange(8)
-            .notInPeaceful(),
+            .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.MOVEMENT_SPEED, 0.22)
             .add(Attributes.MAX_HEALTH, 22.0)
@@ -266,8 +268,7 @@ object PazEntities {
             .eyeHeight(1.74f)
             .passengerAttachments(2.075f)
             .ridingOffset(-0.7f)
-            .clientTrackingRange(8)
-            .notInPeaceful(),
+            .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 2.0)
             .add(Attributes.MAX_HEALTH, 25.0)
@@ -280,8 +281,7 @@ object PazEntities {
             .sized(1.25f, 2.6f)
             .passengerAttachments(2.075f)
             .ridingOffset(-0.7f)
-            .clientTrackingRange(8)
-            .notInPeaceful(),
+            .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 12.0)
             .add(Attributes.MAX_HEALTH, 80.0)
@@ -299,8 +299,7 @@ object PazEntities {
             .eyeHeight(1.74f)
             .passengerAttachments(2.075f)
             .ridingOffset(-0.7f)
-            .clientTrackingRange(8)
-            .notInPeaceful(),
+            .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 7.0)
             .add(Attributes.MAX_HEALTH, 35.0)
@@ -314,8 +313,7 @@ object PazEntities {
             .eyeHeight(1.74f)
             .passengerAttachments(2.075f)
             .ridingOffset(-0.7f)
-            .clientTrackingRange(8)
-            .notInPeaceful(),
+            .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 3.0)
             .add(Attributes.MAX_HEALTH, 10.0)
@@ -323,14 +321,28 @@ object PazEntities {
             .add(Attributes.FOLLOW_RANGE, 16.0)
             .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.0)
     )
+    @JvmField val ALL_STAR: EntityType<AllStar> =  registerZombie(
+        "all_star",
+        EntityType.Builder.of(::AllStar, MobCategory.MONSTER)
+            .sized(0.6f, 1.95f)
+            .eyeHeight(1.74f)
+            .passengerAttachments(2.075f)
+            .ridingOffset(-0.7f)
+            .clientTrackingRange(8),
+        attributes = Zombie.createAttributes()
+            .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 10.0)
+            .add(Attributes.ATTACK_DAMAGE, 4.0)
+            .add(Attributes.MAX_HEALTH, 50.0)
+            .add(Attributes.STEP_HEIGHT, 1.0)
+            .add(Attributes.MOVEMENT_SPEED, 0.23)
+    )
     @JvmField val IMP: EntityType<Imp> =  registerZombie(
         "imp",
         EntityType.Builder.of(::Imp, MobCategory.MONSTER)
             .sized(0.45f, 0.95f)
             .passengerAttachments(2.075f)
             .ridingOffset(-0.7f)
-            .clientTrackingRange(8)
-            .notInPeaceful(),
+            .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 1.0)
             .add(Attributes.MAX_HEALTH, 15.0)
@@ -342,8 +354,7 @@ object PazEntities {
             .sized(1.8f, 3.4f)
             .passengerAttachments(2.3f)
             .ridingOffset(-0.7f)
-            .clientTrackingRange(8)
-            .notInPeaceful(),
+            .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 22.0)
             .add(Attributes.MAX_HEALTH, 250.0)
@@ -423,7 +434,8 @@ object PazEntities {
         builder: EntityType.Builder<T> = EntityType.Builder.createNothing(MobCategory.MONSTER),
         attributes: AttributeSupplier.Builder = Zombie.createAttributes()
     ): EntityType<T> {
-        val type = register(name, builder)
+        val type = register(name, builder
+            .notInPeaceful())
         FabricDefaultAttributeRegistry.register(type, attributes)
         return type
     }

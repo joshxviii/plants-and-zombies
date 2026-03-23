@@ -29,6 +29,7 @@
 
   "item.plantz.sun": "Sun",
   "item.plantz.cone": "Cone",
+  "item.plantz.football_helmet": "Football Helmet",
   "item.plantz.newspaper": "Newspaper",
   "item.plantz.brainz_flag": "Brainz Flag",
   "item.plantz.plantz_flag": "Plantz Flag",
@@ -84,6 +85,8 @@
   "item.plantz.zombie_yeti_spawn_egg": "Zombie Yeti Spawn Egg",
   "item.plantz.disco_zombie_spawn_egg": "Disco Zombie Spawn Egg",
   "item.plantz.backup_dancer_spawn_egg": "Backup Dancer Spawn Egg",
+  "item.plantz.all_star_spawn_egg": "All Star Spawn Egg",
+  "item.plantz.imp_spawn_egg": "Imp Spawn Egg",
   "item.plantz.gargantuar_spawn_egg": "Gargantuar Spawn Egg",
 
   "item.plantz.gnome_spawn_egg": "Gnome Spawn Egg",
@@ -114,6 +117,8 @@
   "entity.plantz.zombie_yeti": "Zombie Yeti",
   "entity.plantz.disco_zombie": "Disco Zombie",
   "entity.plantz.backup_dancer": "Backup Dancer",
+  "entity.plantz.all_star": "All Star",
+  "entity.plantz.imp": "Imp",
   "entity.plantz.gargantuar": "Gargantuar",
 
   "entity.plantz.gnome": "Garden Gnome",
@@ -125,7 +130,6 @@
   "container.plantz.mailbox_coords": "%d, %d, %d",
   "container.plantz.address_search": "Search mailboxes...",
   "container.plantz.no_address": "No other mailboxes found.",
-
 
   "plantz.subtitles.projectile.deflected": "Projectile deflected",
   "plantz.subtitles.projectile.fire": "Projectile fired",
@@ -152,6 +156,12 @@
   "plantz.subtitles.entity.disco_zombie.ambient": "Disco Zombie groans",
   "plantz.subtitles.entity.disco_zombie.death": "Disco Zombie dies",
   "plantz.subtitles.entity.disco_zombie.hurt": "Disco Zombie hurt",
+  "plantz.subtitles.entity.all_star.ambient": "All Star groans",
+  "plantz.subtitles.entity.all_star.death": "All Star dies",
+  "plantz.subtitles.entity.all_star.hurt": "All Star hurt",
+  "plantz.subtitles.entity.imp.ambient": "Imp groans",
+  "plantz.subtitles.entity.imp.death": "Imp dies",
+  "plantz.subtitles.entity.imp.hurt": "Imp hurt",
   "plantz.subtitles.entity.gargantuar.ambient": "Gargantuar groans",
   "plantz.subtitles.entity.gargantuar.death": "Gargantuar dies",
   "plantz.subtitles.entity.gargantuar.hurt": "Gargantuar hurt",

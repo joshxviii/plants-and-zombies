@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer
 import net.minecraft.client.renderer.entity.layers.RenderLayer
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState
-import net.minecraft.client.renderer.state.CameraRenderState
+import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.client.resources.model.EquipmentClientInfo.LayerType
 import net.minecraft.core.component.DataComponents
 import net.minecraft.resources.Identifier

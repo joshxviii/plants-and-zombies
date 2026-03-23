@@ -1,17 +1,15 @@
 package joshxviii.plantz
 
-import com.mojang.blaze3d.vertex.PoseStack
+import joshxviii.plantz.entity.zombie.AllStar
 import joshxviii.plantz.entity.zombie.DiscoZombie
 import joshxviii.plantz.entity.zombie.NewspaperZombie
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.model.zombies.PazZombieModel
 import net.minecraft.client.Minecraft
-import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.ModelLayers
 import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.client.model.monster.zombie.ZombieModel
-import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.AbstractZombieRenderer
 import net.minecraft.client.renderer.entity.ArmorModelSet
 import net.minecraft.client.renderer.entity.EntityRendererProvider
@@ -20,7 +18,6 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.entity.monster.zombie.Zombie
-import org.joml.Vector3f
 
 class PazZombieRenderer(
     context: EntityRendererProvider.Context,
@@ -51,6 +48,7 @@ class PazZombieRenderer(
         state.texturePath = BuiltInRegistries.ENTITY_TYPE.getKey(entity.type).path
         state.initAnimationState.startIfStopped(0)
         if (entity is DiscoZombie) state.actionAnimationState.copyFrom(entity.summonAnimation)
+        if (entity is AllStar) state.actionAnimationState.copyFrom(entity.chargeAnimation)
         if (entity is NewspaperZombie) state.isAngry = entity.isAngry()
     }
 
@@ -62,6 +60,7 @@ class PazZombieRenderer(
 
         val suffixes = buildList {
             if (state.isAngry) add("angry")
+            if (state.isBaby) add("baby")
         }
 
         return resolveTextureLocation(base, suffixes, rm) ?: pazResource("$base.png")

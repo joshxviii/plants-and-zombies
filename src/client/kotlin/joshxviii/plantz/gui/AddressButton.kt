@@ -1,18 +1,13 @@
 package joshxviii.plantz.gui
 
-import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.pazResource
-import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Tooltip
-import net.minecraft.client.gui.components.WidgetTooltipHolder
-import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier
-import net.minecraft.world.item.ItemStack
 
 /**
  * Button to populate list with
@@ -40,9 +35,8 @@ class AddressButton(
         val ADDRESS_SELECTED: Identifier = pazResource("textures/gui/mailbox/address_selected.png")
     }
 
-    override fun renderContents(graphics: GuiGraphics, mx: Int, my: Int, a: Float) {
-        super.renderContents(graphics, mx, my, a)
-        val font = Minecraft.getInstance().font
+    override fun extractContents(graphics: GuiGraphicsExtractor, mx: Int, my: Int, a: Float) {
+        super.extractContents(graphics, mx, my, a)
     }
 
 }

@@ -1,11 +1,12 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.PazEntities.ALL_STAR
 import joshxviii.plantz.PazEntities.BACKUP_DANCER
 import joshxviii.plantz.PazEntities.BROWN_COAT
+import joshxviii.plantz.PazEntities.DIGGER_ZOMBIE
 import joshxviii.plantz.PazEntities.DISCO_ZOMBIE
 import joshxviii.plantz.PazEntities.GARGANTUAR
 import joshxviii.plantz.PazEntities.GNOME
-import joshxviii.plantz.PazEntities.DIGGER_ZOMBIE
 import joshxviii.plantz.PazEntities.IMP
 import joshxviii.plantz.PazEntities.NEWSPAPER_ZOMBIE
 import joshxviii.plantz.PazEntities.ZOMBIE_YETI
@@ -37,6 +38,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.*
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.item.component.UseCooldown
+import net.minecraft.world.item.equipment.ArmorMaterials
+import net.minecraft.world.item.equipment.ArmorType
 import net.minecraft.world.item.equipment.Equippable
 import net.minecraft.world.level.block.DispenserBlock
 import net.minecraft.world.level.gameevent.GameEvent
@@ -46,7 +49,8 @@ object PazItems {
     @JvmField
     val SUN: Item = registerItem(
         "sun", ::SunItem,
-        properties = Item.Properties().stacksTo(99))
+        properties = Item.Properties().stacksTo(99)
+    )
     @JvmField
     val NEWSPAPER: Item = registerItem(
         "newspaper", ::NewspaperItem,
@@ -55,7 +59,33 @@ object PazItems {
                 slot = EquipmentSlotGroup.HAND,
                 breakChance = 0.1f)
             ).component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
-)
+    )
+    @JvmField
+    val FOOTBALL_HELMET: Item = registerItem(
+        "football_helmet",
+        properties = Item.Properties()
+            .humanoidArmor(ArmorMaterials.CHAINMAIL, ArmorType.HELMET)
+            .component(PazComponents.BLOCKS_PROJECTILE_DAMAGE, BlocksProjectileDamage(
+                breakChance = 0.08f)
+            )
+            .component(
+                DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
+                    .setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)
+                    .build()
+            )
+            .component(
+                DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
+                    .add(
+                        Attributes.ARMOR,
+                        AttributeModifier(pazResource("football_armor"), 2.0, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.HEAD
+                    ).add(
+                        Attributes.KNOCKBACK_RESISTANCE,
+                        AttributeModifier(pazResource("football_knockback_resistance"), 0.1, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.HEAD
+                    ).build()
+            )
+    )
     @JvmField
     val SEED_PACKET: Item = registerItem(
         "seed_packet", ::SeedPacketItem,
@@ -76,6 +106,7 @@ object PazItems {
     @JvmField val ZOMBIE_YETI_SPAWN_EGG: Item = registerSpawnEgg(ZOMBIE_YETI)
     @JvmField val DISCO_ZOMBIE_SPAWN_EGG: Item = registerSpawnEgg(DISCO_ZOMBIE)
     @JvmField val BACKUP_DANCER_SPAWN_EGG: Item = registerSpawnEgg(BACKUP_DANCER)
+    @JvmField val ALL_STAR_SPAWN_EGG: Item = registerSpawnEgg(ALL_STAR)
     @JvmField val IMP_SPAWN_EGG: Item = registerSpawnEgg(IMP)
     @JvmField val GARGANTUAR_SPAWN_EGG: Item = registerSpawnEgg(GARGANTUAR)
 
