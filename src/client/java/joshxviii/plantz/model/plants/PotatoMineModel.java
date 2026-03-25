@@ -20,7 +20,7 @@ public class PotatoMineModel extends EntityModel<@NotNull PlantRenderState> {
 	private final ModelPart potato;
 	private final ModelPart blinker;
 	private final KeyframeAnimation idleAnimation;
-	private final KeyframeAnimation actionAnimation;
+	private final KeyframeAnimation cooldownAnimation;
 	private final KeyframeAnimation initAnimation;
 
 	public PotatoMineModel(ModelPart root) {
@@ -33,7 +33,7 @@ public class PotatoMineModel extends EntityModel<@NotNull PlantRenderState> {
 		this.blinker = this.head.getChild("blinker");
 		this.idleAnimation = PotatoMineAnimation.idle.bake(root);
 		this.initAnimation = PotatoMineAnimation.init.bake(root);
-		this.actionAnimation = PotatoMineAnimation.action.bake(root);
+		this.cooldownAnimation = PotatoMineAnimation.cooldown.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -61,8 +61,9 @@ public class PotatoMineModel extends EntityModel<@NotNull PlantRenderState> {
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
+		int i = state.getCooldown();
 		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
-		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
-		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
+		this.cooldownAnimation.apply(state.getCoolDownAnimationState(), state.ageInTicks);
+		if (i<0) this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 	}
 }

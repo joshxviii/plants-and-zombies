@@ -113,7 +113,7 @@ class ProjectileAttackGoal(
             projectile.needsSync = true
         }
 
-        usingEntity.playSound(soundEvent, 3.0f, 0.4f / (usingEntity.random.nextFloat() * 0.4f + 0.8f))
+        usingEntity.playSound(soundEvent, 0.7f, 0.4f / (usingEntity.random.nextFloat() * 0.4f + 0.8f))
         return true
     }
 

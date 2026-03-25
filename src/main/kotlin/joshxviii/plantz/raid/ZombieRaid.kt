@@ -340,7 +340,9 @@ class ZombieRaid(
                 if (isEasy || wave <= 2 || wave == 4) return 0
                 bonusSpawns = 1
             }
+            ZombieRaiderType.ALL_STAR -> bonusSpawns = if (!isEasy && wave > 2) random.nextInt(2) else 0
             ZombieRaiderType.ZOMBIE_YETI -> bonusSpawns = if (!isEasy && wave > 3) 1 else 0
+            ZombieRaiderType.IMP -> bonusSpawns = if (wave > 2) random.nextInt(wave) else 0
             ZombieRaiderType.GARGANTUAR -> return 0
         }
 
@@ -356,7 +358,9 @@ class ZombieRaid(
         NEWSPAPER_ZOMBIE(PazEntities.NEWSPAPER_ZOMBIE, intArrayOf(0,      1,      0,      1,      0,      1,      2,      1,      3)),
         DIGGER_ZOMBIE(PazEntities.DIGGER_ZOMBIE,       intArrayOf(0,      0,      1,      0,      4,      1,      1,      2,      3)),
         DISCO_ZOMBIE(PazEntities.DISCO_ZOMBIE,         intArrayOf(0,      0,      1,      3,      4,      4,      4,      2,      3)),
+        ALL_STAR(PazEntities.ALL_STAR,                 intArrayOf(0,      0,      1,      2,      0,      3,      2,      2,      2)),
         ZOMBIE_YETI(PazEntities.ZOMBIE_YETI,           intArrayOf(0,      0,      0,      1,      3,      0,      2,      1,      2)),
+        IMP(PazEntities.IMP,                           intArrayOf(0,      0,      0,      0,      2,      4,      5,      5,      4)),
         GARGANTUAR(PazEntities.GARGANTUAR,             intArrayOf(0,      0,      0,      0,      0,      1,      0,      2,      1));
 
         companion object {

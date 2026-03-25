@@ -36,6 +36,10 @@ class PlantRenderer(
         if (state.ageInTicks>1) super.submit(state, poseStack, collector, camera)
     }
 
+    override fun getShadowRadius(state: PlantRenderState): Float {
+        return super.getShadowRadius(state) * state.boundingBoxWidth + 0.15f
+    }
+
     override fun scale(state: PlantRenderState, poseStack: PoseStack) {
         super.scale(state, poseStack)
         var g = state.swelling

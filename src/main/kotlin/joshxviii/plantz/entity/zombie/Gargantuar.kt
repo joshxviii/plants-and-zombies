@@ -1,41 +1,24 @@
 package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazEntities
-import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.PazSounds
-import joshxviii.plantz.PazTags
-import joshxviii.plantz.ai.goal.ProjectileAttackGoal
-import joshxviii.plantz.canReachTarget
-import joshxviii.plantz.entity.projectile.PowderSnowChunk
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.BlockParticleOption
-import net.minecraft.core.particles.ParticleOptions
-import net.minecraft.core.particles.ParticleType
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.RandomSource
-import net.minecraft.world.Difficulty
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.control.MoveControl
-import net.minecraft.world.entity.item.FallingBlockEntity
-import net.minecraft.world.entity.monster.zombie.Zombie
-import net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
+import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
-import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.block.FallingBlock
-import net.minecraft.world.level.block.state.BlockBehaviour
-import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.Vec3
-import org.apache.logging.log4j.core.jmx.Server
 
 class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(type, level) {
 
@@ -47,22 +30,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
 
     override fun registerGoals() {
         super.registerGoals()
-        goalSelector.addGoal(2, ProjectileAttackGoal(
-            usingEntity = this,
-            projectileFactory = {
-                Imp(PazEntities.IMP, level())
-            },
-            velocity = 1.0,
-            inaccuracy = 1.2f,
-            actionEndEffect = {
-                this.swing(this.usedItemHand)
-            },
-            actionPredicate = { it.random.nextDouble() < 0.25
-                                && it.target!=null
-                                && it.distanceTo(it.target!!) > 6.5f
-                                && !this.navigation.path.canReachTarget(target!!.blockPosition())
-                              },
-            actionDelay = 35))
+        goalSelector.addGoal(2, ThrowImpGoal(this))
     }
 
     private val noMoveControl = object : MoveControl(this) { override fun getSpeedModifier(): Double = 0.0 }
@@ -97,15 +65,6 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
                 pos.x, pos.y, pos.z,
                 5, 0.3, 0.0, 0.3, 0.0
             )
-        }
-        if(level is ServerLevel && tickCount==60) {
-            val imp = PazEntities.IMP.create(level(), EntitySpawnReason.JOCKEY)
-            if (imp != null) {
-                imp.snapTo(x, y, z, yRot, 0.0f)
-                imp.finalizeSpawn(level, level.getCurrentDifficultyAt(this.blockPosition()), EntitySpawnReason.JOCKEY, null)
-                imp.startRiding(this, true, false)
-                level.addFreshEntity(imp)
-            }
         }
     }
 
@@ -148,6 +107,29 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
     ): SpawnGroupData? {
         val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
 
+//        imp.snapTo(x, y, z, yRot, 0.0f)
+//        imp.finalizeSpawn(level, level.getCurrentDifficultyAt(this.blockPosition()), EntitySpawnReason.JOCKEY, null)
+//        imp.startRiding(this, true, false)
+//        level.addFreshEntity(imp)
+
         return data
     }
+
+    private class ThrowImpGoal(
+        val gargantuar: Gargantuar,
+    ) : Goal() {
+        override fun canUse(): Boolean {
+            return gargantuar.firstPassenger == gargantuar.imp
+        }
+
+        override fun tick() {
+
+        }
+
+        fun throwImp() {
+
+        }
+
+    }
+
 }

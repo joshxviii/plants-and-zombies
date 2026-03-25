@@ -83,7 +83,7 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
     }
 
     override fun getSpeed(): Float {
-        return super.getSpeed() * if (chargingTime>0) 3 else 1
+        return super.getSpeed() * if (chargingTime>0) 3.25f else 1f
     }
 
     override fun registerGoals() {

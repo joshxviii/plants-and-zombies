@@ -5,6 +5,7 @@ import joshxviii.plantz.PazSounds
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.core.particles.ExplosionParticleInfo
 import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.random.WeightedList
 import net.minecraft.world.damagesource.DamageSource
@@ -13,6 +14,8 @@ import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.goal.Goal
+import net.minecraft.world.entity.ai.targeting.TargetingConditions
+import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.level.ExplosionDamageCalculator
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.SimpleExplosionDamageCalculator
@@ -22,8 +25,12 @@ import java.util.function.Predicate
 
 class ExplodeGoal(
     private val plantEntity: Plant,
+    val radius: Float = 2.5f,
+    val detectRange: Double = 9.0,
     val actionPredicate: Predicate<PathfinderMob> = Predicate { true },
+    selector: TargetingConditions.Selector? = { target, level -> target is Enemy && target !is Plant }
 ) : Goal() {
+    protected val targetConditions: TargetingConditions
 
     companion object {
         val EXPLOSION_DAMAGE_CALCULATOR: ExplosionDamageCalculator = SimpleExplosionDamageCalculator(false, true, Optional.of<Float>(1f), Optional.ofNullable(null))
@@ -34,17 +41,19 @@ class ExplodeGoal(
 
     init {
         setFlags(EnumSet.of<Flag>(Flag.MOVE))
+        targetConditions = TargetingConditions.forCombat().range(detectRange).selector(selector)
     }
 
     override fun canUse(): Boolean {
         if (!actionPredicate.test(plantEntity)) return false
-        val target = plantEntity.target
-        return (target != null && !target.isDeadOrDying && plantEntity.distanceToSqr(target) < 9.0) || plantEntity.swell > 0
+        val level = plantEntity.level() as ServerLevel
+        target = level.getNearestEntity(LivingEntity::class.java, targetConditions, plantEntity, plantEntity.x, plantEntity.y, plantEntity.z, plantEntity.boundingBox.inflate(detectRange))
+        val t = target
+        return (t != null && !t.isDeadOrDying && plantEntity.distanceToSqr(t) < detectRange) || plantEntity.swell > 0
     }
 
     override fun start() {
         plantEntity.getNavigation().stop()
-        target = plantEntity.target
     }
 
     override fun stop() {
@@ -56,17 +65,17 @@ class ExplodeGoal(
     }
 
     override fun tick() {
-        val currentTarget = target ?: return
+        val currentTarget = target
 
         plantEntity.swellDir = when {
+            currentTarget == null -> -1
             currentTarget.isDeadOrDying -> -1
             plantEntity.distanceToSqr(currentTarget) > DISTANCE_SQR -> -1
-            !plantEntity.sensing.hasLineOfSight(currentTarget) -> -1
             else -> 1
         }
 
         if (plantEntity.swellDir > 0 && plantEntity.swell == 0) {
-            plantEntity.playSound(SoundEvents.CREEPER_PRIMED, 1.0f, 0.5f)
+            plantEntity.playSound(SoundEvents.CREEPER_PRIMED, 1.0f, 1f + (1-plantEntity.getMaxSwell() / 30))
             plantEntity.gameEvent(GameEvent.PRIME_FUSE)
         }
 
@@ -82,13 +91,13 @@ class ExplodeGoal(
             plantEntity.x,
             plantEntity.y,
             plantEntity.z,
-            3.0f,
+            radius,
             false,
             Level.ExplosionInteraction.MOB,
             ParticleTypes.SMOKE,
             ParticleTypes.EXPLOSION,
-            WeightedList.of<ExplosionParticleInfo>(),
-            PazSounds.SNOWCHUNK_HIT
+            WeightedList.of(),
+            PazSounds.PLANT_EXPLODE
         )
         plantEntity.discard()
     }

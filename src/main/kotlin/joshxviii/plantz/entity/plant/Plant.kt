@@ -245,18 +245,17 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
-        return if (source.type() == level.registryAccess().get(PazDamageTypes.EXPLODE).get().value()) false
+        return if (source.`is`(PazDamageTypes.EXPLODE)) false
         else super.hurtServer(level, source, damage)
     }
 
     override fun hurtClient(source: DamageSource): Boolean {
-        return if (source.type() == this.level().registryAccess().get(PazDamageTypes.EXPLODE).get().value()) false
+        return if (source.`is`(PazDamageTypes.EXPLODE)) false
         else super.hurtClient(source)
     }
 
     override fun actuallyHurt(level: ServerLevel, source: DamageSource, dmg: Float) {
-        val type = level.registryAccess().get(PazDamageTypes.EXPLODE).get().value()
-        if (source.type() == type) return
+        if (source.`is`(PazDamageTypes.EXPLODE)) return
         super.actuallyHurt(
             level,
             if (source.entity is Zombie) DamageSource(
@@ -354,7 +353,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 this.initAnimationState.startIfStopped(0)
                 if (this.tickCount >= 19) {
                     idleAnimationStartTick = 0
-                    state = PlantState.IDLE
+                    state = if (cooldown >= 0) PlantState.COOLDOWN else PlantState.IDLE
                 }
             }
         }

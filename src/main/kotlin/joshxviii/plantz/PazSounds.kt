@@ -48,7 +48,8 @@ object PazSounds {
     @JvmField val HYPNOTIZED = register("event.mob_effect.hypnotized")
     @JvmField val APPLY_ZOMBIE_OMEN = register("event.mob_effect.zombie_omen")
 
-    @JvmField val SNOWCHUNK_HIT = registerForHolder("entity.snowchunk.hit")
+    @JvmField val PLANT_EXPLODE = registerForHolder("entity.plant_explode")
+    @JvmField val SNOWCHUNK_HIT = registerForHolder("entity.snowchunk")
 
     private fun registerGnomeSoundVariants(): Map<GnomeSoundVariant, GnomeSoundVariant.GnomeSoundSet> {
         return GnomeSoundVariant.entries.associateWith { soundVariant ->

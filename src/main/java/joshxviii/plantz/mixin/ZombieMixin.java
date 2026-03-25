@@ -1,6 +1,7 @@
 package joshxviii.plantz.mixin;
 
 import joshxviii.plantz.PazBlocks;
+import joshxviii.plantz.PazDamageTypes;
 import joshxviii.plantz.entity.zombie.Gargantuar;
 import joshxviii.plantz.entity.zombie.ZombieYeti;
 import net.minecraft.resources.Identifier;
@@ -15,9 +16,9 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.Objects;
 
@@ -30,9 +31,10 @@ public class ZombieMixin {
     @Unique
     static private final String LEADER_MODIFIER_ID = "leader_zombie_bonus";
 
-    @Inject(method = "hurtServer", at = @At("HEAD"), cancellable = true)
-    public void hurtServer(final ServerLevel level, final DamageSource source, final float damage, CallbackInfoReturnable<Boolean> cir) {
-
+    @ModifyArgs(method = "hurtServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Monster;hurtServer(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
+    private void updateDamage(Args args) {// exploding plants deal 999 dmg
+        DamageSource source = args.get(1);
+        if (source.is(PazDamageTypes.EXPLODE)) args.set(2, 999F);
     }
 
     @Inject( method = "finalizeSpawn", at = @At("RETURN"))

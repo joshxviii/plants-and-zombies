@@ -119,8 +119,8 @@ object PazEntities {
     @JvmField val POTATO_MINE: EntityType<PotatoMine> = registerPlant(
         "potatomine",
         EntityType.Builder.of(::PotatoMine, MobCategory.CREATURE),
-        sunCost = 5,
-        width = 0.8f,
+        sunCost = 3,
+        width = 0.55f,
         height = 0.35f,
     )
     @JvmField val ICE_PEA_SHOOTER: EntityType<IcePeaShooter> = registerPlant(
@@ -351,7 +351,7 @@ object PazEntities {
     @JvmField val GARGANTUAR: EntityType<Gargantuar> =  registerZombie(
         "gargantuar",
         EntityType.Builder.of(::Gargantuar, MobCategory.MONSTER)
-            .sized(1.8f, 3.4f)
+            .sized(1.7f, 3.2f)
             .passengerAttachments(2.3f)
             .ridingOffset(-0.7f)
             .clientTrackingRange(8),
@@ -363,7 +363,7 @@ object PazEntities {
             .add(Attributes.EXPLOSION_KNOCKBACK_RESISTANCE, 0.7)
             .add(Attributes.SCALE, 1.33)
             .add(Attributes.STEP_HEIGHT, 1.0)
-            .add(Attributes.ENTITY_INTERACTION_RANGE, 2.5)
+            .add(Attributes.ENTITY_INTERACTION_RANGE, 3.5)
             .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.0)
     )
     // endregion

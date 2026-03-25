@@ -41,6 +41,10 @@ class PazZombieRenderer(
         return PazZombieRenderState()
     }
 
+    override fun getShadowRadius(state: ZombieRenderState): Float {
+        return super.getShadowRadius(state)
+    }
+
     override fun extractRenderState(entity: Zombie, state: ZombieRenderState, partialTicks: Float) {
         super.extractRenderState(entity, state, partialTicks)
         (entity as PazZombie)

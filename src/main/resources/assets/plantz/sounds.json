@@ -20,6 +20,14 @@
     "sounds": [{ "name": "mob/evocation_illager/fangs", "volume": 1.0, "pitch": 0.8 }], "subtitle": "plantz.subtitles.entity.chomper.attack"
   },
 
+  "entity.plant_explode": {
+    "sounds": [
+      { "name": "minecraft:random/explode1", "volume": 1.0, "pitch": 1.9 },
+      { "name": "minecraft:random/explode2", "volume": 1.0, "pitch": 1.9 },
+      { "name": "minecraft:random/explode3", "volume": 1.0, "pitch": 1.9 }
+    ], "subtitle": "plantz.subtitles.entity.plant_explode"
+  },
+
   "entity.gnome.voice_1.ambient": {"sounds": [
     { "name": "plantz:entity/gnome/voice_1/ambient_1", "volume": 1.0 },
     { "name": "plantz:entity/gnome/voice_1/ambient_2", "volume": 1.0 },
