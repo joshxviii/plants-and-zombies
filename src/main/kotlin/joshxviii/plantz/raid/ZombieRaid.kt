@@ -72,12 +72,12 @@ class ZombieRaid(
     private val waveToLeaderMap: MutableMap<Int, Zombie> = Maps.newHashMap<Int, Zombie>()
     private val random: RandomSource = RandomSource.create()
     val zombieRaidEvent = ServerBossEvent(Mth.createInsecureUUID(random), ZOMBIE_RAID_BAR_START, BossEvent.BossBarColor.GREEN, BossEvent.BossBarOverlay.NOTCHED_10)
-    private var raidStatus: ZombieRaidStatus = ZombieRaidStatus.ONGOING
     private val waveZombieMap: MutableMap<Int, MutableSet<Zombie>> = Maps.newHashMap<Int, MutableSet<Zombie>>()
     var waveSpawnPos : BlockPos? = null
 
     enum class ZombieRaidStatus(private val state: String) : StringRepresentable {
         ONGOING("ongoing"),
+        NEXT_WAVE("next_wave"),
         VICTORY("victory"),
         LOSS("loss"),
         STOPPED("stopped");
@@ -109,7 +109,7 @@ class ZombieRaid(
             event.setName(title)
         }
 
-        level.playSound(null, center, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.4f, 0.4f)
+        level.playSound(null, center, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.05f, 1.5f)
 
         if (postRaidTicks > 0) { postRaidTicks-- // post-loading time
             if (postRaidTicks <= 0) stop()
@@ -118,10 +118,12 @@ class ZombieRaid(
 
         if (getTotalZombiesAlive() == 0 && raidCooldownTicks > 0) { raidCooldownTicks-- // pre-loading time
             if (raidCooldownTicks <= 0) {
+                status = ZombieRaidStatus.ONGOING
                 raidCooldownTicks = PRE_RAID_TICKS
                 zombieRaidEvent.name = ZOMBIE_RAID_BAR
             }
             else {
+                status = ZombieRaidStatus.NEXT_WAVE
                 zombieRaidEvent.progress += 1f/PRE_RAID_TICKS
                 return
             }
@@ -224,6 +226,7 @@ class ZombieRaid(
     }
 
     fun joinRaid(level: ServerLevel, zombie: Zombie, waveNumber: Int = wavesSpawned, exists: Boolean = true, pos: BlockPos? = null) {
+        if (status != ZombieRaidStatus.ONGOING) return
         val added = addWaveMob(zombie, waveNumber)
         if (added) {
             if (!exists && pos != null) {

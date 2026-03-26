@@ -126,9 +126,9 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
         val allStar: AllStar,
     ) : Goal() {
         companion object {
-            const val CHARGE_DELAY_TIME = 60
+            const val CHARGE_DELAY_TIME = 70
         }
-        var chargeTime = allStar.random.nextInt(20,60)
+        var chargeTime = allStar.random.nextInt(40,50)
 
         override fun canUse(): Boolean {
             if (allStar.chargingTime>0) return true
