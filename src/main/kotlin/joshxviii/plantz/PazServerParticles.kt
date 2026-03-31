@@ -11,6 +11,7 @@ object PazServerParticles {
     @JvmField val PEA_HIT: SimpleParticleType = register("pea")
     @JvmField val ICE_PEA_HIT: SimpleParticleType = register("pea_ice")
     @JvmField val FIRE_PEA_HIT: SimpleParticleType = register("pea_fire")
+    @JvmField val HYPNO_SPORE: SimpleParticleType = register("hypno_spore")
     @JvmField val SPORE: SimpleParticleType = register("spore")
     @JvmField val SPORE_HIT: SimpleParticleType = register("spore_hit")
     @JvmField val FUME_BUBBLE: SimpleParticleType = register("fume_bubble")

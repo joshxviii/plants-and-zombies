@@ -2,6 +2,7 @@ package joshxviii.plantz
 
 import joshxviii.plantz.particles.EmberParticle
 import joshxviii.plantz.particles.FumeBubbleParticle
+import joshxviii.plantz.particles.HypnoSporeParticle
 import joshxviii.plantz.particles.NotifyParticle
 import joshxviii.plantz.particles.PeaParticle
 import joshxviii.plantz.particles.SleepParticle
@@ -29,6 +30,10 @@ object PazParticles {
 
         it.register(PazServerParticles.FIRE_PEA_HIT) { spriteSet ->
             PeaParticle.Provider(spriteSet)
+        }
+
+        it.register(PazServerParticles.HYPNO_SPORE) { spriteSet ->
+            HypnoSporeParticle.Provider(spriteSet)
         }
 
         it.register(PazServerParticles.SPORE) { spriteSet ->
