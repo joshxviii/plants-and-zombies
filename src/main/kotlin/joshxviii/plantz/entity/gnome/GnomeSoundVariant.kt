@@ -16,12 +16,13 @@ import java.util.function.IntFunction
  */
 enum class GnomeSoundVariant(val variant: String, val id: Int, ) : StringRepresentable {
     VOICE_1("voice_1", 0),
-    VOICE_2("voice_2", 1),
-    VOICE_3("voice_3", 2),
-    VOICE_4("voice_4", 3),
-    VOICE_5("voice_5", 4),
-    VOICE_6("voice_6", 5),
-    VOICE_7("voice_7", 6);
+    VOICE_2("voice_2", 1);
+    // TODO: Added the other voices besides 1 & 2
+//    VOICE_3("voice_3", 2),
+//    VOICE_4("voice_4", 3),
+//    VOICE_5("voice_5", 4),
+//    VOICE_6("voice_6", 5),
+//    VOICE_7("voice_7", 6);
 
     override fun getSerializedName(): String = variant
     fun getSoundSet(): GnomeSoundSet = PazSounds.GNOME_SOUNDS[this]!!
