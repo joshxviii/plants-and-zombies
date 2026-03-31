@@ -6,7 +6,13 @@ import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.PazTags.EntityTypes.CANNOT_CHOMP
 import joshxviii.plantz.ai.goal.MeleeAttackActionGoal
+import joshxviii.plantz.entity.zombie.AllStar
+import joshxviii.plantz.entity.zombie.AllStar.Companion.CHARGE_TIME_ID
 import joshxviii.plantz.pazResource
+import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntityType
@@ -26,6 +32,16 @@ class Chomper(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CHO
         private val CHOMP_ATTACK_MODIFIER = AttributeModifier(
             pazResource("chomp_attack"), 100.0, AttributeModifier.Operation.ADD_MULTIPLIED_BASE
         )
+        val CHEW_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Chomper::class.java, EntityDataSerializers.INT)
+    }
+
+    var chewTime: Int
+        get() = this.entityData.get(CHEW_TIME_ID)
+        set(value) = this.entityData.set(CHEW_TIME_ID, value)
+
+    override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
+        super.defineSynchedData(entityData)
+        entityData.define(CHEW_TIME_ID, 0)
     }
 
     override fun registerGoals() {
@@ -40,17 +56,31 @@ class Chomper(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CHO
         })
     }
 
+    override fun tick() {
+        super.tick()
+        if (chewTime > 0) {
+            chewTime--
+            coolDownAnimationState.startIfStopped(tickCount)
+            if (random.nextInt(15) == 1) addParticlesAroundSelf(
+                particle = PazServerParticles.SPORE_HIT,
+                amount = 4,
+                height = 0.5f
+            )
+        }
+    }
+
     class ChompAttackGoal(
-        plantEntity: Plant,
+        val chomperEntity: Chomper,
     ) : MeleeAttackActionGoal(
-        usingEntity = plantEntity,
+        usingEntity = chomperEntity,
         attackReach = 1.85,
         cooldownTime = 60,
         actionDelay = 10,
         damageType = PazDamageTypes.CHOMP,
         actionStartEffect = {
-            plantEntity.playSound(PazSounds.CHOMPER_ATTACK)
-        }
+            chomperEntity.playSound(PazSounds.CHOMPER_ATTACK)
+        },
+        actionPredicate = { chomperEntity.chewTime <= 0 }
     ) {
         override fun doAction() : Boolean {
             val target = usingEntity.target?: return false
@@ -71,6 +101,7 @@ class Chomper(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CHO
                     0.32
                 )
                 target.discard()
+                chomperEntity.chewTime = 160
             }
             return true
         }

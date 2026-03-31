@@ -334,7 +334,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 state = PlantState.COOLDOWN
             }
             PlantState.COOLDOWN -> {
-                //this.coolDownAnimationState.startIfStopped(this.tickCount)
                 if (cooldown <= 0) {
                     state = PlantState.IDLE
                 }
@@ -493,12 +492,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         particle: ParticleOptions = ParticleTypes.SPLASH,
         amount: Int = 8,
         horizontalSpreadScale: Double = 0.3,
-        verticalSpreadScale: Double = 0.5
+        verticalSpreadScale: Double = 0.5,
+        height: Float = 0.0f
     ) {
         if (level is ServerLevel) {
             level.sendParticles(
                 particle,
-                x, y, z,
+                x, y + height, z,
                 amount,
                 horizontalSpreadScale, verticalSpreadScale, horizontalSpreadScale,
                 0.0
@@ -512,7 +512,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
             // Position inside the bounding box
             val px = getRandomX(horizontalSpreadScale)
-            val py = y + random.nextDouble() * bbHeight * verticalSpreadScale
+            val py = y + height + random.nextDouble() * bbHeight * verticalSpreadScale
             val pz = getRandomZ(horizontalSpreadScale)
 
             level.addParticle(
