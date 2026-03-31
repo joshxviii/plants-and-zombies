@@ -8,9 +8,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.tickTimeFormat
 import net.minecraft.SharedConstants
 import net.minecraft.core.BlockPos
 import net.minecraft.core.BlockPos.MutableBlockPos
+import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerBossEvent
 import net.minecraft.server.level.ServerLevel
@@ -20,6 +22,7 @@ import net.minecraft.sounds.SoundSource
 import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
 import net.minecraft.util.StringRepresentable
+import net.minecraft.util.TimeSource
 import net.minecraft.world.BossEvent
 import net.minecraft.world.Difficulty
 import net.minecraft.world.entity.EntitySpawnReason
@@ -28,7 +31,9 @@ import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.SpawnGroupData
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.levelgen.Heightmap
+import java.util.concurrent.TimeUnit
 import java.util.function.Predicate
+import kotlin.time.Duration
 
 class ZombieRaid(
     val center: BlockPos,
@@ -41,6 +46,7 @@ class ZombieRaid(
     var postRaidTicks: Int = 0,
     var totalHealth: Float = 0f,
     var numWaves: Int = 0,
+    var waveTimer: Int = 0,
     var status: ZombieRaidStatus = ZombieRaidStatus.ONGOING,
     val difficulty: Difficulty = Difficulty.NORMAL,
 ) {
@@ -58,6 +64,7 @@ class ZombieRaid(
                 Codec.INT.fieldOf("post_raid_ticks").forGetter<ZombieRaid> { it.postRaidTicks },
                 Codec.FLOAT.fieldOf("total_health").forGetter<ZombieRaid> { it.totalHealth },
                 Codec.INT.fieldOf("wave_count").forGetter<ZombieRaid> { it.numWaves },
+                Codec.INT.fieldOf("wave_timer").forGetter<ZombieRaid> { it.waveTimer },
                 ZombieRaidStatus.CODEC.fieldOf("status").forGetter<ZombieRaid> { it.status },
             ).apply<ZombieRaid>(r, ::ZombieRaid )
         }
@@ -65,6 +72,7 @@ class ZombieRaid(
         val ZOMBIE_RAID_BAR_START: Component = Component.translatable("event.plantz.zombie_raid.start")
         val ZOMBIE_RAID_BAR_VICTORY: Component = Component.translatable("event.plantz.zombie_raid.victory")
         val ZOMBIE_RAID_BAR_DEFEAT: Component = Component.translatable("event.plantz.zombie_raid.defeat")
+        const val WAVE_DURATION_TICKS: Int = 3000 // 2.5 minutes
         const val PRE_RAID_TICKS: Int = 300
         const val POST_RAID_TICKS: Int = 80
     }
@@ -106,17 +114,32 @@ class ZombieRaid(
                 .append(", Zombies Alive: ${getTotalZombiesAlive()}")
                 .append(", Health: ${getHealthOfZombies()}/$totalHealth")
                 .append(", Status: ${status.getSerializedName().uppercase()}")
+                .append(", Timer: ${waveTimer.tickTimeFormat()}")
             event.setName(title)
+
+            level.playSound(null, center, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.05f, 1.5f)
+
+            level.sendParticles(
+                ParticleTypes.HAPPY_VILLAGER,
+                center.x + 0.5,
+                center.y + 0.5,
+                center.z + 0.5,
+                1, 0.1, 0.1, 0.1, 0.1
+            )
         }
 
-        level.playSound(null, center, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.05f, 1.5f)
 
         if (postRaidTicks > 0) { postRaidTicks-- // post-loading time
             if (postRaidTicks <= 0) stop()
             return
         }
 
-        if (getTotalZombiesAlive() == 0 && raidCooldownTicks > 0) { raidCooldownTicks-- // pre-loading time
+        if (
+            (getTotalZombiesAlive() == 0 && raidCooldownTicks > 0) ||
+            (waveTimer == 0 && wavesSpawned < numWaves)
+        ) {
+            raidCooldownTicks-- // pre-loading time
+            waveTimer = 0
             if (raidCooldownTicks <= 0) {
                 status = ZombieRaidStatus.ONGOING
                 raidCooldownTicks = PRE_RAID_TICKS
@@ -124,10 +147,12 @@ class ZombieRaid(
             }
             else {
                 status = ZombieRaidStatus.NEXT_WAVE
-                zombieRaidEvent.progress += 1f/PRE_RAID_TICKS
+                zombieRaidEvent.progress = (zombieRaidEvent.progress + 1f/PRE_RAID_TICKS).coerceAtMost(1.0f)
                 return
             }
         }
+
+        if (waveTimer>0) waveTimer--
 
         if (shouldSpawnNextWave()) {
             val spawnPos = findRandomSpawnPos(level, 20) ?: center
@@ -204,6 +229,7 @@ class ZombieRaid(
 
 
     private fun spawnNextWave(level: ServerLevel, pos: BlockPos) {
+        waveTimer = WAVE_DURATION_TICKS
         var leaderSet = false
         totalHealth = 0.0f
         for (zombieType in ZombieRaiderType.VALUES) {
@@ -294,7 +320,7 @@ class ZombieRaid(
     fun getHealthOfZombies(): Float = waveZombieMap.values.map { it.map { z -> if (z.isAlive) z.health else 0f }.sum() }.sum()
 
     private fun shouldSpawnNextWave(): Boolean {
-        return getTotalZombiesAlive() == 0
+        return (getTotalZombiesAlive() == 0 || waveTimer == 0)
             && status == ZombieRaidStatus.ONGOING
             && wavesSpawned < numWaves
     }

@@ -29,6 +29,11 @@ fun LivingEntity.canArmorAbsorbDamage(source: DamageSource): Boolean {
     return false
 }
 
+fun Int.tickTimeFormat(): String = "%02d:%02d".format(
+    (this / 20 / 60) % 60,
+    (this / 20) % 60,
+)
+
 fun <T : LivingEntity?> ServerEntityGetter.getFurthestEntities(
     entities: MutableList<out T>,
     targetConditions: TargetingConditions,
