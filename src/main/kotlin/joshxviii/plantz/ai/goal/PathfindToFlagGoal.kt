@@ -1,24 +1,18 @@
 package joshxviii.plantz.ai.goal
 
 import joshxviii.plantz.PazBlocks.PLANTZ_FLAG
-import joshxviii.plantz.PazBlocks.PLANTZ_FLAG_POI
 import joshxviii.plantz.PazEntities.PLANT_TEAM
 import joshxviii.plantz.lookAtBlockPos
 import joshxviii.plantz.moveToBlockPos
 import joshxviii.plantz.raid.getZombieRaids
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Holder
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.PathfinderMob
-import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.Goal
-import net.minecraft.world.entity.ai.village.poi.PoiManager.Occupancy
-import net.minecraft.world.entity.ai.village.poi.PoiType
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.pathfinder.Path
 import java.util.*
 import kotlin.math.max
-import kotlin.math.min
 
 class PathfindToFlagGoal(
     val mob: PathfinderMob,

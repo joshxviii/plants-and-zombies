@@ -1,8 +1,8 @@
 package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
-import joshxviii.plantz.entity.projectile.PeaIce
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
+import joshxviii.plantz.entity.projectile.PeaIce
 import net.minecraft.tags.BlockTags
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob

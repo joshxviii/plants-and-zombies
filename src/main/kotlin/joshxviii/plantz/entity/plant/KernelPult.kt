@@ -2,10 +2,8 @@ package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
-import joshxviii.plantz.entity.plant.ScaredyShroom.Companion.HIDING_FLAG
 import joshxviii.plantz.entity.projectile.Butter
 import joshxviii.plantz.entity.projectile.Kernel
-import joshxviii.plantz.entity.projectile.Melon
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData

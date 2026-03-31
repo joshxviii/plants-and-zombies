@@ -5,19 +5,13 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import io.netty.buffer.ByteBuf
 import net.minecraft.ChatFormatting
 import net.minecraft.core.component.DataComponentGetter
-import net.minecraft.core.component.DataComponentType
 import net.minecraft.network.chat.Component
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
-import net.minecraft.resources.Identifier
-import net.minecraft.util.StringRepresentable
-import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.item.Item.TooltipContext
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.component.TooltipProvider
-import net.minecraft.world.item.equipment.Equippable
-import java.util.Optional
 import java.util.function.Consumer
 
 class BlocksProjectileDamage(

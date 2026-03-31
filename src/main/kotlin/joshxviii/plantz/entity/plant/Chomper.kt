@@ -1,20 +1,12 @@
 package joshxviii.plantz.entity.plant
 
-import joshxviii.plantz.PazDamageTypes
-import joshxviii.plantz.PazEntities
-import joshxviii.plantz.PazServerParticles
-import joshxviii.plantz.PazSounds
+import joshxviii.plantz.*
 import joshxviii.plantz.PazTags.EntityTypes.CANNOT_CHOMP
 import joshxviii.plantz.ai.goal.MeleeAttackActionGoal
-import joshxviii.plantz.entity.zombie.AllStar
-import joshxviii.plantz.entity.zombie.AllStar.Companion.CHARGE_TIME_ID
-import joshxviii.plantz.pazResource
-import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.AttributeModifier

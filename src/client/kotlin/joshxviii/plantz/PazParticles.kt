@@ -1,12 +1,6 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.particles.EmberParticle
-import joshxviii.plantz.particles.FumeBubbleParticle
-import joshxviii.plantz.particles.HypnoSporeParticle
-import joshxviii.plantz.particles.NotifyParticle
-import joshxviii.plantz.particles.PeaParticle
-import joshxviii.plantz.particles.SleepParticle
-import joshxviii.plantz.particles.SporeParticle
+import joshxviii.plantz.particles.*
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry
 import net.minecraft.client.particle.CritParticle
 import net.minecraft.client.particle.SpellParticle

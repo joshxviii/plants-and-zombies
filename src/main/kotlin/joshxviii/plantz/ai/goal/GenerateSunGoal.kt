@@ -1,7 +1,7 @@
 package joshxviii.plantz.ai.goal
 
-import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.Sun
+import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.PathfinderMob

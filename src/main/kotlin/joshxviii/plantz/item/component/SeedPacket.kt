@@ -14,7 +14,7 @@ import net.minecraft.resources.Identifier
 import net.minecraft.world.item.Item.TooltipContext
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.component.TooltipProvider
-import java.util.Optional
+import java.util.*
 import java.util.function.Consumer
 
 /**

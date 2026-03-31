@@ -7,7 +7,6 @@ import net.minecraft.client.particle.RisingParticle
 import net.minecraft.client.particle.SpriteSet
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.core.particles.SimpleParticleType
-import net.minecraft.util.LightCoordsUtil
 import net.minecraft.util.RandomSource
 import kotlin.math.pow
 

@@ -22,7 +22,6 @@ import net.minecraft.sounds.SoundSource
 import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
 import net.minecraft.util.StringRepresentable
-import net.minecraft.util.TimeSource
 import net.minecraft.world.BossEvent
 import net.minecraft.world.Difficulty
 import net.minecraft.world.entity.EntitySpawnReason
@@ -31,9 +30,7 @@ import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.SpawnGroupData
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.levelgen.Heightmap
-import java.util.concurrent.TimeUnit
 import java.util.function.Predicate
-import kotlin.time.Duration
 
 class ZombieRaid(
     val center: BlockPos,

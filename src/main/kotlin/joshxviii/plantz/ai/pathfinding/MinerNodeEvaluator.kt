@@ -3,7 +3,10 @@ package joshxviii.plantz.ai.pathfinding
 import joshxviii.plantz.PazTags
 import net.minecraft.core.BlockPos
 import net.minecraft.world.entity.Mob
-import net.minecraft.world.level.pathfinder.*
+import net.minecraft.world.level.pathfinder.Node
+import net.minecraft.world.level.pathfinder.PathType
+import net.minecraft.world.level.pathfinder.PathfindingContext
+import net.minecraft.world.level.pathfinder.WalkNodeEvaluator
 
 class MinerNodeEvaluator : WalkNodeEvaluator() {
     var userMiner = false

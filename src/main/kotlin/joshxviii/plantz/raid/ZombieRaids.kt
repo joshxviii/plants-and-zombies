@@ -10,14 +10,12 @@ import net.minecraft.core.Holder
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NbtOps
 import net.minecraft.nbt.Tag
-import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.VisibleForDebug
 import net.minecraft.util.datafix.DataFixTypes
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.ChunkPos
-import net.minecraft.world.level.dimension.BuiltinDimensionTypes
 import net.minecraft.world.level.dimension.DimensionType
 import net.minecraft.world.level.gamerules.GameRules
 import net.minecraft.world.level.saveddata.SavedData

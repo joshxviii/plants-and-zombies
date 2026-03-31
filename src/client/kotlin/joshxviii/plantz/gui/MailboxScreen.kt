@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.cursor.CursorTypes
 import joshxviii.plantz.inventory.MailboxMenu
 import joshxviii.plantz.networking.SendMailPayload
 import joshxviii.plantz.pazResource
-import kotlinx.coroutines.delay
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button

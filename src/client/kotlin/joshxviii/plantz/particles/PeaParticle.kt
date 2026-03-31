@@ -1,6 +1,5 @@
 package joshxviii.plantz.particles
 
-import net.minecraft.client.Camera
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.particle.ParticleProvider
@@ -10,7 +9,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
-import org.joml.Quaternionf
 import kotlin.math.max
 
 class PeaParticle private constructor(

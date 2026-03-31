@@ -3,14 +3,10 @@ package joshxviii.plantz.ai.goal
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.entity.plant.Plant
-import net.minecraft.core.particles.ExplosionParticleInfo
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.random.WeightedList
-import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.damagesource.DamageSources
-import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.goal.Goal

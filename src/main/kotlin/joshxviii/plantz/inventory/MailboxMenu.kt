@@ -1,10 +1,7 @@
 package joshxviii.plantz.inventory
 
-import joshxviii.plantz.MailboxData
 import joshxviii.plantz.PazMenus
 import joshxviii.plantz.PazTags
-import joshxviii.plantz.block.MailboxBlock
-import joshxviii.plantz.block.MailboxBlock.Companion.FACING
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.block.entity.MailboxManager
 import net.minecraft.core.BlockPos
@@ -19,7 +16,6 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import java.util.*
-import java.util.function.BiConsumer
 
 class MailboxMenu(
     containerId: Int,

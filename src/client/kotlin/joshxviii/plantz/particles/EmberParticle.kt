@@ -8,7 +8,6 @@ import net.minecraft.client.particle.SpriteSet
 import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.util.LightCoordsUtil
 import net.minecraft.util.RandomSource
-import kotlin.math.pow
 
 class EmberParticle private constructor(
     level: ClientLevel, x: Double, y: Double, z: Double, xd: Double, yd: Double, zd: Double,

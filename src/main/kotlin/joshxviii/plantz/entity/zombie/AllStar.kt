@@ -1,11 +1,7 @@
 package joshxviii.plantz.entity.zombie
 
-import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
-import joshxviii.plantz.entity.zombie.DiscoZombie.SummonBackupGoal
-import net.minecraft.core.BlockPos
-import net.minecraft.core.Direction
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -14,22 +10,13 @@ import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
-import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.entity.ai.goal.Goal
-import net.minecraft.world.entity.ai.goal.Goal.getServerLevel
-import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
-import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.level.gameevent.GameEvent
-import net.minecraft.world.phys.Vec3
-import kotlin.math.max
-import kotlin.math.min
 
 class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, level) {
     companion object {
