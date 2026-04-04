@@ -2,6 +2,7 @@
   "values": [
     "#plantz:plant_projectile",
     "plantz:plant_chomp",
-    "plantz:plant_explode"
+    "plantz:plant_explode",
+    "plantz:plant_fume"
   ]
 }

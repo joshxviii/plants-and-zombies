@@ -18,7 +18,7 @@ class PotatoMine(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
         super.registerGoals()
         this.goalSelector.addGoal(1, ExplodeGoal(
             plantEntity = this,
-            radius = 0.5f,
+            radius = 0.75f,
             detectRange = 2.0,
             actionPredicate = { cooldown < 0 },
         ))

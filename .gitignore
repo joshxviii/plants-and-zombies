@@ -39,3 +39,6 @@ replay_*.log
 *.hprof
 *.jfr
 /.kotlin/sessions
+/external-assets/world_save/Neighborville/data
+/external-assets/world_save/Neighborville/dimensions
+/external-assets/world_save/Neighborville/players

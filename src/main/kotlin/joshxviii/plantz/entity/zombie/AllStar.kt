@@ -2,11 +2,13 @@ package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
+import joshxviii.plantz.pazResource
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -14,6 +16,8 @@ import net.minecraft.util.RandomSource
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
+import net.minecraft.world.entity.ai.attributes.AttributeModifier
+import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
@@ -21,6 +25,7 @@ import net.minecraft.world.level.ServerLevelAccessor
 class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, level) {
     companion object {
         val CHARGE_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(AllStar::class.java, EntityDataSerializers.INT)
+        val CHARGE_BOOST_ID: Identifier = pazResource("charge_boost")
     }
 
     init {
@@ -49,28 +54,42 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
-        entityData.define(CHARGE_TIME_ID, 0)
+        entityData.define(CHARGE_TIME_ID, -1)
     }
 
     override fun tick() {
         super.tick()
         val level = level()
-        if(chargingTime>0) {
+        if(chargingTime>=0) {
             chargeAnimation.startIfStopped(tickCount)
-            if (level is ServerLevel) level.sendParticles(
-                BlockParticleOption(ParticleTypes.BLOCK, level.getBlockState(blockPosition().below())),
-                x, y + 0.05, z, 1, 0.0, 0.0, 0.0, 0.6
-            )
-            chargingTime++
+            if (level is ServerLevel) {
+                level.sendParticles(
+                    BlockParticleOption(ParticleTypes.BLOCK, level.getBlockState(blockPosition().below())),
+                    x, y + 0.05, z, 1, 0.0, 0.0, 0.0, 0.6
+                )
+                if (tickCount%2==0) level.sendParticles(
+                    ParticleTypes.WHITE_SMOKE,
+                    x, eyeHeight+y, z, 2, 0.1, 0.2, 0.1, 0.2
+                )
+            }
+            if (chargingTime==0) removeChargeBoost()
+            chargingTime--
         }
-        if (chargingTime>30) {
-            chargeAnimation.stop()
-            chargingTime=0
-        }
+        else chargeAnimation.stop()
     }
 
-    override fun getSpeed(): Float {
-        return super.getSpeed() * if (chargingTime>0) 3.25f else 1f
+    fun removeChargeBoost() {
+        getAttribute(Attributes.KNOCKBACK_RESISTANCE)!!.removeModifier(CHARGE_BOOST_ID)
+        getAttribute(Attributes.MOVEMENT_SPEED)!!.removeModifier(CHARGE_BOOST_ID)
+        getAttribute(Attributes.ATTACK_KNOCKBACK)!!.removeModifier(CHARGE_BOOST_ID)
+    }
+    fun applyChargeBoost() {
+        getAttribute(Attributes.KNOCKBACK_RESISTANCE)!!
+            .addTransientModifier(AttributeModifier(CHARGE_BOOST_ID, 99.0, AttributeModifier.Operation.ADD_VALUE))
+        getAttribute(Attributes.MOVEMENT_SPEED)!!
+            .addTransientModifier(AttributeModifier(CHARGE_BOOST_ID, 0.15, AttributeModifier.Operation.ADD_VALUE))
+        getAttribute(Attributes.ATTACK_KNOCKBACK)!!
+            .addTransientModifier(AttributeModifier(CHARGE_BOOST_ID, 4.0, AttributeModifier.Operation.ADD_VALUE))
     }
 
     override fun registerGoals() {
@@ -115,21 +134,22 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
         companion object {
             const val CHARGE_DELAY_TIME = 70
         }
-        var chargeTime = allStar.random.nextInt(40,50)
+        var chargeDelayTime = allStar.random.nextInt(40,50)
 
         override fun canUse(): Boolean {
-            if (allStar.chargingTime>0) return true
             allStar.target?.distanceTo(allStar)?.let { if (it < 2f) return false }
             return allStar.isAggressive && !allStar.isDeadOrDying
         }
 
         override fun tick() {
             super.tick()
-            if (--chargeTime == 0) {
+            if (--chargeDelayTime == 0) {
+                allStar.applyChargeBoost()
                 allStar.playSound(SoundEvents.WIND_CHARGE_BURST.value(), 1.5f, 1.3f)
-                allStar.chargingTime=1
+                allStar.playSound(PazSounds.ALL_STAR_WHISTLE)
+                allStar.chargingTime = 30
+                chargeDelayTime = CHARGE_DELAY_TIME + allStar.random.nextInt(40)
             }
-            if (chargeTime<-8) chargeTime = CHARGE_DELAY_TIME + allStar.random.nextInt(40)
         }
     }
 
