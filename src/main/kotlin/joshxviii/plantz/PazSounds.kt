@@ -40,6 +40,7 @@ object PazSounds {
     @JvmField val ALL_STAR_AMBIENT = register("entity.all_star.ambient")
     @JvmField val ALL_STAR_HURT = register("entity.all_star.hurt")
     @JvmField val ALL_STAR_DEATH = register("entity.all_star.death")
+    @JvmField val ALL_STAR_WHISTLE = register("entity.all_star.whistle")
     @JvmField val GARGANTUAR_AMBIENT = register("entity.gargantuar.ambient")
     @JvmField val GARGANTUAR_HURT = register("entity.gargantuar.hurt")
     @JvmField val GARGANTUAR_DEATH = register("entity.gargantuar.death")
