@@ -131,16 +131,15 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        var groupData = groupData
+        val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
         val random = level.random
-        groupData = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
         val difficultyModifier = difficulty.specialMultiplier
         if (spawnReason != EntitySpawnReason.CONVERSION) {
             setCanBreakDoors(true)
             setItemSlot(EquipmentSlot.HEAD, PazItems.FOOTBALL_HELMET.asItem().defaultInstance)
         }
 
-        return groupData
+        return data
     }
 
 

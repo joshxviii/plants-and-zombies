@@ -54,6 +54,7 @@ class ExplodeGoal(
 
     override fun stop() {
         target = null
+        plantEntity.swellDir = -1
     }
 
     override fun requiresUpdateEveryTick(): Boolean {

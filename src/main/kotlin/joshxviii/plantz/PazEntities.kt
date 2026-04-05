@@ -114,6 +114,7 @@ object PazEntities {
         height = 0.76f,
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 50.0,
+            followRange = 3.75
         )
     )
     @JvmField val POTATO_MINE: EntityType<PotatoMine> = registerPlant(
@@ -122,6 +123,9 @@ object PazEntities {
         sunCost = 3,
         width = 0.55f,
         height = 0.35f,
+        attributes = Plant.Companion.PlantAttributes(
+            followRange = 3.75
+        )
     )
     @JvmField val ICE_PEA_SHOOTER: EntityType<IcePeaShooter> = registerPlant(
         "ice_peashooter",
@@ -231,6 +235,7 @@ object PazEntities {
         height = 1.3f,
         eyeHeight = 0.3f,
         attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 3.0,
             attackDamage = 2.0,
             followRange = 20.0
         )

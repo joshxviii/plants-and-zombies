@@ -45,9 +45,8 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        var groupData = groupData
+        val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
         val random = level.random
-        groupData = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
         val difficultyModifier = difficulty.specialMultiplier
         if (spawnReason != EntitySpawnReason.CONVERSION) {
             setCanPickUpLoot(true)
@@ -65,6 +64,6 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
             }
         }
 
-        return groupData
+        return data
     }
 }

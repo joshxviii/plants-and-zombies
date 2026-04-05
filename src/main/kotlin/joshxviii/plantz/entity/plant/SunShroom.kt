@@ -17,7 +17,8 @@ class SunShroom(
         this.goalSelector.addGoal(1, GenerateSunGoal(
             usingEntity = this,
             actionDelay = 10,
-            generatesAtNight = true
+            generatesAtNight = true,
+            sunAmount = 2
         ))
     }
 

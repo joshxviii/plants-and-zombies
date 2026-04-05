@@ -18,9 +18,9 @@ class PotatoMine(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
         super.registerGoals()
         this.goalSelector.addGoal(1, ExplodeGoal(
             plantEntity = this,
-            radius = 0.75f,
+            radius = 2.0f,
             detectRange = 2.0,
-            actionPredicate = { cooldown < 0 },
+            actionPredicate = { cooldown < 0 && target.let { it!=null && it.distanceTo(this) <= 0.75} },
         ))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->
             target is Enemy

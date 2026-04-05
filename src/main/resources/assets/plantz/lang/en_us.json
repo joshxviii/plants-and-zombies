@@ -12,6 +12,7 @@
   "death.attack.fume_plant": "%1$s inhaled too many of %2$s's toxic fumes",
 
   "event.plantz.zombie_raid": "Zombie Raid",
+  "event.plantz.zombie_raid.wave": "Next wave in %s",
   "event.plantz.zombie_raid.start": "The Zombies are coming...",
   "event.plantz.zombie_raid.huge_wave": "A huge wave of Zombies is approaching!",
   "event.plantz.zombie_raid.victory": "Victory!",

@@ -49,7 +49,7 @@ object PazItems {
     @JvmField
     val SUN: Item = registerItem(
         "sun", ::SunItem,
-        properties = Item.Properties().stacksTo(99)
+        properties = Item.Properties().stacksTo(64)
     )
     @JvmField
     val NEWSPAPER: Item = registerItem(

@@ -51,9 +51,8 @@ class Imp(type: EntityType<out Imp>, level: Level) : PazZombie(type, level) {
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        var groupData = groupData
+        val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
         val random = level.random
-        groupData = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
         val difficultyModifier = difficulty.specialMultiplier
         if (spawnReason != EntitySpawnReason.CONVERSION) {
             setCanPickUpLoot(false)
@@ -71,6 +70,6 @@ class Imp(type: EntityType<out Imp>, level: Level) : PazZombie(type, level) {
             }
         }
 
-        return groupData
+        return data
     }
 }

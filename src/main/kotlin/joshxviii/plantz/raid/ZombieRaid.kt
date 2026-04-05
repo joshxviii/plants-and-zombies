@@ -168,12 +168,15 @@ class ZombieRaid(
             postRaidTicks = POST_RAID_TICKS
         }
         // lose condition
-        if (!level.getBlockState(center).`is`(PazBlocks.PLANTZ_FLAG)) {
+        else if (!level.getBlockState(center).`is`(PazBlocks.PLANTZ_FLAG)) {
             status = ZombieRaidStatus.LOSS
             zombieRaidEvent.progress = 1.0f
             zombieRaidEvent.color = BossEvent.BossBarColor.RED
             zombieRaidEvent.name = ZOMBIE_RAID_BAR_DEFEAT
             postRaidTicks = POST_RAID_TICKS
+        }
+        else {
+            zombieRaidEvent.setName(Component.translatable("event.plantz.zombie_raid.wave", waveTimer.tickTimeFormat()))
         }
 
         if (ticksActive % 20L == 0L) {
