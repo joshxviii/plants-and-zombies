@@ -7,7 +7,6 @@ object PazClient : ClientModInitializer {
 		PazModels.registerAll()
 		PazParticles.registerAll()
 		PazScreens.registerAll()
-		PazRenderPipelines.initialize()
 		PazClientNetwork.initialize()
 	}
 }

@@ -34,6 +34,8 @@ object PazSounds {
     @JvmField val DISCO_ZOMBIE_AMBIENT = register("entity.disco_zombie.ambient")
     @JvmField val DISCO_ZOMBIE_HURT = register("entity.disco_zombie.hurt")
     @JvmField val DISCO_ZOMBIE_DEATH = register("entity.disco_zombie.death")
+    @JvmField val DISCO_ZOMBIE_BOOGIE = register("entity.disco_zombie.boogie")
+    @JvmField val DISCO_ZOMBIE_SUMMON = register("entity.disco_zombie.summon")
     @JvmField val IMP_AMBIENT = register("entity.imp.ambient")
     @JvmField val IMP_HURT = register("entity.imp.hurt")
     @JvmField val IMP_DEATH = register("entity.imp.death")

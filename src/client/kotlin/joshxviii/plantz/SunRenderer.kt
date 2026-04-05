@@ -81,7 +81,7 @@ class SunRenderer(context: EntityRendererProvider.Context) :
         private val EMISSIVE_SUN =
             RenderType.create(
                 "sun",
-                RenderSetup.builder(PazRenderPipelines.EMISSIVE_SUN)
+                RenderSetup.builder(RenderPipelines.EYES)
                     .withTexture("Sampler0", pazResource("textures/entity/sun.png"))
                     .setOutputTarget(OutputTarget.ITEM_ENTITY_TARGET)
                     .useLightmap()

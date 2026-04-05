@@ -35,13 +35,13 @@ class BackupDancer(type: EntityType<out BackupDancer> = PazEntities.BACKUP_DANCE
     }
 
     override fun getAmbientSound(): SoundEvent {
-        return PazSounds.DISCO_ZOMBIE_AMBIENT
+        return PazSounds.BACKUP_DANCER_AMBIENT
     }
     override fun getHurtSound(source: DamageSource): SoundEvent {
-        return PazSounds.DISCO_ZOMBIE_HURT
+        return PazSounds.BACKUP_DANCER_HURT
     }
     override fun getDeathSound(): SoundEvent {
-        return PazSounds.DISCO_ZOMBIE_DEATH
+        return PazSounds.BACKUP_DANCER_DEATH
     }
     override fun getStepSound(): SoundEvent {
         return SoundEvents.ZOMBIE_STEP

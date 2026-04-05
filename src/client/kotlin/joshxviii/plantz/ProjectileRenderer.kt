@@ -2,10 +2,9 @@ package joshxviii.plantz
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
-import joshxviii.plantz.PazRenderPipelines.EMISSIVE_PROJECTILE
-import joshxviii.plantz.PazRenderPipelines.PLANT_PROJECTILE
 import joshxviii.plantz.entity.projectile.PeaFire
 import net.minecraft.client.model.EntityModel
+import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
@@ -40,7 +39,7 @@ class ProjectileRenderer(
             poseStack,
             RenderType.create(
                 "plant_projectile",
-                RenderSetup.builder(if (state.emissive) EMISSIVE_PROJECTILE else PLANT_PROJECTILE)
+                RenderSetup.builder(if (state.emissive) RenderPipelines.EYES else RenderPipelines.ENTITY_SOLID)
                     .withTexture("Sampler0", getTextureLocation(state))
                     .useLightmap()
                     .sortOnUpload()

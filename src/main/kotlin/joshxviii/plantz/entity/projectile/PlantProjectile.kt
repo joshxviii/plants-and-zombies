@@ -146,9 +146,12 @@ abstract class PlantProjectile(
         val scaledMovement = offsetDirection.scale(0.05)
         this.setPos(this.position().subtract(scaledMovement))
         this.deltaMovement = Vec3.ZERO
-        this.setPierceLevel(0)
-        this.playSound(getHitSound(), 0.4f, 1.8f)
-        afterHitBlockEffect(hitResult.blockPos)
+        if (!isInGround()) {
+            this.setPierceLevel(0)
+            this.playSound(getHitSound(), 0.4f, 1.8f)
+            afterHitBlockEffect(hitResult.blockPos)
+            this.setInGround(true)
+        }
     }
 
     open fun afterHitEntityEffect(target: LivingEntity) {}

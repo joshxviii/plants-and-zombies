@@ -184,59 +184,65 @@
 
   "entity.backup_dancer.ambient": {
     "sounds": [
-      { "name": "plantz:entity/backup_dancer/ambient_1", "volume": 0.8 },
-      { "name": "plantz:entity/backup_dancer/ambient_2", "volume": 0.8 },
-      { "name": "plantz:entity/backup_dancer/ambient_3", "volume": 0.8 }
+      { "name": "plantz:entity/backup_dancer/ambient_1", "volume": 1.0, "pitch": 0.9 },
+      { "name": "plantz:entity/backup_dancer/ambient_2", "volume": 1.0, "pitch": 0.9 },
+      { "name": "plantz:entity/backup_dancer/ambient_3", "volume": 1.0, "pitch": 0.9 }
     ], "subtitle": "plantz.subtitles.entity.backup_dancer.ambient"
   },
   "entity.backup_dancer.hurt": {
     "sounds": [
-      { "name": "plantz:entity/backup_dancer/hurt_1", "volume": 0.8 },
-      { "name": "plantz:entity/backup_dancer/hurt_2", "volume": 0.8 },
-      { "name": "plantz:entity/backup_dancer/hurt_3", "volume": 0.8 }
+      { "name": "plantz:entity/backup_dancer/hurt_1", "volume": 1.0, "pitch": 0.9 },
+      { "name": "plantz:entity/backup_dancer/hurt_2", "volume": 1.0, "pitch": 0.9 },
+      { "name": "plantz:entity/backup_dancer/hurt_3", "volume": 1.0, "pitch": 0.9 }
     ], "subtitle": "plantz.subtitles.entity.backup_dancer.hurt"
   },
   "entity.backup_dancer.death": {
-    "sounds": [{ "name": "plantz:entity/backup_dancer/death", "volume": 0.8 }], "subtitle": "plantz.subtitles.entity.backup_dancer.death"
+    "sounds": [{ "name": "plantz:entity/backup_dancer/death", "volume": 1.0 }], "subtitle": "plantz.subtitles.entity.backup_dancer.death"
   },
 
   "entity.disco_zombie.ambient": {
     "sounds": [
-      { "name": "plantz:entity/disco_zombie/ambient_1", "volume": 0.8 },
-      { "name": "plantz:entity/disco_zombie/ambient_2", "volume": 0.8 },
-      { "name": "plantz:entity/disco_zombie/ambient_3", "volume": 0.8 }
+      { "name": "plantz:entity/disco_zombie/ambient_1", "volume": 1.0 },
+      { "name": "plantz:entity/disco_zombie/ambient_2", "volume": 1.0 },
+      { "name": "plantz:entity/disco_zombie/ambient_3", "volume": 1.0 }
     ], "subtitle": "plantz.subtitles.entity.disco_zombie.ambient"
   },
   "entity.disco_zombie.hurt": {
     "sounds": [
-      { "name": "plantz:entity/disco_zombie/hurt_1", "volume": 0.8 },
-      { "name": "plantz:entity/disco_zombie/hurt_2", "volume": 0.8 },
-      { "name": "plantz:entity/disco_zombie/hurt_3", "volume": 0.8 }
+      { "name": "plantz:entity/disco_zombie/hurt_1", "volume": 1.0 },
+      { "name": "plantz:entity/disco_zombie/hurt_2", "volume": 1.0 },
+      { "name": "plantz:entity/disco_zombie/hurt_3", "volume": 1.0 }
     ], "subtitle": "plantz.subtitles.entity.disco_zombie.hurt"
   },
+  "entity.disco_zombie.boogie": {
+    "sounds": [{ "name": "plantz:entity/disco_zombie/boogie", "volume": 1.0 }], "subtitle": "plantz.subtitles.entity.disco_zombie.boogie"
+  },
+  "entity.disco_zombie.summon": {
+    "sounds": [{ "name": "plantz:entity/disco_zombie/summon", "volume": 1.0 }], "subtitle": "plantz.subtitles.entity.disco_zombie.summon"
+  },
   "entity.disco_zombie.death": {
-    "sounds": [{ "name": "plantz:entity/disco_zombie/death", "volume": 0.8 }], "subtitle": "plantz.subtitles.entity.disco_zombie.death"
+    "sounds": [{ "name": "plantz:entity/disco_zombie/death", "volume": 1.0 }], "subtitle": "plantz.subtitles.entity.disco_zombie.death"
   },
 
   "entity.all_star.ambient": {
     "sounds": [
-      { "name": "plantz:entity/all_star/ambient_1", "volume": 0.8, "pitch": 0.9  },
-      { "name": "plantz:entity/all_star/ambient_2", "volume": 0.8, "pitch": 0.9  },
-      { "name": "plantz:entity/all_star/ambient_3", "volume": 0.8, "pitch": 0.9  }
+      { "name": "plantz:entity/all_star/ambient_1", "volume": 1.0, "pitch": 0.9  },
+      { "name": "plantz:entity/all_star/ambient_2", "volume": 1.0, "pitch": 0.9  },
+      { "name": "plantz:entity/all_star/ambient_3", "volume": 1.0, "pitch": 0.9  }
     ], "subtitle": "plantz.subtitles.entity.all_star.ambient"
   },
   "entity.all_star.hurt": {
     "sounds": [
-      { "name": "plantz:entity/all_star/hurt_1", "volume": 0.8, "pitch": 0.9 },
-      { "name": "plantz:entity/all_star/hurt_2", "volume": 0.8, "pitch": 0.9  },
-      { "name": "plantz:entity/all_star/hurt_3", "volume": 0.8, "pitch": 0.9  }
+      { "name": "plantz:entity/all_star/hurt_1", "volume": 1.0, "pitch": 0.9 },
+      { "name": "plantz:entity/all_star/hurt_2", "volume": 1.0, "pitch": 0.9  },
+      { "name": "plantz:entity/all_star/hurt_3", "volume": 1.0, "pitch": 0.9  }
     ], "subtitle": "plantz.subtitles.entity.all_star.hurt"
   },
   "entity.all_star.whistle": {
-    "sounds": [{ "name": "plantz:entity/all_star/whistle", "volume": 0.8, "pitch": 1.1 }], "subtitle": "plantz.subtitles.entity.all_star.whistle"
+    "sounds": [{ "name": "plantz:entity/all_star/whistle", "volume": 1.0, "pitch": 1.1 }], "subtitle": "plantz.subtitles.entity.all_star.whistle"
   },
   "entity.all_star.death": {
-    "sounds": [{ "name": "plantz:entity/all_star/death", "volume": 0.8, "pitch": 0.9 }], "subtitle": "plantz.subtitles.entity.all_star.death"
+    "sounds": [{ "name": "plantz:entity/all_star/death", "volume": 1.0, "pitch": 0.9 }], "subtitle": "plantz.subtitles.entity.all_star.death"
   },
 
   "entity.zombie_yeti.ambient": {

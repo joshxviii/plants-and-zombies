@@ -2,7 +2,7 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "bonus_rolls": 0.0,
+      "bonus_rolls": 0,
       "conditions": [
         {
           "condition": "minecraft:survives_explosion"
@@ -11,11 +11,27 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "plantz:brainz_flag"
+          "name": "plantz:plantz_flag",
+          "conditions": []
         }
       ],
-      "rolls": 1.0
+      "rolls": 1
     }
   ],
-  "random_sequence": "plantz:blocks/brainz_flag"
+  "functions": [
+    {
+      "function": "minecraft:set_item",
+      "item": "plantz:brainz_flag",
+      "conditions": [
+        {
+          "condition": "minecraft:entity_properties",
+          "entity": "attacker",
+          "predicate": {
+            "type": "#minecraft:zombies"
+          }
+        }
+      ]
+    }
+  ],
+  "random_sequence": "plantz:blocks/plantz_flag"
 }

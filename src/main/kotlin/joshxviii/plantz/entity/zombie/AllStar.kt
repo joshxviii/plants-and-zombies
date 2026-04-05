@@ -1,5 +1,6 @@
 package joshxviii.plantz.entity.zombie
 
+import com.google.common.base.Predicate
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.pazResource
@@ -12,6 +13,7 @@ import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
@@ -21,6 +23,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.phys.Vec3
 
 class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, level) {
     companion object {
@@ -60,7 +63,10 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
     override fun tick() {
         super.tick()
         val level = level()
-        if(chargingTime>=0) {
+        if (chargingTime >= 0) {
+            val direction = lookAngle
+            val chargeSpeed = 0.4
+            deltaMovement = Vec3(direction.x * chargeSpeed, deltaMovement.y, direction.z * chargeSpeed)
             chargeAnimation.startIfStopped(tickCount)
             if (level is ServerLevel) {
                 level.sendParticles(
@@ -69,7 +75,7 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
                 )
                 if (tickCount%2==0) level.sendParticles(
                     ParticleTypes.WHITE_SMOKE,
-                    x, eyeHeight+y, z, 2, 0.1, 0.2, 0.1, 0.2
+                    x, eyeHeight+y, z, 2, 0.1, 0.2, 0.1, 0.05
                 )
             }
             if (chargingTime==0) removeChargeBoost()
@@ -78,16 +84,27 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
         else chargeAnimation.stop()
     }
 
+    override fun doPush(entity: Entity) {
+        super.doPush(entity)
+        if (chargingTime>=0 && entity is LivingEntity) {
+            entity.knockback(
+                0.7,
+                position().x - entity.position().x,
+                position().z - entity.position().z
+            )
+        }
+    }
+
     fun removeChargeBoost() {
         getAttribute(Attributes.KNOCKBACK_RESISTANCE)!!.removeModifier(CHARGE_BOOST_ID)
-        getAttribute(Attributes.MOVEMENT_SPEED)!!.removeModifier(CHARGE_BOOST_ID)
+//        getAttribute(Attributes.MOVEMENT_SPEED)!!.removeModifier(CHARGE_BOOST_ID)
         getAttribute(Attributes.ATTACK_KNOCKBACK)!!.removeModifier(CHARGE_BOOST_ID)
     }
     fun applyChargeBoost() {
         getAttribute(Attributes.KNOCKBACK_RESISTANCE)!!
             .addTransientModifier(AttributeModifier(CHARGE_BOOST_ID, 99.0, AttributeModifier.Operation.ADD_VALUE))
-        getAttribute(Attributes.MOVEMENT_SPEED)!!
-            .addTransientModifier(AttributeModifier(CHARGE_BOOST_ID, 0.15, AttributeModifier.Operation.ADD_VALUE))
+//        getAttribute(Attributes.MOVEMENT_SPEED)!!
+//            .addTransientModifier(AttributeModifier(CHARGE_BOOST_ID, 0.12, AttributeModifier.Operation.ADD_VALUE))
         getAttribute(Attributes.ATTACK_KNOCKBACK)!!
             .addTransientModifier(AttributeModifier(CHARGE_BOOST_ID, 4.0, AttributeModifier.Operation.ADD_VALUE))
     }
@@ -120,7 +137,6 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
         val difficultyModifier = difficulty.specialMultiplier
         if (spawnReason != EntitySpawnReason.CONVERSION) {
             setCanBreakDoors(true)
-
             setItemSlot(EquipmentSlot.HEAD, PazItems.FOOTBALL_HELMET.asItem().defaultInstance)
         }
 
@@ -132,12 +148,12 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
         val allStar: AllStar,
     ) : Goal() {
         companion object {
-            const val CHARGE_DELAY_TIME = 70
+            const val CHARGE_DELAY_TIME = 80
         }
         var chargeDelayTime = allStar.random.nextInt(40,50)
 
         override fun canUse(): Boolean {
-            allStar.target?.distanceTo(allStar)?.let { if (it < 2f) return false }
+            allStar.target?.distanceTo(allStar)?.let { if (it < 1.5f) return false }
             return allStar.isAggressive && !allStar.isDeadOrDying
         }
 
@@ -148,7 +164,7 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
                 allStar.playSound(SoundEvents.WIND_CHARGE_BURST.value(), 1.5f, 1.3f)
                 allStar.playSound(PazSounds.ALL_STAR_WHISTLE)
                 allStar.chargingTime = 30
-                chargeDelayTime = CHARGE_DELAY_TIME + allStar.random.nextInt(40)
+                chargeDelayTime = CHARGE_DELAY_TIME + allStar.random.nextInt(50)
             }
         }
     }

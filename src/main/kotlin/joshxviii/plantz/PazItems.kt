@@ -92,7 +92,7 @@ object PazItems {
         properties = Item.Properties()
             .component(PazComponents.SEED_PACKET, SeedPacket())
             .component(PazComponents.SUN_COST, SunCost())
-            .component(DataComponents.USE_COOLDOWN, UseCooldown(100.0f))
+            //.component(DataComponents.USE_COOLDOWN, UseCooldown(100.0f))
     )
     @JvmField
     val PLANT_POT_MINECART: Item = registerItem(

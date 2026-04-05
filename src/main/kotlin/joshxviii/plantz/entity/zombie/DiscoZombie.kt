@@ -56,6 +56,8 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
             summonAnimation.startIfStopped(tickCount)
             summoningTime++
         }
+        if (summoningTime==10) playSound(PazSounds.DISCO_ZOMBIE_BOOGIE, 1.0f, 1.0f)
+        if (summoningTime==20) playSound(PazSounds.DISCO_ZOMBIE_SUMMON, 1.0f, 1.0f)
         if (summoningTime>40) {
             summonAnimation.stop()
             summoningTime=0
