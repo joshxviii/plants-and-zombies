@@ -21,15 +21,15 @@ object PazComponents {
         .cacheEncoding()
     }
 
-    @JvmField
-    val SUN_COST: DataComponentType<SunCost> = register(
-        "sun_cost"
-    ) { b: DataComponentType.Builder<SunCost> ->
-        DataComponentType.builder<SunCost>()
-            .persistent(SunCost.CODEC)
-            .networkSynchronized(SunCost.STREAM_CODEC)
-            .cacheEncoding()
-    }
+//    @JvmField
+//    val SUN_COST: DataComponentType<SunCost> = register(
+//        "sun_cost"
+//    ) { b: DataComponentType.Builder<SunCost> ->
+//        DataComponentType.builder<SunCost>()
+//            .persistent(SunCost.CODEC)
+//            .networkSynchronized(SunCost.STREAM_CODEC)
+//            .cacheEncoding()
+//    }
 
 
     @JvmField

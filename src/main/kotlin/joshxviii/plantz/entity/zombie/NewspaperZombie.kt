@@ -99,8 +99,6 @@ class NewspaperZombie(type: EntityType<out NewspaperZombie>, level: Level) : Paz
     override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {}
     override fun getPreferredWeaponType(): TagKey<Item> = PazTags.ItemTags.NEWSPAPER_ZOMBIE_PREFERRED_WEAPONS
     override fun canPickUpLoot(): Boolean = true
-    override fun isSunSensitive(): Boolean = false
-    override fun convertsInWater(): Boolean = false
 
     override fun dropEquipment(level: ServerLevel) {
         super.dropEquipment(level)

@@ -71,6 +71,8 @@ object PazTags {
         val HAS_ZOMBIE_YETI = tag("zombie/has_zombie_yeti")
         val HAS_ZOMBIE_YETI_ALT = tag("zombie/has_zombie_yeti_alt")
         val HAS_DISCO_ZOMBIE = tag("zombie/has_disco_zombie")
+        val HAS_ALL_STAR = tag("zombie/has_all_star")
+        val HAS_IMP = tag("zombie/has_imp")
 
         private fun tag(name: String): TagKey<Biome>  = TagKey.create(Registries.BIOME, pazResource(name))
     }

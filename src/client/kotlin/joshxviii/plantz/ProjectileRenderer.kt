@@ -39,7 +39,7 @@ class ProjectileRenderer(
             poseStack,
             RenderType.create(
                 "plant_projectile",
-                RenderSetup.builder(if (state.emissive) RenderPipelines.EYES else RenderPipelines.ENTITY_SOLID)
+                RenderSetup.builder(if (state.emissive) RenderPipelines.EYES else RenderPipelines.ENTITY_CUTOUT)
                     .withTexture("Sampler0", getTextureLocation(state))
                     .useLightmap()
                     .sortOnUpload()

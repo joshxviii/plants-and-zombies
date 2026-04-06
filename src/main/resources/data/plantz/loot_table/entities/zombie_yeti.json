@@ -2,6 +2,36 @@
   "type": "minecraft:entity",
   "pools": [
     {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "plantz:seed_packet",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "plantz:seed_packet": {
+                  "id": "plantz:ice_peashooter"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 20
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:killed_by_player"
+        }
+      ]
+    },
+    {
       "bonus_rolls": 0,
       "entries": [
         {

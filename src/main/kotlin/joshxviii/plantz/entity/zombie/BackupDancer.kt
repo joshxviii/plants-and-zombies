@@ -57,8 +57,6 @@ class BackupDancer(type: EntityType<out BackupDancer> = PazEntities.BACKUP_DANCE
     override fun isBaby(): Boolean = false
     override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {}
     override fun canPickUpLoot(): Boolean = false
-    override fun isSunSensitive(): Boolean = false
-    override fun convertsInWater(): Boolean = false
     override fun randomizeReinforcementsChance() {}
 
     override fun getMoveControl(): MoveControl {

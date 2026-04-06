@@ -2,6 +2,7 @@ package joshxviii.plantz.entity.projectile
 
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.hasSameOwner
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
@@ -19,6 +20,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.InsideBlockEffectApplier
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.OwnableEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.Projectile
@@ -246,7 +248,8 @@ abstract class PlantProjectile(
 
     override fun canHitEntity(entity: Entity): Boolean {
         val playerOwner = plantOwner?.owner as? Player
-        return if (playerOwner!= null && entity.`is`(playerOwner)) false
+        return if (entity.hasSameOwner(plantOwner)) false
+        else if (playerOwner!= null && entity.`is`(playerOwner)) false
         else entity !is Plant && entity !is Projectile && !this.piercingIgnoreEntityIds.contains(entity.id)
     }
 

@@ -1,0 +1,70 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:group",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 3,
+              "functions": [
+                {
+                  "function": "minecraft:set_components",
+                  "components": {
+                    "plantz:seed_packet": {
+                      "id": "plantz:sunflower"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 3,
+              "functions": [
+                {
+                  "function": "minecraft:set_components",
+                  "components": {
+                    "plantz:seed_packet": {
+                      "id": "plantz:peashooter"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 2,
+              "functions": [
+                {
+                  "function": "minecraft:set_components",
+                  "components": {
+                    "plantz:seed_packet": {
+                      "id": "plantz:wallnut"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 30
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:killed_by_player"
+        }
+      ]
+    }
+  ],
+  "random_sequence": "minecraft:entities/browncoat"
+}

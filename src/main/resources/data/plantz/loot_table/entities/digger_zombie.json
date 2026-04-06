@@ -2,6 +2,36 @@
   "type": "minecraft:entity",
   "pools": [
     {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "plantz:seed_packet",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "plantz:seed_packet": {
+                  "id": "plantz:cherrybomb"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 15
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:killed_by_player"
+        }
+      ]
+    },
+    {
       "bonus_rolls": 0,
       "entries": [
         {
@@ -90,5 +120,5 @@
       "rolls": 1
     }
   ],
-  "random_sequence": "minecraft:entities/miner"
+  "random_sequence": "minecraft:entities/digger_zombie"
 }

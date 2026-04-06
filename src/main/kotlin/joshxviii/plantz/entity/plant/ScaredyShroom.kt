@@ -3,12 +3,14 @@ package joshxviii.plantz.entity.plant
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.entity.projectile.Spore
+import joshxviii.plantz.hasSameOwner
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.OwnableEntity
 import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
@@ -58,9 +60,9 @@ class ScaredyShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(Paz
             }))
         this.goalSelector.addGoal(3, HideGoal(this, Zombie::class.java))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, _ ->
-            target is Enemy
-            && target !is Creeper
-            && target !is Plant
+            target !is Plant
+                && target is Enemy
+                && target !is Creeper
         })
     }
 

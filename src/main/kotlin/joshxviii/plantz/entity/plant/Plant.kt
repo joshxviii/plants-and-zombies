@@ -3,6 +3,7 @@ package joshxviii.plantz.entity.plant
 import joshxviii.plantz.*
 import joshxviii.plantz.PazDataSerializers.DATA_COOLDOWN
 import joshxviii.plantz.PazDataSerializers.DATA_PLANT_STATE
+import joshxviii.plantz.PazDataSerializers.DATA_RECEIVED_SUN
 import joshxviii.plantz.PazDataSerializers.DATA_SEED_GROW_COOLDOWN
 import joshxviii.plantz.PazDataSerializers.DATA_SLEEPING
 import joshxviii.plantz.PazDataSerializers.DATA_SWELL_DIR
@@ -79,12 +80,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val PLANT_STATE: EntityDataAccessor<PlantState> = SynchedEntityData.defineId<PlantState>(Plant::class.java, DATA_PLANT_STATE)
         val SWELL_DIR: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_SWELL_DIR)
         val COOLDOWN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_COOLDOWN)
+        val RECEIVED_SUN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_RECEIVED_SUN)
         val SEED_GROW_COOLDOWN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_SEED_GROW_COOLDOWN)
         val SLEEPING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, DATA_SLEEPING)
 
         data class PlantAttributes(
             val maxHealth: Double = 10.0,
-            val attackDamage: Double = 1.0,
+            val attackDamage: Double = 1.5,
             val attackKnockback: Double = 0.07,
             val movementSpeed: Double = 0.0,
             val followRange: Double = 14.0,
@@ -139,6 +141,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         get() = this.entityData.get(COOLDOWN)
         set(value) = this.entityData.set(COOLDOWN, value.coerceAtLeast(-1))
 
+    var receivedSun: Int
+        get() = this.entityData.get(RECEIVED_SUN)
+        set(value) = this.entityData.set(RECEIVED_SUN, value.coerceAtLeast(0))
+
     var seedGrowCooldown: Int
         get() = this.entityData.get(SEED_GROW_COOLDOWN)
         set(value) = this.entityData.set(SEED_GROW_COOLDOWN, value.coerceAtLeast(0))
@@ -179,6 +185,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         entityData.define(PLANT_STATE, PlantState.IDLE)
         entityData.define(SWELL_DIR, 0)
         entityData.define(COOLDOWN, 0)
+        entityData.define(RECEIVED_SUN, 0)
         entityData.define(SEED_GROW_COOLDOWN, getSeedGrowCooldownDelay())
         entityData.define(SLEEPING, false)
     }
@@ -198,22 +205,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         swell = (swell + swellDir).coerceIn(0, getMaxSwell())
     }
 
-    override fun getAmbientSound(): SoundEvent? {
-        return super.getAmbientSound()// TODO make custom sounds
-    }
-
+    override fun getAmbientSound(): SoundEvent? = super.getAmbientSound()// TODO make custom sounds
     override fun getHurtSound(source: DamageSource): SoundEvent? {
         if (source.entity is Zombie) return PazSounds.ZOMBIE_EATS
         return SoundEvents.ROOTED_DIRT_HIT// TODO make custom sounds
     }
-
-    override fun getDeathSound(): SoundEvent? {
-        return SoundEvents.ROOTED_DIRT_BREAK// TODO make custom sounds
-    }
-
-    open fun getActionSound(): SoundEvent? {
-        return null// TODO make custom sounds
-    }
+    override fun getDeathSound(): SoundEvent? = SoundEvents.ROOTED_DIRT_BREAK// TODO make custom sounds
+    open fun getActionSound(): SoundEvent? = null// TODO make custom sounds
 
     override fun registerGoals() {
         this.goalSelector.addGoal(3, RandomLookAroundGoal(this))
@@ -225,6 +223,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         this.targetSelector.addGoal(2, OwnerHurtTargetGoal(this))
         this.targetSelector.addGoal(3, HurtByTargetGoal(this, Plant::class.java).setAlertOthers())
     }
+    override fun canAttack(target: LivingEntity): Boolean = super.canAttack(target) && !target.hasSameOwner(this)
 
     open fun stateUpdated(state: PlantState) {}
 
@@ -366,6 +365,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return leftOver.coerceAtLeast(0.0f)
     }
 
+    fun sunRequiredForSeeds(): Int = Mth.floor(PazEntities.getSunCostFromType(this.type)*1.5f)
+
     open fun canSurviveOn(block: BlockState) : Boolean {
         return block.`is`(PLANTABLE)
     }
@@ -436,7 +437,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 }
                 else if (!isTame) {// try to tame
                     itemStack.consume(1, player)
-                    if (random.nextFloat() < 0.1) {
+                    if (random.nextFloat() < (1f - (PazEntities.getSunCostFromType(this.type) / 14f))*0.5f) {
                         tame(player)
                         this.target = null
                         level.broadcastEntityEvent(this, 7.toByte())
@@ -445,25 +446,25 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 }
                 else if (testGrowConditions() == PlantGrowNeeds.SUN) {// grow seeds
                     itemStack.consume(1, player)
-                    seedGrowCooldown = getSeedGrowCooldownDelay()
-                    val stack = SeedPacketItem.stackFor(this.type)
-                    val itemEntity = ItemEntity(level, x, y + 0.5, z, stack)
-                    level.addFreshEntity(itemEntity)
-                    playSound(SoundEvents.ROOTED_DIRT_BREAK)
-                    return InteractionResult.SUCCESS_SERVER
+                    if (receivedSun++ >= sunRequiredForSeeds()) {
+                        seedGrowCooldown = getSeedGrowCooldownDelay()
+                        val stack = SeedPacketItem.stackFor(this.type)
+                        val itemEntity = ItemEntity(level, x, y + 0.5, z, stack)
+                        level.addFreshEntity(itemEntity)
+                        playSound(SoundEvents.ROOTED_DIRT_BREAK)
+                        return InteractionResult.SUCCESS_SERVER
+                    } else return InteractionResult.CONSUME
                 }
             }
 
             // shovel interaction
             if (itemStack.`is`(ItemTags.SHOVELS)) {
-
                 if (!isTame || player != owner) {
                     player.sendSystemMessage(
                         Component.translatable("message.plantz.not_yours", this.name).withStyle(ChatFormatting.RED)
                     )
                     return InteractionResult.FAIL
                 }
-
                 // apply tool damage base on how damaged the plant was
                 itemStack.hurtAndBreak(4, player, hand.asEquipmentSlot())
                 if (!player.isCreative || customName!=null) run {// Spawn a seed packet item containing this plant's data

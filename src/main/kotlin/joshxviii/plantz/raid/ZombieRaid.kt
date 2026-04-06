@@ -384,12 +384,12 @@ class ZombieRaid(
         val spawnsPerWaveBeforeBonus: IntArray
     ) {
         // default spawns per wave
-        BROWN_COAT(PazEntities.BROWN_COAT,             intArrayOf(2,      5,      7,      9,      9,      12,     19,     22,     43)),
+        BROWN_COAT(PazEntities.BROWN_COAT,             intArrayOf(2,      5,      7,      9,      9,      12,     19,     20,     30)),
         NEWSPAPER_ZOMBIE(PazEntities.NEWSPAPER_ZOMBIE, intArrayOf(0,      1,      0,      1,      0,      1,      2,      1,      3)),
         DIGGER_ZOMBIE(PazEntities.DIGGER_ZOMBIE,       intArrayOf(0,      0,      1,      0,      4,      1,      1,      2,      3)),
-        DISCO_ZOMBIE(PazEntities.DISCO_ZOMBIE,         intArrayOf(0,      0,      1,      3,      4,      4,      4,      2,      3)),
-        ALL_STAR(PazEntities.ALL_STAR,                 intArrayOf(0,      0,      1,      2,      0,      3,      2,      2,      2)),
-        ZOMBIE_YETI(PazEntities.ZOMBIE_YETI,           intArrayOf(0,      0,      0,      1,      3,      0,      2,      1,      2)),
+        DISCO_ZOMBIE(PazEntities.DISCO_ZOMBIE,         intArrayOf(0,      0,      1,      2,      3,      3,      4,      2,      3)),
+        ALL_STAR(PazEntities.ALL_STAR,                 intArrayOf(0,      0,      1,      3,      2,      4,      5,      3,      5)),
+        ZOMBIE_YETI(PazEntities.ZOMBIE_YETI,           intArrayOf(0,      0,      0,      1,      2,      0,      3,      1,      2)),
         IMP(PazEntities.IMP,                           intArrayOf(0,      0,      0,      0,      2,      4,      5,      5,      4)),
         GARGANTUAR(PazEntities.GARGANTUAR,             intArrayOf(0,      0,      0,      0,      0,      1,      0,      2,      1));
 

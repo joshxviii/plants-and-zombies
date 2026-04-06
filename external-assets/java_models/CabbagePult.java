@@ -1,20 +1,11 @@
-package joshxviii.plantz.model.plants;
+// Made with Blockbench 5.1.3
+// Exported for Minecraft version 1.17 or later with Mojang mappings
+// Paste this class into your mod and generate all required imports
 
-import joshxviii.plantz.PlantRenderState;
-import joshxviii.plantz.animation.plants.CabbagePultAnimation;
-import joshxviii.plantz.animation.plants.CactusAnimation;
-import net.minecraft.client.animation.KeyframeAnimation;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.*;
-import org.jetbrains.annotations.NotNull;
 
-import static joshxviii.plantz.UtilsKt.pazResource;
-
-public class CabbagePultModel extends EntityModel<@NotNull PlantRenderState> {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("cabbagepult"), "main");
+public class CabbagePult<T extends Entity> extends EntityModel<T> {
+	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "cabbagepult"), "main");
 	private final ModelPart body;
 	private final ModelPart head;
 	private final ModelPart eyebrows;
@@ -29,13 +20,8 @@ public class CabbagePultModel extends EntityModel<@NotNull PlantRenderState> {
 	private final ModelPart leaf_2;
 	private final ModelPart leaf_3;
 	private final ModelPart leaf_4;
-	private final KeyframeAnimation idleAnimation;
-	private final KeyframeAnimation actionAnimation;
-	private final KeyframeAnimation initAnimation;
 
-
-	public CabbagePultModel(ModelPart root) {
-		super(root);
+	public CabbagePult(ModelPart root) {
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.eyebrows = this.head.getChild("eyebrows");
@@ -50,9 +36,6 @@ public class CabbagePultModel extends EntityModel<@NotNull PlantRenderState> {
 		this.leaf_2 = this.leaves.getChild("leaf_2");
 		this.leaf_3 = this.leaves.getChild("leaf_3");
 		this.leaf_4 = this.leaves.getChild("leaf_4");
-		this.initAnimation = CabbagePultAnimation.init.bake(root);
-		this.idleAnimation = CabbagePultAnimation.idle.bake(root);
-		this.actionAnimation = CabbagePultAnimation.action.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -62,7 +45,7 @@ public class CabbagePultModel extends EntityModel<@NotNull PlantRenderState> {
 		PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
 
 		PartDefinition head = body.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 13).addBox(-5.0F, -10.0F, -5.0F, 10.0F, 10.0F, 10.0F, new CubeDeformation(0.0F))
-				.texOffs(28, 33).addBox(-1.5F, -12.0F, -1.5F, 3.0F, 2.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+		.texOffs(28, 33).addBox(-1.5F, -12.0F, -1.5F, 3.0F, 2.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
 		PartDefinition cube_r1 = head.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(25, 1).addBox(-6.0F, -5.7F, 0.0F, 13.0F, 11.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, -6.5F, -2.0F, 0.9599F, 0.0F, 0.0F));
 
@@ -81,8 +64,8 @@ public class CabbagePultModel extends EntityModel<@NotNull PlantRenderState> {
 		PartDefinition coil_2 = coil.addOrReplaceChild("coil_2", CubeListBuilder.create().texOffs(12, 46).addBox(0.0F, -10.0F, -1.0F, 0.0F, 10.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -10.0F, 0.0F));
 
 		PartDefinition basket = coil_2.addOrReplaceChild("basket", CubeListBuilder.create().texOffs(0, 33).addBox(-4.0F, -8.0F, 2.0F, 8.0F, 8.0F, 1.0F, new CubeDeformation(0.0F))
-				.texOffs(1, 49).addBox(-4.0F, -7.0F, -2.0F, 1.0F, 6.0F, 4.0F, new CubeDeformation(0.0F))
-				.texOffs(1, 43).addBox(-4.0F, -8.0F, -2.0F, 8.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -10.0F, 0.0F));
+		.texOffs(1, 49).addBox(-4.0F, -7.0F, -2.0F, 1.0F, 6.0F, 4.0F, new CubeDeformation(0.0F))
+		.texOffs(1, 43).addBox(-4.0F, -8.0F, -2.0F, 8.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -10.0F, 0.0F));
 
 		PartDefinition cube_r4 = basket.addOrReplaceChild("cube_r4", CubeListBuilder.create().texOffs(1, 49).addBox(-0.5F, -3.0F, -2.5F, 1.0F, 6.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(3.5F, -4.0F, 0.5F, 0.0F, 0.0F, -3.1416F));
 
@@ -104,11 +87,12 @@ public class CabbagePultModel extends EntityModel<@NotNull PlantRenderState> {
 	}
 
 	@Override
-	public void setupAnim(@NotNull PlantRenderState state) {
-		super.setupAnim(state);
-		this.head.yRot = state.yRot * (float) (Math.PI / 180.0);
-		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
-		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
-		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
+	public void setupAnim(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+
+	}
+
+	@Override
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		body.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 }

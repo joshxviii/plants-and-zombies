@@ -35,8 +35,6 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
         xpReward = 12
     }
 
-    override fun isSunSensitive(): Boolean = false
-
     override fun getAmbientSound(): SoundEvent {
         return PazSounds.ALL_STAR_AMBIENT
     }
@@ -122,8 +120,6 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
         val result = super.doHurtTarget(level, target)
         return result
     }
-
-    override fun convertsInWater(): Boolean = false
 
     override fun finalizeSpawn(
         level: ServerLevelAccessor,

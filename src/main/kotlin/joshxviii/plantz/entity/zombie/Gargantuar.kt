@@ -84,8 +84,6 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
     override fun isBaby(): Boolean = false
     override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {}
     override fun canPickUpLoot(): Boolean = false
-    override fun isSunSensitive(): Boolean = false
-    override fun convertsInWater(): Boolean = false
     override fun randomizeReinforcementsChance() {}
 
     override fun getPassengerRidingPosition(passenger: Entity): Vec3 {

@@ -31,7 +31,6 @@ class PathfindToFlagGoal(
     }
 
     override fun canUse(): Boolean {
-        if (mob.target != null) return false
         if (navCooldown > 0) { navCooldown--
             if (navCooldown <= 0) {
                 navCooldown = SEARCH_COOLDOWN

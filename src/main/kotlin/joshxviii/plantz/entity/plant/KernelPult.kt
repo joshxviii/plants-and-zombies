@@ -4,11 +4,13 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.entity.projectile.Butter
 import joshxviii.plantz.entity.projectile.Kernel
+import joshxviii.plantz.hasSameOwner
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.OwnableEntity
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.entity.monster.Enemy
@@ -45,9 +47,9 @@ class KernelPult(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
             actionDelay = 12,
             actionStartEffect = { hasButterShot = random.nextFloat() < 0.25 }))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, false, false) { target, level ->
-            target is Enemy
-            && target !is Creeper
-            && target !is Plant
+            target !is Plant
+                && target !is Creeper
+                && target is Enemy
         })
     }
 }

@@ -1,15 +1,9 @@
 {
   "values": [
-    "minecraft:ice_spikes",
-    "minecraft:frozen_peaks",
-    "minecraft:frozen_ocean",
-    "minecraft:snowy_slopes",
+    "minecraft:snowy_plains",
+    "minecraft:snowy_taiga",
     {
-      "id": "#c:is_mountain/peak",
-      "required": false
-    },
-    {
-      "id": "#c:is_icy",
+      "id": "#c:is_cold",
       "required": false
     }
   ]

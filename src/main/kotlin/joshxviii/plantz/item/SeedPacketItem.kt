@@ -7,10 +7,8 @@ import joshxviii.plantz.PazItems
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.item.component.SeedPacket
-import joshxviii.plantz.item.component.SunCost
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Direction
-import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
@@ -21,7 +19,6 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.TamableAnimal
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.component.UseCooldown
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.AABB
@@ -78,7 +75,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
 
             // check that player has enough sun to plant
             val availableSun = player?.inventory?.countItem(PazItems.SUN) ?: 0
-            val sunCost = itemStack.get(PazComponents.SUN_COST)?.sunCost ?: 0
+            val sunCost = itemStack.get(PazComponents.SEED_PACKET)?.getSunCost() ?: 0
             if (sunCost > availableSun && player?.isCreative == false) {
                 player.sendSystemMessage(
                     Component.translatable("message.plantz.not_enough_sun", availableSun, sunCost)
@@ -126,8 +123,6 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             val id = BuiltInRegistries.ENTITY_TYPE.getKey(type)
 
             stack.set(PazComponents.SEED_PACKET, SeedPacket(id))
-            stack.set(PazComponents.SUN_COST, SunCost(getSunCostFromType(type)))
-            stack.set(DataComponents.USE_COOLDOWN, UseCooldown(100.0f, Optional.ofNullable(id)))
 
             return stack
         }

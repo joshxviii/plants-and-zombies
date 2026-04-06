@@ -20,6 +20,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.ServerLevelAccessor
 
 
@@ -36,7 +37,7 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
             val below = pos.below()
             return level.difficulty != Difficulty.PEACEFUL
                     && (EntitySpawnReason.ignoresLightRequirements(spawnReason) || isDarkEnoughToSpawn(level, pos, random))
-                    && checkMobSpawnRules(type, level, spawnReason, pos, random) || level.getBlockState(below).`is`(PazTags.BlockTags.YETI_SPAWNABLE_ON)
+                    && checkMobSpawnRules(type, level, spawnReason, pos, random)
                     && pos.y < 10
         }
     }
@@ -77,8 +78,6 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
     override fun isBaby(): Boolean = false
     override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {}
     override fun canPickUpLoot(): Boolean = true
-    override fun isSunSensitive(): Boolean = false
-    override fun convertsInWater(): Boolean = false
     override fun getPreferredWeaponType(): TagKey<Item> = PazTags.ItemTags.DIGGER_PREFERRED_WEAPONS
     override fun wantsToPickUp(level: ServerLevel, itemStack: ItemStack): Boolean {
         if(itemStack.`is`(ItemTags.ARMOR_ENCHANTABLE)) return false

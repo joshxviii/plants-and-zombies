@@ -91,7 +91,7 @@ object PazItems {
         "seed_packet", ::SeedPacketItem,
         properties = Item.Properties()
             .component(PazComponents.SEED_PACKET, SeedPacket())
-            .component(PazComponents.SUN_COST, SunCost())
+            //.component(PazComponents.SUN_COST, SunCost())
             //.component(DataComponents.USE_COOLDOWN, UseCooldown(100.0f))
     )
     @JvmField
@@ -142,7 +142,7 @@ object PazItems {
 
         // Modify components
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SEED_PACKET)
-        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
+        //ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BLOCKS_PROJECTILE_DAMAGE)
 
         DefaultItemComponentEvents.MODIFY.register {

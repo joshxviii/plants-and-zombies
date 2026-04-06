@@ -92,8 +92,6 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
     override fun isBaby(): Boolean = false
     override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {}
     override fun canPickUpLoot(): Boolean = false
-    override fun isSunSensitive(): Boolean = false
-    override fun convertsInWater(): Boolean = false
     override fun randomizeReinforcementsChance() {}
 
     override fun finalizeSpawn(

@@ -15,9 +15,6 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 
 class Imp(type: EntityType<out Imp>, level: Level) : PazZombie(type, level) {
-    override fun isSunSensitive(): Boolean {
-        return false
-    }
 
     override fun getAmbientSound(): SoundEvent {
         return PazSounds.IMP_AMBIENT
@@ -39,10 +36,6 @@ class Imp(type: EntityType<out Imp>, level: Level) : PazZombie(type, level) {
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         val result = super.doHurtTarget(level, target)
         return result
-    }
-
-    override fun convertsInWater(): Boolean {
-        return false
     }
 
     override fun finalizeSpawn(

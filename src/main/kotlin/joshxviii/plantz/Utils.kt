@@ -7,8 +7,10 @@ import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerEntityGetter
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.OwnableEntity
 import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
@@ -33,6 +35,13 @@ fun Int.tickTimeFormat(): String = "%02d:%02d".format(
     (this / 20 / 60) % 60,
     (this / 20) % 60,
 )
+
+fun Entity.hasSameOwner(target: Entity?): Boolean {
+    return if ((this is OwnableEntity && target is OwnableEntity))
+        owner.let { it!=null && target.owner?.`is`(it) == true }
+    else
+        false
+}
 
 fun <T : LivingEntity?> ServerEntityGetter.getFurthestEntities(
     entities: MutableList<out T>,

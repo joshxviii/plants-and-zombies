@@ -58,7 +58,7 @@ object PazEntities {
 
             if (entity is PathfinderMob && entity.`is`(ZOMBIE_RAIDERS)) {
                 (entity as MobAccessor).goalSelector.addGoal(5, DestroyFlagGoal(entity))
-                (entity as MobAccessor).goalSelector.addGoal(2, PathfindToFlagGoal(entity))
+                (entity as MobAccessor).goalSelector.addGoal(3, PathfindToFlagGoal(entity))
             }
 
             if (entity is Mob && entity.`is`(ATTACKS_PLANTS)) {
@@ -70,7 +70,7 @@ object PazEntities {
     }
 
     private val typeToSunCost = mutableMapOf<EntityType<*>, Int>()
-    fun getSunCostFromType(type: EntityType<*>) : Int = typeToSunCost[type]?: 0
+    fun getSunCostFromType(type: EntityType<*>?) : Int = typeToSunCost[type]?: 0
 
     // region Plants
     @JvmField val SUNFLOWER: EntityType<Sunflower> = registerPlant(
@@ -150,7 +150,7 @@ object PazEntities {
         height = 1.25f,
         eyeHeight = 0.85f,
         attributes = Plant.Companion.PlantAttributes(
-            attackDamage = 2.0,
+            attackDamage = 3.5,
             followRange = 34.0
         )
     )
@@ -161,7 +161,7 @@ object PazEntities {
         width = 0.9f,
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
-            attackDamage = 3.0,
+            attackDamage = 3.5,
             attackKnockback = 0.5,
             followRange = 20.0
         )
@@ -173,7 +173,7 @@ object PazEntities {
         width = 0.9f,
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
-            attackDamage = 3.0,
+            attackDamage = 2.5,
             attackKnockback = 0.5,
             followRange = 22.0
         )
@@ -186,7 +186,7 @@ object PazEntities {
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 50.0,
-            attackDamage = 5.0,
+            attackDamage = 6.0,
             followRange = 28.0
         )
     )
@@ -198,7 +198,7 @@ object PazEntities {
         eyeHeight = 0.3f,
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 10.0,
-            attackDamage = 2.0,
+            attackDamage = 1.0,
             followRange = 10.0
         )
     )
@@ -219,7 +219,7 @@ object PazEntities {
         width = 0.8f,
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
-            attackDamage = 1.0,
+            attackDamage = 2.5,
         )
     )
     @JvmField val SUN_SHROOM: EntityType<SunShroom> = registerPlant(
@@ -236,7 +236,6 @@ object PazEntities {
         eyeHeight = 0.3f,
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 3.0,
-            attackDamage = 2.0,
             followRange = 20.0
         )
     )

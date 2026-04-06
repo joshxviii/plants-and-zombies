@@ -4,12 +4,14 @@ import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.PazSounds
+import joshxviii.plantz.hasSameOwner
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.OwnableEntity
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.entity.monster.Enemy
@@ -20,9 +22,8 @@ class HypnoShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEn
         super.registerGoals()
 
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->
-            target is Enemy
-            && target !is Creeper
-            && target !is Plant
+            target !is Plant
+                && target is Enemy
         })
 
     }
