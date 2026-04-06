@@ -2,7 +2,6 @@ package joshxviii.plantz.item
 
 import com.google.common.base.Predicate
 import joshxviii.plantz.PazComponents
-import joshxviii.plantz.PazEntities.getSunCostFromType
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.entity.plant.Plant
@@ -106,7 +105,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
                     player.inventory.clearOrCountMatchingItems(Predicate<ItemStack> {
                         it.`is`(PazItems.SUN)
                     }, sunCost, player.inventoryMenu.getCraftSlots())
-                    player.cooldowns?.addCooldown(itemStack, 100)
+                    //player.cooldowns?.addCooldown(itemStack, 100)
                 }
                 entity.playSound(SoundEvents.BIG_DRIPLEAF_PLACE)
                 if (entity is TamableAnimal && player != null) entity.tame(player)

@@ -151,7 +151,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     fun getSeedGrowCooldownDelay() : Int {
         val sunCost = PazEntities.getSunCostFromType(this.type)
-        return 200 + (sunCost*400)
+        return 600 + (sunCost*650)
     }
 
     private var idleAnimationStartTick: Int = 0
@@ -446,7 +446,11 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 }
                 else if (testGrowConditions() == PlantGrowNeeds.SUN) {// grow seeds
                     itemStack.consume(1, player)
+                    playSound(SoundEvents.BUBBLE_POP, 1.0f,
+                        receivedSun/sunRequiredForSeeds() + 0.5f
+                    )
                     if (receivedSun++ >= sunRequiredForSeeds()) {
+                        receivedSun = 0
                         seedGrowCooldown = getSeedGrowCooldownDelay()
                         val stack = SeedPacketItem.stackFor(this.type)
                         val itemEntity = ItemEntity(level, x, y + 0.5, z, stack)
