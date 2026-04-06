@@ -2,6 +2,7 @@
   "values": [
     "minecraft:lush_caves",
     "minecraft:dark_forest",
+    "minecraft:warped_forest",
     "minecraft:mushroom_fields",
     {
       "id": "#c:is_mushroom",

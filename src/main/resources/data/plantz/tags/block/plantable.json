@@ -8,7 +8,8 @@
     "minecraft:farmland",
     "minecraft:lily_pad",
     "minecraft:flower_pot",
-    "plantz:plant_pot",
-    "minecraft:clay"
+    "minecraft:clay",
+    "minecraft:soul_soil",
+    "plantz:plant_pot"
   ]
 }

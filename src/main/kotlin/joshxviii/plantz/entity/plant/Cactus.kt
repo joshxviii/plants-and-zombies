@@ -10,6 +10,7 @@ import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
 
 class Cactus(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CACTUS, level) {
@@ -30,6 +31,6 @@ class Cactus(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CACT
     }
 
     override fun canSurviveOn(block: BlockState): Boolean {
-        return super.canSurviveOn(block) || block.`is`(BlockTags.SAND)
+        return super.canSurviveOn(block) || block.`is`(BlockTags.SAND) || block.`is`(Blocks.SOUL_SAND)
     }
 }

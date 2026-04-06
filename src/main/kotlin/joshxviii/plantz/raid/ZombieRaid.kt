@@ -145,6 +145,7 @@ class ZombieRaid(
             else {
                 status = ZombieRaidStatus.NEXT_WAVE
                 zombieRaidEvent.progress = (zombieRaidEvent.progress + 1f/PRE_RAID_TICKS).coerceAtMost(1.0f)
+                zombieRaidEvent.setName(Component.translatable("event.plantz.zombie_raid.wave", wavesSpawned, 0.tickTimeFormat()))
                 return
             }
         }
@@ -176,7 +177,7 @@ class ZombieRaid(
             postRaidTicks = POST_RAID_TICKS
         }
         else {
-            zombieRaidEvent.setName(Component.translatable("event.plantz.zombie_raid.wave", waveTimer.tickTimeFormat()))
+            zombieRaidEvent.setName(Component.translatable("event.plantz.zombie_raid.wave", wavesSpawned, waveTimer.tickTimeFormat()))
         }
 
         if (ticksActive % 20L == 0L) {

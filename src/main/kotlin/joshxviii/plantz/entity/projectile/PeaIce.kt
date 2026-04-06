@@ -19,6 +19,7 @@ class PeaIce(
     PazDamageTypes.FREEZE
 ) {
     override fun afterHitEntityEffect(target: LivingEntity) {
+        super.afterHitEntityEffect(target)
         target.addEffect(MobEffectInstance(MobEffects.SLOWNESS, 100, 0))
         target.addEffect(MobEffectInstance(MobEffects.WEAKNESS, 100, 0))
     }

@@ -154,7 +154,9 @@ abstract class PlantProjectile(
         }
     }
 
-    open fun afterHitEntityEffect(target: LivingEntity) {}
+    open fun afterHitEntityEffect(target: LivingEntity) {
+        if (isOnFire) target.igniteForSeconds(2.0f);
+    }
     open fun afterHitBlockEffect(target: BlockPos) {}
 
     override fun getDefaultGravity(): Double { return 0.03 }

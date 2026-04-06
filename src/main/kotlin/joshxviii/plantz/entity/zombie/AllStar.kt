@@ -156,6 +156,11 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
             return allStar.isAggressive && !allStar.isDeadOrDying
         }
 
+        override fun stop() {
+            super.stop()
+            allStar.chargingTime = 0
+        }
+
         override fun tick() {
             super.tick()
             if (--chargeDelayTime == 0) {

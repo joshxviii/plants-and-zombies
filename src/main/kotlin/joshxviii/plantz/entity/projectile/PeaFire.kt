@@ -17,7 +17,8 @@ class PeaFire(
     PazDamageTypes.FIRE,
 ) {
     override fun afterHitEntityEffect(target: LivingEntity) {
-        target.igniteForSeconds(3.0f);
+        super.afterHitEntityEffect(target)
+        target.igniteForSeconds(3.5f);
     }
 
     override fun onHit(hitResult: HitResult) {

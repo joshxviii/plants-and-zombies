@@ -32,7 +32,7 @@ object PazSpawnPlacements {
         registerSpawnPlacement(PazEntities.CHOMPER, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_FIRE_PEASHOOTER, PazEntities.FIRE_PEA_SHOOTER,
-            weight = 10, minGroupSize = 1, maxGroupSize = 1)
+            weight = 10, minGroupSize = 1, maxGroupSize = 3)
         registerSpawnPlacement(PazEntities.FIRE_PEA_SHOOTER, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_FUMESHROOM, PazEntities.FUME_SHROOM,
@@ -44,15 +44,15 @@ object PazSpawnPlacements {
         registerSpawnPlacement(PazEntities.HYPNOSHROOM, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_ICE_PEASHOOTER, PazEntities.ICE_PEA_SHOOTER,
-            weight = 10, minGroupSize = 1, maxGroupSize = 1)
+            weight = 10, minGroupSize = 1, maxGroupSize = 3)
         registerSpawnPlacement(PazEntities.ICE_PEA_SHOOTER, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_CABBAGEPULT, PazEntities.CABBAGE_PULT,
-            weight = 10, minGroupSize = 1, maxGroupSize = 1)
+            weight = 10, minGroupSize = 1, maxGroupSize = 2)
         registerSpawnPlacement(PazEntities.CABBAGE_PULT, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_KERNELPULT, PazEntities.KERNEL_PULT,
-            weight = 10, minGroupSize = 1, maxGroupSize = 1)
+            weight = 10, minGroupSize = 1, maxGroupSize = 2)
         registerSpawnPlacement(PazEntities.KERNEL_PULT, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_MELONPULT, PazEntities.MELON_PULT,
@@ -60,7 +60,7 @@ object PazSpawnPlacements {
         registerSpawnPlacement(PazEntities.MELON_PULT, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_PEASHOOTER, PazEntities.PEA_SHOOTER,
-            weight = 10, minGroupSize = 1, maxGroupSize = 1)
+            weight = 10, minGroupSize = 1, maxGroupSize = 4)
         registerSpawnPlacement(PazEntities.PEA_SHOOTER, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_POTATOMINE, PazEntities.POTATO_MINE,
@@ -68,7 +68,7 @@ object PazSpawnPlacements {
         registerSpawnPlacement(PazEntities.POTATO_MINE, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_REPEATER, PazEntities.REPEATER,
-            weight = 10, minGroupSize = 1, maxGroupSize = 1)
+            weight = 10, minGroupSize = 1, maxGroupSize = 3)
         registerSpawnPlacement(PazEntities.REPEATER, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_SCAREDYSHROOM, PazEntities.SCAREDY_SHROOM,

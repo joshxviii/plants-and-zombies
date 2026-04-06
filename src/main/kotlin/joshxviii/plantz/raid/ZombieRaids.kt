@@ -73,8 +73,9 @@ class ZombieRaids(
         if (tick % 200 == 0) setDirty()
     }
 
-    fun createOrExtendZombieRaid(player: ServerPlayer, flagPosition: BlockPos): ZombieRaid? {
+    fun createOrExtendZombieRaid(player: ServerPlayer, flagPosition: BlockPos?): ZombieRaid? {
         if (player.isSpectator) return null
+        if (flagPosition == null) return null
         else {
             val level = player.level()
             if (!level.gameRules.get<Boolean>(GameRules.RAIDS)!!) return null
