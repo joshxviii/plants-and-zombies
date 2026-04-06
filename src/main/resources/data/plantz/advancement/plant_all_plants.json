@@ -1,0 +1,167 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:seed_packet",
+      "components": {
+        "plantz:seed_packet": {
+          "id": "plantz:melonpult"
+        }
+      }
+    },
+    "title": {
+      "translate": "advancements.plantz.plant_all_plants"
+    },
+    "description": {
+      "translate": "advancements.plantz.plant_all_plants.description"
+    },
+    "frame": "challenge"
+  },
+  "parent": "plantz:grow_plant_seeds",
+  "criteria": {
+    "plantz:sunflower": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:sunflower"
+        }
+      }
+    },
+    "plantz:peashooter": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:peashooter"
+        }
+      }
+    },
+    "plantz:wallnut": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:wallnut"
+        }
+      }
+    },
+    "plantz:chomper": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:chomper"
+        }
+      }
+    },
+    "plantz:cherrybomb": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:cherrybomb"
+        }
+      }
+    },
+    "plantz:potatomine": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:potatomine"
+        }
+      }
+    },
+    "plantz:ice_peashooter": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:ice_peashooter"
+        }
+      }
+    },
+    "plantz:repeater": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:repeater"
+        }
+      }
+    },
+    "plantz:fire_peashooter": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:fire_peashooter"
+        }
+      }
+    },
+    "plantz:cactus": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:cactus"
+        }
+      }
+    },
+    "plantz:cabbagepult": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:cabbagepult"
+        }
+      }
+    },
+    "plantz:kernelpult": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:kernelpult"
+        }
+      }
+    },
+    "plantz:melonpult": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:melonpult"
+        }
+      }
+    },
+    "plantz:puffshroom": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:puffshroom"
+        }
+      }
+    },
+    "plantz:fumeshroom": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:fumeshroom"
+        }
+      }
+    },
+    "plantz:scaredyshroom": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:scaredyshroom"
+        }
+      }
+    },
+    "plantz:sunshroom": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:scaredyshroom"
+        }
+      }
+    },
+    "plantz:hypnoshroom": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:scaredyshroom"
+        }
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

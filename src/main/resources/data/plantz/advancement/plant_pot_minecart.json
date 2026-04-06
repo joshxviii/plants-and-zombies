@@ -1,0 +1,22 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:plant_pot_minecart"
+    },
+    "title": {
+      "translate": "advancements.plantz.plant_pot_minecart"
+    },
+    "description": {
+      "translate": "advancements.plantz.plant_pot_minecart.description"
+    },
+    "frame": "challenge",
+    "hidden": true
+  },
+  "parent": "plantz:grow_plant_seeds",
+  "criteria": {
+    "send_mail": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "sends_telemetry_event": false
+}

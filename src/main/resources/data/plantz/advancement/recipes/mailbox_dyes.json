@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:recipes/root",
+  "parent": "plantz:recipes/mailbox",
   "criteria": {
     "has_the_recipe": {
       "conditions": {

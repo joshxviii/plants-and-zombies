@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:plantz_flag"
+    },
+    "title": {
+      "translate": "advancements.plantz.craft_plant_flag"
+    },
+    "description": {
+      "translate": "advancements.plantz.craft_plant_flag.description"
+    }
+  },
+  "parent": "plantz:root",
+  "criteria": {
+    "craft_flag": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "plantz:plantz_flag"
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

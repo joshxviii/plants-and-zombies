@@ -1,7 +1,12 @@
 {
   "values": [
     "minecraft:dark_forest",
+    "minecraft:taiga",
     "minecraft:mushroom_fields",
+    {
+     "id": "#c:is_old_growth",
+      "required": false
+    },
     {
       "id": "#c:is_mushroom",
       "required": false

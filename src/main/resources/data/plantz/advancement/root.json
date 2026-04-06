@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:sun"
+    },
+    "title": {
+      "translate": "advancements.plantz.root"
+    },
+    "description": {
+      "translate": "advancements.plantz.root.description"
+    },
+    "background": "plantz:gui/advancements/background"
+  },
+  "criteria": {
+    "has_sun": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "plantz:sun"
+          }
+        ]
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

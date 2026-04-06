@@ -1,0 +1,20 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:mailbox"
+    },
+    "title": {
+      "translate": "advancements.plantz.send_mail"
+    },
+    "description": {
+      "translate": "advancements.plantz.send_mail.description"
+    }
+  },
+  "parent": "plantz:read_newspaper",
+  "criteria": {
+    "send_mail": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "sends_telemetry_event": false
+}

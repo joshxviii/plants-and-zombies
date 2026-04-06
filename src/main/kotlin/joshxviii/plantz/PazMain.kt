@@ -6,12 +6,13 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.registry.LandPathTypeRegistry
 import net.minecraft.server.level.ServerLevel
 import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 
 object PazMain : ModInitializer {
 	const val MODID = "plantz"
-    private val logger = LogManager.getLogger(MODID)
-
+	@JvmField
+	val LOGGER: Logger = LogManager.getLogger()
 
 	override fun onInitialize() {
 
@@ -20,6 +21,7 @@ object PazMain : ModInitializer {
 		PazServerParticles.initialize()
 		PazBlocks.initialize()
 		PazItems.initialize()
+		PazLootTables.initialize()
 		PazEffects.initialize()
 		PazCreativeTab.initialize()
 		PazEntities.initialize()

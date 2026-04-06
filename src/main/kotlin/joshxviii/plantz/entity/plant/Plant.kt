@@ -151,7 +151,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     fun getSeedGrowCooldownDelay() : Int {
         val sunCost = PazEntities.getSunCostFromType(this.type)
-        return 600 + (sunCost*650)
+        return 600 + (sunCost*650) + random.nextInt(40)
     }
 
     private var idleAnimationStartTick: Int = 0
@@ -219,9 +219,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         attackGoals()
     }
     open fun attackGoals() {
+        this.targetSelector.addGoal(1, HurtByTargetGoal(this, Plant::class.java).setAlertOthers())
         this.targetSelector.addGoal(1, OwnerHurtByTargetGoal(this))
         this.targetSelector.addGoal(2, OwnerHurtTargetGoal(this))
-        this.targetSelector.addGoal(3, HurtByTargetGoal(this, Plant::class.java).setAlertOthers())
     }
     override fun canAttack(target: LivingEntity): Boolean = super.canAttack(target) && !target.hasSameOwner(this)
 
@@ -445,9 +445,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                     return InteractionResult.SUCCESS_SERVER
                 }
                 else if (testGrowConditions() == PlantGrowNeeds.SUN) {// grow seeds
+                    if (!isTame || player != owner) {
+                        player.sendOverlayMessage(Component.translatable("message.plantz.not_yours", this.name).withStyle(ChatFormatting.RED))
+                        return InteractionResult.FAIL
+                    }
                     itemStack.consume(1, player)
-                    playSound(SoundEvents.BUBBLE_POP, 1.0f,
-                        receivedSun/sunRequiredForSeeds() + 0.5f
+                    playSound(SoundEvents.BUBBLE_POP, 1.0f,// TODO make custom sound
+                        receivedSun.toFloat()/sunRequiredForSeeds() + 0.9f
                     )
                     if (receivedSun++ >= sunRequiredForSeeds()) {
                         receivedSun = 0
@@ -464,7 +468,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             // shovel interaction
             if (itemStack.`is`(ItemTags.SHOVELS)) {
                 if (!isTame || player != owner) {
-                    player.sendSystemMessage(
+                    player.sendOverlayMessage(
                         Component.translatable("message.plantz.not_yours", this.name).withStyle(ChatFormatting.RED)
                     )
                     return InteractionResult.FAIL

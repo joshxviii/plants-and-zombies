@@ -1,0 +1,20 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:copper_shovel"
+    },
+    "title": {
+      "translate": "advancements.plantz.grow_plant_seeds"
+    },
+    "description": {
+      "translate": "advancements.plantz.grow_plant_seeds.description"
+    }
+  },
+  "parent": "plantz:root",
+  "criteria": {
+    "grow_seeds": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "sends_telemetry_event": false
+}

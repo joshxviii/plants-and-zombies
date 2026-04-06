@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:brainz_flag"
+    },
+    "title": {
+      "translate": "advancements.plantz.win_zombie_raid"
+    },
+    "description": {
+      "translate": "advancements.plantz.win_zombie_raid.description"
+    },
+    "frame": "challenge"
+  },
+  "parent": "plantz:craft_plant_flag",
+  "criteria": {
+    "win_zombie_raid": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "sends_telemetry_event": false
+}

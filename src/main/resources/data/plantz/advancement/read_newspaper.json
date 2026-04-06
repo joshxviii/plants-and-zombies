@@ -1,0 +1,25 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:newspaper"
+    },
+    "title": {
+      "translate": "advancements.plantz.read_newspaper"
+    },
+    "description": {
+      "translate": "advancements.plantz.read_newspaper.description"
+    }
+  },
+  "parent": "plantz:root",
+  "criteria": {
+    "read_newspaper": {
+      "trigger": "minecraft:using_item",
+      "conditions": {
+        "item": {
+          "items": "plantz:newspaper"
+        }
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}
