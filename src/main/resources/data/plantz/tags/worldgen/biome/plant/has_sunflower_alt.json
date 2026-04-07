@@ -1,14 +1,13 @@
 {
   "values": [
     "minecraft:flower_forest",
-    "minecraft:plains",
     "minecraft:sunflower_plains",
     {
-      "id": "#c:is_plains",
+      "id": "#c:is_flower_forest",
       "required": false
     },
     {
-      "id": "#c:is_forest",
+      "id": "#c:is_floral",
       "required": false
     }
   ]
