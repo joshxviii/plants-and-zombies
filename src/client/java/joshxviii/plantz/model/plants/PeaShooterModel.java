@@ -32,6 +32,7 @@ public class PeaShooterModel extends EntityModel<@NotNull PlantRenderState> {
 	private final KeyframeAnimation idleAnimation;
 	private final KeyframeAnimation actionAnimation;
 	private final KeyframeAnimation initAnimation;
+	private final KeyframeAnimation sleepAnimation;
 
 	public PeaShooterModel(ModelPart root) {
 		super(root);
@@ -54,6 +55,7 @@ public class PeaShooterModel extends EntityModel<@NotNull PlantRenderState> {
 		this.initAnimation = PeaShooterAnimation.init.bake(root);
 		this.idleAnimation = PeaShooterAnimation.idle.bake(root);
 		this.actionAnimation = PeaShooterAnimation.action.bake(root);
+		this.sleepAnimation = PeaShooterAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -109,5 +111,6 @@ public class PeaShooterModel extends EntityModel<@NotNull PlantRenderState> {
 		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
+		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

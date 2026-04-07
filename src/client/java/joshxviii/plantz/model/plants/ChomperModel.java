@@ -42,6 +42,7 @@ public class ChomperModel extends EntityModel<@NotNull PlantRenderState> {
 	private final KeyframeAnimation actionAnimation;
 	private final KeyframeAnimation cooldownAnimation;
 	private final KeyframeAnimation initAnimation;
+	private final KeyframeAnimation sleepAnimation;
 
 	public ChomperModel(ModelPart root) {
 		super(root);
@@ -73,6 +74,7 @@ public class ChomperModel extends EntityModel<@NotNull PlantRenderState> {
 		this.idleAnimation = ChomperAnimation.idle.bake(root);
 		this.actionAnimation = ChomperAnimation.action.bake(root);
 		this.cooldownAnimation = ChomperAnimation.cooldown.bake(root);
+		this.sleepAnimation = ChomperAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -163,5 +165,6 @@ public class ChomperModel extends EntityModel<@NotNull PlantRenderState> {
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
 		this.cooldownAnimation.apply(state.getCoolDownAnimationState(), state.ageInTicks);
+		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

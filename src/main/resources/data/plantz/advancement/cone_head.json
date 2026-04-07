@@ -1,0 +1,36 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:cone"
+    },
+    "title": {
+      "translate": "advancements.plantz.cone_head"
+    },
+    "description": {
+      "translate": "advancements.plantz.cone_head.description"
+    }
+  },
+  "parent": "plantz:root",
+  "criteria": {
+    "wearing_cone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "player": {
+          "equipment": {
+            "head": {
+              "items": [
+                "plantz:cone"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "wearing_cone"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

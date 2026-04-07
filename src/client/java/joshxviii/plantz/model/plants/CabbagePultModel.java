@@ -32,7 +32,7 @@ public class CabbagePultModel extends EntityModel<@NotNull PlantRenderState> {
 	private final KeyframeAnimation idleAnimation;
 	private final KeyframeAnimation actionAnimation;
 	private final KeyframeAnimation initAnimation;
-
+	private final KeyframeAnimation sleepAnimation;
 
 	public CabbagePultModel(ModelPart root) {
 		super(root);
@@ -45,7 +45,7 @@ public class CabbagePultModel extends EntityModel<@NotNull PlantRenderState> {
 		this.coil_2 = this.coil.getChild("coil_2");
 		this.basket = this.coil_2.getChild("basket");
 		this.projectile = this.basket.getChild("projectile");
-		this.leaves = this.head.getChild("leaves");
+		this.leaves = this.body.getChild("leaves");
 		this.leaf_1 = this.leaves.getChild("leaf_1");
 		this.leaf_2 = this.leaves.getChild("leaf_2");
 		this.leaf_3 = this.leaves.getChild("leaf_3");
@@ -53,6 +53,7 @@ public class CabbagePultModel extends EntityModel<@NotNull PlantRenderState> {
 		this.initAnimation = CabbagePultAnimation.init.bake(root);
 		this.idleAnimation = CabbagePultAnimation.idle.bake(root);
 		this.actionAnimation = CabbagePultAnimation.action.bake(root);
+		this.sleepAnimation = CabbagePultAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -90,7 +91,7 @@ public class CabbagePultModel extends EntityModel<@NotNull PlantRenderState> {
 
 		PartDefinition projectile = basket.addOrReplaceChild("projectile", CubeListBuilder.create().texOffs(71, 0).addBox(-3.0F, -3.0F, -3.0F, 6.0F, 6.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -4.0F, -1.0F, 0.0F, -1.5708F, 0.0F));
 
-		PartDefinition leaves = head.addOrReplaceChild("leaves", CubeListBuilder.create(), PartPose.offset(0.0F, -0.4F, 0.0F));
+		PartDefinition leaves = body.addOrReplaceChild("leaves", CubeListBuilder.create(), PartPose.offset(0.0F, -0.4F, 0.0F));
 
 		PartDefinition leaf_1 = leaves.addOrReplaceChild("leaf_1", CubeListBuilder.create().texOffs(43, 0).addBox(-5.0F, 0.0F, -6.0F, 10.0F, 0.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.4F, -5.0F));
 
@@ -110,5 +111,6 @@ public class CabbagePultModel extends EntityModel<@NotNull PlantRenderState> {
 		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
+		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

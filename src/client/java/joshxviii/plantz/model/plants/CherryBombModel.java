@@ -25,6 +25,7 @@ public class CherryBombModel extends EntityModel<@NotNull PlantRenderState> {
 	private final ModelPart head_2;
 	private final KeyframeAnimation idleAnimation;
 	private final KeyframeAnimation initAnimation;
+	private final KeyframeAnimation sleepAnimation;
 
 	public CherryBombModel(ModelPart root) {
 		super(root);
@@ -40,6 +41,7 @@ public class CherryBombModel extends EntityModel<@NotNull PlantRenderState> {
 		this.head_2 = this.stem.getChild("head_2");
 		this.initAnimation = CherryBombAnimation.init.bake(root);
 		this.idleAnimation = CherryBombAnimation.idle.bake(root);
+		this.sleepAnimation = CherryBombAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -74,5 +76,6 @@ public class CherryBombModel extends EntityModel<@NotNull PlantRenderState> {
 		super.setupAnim(state);
 		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
+		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

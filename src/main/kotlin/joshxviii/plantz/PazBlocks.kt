@@ -44,6 +44,15 @@ object PazBlocks {
             .pushReaction(PushReaction.NORMAL),
         ::PlantPotBlock
     )
+    @JvmField val ZEN_PLANT_POT: Block = registerBlock(
+        "zen_plant_pot",
+        BlockBehaviour.Properties.of()
+            .sound(SoundType.WOOD)
+            .strength(0.2F)
+            .noOcclusion()
+            .pushReaction(PushReaction.NORMAL),
+        ::ZenPlantPotBlock
+    )
 
     @JvmField val MAILBOX: Block = registerBlock("mailbox", mailboxProperties(), ::MailboxBlock)
     @JvmField val LIGHT_GRAY_MAILBOX: Block = registerBlock("light_gray_mailbox", mailboxProperties(MapColor.COLOR_LIGHT_GRAY), {MailboxBlock(it, DyeColor.LIGHT_GRAY)})

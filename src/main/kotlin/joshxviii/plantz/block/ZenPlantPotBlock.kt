@@ -22,15 +22,16 @@ import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 
-class PlantPotBlock(properties: Properties) : HorizontalDirectionalBlock(properties), SimpleWaterloggedBlock {
+class ZenPlantPotBlock(properties: Properties) : HorizontalDirectionalBlock(properties), SimpleWaterloggedBlock {
     companion object {
-        val CODEC: MapCodec<PlantPotBlock> = simpleCodec(::PlantPotBlock)
+        val CODEC: MapCodec<ZenPlantPotBlock> = simpleCodec(::ZenPlantPotBlock)
         val SHAPE: VoxelShape = Util.make {
             Shapes.or(
-                column(12.0, 0.0, 6.0),
+                column(16.0, 0.0, 3.0),
+                column(12.0, 3.0, 9.0),
                 Shapes.join(
-                    column(14.0, 6.0, 8.0),
-                    column(10.0, 6.0, 8.0),
+                    column(14.0, 9.0, 11.0),
+                    column(10.0, 9.0, 11.0),
                     BooleanOp.ONLY_FIRST
                 )
             )
@@ -80,5 +81,5 @@ class PlantPotBlock(properties: Properties) : HorizontalDirectionalBlock(propert
         return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random)
     }
 
-    override fun codec(): MapCodec<out PlantPotBlock> { return CODEC }
+    override fun codec(): MapCodec<out ZenPlantPotBlock> { return CODEC }
 }

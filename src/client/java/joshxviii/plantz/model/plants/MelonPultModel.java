@@ -36,6 +36,7 @@ public class MelonPultModel extends EntityModel<@NotNull PlantRenderState> {
 	private final KeyframeAnimation idleAnimation;
 	private final KeyframeAnimation actionAnimation;
 	private final KeyframeAnimation initAnimation;
+	private final KeyframeAnimation sleepAnimation;
 
 	public MelonPultModel(ModelPart root) {
 		super(root);
@@ -60,6 +61,7 @@ public class MelonPultModel extends EntityModel<@NotNull PlantRenderState> {
 		this.initAnimation = MelonPultAnimation.init.bake(root);
 		this.idleAnimation = MelonPultAnimation.idle.bake(root);
 		this.actionAnimation = MelonPultAnimation.action.bake(root);
+		this.sleepAnimation = MelonPultAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -119,5 +121,6 @@ public class MelonPultModel extends EntityModel<@NotNull PlantRenderState> {
 		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
+		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

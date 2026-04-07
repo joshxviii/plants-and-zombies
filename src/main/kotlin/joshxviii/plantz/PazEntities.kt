@@ -233,7 +233,7 @@ object PazEntities {
         sunCost = 7,
         width = 0.6f,
         height = 1.3f,
-        eyeHeight = 0.3f,
+        eyeHeight = 0.6f,
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 3.0,
             followRange = 20.0

@@ -17,7 +17,7 @@
     "frame": "challenge",
     "hidden": true
   },
-  "parent": "plantz:root",
+  "parent": "plantz:cone_head",
   "criteria": {
     "send_mail": {
       "trigger": "minecraft:impossible"

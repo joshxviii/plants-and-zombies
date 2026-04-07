@@ -37,6 +37,7 @@ public class KernelPultModel extends EntityModel<@NotNull PlantRenderState> {
 	private final KeyframeAnimation idleAnimation;
 	private final KeyframeAnimation actionAnimation;
 	private final KeyframeAnimation initAnimation;
+	private final KeyframeAnimation sleepAnimation;
 
 	public KernelPultModel(ModelPart root) {
 		super(root);
@@ -61,6 +62,7 @@ public class KernelPultModel extends EntityModel<@NotNull PlantRenderState> {
 		this.initAnimation = KernelPultAnimation.init.bake(root);
 		this.idleAnimation = KernelPultAnimation.idle.bake(root);
 		this.actionAnimation = KernelPultAnimation.action.bake(root);
+		this.sleepAnimation = KernelPultAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -125,5 +127,6 @@ public class KernelPultModel extends EntityModel<@NotNull PlantRenderState> {
 		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
+		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

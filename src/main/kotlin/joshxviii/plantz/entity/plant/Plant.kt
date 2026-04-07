@@ -373,12 +373,16 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     fun testGrowConditions(): PlantGrowNeeds {
         val farmBlock = getBlockBelow()
-        if (!farmBlock.`is`(Blocks.FARMLAND)) return PlantGrowNeeds.SOIL
-        if (farmBlock.getValue(BlockStateProperties.MOISTURE) < 7) return PlantGrowNeeds.WATER
-        if (seedGrowCooldown > 0 && !isAsleep) {
+        if (!farmBlock.`is`(PazBlocks.ZEN_PLANT_POT)) {
+            if (!farmBlock.`is`(Blocks.FARMLAND)) return PlantGrowNeeds.SOIL
+            if (farmBlock.getValue(BlockStateProperties.MOISTURE) < 7) return PlantGrowNeeds.WATER
+        }
+        if (seedGrowCooldown > 0) {
+            if (!isAsleep) isAsleep = true
             --seedGrowCooldown
             return PlantGrowNeeds.TIME
         }
+        if (isAsleep) isAsleep = false
         return PlantGrowNeeds.SUN
     }
 

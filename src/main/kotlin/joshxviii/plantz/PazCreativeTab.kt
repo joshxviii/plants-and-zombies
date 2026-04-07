@@ -66,6 +66,7 @@ object PazCreativeTab {
                 output.accept(PazBlocks.PLANTZ_FLAG)
                 output.accept(PazItems.SUN)
                 output.accept(PazBlocks.PLANT_POT)
+                output.accept(PazBlocks.ZEN_PLANT_POT)
                 output.accept(PazItems.PLANT_POT_MINECART)
                 PazBlocks.mailboxByColor.forEach { output.accept(it.value) }
             }

@@ -18,6 +18,7 @@ public class WallNutModel extends EntityModel<@NotNull PlantRenderState> {
 	private final KeyframeAnimation idleAnimation;
 	private final KeyframeAnimation initAnimation;
 	private final KeyframeAnimation actionAnimation;
+	private final KeyframeAnimation sleepAnimation;
 
 	public WallNutModel(ModelPart root) {
 		super(root);
@@ -26,6 +27,7 @@ public class WallNutModel extends EntityModel<@NotNull PlantRenderState> {
 		this.initAnimation = WallNutAnimation.init.bake(root);
 		this.idleAnimation = WallNutAnimation.idle.bake(root);
 		this.actionAnimation = WallNutAnimation.action.bake(root);
+		this.sleepAnimation = WallNutAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -50,5 +52,6 @@ public class WallNutModel extends EntityModel<@NotNull PlantRenderState> {
 		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
+		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }
