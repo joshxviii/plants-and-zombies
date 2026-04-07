@@ -13,7 +13,7 @@
   "parent": "plantz:root",
   "criteria": {
     "grow_seeds": {
-      "trigger": "minecraft:impossible"
+      "trigger": "plantz:grow_seeds"
     }
   },
   "sends_telemetry_event": false

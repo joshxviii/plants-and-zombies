@@ -1,0 +1,43 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:football_helmet"
+    },
+    "title": {
+      "translate": "advancements.plantz.big_three"
+    },
+    "description": {
+      "translate": "advancements.plantz.big_three.description"
+    },
+    "frame": "task",
+    "hidden": false
+  },
+  "parent": "plantz:cone_head",
+  "criteria": {
+    "plantz:all_star": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "plantz:all_star"
+        }
+      }
+    },
+    "plantz:disco_zombie": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "plantz:disco_zombie"
+        }
+      }
+    },
+    "plantz:zombie_yeti": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "plantz:zombie_yeti"
+        }
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

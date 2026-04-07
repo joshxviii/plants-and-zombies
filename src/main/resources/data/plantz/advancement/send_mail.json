@@ -13,7 +13,7 @@
   "parent": "plantz:read_newspaper",
   "criteria": {
     "send_mail": {
-      "trigger": "minecraft:impossible"
+      "trigger": "plantz:send_mail"
     }
   },
   "sends_telemetry_event": false

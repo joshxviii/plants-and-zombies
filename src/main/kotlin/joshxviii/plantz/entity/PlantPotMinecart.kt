@@ -1,6 +1,7 @@
 package joshxviii.plantz.entity
 
 import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.PazCriteria
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.block.PlantPotBlock
 import joshxviii.plantz.entity.plant.Plant
@@ -8,6 +9,7 @@ import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -28,6 +30,8 @@ class PlantPotMinecart(type: EntityType<out AbstractMinecart>, level: Level) : A
     override fun interact(player: Player, hand: InteractionHand, location: Vec3): InteractionResult {
         val itemStack = player.getItemInHand(hand)
         val serverLevel = this.level()
+
+        if (passengers.isNotEmpty()) return InteractionResult.PASS
 
         if (itemStack.`is`(PazItems.SEED_PACKET)) {
             val plantType = SeedPacketItem.typeFromStack(itemStack)
@@ -53,9 +57,9 @@ class PlantPotMinecart(type: EntityType<out AbstractMinecart>, level: Level) : A
             entity?.playSound(SoundEvents.BIG_DRIPLEAF_PLACE, 1.0f, 1.0f)
             if (entity is TamableAnimal) entity.tame(player)
             serverLevel.gameEvent(player, GameEvent.ENTITY_PLACE, this.position())
-            return InteractionResult.FAIL
+            if (player is ServerPlayer) PazCriteria.PLANT_POT_MINECRAFT.trigger(player, entity !=null && hasPassenger(entity))
         }
-        return InteractionResult.PASS
+        return InteractionResult.SUCCESS_SERVER
     }
 
     override fun isRideable(): Boolean = false

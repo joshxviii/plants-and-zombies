@@ -14,7 +14,7 @@
   "parent": "plantz:craft_plant_flag",
   "criteria": {
     "win_zombie_raid": {
-      "trigger": "minecraft:impossible"
+      "trigger": "plantz:win_zombie_raid"
     }
   },
   "sends_telemetry_event": false

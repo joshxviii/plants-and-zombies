@@ -1,4 +1,6 @@
 {
+  "advancements.plantz.big_three": "The Big Three",
+  "advancements.plantz.big_three.description": "Defeat an All Star, Disco Zombie, and a Zombie Yeti.",
   "advancements.plantz.cone_head": "U R A Wizard!",
   "advancements.plantz.cone_head.description": "Wear a Cone on your head.",
   "advancements.plantz.craft_plant_flag": "Plant Power!",
@@ -15,7 +17,7 @@
   "advancements.plantz.read_newspaper.description": "Acquire and read the daily newspaper.",
   "advancements.plantz.root": "Plants & Zombies",
   "advancements.plantz.root.description": "Get some sun!",
-  "advancements.plantz.send_mail": "A Gift For Me!",
+  "advancements.plantz.send_mail": "A Gift From Me!",
   "advancements.plantz.send_mail.description": "Send some mail to your neighbor!",
   "advancements.plantz.win_zombie_raid": "Tough Nut",
   "advancements.plantz.win_zombie_raid.description": "Defeat the Zombie Raid!",

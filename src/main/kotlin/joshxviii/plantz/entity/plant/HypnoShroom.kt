@@ -1,11 +1,13 @@
 package joshxviii.plantz.entity.plant
 
+import joshxviii.plantz.PazCriteria
 import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.hasSameOwner
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.EntityType
@@ -25,7 +27,6 @@ class HypnoShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEn
             target !is Plant
                 && target is Enemy
         })
-
     }
 
     override fun actuallyHurt(level: ServerLevel, source: DamageSource, dmg: Float) {
@@ -40,6 +41,8 @@ class HypnoShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEn
                 height = 0.6f
             )
             attacker.addEffect(MobEffectInstance(PazEffects.HYPNOTIZE, 800, 0))
+            val owner = owner
+            if (owner is ServerPlayer) PazCriteria.DISCO_HYPNO.trigger(owner, attacker.`is`(PazEntities.DISCO_ZOMBIE))
             playSound(PazSounds.HYPNOTIZED)
         }
     }

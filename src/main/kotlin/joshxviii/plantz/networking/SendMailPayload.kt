@@ -1,5 +1,6 @@
 package joshxviii.plantz.networking
 
+import joshxviii.plantz.PazCriteria
 import joshxviii.plantz.block.MailboxState
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.inventory.MailboxMenu
@@ -71,6 +72,7 @@ data class SendMailPayload(val targetPos: BlockPos) : CustomPacketPayload {
                 level.playSound(null, menu.blockPos, SoundEvents.UI_LOOM_SELECT_PATTERN, SoundSource.BLOCKS, 0.3f, 1.2f)
             }
             else ServerPlayNetworking.send(player, SendMailResponsePayload(Component.translatable("container.plantz.mailbox_full")))
+            PazCriteria.SEND_MAIL.trigger(player, success)
         }
     }
 

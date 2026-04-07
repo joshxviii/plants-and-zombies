@@ -16,7 +16,7 @@ object PazMain : ModInitializer {
 
 	override fun onInitialize() {
 
-		ServerTickEvents.END_LEVEL_TICK.register { it?.getZombieRaids()?.tick(it) }
+		ServerTickEvents.END_LEVEL_TICK.register { it.getZombieRaids().tick(it) }
 
 		PazServerParticles.initialize()
 		PazBlocks.initialize()
@@ -26,6 +26,7 @@ object PazMain : ModInitializer {
 		PazCreativeTab.initialize()
 		PazEntities.initialize()
 		PazDamageTypes.initialize()
+		PazCriteria.initialize()
 		PazDataSerializers.initialize()
 		PazAttributes.initialize()
 		PazSounds.initialize()

@@ -6,8 +6,10 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.PazCriteria
 import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.advancement.ZombieRaidContext
 import joshxviii.plantz.tickTimeFormat
 import net.minecraft.SharedConstants
 import net.minecraft.core.BlockPos
@@ -167,6 +169,10 @@ class ZombieRaid(
             zombieRaidEvent.color = BossEvent.BossBarColor.YELLOW
             zombieRaidEvent.name = ZOMBIE_RAID_BAR_VICTORY
             postRaidTicks = POST_RAID_TICKS
+
+            zombieRaidEvent.players.forEach { player ->// advancement
+                PazCriteria.WIN_ZOMBIE_RAID.trigger(player, ZombieRaidContext(center))
+            }
         }
         // lose condition
         else if (!level.getBlockState(center).`is`(PazBlocks.PLANTZ_FLAG)) {

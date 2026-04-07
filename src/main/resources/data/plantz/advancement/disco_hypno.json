@@ -17,10 +17,10 @@
     "frame": "challenge",
     "hidden": true
   },
-  "parent": "plantz:cone_head",
+  "parent": "plantz:big_three",
   "criteria": {
-    "send_mail": {
-      "trigger": "minecraft:impossible"
+    "disco_hypno": {
+      "trigger": "plantz:disco_hypno"
     }
   },
   "sends_telemetry_event": false
