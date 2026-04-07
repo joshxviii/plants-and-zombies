@@ -145,7 +145,7 @@ object PazEntities {
     @JvmField val CACTUS: EntityType<Cactus> = registerPlant(
         "cactus",
         EntityType.Builder.of(::Cactus, MobCategory.CREATURE),
-        sunCost = 7,
+        sunCost = 6,
         width = 0.8f,
         height = 1.25f,
         eyeHeight = 0.85f,
@@ -215,7 +215,7 @@ object PazEntities {
     @JvmField val FUME_SHROOM: EntityType<FumeShroom> = registerPlant(
         "fumeshroom",
         EntityType.Builder.of(::FumeShroom, MobCategory.CREATURE),
-        sunCost = 7,
+        sunCost = 6,
         width = 0.8f,
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(

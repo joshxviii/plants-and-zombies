@@ -42,6 +42,7 @@ class ExplodeGoal(
 
     override fun canUse(): Boolean {
         if (!actionPredicate.test(plantEntity)) return false
+        if ((plantEntity.isAsleep || plantEntity.isGrowingSeeds)) return false
         val level = plantEntity.level() as ServerLevel
         target = level.getNearestEntity(LivingEntity::class.java, targetConditions, plantEntity, plantEntity.x, plantEntity.y, plantEntity.z, plantEntity.boundingBox.inflate(detectRange))
         val t = target

@@ -88,9 +88,9 @@ class PlantRenderer(
         val rm = Minecraft.getInstance().resourceManager
 
         val suffixes = buildList {
+            if (!state.texturePathExtra.isEmpty()) add(state.texturePathExtra)
             if (state.isBaby)   add("baby")
             if (state.isAsleep) add("sleep")
-            if (!state.texturePathExtra.isEmpty()) add(state.texturePathExtra)
         }
 
         val textureLocation = resolveTextureLocation(base, suffixes, rm)

@@ -151,7 +151,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     fun getSeedGrowCooldownDelay() : Int {
         val sunCost = PazEntities.getSunCostFromType(this.type)
-        return 800 + (sunCost*450) + random.nextInt(40) + if (!getBlockBelow().`is`(PazBlocks.ZEN_PLANT_POT)) 400 else 0
+        return 900 + (sunCost*450) + random.nextInt(50) + if (!getBlockBelow().`is`(PazBlocks.ZEN_PLANT_POT)) 600 else 0
     }
 
     private var idleAnimationStartTick: Int = 0
@@ -290,7 +290,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val target = this.target
         if (target != null) getLookControl().setLookAt(target, 180.0F, 180.0F);
 
-        if (isAsleep && tickCount % 10 == 0 && random.nextFloat()>0.6 && tickCount > 18 && isAlive) {
+        if (isAsleep && tickCount % 12 == 0 && random.nextFloat()>0.6 && tickCount > 18 && isAlive) {
             val direction = calculateViewVector(xRot, yHeadRot).scale(boundingBox.xsize)
             level().addParticle(
                 PazServerParticles.SLEEP,
@@ -303,7 +303,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
         val needs = testGrowConditions()
         if (needs == PlantGrowNeeds.SUN) {
-            if (tickCount%20==0) level().addParticle(PazServerParticles.NEEDS_SUN, x, y+eyeHeight+0.5, z, 0.0, 0.0, 0.0)
+            if (tickCount%25==0) level().addParticle(PazServerParticles.NEEDS_SUN, x, y+eyeHeight+0.5, z, 0.0, 0.0, 0.0)
         }
     }
 
