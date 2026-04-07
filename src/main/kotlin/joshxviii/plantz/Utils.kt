@@ -20,18 +20,6 @@ import net.minecraft.world.level.pathfinder.Path
 
 fun pazResource(path: String): Identifier = Identifier.fromNamespaceAndPath(MODID, path)
 
-fun ItemStack.canBlockDamage(source: DamageSource): Boolean {
-    return this.components.has(PazComponents.BLOCKS_PROJECTILE_DAMAGE) && source.`is`(PazTags.DamageTypes.BLOCKABLE_DAMAGE)
-}
-
-fun LivingEntity.canArmorAbsorbDamage(source: DamageSource): Boolean {
-    val slots = setOf(EquipmentSlot.HEAD,EquipmentSlot.CHEST,EquipmentSlot.LEGS, EquipmentSlot.FEET, EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND)
-    slots.forEach { slot ->
-       if (this.getItemBySlot(slot).canBlockDamage(source)) return true
-    }
-    return false
-}
-
 fun Int.tickTimeFormat(): String = "%02d:%02d".format(
     (this / 20 / 60) % 60,
     (this / 20) % 60,
