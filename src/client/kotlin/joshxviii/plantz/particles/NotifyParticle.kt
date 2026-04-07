@@ -15,7 +15,7 @@ class NotifyParticle private constructor(
 ) : SingleQuadParticle(level, x, y, z, xd, yd, zd, sprite) {
 
     init {
-        lifetime = 5
+        lifetime = random.nextInt(4, 6)
         gravity = 0f
 
         quadSize = 0.1f

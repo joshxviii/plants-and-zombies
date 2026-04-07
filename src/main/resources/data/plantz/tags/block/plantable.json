@@ -5,12 +5,11 @@
     "#minecraft:nylium",
     "#minecraft:moss_blocks",
     "minecraft:dirt_path",
-    "minecraft:farmland",
     "minecraft:lily_pad",
     "minecraft:flower_pot",
     "minecraft:clay",
     "minecraft:soul_soil",
     "plantz:plant_pot",
-    "plantz:zen_plant_pot"
+    "#plantz:farmable"
   ]
 }

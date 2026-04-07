@@ -9,4 +9,5 @@ public interface LivingEntityAccessor {
 
     @Invoker("plantz$getHypnoId")
     boolean plantz$getHypnoId();
+
 }

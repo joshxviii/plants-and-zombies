@@ -151,7 +151,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     fun getSeedGrowCooldownDelay() : Int {
         val sunCost = PazEntities.getSunCostFromType(this.type)
-        return 600 + (sunCost*650) + random.nextInt(40)
+        return 800 + (sunCost*450) + random.nextInt(40) + if (!getBlockBelow().`is`(PazBlocks.ZEN_PLANT_POT)) 400 else 0
     }
 
     private var idleAnimationStartTick: Int = 0
@@ -302,8 +302,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
 
         val needs = testGrowConditions()
-        if (tickCount%20==0 && needs == PlantGrowNeeds.SUN) {
-            level().addParticle(PazServerParticles.NOTIFY, x, y+eyeHeight+0.5, z, 0.0, 0.0, 0.0)
+        if (needs == PlantGrowNeeds.SUN) {
+            if (tickCount%20==0) level().addParticle(PazServerParticles.NEEDS_SUN, x, y+eyeHeight+0.5, z, 0.0, 0.0, 0.0)
         }
     }
 
@@ -365,7 +365,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return leftOver.coerceAtLeast(0.0f)
     }
 
-    fun sunRequiredForSeeds(): Int = Mth.floor(PazEntities.getSunCostFromType(this.type)*1.5f)
+    fun sunRequiredForSeeds(): Int = Mth.floor(PazEntities.getSunCostFromType(this.type)*1.5f).coerceAtLeast(1)
 
     open fun canSurviveOn(block: BlockState) : Boolean {
         return block.`is`(PLANTABLE)
@@ -373,8 +373,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     fun testGrowConditions(): PlantGrowNeeds {
         val farmBlock = getBlockBelow()
-        if (!farmBlock.`is`(PazBlocks.ZEN_PLANT_POT)) {
-            if (!farmBlock.`is`(Blocks.FARMLAND)) return PlantGrowNeeds.SOIL
+        if (!farmBlock.`is`(PazTags.BlockTags.FARMABLE)) return PlantGrowNeeds.SOIL
+        if (farmBlock.hasProperty(BlockStateProperties.MOISTURE)) {
             if (farmBlock.getValue(BlockStateProperties.MOISTURE) < 7) return PlantGrowNeeds.WATER
         }
         if (seedGrowCooldown > 0) {
@@ -464,8 +464,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                         val itemEntity = ItemEntity(level, x, y + 0.5, z, stack)
                         level.addFreshEntity(itemEntity)
                         playSound(SoundEvents.ROOTED_DIRT_BREAK)
-                        return InteractionResult.SUCCESS_SERVER
-                    } else return InteractionResult.CONSUME
+                    }
+                    return InteractionResult.SUCCESS_SERVER
                 }
             }
 
@@ -503,7 +503,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         amount: Int = 8,
         horizontalSpreadScale: Double = 0.3,
         verticalSpreadScale: Double = 0.5,
-        height: Float = 0.0f
+        height: Float = 0.0f,
+        speed: Double = 0.0,
     ) {
         if (level is ServerLevel) {
             level.sendParticles(
@@ -511,7 +512,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 x, y + height, z,
                 amount,
                 horizontalSpreadScale, verticalSpreadScale, horizontalSpreadScale,
-                0.0
+                speed
             )
         }
         else repeat(amount) {
@@ -528,7 +529,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             level.addParticle(
                 particle,
                 px, py, pz,
-                xa, ya, za
+                xa, ya, za,
             )
         }
     }

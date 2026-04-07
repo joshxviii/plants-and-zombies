@@ -28,10 +28,10 @@ class ZenPlantPotBlock(properties: Properties) : HorizontalDirectionalBlock(prop
         val SHAPE: VoxelShape = Util.make {
             Shapes.or(
                 column(16.0, 0.0, 3.0),
-                column(12.0, 3.0, 9.0),
+                column(12.0, 3.0, 8.0),
                 Shapes.join(
-                    column(14.0, 9.0, 11.0),
-                    column(10.0, 9.0, 11.0),
+                    column(14.0, 7.0, 9.0),
+                    column(10.0, 7.0, 9.0),
                     BooleanOp.ONLY_FIRST
                 )
             )

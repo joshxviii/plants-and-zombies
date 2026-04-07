@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "minecraft:copper_shovel"
+      "id": "plantz:zen_plant_pot"
     },
     "title": {
       "translate": "advancements.plantz.grow_plant_seeds"

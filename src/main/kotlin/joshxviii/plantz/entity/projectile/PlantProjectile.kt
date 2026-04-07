@@ -250,7 +250,7 @@ abstract class PlantProjectile(
         val playerOwner = plantOwner?.owner as? Player
         return if (entity.hasSameOwner(plantOwner)) false
         else if (playerOwner!= null && entity.`is`(playerOwner)) false
-        else entity !is Plant && entity !is Projectile && !this.piercingIgnoreEntityIds.contains(entity.id)
+        else entity !is Plant && entity !is Projectile && super.canHitEntity(entity) && !this.piercingIgnoreEntityIds.contains(entity.id)
     }
 
     fun spawnParticle(
