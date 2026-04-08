@@ -13,6 +13,7 @@ object PazTags {
         @JvmField val MAILBOX = tag("mailbox")
         @JvmField val PLANTABLE = tag("plantable")
         @JvmField val FARMABLE = tag("farmable")
+        @JvmField val PLANT_POT_PROTECTION = tag("plant_pot_protection")
         @JvmField val YETI_SPAWNABLE_ON = tag("yeti_spawnable_on")
         @JvmField val DIGGER_BREAKABLE = tag("digger_breakable")
         private fun tag(name: String): TagKey<Block> = TagKey.create(Registries.BLOCK, pazResource(name))

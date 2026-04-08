@@ -34,7 +34,6 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.ai.behavior.SetWalkTargetAwayFrom.pos
 import net.minecraft.world.entity.ai.control.BodyRotationControl
 import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal
@@ -43,6 +42,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal
 import net.minecraft.world.entity.item.ItemEntity
+import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
@@ -50,14 +50,12 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.LightLayer
 import net.minecraft.world.level.ServerLevelAccessor
-import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
-import org.apache.logging.log4j.core.jmx.Server
 import kotlin.jvm.optionals.getOrElse
 
 /**
@@ -262,8 +260,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         else super.hurtClient(source)
     }
 
-    override fun actuallyHurt(level: ServerLevel, source: DamageSource, dmg: Float) {
+    override fun actuallyHurt(level: ServerLevel, source: DamageSource, damage: Float) {
         if (source.`is`(PazDamageTypes.EXPLODE)) return
+        val plantPotProtection: Boolean = getBlockBelow().`is`(PazTags.BlockTags.PLANT_POT_PROTECTION) && source.entity is Enemy
         super.actuallyHurt(
             level,
             if (source.entity is Zombie) DamageSource(
@@ -271,7 +270,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 source.directEntity,
                 source.entity
             ) else source,
-            dmg
+            if (plantPotProtection) damage/2 else damage
         )
     }
 

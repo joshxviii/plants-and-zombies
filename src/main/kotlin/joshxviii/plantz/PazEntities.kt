@@ -81,7 +81,7 @@ object PazEntities {
         width = 1.0f,
         height = 1.1f,
         attributes = Plant.Companion.PlantAttributes(
-            maxHealth = 40.0,
+            maxHealth = 25.0,
         )
     )
     @JvmField val CHOMPER: EntityType<Chomper> = registerPlant(
@@ -270,7 +270,7 @@ object PazEntities {
             .ridingOffset(-0.7f)
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
-            .add(Attributes.ATTACK_DAMAGE, 2.0)
+            .add(Attributes.ATTACK_DAMAGE, 3.0)
             .add(Attributes.MAX_HEALTH, 25.0)
             .add(Attributes.MOVEMENT_SPEED, 0.225)
             .add(Attributes.FOLLOW_RANGE, 16.0)
@@ -283,7 +283,7 @@ object PazEntities {
             .ridingOffset(-0.7f)
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
-            .add(Attributes.ATTACK_DAMAGE, 12.0)
+            .add(Attributes.ATTACK_DAMAGE, 13.0)
             .add(Attributes.MAX_HEALTH, 80.0)
             .add(Attributes.MOVEMENT_SPEED, 0.27)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.5)
@@ -303,7 +303,7 @@ object PazEntities {
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 7.0)
             .add(Attributes.MAX_HEALTH, 35.0)
-            .add(Attributes.MOVEMENT_SPEED, 0.24)
+            .add(Attributes.MOVEMENT_SPEED, 0.235)
             .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.0)
     )
     @JvmField val BACKUP_DANCER: EntityType<BackupDancer> =  registerZombie(
@@ -315,7 +315,7 @@ object PazEntities {
             .ridingOffset(-0.7f)
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
-            .add(Attributes.ATTACK_DAMAGE, 3.0)
+            .add(Attributes.ATTACK_DAMAGE, 3.5)
             .add(Attributes.MAX_HEALTH, 10.0)
             .add(Attributes.MOVEMENT_SPEED, 0.3)
             .add(Attributes.FOLLOW_RANGE, 16.0)
@@ -330,11 +330,12 @@ object PazEntities {
             .ridingOffset(-0.7f)
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
-            .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 10.0)
-            .add(Attributes.ATTACK_DAMAGE, 4.0)
+            .add(Attributes.ATTACK_DAMAGE, 8.0)
             .add(Attributes.MAX_HEALTH, 50.0)
             .add(Attributes.STEP_HEIGHT, 1.0)
             .add(Attributes.MOVEMENT_SPEED, 0.23)
+            .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 5.0)
+
     )
     @JvmField val IMP: EntityType<Imp> =  registerZombie(
         "imp",
@@ -344,7 +345,7 @@ object PazEntities {
             .ridingOffset(-0.7f)
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
-            .add(Attributes.ATTACK_DAMAGE, 1.0)
+            .add(Attributes.ATTACK_DAMAGE, 1.5)
             .add(Attributes.MAX_HEALTH, 15.0)
             .add(Attributes.MOVEMENT_SPEED, 0.3)
     )
@@ -356,7 +357,7 @@ object PazEntities {
             .ridingOffset(-0.7f)
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
-            .add(Attributes.ATTACK_DAMAGE, 22.0)
+            .add(Attributes.ATTACK_DAMAGE, 23.0)
             .add(Attributes.MAX_HEALTH, 250.0)
             .add(Attributes.MOVEMENT_SPEED, 0.26)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.7)
@@ -379,7 +380,7 @@ object PazEntities {
             .add(Attributes.MOVEMENT_SPEED, 0.5)
             .add(Attributes.JUMP_STRENGTH, 0.4)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.3)
-            .add(Attributes.ATTACK_DAMAGE, 2.0)
+            .add(Attributes.ATTACK_DAMAGE, 2.5)
     )
 
     //region Projectiles
