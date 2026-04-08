@@ -7,10 +7,6 @@
     "minecraft:frozen_ocean",
     "minecraft:snowy_slopes",
     {
-      "id": "#c:is_cold",
-      "required": false
-    },
-    {
       "id": "#c:is_icy",
       "required": false
     }

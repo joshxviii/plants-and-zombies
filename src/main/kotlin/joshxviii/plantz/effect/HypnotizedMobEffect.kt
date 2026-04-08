@@ -1,7 +1,6 @@
 package joshxviii.plantz.effect
 
 import joshxviii.plantz.PazEffects.HYPNOTIZED_GOAL_ATTACHMENT
-import joshxviii.plantz.PazEntities.PLANT_TEAM
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.mixin.MobAccessor
@@ -40,9 +39,6 @@ class HypnotizedMobEffect(category: MobEffectCategory, color: Int) : MobEffect(c
     override fun onEffectRemoved(effectInstance: MobEffectInstance, entity: LivingEntity) {
         super.onEffectRemoved(effectInstance, entity)
         if (entity !is Plant) {
-            val scoreboard = entity.level().server?.scoreboard?: return
-            if (entity.team == PLANT_TEAM) scoreboard.removePlayerFromTeam(entity.scoreboardName, PLANT_TEAM)
-
             if(entity is Mob) {
                 val goal = entity.getAttached<Goal>(HYPNOTIZED_GOAL_ATTACHMENT)
                 if (goal != null) (entity as MobAccessor).targetSelector.removeGoal(goal)
@@ -53,9 +49,6 @@ class HypnotizedMobEffect(category: MobEffectCategory, color: Int) : MobEffect(c
 
     private fun tryAddGoal(entity: LivingEntity) {
         if (entity !is Plant) {
-            val scoreboard = entity.level().server?.scoreboard?: return
-            if (entity.team != PLANT_TEAM) scoreboard.addPlayerToTeam(entity.scoreboardName, PLANT_TEAM)
-
             if(entity is Mob) {
                 val oldGoal = entity.getAttached<Goal>(HYPNOTIZED_GOAL_ATTACHMENT)
                 if (oldGoal != null) return

@@ -1,7 +1,7 @@
 package joshxviii.plantz.ai.goal
 
 import joshxviii.plantz.PazBlocks.PLANTZ_FLAG
-import joshxviii.plantz.PazEntities.PLANT_TEAM
+import joshxviii.plantz.PazEffects
 import joshxviii.plantz.lookAtBlockPos
 import joshxviii.plantz.moveToBlockPos
 import joshxviii.plantz.raid.getZombieRaids
@@ -43,7 +43,7 @@ class PathfindToFlagGoal(
         val targetPos = targetFlagPos ?: return false
         path = mob.getNavigation().createPath(targetPos, 0)
         val isValid = mob.level().getBlockState(targetPos).`is`(PLANTZ_FLAG)
-        return targetPos.distSqr(mob.blockPosition()) > 96 && isValid && !mob.isAggressive && path != null && mob.team != PLANT_TEAM
+        return targetPos.distSqr(mob.blockPosition()) > 96 && isValid && !mob.isAggressive && path != null && !mob.hasEffect(PazEffects.HYPNOTIZE)
     }
 
     override fun stop() {

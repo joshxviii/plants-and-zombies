@@ -44,13 +44,14 @@ public class ZombieMixin {
         var isLeader = Objects.requireNonNull(entity.getAttribute(Attributes.MAX_HEALTH)).hasModifier(Identifier.withDefaultNamespace(LEADER_MODIFIER_ID));
 
         if(isLeader) {
+            var dropChance = spawnReason.equals(EntitySpawnReason.EVENT) ? 0.0F : 1.0F;
             if (entity instanceof Gargantuar || entity instanceof ZombieYeti) {
                 entity.setItemSlot(EquipmentSlot.HEAD, PazBlocks.BRAINZ_FLAG.asItem().getDefaultInstance());
-                entity.setDropChance(EquipmentSlot.HEAD, 1.0F);
+                entity.setDropChance(EquipmentSlot.HEAD, dropChance);
             }
             else {
                 entity.setItemSlot(EquipmentSlot.OFFHAND, PazBlocks.BRAINZ_FLAG.asItem().getDefaultInstance());
-                entity.setDropChance(EquipmentSlot.OFFHAND, 1.0F);
+                entity.setDropChance(EquipmentSlot.OFFHAND, dropChance);
             }
         }
     }

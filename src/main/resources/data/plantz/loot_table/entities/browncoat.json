@@ -56,7 +56,7 @@
         },
         {
           "type": "minecraft:empty",
-          "weight": 30
+          "weight": 45
         }
       ],
       "conditions": [

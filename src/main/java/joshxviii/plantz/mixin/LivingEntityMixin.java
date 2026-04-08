@@ -2,6 +2,7 @@ package joshxviii.plantz.mixin;
 
 import joshxviii.plantz.PazEffects;
 import joshxviii.plantz.PazTags;
+import joshxviii.plantz.entity.plant.Plant;
 import net.minecraft.core.Holder;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -10,6 +11,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
@@ -60,6 +62,12 @@ abstract public class LivingEntityMixin {
     public void immuneToHypnosis(MobEffectInstance newEffect, CallbackInfoReturnable<Boolean> cir) {
         if (newEffect.is(PazEffects.HYPNOTIZE)) {
             cir.setReturnValue(!((Entity) (Object) this).is(PazTags.EntityTypes.CANNOT_HYPNOTIZE));
+        }
+    }
+    @Inject(method = "canAttack", at = @At(value = "RETURN"), cancellable = true)
+    public void stopTargetingFriendlies(LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
+        if (this.hasEffect(PazEffects.HYPNOTIZE) && (target instanceof Plant || target instanceof Player)) {
+            cir.setReturnValue(false);
         }
     }
 }

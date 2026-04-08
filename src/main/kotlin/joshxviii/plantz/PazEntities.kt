@@ -39,18 +39,8 @@ import net.minecraft.world.scores.PlayerTeam
 import net.minecraft.world.scores.Scoreboard
 
 object PazEntities {
-    private fun Scoreboard.createPlantTeam(): PlayerTeam {
-        val plantTeam = this.addPlayerTeam("plantz")
-        plantTeam.setSeeFriendlyInvisibles(false)
-        plantTeam.isAllowFriendlyFire = false
-        return plantTeam
-    }
 
     fun initialize() {
-        ServerLevelEvents.LOAD.register { server, level ->
-            val scoreboard: Scoreboard = server.scoreboard
-            PLANT_TEAM = scoreboard.getPlayerTeam("plantz")?: scoreboard.createPlantTeam()
-        }
 
         ServerEntityEvents.ENTITY_LOAD.register { entity, level ->
 
@@ -62,7 +52,7 @@ object PazEntities {
             }
 
             if (entity is Mob && entity.`is`(ATTACKS_PLANTS)) {
-                (entity as MobAccessor).targetSelector.addGoal(1, NearestAttackableTargetGoal(entity, WallNut::class.java, 4, true, true) { target, level -> target is WallNut })
+                (entity as MobAccessor).targetSelector.addGoal(2, NearestAttackableTargetGoal(entity, WallNut::class.java, 4, true, true) { target, level -> target is WallNut })
                 (entity as MobAccessor).targetSelector.addGoal(4, NearestAttackableTargetGoal(entity, Plant::class.java, 5, true, false) { target, level ->
                     target is Plant && !target.`is`(IGNORED_BY_PLANT_ATTACKERS) })
             }
@@ -471,6 +461,4 @@ object PazEntities {
         val id = ResourceKey.create(Registries.ENTITY_TYPE, pazResource(name))
         return Registry.register(BuiltInRegistries.ENTITY_TYPE, id, builder.build(id))
     }
-
-    lateinit var PLANT_TEAM : PlayerTeam
 }

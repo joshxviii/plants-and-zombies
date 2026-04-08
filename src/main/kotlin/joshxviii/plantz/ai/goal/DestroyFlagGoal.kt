@@ -2,7 +2,7 @@ package joshxviii.plantz.ai.goal
 
 import joshxviii.plantz.PazBlocks.PLANTZ_FLAG
 import joshxviii.plantz.PazBlocks.PLANTZ_FLAG_POI
-import joshxviii.plantz.PazEntities.PLANT_TEAM
+import joshxviii.plantz.PazEffects
 import joshxviii.plantz.block.entity.FlagBlockEntity
 import joshxviii.plantz.canReachTarget
 import joshxviii.plantz.lookAtBlockPos
@@ -46,7 +46,7 @@ class DestroyFlagGoal(
                 path = mob.getNavigation().createPath(flagPos, 0)
             }
         }
-        return targetFlagPos!=null && path != null && mob.team != PLANT_TEAM
+        return targetFlagPos!=null && path != null && !mob.hasEffect(PazEffects.HYPNOTIZE)
     }
 
     override fun canContinueToUse(): Boolean {

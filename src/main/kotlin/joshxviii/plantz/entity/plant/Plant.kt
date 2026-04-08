@@ -7,9 +7,9 @@ import joshxviii.plantz.PazDataSerializers.DATA_RECEIVED_SUN
 import joshxviii.plantz.PazDataSerializers.DATA_SEED_GROW_COOLDOWN
 import joshxviii.plantz.PazDataSerializers.DATA_SLEEPING
 import joshxviii.plantz.PazDataSerializers.DATA_SWELL_DIR
-import joshxviii.plantz.PazEntities.PLANT_TEAM
 import joshxviii.plantz.PazTags.BlockTags.PLANTABLE
 import joshxviii.plantz.ai.PlantState
+import joshxviii.plantz.entity.Sun
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
@@ -34,6 +34,7 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.behavior.SetWalkTargetAwayFrom.pos
 import net.minecraft.world.entity.ai.control.BodyRotationControl
 import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal
@@ -56,6 +57,7 @@ import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
+import org.apache.logging.log4j.core.jmx.Server
 import kotlin.jvm.optionals.getOrElse
 
 /**
@@ -152,7 +154,16 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     fun getSeedGrowCooldownDelay() : Int {
         val sunCost = PazEntities.getSunCostFromType(this.type)
-        return 900 + (sunCost*450) + random.nextInt(50) + if (!getBlockBelow().`is`(PazBlocks.ZEN_PLANT_POT)) 600 else 0
+        return 900 + (sunCost*450) + random.nextInt(50) + if (level().hasChunkAt(blockPosition()) && !getBlockBelow().`is`(PazBlocks.ZEN_PLANT_POT)) 600 else 0
+    }
+
+    override fun die(source: DamageSource) {
+        super.die(source)
+        if (source.entity is Player) {
+            val sunCost = PazEntities.getSunCostFromType(this.type)
+            val level = level() as? ServerLevel
+            if (level!=null) Sun.award(level, position(), (sunCost/2) - random.nextInt(0,1))
+        }
     }
 
     private var idleAnimationStartTick: Int = 0
@@ -421,8 +432,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     ): SpawnGroupData? {
         if (spawnReason == EntitySpawnReason.NATURAL
             && (!onValidGround() || isOverlappingWithOther(blockPosition()))) this.discard()
-
-        level.server?.scoreboard?.addPlayerToTeam(this.scoreboardName, PLANT_TEAM)
 
         return groupData
     }
