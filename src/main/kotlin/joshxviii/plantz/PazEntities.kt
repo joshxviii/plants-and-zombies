@@ -121,6 +121,9 @@ object PazEntities {
         "ice_peashooter",
         EntityType.Builder.of(::IcePeaShooter, MobCategory.CREATURE),
         sunCost = 7,
+        attributes = Plant.Companion.PlantAttributes(
+            attackDamage = 3.0
+        )
     )
     @JvmField val REPEATER: EntityType<Repeater> = registerPlant(
         "repeater",
@@ -131,6 +134,9 @@ object PazEntities {
         "fire_peashooter",
         EntityType.Builder.of(::FirePeaShooter, MobCategory.CREATURE).fireImmune(),
         sunCost = 7,
+        attributes = Plant.Companion.PlantAttributes(
+            attackDamage = 3.0
+        )
     )
     @JvmField val CACTUS: EntityType<Cactus> = registerPlant(
         "cactus",
@@ -140,7 +146,7 @@ object PazEntities {
         height = 1.25f,
         eyeHeight = 0.85f,
         attributes = Plant.Companion.PlantAttributes(
-            attackDamage = 3.5,
+            attackDamage = 4.0,
             followRange = 34.0
         )
     )
@@ -151,7 +157,7 @@ object PazEntities {
         width = 0.9f,
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
-            attackDamage = 3.5,
+            attackDamage = 3.0,
             attackKnockback = 0.5,
             followRange = 20.0
         )
@@ -176,7 +182,7 @@ object PazEntities {
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 50.0,
-            attackDamage = 6.0,
+            attackDamage = 6.5,
             followRange = 28.0
         )
     )
@@ -188,7 +194,7 @@ object PazEntities {
         eyeHeight = 0.3f,
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 10.0,
-            attackDamage = 1.0,
+            attackDamage = 1.5,
             followRange = 10.0
         )
     )
@@ -209,7 +215,7 @@ object PazEntities {
         width = 0.8f,
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
-            attackDamage = 2.5,
+            attackDamage = 3.0,
         )
     )
     @JvmField val SUN_SHROOM: EntityType<SunShroom> = registerPlant(

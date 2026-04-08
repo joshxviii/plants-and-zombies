@@ -66,7 +66,7 @@ abstract public class LivingEntityMixin {
     }
     @Inject(method = "canAttack", at = @At(value = "RETURN"), cancellable = true)
     public void stopTargetingFriendlies(LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
-        if (this.hasEffect(PazEffects.HYPNOTIZE) && (target instanceof Plant || target instanceof Player)) {
+        if (this.hasEffect(PazEffects.HYPNOTIZE) && (target instanceof Plant || target instanceof Player || target.hasEffect(PazEffects.HYPNOTIZE))) {
             cir.setReturnValue(false);
         }
     }

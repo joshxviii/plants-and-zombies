@@ -12,6 +12,8 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.monster.Creeper
+import net.minecraft.world.entity.monster.Enemy
 
 /**
  * A [MobEffect] that causes the user to attack [PazTags.EntityTypes.ZOMBIE_RAIDERS].
@@ -54,7 +56,7 @@ class HypnotizedMobEffect(category: MobEffectCategory, color: Int) : MobEffect(c
                 if (oldGoal != null) return
 
                 val goal = NearestAttackableTargetGoal(entity, LivingEntity::class.java, true) { target, level ->
-                    target.`is`(PazTags.EntityTypes.ZOMBIE_RAIDERS) }
+                    target.`is`(PazTags.EntityTypes.ZOMBIE_RAIDERS) || (target is Enemy && target !is Creeper) }
 
                 (entity as MobAccessor).targetSelector.addGoal(0, goal)
                 entity.setAttached(HYPNOTIZED_GOAL_ATTACHMENT,goal)
