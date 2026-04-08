@@ -57,7 +57,9 @@ object PazItems {
         properties = Item.Properties()
             .component(PazComponents.BLOCKS_PROJECTILE_DAMAGE, BlocksProjectileDamage(
                 slot = EquipmentSlotGroup.HAND,
-                breakChance = 0.1f)
+                breakChance = 0.1f,
+                mustBeUsing = true
+            )
             ).component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
     )
     @JvmField

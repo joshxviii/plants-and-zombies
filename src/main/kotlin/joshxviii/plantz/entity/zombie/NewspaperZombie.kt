@@ -59,6 +59,7 @@ class NewspaperZombie(type: EntityType<out NewspaperZombie>, level: Level) : Paz
     override fun equipmentHasChanged(previous: ItemStack, current: ItemStack): Boolean {
         val hasChanged = super.equipmentHasChanged(previous, current)
         if(mainHandItem.`is`(PazItems.NEWSPAPER)) {
+            this.startUsingItem(usedItemHand)
             this.setLivingEntityFlag(LIVING_ENTITY_FLAG_IS_USING, true)
         }
         else {

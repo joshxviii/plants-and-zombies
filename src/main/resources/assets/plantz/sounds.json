@@ -1,5 +1,10 @@
 {
-
+  "entity.projectile.hit_paper": {
+    "sounds": [
+      { "name": "plantz:projectile/hit_paper_1", "volume": 1.0},
+      { "name": "plantz:projectile/hit_paper_2", "volume": 1.0}
+    ], "subtitle": "plantz.subtitles.projectile.deflected"
+  },
   "entity.projectile.hit_cone": {
     "sounds": [
       { "name": "plantz:projectile/hit_cone_1", "volume": 1.0},

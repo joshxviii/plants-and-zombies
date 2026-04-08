@@ -17,6 +17,7 @@ import java.util.function.Consumer
 class BlocksProjectileDamage(
     val slot: EquipmentSlotGroup = EquipmentSlotGroup.HEAD,
     val breakChance: Float = 0.15f,
+    val mustBeUsing: Boolean = false
 ) : TooltipProvider {
 
     override fun addToTooltip(
@@ -34,7 +35,8 @@ class BlocksProjectileDamage(
         val CODEC: Codec<BlocksProjectileDamage> = RecordCodecBuilder.create { inst ->
             inst.group(
                 EquipmentSlotGroup.CODEC.fieldOf("slot").forGetter { it.slot },
-                Codec.FLOAT.fieldOf("break_chance").forGetter { it.breakChance }
+                Codec.FLOAT.fieldOf("break_chance").forGetter { it.breakChance },
+                Codec.BOOL.optionalFieldOf("must_be_using", false).forGetter { it.mustBeUsing }
             ).apply(inst, ::BlocksProjectileDamage)
         }
 
@@ -43,6 +45,8 @@ class BlocksProjectileDamage(
             BlocksProjectileDamage::slot,
             ByteBufCodecs.FLOAT,
             BlocksProjectileDamage::breakChance,
+            ByteBufCodecs.BOOL,
+            BlocksProjectileDamage::mustBeUsing,
             ::BlocksProjectileDamage
         )
 

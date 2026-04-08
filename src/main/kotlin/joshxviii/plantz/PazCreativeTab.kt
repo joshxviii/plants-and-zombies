@@ -59,15 +59,17 @@ object PazCreativeTab {
                 output.accept(PazItems.GNOME_SPAWN_EGG)
 
                 // other
+                output.accept(PazItems.SUN)
+                output.accept(PazBlocks.PLANT_POT)
+                output.accept(PazBlocks.ZEN_PLANT_POT)
+                output.accept(PazItems.PLANT_POT_MINECART)
                 output.accept(PazBlocks.CONE)
                 output.accept(PazItems.NEWSPAPER)
                 output.accept(PazItems.FOOTBALL_HELMET)
                 output.accept(PazBlocks.BRAINZ_FLAG)
                 output.accept(PazBlocks.PLANTZ_FLAG)
-                output.accept(PazItems.SUN)
-                output.accept(PazBlocks.PLANT_POT)
-                output.accept(PazBlocks.ZEN_PLANT_POT)
-                output.accept(PazItems.PLANT_POT_MINECART)
+
+                // mailboxes
                 PazBlocks.mailboxByColor.forEach { output.accept(it.value) }
             }
             .build()
