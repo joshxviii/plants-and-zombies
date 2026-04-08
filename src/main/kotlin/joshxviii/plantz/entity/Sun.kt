@@ -345,14 +345,14 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
                 return 149
             } else if (maxValue >= 73) {
                 return 73
-            } else if (maxValue >= 37) {
-                return 37
-            } else if (maxValue >= 17) {
-                return 17
-            } else if (maxValue >= 7) {
-                return 7
+            } else if (maxValue >= 12) {
+                return 12
+            } else if (maxValue >= 6) {
+                return 6
+            } else if (maxValue >= 3) {
+                return 3
             } else {
-                return if (maxValue >= 3) 3 else 1
+                return if (maxValue >= 2) 2 else 1
             }
         }
     }

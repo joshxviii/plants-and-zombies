@@ -13,6 +13,7 @@ import joshxviii.plantz.PazEntities.ZOMBIE_YETI
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.item.NewspaperItem
 import joshxviii.plantz.item.SeedPacketItem
+import joshxviii.plantz.item.SunBottleItem
 import joshxviii.plantz.item.SunItem
 import joshxviii.plantz.item.component.BlocksProjectileDamage
 import joshxviii.plantz.item.component.SeedPacket
@@ -36,6 +37,7 @@ import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.*
+import net.minecraft.world.item.Items.GLASS_BOTTLE
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.item.component.UseCooldown
 import net.minecraft.world.item.equipment.ArmorMaterials
@@ -49,7 +51,12 @@ object PazItems {
     @JvmField
     val SUN: Item = registerItem(
         "sun", ::SunItem,
-        properties = Item.Properties().stacksTo(64)
+        properties = Item.Properties()
+    )
+    @JvmField
+    val SUN_BOTTLE: Item = registerItem(
+        "sun_bottle", ::SunBottleItem,
+        properties = Item.Properties().craftRemainder(GLASS_BOTTLE)
     )
     @JvmField
     val NEWSPAPER: Item = registerItem(
@@ -144,7 +151,6 @@ object PazItems {
 
         // Modify components
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SEED_PACKET)
-        //ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BLOCKS_PROJECTILE_DAMAGE)
 
         DefaultItemComponentEvents.MODIFY.register {

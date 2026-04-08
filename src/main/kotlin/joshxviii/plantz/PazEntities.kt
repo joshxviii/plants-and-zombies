@@ -384,6 +384,7 @@ object PazEntities {
     )
 
     //region Projectiles
+    @JvmField val THROWN_SUN_BOTTLE: EntityType<ThrownSunBottle> = registerProjectile("thrown_sun_bottle", EntityType.Builder.of({ _, l->ThrownSunBottle(l)}, MobCategory.MISC))
     @JvmField val PEA: EntityType<Pea> = registerProjectile("pea", EntityType.Builder.of({_,l->Pea(l)}, MobCategory.MISC))
     @JvmField val PEA_ICE: EntityType<PeaIce> = registerProjectile("pea_ice", EntityType.Builder.of({_,l->PeaIce(l)}, MobCategory.MISC))
     @JvmField val PEA_FIRE: EntityType<PeaFire> = registerProjectile("pea_fire", EntityType.Builder.of({_,l->PeaFire(l)}, MobCategory.MISC))

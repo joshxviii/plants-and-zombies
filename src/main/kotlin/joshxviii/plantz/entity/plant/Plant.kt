@@ -150,11 +150,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         get() = this.entityData.get(SEED_GROW_COOLDOWN)
         set(value) = this.entityData.set(SEED_GROW_COOLDOWN, value.coerceAtLeast(0))
 
-    fun getSeedGrowCooldownDelay() : Int {
-        val sunCost = PazEntities.getSunCostFromType(this.type)
-        return 900 + (sunCost*450) + random.nextInt(50) + if (level().hasChunkAt(blockPosition()) && !getBlockBelow().`is`(PazBlocks.ZEN_PLANT_POT)) 600 else 0
-    }
-
     override fun die(source: DamageSource) {
         super.die(source)
         if (source.entity is Player) {
@@ -196,7 +191,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         entityData.define(SWELL_DIR, 0)
         entityData.define(COOLDOWN, 0)
         entityData.define(RECEIVED_SUN, 0)
-        entityData.define(SEED_GROW_COOLDOWN, getSeedGrowCooldownDelay())
+        entityData.define(SEED_GROW_COOLDOWN, timeRequiredForSeeds())
         entityData.define(SLEEPING, false)
     }
 
@@ -207,7 +202,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
-        seedGrowCooldown = input.getInt("SeedGrowTime").getOrElse { getSeedGrowCooldownDelay() }
+        seedGrowCooldown = input.getInt("SeedGrowTime").getOrElse { timeRequiredForSeeds() }
     }
 
     fun calculateSwell() {
@@ -378,6 +373,11 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     fun sunRequiredForSeeds(): Int = Mth.floor(PazEntities.getSunCostFromType(this.type)*1.5f).coerceAtLeast(1)
 
+    fun timeRequiredForSeeds() : Int {
+        val sunCost = PazEntities.getSunCostFromType(this.type)
+        return 1000 + (sunCost*450) + random.nextInt(50) * if (level().hasChunkAt(blockPosition()) && getBlockBelow().`is`(PazBlocks.ZEN_PLANT_POT)) 1 else 2
+    }
+
     open fun canSurviveOn(block: BlockState) : Boolean {
         return block.`is`(PLANTABLE)
     }
@@ -468,7 +468,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                     )
                     if (receivedSun++ >= sunRequiredForSeeds()) {
                         receivedSun = 0
-                        seedGrowCooldown = getSeedGrowCooldownDelay()
+                        seedGrowCooldown = timeRequiredForSeeds()
                         val stack = SeedPacketItem.stackFor(this.type)
                         val itemEntity = ItemEntity(level, x, y + 0.5, z, stack)
                         level.addFreshEntity(itemEntity)
