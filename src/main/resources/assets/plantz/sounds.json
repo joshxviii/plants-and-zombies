@@ -288,23 +288,23 @@
 
   "entity.gargantuar.ambient": {
     "sounds": [
-      { "name": "plantz:entity/gargantuar/ambient_1", "volume": 1.0 },
-      { "name": "plantz:entity/gargantuar/ambient_2", "volume": 1.0 },
-      { "name": "plantz:entity/gargantuar/ambient_3", "volume": 1.0 }
+      { "name": "plantz:entity/gargantuar/ambient_1", "volume": 2.0 },
+      { "name": "plantz:entity/gargantuar/ambient_2", "volume": 2.0 },
+      { "name": "plantz:entity/gargantuar/ambient_3", "volume": 2.0 }
     ], "subtitle": "plantz.subtitles.entity.gargantuar.ambient"
   },
   "entity.gargantuar.hurt": {
     "sounds": [
-      { "name": "plantz:entity/gargantuar/hurt_1", "volume": 1.2 },
-      { "name": "plantz:entity/gargantuar/hurt_2", "volume": 1.2 },
-      { "name": "plantz:entity/gargantuar/hurt_3", "volume": 1.2 }
+      { "name": "plantz:entity/gargantuar/hurt_1", "volume": 2.0 },
+      { "name": "plantz:entity/gargantuar/hurt_2", "volume": 2.0 },
+      { "name": "plantz:entity/gargantuar/hurt_3", "volume": 2.0 }
     ], "subtitle": "plantz.subtitles.entity.gargantuar.hurt"
   },
   "entity.gargantuar.death": {
-    "sounds": [{ "name": "plantz:entity/gargantuar/death", "volume": 1.2 }], "subtitle": "subtitles"
+    "sounds": [{ "name": "plantz:entity/gargantuar/death", "volume": 2.0 }], "subtitle": "subtitles"
   },
   "entity.gargantuar.dig": {
-    "sounds": [{ "name": "plantz:entity/gargantuar/dig", "volume": 1.2 }], "subtitle": "plantz.subtitles.entity.gargantuar.dig"
+    "sounds": [{ "name": "plantz:entity/gargantuar/dig", "volume": 1.3 }], "subtitle": "plantz.subtitles.entity.gargantuar.dig"
   },
 
   "entity.zombie.eat": {

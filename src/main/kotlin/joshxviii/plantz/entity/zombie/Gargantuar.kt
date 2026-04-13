@@ -181,14 +181,14 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
         val gargantuar: Gargantuar,
     ) : Goal() {
         companion object {
-            const val ATTACK_DELAY_TIME = 35
+            const val ATTACK_DELAY_TIME = 20
             val SMASH_DAMAGE_CALCULATOR: ExplosionDamageCalculator = SimpleExplosionDamageCalculator(false, true, Optional.of(4f), Optional.ofNullable(null))
         }
         var attackTime = gargantuar.random.nextInt(10,20)
 
         override fun canUse(): Boolean {
             if (attackTime <= 0) return true
-            return gargantuar.isAggressive && !gargantuar.isDeadOrDying && gargantuar.target.let { it != null && it.isAlive && gargantuar.hasLineOfSight(it) && it.distanceTo(gargantuar) < 6.75f }
+            return (gargantuar.health <= gargantuar.maxHealth*.5) && gargantuar.isAggressive && !gargantuar.isDeadOrDying && gargantuar.target.let { it != null && it.isAlive && gargantuar.hasLineOfSight(it) && it.distanceTo(gargantuar) < 6.75f }
         }
 
         override fun canContinueToUse(): Boolean {
