@@ -24,8 +24,8 @@ class WallNut(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.WAL
         else super.hurtServer(level, source, damage)
     }
 
-    override fun actuallyHurt(level: ServerLevel, source: DamageSource, dmg: Float) {
-        val reducedDamage = if (source.entity is Zombie) dmg*0.5f else dmg
+    override fun actuallyHurt(level: ServerLevel, source: DamageSource, damage: Float) {
+        val reducedDamage = if (source.entity is Zombie) damage*0.5f else damage
         super.actuallyHurt(level, source, reducedDamage)
     }
 }

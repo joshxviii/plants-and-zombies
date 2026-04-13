@@ -111,7 +111,7 @@ class Gnome(type: EntityType<out Gnome>, level: Level) :Monster(type, level) {
     }
 
     fun reassessWeaponGoal() {
-        if (this.level() != null && !this.level().isClientSide) {
+        if (!this.level().isClientSide) {
             this.goalSelector.removeGoal(this.meleeGoal)
             this.goalSelector.removeGoal(this.bowGoal)
             val usedWeapon = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, Items.BOW))

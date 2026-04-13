@@ -84,7 +84,7 @@ class ExplodeGoal(
         val level = plantEntity.level()
         level.explode(
             plantEntity,
-            level.damageSources().source(PazDamageTypes.EXPLODE),
+            level.damageSources().source(PazDamageTypes.PLANT_AOE),
             EXPLOSION_DAMAGE_CALCULATOR,
             plantEntity.x,
             plantEntity.y,

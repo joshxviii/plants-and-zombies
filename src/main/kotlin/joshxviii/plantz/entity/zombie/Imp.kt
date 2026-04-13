@@ -1,6 +1,7 @@
 package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazSounds
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
@@ -13,8 +14,13 @@ import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.phys.Vec3
 
-class Imp(type: EntityType<out Imp>, level: Level) : PazZombie(type, level) {
+class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie(type, level) {
+
+    init {
+
+    }
 
     override fun getAmbientSound(): SoundEvent {
         return PazSounds.IMP_AMBIENT

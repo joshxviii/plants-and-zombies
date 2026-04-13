@@ -93,7 +93,7 @@ class MailboxMenu(
 
     override fun quickMoveStack(player: Player, slotIndex: Int): ItemStack {
         val clicked = ItemStack.EMPTY
-        val slot = slots[slotIndex]?: return clicked
+        val slot = slots[slotIndex]
         if (slot.hasItem()) {
             val stack = slot.item
             if (slotIndex == 0) {

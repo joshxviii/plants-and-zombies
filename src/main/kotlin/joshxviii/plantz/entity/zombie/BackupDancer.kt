@@ -2,6 +2,7 @@ package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazSounds
+import joshxviii.plantz.ai.ZombieState
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
@@ -10,6 +11,7 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.RandomSource
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
@@ -19,15 +21,10 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.phys.Vec3
 
-class BackupDancer(type: EntityType<out BackupDancer> = PazEntities.BACKUP_DANCER, level: Level, position: Vec3? = null, rotation: Float? = null) : PazZombie(type, level) {
+class BackupDancer(type: EntityType<out BackupDancer>, level: Level) : PazZombie(type, level) {
 
     init {
-        if (position != null) setPos(position)
-        if (rotation != null) {
-            yRot = rotation
-            yBodyRot = rotation
-            yHeadRot = rotation
-        }
+
     }
 
     private val noMoveControl = object : MoveControl(this) {
@@ -82,6 +79,7 @@ class BackupDancer(type: EntityType<out BackupDancer> = PazEntities.BACKUP_DANCE
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
+        state = ZombieState.EMERGING
         val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
         setCanBreakDoors(false)
 

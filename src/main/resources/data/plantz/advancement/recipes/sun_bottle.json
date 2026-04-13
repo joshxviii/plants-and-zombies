@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "plantz:sun_bottle"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_glass_bottle": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:glass_bottle"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_glass_bottle"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "plantz:sun_bottle"
+    ]
+  }
+}

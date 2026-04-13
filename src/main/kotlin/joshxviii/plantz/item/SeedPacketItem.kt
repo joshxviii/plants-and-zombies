@@ -27,7 +27,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
 
     override fun getName(itemStack: ItemStack): Component {
         val component = itemStack.get(PazComponents.SEED_PACKET) ?: return super.getName(itemStack)
-        val entityId = component.entityId?: return super.getName(itemStack)
+        val entityId = component.entityId
 
         val entityName = Component.translatable("entity.${entityId.namespace}.${entityId.path}")
         return Component.translatable("item.plantz.seed_packet.entity", entityName)
@@ -69,7 +69,6 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
                 entity.yHeadRot = yaw
                 entity.yBodyRot = yaw
                 entity.yRot = yaw
-                entity.state = PlantState.GROW
             }
 
             // check that player has enough sun to plant

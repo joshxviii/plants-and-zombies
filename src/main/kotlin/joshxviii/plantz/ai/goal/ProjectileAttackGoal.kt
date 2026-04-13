@@ -1,6 +1,7 @@
 package joshxviii.plantz.ai.goal
 
 import joshxviii.plantz.PazSounds
+import joshxviii.plantz.applyImpulse
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
@@ -31,6 +32,7 @@ class ProjectileAttackGoal(
     val useHighArc: Boolean = false,
     val soundEvent: SoundEvent = PazSounds.PROJECTILE_FIRE,
 ) : ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect, actionPredicate) {
+
     var distanceSqr: Double = 0.0
     var attackRadius : Float = 0.0f
 
@@ -106,10 +108,7 @@ class ProjectileAttackGoal(
         val shootZ = (horizUnitZ * horizComp)
 
         if (projectile is Projectile) projectile.shoot(shootX, shootY, shootZ, velocity.toFloat(), inaccuracy)
-        else {
-            projectile.deltaMovement = getMovementToShoot(shootX, shootY, shootZ, velocity.toFloat(), inaccuracy)
-            projectile.needsSync = true
-        }
+        else projectile.applyImpulse(shootX, shootY, shootZ, velocity.toFloat(), inaccuracy)
 
         usingEntity.playSound(soundEvent, 0.7f, 0.4f / (usingEntity.random.nextFloat() * 0.4f + 0.8f))
         return true
@@ -190,16 +189,5 @@ class ProjectileAttackGoal(
         val phi2 = atan((v2 - sqrtDisc) / denom)
 
         return phi1 to phi2
-    }
-
-    fun getMovementToShoot(xd: Double, yd: Double, zd: Double, pow: Float, uncertainty: Float): Vec3 {
-        return Vec3(xd, yd, zd)
-            .normalize()
-            .add(
-                usingEntity.random.triangle(0.0, 0.0172275 * uncertainty),
-                usingEntity.random.triangle(0.0, 0.0172275 * uncertainty),
-                usingEntity.random.triangle(0.0, 0.0172275 * uncertainty)
-            )
-            .scale(pow.toDouble())
     }
 }

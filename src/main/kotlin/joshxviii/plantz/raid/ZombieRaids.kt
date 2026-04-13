@@ -62,7 +62,7 @@ class ZombieRaids(
 
         while (raidIterator.hasNext()) {
             val raid = raidIterator.next()
-            if (!level.gameRules.get<Boolean>(GameRules.RAIDS)!!) raid.stop()
+            if (!level.gameRules.get<Boolean>(GameRules.RAIDS)) raid.stop()
 
             if (raid.isStopped()) {
                 raidIterator.remove()
@@ -78,7 +78,7 @@ class ZombieRaids(
         if (flagPosition == null) return null
         else {
             val level = player.level()
-            if (!level.gameRules.get<Boolean>(GameRules.RAIDS)!!) return null
+            if (!level.gameRules.get<Boolean>(GameRules.RAIDS)) return null
 
             val raid = getOrCreateRaid(level, flagPosition)
 

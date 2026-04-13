@@ -23,8 +23,8 @@ class HypnoShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEn
         })
     }
 
-    override fun actuallyHurt(level: ServerLevel, source: DamageSource, dmg: Float) {
-        super.actuallyHurt(level, source, dmg)
+    override fun actuallyHurt(level: ServerLevel, source: DamageSource, damage: Float) {
+        super.actuallyHurt(level, source, damage)
         val attacker = source.entity
         if (attacker is LivingEntity && !attacker.isInvulnerable) {
             addParticlesAroundSelf(

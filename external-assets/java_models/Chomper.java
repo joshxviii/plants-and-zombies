@@ -1,4 +1,4 @@
-// Made with Blockbench 5.0.7
+// Made with Blockbench 5.1.3
 // Exported for Minecraft version 1.17 or later with Mojang mappings
 // Paste this class into your mod and generate all required imports
 
@@ -13,6 +13,7 @@ public class Chomper<T extends Chomper> extends EntityModel<T> {
 	private final ModelPart stem_4;
 	private final ModelPart head;
 	private final ModelPart head_top;
+	private final ModelPart glasses;
 	private final ModelPart head_bottom;
 	private final ModelPart toung;
 	private final ModelPart toung_2;
@@ -39,6 +40,7 @@ public class Chomper<T extends Chomper> extends EntityModel<T> {
 		this.stem_4 = this.stem_3.getChild("stem_4");
 		this.head = this.stem_4.getChild("head");
 		this.head_top = this.head.getChild("head_top");
+		this.glasses = this.head_top.getChild("glasses");
 		this.head_bottom = this.head.getChild("head_bottom");
 		this.toung = this.head_bottom.getChild("toung");
 		this.toung_2 = this.toung.getChild("toung_2");
@@ -88,19 +90,25 @@ public class Chomper<T extends Chomper> extends EntityModel<T> {
 		.texOffs(34, 28).addBox(0.0F, -10.0071F, -8.9867F, 0.0F, 5.0F, 9.0F, new CubeDeformation(0.0F))
 		.texOffs(0, 51).addBox(-7.0F, -0.9071F, -10.4867F, 14.0F, 1.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.5F, -4.0F));
 
-		PartDefinition cube_r5 = head_top.addOrReplaceChild("cube_r5", CubeListBuilder.create().texOffs(2, 49).addBox(-4.0F, -1.0F, 0.0F, 9.5F, 2.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(5.5F, 0.9929F, -3.9867F, 0.0F, 1.5708F, 3.1416F));
+		PartDefinition cube_r5 = head_top.addOrReplaceChild("cube_r5", CubeListBuilder.create().texOffs(1, 49).addBox(-4.0F, -1.0F, 0.0F, 10.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(5.5F, 0.9929F, -3.4867F, 0.0F, 1.5708F, 3.1416F));
 
-		PartDefinition cube_r6 = head_top.addOrReplaceChild("cube_r6", CubeListBuilder.create().texOffs(2, 49).addBox(-4.0F, -1.0F, 0.0F, 9.5F, 2.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.5F, 0.9929F, -3.9867F, 0.0F, 1.5708F, 3.1416F));
+		PartDefinition cube_r6 = head_top.addOrReplaceChild("cube_r6", CubeListBuilder.create().texOffs(1, 49).addBox(-4.0F, -1.0F, 0.0F, 10.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.5F, 0.9929F, -3.4867F, 0.0F, 1.5708F, 3.1416F));
 
 		PartDefinition cube_r7 = head_top.addOrReplaceChild("cube_r7", CubeListBuilder.create().texOffs(0, 49).addBox(-6.0F, -1.0F, 4.0F, 11.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.5F, 0.9929F, -5.4867F, 3.1416F, 0.0F, 0.0F));
+
+		PartDefinition glasses = head_top.addOrReplaceChild("glasses", CubeListBuilder.create().texOffs(40, 59).addBox(-6.0F, -2.0F, -2.0F, 12.0F, 4.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -4.25F, -8.5F, -0.2182F, 0.0F, 0.0F));
+
+		PartDefinition cube_r8 = glasses.addOrReplaceChild("cube_r8", CubeListBuilder.create().texOffs(40, 49).addBox(0.0F, -1.5F, -6.0F, 0.0F, 4.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(6.0F, -0.5F, -2.0F, 0.0F, -3.0543F, 0.0F));
+
+		PartDefinition cube_r9 = glasses.addOrReplaceChild("cube_r9", CubeListBuilder.create().texOffs(40, 49).addBox(0.0F, -1.5F, 0.0F, 0.0F, 4.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-6.0F, -0.5F, -2.0F, 0.0F, -0.0436F, 0.0F));
 
 		PartDefinition head_bottom = head.addOrReplaceChild("head_bottom", CubeListBuilder.create().texOffs(0, 16).addBox(-7.0F, 0.0F, -10.0F, 12.0F, 6.0F, 11.0F, new CubeDeformation(0.0F))
 		.texOffs(0, 51).addBox(-8.0F, -0.1F, -10.5F, 14.0F, 1.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offset(1.0F, -1.5071F, -3.9867F));
 
-		PartDefinition cube_r8 = head_bottom.addOrReplaceChild("cube_r8", CubeListBuilder.create().texOffs(2, 49).addBox(-7.125F, -1.0F, 5.5F, 9.5F, 2.0F, 0.0F, new CubeDeformation(0.0F))
+		PartDefinition cube_r10 = head_bottom.addOrReplaceChild("cube_r10", CubeListBuilder.create().texOffs(2, 49).addBox(-7.125F, -1.0F, 5.5F, 9.5F, 2.0F, 0.0F, new CubeDeformation(0.0F))
 		.texOffs(2, 49).addBox(-7.125F, -1.0F, -5.5F, 9.5F, 2.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.0F, -1.0F, -7.125F, 0.0F, 1.5708F, 0.0F));
 
-		PartDefinition cube_r9 = head_bottom.addOrReplaceChild("cube_r9", CubeListBuilder.create().texOffs(0, 49).addBox(-5.5F, -1.0F, 2.375F, 11.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.0F, -1.0F, -7.125F, 3.1416F, 0.0F, -3.1416F));
+		PartDefinition cube_r11 = head_bottom.addOrReplaceChild("cube_r11", CubeListBuilder.create().texOffs(0, 49).addBox(-5.5F, -1.0F, 2.375F, 11.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.0F, -1.0F, -7.125F, 3.1416F, 0.0F, -3.1416F));
 
 		PartDefinition toung = head_bottom.addOrReplaceChild("toung", CubeListBuilder.create().texOffs(35, 0).addBox(-1.5F, -1.0F, -4.0F, 3.0F, 2.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-1.0F, -1.0F, 0.0F));
 

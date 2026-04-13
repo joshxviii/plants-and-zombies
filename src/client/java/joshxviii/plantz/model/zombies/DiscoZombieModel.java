@@ -63,9 +63,7 @@ public class DiscoZombieModel extends PazZombieModel {
 	public void setupAnim(@NotNull ZombieRenderState state) {
 		super.setupAnim(state);
 		PazZombieRenderState pazState = (PazZombieRenderState) state;
-		if (pazState.entityType == PazEntities.BACKUP_DANCER) {
-			initAnimation.apply(pazState.getInitAnimationState(), pazState.ageInTicks);
-		}
-		actionAnimation.apply(pazState.getActionAnimationState(),  pazState.ageInTicks);
+		initAnimation.apply(pazState.getInitAnimationState(), pazState.ageInTicks);
+		actionAnimation.apply(pazState.getActionAnimationState(), pazState.ageInTicks);
 	}
 }

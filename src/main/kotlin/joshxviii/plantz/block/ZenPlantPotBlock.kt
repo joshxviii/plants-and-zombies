@@ -25,6 +25,7 @@ import net.minecraft.world.phys.shapes.VoxelShape
 class ZenPlantPotBlock(properties: Properties) : HorizontalDirectionalBlock(properties), SimpleWaterloggedBlock {
     companion object {
         val CODEC: MapCodec<ZenPlantPotBlock> = simpleCodec(::ZenPlantPotBlock)
+        val SHAPE_INSIDE = column(12.0, 7.0, 9.0)
         val SHAPE: VoxelShape = Util.make {
             Shapes.or(
                 column(16.0, 0.0, 3.0),
@@ -46,6 +47,10 @@ class ZenPlantPotBlock(properties: Properties) : HorizontalDirectionalBlock(prop
 
     override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
         return SHAPE
+    }
+
+    override fun getInteractionShape(state: BlockState, level: BlockGetter, pos: BlockPos): VoxelShape {
+        return SHAPE_INSIDE
     }
 
     override fun rotate(state: BlockState, rotation: Rotation): BlockState {

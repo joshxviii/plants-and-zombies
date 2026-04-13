@@ -1,6 +1,7 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.PazMain.MODID
+import joshxviii.plantz.entity.plant.Chomper
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
 import net.minecraft.resources.Identifier
@@ -15,10 +16,19 @@ import net.minecraft.world.entity.TamableAnimal
 import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.pathfinder.Path
+import net.minecraft.world.phys.Vec3
 
 fun pazResource(path: String): Identifier = Identifier.fromNamespaceAndPath(MODID, path)
+
+fun Player.hasSpaceForItem(item: ItemStack): Boolean {
+    val inv = this.inventory
+    val hasFreeSlot = inv.freeSlot != -1
+    val hasSlotWithSpace = inv.getSlotWithRemainingSpace(item) != -1
+    return hasFreeSlot || hasSlotWithSpace
+}
 
 fun Int.tickTimeFormat(): String = "%02d:%02d".format(
     (this / 20 / 60) % 60,
@@ -30,6 +40,19 @@ fun Entity.hasSameOwner(target: Entity?): Boolean {
         owner.let { it!=null && target.owner?.`is`(it) == true }
     else
         false
+}
+
+fun Entity.applyImpulse(xd: Double, yd: Double, zd: Double, pow: Float, uncertainty: Float) {
+    val impulse = Vec3(xd, yd, zd)
+        .normalize()
+        .add(
+            this.random.triangle(0.0, 0.0172275 * uncertainty),
+            this.random.triangle(0.0, 0.0172275 * uncertainty),
+            this.random.triangle(0.0, 0.0172275 * uncertainty)
+        )
+        .scale(pow.toDouble())
+    this.deltaMovement = impulse
+    this.needsSync = true
 }
 
 fun <T : LivingEntity?> ServerEntityGetter.getFurthestEntities(
@@ -76,6 +99,15 @@ fun List<String>.permutationsDescending(): List<String> = buildList {
     for (i in size - 1 downTo 1) {
         add(this@permutationsDescending.subList(0, i).joinToString(""))
     }
+}
+
+fun LivingEntity.getMagicName(): String {
+    val name = this.customName?.string ?: return ""
+    val hasMagicName: Boolean = when (this) {
+        is Chomper -> name == "Chester"
+        else -> false
+    }
+    return if (hasMagicName) name.lowercase() else ""
 }
 
 fun resolveTextureLocation(base: String, suffixes: List<String>, rm: ResourceManager): Identifier? {

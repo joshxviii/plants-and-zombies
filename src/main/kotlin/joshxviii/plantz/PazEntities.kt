@@ -304,7 +304,7 @@ object PazEntities {
             .add(Attributes.ATTACK_DAMAGE, 7.0)
             .add(Attributes.MAX_HEALTH, 35.0)
             .add(Attributes.MOVEMENT_SPEED, 0.235)
-            .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.0)
+            .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.1)
     )
     @JvmField val BACKUP_DANCER: EntityType<BackupDancer> =  registerZombie(
         "backup_dancer",
@@ -334,7 +334,7 @@ object PazEntities {
             .add(Attributes.MAX_HEALTH, 50.0)
             .add(Attributes.STEP_HEIGHT, 1.0)
             .add(Attributes.MOVEMENT_SPEED, 0.23)
-            .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 5.0)
+            .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 2.0)
 
     )
     @JvmField val IMP: EntityType<Imp> =  registerZombie(
@@ -348,18 +348,20 @@ object PazEntities {
             .add(Attributes.ATTACK_DAMAGE, 1.5)
             .add(Attributes.MAX_HEALTH, 15.0)
             .add(Attributes.MOVEMENT_SPEED, 0.3)
+            .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.1)
+
     )
     @JvmField val GARGANTUAR: EntityType<Gargantuar> =  registerZombie(
         "gargantuar",
         EntityType.Builder.of(::Gargantuar, MobCategory.MONSTER)
             .sized(1.7f, 3.2f)
-            .passengerAttachments(2.3f)
+            .passengerAttachments(2.0f)
             .ridingOffset(-0.7f)
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
-            .add(Attributes.ATTACK_DAMAGE, 23.0)
+            .add(Attributes.ATTACK_DAMAGE, 9.0)
             .add(Attributes.MAX_HEALTH, 250.0)
-            .add(Attributes.MOVEMENT_SPEED, 0.26)
+            .add(Attributes.MOVEMENT_SPEED, 0.2)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.7)
             .add(Attributes.EXPLOSION_KNOCKBACK_RESISTANCE, 0.7)
             .add(Attributes.SCALE, 1.33)
@@ -408,6 +410,7 @@ object PazEntities {
     @JvmField val SUN: EntityType<Sun> = register(
         "sun",
         EntityType.Builder.of(::Sun, MobCategory.MISC)
+            .fireImmune()
             .noLootTable()
             .sized(0.15F, 0.15F)
             .clientTrackingRange(6)

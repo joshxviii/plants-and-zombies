@@ -21,7 +21,7 @@ enum class GnomeVariant(val color: String, val id: Int) : StringRepresentable {
     YELLOW("yellow", 3);
 
     override fun getSerializedName(): String = color
-    fun getTexture(): Identifier = ClientAsset.ResourceTexture(pazResource("entity/gnome/${color}")).texturePath!!
+    fun getTexture(): Identifier = ClientAsset.ResourceTexture(pazResource("entity/gnome/${color}")).texturePath
 
     companion object {
         fun getDefault(): GnomeVariant = BLUE

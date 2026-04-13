@@ -3,6 +3,7 @@ package joshxviii.plantz.entity
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.hasSpaceForItem
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -35,6 +36,12 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
     private var followingEntity: LivingEntity? = null
     private val interpolation = InterpolationHandler(this)
 
+    var value: Int
+        get() = entityData.get(DATA_VALUE)
+        private set(value) {
+            entityData.set(DATA_VALUE, value)
+        }
+
     constructor(level: Level, pos: Vec3, roughly: Vec3, value: Int) : this(PazEntities.SUN, level) {
         setPos(pos)
         if (!level.isClientSide) {
@@ -48,7 +55,7 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
                 randomMovement = randomMovement.scale(-1.0)
             }
 
-            val size = boundingBox.getSize()
+            val size = boundingBox.size
             setPos(pos.add(roughly.normalize().scale(size * ORB_MERGE_DISTANCE)))
             deltaMovement = randomMovement
             if (!level.noCollision(boundingBox)) unstuckIfPossible(size)
@@ -75,7 +82,7 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) { entityData.define(DATA_VALUE, 0) }
 
-    override fun getDefaultGravity(): Double = 0.04
+    override fun getDefaultGravity(): Double = 0.015
 
     override fun tick() {
         interpolation.interpolate()
@@ -108,9 +115,9 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
             val fallSpeed = deltaMovement.y
             move(MoverType.SELF, deltaMovement)
             applyEffectsFromBlocks()
-            var friction = 0.98f
+            var friction = 0.97f
             if (onGround()) {
-                friction = level().getBlockState(blockPosBelowThatAffectsMyMovement).block.getFriction() * 0.98f
+                friction = level().getBlockState(blockPosBelowThatAffectsMyMovement).block.getFriction() * 0.97f
             }
 
             deltaMovement = deltaMovement.scale(friction.toDouble())
@@ -152,15 +159,16 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
         if (entity is Player) {
             val serverLevel = level() as? ServerLevel
             if (serverLevel!=null) {
-                val itemStack = PazItems.SUN.defaultInstance
-                itemStack.count = this.value
-                if (
-                    (!entity.isCreative && entity.inventory.add(itemStack))
-                    || entity.isCreative
-                ) {
-                    playPickupSound()
-                    discard()
+                var successCount = 0
+                for (i in 0 until this.value) {
+                    val success = tryToGiveSun(entity)
+                    if(success) {
+                        successCount++
+                        this.value--
+                    }
                 }
+                if (successCount>0) playPickupSound()
+                if (this.value <= 0) discard()
             }
         }
         else if (entity is Plant && !entity.isDeadOrDying) {
@@ -171,6 +179,11 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
         if (value <= 0) discard()
     }
 
+    fun tryToGiveSun(entity: Player): Boolean {
+        val itemStack = PazItems.SUN.defaultInstance
+        return (!entity.isCreative && entity.inventory.add(itemStack)) || entity.isCreative
+    }
+
     fun getNearestEntity(range: Double = 3.5) : LivingEntity? {
         var best = -1.0
         var result: LivingEntity? = null
@@ -178,8 +191,8 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
             LivingEntity::class.java,
             boundingBox.inflate(range),
             Predicate {
-                !it.isDeadOrDying && !it.isSpectator
-                ( (it is Plant && it.health != it.maxHealth) || it is Player )
+                (it is Player && !(it.isSpectator || it.isCreative) && it.hasSpaceForItem(PazItems.SUN.defaultInstance)) ||
+                (it is Plant && it.health != it.maxHealth)
             }
         )
         for (candidate in candidates) {
@@ -249,12 +262,6 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
         value = input.getShortOr("Value", DEFAULT_VALUE)
         count = input.read("Count", ExtraCodecs.POSITIVE_INT).orElse(DEFAULT_COUNT) as Int
     }
-
-    var value: Int
-        get() = entityData.get(DATA_VALUE)
-        private set(value) {
-            entityData.set(DATA_VALUE, value)
-        }
 
     val icon: Int
         get() {

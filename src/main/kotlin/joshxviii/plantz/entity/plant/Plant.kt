@@ -31,6 +31,7 @@ import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -246,21 +247,21 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
-        return if (source.`is`(PazDamageTypes.EXPLODE)) false
+        return if (source.`is`(PazDamageTypes.PLANT_AOE)) false
         else super.hurtServer(level, source, damage)
     }
 
     override fun hurtClient(source: DamageSource): Boolean {
-        return if (source.`is`(PazDamageTypes.EXPLODE)) false
+        return if (source.`is`(PazDamageTypes.PLANT_AOE)) false
         else super.hurtClient(source)
     }
 
     override fun actuallyHurt(level: ServerLevel, source: DamageSource, damage: Float) {
-        if (source.`is`(PazDamageTypes.EXPLODE)) return
+        if (source.`is`(PazDamageTypes.PLANT_AOE)) return
         val plantPotProtection: Boolean = getBlockBelow().`is`(PazTags.BlockTags.PLANT_POT_PROTECTION) && source.entity is Enemy
         super.actuallyHurt(
             level,
-            if (source.entity is Zombie) DamageSource(
+            if (source.entity is Zombie && source.`is`(DamageTypes.MOB_ATTACK)) DamageSource(
                 level.registryAccess().get(PazDamageTypes.ZOMBIE_EAT).get(),
                 source.directEntity,
                 source.entity
@@ -291,7 +292,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         calculateSwell()
 
         --cooldown
-        if (this.level().isClientSide && !this.isNoAi) { updateAnimationState() }
+        if (!this.isNoAi) { updateAnimationState() }
 
         val target = this.target
         if (target != null) getLookControl().setLookAt(target, 180.0F, 180.0F);
@@ -319,20 +320,20 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     private fun updateAnimationState() {
         when (state) {
             PlantState.IDLE -> {
-                this.idleAnimationState.startIfStopped(this.tickCount - idleAnimationStartTick)
-                this.initAnimationState.stop()
-                this.actionAnimationState.stop()
-                this.coolDownAnimationState.stop()
-                this.specialAnimation.stop()
-                this.sleepAnimationState.stop()
+                idleAnimationState.startIfStopped(tickCount - idleAnimationStartTick)
+                initAnimationState.stop()
+                actionAnimationState.stop()
+                coolDownAnimationState.stop()
+                specialAnimation.stop()
+                sleepAnimationState.stop()
                 if (isAsleep) state = PlantState.SLEEP
                 if (cooldown > 0) {
                     state = PlantState.ACTION
                 }
             }
             PlantState.ACTION -> {
-                this.actionAnimationState.startIfStopped(this.tickCount)
-                this.coolDownAnimationState.stop()
+                actionAnimationState.startIfStopped(tickCount)
+                coolDownAnimationState.stop()
                 state = PlantState.COOLDOWN
             }
             PlantState.COOLDOWN -> {
@@ -342,17 +343,17 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }
             PlantState.RECHARGE -> state = PlantState.IDLE
             PlantState.SLEEP -> {
-                this.sleepAnimationState.startIfStopped(this.tickCount)
-                this.idleAnimationState.stop()
-                this.initAnimationState.stop()
-                this.actionAnimationState.stop()
-                this.coolDownAnimationState.stop()
-                this.specialAnimation.stop()
+                sleepAnimationState.startIfStopped(tickCount)
+                idleAnimationState.stop()
+                initAnimationState.stop()
+                actionAnimationState.stop()
+                coolDownAnimationState.stop()
+                specialAnimation.stop()
                 if (!isAsleep) state = PlantState.IDLE
             }
             PlantState.GROW -> {
-                this.initAnimationState.startIfStopped(0)
-                if (this.tickCount >= 19) {
+                initAnimationState.startIfStopped(tickCount)
+                if (tickCount >= 19) {
                     idleAnimationStartTick = 0
                     state = if (cooldown >= 0) PlantState.COOLDOWN else PlantState.IDLE
                 }
@@ -429,6 +430,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
+        state = PlantState.GROW
+
         if (spawnReason == EntitySpawnReason.NATURAL
             && (!onValidGround() || isOverlappingWithOther(blockPosition()))) this.discard()
 

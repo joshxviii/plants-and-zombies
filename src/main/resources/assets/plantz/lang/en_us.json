@@ -28,6 +28,7 @@
   "message.plantz.not_enough_sun": "Not enough sun (%s/%s)",
 
   "death.attack.zombie_eat": "%1$s was eaten by %2$s",
+  "death.attack.zombie_smash": "%1$s was smashed by %2$s",
   "death.attack.plant": "%1$s was killed by %2$s",
   "death.attack.chomp_plant": "%1$s was chomped by %2$s",
   "death.attack.ice_plant": "%1$s was frozen to death by %2$s",
@@ -52,7 +53,7 @@
   "item.plantz.zombie_banner": "Brainz Banner",
 
   "item.plantz.sun": "Sun",
-  "item.plantz.sun_bottle": "Sun in a Bottle",
+  "item.plantz.sun_bottle": "Bottle of Sun",
   "item.plantz.cone": "Cone",
   "item.plantz.football_helmet": "Football Helmet",
   "item.plantz.newspaper": "Newspaper",

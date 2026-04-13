@@ -1,28 +1,44 @@
-// Made with Blockbench 5.0.7
+// Made with Blockbench 5.1.3
 // Exported for Minecraft version 1.17 or later with Mojang mappings
 // Paste this class into your mod and generate all required imports
 
 
-public class GargantuarModel<T extends Entity> extends EntityModel<T> {
+public class gargantuar<T extends Entity> extends EntityModel<T> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "gargantuarmodel"), "main");
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "gargantuar"), "main");
 	private final ModelPart root;
 	private final ModelPart head;
 	private final ModelPart hat;
 	private final ModelPart body;
 	private final ModelPart basket;
+	private final ModelPart imp;
+	private final ModelPart head2;
+	private final ModelPart hat2;
+	private final ModelPart body2;
+	private final ModelPart right_arm2;
+	private final ModelPart left_arm2;
+	private final ModelPart right_leg2;
+	private final ModelPart left_leg2;
 	private final ModelPart right_arm;
 	private final ModelPart left_arm;
 	private final ModelPart pole;
 	private final ModelPart right_leg;
 	private final ModelPart left_leg;
 
-	public GargantuarModel(ModelPart root) {
+	public gargantuar(ModelPart root) {
 		this.root = root.getChild("root");
 		this.head = this.root.getChild("head");
 		this.hat = this.head.getChild("hat");
 		this.body = this.root.getChild("body");
 		this.basket = this.body.getChild("basket");
+		this.imp = this.basket.getChild("imp");
+		this.head2 = this.imp.getChild("head2");
+		this.hat2 = this.head2.getChild("hat2");
+		this.body2 = this.imp.getChild("body2");
+		this.right_arm2 = this.imp.getChild("right_arm2");
+		this.left_arm2 = this.imp.getChild("left_arm2");
+		this.right_leg2 = this.imp.getChild("right_leg2");
+		this.left_leg2 = this.imp.getChild("left_leg2");
 		this.right_arm = this.root.getChild("right_arm");
 		this.left_arm = this.root.getChild("left_arm");
 		this.pole = this.left_arm.getChild("pole");
@@ -45,6 +61,22 @@ public class GargantuarModel<T extends Entity> extends EntityModel<T> {
 		.texOffs(0, 63).addBox(-7.0F, -0.0593F, -2.3701F, 14.0F, 8.0F, 9.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -7.9407F, -0.6299F));
 
 		PartDefinition basket = body.addOrReplaceChild("basket", CubeListBuilder.create().texOffs(72, 15).addBox(-4.0F, -2.0F, 0.0F, 8.0F, 11.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -10.0593F, 6.6299F));
+
+		PartDefinition imp = basket.addOrReplaceChild("imp", CubeListBuilder.create(), PartPose.offset(0.0F, -5.0F, 3.6667F));
+
+		PartDefinition head2 = imp.addOrReplaceChild("head2", CubeListBuilder.create().texOffs(49, 84).addBox(-3.5F, -7.0F, -3.5F, 7.0F, 7.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.3333F));
+
+		PartDefinition hat2 = head2.addOrReplaceChild("hat2", CubeListBuilder.create(), PartPose.offset(0.0F, -7.0F, -0.5F));
+
+		PartDefinition body2 = imp.addOrReplaceChild("body2", CubeListBuilder.create().texOffs(49, 98).addBox(-3.5F, 0.0F, -2.5F, 7.0F, 6.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.3333F));
+
+		PartDefinition right_arm2 = imp.addOrReplaceChild("right_arm2", CubeListBuilder.create().texOffs(73, 98).addBox(-2.0F, -1.0F, -1.0F, 2.0F, 6.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-3.5F, 1.0F, 0.3333F, -1.5708F, 0.0F, 0.0F));
+
+		PartDefinition left_arm2 = imp.addOrReplaceChild("left_arm2", CubeListBuilder.create().texOffs(73, 106).addBox(0.0F, -1.0F, -1.0F, 2.0F, 6.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(3.5F, 1.0F, 0.3333F, -1.5708F, 0.0F, 0.0F));
+
+		PartDefinition right_leg2 = imp.addOrReplaceChild("right_leg2", CubeListBuilder.create().texOffs(49, 109).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(2.5F, 6.0F, 0.3333F));
+
+		PartDefinition left_leg2 = imp.addOrReplaceChild("left_leg2", CubeListBuilder.create().texOffs(57, 109).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(-2.5F, 6.0F, 0.3333F));
 
 		PartDefinition right_arm = root.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(36, 25).addBox(-8.0F, -3.0F, -5.0F, 8.0F, 28.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(-10.0F, -18.0F, 0.0F));
 
