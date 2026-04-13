@@ -1,30 +1,13 @@
 package joshxviii.plantz
 
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents
-import net.fabricmc.fabric.api.loot.v3.LootTableSource
 import net.minecraft.core.registries.Registries
-import net.minecraft.data.loot.LootTableProvider
 import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
-import net.minecraft.world.entity.projectile.FishingHook
-import net.minecraft.world.item.Items
 import net.minecraft.world.level.storage.loot.BuiltInLootTables
-import net.minecraft.world.level.storage.loot.LootContext
-import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.level.storage.loot.LootPool
 import net.minecraft.world.level.storage.loot.LootTable
-import net.minecraft.world.level.storage.loot.entries.LootItem
-import net.minecraft.world.level.storage.loot.entries.LootPoolEntries
-import net.minecraft.world.level.storage.loot.entries.LootPoolEntry
-import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer
 import net.minecraft.world.level.storage.loot.entries.NestedLootTable
-import net.minecraft.world.level.storage.loot.functions.LootItemFunction
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctions
-import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditions
-import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue
-import net.minecraft.world.level.storage.loot.providers.number.NumberProvider
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator
 
 object PazLootTables {

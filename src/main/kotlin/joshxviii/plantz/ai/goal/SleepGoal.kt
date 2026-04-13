@@ -2,7 +2,6 @@ package joshxviii.plantz.ai.goal
 
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.world.entity.ai.goal.Goal
-import net.minecraft.world.entity.ai.goal.Goal.reducedTickDelay
 
 class SleepGoal(
     val plantEntity: Plant,

@@ -3,8 +3,6 @@ package joshxviii.plantz
 import joshxviii.plantz.raid.getZombieRaids
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
-import net.fabricmc.fabric.api.registry.LandPathTypeRegistry
-import net.minecraft.server.level.ServerLevel
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 

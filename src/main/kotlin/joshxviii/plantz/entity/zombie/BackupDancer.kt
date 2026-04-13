@@ -1,6 +1,5 @@
 package joshxviii.plantz.entity.zombie
 
-import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.ai.ZombieState
 import net.minecraft.core.particles.BlockParticleOption
@@ -11,7 +10,6 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.RandomSource
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
@@ -19,7 +17,6 @@ import net.minecraft.world.entity.SpawnGroupData
 import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
-import net.minecraft.world.phys.Vec3
 
 class BackupDancer(type: EntityType<out BackupDancer>, level: Level) : PazZombie(type, level) {
 

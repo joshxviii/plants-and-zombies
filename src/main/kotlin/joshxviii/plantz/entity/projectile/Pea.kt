@@ -5,8 +5,6 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.world.entity.EntitySpawnReason
-import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.HitResult

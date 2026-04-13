@@ -4,11 +4,9 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.ai.goal.FurthestAttackableTargetGoal
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.entity.projectile.Needle
-import joshxviii.plantz.hasSameOwner
 import net.minecraft.tags.BlockTags
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
-import net.minecraft.world.entity.OwnableEntity
 import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.level.Level

@@ -6,7 +6,6 @@ import joshxviii.plantz.entity.Sun
 import net.minecraft.core.Position
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.ExperienceOrb
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile
 import net.minecraft.world.item.Item

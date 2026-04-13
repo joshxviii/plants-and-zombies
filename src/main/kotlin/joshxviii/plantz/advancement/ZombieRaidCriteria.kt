@@ -2,10 +2,7 @@ package joshxviii.plantz.advancement
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import joshxviii.plantz.block.FlagBlock
-import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.advancements.criterion.ContextAwarePredicate
-import net.minecraft.advancements.criterion.EntityPredicate
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerPlayer
 import java.util.Optional

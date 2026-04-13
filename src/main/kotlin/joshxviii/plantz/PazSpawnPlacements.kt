@@ -1,20 +1,13 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.entity.plant.Plant
-import joshxviii.plantz.entity.zombie.DiggerZombie
-import joshxviii.plantz.entity.zombie.DiscoZombie
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.entity.zombie.ZombieYeti
 import joshxviii.plantz.mixin.SpawnPlacementsInvoker
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext
-import net.minecraft.data.loot.packs.VanillaFishingLoot
 import net.minecraft.tags.TagKey
-import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.Mob
-import net.minecraft.world.entity.MobCategory
-import net.minecraft.world.entity.SpawnPlacementTypes
-import net.minecraft.world.entity.SpawnPlacements
+import net.minecraft.world.entity.*
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.levelgen.Heightmap
 

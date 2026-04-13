@@ -1,16 +1,9 @@
 package joshxviii.plantz.entity.zombie
 
-import joshxviii.plantz.PazDamageTypes
-import joshxviii.plantz.PazEntities
-import joshxviii.plantz.PazSounds
-import joshxviii.plantz.PazTags
+import joshxviii.plantz.*
 import joshxviii.plantz.ai.ZombieState
-import joshxviii.plantz.ai.goal.ProjectileAttackGoal
-import joshxviii.plantz.applyImpulse
-import joshxviii.plantz.canReachTarget
 import joshxviii.plantz.entity.zombie.Gargantuar.SmashAttackGoal.Companion.ATTACK_DELAY_TIME
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Vec3i
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -35,7 +28,6 @@ import net.minecraft.world.level.SimpleExplosionDamageCalculator
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.Vec3
 import java.util.*
-import kotlin.Boolean
 
 class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(type, level) {
 

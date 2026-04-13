@@ -1,12 +1,6 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.advancement.DiscoHypnoCriteria
-import joshxviii.plantz.advancement.GrowSeedsCriteria
-import joshxviii.plantz.advancement.PlantPotMinecartCriteria
-import joshxviii.plantz.advancement.SendMailCriteria
-import joshxviii.plantz.advancement.SimpleCriterionCondition
-import joshxviii.plantz.advancement.SimpleCriterionTrigger
-import joshxviii.plantz.advancement.ZombieRaidCriteria
+import joshxviii.plantz.advancement.*
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 
