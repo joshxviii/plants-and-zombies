@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.core.BlockPos
 import net.minecraft.util.Mth
+import kotlin.math.floor
 
 class SunRenderer(context: EntityRendererProvider.Context) :
     EntityRenderer<Sun, SunRenderState>(context) {
@@ -52,7 +53,9 @@ class SunRenderer(context: EntityRendererProvider.Context) :
         poseStack.mulPose(camera.orientation)
         val s = 1.2f-(8.0f/(state.value.coerceAtLeast(1)+8f))
         poseStack.scale(s, s, s)
-        submitNodeCollector.submitCustomGeometry(
+        val timeLeft = floor(state.lifeTime - state.ageInTicks).toInt()
+        val isFlashing = (timeLeft <= 40) && timeLeft % 2 == 0
+        if (!isFlashing) submitNodeCollector.submitCustomGeometry(
             poseStack,
             EMISSIVE_SUN,
         ) { pose: PoseStack.Pose?, buffer: VertexConsumer? ->
@@ -62,6 +65,7 @@ class SunRenderer(context: EntityRendererProvider.Context) :
             vertex(buffer, pose, -xo, 0.75f, rc, gc, bc, u0, v0, state.lightCoords)
         }
         poseStack.popPose()
+
         super.submit(state, poseStack, submitNodeCollector, camera)
     }
 
@@ -72,7 +76,8 @@ class SunRenderer(context: EntityRendererProvider.Context) :
     override fun extractRenderState(entity: Sun, state: SunRenderState, partialTicks: Float) {
         super.extractRenderState(entity, state, partialTicks)
         state.value = entity.value
-        state.icon = entity.icon
+        state.lifeTime = entity.getLifeTime()
+        state.icon = 0
     }
 
     companion object {
@@ -116,6 +121,7 @@ class SunRenderer(context: EntityRendererProvider.Context) :
 }
 
 class SunRenderState : EntityRenderState() {
-    var icon: Int = 0
     var value: Int = 0
+    var lifeTime: Int = 0
+    var icon: Int = 0
 }

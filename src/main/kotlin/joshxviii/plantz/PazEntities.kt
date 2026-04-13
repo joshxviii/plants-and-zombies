@@ -47,7 +47,7 @@ object PazEntities {
             if (entity is Zombie) (entity as MobAccessor).targetSelector.addGoal(4, NearestAttackableTargetGoal(entity, Gnome::class.java, 5, true, false, null))
 
             if (entity is PathfinderMob && entity.`is`(ZOMBIE_RAIDERS)) {
-                (entity as MobAccessor).goalSelector.addGoal(5, DestroyFlagGoal(entity))
+                (entity as MobAccessor).goalSelector.addGoal(3, DestroyFlagGoal(entity))
                 (entity as MobAccessor).goalSelector.addGoal(3, PathfindToFlagGoal(entity))
             }
 

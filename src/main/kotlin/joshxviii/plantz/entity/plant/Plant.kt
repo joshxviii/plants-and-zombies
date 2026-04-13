@@ -365,11 +365,12 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
      * @param sunAmount the amount of sun used to heal.
      * @return the amount of unused sun.
      */
-    fun sunHeal(sunAmount: Int) : Float {
-        val sunHeal = sunAmount*2.0f
-        val leftOver =( (health + sunHeal) - maxHealth)
-        heal(sunHeal)
-        return leftOver.coerceAtLeast(0.0f)
+    fun sunHeal(sunAmount: Int = 1): Boolean {
+        val healingMultiplier = 2.0f
+        val healingAmount = sunAmount * healingMultiplier
+        val success = health < maxHealth
+        heal(healingAmount)
+        return success
     }
 
     fun sunRequiredForSeeds(): Int = Mth.floor(PazEntities.getSunCostFromType(this.type)*1.5f).coerceAtLeast(1)

@@ -36,6 +36,66 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
     private var followingEntity: LivingEntity? = null
     private val interpolation = InterpolationHandler(this)
 
+    companion object {
+        val DATA_VALUE: EntityDataAccessor<Int> =
+            SynchedEntityData.defineId<Int>(Sun::class.java, EntityDataSerializers.INT)
+        private const val ENTITY_SCAN_PERIOD = 20
+        private const val MAX_FOLLOW_DIST = 8.0
+        private const val ORB_GROUPS_PER_AREA = 40
+        private const val ORB_MERGE_DISTANCE = 0.5
+        private const val DEFAULT_HEALTH: Short = 5
+        private const val DEFAULT_AGE: Short = 0
+        private const val DEFAULT_VALUE: Short = 0
+        private const val DEFAULT_COUNT = 1
+        fun award(level: ServerLevel, pos: Vec3, amount: Int) {
+            awardWithDirection(level, pos, Vec3.Y_AXIS, amount)
+        }
+
+        fun awardWithDirection(level: ServerLevel, pos: Vec3, roughDirection: Vec3, amount: Int) {
+            var amount = amount
+            while (amount > 0) {
+                val newCount = getExperienceValue(amount)
+                amount -= newCount
+                if (!tryMergeToExisting(level, pos, newCount)) level.addFreshEntity(Sun(level, pos, roughDirection, newCount))
+            }
+        }
+
+        private fun tryMergeToExisting(level: ServerLevel, pos: Vec3, value: Int): Boolean {
+            val box = AABB.ofSize(pos, 1.0, 1.0, 1.0)
+            val id = level.getRandom().nextInt(ORB_GROUPS_PER_AREA)
+            val orbs: MutableList<Sun> = level.getEntities(
+                EntityTypeTest.forClass(Sun::class.java),
+                box,
+                Predicate { orbx: Sun -> canMerge(orbx, id, value) })
+            if (!orbs.isEmpty()) {
+                val orb = orbs[0]
+                orb.count++
+                orb.age = 0
+                return true
+            } else return false
+        }
+
+        private fun canMerge(orb: Sun, id: Int, value: Int): Boolean {
+            return !orb.isRemoved && (orb.id - id) % ORB_GROUPS_PER_AREA == 0 && orb.value == value
+        }
+
+        fun getExperienceValue(maxValue: Int): Int {
+            return when {
+                maxValue >= 2477 -> 2477
+                maxValue >= 1237 -> 1237
+                maxValue >= 617 -> 617
+                maxValue >= 307 -> 307
+                maxValue >= 149 -> 149
+                maxValue >= 73 -> 73
+                maxValue >= 12 -> 12
+                maxValue >= 6 -> 6
+                maxValue >= 3 -> 3
+                maxValue >= 2 -> 2
+                else -> 1
+            }
+        }
+    }
+
     var value: Int
         get() = entityData.get(DATA_VALUE)
         private set(value) {
@@ -125,9 +185,11 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
                 deltaMovement = Vec3(deltaMovement.x, -fallSpeed * 0.8, deltaMovement.z)
             }
 
-            if (age++ >= LIFETIME) discard()
+            if (age++ >= getLifeTime()) discard()
         }
     }
+
+    fun getLifeTime(): Int = 800
 
     private fun followNearbyEntity() {
         followingEntity = getNearestEntity(MAX_FOLLOW_DIST)
@@ -156,27 +218,28 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
     }
 
     private fun touchedEntity(entity: LivingEntity?) {
-        if (entity is Player) {
-            val serverLevel = level() as? ServerLevel
-            if (serverLevel!=null) {
-                var successCount = 0
-                for (i in 0 until this.value) {
-                    val success = tryToGiveSun(entity)
-                    if(success) {
-                        successCount++
-                        this.value--
+        if (entity !is Player && entity !is Plant || entity.isDeadOrDying) return
+
+        val serverLevel = level() as? ServerLevel
+        if (serverLevel!=null) {
+            var successCount = 0
+            for (i in 0 until this.value) {
+                val success = when (entity) {
+                    is Player -> tryToGiveSun(entity)
+                    is Plant -> {
+                        entity.addParticlesAroundSelf(particle = ParticleTypes.HAPPY_VILLAGER)
+                        entity.sunHeal()
                     }
+                    else -> false
                 }
-                if (successCount>0) playPickupSound()
-                if (this.value <= 0) discard()
+                if(success) {
+                    successCount++
+                    value--
+                }
             }
+            if (successCount>0) playPickupSound()
+            if (value <= 0) discard()
         }
-        else if (entity is Plant && !entity.isDeadOrDying) {
-            this.value -= entity.sunHeal(this.value).toInt()
-            entity.addParticlesAroundSelf(particle = ParticleTypes.HAPPY_VILLAGER)
-            playPickupSound()
-        }
-        if (value <= 0) discard()
     }
 
     fun tryToGiveSun(entity: Player): Boolean {
@@ -263,104 +326,9 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
         count = input.read("Count", ExtraCodecs.POSITIVE_INT).orElse(DEFAULT_COUNT) as Int
     }
 
-    val icon: Int
-        get() {
-            val value = value
-            if (value >= 2477) {
-                return 10
-            } else if (value >= 1237) {
-                return 9
-            } else if (value >= 617) {
-                return 8
-            } else if (value >= 307) {
-                return 7
-            } else if (value >= 149) {
-                return 6
-            } else if (value >= 73) {
-                return 5
-            } else if (value >= 37) {
-                return 4
-            } else if (value >= 17) {
-                return 3
-            } else if (value >= 7) {
-                return 2
-            } else {
-                return if (value >= 3) 1 else 0
-            }
-        }
-
     override fun isAttackable(): Boolean = false
 
     override fun getSoundSource(): SoundSource = SoundSource.AMBIENT
 
     override fun getInterpolation(): InterpolationHandler = interpolation
-
-    companion object {
-        val DATA_VALUE: EntityDataAccessor<Int> =
-            SynchedEntityData.defineId<Int>(Sun::class.java, EntityDataSerializers.INT)
-        private const val LIFETIME = 800
-        private const val ENTITY_SCAN_PERIOD = 20
-        private const val MAX_FOLLOW_DIST = 8.0
-        private const val ORB_GROUPS_PER_AREA = 40
-        private const val ORB_MERGE_DISTANCE = 0.5
-        private const val DEFAULT_HEALTH: Short = 5
-        private const val DEFAULT_AGE: Short = 0
-        private const val DEFAULT_VALUE: Short = 0
-        private const val DEFAULT_COUNT = 1
-        fun award(level: ServerLevel, pos: Vec3, amount: Int) {
-            awardWithDirection(level, pos, Vec3.Y_AXIS, amount)
-        }
-
-        fun awardWithDirection(level: ServerLevel, pos: Vec3, roughDirection: Vec3, amount: Int) {
-            var amount = amount
-            while (amount > 0) {
-                val newCount = getExperienceValue(amount)
-                amount -= newCount
-                if (!tryMergeToExisting(level, pos, newCount)) level.addFreshEntity(Sun(level, pos, roughDirection, newCount))
-            }
-        }
-
-        private fun tryMergeToExisting(level: ServerLevel, pos: Vec3, value: Int): Boolean {
-            val box = AABB.ofSize(pos, 1.0, 1.0, 1.0)
-            val id = level.getRandom().nextInt(ORB_GROUPS_PER_AREA)
-            val orbs: MutableList<Sun> = level.getEntities(
-                EntityTypeTest.forClass(Sun::class.java),
-                box,
-                Predicate { orbx: Sun -> canMerge(orbx, id, value) })
-            if (!orbs.isEmpty()) {
-                val orb = orbs[0]
-                orb.count++
-                orb.age = 0
-                return true
-            } else return false
-        }
-
-        private fun canMerge(orb: Sun, id: Int, value: Int): Boolean {
-            return !orb.isRemoved && (orb.id - id) % ORB_GROUPS_PER_AREA == 0 && orb.value == value
-        }
-
-        fun getExperienceValue(maxValue: Int): Int {
-            if (maxValue >= 2477) {
-                return 2477
-            } else if (maxValue >= 1237) {
-                return 1237
-            } else if (maxValue >= 617) {
-                return 617
-            } else if (maxValue >= 307) {
-                return 307
-            } else if (maxValue >= 149) {
-                return 149
-            } else if (maxValue >= 73) {
-                return 73
-            } else if (maxValue >= 12) {
-                return 12
-            } else if (maxValue >= 6) {
-                return 6
-            } else if (maxValue >= 3) {
-                return 3
-            } else {
-                return if (maxValue >= 2) 2 else 1
-            }
-        }
-    }
 }
