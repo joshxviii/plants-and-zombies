@@ -20,7 +20,7 @@ class Cactus(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CACT
         this.goalSelector.addGoal(2, ProjectileAttackGoal(
             usingEntity = this,
             projectileFactory = { Needle(level(), this) },
-            velocity = 1.4,
+            velocity = 1.5,
             cooldownTime = 40,
             actionDelay = 6))
         this.targetSelector.addGoal(4, FurthestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->
