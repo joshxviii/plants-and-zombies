@@ -6,6 +6,10 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.ai.goal.BeamAttackGoal
+import joshxviii.plantz.entity.zombie.AllStar
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
@@ -14,7 +18,20 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.level.Level
 
 class FumeShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEntities.FUME_SHROOM, level) {
-    var sprayTime = -1
+    companion object {
+        val SPRAY_TIME_ID: EntityDataAccessor<Int> =
+            SynchedEntityData.defineId<Int>(FumeShroom::class.java, EntityDataSerializers.INT)
+    }
+
+    var sprayTime: Int
+        get() = this.entityData.get(SPRAY_TIME_ID)
+        set(value) = this.entityData.set(SPRAY_TIME_ID, value)
+
+
+    override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
+        super.defineSynchedData(entityData)
+        entityData.define(SPRAY_TIME_ID, -1)
+    }
 
     override fun registerGoals() {
         super.registerGoals()
@@ -55,7 +72,7 @@ class FumeShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEnt
                 val randomVy = vy + (random.nextGaussian() * spread)
                 val randomVz = vz + (random.nextGaussian() * spread)
 
-                this.level().addParticle(
+                level().addParticle(
                     PazServerParticles.FUME_BUBBLE,
                     direction.x * .3 + this.getRandomX(0.2),
                     this.y + eyeHeight - 0.1,
