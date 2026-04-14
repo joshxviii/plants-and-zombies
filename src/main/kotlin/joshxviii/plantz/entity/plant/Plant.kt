@@ -87,7 +87,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val SLEEPING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, DATA_SLEEPING)
 
         data class PlantAttributes(
-            val maxHealth: Double = 10.0,
+            val maxHealth: Double = 15.0,
             val attackDamage: Double = 2.0,
             val attackKnockback: Double = 0.07,
             val movementSpeed: Double = 0.0,
@@ -337,6 +337,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 state = PlantState.COOLDOWN
             }
             PlantState.COOLDOWN -> {
+                idleAnimationState.startIfStopped(tickCount)
                 if (cooldown <= 0) {
                     state = PlantState.IDLE
                 }
@@ -497,7 +498,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                     val stack = SeedPacketItem.stackFor(this.type)
                     if (customName!=null) stack.set(DataComponents.CUSTOM_NAME, customName)
                     val itemEntity = ItemEntity(level, x, y + 0.5, z, stack)
-                    level.addFreshEntity(itemEntity)
+                    val success = level.addFreshEntity(itemEntity)
+                    if (player is ServerPlayer) PazCriteria.RELOCATION.trigger(player, success)
                 }
                 playSound(SoundEvents.ROOTED_DIRT_BREAK)
                 level.sendParticles(BlockParticleOption(

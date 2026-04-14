@@ -1,0 +1,35 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+            "type": "minecraft:item",
+            "name": "plantz:seed_packet",
+            "weight": 1,
+            "functions": [
+              {
+                "function": "minecraft:set_components",
+                "components": {
+                  "plantz:seed_packet": {
+                    "id": "plantz:melonpult"
+                  }
+                }
+              }
+            ]
+          },
+        {
+          "type": "minecraft:empty",
+          "weight": 10
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:killed_by_player"
+        }
+      ]
+    }
+  ],
+  "random_sequence": "minecraft:entities/disco_zombie"
+}

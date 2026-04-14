@@ -131,7 +131,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
     }
 
     override fun emergingTime(): Int = 80
-    override fun getSoundVolume(): Float =  4.0f
+    override fun getSoundVolume(): Float =  2.5f
 
     override fun getAmbientSound(): SoundEvent {
         return PazSounds.GARGANTUAR_AMBIENT
@@ -183,8 +183,8 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
         val gargantuar: Gargantuar,
     ) : Goal() {
         companion object {
-            const val ATTACK_DELAY_TIME = 20
-            val SMASH_DAMAGE_CALCULATOR: ExplosionDamageCalculator = SimpleExplosionDamageCalculator(false, true, Optional.of(4f), Optional.ofNullable(null))
+            const val ATTACK_DELAY_TIME = 40
+            val SMASH_DAMAGE_CALCULATOR: ExplosionDamageCalculator = SimpleExplosionDamageCalculator(false, true, Optional.of(2.5f), Optional.ofNullable(null))
         }
         var attackTime = gargantuar.random.nextInt(10,20)
 

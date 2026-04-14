@@ -10,7 +10,7 @@
       "translate": "advancements.plantz.grow_plant_seeds.description"
     }
   },
-  "parent": "plantz:root",
+  "parent": "plantz:relocation",
   "criteria": {
     "grow_seeds": {
       "trigger": "plantz:grow_seeds"

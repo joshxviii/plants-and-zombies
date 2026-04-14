@@ -55,7 +55,7 @@ object PazCreativeTab {
                 output.accept(PazItems.GARGANTUAR_SPAWN_EGG)
 
                 // gnome
-                output.accept(PazItems.GNOME_SPAWN_EGG)
+                //output.accept(PazItems.GNOME_SPAWN_EGG)
 
                 // other
                 output.accept(PazItems.SUN)

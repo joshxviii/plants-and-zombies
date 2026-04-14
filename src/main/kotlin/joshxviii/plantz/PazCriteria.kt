@@ -10,6 +10,9 @@ object PazCriteria {
     val SEND_MAIL = registerCriteria("send_mail", SimpleCriterionTrigger(SendMailCriteria.CODEC))
 
     @JvmField
+    val RELOCATION = registerCriteria("relocate", SimpleCriterionTrigger(RelocatePlantCriteria.CODEC))
+
+    @JvmField
     val GROW_SEEDS = registerCriteria("grow_seeds", SimpleCriterionTrigger(GrowSeedsCriteria.CODEC))
 
     @JvmField

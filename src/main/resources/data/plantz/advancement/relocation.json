@@ -1,0 +1,20 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:copper_shovel"
+    },
+    "title": {
+      "translate": "advancements.plantz.relocation"
+    },
+    "description": {
+      "translate": "advancements.plantz.relocation.description"
+    }
+  },
+  "parent": "plantz:root",
+  "criteria": {
+    "relocate": {
+      "trigger": "plantz:relocate"
+    }
+  },
+  "sends_telemetry_event": false
+}

@@ -24,7 +24,7 @@ object PazSpawnPlacements {
         registerSpawnPlacement(PazEntities.CHERRY_BOMB, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_CHOMPER, PazEntities.CHOMPER,
-            weight = 4, minGroupSize = 1, maxGroupSize = 1)
+            weight = 5, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.CHOMPER, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_FIRE_PEASHOOTER, PazEntities.FIRE_PEA_SHOOTER,
@@ -32,7 +32,7 @@ object PazSpawnPlacements {
         registerSpawnPlacement(PazEntities.FIRE_PEA_SHOOTER, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_FUMESHROOM, PazEntities.FUME_SHROOM,
-            weight = 5, minGroupSize = 1, maxGroupSize = 1)
+            weight = 6, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.FUME_SHROOM, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_HYPNOSHROOM, PazEntities.HYPNOSHROOM,
@@ -68,7 +68,7 @@ object PazSpawnPlacements {
         registerSpawnPlacement(PazEntities.REPEATER, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_SCAREDYSHROOM, PazEntities.SCAREDY_SHROOM,
-            weight = 3, minGroupSize = 1, maxGroupSize = 1)
+            weight = 7, minGroupSize = 1, maxGroupSize = 2)
         registerSpawnPlacement(PazEntities.SCAREDY_SHROOM, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_SUNFLOWER, PazEntities.SUNFLOWER,
