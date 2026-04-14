@@ -80,17 +80,8 @@ class PlantRenderer(
                     else -> ""
                 }
                 is KernelPult -> if (entity.hasButterShot) "butter" else ""
-                else -> getMagicName(entity)
+                else -> entity.getMagicName()
             }
-    }
-
-    fun getMagicName(entity: Plant): String {
-        val name = entity.customName?.string ?: return ""
-        val hasMagicName: Boolean = when (entity) {
-            is Chomper -> name == "Chester"
-            else -> false
-        }
-        return if (hasMagicName) name else ""
     }
 
     override fun getTextureLocation(state: PlantRenderState): Identifier {

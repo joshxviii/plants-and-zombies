@@ -25,6 +25,7 @@ import net.minecraft.world.level.ExplosionDamageCalculator
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.SimpleExplosionDamageCalculator
+import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.Vec3
 import java.util.*
@@ -130,6 +131,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
     }
 
     override fun emergingTime(): Int = 80
+    override fun getSoundVolume(): Float =  4.0f
 
     override fun getAmbientSound(): SoundEvent {
         return PazSounds.GARGANTUAR_AMBIENT
@@ -140,8 +142,8 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
     override fun getDeathSound(): SoundEvent {
         return PazSounds.GARGANTUAR_DEATH
     }
-    override fun getStepSound(): SoundEvent {
-        return SoundEvents.WARDEN_STEP
+    override fun playStepSound(pos: BlockPos, blockState: BlockState) {
+        this.playSound(SoundEvents.WARDEN_STEP, 6.0f, 0.9f)
     }
 
     override fun isBaby(): Boolean = false
@@ -188,7 +190,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
 
         override fun canUse(): Boolean {
             if (attackTime <= 0) return true
-            return (gargantuar.health <= gargantuar.maxHealth*.5) && gargantuar.isAggressive && !gargantuar.isDeadOrDying && gargantuar.target.let { it != null && it.isAlive && gargantuar.hasLineOfSight(it) && it.distanceTo(gargantuar) < 6.75f }
+            return gargantuar.isAggressive && !gargantuar.isDeadOrDying && gargantuar.target.let { it != null && it.isAlive && gargantuar.hasLineOfSight(it) && it.distanceTo(gargantuar) < 6.75f }
         }
 
         override fun canContinueToUse(): Boolean {
@@ -251,7 +253,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
         override fun canUse(): Boolean {
             if (!gargantuar.hasImp) return false
             if (throwTime <= 0) return true
-            return gargantuar.isAggressive && !gargantuar.isDeadOrDying && gargantuar.target.let {
+            return (gargantuar.health <= gargantuar.maxHealth*.5) && gargantuar.isAggressive && !gargantuar.isDeadOrDying && gargantuar.target.let {
                 it != null
                 && it.distanceTo(gargantuar) > 4.5f
             }
