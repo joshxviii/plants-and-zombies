@@ -31,6 +31,7 @@ object PazMain : ModInitializer {
 		PazSpawnPlacements.initialize()
 		PazMenus.initialize()
 		PazNetwork.initialize()
+		PazJukeboxSongs.initialize()
 	}
 }
 

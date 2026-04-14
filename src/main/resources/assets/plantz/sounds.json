@@ -316,5 +316,8 @@
   },
   "event.mob_effect.zombie_omen": {
     "sounds": [{ "name": "event/mob_effects/raid_omen", "volume": 1.0, "pitch": 1.2 }], "subtitle": "plantz.subtitles.event.mob_effect.zombie_omen"
+  },
+  "music_disc.grassy_groove": {
+    "sounds": [{ "name": "plantz:music/grassy_groove", "volume": 1.0, "pitch": 1.0 }], "subtitle": "plantz.subtitles.music_disc.grassy_groove"
   }
 }

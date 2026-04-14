@@ -1,4 +1,7 @@
 {
+
+
+
   "advancements.plantz.big_three": "The Big Three",
   "advancements.plantz.big_three.description": "Defeat an All Star, Disco Zombie, and a Zombie Yeti.",
   "advancements.plantz.cone_head": "U R A Wizard!",
@@ -120,6 +123,10 @@
 
   "item.plantz.gnome_spawn_egg": "Gnome Spawn Egg",
 
+  "item.plantz.music_disc_grassy_groove": "Music Disc",
+
+  "jukebox_song.plantz.grassy_groove": "joshxviii - Grassy Groove",
+
   "entity.plantz.empty": "Empty",
   "entity.plantz.sunflower": "Sunflower",
   "entity.plantz.peashooter": "Peashooter",
@@ -140,8 +147,8 @@
   "entity.plantz.scaredyshroom": "Scaredy Shroom",
   "entity.plantz.hypnoshroom": "Hypno Shroom",
 
-  "entity.plantz.browncoat": "Brown Coat",
-  "entity.plantz.newspaper_zombie": "Brown Coat",
+  "entity.plantz.browncoat": "Browncoat",
+  "entity.plantz.newspaper_zombie": "Newspaper Zombie",
   "entity.plantz.digger_zombie": "Digger Zombie",
   "entity.plantz.zombie_yeti": "Zombie Yeti",
   "entity.plantz.disco_zombie": "Disco Zombie",

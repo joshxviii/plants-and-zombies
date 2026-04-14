@@ -1,11 +1,16 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.entity.gnome.GnomeSoundVariant
+import net.fabricmc.fabric.mixin.transfer.JukeboxBlockEntityMixin
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.world.damagesource.DamageType
+import net.minecraft.world.item.JukeboxSong
 
 object PazSounds {
 
@@ -58,6 +63,8 @@ object PazSounds {
     @JvmField val PLANT_EXPLODE = registerForHolder("entity.plant_explode")
     @JvmField val SNOWCHUNK_HIT = registerForHolder("entity.snowchunk")
 
+    @JvmField val MUSIC_DISC_GRASSY_GROOVE = registerForHolder("music_disc.grassy_groove")
+
     private fun registerGnomeSoundVariants(): Map<GnomeSoundVariant, GnomeSoundVariant.GnomeSoundSet> {
         return GnomeSoundVariant.entries.associateWith { soundVariant ->
             val id = soundVariant.serializedName
@@ -81,5 +88,7 @@ object PazSounds {
         return Registry.registerForHolder(BuiltInRegistries.SOUND_EVENT, soundId, SoundEvent.createVariableRangeEvent(soundId))
     }
 
-    fun initialize() {}
+    fun initialize() {
+
+    }
 }

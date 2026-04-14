@@ -106,6 +106,11 @@ object PazItems {
         "plant_pot_minecart", { p: Item.Properties -> MinecartItem(PazEntities.PLANT_POT_MINECART ,p) },
         properties = Item.Properties().stacksTo(1)
     )
+    @JvmField
+    val MUSIC_DISC_GRASSY_GROOVE: Item = registerItem(
+        "music_disc_grassy_groove",
+        properties = Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).jukeboxPlayable(PazJukeboxSongs.GRASSY_GROOVE)
+    )
 
     @JvmField val BROWN_COAT_SPAWN_EGG: Item = registerSpawnEgg(BROWN_COAT)
     @JvmField val NEWSPAPER_ZOMBIE_SPAWN_EGG: Item = registerSpawnEgg(NEWSPAPER_ZOMBIE)
