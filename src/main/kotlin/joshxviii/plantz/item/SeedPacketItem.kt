@@ -3,7 +3,6 @@ package joshxviii.plantz.item
 import com.google.common.base.Predicate
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazItems
-import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.item.component.SeedPacket
 import net.minecraft.ChatFormatting

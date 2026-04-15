@@ -10,7 +10,6 @@ import joshxviii.plantz.PazDataSerializers.DATA_SWELL_DIR
 import joshxviii.plantz.PazTags.BlockTags.PLANTABLE
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.entity.Sun
-import joshxviii.plantz.entity.zombie.NewspaperZombie.Companion.ANGRY_BONUS_ID
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
@@ -518,33 +517,28 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             // shovel interaction
             if (itemStack.`is`(ItemTags.SHOVELS)) {
                 if (!verifyOwner(player)) return InteractionResult.FAIL
-                // apply tool damage base on how damaged the plant was
-                itemStack.hurtAndBreak(4, player, hand.asEquipmentSlot())
-                if (!player.isCreative || customName!=null) run {// Spawn a seed packet item containing this plant's data
-                    val stack = SeedPacketItem.stackFor(this.type)
-                    if (customName!=null) stack.set(DataComponents.CUSTOM_NAME, customName)
-                    val itemEntity = ItemEntity(level, x, y + 0.5, z, stack)
-                    val success = level.addFreshEntity(itemEntity)
-                    if (player is ServerPlayer) PazCriteria.RELOCATION.trigger(player, success)
+                val success = dropAsSeedPacketItem(force = !player.isCreative)
+                if (success) {
+                    // apply tool damage base on how damaged the plant was
+                    itemStack.hurtAndBreak(4, player, hand.asEquipmentSlot())
+                    playSound(SoundEvents.ROOTED_DIRT_BREAK)
+                    level.sendParticles(BlockParticleOption(
+                        ParticleTypes.BLOCK, getBlockBelow()),
+                        x, y+0.05, z, 16, 0.25,0.0,0.25, 0.4)
                 }
-                playSound(SoundEvents.ROOTED_DIRT_BREAK)
-                level.sendParticles(BlockParticleOption(
-                    ParticleTypes.BLOCK, getBlockBelow()),
-                    x, y+0.05, z, 16, 0.25,0.0,0.25, 0.4)
-                this.discard()
-
+                if (player is ServerPlayer) PazCriteria.RELOCATION.trigger(player, success)
                 return InteractionResult.SUCCESS_SERVER
             }
 
             //pot helmet interaction
+
             if (itemStack.isEmpty
-                && player.getItemBySlot(EquipmentSlot.HEAD).`is`(PazItems.PLANT_POT_HELMET)
-                && player.isCrouching
-            ) {
+                && (player as ServerPlayerAccessor).`plantz$wearingPlantPotHelmet`()
+                && player.isCrouching ) {
                 if (!verifyOwner(player)) return InteractionResult.FAIL
-                if (attachedPlayer == null && !(player as ServerPlayerAccessor).`plantz$hasPlantOnHead`()) {
+                if (attachedPlayer == null && !player.`plantz$hasPlantOnHead`()) {
                     attachedPlayer = player
-                    (player as ServerPlayerAccessor).`plantz$setHasPlantOnHead`(true)
+                    player.`plantz$setHasPlantOnHead`(true)
                     return InteractionResult.SUCCESS_SERVER
                 }
 
@@ -573,6 +567,22 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             player.sendOverlayMessage(Component.translatable("message.plantz.not_yours", this.name).withStyle(ChatFormatting.RED))
             return false
         }
+        return true
+    }
+
+    fun dropAsSeedPacketItem(force: Boolean = false): Boolean {
+        val level = level() as ServerLevel
+        if (force || customName!=null) {// Spawn a seed packet item containing this plant's data
+            val stack = SeedPacketItem.stackFor(this.type)
+            if (customName!=null) stack.set(DataComponents.CUSTOM_NAME, customName)
+            val itemEntity = ItemEntity(level, x, y + 0.5, z, stack)
+            if(level.addFreshEntity(itemEntity)){
+                this.discard()
+                return true
+            }
+            else return false
+        }
+        this.discard()
         return true
     }
 

@@ -23,6 +23,7 @@ fun pazResource(path: String): Identifier = Identifier.fromNamespaceAndPath(MODI
 interface ServerPlayerAccessor {
     fun `plantz$hasPlantOnHead`(): Boolean
     fun `plantz$setHasPlantOnHead`(value: Boolean)
+    fun `plantz$wearingPlantPotHelmet`(): Boolean
 }
 
 fun Player.hasSpaceForItem(item: ItemStack): Boolean {

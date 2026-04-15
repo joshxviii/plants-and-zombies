@@ -9,17 +9,13 @@ import net.minecraft.sounds.SoundSource
 import net.minecraft.stats.Stats
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
-import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.Projectile
-import net.minecraft.world.entity.projectile.Projectile.ProjectileFactory
-import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownExperienceBottle
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ProjectileItem
 import net.minecraft.world.item.ProjectileItem.DispenseConfig
-import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.Level
 
 class SunBottleItem(properties: Properties) : Item(properties), ProjectileItem {

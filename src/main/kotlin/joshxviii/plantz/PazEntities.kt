@@ -11,18 +11,9 @@ import joshxviii.plantz.entity.gnome.Gnome
 import joshxviii.plantz.entity.plant.*
 import joshxviii.plantz.entity.plants.WallNut
 import joshxviii.plantz.entity.projectile.*
-import joshxviii.plantz.entity.zombie.AllStar
-import joshxviii.plantz.entity.zombie.BackupDancer
-import joshxviii.plantz.entity.zombie.BrownCoat
-import joshxviii.plantz.entity.zombie.DiscoZombie
-import joshxviii.plantz.entity.zombie.Gargantuar
-import joshxviii.plantz.entity.zombie.DiggerZombie
-import joshxviii.plantz.entity.zombie.Imp
-import joshxviii.plantz.entity.zombie.NewspaperZombie
-import joshxviii.plantz.entity.zombie.ZombieYeti
+import joshxviii.plantz.entity.zombie.*
 import joshxviii.plantz.mixin.MobAccessor
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
@@ -35,8 +26,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.projectile.Projectile
-import net.minecraft.world.scores.PlayerTeam
-import net.minecraft.world.scores.Scoreboard
 
 object PazEntities {
 

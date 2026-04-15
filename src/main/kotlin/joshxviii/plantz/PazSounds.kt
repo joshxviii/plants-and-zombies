@@ -1,16 +1,11 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.entity.gnome.GnomeSoundVariant
-import net.fabricmc.fabric.mixin.transfer.JukeboxBlockEntityMixin
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.core.registries.Registries
-import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.world.damagesource.DamageType
-import net.minecraft.world.item.JukeboxSong
 
 object PazSounds {
 
