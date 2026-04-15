@@ -20,6 +20,11 @@ import net.minecraft.world.phys.Vec3
 
 fun pazResource(path: String): Identifier = Identifier.fromNamespaceAndPath(MODID, path)
 
+interface ServerPlayerAccessor {
+    fun `plantz$hasPlantOnHead`(): Boolean
+    fun `plantz$setHasPlantOnHead`(value: Boolean)
+}
+
 fun Player.hasSpaceForItem(item: ItemStack): Boolean {
     val inv = this.inventory
     val hasFreeSlot = inv.freeSlot != -1

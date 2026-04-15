@@ -107,6 +107,15 @@ object PazItems {
         properties = Item.Properties().stacksTo(1)
     )
     @JvmField
+    val PLANT_POT_HELMET: Item = registerItem(
+        "plant_pot_helmet",
+        properties = Item.Properties().stacksTo(1)
+            .component(
+                DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
+                    .setEquipSound(SoundEvents.ARMOR_EQUIP_TURTLE)
+                    .build())
+    )
+    @JvmField
     val MUSIC_DISC_GRASSY_GROOVE: Item = registerItem(
         "music_disc_grassy_groove",
         properties = Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).jukeboxPlayable(PazJukeboxSongs.GRASSY_GROOVE)

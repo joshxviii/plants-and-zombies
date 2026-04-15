@@ -16,7 +16,7 @@ class WallNut(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.WAL
     override fun attackGoals() {}
 
     // solid collision
-    override fun canBeCollidedWith(other: Entity?): Boolean = this.isAlive
+    override fun canBeCollidedWith(other: Entity?): Boolean = this.isAlive && other != attachedPlayer
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
         val entity = source.directEntity

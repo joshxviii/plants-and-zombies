@@ -10,6 +10,7 @@ import joshxviii.plantz.PazDataSerializers.DATA_SWELL_DIR
 import joshxviii.plantz.PazTags.BlockTags.PLANTABLE
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.entity.Sun
+import joshxviii.plantz.entity.zombie.NewspaperZombie.Companion.ANGRY_BONUS_ID
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
@@ -19,7 +20,9 @@ import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
@@ -33,6 +36,7 @@ import net.minecraft.world.InteractionResult
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.*
+import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.control.BodyRotationControl
@@ -57,7 +61,9 @@ import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
+import java.util.*
 import kotlin.jvm.optionals.getOrElse
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * Base class for all the other plant entities.
@@ -84,7 +90,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val COOLDOWN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_COOLDOWN)
         val RECEIVED_SUN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_RECEIVED_SUN)
         val SEED_GROW_COOLDOWN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_SEED_GROW_COOLDOWN)
+        val ATTACHED_PLAYER: EntityDataAccessor<Optional<EntityReference<LivingEntity>>> = SynchedEntityData.defineId(Plant::class.java, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE)
         val SLEEPING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, DATA_SLEEPING)
+
+        val ON_PLAYER_HEAD_EFFECTS: Identifier = pazResource("on_player_head_effects")
 
         data class PlantAttributes(
             val maxHealth: Double = 15.0,
@@ -151,13 +160,24 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         get() = this.entityData.get(SEED_GROW_COOLDOWN)
         set(value) = this.entityData.set(SEED_GROW_COOLDOWN, value.coerceAtLeast(0))
 
-    override fun die(source: DamageSource) {
-        super.die(source)
-        if (source.entity is Player) {
-            val sunCost = PazEntities.getSunCostFromType(this.type)
-            val level = level() as? ServerLevel
-            if (level!=null) Sun.award(level, position(), (sunCost/2) - random.nextInt(0,1))
+    private var attachedPlayerReference: EntityReference<LivingEntity>?
+        get() = this.entityData.get(ATTACHED_PLAYER).getOrNull()
+        set(value) = this.entityData.set(ATTACHED_PLAYER, Optional.ofNullable(value))
+
+    var attachedPlayer: LivingEntity?
+        get() = EntityReference.getLivingEntity(attachedPlayerReference, this.level())
+        set(value) {
+            if (value==null) removeOnHeadEffects()
+            else applyOnHeadEffects()
+            attachedPlayerReference = EntityReference.of(value)
         }
+
+    fun applyOnHeadEffects() {
+        getAttribute(Attributes.SCALE)!!.addPermanentModifier(
+            AttributeModifier(ON_PLAYER_HEAD_EFFECTS, -0.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+    }
+    fun removeOnHeadEffects() {
+        getAttribute(Attributes.SCALE)!!.removeModifier(ON_PLAYER_HEAD_EFFECTS)
     }
 
     private var idleAnimationStartTick: Int = 0
@@ -194,16 +214,19 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         entityData.define(RECEIVED_SUN, 0)
         entityData.define(SEED_GROW_COOLDOWN, timeRequiredForSeeds())
         entityData.define(SLEEPING, false)
+        entityData.define(ATTACHED_PLAYER, Optional.empty())
     }
 
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
         output.putInt("SeedGrowTime", seedGrowCooldown)
+        attachedPlayerReference.let { EntityReference.store(it, output, "AttachedPlayer") }
     }
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
         seedGrowCooldown = input.getInt("SeedGrowTime").getOrElse { timeRequiredForSeeds() }
+        attachedPlayerReference = Optional.ofNullable((EntityReference.read<LivingEntity>(input, "AttachedPlayer"))).getOrNull()
     }
 
     fun calculateSwell() {
@@ -229,7 +252,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         this.targetSelector.addGoal(1, OwnerHurtByTargetGoal(this))
         this.targetSelector.addGoal(2, OwnerHurtTargetGoal(this))
     }
-    override fun canAttack(target: LivingEntity): Boolean = super.canAttack(target) && !target.hasSameOwner(this)
 
     open fun stateUpdated(state: PlantState) {}
 
@@ -242,11 +264,11 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun isFood(itemStack: ItemStack): Boolean = false
     override fun getLeashOffset(): Vec3 = Vec3.ZERO
     override fun getPickResult(): ItemStack = SeedPacketItem.stackFor(this.type)
-    override fun wantsToAttack(target: LivingEntity, owner: LivingEntity): Boolean {
-        return (target !is Plant || target.owner != owner)
-    }
+    override fun wantsToAttack(target: LivingEntity, owner: LivingEntity): Boolean = (target !is Plant && super.wantsToAttack(target, owner))
+    override fun canAttack(target: LivingEntity): Boolean = super.canAttack(target) && !target.hasSameOwner(this)
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
+        if ( attachedPlayer.let { it!=null && source.entity?.`is`(it)==true } ) return false
         return if (source.`is`(PazDamageTypes.PLANT_AOE)) false
         else super.hurtServer(level, source, damage)
     }
@@ -271,13 +293,25 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     override fun setPos(x: Double, y: Double, z: Double) {
-        if (this.isPassenger) super.setPos(x, y, z)
+        if (this.isPassenger || attachedPlayer != null) super.setPos(x, y, z)
         else super.setPos(Mth.floor(x) + 0.5, y, Mth.floor(z) + 0.5)
     }
 
+    override fun isNoGravity(): Boolean = if (attachedPlayer != null) true else super.isNoGravity()
+    override fun doPush(entity: Entity) { if (entity!=attachedPlayer) super.doPush(entity)}
+    override fun isAffectedByBlocks(): Boolean = if (attachedPlayer != null) !isRemoved else super.isAffectedByBlocks()
+
     override fun tick() {
+        val attachedPlayer = attachedPlayer
+        if (attachedPlayer != null) noPhysics=true
         super.tick()
         val level = this.level()
+
+        if (attachedPlayer != null) {
+            noPhysics=false
+            yBodyRot = attachedPlayer.yRot
+            super.setPos(attachedPlayer.x, attachedPlayer.eyeY+0.3, attachedPlayer.z)
+        }
 
         if (level is ServerLevel) {
             if (!onValidGround() || isOverlappingWithOther(blockPosition())) {
@@ -402,7 +436,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     // if on invalid ground plant should start to suffocate
     private fun onValidGround() : Boolean {
-        return canSurviveOn(getBlockBelow()) || vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
+        return (attachedPlayer != null) || canSurviveOn(getBlockBelow()) || vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
     }
 
     fun sunIsVisible() : Boolean {
@@ -463,10 +497,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                     return InteractionResult.SUCCESS_SERVER
                 }
                 else if (testGrowConditions() == PlantGrowNeeds.SUN) {// grow seeds
-                    if (!isTame || player != owner) {
-                        player.sendOverlayMessage(Component.translatable("message.plantz.not_yours", this.name).withStyle(ChatFormatting.RED))
-                        return InteractionResult.FAIL
-                    }
+                    if (!verifyOwner(player)) return InteractionResult.FAIL
                     itemStack.consume(1, player)
                     playSound(SoundEvents.BUBBLE_POP, 1.0f,// TODO make custom sound
                         receivedSun.toFloat()/sunRequiredForSeeds() + 0.9f
@@ -486,12 +517,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
             // shovel interaction
             if (itemStack.`is`(ItemTags.SHOVELS)) {
-                if (!isTame || player != owner) {
-                    player.sendOverlayMessage(
-                        Component.translatable("message.plantz.not_yours", this.name).withStyle(ChatFormatting.RED)
-                    )
-                    return InteractionResult.FAIL
-                }
+                if (!verifyOwner(player)) return InteractionResult.FAIL
                 // apply tool damage base on how damaged the plant was
                 itemStack.hurtAndBreak(4, player, hand.asEquipmentSlot())
                 if (!player.isCreative || customName!=null) run {// Spawn a seed packet item containing this plant's data
@@ -509,8 +535,45 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
                 return InteractionResult.SUCCESS_SERVER
             }
+
+            //pot helmet interaction
+            if (itemStack.isEmpty
+                && player.getItemBySlot(EquipmentSlot.HEAD).`is`(PazItems.PLANT_POT_HELMET)
+                && player.isCrouching
+            ) {
+                if (!verifyOwner(player)) return InteractionResult.FAIL
+                if (attachedPlayer == null && !(player as ServerPlayerAccessor).`plantz$hasPlantOnHead`()) {
+                    attachedPlayer = player
+                    (player as ServerPlayerAccessor).`plantz$setHasPlantOnHead`(true)
+                    return InteractionResult.SUCCESS_SERVER
+                }
+
+            }
+
         }
         return super.mobInteract(player, hand)
+    }
+
+    override fun remove(reason: RemovalReason) {
+        super.remove(reason)
+        attachedPlayer.let { if (it != null) (it as ServerPlayerAccessor).`plantz$setHasPlantOnHead`(false) }
+    }
+
+    override fun die(source: DamageSource) {
+        super.die(source)
+        if (source.entity is Player) {
+            val sunCost = PazEntities.getSunCostFromType(this.type)
+            val level = level() as? ServerLevel
+            if (level!=null) Sun.award(level, position(), (sunCost/2) - random.nextInt(0,1))
+        }
+    }
+
+    fun verifyOwner(player: Player): Boolean {
+        if (!isTame || player != owner) {
+            player.sendOverlayMessage(Component.translatable("message.plantz.not_yours", this.name).withStyle(ChatFormatting.RED))
+            return false
+        }
+        return true
     }
 
     fun addParticlesAroundSelf(
