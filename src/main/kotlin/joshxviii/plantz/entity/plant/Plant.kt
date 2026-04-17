@@ -9,6 +9,7 @@ import joshxviii.plantz.PazDataSerializers.DATA_SLEEPING
 import joshxviii.plantz.PazDataSerializers.DATA_SWELL_DIR
 import joshxviii.plantz.PazTags.BlockTags.PLANTABLE
 import joshxviii.plantz.ai.PlantState
+import joshxviii.plantz.ai.goal.SleepGoal
 import joshxviii.plantz.entity.Sun
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.ChatFormatting
@@ -242,6 +243,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     open fun getActionSound(): SoundEvent? = null// TODO make custom sounds
 
     override fun registerGoals() {
+        this.goalSelector.addGoal(1, SleepGoal(this,
+            sleepDuringDay = sleepsDuringDay(),
+            sleepDuringNight = sleepsDuringNight()
+        ))
         this.goalSelector.addGoal(3, RandomLookAroundGoal(this))
         this.goalSelector.addGoal(3, LookAtPlayerGoal(this, Player::class.java, 8.0f))
         attackGoals()
@@ -343,7 +348,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
         val needs = testGrowConditions()
         if (needs == PlantGrowNeeds.SUN) {
-            if (tickCount%25==0) level().addParticle(PazServerParticles.NEEDS_SUN, x, y+eyeHeight+0.5, z, 0.0, 0.0, 0.0)
+            if (tickCount%25==0) level().addParticle(PazServerParticles.NEEDS_SUN, x, y+eyeHeight+0.55, z, 0.0, 0.0, 0.0)
         }
     }
 
@@ -425,11 +430,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             if (farmBlock.getValue(BlockStateProperties.MOISTURE) < 7) return PlantGrowNeeds.WATER
         }
         if (seedGrowCooldown > 0) {
-            if (!isAsleep) isAsleep = true
             --seedGrowCooldown
             return PlantGrowNeeds.TIME
         }
-        if (isAsleep) isAsleep = false
         return PlantGrowNeeds.SUN
     }
 
@@ -441,6 +444,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     fun sunIsVisible() : Boolean {
         return level().isBrightOutside && level().getBrightness(LightLayer.SKY, BlockPos.containing(x, eyeY, z)) >= 7
     }
+    open fun sleepsDuringNight(): Boolean = false
+    open fun sleepsDuringDay(): Boolean = false
 
     fun getBlockBelow(): BlockState {
         val feetY = y - 0.001

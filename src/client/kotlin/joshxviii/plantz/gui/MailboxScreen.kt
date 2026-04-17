@@ -1,9 +1,11 @@
 package joshxviii.plantz.gui
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes
+import joshxviii.plantz.PazMenus
 import joshxviii.plantz.inventory.MailboxMenu
 import joshxviii.plantz.networking.SendMailPayload
 import joshxviii.plantz.pazResource
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
@@ -78,6 +80,11 @@ class MailboxScreen(
         menu.registerUpdateListener { containerChanged() }
         menu.refreshMailboxList()
         rebuildAddressButtons()
+
+        ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register { minecraft, level ->
+            menu.refreshMailboxList()
+            rebuildAddressButtons()
+        }
     }
 
     private fun rebuildAddressButtons() {

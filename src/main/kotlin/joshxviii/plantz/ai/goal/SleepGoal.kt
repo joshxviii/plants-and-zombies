@@ -1,17 +1,19 @@
 package joshxviii.plantz.ai.goal
 
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.entity.plant.PlantGrowNeeds
 import net.minecraft.world.entity.ai.goal.Goal
 
 class SleepGoal(
     val plantEntity: Plant,
-    val sleepDuringDay: Boolean = false
+    val sleepDuringDay: Boolean = false,
+    val sleepDuringNight: Boolean = false
 ) : Goal() {
-    private var countdownAfter = 0
-    private var countdownBefore = 0
+    private var wakeUpDelay = 0
+    private var sleepDelay = 0
 
     companion object {
-        private val SLEEP_WAIT_TIME = reducedTickDelay(140)
+        private val SLEEP_WAIT_TIME = reducedTickDelay(120)
     }
 
     override fun canUse(): Boolean {
@@ -23,18 +25,21 @@ class SleepGoal(
     }
 
     fun canSleep(): Boolean {
-        return if (this.countdownBefore-- > 0) false
-        else if (this.countdownAfter-- > 0) true
-        else if (sleepDuringDay) plantEntity.sunIsVisible() else !plantEntity.sunIsVisible()
+        val needs = plantEntity.testGrowConditions()
+        return if (this.sleepDelay-- > 0) false
+        else if (this.wakeUpDelay-- > 0) true
+        else if (needs == PlantGrowNeeds.TIME) true
+        else if (needs == PlantGrowNeeds.SUN) false
+        else if (sleepDuringDay) plantEntity.sunIsVisible() else if (sleepDuringNight) !plantEntity.sunIsVisible() else false
     }
 
     override fun stop() {
-        this.countdownBefore = plantEntity.random.nextInt(SLEEP_WAIT_TIME)
+        this.sleepDelay = plantEntity.random.nextInt(10,SLEEP_WAIT_TIME)
         plantEntity.isAsleep = false
     }
 
     override fun start() {
-        this.countdownAfter = plantEntity.random.nextInt(SLEEP_WAIT_TIME)
+        this.wakeUpDelay = plantEntity.random.nextInt(10,SLEEP_WAIT_TIME)
         plantEntity.isAsleep = true
     }
 }

@@ -37,7 +37,7 @@ object PazEntities {
 
             if (entity is PathfinderMob && entity.`is`(ZOMBIE_RAIDERS)) {
                 (entity as MobAccessor).goalSelector.addGoal(3, DestroyFlagGoal(entity))
-                (entity as MobAccessor).goalSelector.addGoal(3, PathfindToFlagGoal(entity))
+                (entity as MobAccessor).goalSelector.addGoal(4, PathfindToFlagGoal(entity))
             }
 
             if (entity is Mob && entity.`is`(ATTACKS_PLANTS)) {

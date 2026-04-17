@@ -5,20 +5,20 @@
       "bonus_rolls": 0,
       "entries": [
         {
-            "type": "minecraft:item",
-            "name": "plantz:seed_packet",
-            "weight": 1,
-            "functions": [
-              {
-                "function": "minecraft:set_components",
-                "components": {
-                  "plantz:seed_packet": {
-                    "id": "plantz:hypnoshroom"
-                  }
+          "type": "minecraft:item",
+          "name": "plantz:seed_packet",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "plantz:seed_packet": {
+                  "id": "plantz:hypnoshroom"
                 }
               }
-            ]
-          },
+            }
+          ]
+        },
         {
           "type": "minecraft:empty",
           "weight": 35
@@ -27,6 +27,25 @@
       "conditions": [
         {
           "condition": "minecraft:killed_by_player"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "plantz:music_disc_grassy_groove",
+          "weight": 1
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:entity_properties",
+          "entity": "attacker",
+          "predicate": {
+            "type": "plantz:backup_dancer"
+          }
         }
       ]
     }

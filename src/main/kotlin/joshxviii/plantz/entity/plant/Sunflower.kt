@@ -12,9 +12,10 @@ class Sunflower(
 ) : Plant(PazEntities.SUNFLOWER, level) {
     override fun attackGoals() {}
 
+    override fun sleepsDuringNight(): Boolean = true
+
     override fun registerGoals() {
         super.registerGoals()
-        this.goalSelector.addGoal(1, SleepGoal(this, sleepDuringDay = false))
         this.goalSelector.addGoal(1, GenerateSunGoal(
             usingEntity = this,
             actionDelay = 10,

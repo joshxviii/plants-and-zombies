@@ -84,7 +84,7 @@ object PazItems {
                 DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
                     .add(
                         Attributes.ARMOR,
-                        AttributeModifier(pazResource("football_armor"), 2.0, AttributeModifier.Operation.ADD_VALUE),
+                        AttributeModifier(pazResource("football_armor"), 4.0, AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.HEAD
                     ).add(
                         Attributes.KNOCKBACK_RESISTANCE,

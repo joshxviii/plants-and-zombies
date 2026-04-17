@@ -147,12 +147,12 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
 
         override fun canUse(): Boolean {
             allStar.target?.distanceTo(allStar)?.let { if (it < 1.5f) return false }
-            return allStar.isAggressive && !allStar.isDeadOrDying
+            return (allStar.isAggressive && !allStar.isDeadOrDying)
         }
 
         override fun stop() {
             super.stop()
-            allStar.chargingTime = 0
+            chargeDelayTime = allStar.random.nextInt(40,50)
         }
 
         override fun tick() {
