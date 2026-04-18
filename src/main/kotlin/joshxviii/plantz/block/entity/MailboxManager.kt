@@ -1,5 +1,8 @@
 package joshxviii.plantz.block.entity
 
+import joshxviii.plantz.PazMain
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
@@ -12,6 +15,11 @@ object MailboxManager {
 
     private val mailboxes: MutableMap<ResourceKey<Level>, MutableSet<BlockPos>> = mutableMapOf()
     private val mailboxData: MutableMap<BlockPos, MailboxBlockEntity> = mutableMapOf()
+
+    fun clearMailboxes() {
+        mailboxes.clear()
+        mailboxData.clear()
+    }
 
     fun registerMailbox(level: Level, pos: BlockPos, blockEntity: MailboxBlockEntity) {
         val levelKey = level.dimension()
@@ -26,6 +34,7 @@ object MailboxManager {
     }
 
     fun getMailboxesInLevel(level: Level): List<MailboxBlockEntity> {
+        PazMain.LOGGER.info("Getting mailboxes in level: ${level.dimension()}")
         val levelKey = level.dimension()
 
         return mailboxes[levelKey]?.mapNotNull { pos ->
