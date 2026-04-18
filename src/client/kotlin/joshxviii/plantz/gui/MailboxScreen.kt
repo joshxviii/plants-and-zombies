@@ -1,11 +1,13 @@
 package joshxviii.plantz.gui
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes
+import joshxviii.plantz.PazMain
 import joshxviii.plantz.PazMenus
 import joshxviii.plantz.inventory.MailboxMenu
 import joshxviii.plantz.networking.SendMailPayload
 import joshxviii.plantz.pazResource
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
@@ -13,6 +15,7 @@ import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.input.KeyEvent
 import net.minecraft.client.input.MouseButtonEvent
+import net.minecraft.client.renderer.LevelEventHandler
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
@@ -77,17 +80,14 @@ class MailboxScreen(
         val yo = (height - imageHeight) / 2
         addressSearch = initSearchBar(xo+53, yo+17)
         sendButton = initSendButton(xo+18, yo+55)
-        menu.registerUpdateListener { containerChanged() }
-        menu.refreshMailboxList()
-        rebuildAddressButtons()
-
-        ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register { minecraft, level ->
-            menu.refreshMailboxList()
-            rebuildAddressButtons()
+        menu.registerUpdateListener {
+            containerChanged()
         }
+        rebuildAddressButtons()
     }
 
     private fun rebuildAddressButtons() {
+        menu.refreshMailboxList()
         addressButtons.forEach { removeWidget(it) }
         addressButtons.clear()
 
