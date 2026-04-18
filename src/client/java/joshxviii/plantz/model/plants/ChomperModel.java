@@ -168,7 +168,7 @@ public class ChomperModel extends EntityModel<@NotNull PlantRenderState> {
 		this.stem.yRot = state.yRot * (float) (Math.PI / 180.0);
 		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
 		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
-		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
+		if (!state.getCoolDownAnimationState().isStarted()) this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
 		this.cooldownAnimation.apply(state.getCoolDownAnimationState(), state.ageInTicks);
 		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);

@@ -84,6 +84,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
 
         private const val NUTRIENT_SUPPLY_MAX = 140  // ticks before suffocating when on invalid ground
+        private const val SEED_TIME = 2400
+        private const val SEED_TIME_SUN_MULTIPLIER = 1200
+        private const val SEED_TIME_ZEN_MULTIPLIER = 0.75
 
         val PLANT_STATE: EntityDataAccessor<PlantState> = SynchedEntityData.defineId<PlantState>(Plant::class.java, DATA_PLANT_STATE)
         val SWELL_DIR: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_SWELL_DIR)
@@ -96,7 +99,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val ON_PLAYER_HEAD_EFFECTS: Identifier = pazResource("on_player_head_effects")
 
         data class PlantAttributes(
-            val maxHealth: Double = 15.0,
+            val maxHealth: Double = 20.0,
             val attackDamage: Double = 2.0,
             val attackKnockback: Double = 0.07,
             val movementSpeed: Double = 0.0,
@@ -412,11 +415,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return success
     }
 
-    fun sunRequiredForSeeds(): Int = Mth.floor(PazEntities.getSunCostFromType(this.type)*1.5f).coerceAtLeast(1)
+    fun sunRequiredForSeeds(): Int = 2 + Mth.floor(PazEntities.getSunCostFromType(this.type)*1.5f).coerceAtLeast(1)
 
     fun timeRequiredForSeeds() : Int {
         val sunCost = PazEntities.getSunCostFromType(this.type)
-        return 1000 + (sunCost*450) + random.nextInt(50) * if (level().hasChunkAt(blockPosition()) && getBlockBelow().`is`(PazBlocks.ZEN_PLANT_POT)) 1 else 2
+        val zenBotBonus = level().hasChunkAt(blockPosition()) && getBlockBelow().`is`(PazBlocks.ZEN_PLANT_POT)
+        val time = SEED_TIME + (sunCost*SEED_TIME_SUN_MULTIPLIER) + random.nextInt(50)
+        return if (zenBotBonus) (time*SEED_TIME_ZEN_MULTIPLIER).toInt() else time
     }
 
     open fun canSurviveOn(block: BlockState) : Boolean {
