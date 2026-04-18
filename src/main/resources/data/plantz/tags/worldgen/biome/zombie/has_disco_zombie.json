@@ -1,8 +1,5 @@
 {
   "values": [
-    {
-      "id": "#c:is_overworld",
-      "required": false
-    }
+    "#plantz:zombie/common_spawns"
   ]
 }

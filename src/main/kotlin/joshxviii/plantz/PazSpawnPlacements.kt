@@ -92,10 +92,10 @@ object PazSpawnPlacements {
 
         // region ZOMBIES
         addBiomeSpawn(PazTags.Biomes.HAS_BROWNCOAT, PazEntities.BROWN_COAT, category = MobCategory.MONSTER,
-            weight = 20, minGroupSize = 1, maxGroupSize = 4)
+            weight = 25, minGroupSize = 1, maxGroupSize = 4)
         registerSpawnPlacement(PazEntities.BROWN_COAT, PazZombie::checkZombieSpawnRules)
         addBiomeSpawn(PazTags.Biomes.HAS_NEWSPAPER_ZOMBIE, PazEntities.NEWSPAPER_ZOMBIE, category = MobCategory.MONSTER,
-            weight = 10, minGroupSize = 1, maxGroupSize = 1)
+            weight = 8, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.NEWSPAPER_ZOMBIE, PazZombie::checkZombieSpawnRules)
         addBiomeSpawn(PazTags.Biomes.HAS_ZOMBIE_YETI, PazEntities.ZOMBIE_YETI, category = MobCategory.MONSTER,
             weight = 10, minGroupSize = 1, maxGroupSize = 1)
@@ -108,7 +108,7 @@ object PazSpawnPlacements {
             weight = 30, minGroupSize = 1, maxGroupSize = 2)
         registerSpawnPlacement(PazEntities.DIGGER_ZOMBIE, PazZombie::checkZombieSpawnRules)
         addBiomeSpawn(PazTags.Biomes.HAS_DISCO_ZOMBIE, PazEntities.DISCO_ZOMBIE, category = MobCategory.MONSTER,
-            weight = 6, minGroupSize = 1, maxGroupSize = 1)
+            weight = 4, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.DISCO_ZOMBIE, PazZombie::checkZombieSpawnRules)
         addBiomeSpawn(PazTags.Biomes.HAS_ALL_STAR, PazEntities.ALL_STAR, category = MobCategory.MONSTER,
             weight = 6, minGroupSize = 1, maxGroupSize = 1)

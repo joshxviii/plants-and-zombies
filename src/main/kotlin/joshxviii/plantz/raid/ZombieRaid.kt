@@ -381,6 +381,10 @@ class ZombieRaid(
         return if (bonusSpawns > 0) random.nextInt(bonusSpawns + 1) else 0
     }
 
+    enum class SpecialWave() {
+        
+    }
+
     enum class ZombieRaiderType(
         val entityType: EntityType<out Zombie>,
         val spawnsPerWaveBeforeBonus: IntArray

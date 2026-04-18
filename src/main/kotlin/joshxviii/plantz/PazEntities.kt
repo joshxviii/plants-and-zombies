@@ -36,13 +36,13 @@ object PazEntities {
             if (entity is Zombie) (entity as MobAccessor).targetSelector.addGoal(4, NearestAttackableTargetGoal(entity, Gnome::class.java, 5, true, false, null))
 
             if (entity is PathfinderMob && entity.`is`(ZOMBIE_RAIDERS)) {
-                (entity as MobAccessor).goalSelector.addGoal(3, DestroyFlagGoal(entity))
-                (entity as MobAccessor).goalSelector.addGoal(4, PathfindToFlagGoal(entity))
+                (entity as MobAccessor).goalSelector.addGoal(2, DestroyFlagGoal(entity))
+                (entity as MobAccessor).goalSelector.addGoal(3, PathfindToFlagGoal(entity))
             }
 
             if (entity is Mob && entity.`is`(ATTACKS_PLANTS)) {
-                (entity as MobAccessor).targetSelector.addGoal(2, NearestAttackableTargetGoal(entity, WallNut::class.java, 4, true, true) { target, level -> target is WallNut })
-                (entity as MobAccessor).targetSelector.addGoal(4, NearestAttackableTargetGoal(entity, Plant::class.java, 5, true, false) { target, level ->
+                (entity as MobAccessor).targetSelector.addGoal(1, NearestAttackableTargetGoal(entity, WallNut::class.java, 4, true, true) { target, level -> target is WallNut })
+                (entity as MobAccessor).targetSelector.addGoal(2, NearestAttackableTargetGoal(entity, Plant::class.java, 5, true, false) { target, level ->
                     target is Plant && !target.`is`(IGNORED_BY_PLANT_ATTACKERS) })
             }
         }
@@ -182,7 +182,7 @@ object PazEntities {
         height = 0.65f,
         eyeHeight = 0.3f,
         attributes = Plant.Companion.PlantAttributes(
-            maxHealth = 10.0,
+            maxHealth = 12.0,
             attackDamage = 1.5,
             followRange = 10.0
         )
@@ -220,7 +220,7 @@ object PazEntities {
         height = 1.3f,
         eyeHeight = 0.6f,
         attributes = Plant.Companion.PlantAttributes(
-            maxHealth = 3.0,
+            maxHealth = 4.0,
             followRange = 20.0
         )
     )
