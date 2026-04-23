@@ -42,3 +42,4 @@ replay_*.log
 /external-assets/world_save/Neighborville/data
 /external-assets/world_save/Neighborville/dimensions
 /external-assets/world_save/Neighborville/players
+/.kotlin

@@ -2,12 +2,17 @@ package joshxviii.plantz
 
 import joshxviii.plantz.PazMain.MODID
 import joshxviii.plantz.entity.plant.Chomper
+import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerEntityGetter
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.Entity.MoveFunction
+import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.OwnableEntity
 import net.minecraft.world.entity.ai.control.LookControl
@@ -20,10 +25,56 @@ import net.minecraft.world.phys.Vec3
 
 fun pazResource(path: String): Identifier = Identifier.fromNamespaceAndPath(MODID, path)
 
-interface ServerPlayerAccessor {
+interface PlantHeadAttachment {
     fun `plantz$hasPlantOnHead`(): Boolean
-    fun `plantz$setHasPlantOnHead`(value: Boolean)
-    fun `plantz$wearingPlantPotHelmet`(): Boolean
+    fun `plantz$getPlantEntityOnHead`(): CompoundTag
+    fun `plantz$setPlantEntityOnHead`(value: CompoundTag)
+}
+
+fun LivingEntity.headAttachmentPoint(): Vec3 {
+    val scale = this.scale
+    val pitch = Math.toRadians(this.xRot.toDouble())
+    val yaw = Math.toRadians(this.yRot.toDouble())
+
+    val local = Vec3(0.0, 0.575 * scale, 0.0)
+
+    val pitched = local.xRot(-pitch.toFloat())
+    val rotated = pitched.yRot(-yaw.toFloat())
+
+    return this.position().add(
+        rotated.x,
+        this.eyeHeight + rotated.y - 0.25 * scale,
+        rotated.z
+    )
+//    return Vec3(
+//        this.x + rotated.x,
+//        this.eyeY + rotated.y - 0.25 * scale,
+//        this.z + rotated.z
+//    )
+}
+
+fun LivingEntity.canWearPlant(): Boolean {
+    return this.getItemBySlot(EquipmentSlot.HEAD).`is`(PazItems.PLANT_POT_HELMET)
+            && this.isAlive && !this.isDeadOrDying
+            && !(this is ServerPlayer && this.isSpectator)
+}
+fun ServerPlayer.tryToSetPlantOnHead(entityTag: CompoundTag): Boolean {
+    if (this.canWearPlant() && !(this as PlantHeadAttachment).`plantz$hasPlantOnHead`()) {
+        this.`plantz$setPlantEntityOnHead`(entityTag)
+        return true
+    }
+    return false
+}
+fun LivingEntity.positionPlant(plant: Plant) {
+    val moveFunction: MoveFunction = { entity: Entity, x: Double, y: Double, z: Double -> entity.setPos(x, y, z) }
+    val position = this.headAttachmentPoint()
+    val offset = plant.getVehicleAttachmentPoint(this)
+    moveFunction.accept(plant,
+        position.x - offset.x,
+        position.y - offset.y,
+        position.z - offset.z
+    )
+    plant.yBodyRot = this.yHeadRot
 }
 
 fun Player.hasSpaceForItem(item: ItemStack): Boolean {

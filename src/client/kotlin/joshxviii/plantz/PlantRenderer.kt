@@ -1,7 +1,6 @@
 package joshxviii.plantz
 
 import com.mojang.blaze3d.vertex.PoseStack
-import joshxviii.plantz.entity.plant.Chomper
 import joshxviii.plantz.entity.plant.KernelPult
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.plants.WallNut
@@ -16,6 +15,7 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.AnimationState
+import org.joml.Quaternionf
 import kotlin.math.pow
 
 class PlantRenderer(
@@ -33,12 +33,16 @@ class PlantRenderer(
         collector: SubmitNodeCollector,
         camera: CameraRenderState
     ) {
+//        poseStack.rotateAround(
+//            state.rotations,
+//            0f,0f,0f
+//        )
         model = if (state.isBaby && babyModel != null) babyModel else defaultModel
         if (state.ageInTicks>1) super.submit(state, poseStack, collector, camera)
     }
 
     override fun getShadowRadius(state: PlantRenderState): Float {
-        return super.getShadowRadius(state) * state.boundingBoxWidth + 0.15f
+        return if (state.rotations == Quaternionf()) super.getShadowRadius(state) * (0.9f) else 0f
     }
 
     override fun scale(state: PlantRenderState, poseStack: PoseStack) {
@@ -60,7 +64,16 @@ class PlantRenderer(
 
     override fun extractRenderState(entity: Plant, state: PlantRenderState, partialTick: Float) {
         super.extractRenderState(entity, state, partialTick)
-
+        val attached = entity.attachedEntity
+        state.rotations = if (attached != null) {
+            val pitch = -Mth.lerp(partialTick, attached.xRotO, attached.xRot)
+            val yaw = Mth.lerp(partialTick, attached.yRotO, attached.yRot)
+            Quaternionf()
+                .rotateY(Mth.DEG_TO_RAD * (180.0f - yaw))
+                .rotateX(Mth.DEG_TO_RAD * pitch)
+        } else {
+            Quaternionf()
+        }
         state.swelling = entity.getSwelling(partialTick)
         state.cooldown = entity.cooldown
         state.isAsleep = entity.isAsleep
@@ -100,6 +113,7 @@ class PlantRenderer(
 }
 
 class PlantRenderState : LivingEntityRenderState() {
+    var rotations: Quaternionf = Quaternionf()
     var swelling: Float = 0f
     var lastCooldownTime: Int = 0
     var cooldown: Int = 0
