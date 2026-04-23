@@ -4,7 +4,6 @@
   "package": "joshxviii.plantz.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "ServerPlayerMixin",
     "LevelAccessor",
     "LivingEntityAccessor",
     "LivingEntityMixin",
