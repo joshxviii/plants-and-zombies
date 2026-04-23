@@ -112,7 +112,7 @@ object PazItems {
         properties = Item.Properties().stacksTo(1)
             .component(
                 DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
-                    .setEquipSound(SoundEvents.ARMOR_EQUIP_TURTLE)
+                    .setEquipSound(SoundEvents.ARMOR_EQUIP_GENERIC)
                     .build())
     )
     @JvmField

@@ -4,6 +4,7 @@
     "minecraft:dark_forest",
     "minecraft:warped_forest",
     "minecraft:mushroom_fields",
+    "minecraft:soul_sand_valley",
     {
       "id": "#c:is_mushroom",
       "required": false
