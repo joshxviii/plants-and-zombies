@@ -4,8 +4,14 @@
 </p>
 
 <p align="center"><font size=6>A Plants vs. Zombies mod for Minecraft.</font></p>
-
-
+<p align="center">
+  <a href="https://modrinth.com/mod/plants-and-zombies" target="_blank">
+    <img alt="modrinth" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg">
+  </a>
+  <a href="https://www.curseforge.com/minecraft/mc-mods/plants-and-zombies" target="_blank">
+    <img alt="curseforge" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg">
+  </a>
+</p>
 
 Plants & Zombies is a Plants vs. Zombies themed mod that aims to add mechanics and characters from the game into Minecraft in a totally integrated, survival friendly way. 
 </p>
