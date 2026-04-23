@@ -7,7 +7,7 @@
 
 
 
-Plants & Zombies is a Plants vs. Zombies themed mod that aims to add mechanics and characters from the game into Minecraft in a totally integrated, survival friendly way. This mod adds over 20 unique mobs, as well as some unique blocks and items.
+Plants & Zombies is a Plants vs. Zombies themed mod that aims to add mechanics and characters from the game into Minecraft in a totally integrated, survival friendly way. 
 </p>
 
 <p align="center">
