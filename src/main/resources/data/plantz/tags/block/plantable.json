@@ -10,7 +10,7 @@
     "minecraft:flower_pot",
     "minecraft:clay",
     "minecraft:soul_soil",
-    "plantz:plant_pot",
+    "#plantz:plant_pot",
     "#plantz:farmable"
   ]
 }

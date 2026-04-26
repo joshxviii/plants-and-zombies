@@ -295,7 +295,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun actuallyHurt(level: ServerLevel, source: DamageSource, damage: Float) {
         if (source.`is`(PazDamageTypes.PLANT_AOE)) return
-        val plantPotProtection: Boolean = getBlockBelow().`is`(PazTags.BlockTags.PLANT_POT_PROTECTION) && source.entity is Enemy
+        val potProtection: Boolean = hasPlantPotProtection() && source.entity is Enemy
         super.actuallyHurt(
             level,
             if (source.entity is Zombie && source.`is`(DamageTypes.MOB_ATTACK)) DamageSource(
@@ -303,9 +303,11 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 source.directEntity,
                 source.entity
             ) else source,
-            if (plantPotProtection) damage/2 else damage
+            if (potProtection) damage/2 else damage
         )
     }
+
+    fun hasPlantPotProtection(): Boolean= getBlockBelow().`is`(PazTags.BlockTags.PLANT_POT) || attachedEntity != null
 
     override fun setPos(x: Double, y: Double, z: Double) {
         if (this.isPassenger || attachedEntity != null) super.setPos(x, y, z)

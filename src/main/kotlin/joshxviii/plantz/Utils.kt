@@ -56,7 +56,7 @@ fun LivingEntity.headAttachmentPoint(): Vec3 {
 fun LivingEntity.canWearPlant(): Boolean {
     return this.getItemBySlot(EquipmentSlot.HEAD).`is`(PazItems.PLANT_POT_HELMET)
             && this.isAlive && !this.isDeadOrDying
-            && !(this is ServerPlayer && this.isSpectator)
+            && !(this is ServerPlayer && (this.isSpectator || this.hasDisconnected()))
 }
 fun ServerPlayer.tryToSetPlantOnHead(entityTag: CompoundTag): Boolean {
     if (this.canWearPlant() && !(this as PlantHeadAttachment).`plantz$hasPlantOnHead`()) {
