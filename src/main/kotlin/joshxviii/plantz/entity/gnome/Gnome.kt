@@ -5,6 +5,7 @@ import joshxviii.plantz.PazDataSerializers.GNOME_VARIANT
 import joshxviii.plantz.PazSounds.GNOME_JUMP
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
+import joshxviii.plantz.entity.gnome.GnomeSoundVariant
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.core.BlockPos
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -38,6 +39,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
+import kotlin.jvm.optionals.getOrDefault
 
 class Gnome(type: EntityType<out Gnome>, level: Level) :Monster(type, level) {
 
@@ -51,7 +53,6 @@ class Gnome(type: EntityType<out Gnome>, level: Level) :Monster(type, level) {
         ): Boolean {
             return (EntitySpawnReason.ignoresLightRequirements(spawnReason))
                     && checkMobSpawnRules(type, level, spawnReason, pos, random)
-                    && pos.y < level.seaLevel
         }
 
         val DATA_VARIANT_ID: EntityDataAccessor<GnomeVariant> = SynchedEntityData.defineId(Gnome::class.java, GNOME_VARIANT)
@@ -146,8 +147,8 @@ class Gnome(type: EntityType<out Gnome>, level: Level) :Monster(type, level) {
     }
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
-        variant = input.read<GnomeVariant>("color_variant", GnomeVariant.CODEC).get()
-        soundVariant = input.read<GnomeSoundVariant>("sound_variant", GnomeSoundVariant.CODEC).get()
+        variant = input.read<GnomeVariant>("color_variant", GnomeVariant.CODEC).getOrDefault(GnomeVariant.pickRandomVariant())
+        soundVariant = input.read<GnomeSoundVariant>("sound_variant", GnomeSoundVariant.CODEC).getOrDefault(GnomeSoundVariant.pickRandomVariant())
         this.reassessWeaponGoal()
     }
 
@@ -159,9 +160,6 @@ class Gnome(type: EntityType<out Gnome>, level: Level) :Monster(type, level) {
     ): SpawnGroupData? {
         setCanPickUpLoot(true)
         populateDefaultEquipmentSlots(random, difficulty)
-
-        variant = GnomeVariant.pickRandomVariant()
-        soundVariant = GnomeSoundVariant.pickRandomVariant()
 
         this.reassessWeaponGoal()
         return groupData

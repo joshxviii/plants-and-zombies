@@ -85,9 +85,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             pos: BlockPos,
             random: RandomSource
         ): Boolean {
-            val below = pos.below()
-            val valid = level.getBlockState(below)
-            return EntitySpawnReason.isSpawner(spawnReason) || true
+            val blockAtPos = level.getBlockState(pos)
+            val blockAbove = level.getBlockState(pos.above())
+            val blockBelow = level.getBlockState(pos.below())
+
+            return blockAtPos.isAir
+                    && blockAbove.getCollisionShape(level, pos.above()).isEmpty
+//                    && blockBelow.`is`(PLANTABLE)
         }
 
         private const val NUTRIENT_SUPPLY_MAX = 160  // ticks before suffocating when on invalid ground
@@ -493,8 +497,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     ): SpawnGroupData? {
         state = PlantState.GROW
 
-        if (spawnReason == EntitySpawnReason.NATURAL
-            && (!onValidGround() || isOverlappingWithOther(blockPosition()))) this.discard()
+//        if (spawnReason == EntitySpawnReason.NATURAL
+//            && (!onValidGround() || isOverlappingWithOther(blockPosition()))) this.discard()
 
         return groupData
     }

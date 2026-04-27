@@ -1,12 +1,5 @@
 {
   "values": [
-    "minecraft:basalt_deltas",
-    "minecraft:crimson_forest",
-    "minecraft:warped_forest",
-    "minecraft:soul_sand_valley",
-    {
-      "id": "#c:is_hot/nether",
-      "required": false
-    }
+    "minecraft:crimson_forest"
   ]
 }
