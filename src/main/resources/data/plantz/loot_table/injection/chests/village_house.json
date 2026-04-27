@@ -56,7 +56,7 @@
             {
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
-              "weight": 1,
+              "weight": 2,
               "functions": [
                 {
                   "function": "minecraft:set_components",

@@ -113,7 +113,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         data class PlantAttributes(
             val maxHealth: Double = 20.0,
             val attackDamage: Double = 2.0,
-            val attackKnockback: Double = 0.07,
+            val attackKnockback: Double = 0.02,
             val movementSpeed: Double = 0.0,
             val followRange: Double = 14.0,
             val armor: Double = 0.0,
@@ -497,8 +497,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     ): SpawnGroupData? {
         state = PlantState.GROW
 
-//        if (spawnReason == EntitySpawnReason.NATURAL
-//            && (!onValidGround() || isOverlappingWithOther(blockPosition()))) this.discard()
+        if (spawnReason == EntitySpawnReason.NATURAL
+            && (!onValidGround() || isOverlappingWithOther(blockPosition()))) this.discard()
 
         return groupData
     }

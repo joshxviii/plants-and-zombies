@@ -28,11 +28,11 @@ object PazSpawnPlacements {
         registerSpawnPlacement(PazEntities.CHERRY_BOMB, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_CHOMPER, PazEntities.CHOMPER,
-            weight = 6, minGroupSize = 1, maxGroupSize = 1)
+            weight = 3, minGroupSize = 1, maxGroupSize = 1, category = MobCategory.MONSTER)
         registerSpawnPlacement(PazEntities.CHOMPER, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_FIRE_PEASHOOTER, PazEntities.FIRE_PEA_SHOOTER,
-            weight = 70, minGroupSize = 1, maxGroupSize = 2, category = MobCategory.MONSTER)
+            weight = 40, minGroupSize = 1, maxGroupSize = 2, category = MobCategory.MONSTER)
         registerSpawnPlacement(PazEntities.FIRE_PEA_SHOOTER, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_FUMESHROOM, PazEntities.FUME_SHROOM,
@@ -40,7 +40,7 @@ object PazSpawnPlacements {
         registerSpawnPlacement(PazEntities.FUME_SHROOM, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_HYPNOSHROOM, PazEntities.HYPNOSHROOM,
-            weight = 2, minGroupSize = 1, maxGroupSize = 1)
+            weight = 2, minGroupSize = 1, maxGroupSize = 1, category = MobCategory.MONSTER)
         registerSpawnPlacement(PazEntities.HYPNOSHROOM, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_ICE_PEASHOOTER, PazEntities.ICE_PEA_SHOOTER,
@@ -55,8 +55,8 @@ object PazSpawnPlacements {
             weight = 4, minGroupSize = 1, maxGroupSize = 2)
         registerSpawnPlacement(PazEntities.KERNEL_PULT, Plant::checkPlantSpawnRules)
 
-        addBiomeSpawn(PazTags.Biomes.HAS_MELONPULT, PazEntities.MELON_PULT,
-            weight = 3, minGroupSize = 1, maxGroupSize = 1)
+        addBiomeSpawn(PazTags.Biomes.HAS_MELONPULT, PazEntities.MELON_PULT, category = MobCategory.MONSTER,
+            weight = 1, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.MELON_PULT, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_PEASHOOTER, PazEntities.PEA_SHOOTER,
@@ -78,7 +78,7 @@ object PazSpawnPlacements {
         addBiomeSpawn(PazTags.Biomes.HAS_SUNFLOWER, PazEntities.SUNFLOWER,
             weight = 8, minGroupSize = 1, maxGroupSize = 3)
         addBiomeSpawn(PazTags.Biomes.HAS_SUNFLOWER_ALT, PazEntities.SUNFLOWER,
-            weight = 10, minGroupSize = 2, maxGroupSize = 5)
+            weight = 10, minGroupSize = 2, maxGroupSize = 4)
         registerSpawnPlacement(PazEntities.SUNFLOWER, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_PUFFSHROOM, PazEntities.PUFF_SHROOM,
@@ -90,7 +90,9 @@ object PazSpawnPlacements {
         registerSpawnPlacement(PazEntities.WALL_NUT, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_SUNSHROOM, PazEntities.SUN_SHROOM,
-            weight = 15, minGroupSize = 2, maxGroupSize = 3)
+            weight = 15, minGroupSize = 2, maxGroupSize = 3, category = MobCategory.MONSTER)
+        addBiomeSpawn(PazTags.Biomes.HAS_SUNFLOWER, PazEntities.SUN_SHROOM,
+            weight = 1, minGroupSize = 1, maxGroupSize = 2)
         registerSpawnPlacement(PazEntities.SUN_SHROOM, Plant::checkPlantSpawnRules)
         // endregion
 

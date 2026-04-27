@@ -81,8 +81,8 @@ object PazEntities {
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 35.0,
             attackDamage = 12.0,
-            attackKnockback = 0.1,
-            followRange = 3.75
+            attackKnockback = 0.15,
+            followRange = 4.75
         )
     )
     @JvmField val CHERRY_BOMB: EntityType<CherryBomb> = registerPlant(
@@ -194,7 +194,7 @@ object PazEntities {
         height = 0.9f,
         eyeHeight = 0.5f,
         attributes = Plant.Companion.PlantAttributes(
-            followRange = 16.0
+            followRange = 22.0
         )
     )
     @JvmField val FUME_SHROOM: EntityType<FumeShroom> = registerPlant(
@@ -273,7 +273,7 @@ object PazEntities {
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 13.0)
-            .add(Attributes.MAX_HEALTH, 80.0)
+            .add(Attributes.MAX_HEALTH, 90.0)
             .add(Attributes.MOVEMENT_SPEED, 0.27)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.5)
             .add(Attributes.SCALE, 1.25)
@@ -291,7 +291,7 @@ object PazEntities {
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 7.0)
-            .add(Attributes.MAX_HEALTH, 35.0)
+            .add(Attributes.MAX_HEALTH, 45.0)
             .add(Attributes.MOVEMENT_SPEED, 0.235)
             .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.1)
     )
@@ -320,7 +320,8 @@ object PazEntities {
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 8.0)
-            .add(Attributes.MAX_HEALTH, 50.0)
+            .add(Attributes.MAX_HEALTH, 60.0)
+            .add(Attributes.SCALE, 1.2)
             .add(Attributes.STEP_HEIGHT, 1.0)
             .add(Attributes.MOVEMENT_SPEED, 0.23)
             .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 2.0)
@@ -349,7 +350,7 @@ object PazEntities {
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 9.0)
-            .add(Attributes.MAX_HEALTH, 250.0)
+            .add(Attributes.MAX_HEALTH, 300.0)
             .add(Attributes.MOVEMENT_SPEED, 0.2)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.7)
             .add(Attributes.EXPLOSION_KNOCKBACK_RESISTANCE, 0.7)
