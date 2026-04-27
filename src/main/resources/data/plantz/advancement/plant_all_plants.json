@@ -150,7 +150,7 @@
       "trigger": "minecraft:tame_animal",
       "conditions": {
         "entity": {
-          "type": "plantz:scaredyshroom"
+          "type": "plantz:sunshroom"
         }
       }
     },
@@ -158,7 +158,7 @@
       "trigger": "minecraft:tame_animal",
       "conditions": {
         "entity": {
-          "type": "plantz:scaredyshroom"
+          "type": "plantz:hypnoshroom"
         }
       }
     }
