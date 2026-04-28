@@ -7,11 +7,11 @@ import joshxviii.plantz.entity.zombie.Gargantuar;
 import joshxviii.plantz.entity.zombie.ZombieYeti;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.zombie.Zombie;
@@ -55,7 +55,9 @@ public class ZombieMixin {
         Zombie entity = (Zombie) (Object) this;
         var isLeader = Objects.requireNonNull(entity.getAttribute(Attributes.MAX_HEALTH)).hasModifier(Identifier.withDefaultNamespace(LEADER_MODIFIER_ID));
 
-        if(isLeader) {
+        boolean shouldAddEasyModeFlag = difficulty.getDifficulty()==Difficulty.EASY && level.getRandom().nextFloat()<0.02;
+
+        if(isLeader || shouldAddEasyModeFlag) {
             var dropChance = spawnReason.equals(EntitySpawnReason.EVENT) ? 0.0F : 1.0F;
             if (entity instanceof Gargantuar) {}
             else if (entity instanceof ZombieYeti) {
