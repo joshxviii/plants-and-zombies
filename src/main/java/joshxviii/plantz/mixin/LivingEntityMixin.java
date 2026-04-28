@@ -65,7 +65,7 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment {
 
     @Override
     public boolean plantz$hasPlantOnHead() {
-        return plantEntity != null;
+        return plantEntity != null &&  plantEntity.isAlive() && !plantEntity.isRemoved();
     }
 
     @Unique
@@ -81,13 +81,13 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment {
     private void saveHypnoFlag(ValueOutput output, CallbackInfo ci) {
         output.putBoolean("plantz:IsHypnotized", ((Entity) (Object) this).getEntityData().get(DATA_HYPNO_ID));
         if (!this.plantz$getPlantData().isEmpty()) {
-            output.store("plantz:PlantEntityOnHead", CompoundTag.CODEC, this.plantz$getPlantData());
+            output.store("plantz:AttachedPlant", CompoundTag.CODEC, this.plantz$getPlantData());
         }
     }
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     private void loadHypnoFlag(ValueInput input, CallbackInfo ci) {
         ((Entity) (Object) this).getEntityData().set(DATA_HYPNO_ID, input.getBooleanOr("plantz:IsHypnotized", false));
-        plantz$setPlantData(input.read("plantz:PlantEntityOnHead", CompoundTag.CODEC).orElseGet(CompoundTag::new));
+        plantz$setPlantData(input.read("plantz:AttachedPlant", CompoundTag.CODEC).orElseGet(CompoundTag::new));
     }
     @Inject(method = "onEffectAdded", at = @At(value = "TAIL"))
     public void onHypnoAdded(MobEffectInstance effect, Entity source, CallbackInfo ci) {

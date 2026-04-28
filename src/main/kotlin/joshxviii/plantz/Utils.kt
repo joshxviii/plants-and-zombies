@@ -36,7 +36,7 @@ interface PlantHeadAttachment {
 
 fun Entity.canWearPlant(): Boolean {
     return this is LivingEntity && this.getItemBySlot(EquipmentSlot.HEAD).`is`(PazItems.PLANT_POT_HELMET)
-            && this.isAlive && !this.isDeadOrDying
+            && this.isAlive && !this.isDeadOrDying && !this.isRemoved
             && !(this is ServerPlayer && (this.isSpectator))
 }
 fun Entity.tryToSetPlantOnHead(entityTag: CompoundTag): Boolean {

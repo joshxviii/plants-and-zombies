@@ -30,15 +30,17 @@ public abstract class ServerLevelMixin {
     public abstract void tickNonPassenger(Entity entity);
 
     @Inject(method = "tickNonPassenger", at = @At(value = "HEAD"), cancellable = true)
-    public void tickCancelTick(Entity entity, CallbackInfo ci) {
+    public void tickSyncPlant(Entity entity, CallbackInfo ci) {
         if (entity instanceof Plant) {
             var attachedEntity = ((Plant) entity).getAttachedEntity();
-            if (attachedEntity!=null) tickNonPassenger(attachedEntity);
+            if (attachedEntity!=null) {
+                tickNonPassenger(attachedEntity);
+            }
         }
     }
 
     @Inject(method = "tickNonPassenger", at = @At(value = "HEAD"), cancellable = true)
-    public void tickSyncPlant(Entity entity, CallbackInfo ci) {
+    public void tickCancel(Entity entity, CallbackInfo ci) {
         if (entity instanceof LivingEntity && ((PlantHeadAttachment) entity).plantz$hasPlantOnHead()) {
             ci.cancel();
         }

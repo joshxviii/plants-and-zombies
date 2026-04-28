@@ -32,6 +32,7 @@ import net.minecraft.tags.ItemTags
 import net.minecraft.util.Mth
 import net.minecraft.util.ProblemReporter.ScopedCollector
 import net.minecraft.util.RandomSource
+import net.minecraft.util.profiling.Profiler
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -59,6 +60,7 @@ import net.minecraft.world.level.LightLayer
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
+import net.minecraft.world.level.portal.TeleportTransition
 import net.minecraft.world.level.storage.TagValueOutput
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
@@ -112,7 +114,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
         data class PlantAttributes(
             val maxHealth: Double = 20.0,
-            val attackDamage: Double = 2.0,
+            val attackDamage: Double = 1.5,
             val attackKnockback: Double = 0.001,
             val movementSpeed: Double = 0.0,
             val followRange: Double = 14.0,
@@ -188,11 +190,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
 
     fun applyOnHeadEffects() {
-        getAttribute(Attributes.SCALE)!!.addPermanentModifier(
+        if(getAttribute(Attributes.SCALE)?.hasModifier(ON_PLAYER_HEAD_EFFECTS)==false) getAttribute(Attributes.SCALE)!!.addPermanentModifier(
             AttributeModifier(ON_PLAYER_HEAD_EFFECTS, -0.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+        noPhysics = true
     }
     fun removeOnHeadEffects() {
-        getAttribute(Attributes.SCALE)!!.removeModifier(ON_PLAYER_HEAD_EFFECTS)
+        if(getAttribute(Attributes.SCALE)?.hasModifier(ON_PLAYER_HEAD_EFFECTS)==true) getAttribute(Attributes.SCALE)!!.removeModifier(ON_PLAYER_HEAD_EFFECTS)
+        noPhysics = false
     }
 
     private var idleAnimationStartTick: Int = 0
@@ -210,6 +214,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             override fun tick() { if (!isAsleep) super.tick() }
         }
         idleAnimationStartTick = this.random.nextInt(200, 240)
+    }
+
+    override fun canUsePortal(ignorePassenger: Boolean): Boolean {
+        return super.canUsePortal(ignorePassenger) && !isAttached()
     }
 
     // disables body control
@@ -316,16 +324,31 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         )
     }
 
-    fun hasPlantPotProtection(): Boolean= getBlockBelow().`is`(PazTags.BlockTags.PLANT_POT) || attachedEntity != null
+    fun hasPlantPotProtection(): Boolean= getBlockBelow().`is`(PazTags.BlockTags.PLANT_POT) || isAttached()
 
     override fun setPos(x: Double, y: Double, z: Double) {
-        if (this.isPassenger || attachedEntity != null) super.setPos(x, y, z)
+        if (this.isPassenger || isAttached()) super.setPos(x, y, z)
         else super.setPos(Mth.floor(x) + 0.5, y, Mth.floor(z) + 0.5)
     }
 
-    override fun getDefaultGravity(): Double = if (attachedEntity != null) 0.0 else super.getDefaultGravity()
+    override fun teleport(transition: TeleportTransition): Entity? {
+        val result = super.teleport(transition)
+        val oldLevel = this.level() as? ServerLevel?: return result
+        val newLevel = transition.newLevel
+
+        if (!isRemoved) {
+            val otherDimension = newLevel.dimension() != oldLevel.dimension()
+            if (otherDimension) {
+
+            }
+        }
+
+        return result
+    }
+
+    override fun getDefaultGravity(): Double = if (isAttached()) 0.0 else super.getDefaultGravity()
     override fun doPush(entity: Entity) { if (entity!=attachedEntity) super.doPush(entity)}
-    override fun isAffectedByBlocks(): Boolean = if (attachedEntity != null) !isRemoved else super.isAffectedByBlocks()
+    override fun isAffectedByBlocks(): Boolean = if (isAttached()) !isRemoved else super.isAffectedByBlocks()
 
     override fun tick() {
         super.tick()

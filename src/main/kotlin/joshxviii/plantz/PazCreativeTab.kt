@@ -67,12 +67,14 @@ object PazCreativeTab {
                 output.accept(PazBlocks.CONE)
                 output.accept(PazItems.NEWSPAPER)
                 output.accept(PazItems.FOOTBALL_HELMET)
-                output.accept(PazItems.MUSIC_DISC_GRASSY_GROOVE)
                 output.accept(PazBlocks.BRAINZ_FLAG)
                 output.accept(PazBlocks.PLANTZ_FLAG)
 
                 // mailboxes
                 PazBlocks.mailboxByColor.forEach { output.accept(it.value) }
+
+                //music
+                output.accept(PazItems.MUSIC_DISC_GRASSY_GROOVE)
             }
             .build()
     )
