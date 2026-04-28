@@ -113,7 +113,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         data class PlantAttributes(
             val maxHealth: Double = 20.0,
             val attackDamage: Double = 2.0,
-            val attackKnockback: Double = 0.02,
+            val attackKnockback: Double = 0.001,
             val movementSpeed: Double = 0.0,
             val followRange: Double = 14.0,
             val armor: Double = 0.0,
@@ -251,7 +251,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun getAmbientSound(): SoundEvent? = super.getAmbientSound()// TODO make custom sounds
     override fun getHurtSound(source: DamageSource): SoundEvent? {
-        if (source.entity is Zombie) return PazSounds.ZOMBIE_EATS
+        if (source.`is`(PazDamageTypes.ZOMBIE_EAT)) return PazSounds.ZOMBIE_EATS
         return SoundEvents.ROOTED_DIRT_HIT// TODO make custom sounds
     }
     override fun getDeathSound(): SoundEvent? = SoundEvents.ROOTED_DIRT_BREAK// TODO make custom sounds
@@ -289,7 +289,15 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
         if ( attachedEntity.let { it!=null && source.entity?.`is`(it)==true } ) return false
         return if (source.`is`(PazDamageTypes.PLANT_AOE)) false
-        else super.hurtServer(level, source, damage)
+        else super.hurtServer(
+            level,
+            if (source.entity is Zombie && source.`is`(DamageTypes.MOB_ATTACK)) DamageSource(
+                level.registryAccess().get(PazDamageTypes.ZOMBIE_EAT).get(),
+                source.directEntity,
+                source.entity
+            ) else source,
+            damage
+        )
     }
 
     override fun hurtClient(source: DamageSource): Boolean {
@@ -302,11 +310,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val potProtection: Boolean = hasPlantPotProtection() && source.entity is Enemy
         super.actuallyHurt(
             level,
-            if (source.entity is Zombie && source.`is`(DamageTypes.MOB_ATTACK)) DamageSource(
-                level.registryAccess().get(PazDamageTypes.ZOMBIE_EAT).get(),
-                source.directEntity,
-                source.entity
-            ) else source,
+            source,
             if (potProtection) damage/2 else damage
         )
     }

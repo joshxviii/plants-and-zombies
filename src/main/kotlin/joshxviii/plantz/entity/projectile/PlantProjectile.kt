@@ -200,7 +200,7 @@ abstract class PlantProjectile(
             val direction = nearby.position().subtract(this.position())
             val knockbackVector = direction.normalize().scale(knockback)
             if (knockback > 0.0) {
-                nearby.push(knockbackVector.x, 0.08, knockbackVector.z)
+                nearby.push(knockbackVector.x, 0.03, knockbackVector.z)
                 val source = this.damageSources().source(damageType, this, plantOwner)
                 if(nearby.hurtServer(serverLevel, source, (damage/direction.length()*distance).toFloat())) {
                     val knockbackDirection = calculateHorizontalHurtKnockbackDirection(nearby, source)

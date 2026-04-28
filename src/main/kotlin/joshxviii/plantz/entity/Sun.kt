@@ -41,8 +41,9 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
             SynchedEntityData.defineId<Int>(Sun::class.java, EntityDataSerializers.INT)
         private const val ENTITY_SCAN_PERIOD = 20
         private const val MAX_FOLLOW_DIST = 8.0
-        private const val ORB_GROUPS_PER_AREA = 40
-        private const val ORB_MERGE_DISTANCE = 0.5
+        private const val SUN_GROUPS_PER_AREA = 40
+        private const val SUN_MERGE_DISTANCE = 0.5
+        private const val DEFAULT_LIFETIME = 1000
         private const val DEFAULT_HEALTH: Short = 5
         private const val DEFAULT_AGE: Short = 0
         private const val DEFAULT_VALUE: Short = 0
@@ -62,7 +63,7 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
 
         private fun tryMergeToExisting(level: ServerLevel, pos: Vec3, value: Int): Boolean {
             val box = AABB.ofSize(pos, 1.0, 1.0, 1.0)
-            val id = level.getRandom().nextInt(ORB_GROUPS_PER_AREA)
+            val id = level.getRandom().nextInt(SUN_GROUPS_PER_AREA)
             val orbs: MutableList<Sun> = level.getEntities(
                 EntityTypeTest.forClass(Sun::class.java),
                 box,
@@ -76,7 +77,7 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
         }
 
         private fun canMerge(orb: Sun, id: Int, value: Int): Boolean {
-            return !orb.isRemoved && (orb.id - id) % ORB_GROUPS_PER_AREA == 0 && orb.value == value
+            return !orb.isRemoved && (orb.id - id) % SUN_GROUPS_PER_AREA == 0 && orb.value == value
         }
 
         fun getExperienceValue(maxValue: Int): Int {
@@ -116,7 +117,7 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
             }
 
             val size = boundingBox.size
-            setPos(pos.add(roughly.normalize().scale(size * ORB_MERGE_DISTANCE)))
+            setPos(pos.add(roughly.normalize().scale(size * SUN_MERGE_DISTANCE)))
             deltaMovement = randomMovement
             if (!level.noCollision(boundingBox)) unstuckIfPossible(size)
         }
@@ -189,7 +190,7 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
         }
     }
 
-    fun getLifeTime(): Int = 800
+    fun getLifeTime(): Int = DEFAULT_LIFETIME
 
     private fun followNearbyEntity() {
         followingEntity = getNearestEntity(MAX_FOLLOW_DIST)
@@ -278,7 +279,7 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
         if (level() is ServerLevel) {
             for (orb in level().getEntities(
                 EntityTypeTest.forClass(Sun::class.java),
-                boundingBox.inflate(ORB_MERGE_DISTANCE),
+                boundingBox.inflate(SUN_MERGE_DISTANCE),
                 Predicate { orb: Sun -> canMerge(orb) })) {
                 merge(orb)
             }

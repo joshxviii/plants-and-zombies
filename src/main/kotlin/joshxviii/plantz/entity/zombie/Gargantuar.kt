@@ -20,6 +20,7 @@ import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.entity.ai.goal.Goal
+import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.vehicle.boat.AbstractBoat
 import net.minecraft.world.level.ExplosionDamageCalculator
 import net.minecraft.world.level.Level
@@ -133,6 +134,19 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
     override fun emergingTime(): Int = 80
     override fun getSoundVolume(): Float =  2.5f
 
+    override fun doPush(entity: Entity) {
+        super.doPush(entity)
+        if (isPathFinding && this.target!=null) {
+            if (entity is LivingEntity && entity !is Zombie) {
+                val level = level() as? ServerLevel?: return
+                entity.hurtServer(level, this.damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 2.5f)
+                entity.knockback(
+                    0.2, position().x - entity.position().x, position().z - entity.position().z
+                )
+            }
+        }
+    }
+
     override fun getAmbientSound(): SoundEvent {
         return PazSounds.GARGANTUAR_AMBIENT
     }
@@ -170,11 +184,6 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
     ): SpawnGroupData? {
         state = ZombieState.EMERGING
         val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
-
-//        imp.snapTo(x, y, z, yRot, 0.0f)
-//        imp.finalizeSpawn(level, level.getCurrentDifficultyAt(this.blockPosition()), EntitySpawnReason.JOCKEY, null)
-//        imp.startRiding(this, true, false)
-//        level.addFreshEntity(imp)
 
         return data
     }
@@ -216,6 +225,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
                 direction.y + (target?.y?.coerceIn(gargantuar.y..gargantuar.y+5) ?: gargantuar.y),
                 direction.z + gargantuar.z
             )
+            //TODO add electric attack on <.5 health
             level.explode(
                     gargantuar,
                     DamageSource(level.registryAccess().get(PazDamageTypes.ZOMBIE_SMASH).get(), gargantuar),
@@ -253,7 +263,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
         override fun canUse(): Boolean {
             if (!gargantuar.hasImp) return false
             if (throwTime <= 0) return true
-            return (gargantuar.health <= gargantuar.maxHealth*.5) && gargantuar.isAggressive && !gargantuar.isDeadOrDying && gargantuar.target.let {
+            return (gargantuar.health <= gargantuar.maxHealth*.75) && gargantuar.isAggressive && !gargantuar.isDeadOrDying && gargantuar.target.let {
                 it != null
                 && it.distanceTo(gargantuar) > 4.5f
             }
@@ -272,21 +282,21 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
             gargantuar.hasImp = false
             val level = gargantuar.level() as ServerLevel
 
-            val direction = gargantuar.calculateViewVector(0f, gargantuar.yBodyRot+35).scale(2.4)
-            val pos = Vec3(
-                direction.x + gargantuar.x,
-                direction.y + gargantuar.y+2.5f,
-                direction.z + gargantuar.z
+            val spawnDirection = gargantuar.calculateViewVector(0f, gargantuar.yBodyRot+35).scale(2.4)
+            val spawnPos = Vec3(
+                spawnDirection.x + gargantuar.x,
+                spawnDirection.y + gargantuar.y+2.5f,
+                spawnDirection.z + gargantuar.z
             )
-            val imp = PazEntities.IMP.create(level, EntitySpawnReason.MOB_SUMMONED)?: return
-            imp.snapTo(pos, gargantuar.yRot, 0.0f)
-            imp.applyImpulse(direction.x, direction.y, direction.z, 1.0f, 0f)
-            gargantuar.target.let { if (it!=null) imp.setLastHurtMob(it) }
-            level.addFreshEntity(imp)
-            level.gameEvent(GameEvent.ENTITY_PLACE, pos, GameEvent.Context.of(gargantuar))
-
+           PazEntities.IMP.create(level, EntitySpawnReason.MOB_SUMMONED)?.let { imp ->
+                val lookDirection = gargantuar.calculateViewVector(0f, gargantuar.yRot)
+                imp.snapTo(spawnPos, gargantuar.yRot, 0.0f)
+                imp.applyImpulse(lookDirection.x, lookDirection.y, lookDirection.z, 1.0f, 0f)
+                gargantuar.target.let { if (it!=null) imp.setLastHurtMob(it) }
+                level.addFreshEntity(imp)
+                level.gameEvent(GameEvent.ENTITY_PLACE, spawnPos, GameEvent.Context.of(gargantuar))
+            }?: return
         }
-
     }
 
 }

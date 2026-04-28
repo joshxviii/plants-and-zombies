@@ -1,5 +1,6 @@
 package joshxviii.plantz.entity.zombie
 
+import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazSounds
@@ -112,8 +113,8 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
         val summoner: DiscoZombie,
     ) : Goal() {
         companion object {
-            const val DEFAULT_AMOUNT = 2
-            const val SUMMON_DELAY_TIME = 70
+            const val DEFAULT_AMOUNT = 3
+            const val SUMMON_DELAY_TIME = 75
             val backupTargeting: TargetingConditions = TargetingConditions.forNonCombat().range(16.0).ignoreLineOfSight().ignoreInvisibilityTesting()
         }
         var summonTime = summoner.random.nextInt(20,60)
@@ -131,21 +132,21 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
         }
 
         private fun getSummonAmount(): Int {
-            var finalAmount = DEFAULT_AMOUNT
+            var amount = DEFAULT_AMOUNT
             val level = summoner.level() as ServerLevelAccessor
             val multi = level.getCurrentDifficultyAt(summoner.blockPosition()).specialMultiplier
             if(multi > 0.0) repeat(3) {
-                if(summoner.random.nextFloat() < 0.25 * multi) finalAmount++
+                if(summoner.random.nextFloat() < 0.25 * multi) amount++
             }
-            return finalAmount
+            return amount
         }
 
         private fun trySummonBackup() {
             summonTime = SUMMON_DELAY_TIME + summoner.random.nextInt(40)
             val target = summoner.target?: return
             val angleToTarget = (summoner.yRot * Math.PI.toFloat()) / 180.0f
-            val minY = min(target.y, summoner.y)
-            val maxY = max(target.y, summoner.y) + 1.0
+            val minY = min(target.y, summoner.y) - 2.0
+            val maxY = max(target.y, summoner.y) + 2.0
             val amount = getSummonAmount()
             val a = (2*Math.PI / amount)// spread angle evenly based on summons amount
             for(i in 1..amount) {
@@ -157,16 +158,17 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
             }
         }
 
-        private fun tryCreateBackupDancer(x: Double, z: Double, maxY: Double, minY: Double, angle: Float) {
+        private fun tryCreateBackupDancer(x: Double, z: Double, minY: Double, maxY: Double, angle: Float) {
             val level = summoner.level() as ServerLevel
             var pos = BlockPos.containing(x, maxY, z)
             var success = false
             var topOffset = 0.0
-            do {
-                val below = pos.below()
-                if (level.getBlockState(below).isFaceSturdy(level, below, Direction.UP)) {
+            do {// search for an empty space from minY to maxY
+                val belowState = level.getBlockState(pos.below())
+                val blockState = level.getBlockState(pos)
+                if (belowState.isFaceSturdy(level, pos.below(), Direction.UP)) {
                     if (!level.isEmptyBlock(pos)) {
-                        val blockState: BlockState = level.getBlockState(pos)
+                        val blockState: BlockState = blockState
                         val shape = blockState.getCollisionShape(level, pos)
                         if (!shape.isEmpty) topOffset = shape.max(Direction.Axis.Y)
                     }

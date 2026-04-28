@@ -41,21 +41,20 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
         val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
         val random = level.random
         val difficultyModifier = difficulty.specialMultiplier
-        if (spawnReason != EntitySpawnReason.CONVERSION) {
-            setCanPickUpLoot(true)
-            setCanBreakDoors(true)
+        setCanPickUpLoot(true)
+        setCanBreakDoors(true)
 
-            //getAttribute(Attributes.SPAWN_REINFORCEMENTS_CHANCE)?.addPermanentModifier(AttributeModifier(pazResource("browncoat"), this.random.nextDouble() * 10.25 + 0.5, AttributeModifier.Operation.ADD_VALUE))
+        //getAttribute(Attributes.SPAWN_REINFORCEMENTS_CHANCE)?.addPermanentModifier(AttributeModifier(pazResource("browncoat"), this.random.nextDouble() * 10.25 + 0.5, AttributeModifier.Operation.ADD_VALUE))
 
-            if (getItemBySlot(EquipmentSlot.HEAD).isEmpty){
-                if (random.nextFloat() < 0.25) {
-                    setItemSlot(EquipmentSlot.HEAD, PazBlocks.CONE.asItem().defaultInstance)
-                }
-                else if (random.nextFloat() < 0.1 && getItemBySlot(EquipmentSlot.HEAD).isEmpty) {
-                    setItemSlot(EquipmentSlot.HEAD, Items.BUCKET.defaultInstance)
-                }
+        if (getItemBySlot(EquipmentSlot.HEAD).isEmpty){
+            if (random.nextFloat() < 0.25) {
+                setItemSlot(EquipmentSlot.HEAD, PazBlocks.CONE.asItem().defaultInstance)
+            }
+            else if (random.nextFloat() < 0.1 && getItemBySlot(EquipmentSlot.HEAD).isEmpty) {
+                setItemSlot(EquipmentSlot.HEAD, Items.BUCKET.defaultInstance)
             }
         }
+
 
         return data
     }

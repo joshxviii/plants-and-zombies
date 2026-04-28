@@ -41,7 +41,7 @@ object PazEntities {
             }
 
             if (entity is Mob && entity.`is`(ATTACKS_PLANTS)) {
-                (entity as MobAccessor).targetSelector.addGoal(1, NearestAttackableTargetGoal(entity, WallNut::class.java, 4, true, true) { target, level -> target is WallNut })
+                (entity as MobAccessor).targetSelector.addGoal(1, NearestAttackableTargetGoal(entity, Plant::class.java, 4, true, true) { target, level -> target is WallNut || target is HypnoShroom })
                 (entity as MobAccessor).targetSelector.addGoal(2, NearestAttackableTargetGoal(entity, Plant::class.java, 5, true, false) { target, level ->
                     target is Plant && !target.`is`(IGNORED_BY_PLANT_ATTACKERS) })
             }
@@ -89,8 +89,8 @@ object PazEntities {
         "cherrybomb",
         EntityType.Builder.of(::CherryBomb, MobCategory.CREATURE),
         sunCost = 10,
-        width = 0.8f,
-        height = 0.76f,
+        width = 0.625f,
+        height = 0.7f,
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 50.0,
             followRange = 3.75
@@ -273,7 +273,7 @@ object PazEntities {
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 13.0)
-            .add(Attributes.MAX_HEALTH, 90.0)
+            .add(Attributes.MAX_HEALTH, 100.0)
             .add(Attributes.MOVEMENT_SPEED, 0.27)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.5)
             .add(Attributes.SCALE, 1.25)
@@ -291,7 +291,7 @@ object PazEntities {
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 7.0)
-            .add(Attributes.MAX_HEALTH, 45.0)
+            .add(Attributes.MAX_HEALTH, 50.0)
             .add(Attributes.MOVEMENT_SPEED, 0.235)
             .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.1)
     )
@@ -320,8 +320,8 @@ object PazEntities {
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 8.0)
-            .add(Attributes.MAX_HEALTH, 60.0)
-            .add(Attributes.SCALE, 1.2)
+            .add(Attributes.MAX_HEALTH, 65.0)
+            .add(Attributes.SCALE, 1.1)
             .add(Attributes.STEP_HEIGHT, 1.0)
             .add(Attributes.MOVEMENT_SPEED, 0.23)
             .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 2.0)
@@ -349,9 +349,9 @@ object PazEntities {
             .ridingOffset(-0.7f)
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
-            .add(Attributes.ATTACK_DAMAGE, 9.0)
-            .add(Attributes.MAX_HEALTH, 300.0)
-            .add(Attributes.MOVEMENT_SPEED, 0.2)
+            .add(Attributes.ATTACK_DAMAGE, 8.0)
+            .add(Attributes.MAX_HEALTH, 450.0)
+            .add(Attributes.MOVEMENT_SPEED, 0.21)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.7)
             .add(Attributes.EXPLOSION_KNOCKBACK_RESISTANCE, 0.7)
             .add(Attributes.SCALE, 1.33)

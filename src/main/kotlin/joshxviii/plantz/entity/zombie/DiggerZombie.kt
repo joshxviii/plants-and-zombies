@@ -90,12 +90,11 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
-        if (spawnReason != EntitySpawnReason.CONVERSION) {
-            isLeftHanded = false
-            setCanBreakDoors(true)
-            setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_PICKAXE.defaultInstance)
-            setDropChance(EquipmentSlot.MAINHAND, 0.0f)
-        }
+
+        isLeftHanded = false
+        setCanBreakDoors(true)
+        setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_PICKAXE.defaultInstance)
+        setDropChance(EquipmentSlot.MAINHAND, 0.0f)
 
         return data
     }

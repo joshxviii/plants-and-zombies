@@ -10,7 +10,6 @@ import joshxviii.plantz.PazEntities.GNOME
 import joshxviii.plantz.PazEntities.IMP
 import joshxviii.plantz.PazEntities.NEWSPAPER_ZOMBIE
 import joshxviii.plantz.PazEntities.ZOMBIE_YETI
-import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.item.NewspaperItem
 import joshxviii.plantz.item.SeedPacketItem
 import joshxviii.plantz.item.SunBottleItem
@@ -25,10 +24,12 @@ import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.dispenser.BlockSource
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior
+import net.minecraft.core.dispenser.MinecartDispenseItemBehavior
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.tags.BlockTags
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.EquipmentSlot
@@ -42,7 +43,6 @@ import net.minecraft.world.item.equipment.ArmorMaterials
 import net.minecraft.world.item.equipment.ArmorType
 import net.minecraft.world.item.equipment.Equippable
 import net.minecraft.world.level.block.DispenserBlock
-import net.minecraft.world.level.gameevent.GameEvent
 import java.util.function.Function
 
 object PazItems {
@@ -73,7 +73,7 @@ object PazItems {
         properties = Item.Properties()
             .humanoidArmor(ArmorMaterials.CHAINMAIL, ArmorType.HELMET)
             .component(PazComponents.BLOCKS_PROJECTILE_DAMAGE, BlocksProjectileDamage(
-                breakChance = 0.08f)
+                breakChance = 0.025f)
             )
             .component(
                 DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
@@ -192,39 +192,12 @@ object PazItems {
         DispenserBlock.registerBehavior(
             SEED_PACKET, object : DefaultDispenseItemBehavior() {
             public override fun execute(source: BlockSource, dispensed: ItemStack): ItemStack {
-                val direction: Direction = source.state().getValue<Direction>(DispenserBlock.FACING)
-                val serverLevel = source.level()
-                val plantType = SeedPacketItem.typeFromStack(dispensed)
-
-                if (plantType != null){
-                    val entity = plantType.create(
-                        serverLevel,
-                        null,
-                        source.pos().relative(direction),
-                        EntitySpawnReason.DISPENSER,
-                        direction != Direction.UP,
-                        false
-                    )
-
-                    if (entity is Plant) {// snap rotation
-                        val yaw = direction.toYRot()
-                        entity.yHeadRot = yaw
-                        entity.yBodyRot = yaw
-                        entity.yRot = yaw
-                    }
-
-                    if (entity != null && !serverLevel.addFreshEntity(entity)) {
-                        entity.discard()
-                        return dispensed
-                    }
-
-                    entity?.playSound(SoundEvents.BIG_DRIPLEAF_PLACE)
-                    source.level().gameEvent(null, GameEvent.ENTITY_PLACE, source.pos())
-                    dispensed.shrink(1)
-                }
-
-                return dispensed
+                return super.execute(source, dispensed)
             }
         })
+
+        DispenserBlock.registerBehavior(
+            PLANT_POT_MINECART, object : MinecartDispenseItemBehavior(PazEntities.PLANT_POT_MINECART) {}
+        )
     }
 }
