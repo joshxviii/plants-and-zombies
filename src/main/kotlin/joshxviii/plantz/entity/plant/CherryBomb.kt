@@ -24,6 +24,6 @@ class CherryBomb(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
     }
 
     override fun canSurviveOn(block: BlockState): Boolean {
-        return !block.`is`(Blocks.AIR)
+        return super.canSurviveOn(block) || !block.`is`(BlockTags.AIR)
     }
 }

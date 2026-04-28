@@ -59,17 +59,6 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
                 clickedFace == Direction.UP
             )
 
-            if (entity is Plant) {// check if valid block to plant
-                if (!entity.canSurviveOn(level.getBlockState(spawnPos.below()))) {
-                    entity.discard()
-                    return InteractionResult.FAIL
-                }
-                val yaw = context.horizontalDirection.opposite.toYRot()
-                entity.yHeadRot = yaw
-                entity.yBodyRot = yaw
-                entity.yRot = yaw
-            }
-
             // check that player has enough sun to plant
             val availableSun = player?.inventory?.countItem(PazItems.SUN) ?: 0
             val sunCost = itemStack.get(PazComponents.SEED_PACKET)?.getSunCost() ?: 0
@@ -79,6 +68,26 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
                         .withStyle(ChatFormatting.RED)
                 )
                 return InteractionResult.FAIL
+            }
+
+            // check if space is valid (no intersecting block bounding box and plant can survive)
+            if (entity is Plant) {
+                val spawnBlockCollisionShape = level.getBlockState(spawnPos).getCollisionShape(level, spawnPos).let { if (it.isEmpty.not()) it.bounds() else null }
+                val entityBox = entity.boundingBox.move(spawnPos.multiply(-1))
+                if (
+                    !entity.canSurviveOn(level.getBlockState(spawnPos.below()))
+                    || !(spawnBlockCollisionShape==null || !entityBox.intersects(spawnBlockCollisionShape))
+                ) {
+                    player?.sendOverlayMessage(
+                        Component.translatable("message.plantz.cannot_survive")
+                            .withStyle(ChatFormatting.RED)
+                    )
+                    return InteractionResult.FAIL
+                }
+                val yaw = context.horizontalDirection.opposite.toYRot()
+                entity.yHeadRot = yaw
+                entity.yBodyRot = yaw
+                entity.yRot = yaw
             }
 
             // Prevent spawn if there's already a Plant in that block
