@@ -34,6 +34,7 @@
 
   "death.attack.zombie_eat": "%1$s was eaten by %2$s",
   "death.attack.zombie_smash": "%1$s was smashed by %2$s",
+  "death.attack.zombie_trample": "%1$s was trampled by %2$s",
   "death.attack.plant": "%1$s was killed by %2$s",
   "death.attack.chomp_plant": "%1$s was chomped by %2$s",
   "death.attack.ice_plant": "%1$s was frozen to death by %2$s",
