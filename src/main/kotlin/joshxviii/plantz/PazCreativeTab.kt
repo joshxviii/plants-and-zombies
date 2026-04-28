@@ -63,6 +63,7 @@ object PazCreativeTab {
                 output.accept(PazBlocks.PLANT_POT)
                 output.accept(PazBlocks.ZEN_PLANT_POT)
                 output.accept(PazItems.PLANT_POT_MINECART)
+                output.accept(PazItems.PLANT_POT_HELMET)
                 output.accept(PazBlocks.CONE)
                 output.accept(PazItems.NEWSPAPER)
                 output.accept(PazItems.FOOTBALL_HELMET)

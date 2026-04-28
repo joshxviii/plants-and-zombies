@@ -28,7 +28,7 @@ class SleepGoal(
         val needs = plantEntity.testGrowConditions()
         return if (this.sleepDelay-- > 0) false
         else if (this.wakeUpDelay-- > 0) true
-        else if (plantEntity.attachedEntity!=null) false
+        else if (plantEntity.isAttached()) false
         else if (needs == PlantGrowNeeds.TIME) true
         else if (needs == PlantGrowNeeds.SUN) false
         else if (sleepDuringDay) plantEntity.sunIsVisible() else if (sleepDuringNight) !plantEntity.sunIsVisible() else false

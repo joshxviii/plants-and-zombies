@@ -8,8 +8,10 @@
     "LivingEntityAccessor",
     "LivingEntityMixin",
     "MobAccessor",
+    "PlayerListMixin",
     "ProjectileMixin",
     "ServerLevelMixin",
+    "ServerPlayerMixin",
     "SpawnPlacementsInvoker",
     "ZombieMixin"
   ],

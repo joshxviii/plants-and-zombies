@@ -181,7 +181,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     var attachedEntity: LivingEntity? = null
         get() = EntityReference.getLivingEntity(attachedPlayerReference, this.level())
-        set(value) {
+        private set(value) {
             if (value==null && field!=null) removeOnHeadEffects()
             else if (value!=null && field==null) applyOnHeadEffects()
             attachedPlayerReference = EntityReference.of(value)
@@ -285,6 +285,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun getPickResult(): ItemStack = SeedPacketItem.stackFor(this.type)
     override fun wantsToAttack(target: LivingEntity, owner: LivingEntity): Boolean = (target !is Plant && super.wantsToAttack(target, owner))
     override fun canAttack(target: LivingEntity): Boolean = super.canAttack(target) && !target.hasSameOwner(this)
+    fun isAttached(): Boolean = attachedEntity!=null
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
         if ( attachedEntity.let { it!=null && source.entity?.`is`(it)==true } ) return false
@@ -329,13 +330,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun tick() {
         super.tick()
         attachedEntity?.positionPlant(this)
-        attachedEntity.let {
-            if (it != null) {
-                if (!it.canWearPlant()) {
-                    detachFromEntity()
-                    if(dropAsSeedPacketItem(force = true)) playSound(SoundEvents.ROOTED_DIRT_BREAK)
-                }
-            }
+        if (attachedEntity?.canWearPlant() == false) {
+            if(dropAsSeedPacketItem(force = true)) playSound(SoundEvents.ROOTED_DIRT_BREAK)
         }
         val level = this.level()
 
@@ -602,7 +598,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun remove(reason: RemovalReason) {
         super.remove(reason)
-        detachFromEntity()
+        if (reason != RemovalReason.UNLOADED_WITH_PLAYER) detachFromEntity()
     }
 
     override fun die(source: DamageSource) {
@@ -674,6 +670,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             )
         }
     }
+
 }
 
 enum class PlantGrowNeeds {

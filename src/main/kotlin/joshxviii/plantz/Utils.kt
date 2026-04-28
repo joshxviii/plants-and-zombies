@@ -10,6 +10,7 @@ import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerEntityGetter
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.resources.ResourceManager
+import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.Entity.MoveFunction
 import net.minecraft.world.entity.EquipmentSlot
@@ -33,32 +34,10 @@ interface PlantHeadAttachment {
     fun `plantz$setPlantData`(value: CompoundTag)
 }
 
-fun Entity.headAttachmentPoint(): Vec3 {
-    val scale = (this as? LivingEntity)?.scale ?: 1.0f
-    val pitch = Math.toRadians(this.xRot.toDouble())
-    val yaw = Math.toRadians(this.yRot.toDouble())
-
-    val local = Vec3(0.0, 0.575 * scale, 0.0)
-
-    val pitched = local.xRot(-pitch.toFloat())
-    val rotated = pitched.yRot(-yaw.toFloat())
-
-    return this.position().add(
-        rotated.x,
-        this.eyeHeight + rotated.y - 0.25 * scale,
-        rotated.z
-    )
-//    return Vec3(
-//        this.x + rotated.x,
-//        this.eyeY + rotated.y - 0.25 * scale,
-//        this.z + rotated.z
-//    )
-}
-
 fun Entity.canWearPlant(): Boolean {
     return this is LivingEntity && this.getItemBySlot(EquipmentSlot.HEAD).`is`(PazItems.PLANT_POT_HELMET)
             && this.isAlive && !this.isDeadOrDying
-            && !(this is ServerPlayer && (this.isSpectator || this.hasDisconnected()))
+            && !(this is ServerPlayer && (this.isSpectator))
 }
 fun Entity.tryToSetPlantOnHead(entityTag: CompoundTag): Boolean {
     if (this.canWearPlant() && !(this as PlantHeadAttachment).`plantz$hasPlantOnHead`()) {
@@ -69,7 +48,16 @@ fun Entity.tryToSetPlantOnHead(entityTag: CompoundTag): Boolean {
 }
 fun Entity.positionPlant(plant: Plant) {
     val moveFunction: MoveFunction = { entity: Entity, x: Double, y: Double, z: Double -> entity.setPos(x, y, z) }
-    val position = this.headAttachmentPoint()
+    val scale = (this as? LivingEntity)?.scale ?: 1.0f
+    val pitch = this.xRot * Mth.DEG_TO_RAD
+    val yaw = this.yRot * Mth.DEG_TO_RAD
+
+    val rotated = Vec3(0.0, 0.55 * scale, 0.0).xRot(-pitch).yRot(-yaw)
+    val position = this.position().add(
+        rotated.x,
+        this.eyeHeight + rotated.y - 0.25 * scale,
+        rotated.z
+    )
     val offset = plant.getVehicleAttachmentPoint(this)
     moveFunction.accept(plant,
         position.x - offset.x,
