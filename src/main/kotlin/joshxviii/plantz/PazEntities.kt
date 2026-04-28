@@ -25,6 +25,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.monster.zombie.Zombie
+import net.minecraft.world.entity.monster.zombie.ZombifiedPiglin
 import net.minecraft.world.entity.projectile.Projectile
 
 object PazEntities {
@@ -40,7 +41,7 @@ object PazEntities {
                 (entity as MobAccessor).goalSelector.addGoal(3, PathfindToFlagGoal(entity))
             }
 
-            if (entity is Mob && entity.`is`(ATTACKS_PLANTS)) {
+            if (entity is Mob && entity.`is`(ATTACKS_PLANTS) && entity !is ZombifiedPiglin) {
                 (entity as MobAccessor).targetSelector.addGoal(1, NearestAttackableTargetGoal(entity, Plant::class.java, 4, true, true) { target, level -> target is WallNut || target is HypnoShroom })
                 (entity as MobAccessor).targetSelector.addGoal(2, NearestAttackableTargetGoal(entity, Plant::class.java, 5, true, false) { target, level ->
                     target is Plant && !target.`is`(IGNORED_BY_PLANT_ATTACKERS) })

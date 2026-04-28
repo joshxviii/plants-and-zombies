@@ -21,12 +21,7 @@
           "name": "plantz:newspaper"
         }
       ],
-      "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:killed_by_player"
-        }
-      ]
+      "rolls": 1
     }
   ],
   "random_sequence": "minecraft:entities/newspaper_zombie"

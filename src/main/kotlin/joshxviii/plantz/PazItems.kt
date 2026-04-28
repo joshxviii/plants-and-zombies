@@ -1,5 +1,6 @@
 package joshxviii.plantz
 
+import com.mojang.authlib.minecraft.client.MinecraftClient
 import joshxviii.plantz.PazEntities.ALL_STAR
 import joshxviii.plantz.PazEntities.BACKUP_DANCER
 import joshxviii.plantz.PazEntities.BROWN_COAT
@@ -19,6 +20,8 @@ import joshxviii.plantz.item.component.SeedPacket
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
 import net.fabricmc.fabric.api.registry.FuelValueEvents
 import net.fabricmc.fabric.impl.item.ItemComponentTooltipProviderRegistryImpl
+import net.fabricmc.fabric.mixin.client.keymapping.KeyMappingAccessor
+import net.minecraft.ChatFormatting
 import net.minecraft.core.Direction
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponents
@@ -27,7 +30,9 @@ import net.minecraft.core.dispenser.DefaultDispenseItemBehavior
 import net.minecraft.core.dispenser.MinecartDispenseItemBehavior
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
+import net.minecraft.server.MinecraftServer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.BlockTags
 import net.minecraft.world.entity.EntitySpawnReason
@@ -39,6 +44,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.*
 import net.minecraft.world.item.Items.GLASS_BOTTLE
 import net.minecraft.world.item.component.ItemAttributeModifiers
+import net.minecraft.world.item.component.ItemLore
 import net.minecraft.world.item.equipment.ArmorMaterials
 import net.minecraft.world.item.equipment.ArmorType
 import net.minecraft.world.item.equipment.Equippable
@@ -109,7 +115,10 @@ object PazItems {
     @JvmField
     val PLANT_POT_HELMET: Item = registerItem(
         "plant_pot_helmet",
-        properties = Item.Properties().stacksTo(1)
+        properties = Item.Properties()
+            .durability(185)
+            .rarity(Rarity.UNCOMMON)
+            .repairable(Items.BRICK)
             .component(
                 DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
                     .setEquipSound(SoundEvents.ARMOR_EQUIP_GENERIC)
