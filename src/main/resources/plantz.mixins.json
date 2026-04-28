@@ -7,8 +7,9 @@
     "LevelAccessor",
     "LivingEntityAccessor",
     "LivingEntityMixin",
-    "ProjectileMixin",
     "MobAccessor",
+    "ProjectileMixin",
+    "ServerLevelMixin",
     "SpawnPlacementsInvoker",
     "ZombieMixin"
   ],

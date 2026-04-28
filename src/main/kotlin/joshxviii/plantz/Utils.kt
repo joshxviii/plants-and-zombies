@@ -27,12 +27,14 @@ fun pazResource(path: String): Identifier = Identifier.fromNamespaceAndPath(MODI
 
 interface PlantHeadAttachment {
     fun `plantz$hasPlantOnHead`(): Boolean
-    fun `plantz$getPlantEntityOnHead`(): CompoundTag
-    fun `plantz$setPlantEntityOnHead`(value: CompoundTag)
+    fun `plantz$getPlant`(): Plant?
+    fun `plantz$setPlant`(value: Plant?)
+    fun `plantz$getPlantData`(): CompoundTag
+    fun `plantz$setPlantData`(value: CompoundTag)
 }
 
-fun LivingEntity.headAttachmentPoint(): Vec3 {
-    val scale = this.scale
+fun Entity.headAttachmentPoint(): Vec3 {
+    val scale = (this as? LivingEntity)?.scale ?: 1.0f
     val pitch = Math.toRadians(this.xRot.toDouble())
     val yaw = Math.toRadians(this.yRot.toDouble())
 
@@ -53,19 +55,19 @@ fun LivingEntity.headAttachmentPoint(): Vec3 {
 //    )
 }
 
-fun LivingEntity.canWearPlant(): Boolean {
-    return this.getItemBySlot(EquipmentSlot.HEAD).`is`(PazItems.PLANT_POT_HELMET)
+fun Entity.canWearPlant(): Boolean {
+    return this is LivingEntity && this.getItemBySlot(EquipmentSlot.HEAD).`is`(PazItems.PLANT_POT_HELMET)
             && this.isAlive && !this.isDeadOrDying
             && !(this is ServerPlayer && (this.isSpectator || this.hasDisconnected()))
 }
-fun ServerPlayer.tryToSetPlantOnHead(entityTag: CompoundTag): Boolean {
+fun Entity.tryToSetPlantOnHead(entityTag: CompoundTag): Boolean {
     if (this.canWearPlant() && !(this as PlantHeadAttachment).`plantz$hasPlantOnHead`()) {
-        this.`plantz$setPlantEntityOnHead`(entityTag)
+        this.`plantz$setPlantData`(entityTag)
         return true
     }
     return false
 }
-fun LivingEntity.positionPlant(plant: Plant) {
+fun Entity.positionPlant(plant: Plant) {
     val moveFunction: MoveFunction = { entity: Entity, x: Double, y: Double, z: Double -> entity.setPos(x, y, z) }
     val position = this.headAttachmentPoint()
     val offset = plant.getVehicleAttachmentPoint(this)

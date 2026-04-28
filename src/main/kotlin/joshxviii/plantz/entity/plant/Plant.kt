@@ -179,11 +179,11 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         get() = this.entityData.get(ATTACHED_PLAYER).getOrNull()
         set(value) = this.entityData.set(ATTACHED_PLAYER, Optional.ofNullable(value))
 
-    var attachedEntity: LivingEntity?
+    var attachedEntity: LivingEntity? = null
         get() = EntityReference.getLivingEntity(attachedPlayerReference, this.level())
         set(value) {
-            if (value==null) removeOnHeadEffects()
-            else applyOnHeadEffects()
+            if (value==null && field!=null) removeOnHeadEffects()
+            else if (value!=null && field==null) applyOnHeadEffects()
             attachedPlayerReference = EntityReference.of(value)
         }
 
@@ -326,20 +326,15 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun doPush(entity: Entity) { if (entity!=attachedEntity) super.doPush(entity)}
     override fun isAffectedByBlocks(): Boolean = if (attachedEntity != null) !isRemoved else super.isAffectedByBlocks()
 
-    override fun rideTick() {
-        super.rideTick()
-
-    }
-
     override fun tick() {
         super.tick()
+        attachedEntity?.positionPlant(this)
         attachedEntity.let {
             if (it != null) {
                 if (!it.canWearPlant()) {
                     detachFromEntity()
                     if(dropAsSeedPacketItem(force = true)) playSound(SoundEvents.ROOTED_DIRT_BREAK)
                 }
-                it.positionPlant(this)
             }
         }
         val level = this.level()
@@ -378,6 +373,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             if (tickCount%25==0) level().addParticle(PazServerParticles.NEEDS_SUN, x, y+eyeHeight+0.55, z, 0.0, 0.0, 0.0)
         }
     }
+
 
     /**
      * State machine for plant animations
@@ -565,7 +561,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }
 
             //pot helmet interaction
-
             if (
                 hand == InteractionHand.MAIN_HAND
                 && itemStack.isEmpty
@@ -583,13 +578,14 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return super.mobInteract(player, hand)
     }
 
-    fun attachToEntity(player: ServerPlayer): Boolean {
+    fun attachToEntity(entity: LivingEntity): Boolean {
         ScopedCollector(this.problemPath(), LOGGER).use { reporter ->
             val output = TagValueOutput.createWithContext(reporter, this.registryAccess())
             this.saveWithoutId(output)
             output.putString("id", this.encodeId!!)
-            if (player.tryToSetPlantOnHead(output.buildResult())) {
-                attachedEntity = player
+            if (entity.tryToSetPlantOnHead(output.buildResult())) {
+                (entity as PlantHeadAttachment).`plantz$setPlant`(this)
+                attachedEntity = entity
                 return true
             }
         }
@@ -598,7 +594,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     fun detachFromEntity() {
         if (attachedEntity!=null) {
-            (attachedEntity as PlantHeadAttachment).`plantz$setPlantEntityOnHead`(CompoundTag())
+            (attachedEntity as PlantHeadAttachment).`plantz$setPlantData`(CompoundTag())
+            (attachedEntity as PlantHeadAttachment).`plantz$setPlant`(null)
             attachedEntity = null
         }
     }

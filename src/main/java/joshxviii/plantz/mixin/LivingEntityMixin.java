@@ -17,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -37,21 +38,34 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment {
     public abstract boolean hasEffect(Holder<MobEffect> effect);
 
     @Unique
-    private CompoundTag plantEntityOnHead = new CompoundTag();
+    private CompoundTag plantData = new CompoundTag();
+
+    @Unique
+    private @Nullable Plant plantEntity = null;
 
     @Override
-    public @NotNull CompoundTag plantz$getPlantEntityOnHead() {
-        return plantEntityOnHead;
+    public @Nullable Plant plantz$getPlant() {
+        return plantEntity;
     }
 
     @Override
-    public void plantz$setPlantEntityOnHead(@NotNull CompoundTag value) {
-        plantEntityOnHead = value;
+    public void plantz$setPlant(@Nullable Plant value) {
+        plantEntity = value;
+    }
+
+    @Override
+    public @NotNull CompoundTag plantz$getPlantData() {
+        return plantData;
+    }
+
+    @Override
+    public void plantz$setPlantData(@NotNull CompoundTag value) {
+        plantData = value;
     }
 
     @Override
     public boolean plantz$hasPlantOnHead() {
-        return !plantEntityOnHead.isEmpty();
+        return plantEntity != null;
     }
 
     @Unique
@@ -66,14 +80,14 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment {
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
     private void saveHypnoFlag(ValueOutput output, CallbackInfo ci) {
         output.putBoolean("plantz:IsHypnotized", ((Entity) (Object) this).getEntityData().get(DATA_HYPNO_ID));
-        if (!this.plantz$getPlantEntityOnHead().isEmpty()) {
-            output.store("PlantEntityOnHead", CompoundTag.CODEC, this.plantz$getPlantEntityOnHead());
+        if (!this.plantz$getPlantData().isEmpty()) {
+            output.store("PlantEntityOnHead", CompoundTag.CODEC, this.plantz$getPlantData());
         }
     }
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     private void loadHypnoFlag(ValueInput input, CallbackInfo ci) {
         ((Entity) (Object) this).getEntityData().set(DATA_HYPNO_ID, input.getBooleanOr("plantz:IsHypnotized", false));
-        plantz$setPlantEntityOnHead(input.read("PlantEntityOnHead", CompoundTag.CODEC).orElseGet(CompoundTag::new));
+        plantz$setPlantData(input.read("PlantEntityOnHead", CompoundTag.CODEC).orElseGet(CompoundTag::new));
     }
     @Inject(method = "onEffectAdded", at = @At(value = "TAIL"))
     public void onHypnoAdded(MobEffectInstance effect, Entity source, CallbackInfo ci) {
