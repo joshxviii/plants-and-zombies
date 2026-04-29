@@ -94,6 +94,10 @@ object PazSpawnPlacements {
         addBiomeSpawn(PazTags.Biomes.HAS_SUNFLOWER, PazEntities.SUN_SHROOM,
             weight = 1, minGroupSize = 1, maxGroupSize = 2)
         registerSpawnPlacement(PazEntities.SUN_SHROOM, Plant::checkPlantSpawnRules)
+
+        addBiomeSpawn(PazTags.Biomes.HAS_COFFEE_BEAN, PazEntities.COFFEE_BEAN,
+            weight = 8, minGroupSize = 1, maxGroupSize = 2)
+        registerSpawnPlacement(PazEntities.COFFEE_BEAN, Plant::checkPlantSpawnRules)
         // endregion
 
         // region ZOMBIES

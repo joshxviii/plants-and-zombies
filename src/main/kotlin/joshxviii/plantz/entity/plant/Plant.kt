@@ -1,6 +1,8 @@
 package joshxviii.plantz.entity.plant
 
+import com.google.common.base.Predicate
 import joshxviii.plantz.*
+import joshxviii.plantz.PazDataSerializers.DATA_COFFEE_BUFF
 import joshxviii.plantz.PazDataSerializers.DATA_COOLDOWN
 import joshxviii.plantz.PazDataSerializers.DATA_PLANT_STATE
 import joshxviii.plantz.PazDataSerializers.DATA_RECEIVED_SUN
@@ -12,12 +14,14 @@ import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.ai.goal.SleepGoal
 import joshxviii.plantz.entity.Sun
 import joshxviii.plantz.item.SeedPacketItem
+import joshxviii.plantz.item.component.SeedPacket
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -28,11 +32,11 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundEvents.FOX_SLEEP
 import net.minecraft.tags.ItemTags
 import net.minecraft.util.Mth
 import net.minecraft.util.ProblemReporter.ScopedCollector
 import net.minecraft.util.RandomSource
-import net.minecraft.util.profiling.Profiler
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -93,9 +97,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
             return blockAtPos.isAir
                     && blockAbove.getCollisionShape(level, pos.above()).isEmpty
-//                    && blockBelow.`is`(PLANTABLE)
         }
 
+        private const val COFFEE_BUFF_DURATION =  48_000 // 2 days
         private const val NUTRIENT_SUPPLY_MAX = 160  // ticks before suffocating when on invalid ground
         // time and sun cost
         private const val SEED_TIME = 7800
@@ -105,6 +109,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val PLANT_STATE: EntityDataAccessor<PlantState> = SynchedEntityData.defineId<PlantState>(Plant::class.java, DATA_PLANT_STATE)
         val SWELL_DIR: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_SWELL_DIR)
         val COOLDOWN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_COOLDOWN)
+        val COFFEE_BUFF: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_COFFEE_BUFF)
         val RECEIVED_SUN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_RECEIVED_SUN)
         val SEED_GROW_COOLDOWN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_SEED_GROW_COOLDOWN)
         val ATTACHED_PLAYER: EntityDataAccessor<Optional<EntityReference<LivingEntity>>> = SynchedEntityData.defineId(Plant::class.java, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE)
@@ -177,6 +182,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         get() = this.entityData.get(SEED_GROW_COOLDOWN)
         set(value) = this.entityData.set(SEED_GROW_COOLDOWN, value.coerceAtLeast(0))
 
+    var coffeeBuff: Int
+        get() = this.entityData.get(COFFEE_BUFF)
+        set(value) = this.entityData.set(COFFEE_BUFF, value.coerceAtLeast(0))
+
     private var attachedPlayerReference: EntityReference<LivingEntity>?
         get() = this.entityData.get(ATTACHED_PLAYER).getOrNull()
         set(value) = this.entityData.set(ATTACHED_PLAYER, Optional.ofNullable(value))
@@ -216,9 +225,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         idleAnimationStartTick = this.random.nextInt(200, 240)
     }
 
-    override fun canUsePortal(ignorePassenger: Boolean): Boolean {
-        return super.canUsePortal(ignorePassenger) && !isAttached()
-    }
 
     // disables body control
     override fun createBodyControl(): BodyRotationControl = object : BodyRotationControl(this) { override fun clientTick() {} }
@@ -236,20 +242,23 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         entityData.define(COOLDOWN, 0)
         entityData.define(RECEIVED_SUN, 0)
         entityData.define(SEED_GROW_COOLDOWN, timeRequiredForSeeds())
+        entityData.define(COFFEE_BUFF, 0)
         entityData.define(SLEEPING, false)
         entityData.define(ATTACHED_PLAYER, Optional.empty())
     }
 
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
-        output.putInt("SeedGrowTime", seedGrowCooldown)
-        attachedPlayerReference.let { EntityReference.store(it, output, "AttachedPlayer") }
+        output.putInt("plantz:SeedGrowTime", seedGrowCooldown)
+        output.putInt("plantz:CoffeeBuff", coffeeBuff)
+        attachedPlayerReference.let { EntityReference.store(it, output, "plantz:AttachedPlayer") }
     }
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
-        seedGrowCooldown = input.getInt("SeedGrowTime").getOrElse { timeRequiredForSeeds() }
-        attachedPlayerReference = Optional.ofNullable((EntityReference.read<LivingEntity>(input, "AttachedPlayer"))).getOrNull()
+        seedGrowCooldown = input.getInt("plantz:SeedGrowTime").getOrElse { timeRequiredForSeeds() }
+        coffeeBuff = input.getInt("plantz:CoffeeBuff").getOrElse { 0 }
+        attachedPlayerReference = Optional.ofNullable((EntityReference.read<LivingEntity>(input, "plantz:AttachedPlayer"))).getOrNull()
     }
 
     fun calculateSwell() {
@@ -293,6 +302,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun getPickResult(): ItemStack = SeedPacketItem.stackFor(this.type)
     override fun wantsToAttack(target: LivingEntity, owner: LivingEntity): Boolean = (target !is Plant && super.wantsToAttack(target, owner))
     override fun canAttack(target: LivingEntity): Boolean = super.canAttack(target) && !target.hasSameOwner(this)
+    override fun canUsePortal(ignorePassenger: Boolean): Boolean = super.canUsePortal(ignorePassenger) && !isAttached()
     fun isAttached(): Boolean = attachedEntity!=null
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
@@ -387,6 +397,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             )
         }
 
+        if (coffeeBuff>0 ) {
+            coffeeBuff--
+            if (tickCount % 12 == 0 && random.nextFloat()>0.6 && tickCount > 18 && isAlive) {
+
+            }
+        }
+
         val needs = testGrowConditions()
         if (needs == PlantGrowNeeds.SUN) {
             if (tickCount%25==0) level().addParticle(PazServerParticles.NEEDS_SUN, x, y+eyeHeight+0.55, z, 0.0, 0.0, 0.0)
@@ -454,7 +471,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return success
     }
 
-    fun sunRequiredForSeeds(): Int = 2 + Mth.floor(PazEntities.getSunCostFromType(this.type)*1.5f).coerceAtLeast(1)
+    fun sunRequiredForSeeds(): Int = Mth.floor(PazEntities.getSunCostFromType(this.type)*2f).coerceAtLeast(4)
 
     fun timeRequiredForSeeds() : Int {
         val sunCost = PazEntities.getSunCostFromType(this.type)
@@ -475,6 +492,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
         if (seedGrowCooldown > 0) {
             --seedGrowCooldown
+            if (coffeeBuff>0) coffeeBuff = 0
             return PlantGrowNeeds.TIME
         }
         return PlantGrowNeeds.SUN
@@ -579,6 +597,12 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 return InteractionResult.SUCCESS_SERVER
             }
 
+            //coffee bean interaction
+            if (itemStack.components.has(PazComponents.SEED_PACKET)) {
+                if (processSeedPacketInteraction(player, itemStack.get(PazComponents.SEED_PACKET)) == PacketInteractionResult.SUCCESS)
+                    return InteractionResult.SUCCESS_SERVER
+            }
+
             //pot helmet interaction
             if (
                 hand == InteractionHand.MAIN_HAND
@@ -595,6 +619,16 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }
         }
         return super.mobInteract(player, hand)
+    }
+
+    fun applyCoffeeBuff() {
+        val level = level() as? ServerLevel?: return
+        coffeeBuff = COFFEE_BUFF_DURATION
+        playSound(SoundEvents.WITCH_DRINK, 1f, 1.5f)
+        addParticlesAroundSelf(level,
+            PazServerParticles.EMBER,
+            amount = 16
+        )
     }
 
     fun attachToEntity(entity: LivingEntity): Boolean {

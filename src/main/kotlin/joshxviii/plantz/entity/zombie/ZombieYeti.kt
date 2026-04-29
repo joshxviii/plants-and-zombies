@@ -100,7 +100,7 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : PazZombie(typ
                 setItemSlot(EquipmentSlot.HEAD, Items.BUCKET.defaultInstance)
             }
 
-            if (random.nextFloat() < 0.0075) {
+            if (random.nextFloat() < 0.001) {
                 val polarBear = EntityType.POLAR_BEAR.create(level(), EntitySpawnReason.JOCKEY)
                 if (polarBear != null) {
                     polarBear.snapTo(x, y, z, yRot, 0.0f)

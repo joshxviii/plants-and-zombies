@@ -2,6 +2,7 @@ package joshxviii.plantz.ai.goal
 
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.plant.PlantGrowNeeds
+import net.minecraft.sounds.SoundEvents.FOX_SLEEP
 import net.minecraft.world.entity.ai.goal.Goal
 
 class SleepGoal(
@@ -24,14 +25,25 @@ class SleepGoal(
         return this.canSleep()
     }
 
-    fun canSleep(): Boolean {
-        val needs = plantEntity.testGrowConditions()
-        return if (this.sleepDelay-- > 0) false
-        else if (this.wakeUpDelay-- > 0) true
-        else if (plantEntity.isAttached()) false
-        else if (needs == PlantGrowNeeds.TIME) true
-        else if (needs == PlantGrowNeeds.SUN) false
-        else if (sleepDuringDay) plantEntity.sunIsVisible() else if (sleepDuringNight) !plantEntity.sunIsVisible() else false
+    fun canSleep(): Boolean {// sleep check priority order
+        //if (plantEntity.isAttached()) return false
+
+        when (plantEntity.testGrowConditions()) {
+            PlantGrowNeeds.TIME -> return true
+            PlantGrowNeeds.SUN -> return false
+            else -> {}
+        }
+
+        if (plantEntity.coffeeBuff > 0) return false
+
+        if (sleepDelay-- > 0) return false
+        if (wakeUpDelay-- > 0) return true
+        val sunIsVisible = plantEntity.sunIsVisible()
+        return when {
+            sleepDuringDay -> sunIsVisible
+            sleepDuringNight -> !sunIsVisible
+            else -> false
+        }
     }
 
     override fun stop() {
@@ -42,5 +54,6 @@ class SleepGoal(
     override fun start() {
         this.wakeUpDelay = plantEntity.random.nextInt(10,SLEEP_WAIT_TIME)
         plantEntity.isAsleep = true
+        plantEntity.playSound(FOX_SLEEP, 1.0f, 1.3f)// TODO custom sound
     }
 }

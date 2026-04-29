@@ -62,7 +62,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             // check that player has enough sun to plant
             val availableSun = player?.inventory?.countItem(PazItems.SUN) ?: 0
             val sunCost = itemStack.get(PazComponents.SEED_PACKET)?.getSunCost() ?: 0
-            if (sunCost > availableSun && player?.isCreative == false) {
+            if (sunCost > availableSun && player?.hasInfiniteMaterials() == false) {
                 player.sendOverlayMessage(
                     Component.translatable("message.plantz.not_enough_sun", availableSun, sunCost)
                         .withStyle(ChatFormatting.RED)
@@ -108,7 +108,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
 
             if (entity != null) {
                 itemStack.consume(1, player)
-                if (player?.isCreative == false) {
+                if (player?.hasInfiniteMaterials() == false) {
                     player.inventory.clearOrCountMatchingItems(Predicate<ItemStack> {
                         it.`is`(PazItems.SUN)
                     }, sunCost, player.inventoryMenu.getCraftSlots())

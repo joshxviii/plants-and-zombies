@@ -161,6 +161,14 @@
           "type": "plantz:hypnoshroom"
         }
       }
+    },
+    "plantz:coffeebean": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:coffeebean"
+        }
+      }
     }
   },
   "sends_telemetry_event": false

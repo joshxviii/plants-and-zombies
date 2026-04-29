@@ -3,9 +3,13 @@ package joshxviii.plantz
 import joshxviii.plantz.PazMain.MODID
 import joshxviii.plantz.entity.plant.Chomper
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.item.component.SeedPacket
+import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerEntityGetter
 import net.minecraft.server.level.ServerPlayer
@@ -152,6 +156,47 @@ fun LivingEntity.getMagicName(): String {
         else -> false
     }
     return if (hasMagicName) name.lowercase() else ""
+}
+
+
+/**
+ * Process bonus interactions for certain seed packets when used on a plant.
+ */
+fun Plant.processSeedPacketInteraction(player: Player, packet: SeedPacket?): PacketInteractionResult {
+    if (packet == null) return PacketInteractionResult.NO_INTERACTION
+    val type = BuiltInRegistries.ENTITY_TYPE.get(packet.entityId).get().value()
+    val availableSun = player.inventory.countItem(PazItems.SUN)
+    val sunCost = packet.getSunCost()
+    val cantAfford = sunCost > availableSun && !player.hasInfiniteMaterials()
+
+    val result = when (type) {
+        PazEntities.COFFEE_BEAN -> {
+            when {
+                isGrowingSeeds -> {
+                    player.sendOverlayMessage(Component.translatable("message.plantz.no_coffee_while_growing").withStyle(ChatFormatting.RED))
+                    PacketInteractionResult.FAIL
+                }
+                cantAfford -> PacketInteractionResult.CANT_AFFORD
+                isAsleep -> {
+                    applyCoffeeBuff()
+                    PacketInteractionResult.SUCCESS
+                }
+                else -> PacketInteractionResult.FAIL
+            }
+        }
+        else -> PacketInteractionResult.NO_INTERACTION
+    }
+    // show message
+    if (result == PacketInteractionResult.CANT_AFFORD) player.sendOverlayMessage(Component.translatable("message.plantz.not_enough_sun", availableSun, sunCost).withStyle(ChatFormatting.RED))
+    // remove used sun
+    if (result == PacketInteractionResult.SUCCESS && !player.hasInfiniteMaterials()) player.inventory.clearOrCountMatchingItems({ it.`is`(PazItems.SUN) }, sunCost, player.inventoryMenu.getCraftSlots())
+    return result
+}
+enum class PacketInteractionResult {
+    SUCCESS,
+    FAIL,
+    CANT_AFFORD,
+    NO_INTERACTION
 }
 
 fun resolveTextureLocation(base: String, suffixes: List<String>, rm: ResourceManager): Identifier? {

@@ -83,7 +83,7 @@ object PazEntities {
             maxHealth = 35.0,
             attackDamage = 12.0,
             attackKnockback = 0.15,
-            followRange = 4.75
+            followRange = 4.75,
         )
     )
     @JvmField val CHERRY_BOMB: EntityType<CherryBomb> = registerPlant(
@@ -94,7 +94,7 @@ object PazEntities {
         height = 0.7f,
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 50.0,
-            followRange = 3.75
+            followRange = 3.75,
         )
     )
     @JvmField val POTATO_MINE: EntityType<PotatoMine> = registerPlant(
@@ -104,7 +104,7 @@ object PazEntities {
         width = 0.55f,
         height = 0.35f,
         attributes = Plant.Companion.PlantAttributes(
-            followRange = 3.75
+            followRange = 3.75,
         )
     )
     @JvmField val ICE_PEA_SHOOTER: EntityType<IcePeaShooter> = registerPlant(
@@ -112,7 +112,7 @@ object PazEntities {
         EntityType.Builder.of(::IcePeaShooter, MobCategory.CREATURE),
         sunCost = 7,
         attributes = Plant.Companion.PlantAttributes(
-            attackDamage = 3.0
+            attackDamage = 2.5,
         )
     )
     @JvmField val REPEATER: EntityType<Repeater> = registerPlant(
@@ -125,7 +125,7 @@ object PazEntities {
         EntityType.Builder.of(::FirePeaShooter, MobCategory.CREATURE).fireImmune(),
         sunCost = 7,
         attributes = Plant.Companion.PlantAttributes(
-            attackDamage = 3.0
+            attackDamage = 2.5,
         )
     )
     @JvmField val CACTUS: EntityType<Cactus> = registerPlant(
@@ -136,8 +136,8 @@ object PazEntities {
         height = 1.25f,
         eyeHeight = 0.85f,
         attributes = Plant.Companion.PlantAttributes(
-            attackDamage = 4.0,
-            followRange = 34.0
+            attackDamage = 3.5,
+            followRange = 34.0,
         )
     )
     @JvmField val CABBAGE_PULT: EntityType<CabbagePult> = registerPlant(
@@ -147,9 +147,9 @@ object PazEntities {
         width = 0.9f,
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
-            attackDamage = 3.0,
+            attackDamage = 3.5,
             attackKnockback = 0.5,
-            followRange = 20.0
+            followRange = 20.0,
         )
     )
     @JvmField val KERNEL_PULT: EntityType<KernelPult> = registerPlant(
@@ -161,7 +161,7 @@ object PazEntities {
         attributes = Plant.Companion.PlantAttributes(
             attackDamage = 2.5,
             attackKnockback = 0.5,
-            followRange = 22.0
+            followRange = 22.0,
         )
     )
     @JvmField val MELON_PULT: EntityType<MelonPult> = registerPlant(
@@ -173,7 +173,7 @@ object PazEntities {
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 50.0,
             attackDamage = 6.5,
-            followRange = 28.0
+            followRange = 28.0,
         )
     )
     @JvmField val PUFF_SHROOM: EntityType<PuffShroom> = registerPlant(
@@ -184,8 +184,8 @@ object PazEntities {
         eyeHeight = 0.3f,
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 12.0,
-            attackDamage = 1.5,
-            followRange = 10.0
+            attackDamage = 1.0,
+            followRange = 10.0,
         )
     )
     @JvmField val SCAREDY_SHROOM: EntityType<ScaredyShroom> = registerPlant(
@@ -195,7 +195,8 @@ object PazEntities {
         height = 0.9f,
         eyeHeight = 0.5f,
         attributes = Plant.Companion.PlantAttributes(
-            followRange = 22.0
+            followRange = 22.0,
+            attackDamage = 1.5,
         )
     )
     @JvmField val FUME_SHROOM: EntityType<FumeShroom> = registerPlant(
@@ -223,6 +224,16 @@ object PazEntities {
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 4.0,
             followRange = 20.0
+        )
+    )
+    @JvmField val COFFEE_BEAN: EntityType<CoffeeBean> = registerPlant(
+        "coffeebean", EntityType.Builder.of(::CoffeeBean, MobCategory.CREATURE),
+        sunCost = 3,
+        width = 0.4f,
+        height = 0.5f,
+        attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 4.0,
+            followRange = 1.0
         )
     )
     // endregion

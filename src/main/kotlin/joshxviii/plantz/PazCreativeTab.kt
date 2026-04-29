@@ -42,6 +42,7 @@ object PazCreativeTab {
                 output.accept(SeedPacketItem.stackFor(PazEntities.FUME_SHROOM))
                 output.accept(SeedPacketItem.stackFor(PazEntities.SCAREDY_SHROOM))
                 output.accept(SeedPacketItem.stackFor(PazEntities.HYPNOSHROOM))
+                output.accept(SeedPacketItem.stackFor(PazEntities.COFFEE_BEAN))
 
                 // zombie spawn eggs
                 output.accept(PazItems.BROWN_COAT_SPAWN_EGG)
@@ -70,11 +71,11 @@ object PazCreativeTab {
                 output.accept(PazBlocks.BRAINZ_FLAG)
                 output.accept(PazBlocks.PLANTZ_FLAG)
 
-                // mailboxes
-                PazBlocks.mailboxByColor.forEach { output.accept(it.value) }
-
                 //music
                 output.accept(PazItems.MUSIC_DISC_GRASSY_GROOVE)
+
+                // mailboxes
+                PazBlocks.mailboxByColor.forEach { output.accept(it.value) }
             }
             .build()
     )
