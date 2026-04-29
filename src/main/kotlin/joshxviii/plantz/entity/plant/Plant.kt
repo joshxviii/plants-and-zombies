@@ -702,7 +702,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         amount: IntRange = 8..9,
         horizontalSpreadScale: Double = 0.3,
         verticalSpreadScale: Double = 0.5,
-        height: Float = 0.0f,
+        height: Float = 0.2f,
         speed: Double = 0.0,
     ) {
         if (level is ServerLevel) {

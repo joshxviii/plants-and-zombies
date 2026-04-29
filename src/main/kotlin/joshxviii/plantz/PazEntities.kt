@@ -364,7 +364,7 @@ object PazEntities {
             .add(Attributes.ATTACK_DAMAGE, 8.0)
             .add(Attributes.MAX_HEALTH, 500.0)
             .add(Attributes.MOVEMENT_SPEED, 0.21)
-            .add(Attributes.KNOCKBACK_RESISTANCE, 0.7)
+            .add(Attributes.KNOCKBACK_RESISTANCE, 1.4)
             .add(Attributes.EXPLOSION_KNOCKBACK_RESISTANCE, 0.7)
             .add(Attributes.SCALE, 1.33)
             .add(Attributes.STEP_HEIGHT, 1.0)

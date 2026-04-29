@@ -97,7 +97,7 @@ object PazSpawnPlacements {
 
         addBiomeSpawn(PazTags.Biomes.HAS_COFFEE_BEAN, PazEntities.COFFEE_BEAN,
             weight = 8, minGroupSize = 1, maxGroupSize = 2)
-        registerSpawnPlacement(PazEntities.COFFEE_BEAN, Plant::checkPlantSpawnRules)
+        registerSpawnPlacement(PazEntities.COFFEE_BEAN, Plant::checkPlantSpawnRules, Heightmap.Types.MOTION_BLOCKING)
         // endregion
 
         // region ZOMBIES
@@ -133,11 +133,11 @@ object PazSpawnPlacements {
         BiomeModifications.addSpawn({ biomeSelector: BiomeSelectionContext -> biomeSelector.hasTag(biomeTag) }, category, entityType, weight, minGroupSize, maxGroupSize)
     }
 
-    fun <T : Mob> registerSpawnPlacement(entityType: EntityType<T>, spawnRules: SpawnPlacements.SpawnPredicate<T>) {
+    fun <T : Mob> registerSpawnPlacement(entityType: EntityType<T>, spawnRules: SpawnPlacements.SpawnPredicate<T>, heightmap: Heightmap.Types = Heightmap.Types.MOTION_BLOCKING_NO_LEAVES) {
         SpawnPlacementsInvoker.invokeRegister(
             entityType,
             SpawnPlacementTypes.ON_GROUND,
-            Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+            heightmap,
             spawnRules
         )
     }
