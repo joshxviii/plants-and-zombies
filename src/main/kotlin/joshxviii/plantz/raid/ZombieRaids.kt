@@ -114,7 +114,7 @@ class ZombieRaids(
 
         for (raid in zombieRaidMap.values) {
             val distance = raid.center.distSqr(pos)
-            if (raid.active && distance < closestDistanceSqr) {
+            if (!raid.isStopped() && distance < closestDistanceSqr) {
                 closest = raid
                 closestDistanceSqr = distance
             }

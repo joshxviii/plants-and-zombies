@@ -15,6 +15,7 @@ import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.ai.goal.FloatGoal
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
@@ -38,6 +39,11 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         }
 
         val ZOMBIE_STATE: EntityDataAccessor<ZombieState> = SynchedEntityData.defineId<ZombieState>(PazZombie::class.java, DATA_ZOMBIE_STATE)
+    }
+
+    override fun registerGoals() {
+        super.registerGoals()
+        this.goalSelector.addGoal(1, FloatGoal(this))
     }
 
     var state: ZombieState

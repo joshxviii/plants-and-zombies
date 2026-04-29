@@ -42,8 +42,8 @@ object PazEntities {
             }
 
             if (entity is Mob && entity.`is`(ATTACKS_PLANTS) && entity !is ZombifiedPiglin) {
-                (entity as MobAccessor).targetSelector.addGoal(1, NearestAttackableTargetGoal(entity, Plant::class.java, 4, true, true) { target, level -> target is WallNut || target is HypnoShroom })
-                (entity as MobAccessor).targetSelector.addGoal(2, NearestAttackableTargetGoal(entity, Plant::class.java, 5, true, false) { target, level ->
+                (entity as MobAccessor).targetSelector.addGoal(2, NearestAttackableTargetGoal(entity, Plant::class.java, 4, true, true) { target, level -> target is WallNut})
+                (entity as MobAccessor).targetSelector.addGoal(3, NearestAttackableTargetGoal(entity, Plant::class.java, 5, true, false) { target, level ->
                     target is Plant && !target.`is`(IGNORED_BY_PLANT_ATTACKERS) })
             }
         }

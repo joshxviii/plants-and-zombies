@@ -7,6 +7,7 @@ import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import joshxviii.plantz.*
 import joshxviii.plantz.advancement.ZombieRaidContext
+import joshxviii.plantz.block.entity.FlagBlockEntity
 import net.minecraft.SharedConstants
 import net.minecraft.core.BlockPos
 import net.minecraft.core.BlockPos.MutableBlockPos
@@ -33,7 +34,7 @@ import java.util.function.Predicate
 class ZombieRaid(
     val center: BlockPos,
     var started: Boolean = false,
-    var active: Boolean = false,
+    private var active: Boolean = false,
     var ticksActive: Long = 0,
     var zombieRaidOmenLevel: Int = 0,
     var wavesSpawned: Int = 0,
@@ -150,37 +151,41 @@ class ZombieRaid(
 
         if (waveTimer>0) waveTimer--
 
-        if (shouldSpawnNextWave()) {
-            val spawnPos = findRandomSpawnPos(level, 20) ?: center
-            spawnNextWave(level, spawnPos)
-            //raidCooldownTicks = 200 + random.nextInt(200)  // Delay next wave
-        }
-
-        updateBossbar()
-
-        // victory condition
+        // victory condition (all zombies dead and all waves completed)
         if (getTotalZombiesAlive() == 0 && wavesSpawned >= numWaves) {
             status = ZombieRaidStatus.VICTORY
             zombieRaidEvent.progress = 1.0f
             zombieRaidEvent.color = BossEvent.BossBarColor.YELLOW
             zombieRaidEvent.name = ZOMBIE_RAID_BAR_VICTORY
             postRaidTicks = POST_RAID_TICKS
-
             zombieRaidEvent.players.forEach { player ->// advancement
                 PazCriteria.WIN_ZOMBIE_RAID.trigger(player, ZombieRaidContext(center))
             }
+            return
         }
-        // lose condition
+        // lose condition (flag destroyed)
         else if (!level.getBlockState(center).`is`(PazBlocks.PLANTZ_FLAG)) {
             status = ZombieRaidStatus.LOSS
             zombieRaidEvent.progress = 1.0f
             zombieRaidEvent.color = BossEvent.BossBarColor.RED
             zombieRaidEvent.name = ZOMBIE_RAID_BAR_DEFEAT
             postRaidTicks = POST_RAID_TICKS
+            return
         }
         else {
             zombieRaidEvent.setName(Component.translatable("event.plantz.zombie_raid.wave", wavesSpawned, waveTimer.tickTimeFormat()))
         }
+
+        if (shouldSpawnNextWave()) {
+            val spawnPos = findRandomSpawnPos(level, 20) ?: center
+            spawnNextWave(level, spawnPos)
+            //raidCooldownTicks = 200 + random.nextInt(200)  // Delay next wave
+        }
+        else if (waveTimer <= 0) {// destroy flag when timer runs out
+            (level.getBlockEntity(center) as? FlagBlockEntity)?.hurt(999f)
+        }
+
+        updateBossbar()
 
         if (ticksActive % 20L == 0L) {
             updatePlayers(level)

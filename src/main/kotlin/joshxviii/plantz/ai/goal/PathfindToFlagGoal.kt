@@ -36,7 +36,7 @@ class PathfindToFlagGoal(
                 navCooldown = SEARCH_COOLDOWN
                 val level = mob.level() as ServerLevel
                 val zombieRaid = level.getZombieRaids().getNearbyRaid(mob.blockPosition(), 99999)
-                if (zombieRaid != null && mob is Zombie) zombieRaid.joinRaid(level, mob)
+                //if (zombieRaid != null && mob is Zombie) zombieRaid.joinRaid(level, mob)
                 targetFlagPos = zombieRaid?.center
             }
         }
