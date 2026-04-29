@@ -40,7 +40,7 @@ object PazSpawnPlacements {
         registerSpawnPlacement(PazEntities.FUME_SHROOM, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_HYPNOSHROOM, PazEntities.HYPNOSHROOM,
-            weight = 2, minGroupSize = 1, maxGroupSize = 1, category = MobCategory.MONSTER)
+            weight = 1, minGroupSize = 1, maxGroupSize = 1, category = MobCategory.MONSTER)
         registerSpawnPlacement(PazEntities.HYPNOSHROOM, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_ICE_PEASHOOTER, PazEntities.ICE_PEA_SHOOTER,
@@ -90,9 +90,9 @@ object PazSpawnPlacements {
         registerSpawnPlacement(PazEntities.WALL_NUT, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_SUNSHROOM, PazEntities.SUN_SHROOM,
-            weight = 15, minGroupSize = 2, maxGroupSize = 3, category = MobCategory.MONSTER)
+            weight = 8, minGroupSize = 1, maxGroupSize = 2, category = MobCategory.MONSTER)
         addBiomeSpawn(PazTags.Biomes.HAS_SUNFLOWER, PazEntities.SUN_SHROOM,
-            weight = 1, minGroupSize = 1, maxGroupSize = 2)
+            weight = 1, minGroupSize = 1, maxGroupSize = 2, category = MobCategory.MONSTER)
         registerSpawnPlacement(PazEntities.SUN_SHROOM, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_COFFEE_BEAN, PazEntities.COFFEE_BEAN,

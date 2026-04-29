@@ -603,8 +603,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
             //coffee bean interaction
             if (itemStack.components.has(PazComponents.SEED_PACKET)) {
-                if (processSeedPacketInteraction(player, itemStack.get(PazComponents.SEED_PACKET)) == PacketInteractionResult.SUCCESS)
+                if (processSeedPacketInteraction(player, itemStack.get(PazComponents.SEED_PACKET)) == PacketInteractionResult.SUCCESS){
+                    itemStack.consume(1, player)
                     return InteractionResult.SUCCESS_SERVER
+                }
             }
 
             //pot helmet interaction

@@ -4,7 +4,7 @@
     "minecraft:taiga",
     "minecraft:mushroom_fields",
     {
-     "id": "#c:is_old_growth",
+      "id": "#c:is_old_growth",
       "required": false
     },
     {
