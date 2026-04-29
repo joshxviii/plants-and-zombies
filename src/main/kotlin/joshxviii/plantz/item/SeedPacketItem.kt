@@ -91,14 +91,15 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             }
 
             // Prevent spawn if there's already a Plant in that block
-            val aabb = AABB(spawnPos)
-            val existingPlants = level.getEntitiesOfClass(Plant::class.java, aabb)
-            if (existingPlants.isNotEmpty()) {
-                player?.sendOverlayMessage(
-                    Component.translatable("message.plantz.already_planted")
-                        .withStyle(ChatFormatting.RED)
-                )
-                return InteractionResult.FAIL
+            val aabb = entity?.let {
+                val existingPlants = level.getEntitiesOfClass(Plant::class.java, AABB(it.blockPosition()))
+                if (existingPlants.isNotEmpty()) {
+                    player?.sendOverlayMessage(
+                        Component.translatable("message.plantz.already_planted")
+                            .withStyle(ChatFormatting.RED)
+                    )
+                    return InteractionResult.FAIL
+                }
             }
 
             if (entity != null && !level.addFreshEntity(entity)) {

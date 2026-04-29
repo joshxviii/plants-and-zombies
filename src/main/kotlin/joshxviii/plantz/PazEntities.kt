@@ -260,7 +260,7 @@ object PazEntities {
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.MOVEMENT_SPEED, 0.22)
-            .add(Attributes.MAX_HEALTH, 22.0)
+            .add(Attributes.MAX_HEALTH, 25.0)
     )
     @JvmField val DIGGER_ZOMBIE: EntityType<DiggerZombie> =  registerZombie(
         "digger_zombie",
@@ -272,7 +272,7 @@ object PazEntities {
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 3.0)
-            .add(Attributes.MAX_HEALTH, 25.0)
+            .add(Attributes.MAX_HEALTH, 35.0)
             .add(Attributes.MOVEMENT_SPEED, 0.225)
             .add(Attributes.FOLLOW_RANGE, 16.0)
     )
@@ -285,7 +285,7 @@ object PazEntities {
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 13.0)
-            .add(Attributes.MAX_HEALTH, 100.0)
+            .add(Attributes.MAX_HEALTH, 120.0)
             .add(Attributes.MOVEMENT_SPEED, 0.27)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.5)
             .add(Attributes.SCALE, 1.25)
@@ -303,7 +303,7 @@ object PazEntities {
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 7.0)
-            .add(Attributes.MAX_HEALTH, 50.0)
+            .add(Attributes.MAX_HEALTH, 60.0)
             .add(Attributes.MOVEMENT_SPEED, 0.235)
             .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.1)
     )
@@ -317,7 +317,7 @@ object PazEntities {
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 3.5)
-            .add(Attributes.MAX_HEALTH, 10.0)
+            .add(Attributes.MAX_HEALTH, 20.0)
             .add(Attributes.MOVEMENT_SPEED, 0.3)
             .add(Attributes.FOLLOW_RANGE, 16.0)
             .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.0)
@@ -332,7 +332,7 @@ object PazEntities {
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 8.0)
-            .add(Attributes.MAX_HEALTH, 65.0)
+            .add(Attributes.MAX_HEALTH, 75.0)
             .add(Attributes.SCALE, 1.1)
             .add(Attributes.STEP_HEIGHT, 1.0)
             .add(Attributes.MOVEMENT_SPEED, 0.23)
@@ -362,7 +362,7 @@ object PazEntities {
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 8.0)
-            .add(Attributes.MAX_HEALTH, 450.0)
+            .add(Attributes.MAX_HEALTH, 500.0)
             .add(Attributes.MOVEMENT_SPEED, 0.21)
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.7)
             .add(Attributes.EXPLOSION_KNOCKBACK_RESISTANCE, 0.7)

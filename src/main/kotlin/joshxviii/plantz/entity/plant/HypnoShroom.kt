@@ -29,7 +29,7 @@ class HypnoShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEn
         if (attacker is LivingEntity && !attacker.isInvulnerable) {
             addParticlesAroundSelf(
                 particle = PazServerParticles.HYPNO_SPORE,
-                amount = 30,
+                amount = 25..30,
                 horizontalSpreadScale = 0.6,
                 verticalSpreadScale = 0.6,
                 height = 0.6f

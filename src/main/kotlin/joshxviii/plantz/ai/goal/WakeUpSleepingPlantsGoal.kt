@@ -2,16 +2,22 @@ package joshxviii.plantz.ai.goal
 
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.phys.AABB
 import java.util.EnumSet
+import java.util.function.Predicate
 
 class WakeUpSleepingPlantsGoal(
-    plantEntity: Plant,
+    usingEntity: Plant,
+    cooldownTime: Int = 20,
+    actionDelay: Int = 0,
+    actionStartEffect: () -> Unit = {},
+    actionEndEffect: () -> Unit = {},
+    actionPredicate: Predicate<PathfinderMob> = Predicate { true },
     val maxPlants: Int = 1,
-) : ActionGoal(plantEntity)
-{
+): ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionEndEffect, actionPredicate, -10..20) {
     var targets: List<Plant> = listOf()
     val targetConditions: TargetingConditions
     val followDistance = usingEntity.getAttribute(Attributes.FOLLOW_RANGE)?.value?: 1.0
@@ -22,8 +28,7 @@ class WakeUpSleepingPlantsGoal(
     }
 
     override fun canUse(): Boolean {
-        return if (usingEntity.getRandom().nextInt(5) != 0) false
-        else (usingEntity.tickCount > cooldownTime
+        return (usingEntity.tickCount > cooldownTime
                 && usingEntity.isAlive
                 && !(usingEntity is Plant && (usingEntity.isAsleep || usingEntity.isGrowingSeeds)))
     }
@@ -51,10 +56,7 @@ class WakeUpSleepingPlantsGoal(
     }
 
     override fun doAction(): Boolean {
-        for (plant in targets) {
-            plant.applyCoffeeBuff()
-        }
-        usingEntity.discard()
+        for (plant in targets) plant.applyCoffeeBuff()
         return true
     }
 }

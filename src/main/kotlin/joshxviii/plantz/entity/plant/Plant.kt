@@ -93,7 +93,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         ): Boolean {
             val blockAtPos = level.getBlockState(pos)
             val blockAbove = level.getBlockState(pos.above())
-            val blockBelow = level.getBlockState(pos.below())
 
             return blockAtPos.isAir
                     && blockAbove.getCollisionShape(level, pos.above()).isEmpty
@@ -399,8 +398,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
         if (coffeeBuff>0 ) {
             coffeeBuff--
-            if (tickCount % 12 == 0 && random.nextFloat()>0.6 && tickCount > 18 && isAlive) {
-
+            if (getRandom().nextInt(25) == 0) {
+                addParticlesAroundSelf(
+                    level,
+                    PazServerParticles.ENERGIZED,
+                    amount = 1..2,
+                    speed = 0.024
+                )
             }
         }
 
@@ -626,8 +630,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         coffeeBuff = COFFEE_BUFF_DURATION
         playSound(SoundEvents.WITCH_DRINK, 1f, 1.5f)
         addParticlesAroundSelf(level,
-            PazServerParticles.EMBER,
-            amount = 16
+            PazServerParticles.ENERGIZED,
+            amount = 16..18,
+            speed = 0.04
         )
     }
 
@@ -694,7 +699,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     fun addParticlesAroundSelf(
         level: Level = level(),
         particle: ParticleOptions = ParticleTypes.SPLASH,
-        amount: Int = 8,
+        amount: IntRange = 8..9,
         horizontalSpreadScale: Double = 0.3,
         verticalSpreadScale: Double = 0.5,
         height: Float = 0.0f,
@@ -704,12 +709,12 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             level.sendParticles(
                 particle,
                 x, y + height, z,
-                amount,
+                amount.random(),
                 horizontalSpreadScale, verticalSpreadScale, horizontalSpreadScale,
                 speed
             )
         }
-        else repeat(amount) {
+        else repeat(amount.random()) {
             // Random offsets for velocity
             val xa = random.nextGaussian() * 0.02
             val ya = random.nextGaussian() * 0.02

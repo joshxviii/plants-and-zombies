@@ -46,6 +46,10 @@ object PazParticles {
             EmberParticle.Provider(spriteSet)
         }
 
+        it.register(PazServerParticles.ENERGIZED) { spriteSet ->
+            EnergizedParticle.Provider(spriteSet)
+        }
+
         it.register(PazServerParticles.SLEEP) { spriteSet ->
             SleepParticle.Provider(spriteSet)
         }
