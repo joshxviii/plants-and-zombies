@@ -8,15 +8,15 @@
         "probability": 0.005
       }
     ],
-    "minecraft:visual/fog_color": "#793397",
-    "minecraft:visual/sky_color": "#5e3c62",
+    "minecraft:visual/fog_color": "#654673",
+    "minecraft:visual/sky_color": "#472d4a",
     "minecraft:visual/cloud_color": 7437954,
-    "minecraft:visual/sunrise_sunset_color": 11097861,
-    "minecraft:visual/sky_light_color": "#9f73ae",
-    "minecraft:visual/ambient_light_color": "#873aaf",
-    "minecraft:visual/water_fog_color": "#6d3892",
-    "minecraft:visual/block_light_tint": "#75ca51",
-    "minecraft:visual/sky_fog_end_distance": 64
+    "minecraft:visual/sunrise_sunset_color": 10165001,
+    "minecraft:visual/sky_light_color": "#b694d1",
+    "minecraft:visual/ambient_light_color": "#070409",
+    "minecraft:visual/water_fog_color": "#2c522e",
+    "minecraft:visual/sky_fog_end_distance": 64,
+    "minecraft:visual/water_fog_start_distance": 4
   },
   "carvers": [
     "minecraft:cave",
@@ -25,13 +25,12 @@
   ],
   "downfall": 0,
   "effects": {
-    "water_color": "#019609",
-    "grass_color": "#767e5a",
-    "foliage_color": "#52693d",
-    "dry_foliage_color": "#52693d"
+    "water_color": "#3d853a",
+    "grass_color": "#667155",
+    "foliage_color": "#586343",
+    "dry_foliage_color": "#7a7a7a"
   },
   "features": [
-    [],
     [
       "minecraft:lake_lava_underground"
     ],
@@ -74,6 +73,8 @@
     [],
     [],
     [
+      "minecraft:pale_moss_patch",
+      "minecraft:forest_rock",
       "minecraft:patch_leaf_litter",
       "minecraft:glow_lichen",
       "minecraft:brown_mushroom_normal",
@@ -83,6 +84,9 @@
     ],
     [
       "minecraft:freeze_top_layer"
+    ],
+    [
+      "plantz:gravestone"
     ]
   ],
   "has_precipitation": true,

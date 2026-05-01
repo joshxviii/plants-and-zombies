@@ -51,11 +51,11 @@ object PazSpawnPlacements {
         registerSpawnPlacement(PazEntities.ICE_PEA_SHOOTER, IcePeaShooter::checkIcePeaShooterSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_CABBAGEPULT, PazEntities.CABBAGE_PULT,
-            weight = 4, minGroupSize = 1, maxGroupSize = 2)
+            weight = 4, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.CABBAGE_PULT, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_KERNELPULT, PazEntities.KERNEL_PULT,
-            weight = 4, minGroupSize = 1, maxGroupSize = 2)
+            weight = 4, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.KERNEL_PULT, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_MELONPULT, PazEntities.MELON_PULT,

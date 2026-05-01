@@ -26,6 +26,12 @@
 				"value": "joshxviii.plantz.PazClient",
 				"adapter": "kotlin"
 			}
+		],
+		"terrablender": [
+			{
+				"value": "joshxviii.plantz.PazWorldGen",
+				"adapter": "kotlin"
+			}
 		]
 	},
 	"mixins": [
