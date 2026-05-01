@@ -2,6 +2,7 @@ package joshxviii.plantz
 
 import joshxviii.plantz.block.*
 import joshxviii.plantz.block.entity.FlagBlockEntity
+import joshxviii.plantz.block.entity.GravestoneBlockEntity
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.item.component.BlocksProjectileDamage
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
@@ -176,6 +177,20 @@ object PazBlocks {
         PLANTZ_FLAG, BRAINZ_FLAG
     )
     @JvmField val PLANTZ_FLAG_POI = PoiHelper.register(pazResource("plantz_flag"), 8, 32, PLANTZ_FLAG)
+
+    @JvmField val GRAVESTONE: Block = registerBlock(
+        "gravestone",
+        BlockBehaviour.Properties.of()
+            .sound(SoundType.STONE)
+            .strength(1.2F)
+            .pushReaction(PushReaction.BLOCK),
+        ::GravestoneBlock,
+    )
+    val GRAVESTONE_BLOCK_ENTITY: BlockEntityType<GravestoneBlockEntity> = registerBlockEntity(
+        "gravestone",
+        ::GravestoneBlockEntity,
+        GRAVESTONE
+    )
 
     private fun registerBlock(
         name: String,
