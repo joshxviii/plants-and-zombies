@@ -87,8 +87,16 @@ class ProjectileAttackGoal(
         if (projectile is Projectile) Projectile.spawnProjectile(projectile, level, ItemStack.EMPTY)
         else level.addFreshEntity(projectile)
 
-        val targetPos = calculateMovingTargetPosition(target, projectile)
-        val arcs = calculateProjectileArcs(targetPos, projectile.gravity, velocity)
+        val targetPosNow = Vec3(
+            target.x - projectile.x,
+            target.boundingBox.minY + (target.bbHeight / 3.0) - projectile.y,
+            target.z - projectile.z
+        )
+        val distanceRatio = (targetPosNow.horizontalDistance() / attackRadius).coerceIn(0.0, 1.0)
+        val finalVel = Mth.lerp(distanceRatio, velocity * 0.45, velocity)
+
+        val targetPos = calculateMovingTargetPosition(target, projectile, finalVel)
+        val arcs = calculateProjectileArcs(targetPos, projectile.gravity, finalVel)
         if (arcs==null) {// lose target if unreachable
             projectile.discard()
             usingEntity.target = null
@@ -107,51 +115,38 @@ class ProjectileAttackGoal(
         val shootY = Mth.sin(finalAngle).toDouble()
         val shootZ = (horizUnitZ * horizComp)
 
-        if (projectile is Projectile) projectile.shoot(shootX, shootY, shootZ, velocity.toFloat(), inaccuracy)
-        else projectile.applyImpulse(shootX, shootY, shootZ, velocity.toFloat(), inaccuracy)
+        if (projectile is Projectile) projectile.shoot(shootX, shootY, shootZ, finalVel.toFloat(), inaccuracy)
+        else projectile.applyImpulse(shootX, shootY, shootZ, finalVel.toFloat(), inaccuracy)
 
         usingEntity.playSound(soundEvent, 0.7f, 0.4f / (usingEntity.random.nextFloat() * 0.4f + 0.8f))
         return true
     }
 
-    private fun calculateMovingTargetPosition(target: LivingEntity, projectile: Entity): Vec3 {
+    private fun calculateMovingTargetPosition(target: LivingEntity, projectile: Entity, v: Double): Vec3 {
         val basePos = Vec3(
             target.x - projectile.x,
             target.boundingBox.minY + (target.bbHeight / 3.0) - projectile.y,
             target.z - projectile.z
         )
-        return basePos
-        //TODO
 
-        val targetVel: Vec3 = target.deltaMovement
+        val targetVel = target.deltaMovement
+        if (targetVel.lengthSqr() <= 0.000001) return basePos
+
+        val g = projectile.gravity
 
         var predicted = basePos
 
-        val g = projectile.gravity
-        val v = velocity
-
-        val maxLeadTicks = 60.0
-        val iterations = 10
-        val epsilon = 1.0e-3
-
-        for (i in 0 until iterations) {
-            val arcs = calculateProjectileArcs(predicted, g, v) ?: break
+        repeat(4) {
+            val arcs = calculateProjectileArcs(predicted, g, v) ?: return predicted
             val angle = if (useHighArc) arcs.first else arcs.second
 
-            val horizDist = predicted.horizontalDistance()
-            if (horizDist < 1.0e-6) break
+            val horizontalSpeed = v * Mth.cos(angle)
+            if (horizontalSpeed <= 0.000001) return predicted
 
-            val cos = Mth.cos(angle).toDouble()
-            if (cos <= 1.0e-6) break
+            val horizontalDistance = predicted.horizontalDistance()
+            val flightTime = horizontalDistance / horizontalSpeed
 
-            val t = (horizDist / (v * cos)).coerceIn(0.0, maxLeadTicks)
-
-            val next = basePos.add(targetVel.scale(t))
-            if (next.distanceTo(predicted) < epsilon) {
-                predicted = next
-                break
-            }
-            predicted = next
+            predicted = basePos.add(targetVel.scale(flightTime))
         }
 
         return predicted

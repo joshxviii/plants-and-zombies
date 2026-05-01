@@ -149,7 +149,7 @@ object PazEntities {
         attributes = Plant.Companion.PlantAttributes(
             attackDamage = 3.5,
             attackKnockback = 0.5,
-            followRange = 20.0,
+            followRange = 28.0,
         )
     )
     @JvmField val KERNEL_PULT: EntityType<KernelPult> = registerPlant(
@@ -161,7 +161,7 @@ object PazEntities {
         attributes = Plant.Companion.PlantAttributes(
             attackDamage = 2.5,
             attackKnockback = 0.5,
-            followRange = 22.0,
+            followRange = 30.0,
         )
     )
     @JvmField val MELON_PULT: EntityType<MelonPult> = registerPlant(
@@ -173,7 +173,7 @@ object PazEntities {
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 50.0,
             attackDamage = 6.5,
-            followRange = 28.0,
+            followRange = 38.0,
         )
     )
     @JvmField val PUFF_SHROOM: EntityType<PuffShroom> = registerPlant(
