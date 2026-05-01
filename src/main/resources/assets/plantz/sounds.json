@@ -1,4 +1,13 @@
 {
+
+  "item.watering_can": {
+    "sounds": [
+      { "name": "entity/boat/paddle_water1", "volume": 1.0, "pitch": 2.0},
+      { "name": "entity/boat/paddle_water2", "volume": 1.0, "pitch": 2.0},
+      { "name": "entity/boat/paddle_water3", "volume": 1.0, "pitch": 2.0}
+    ], "subtitle": "plantz.subtitles.item.watering_can"
+  },
+
   "entity.projectile.hit_paper": {
     "sounds": [
       { "name": "plantz:projectile/hit_paper_1", "volume": 1.0},

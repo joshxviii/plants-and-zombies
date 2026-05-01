@@ -15,6 +15,7 @@ import joshxviii.plantz.item.NewspaperItem
 import joshxviii.plantz.item.SeedPacketItem
 import joshxviii.plantz.item.SunBottleItem
 import joshxviii.plantz.item.SunItem
+import joshxviii.plantz.item.WateringCanItem
 import joshxviii.plantz.item.component.BlocksProjectileDamage
 import joshxviii.plantz.item.component.SeedPacket
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
@@ -61,6 +62,11 @@ object PazItems {
     val SUN_BOTTLE: Item = registerItem(
         "sun_bottle", ::SunBottleItem,
         properties = Item.Properties().craftRemainder(GLASS_BOTTLE)
+    )
+    @JvmField
+    val WATERING_CAN: Item = registerItem(
+        "watering_can", ::WateringCanItem,
+        properties = Item.Properties()
     )
     @JvmField
     val NEWSPAPER: Item = registerItem(

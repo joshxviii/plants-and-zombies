@@ -31,6 +31,7 @@ class SleepGoal(
         when (plantEntity.testGrowConditions()) {
             PlantGrowNeeds.TIME -> return true
             PlantGrowNeeds.SUN -> return false
+            PlantGrowNeeds.WATER -> return false
             else -> {}
         }
 

@@ -9,6 +9,8 @@ import net.minecraft.sounds.SoundEvents
 
 object PazSounds {
 
+    @JvmField val WATERING_CAN = register("item.watering_can")
+
     @JvmField val PROJECTILE_FIRE = register("entity.projectile.fire")
     @JvmField val PROJECTILE_HIT_CONE = register("entity.projectile.hit_cone")
     @JvmField val PROJECTILE_HIT_BUCKET = register("entity.projectile.hit_bucket")

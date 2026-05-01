@@ -6,6 +6,7 @@ import joshxviii.plantz.PazDataSerializers.DATA_COFFEE_BUFF
 import joshxviii.plantz.PazDataSerializers.DATA_COOLDOWN
 import joshxviii.plantz.PazDataSerializers.DATA_PLANT_STATE
 import joshxviii.plantz.PazDataSerializers.DATA_RECEIVED_SUN
+import joshxviii.plantz.PazDataSerializers.DATA_RECEIVED_WATER
 import joshxviii.plantz.PazDataSerializers.DATA_SEED_GROW_COOLDOWN
 import joshxviii.plantz.PazDataSerializers.DATA_SLEEPING
 import joshxviii.plantz.PazDataSerializers.DATA_SWELL_DIR
@@ -123,6 +124,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val COOLDOWN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_COOLDOWN)
         val COFFEE_BUFF: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_COFFEE_BUFF)
         val RECEIVED_SUN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_RECEIVED_SUN)
+        val RECEIVED_WATER: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_RECEIVED_WATER)
         val SEED_GROW_COOLDOWN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_SEED_GROW_COOLDOWN)
         val ATTACHED_PLAYER: EntityDataAccessor<Optional<EntityReference<LivingEntity>>> = SynchedEntityData.defineId(Plant::class.java, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE)
         val SLEEPING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, DATA_SLEEPING)
@@ -189,7 +191,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     var receivedSun: Int
         get() = this.entityData.get(RECEIVED_SUN)
         set(value) = this.entityData.set(RECEIVED_SUN, value.coerceAtLeast(0))
-
+    var receivedWater: Int
+        get() = this.entityData.get(RECEIVED_WATER)
+        set(value) = this.entityData.set(RECEIVED_WATER, value.coerceAtLeast(0))
     var seedGrowCooldown: Int
         get() = this.entityData.get(SEED_GROW_COOLDOWN)
         set(value) = this.entityData.set(SEED_GROW_COOLDOWN, value.coerceAtLeast(0))
@@ -253,6 +257,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         entityData.define(SWELL_DIR, 0)
         entityData.define(COOLDOWN, 0)
         entityData.define(RECEIVED_SUN, 0)
+        entityData.define(RECEIVED_WATER, 0)
         entityData.define(SEED_GROW_COOLDOWN, timeRequiredForSeeds())
         entityData.define(COFFEE_BUFF, 0)
         entityData.define(SLEEPING, false)
@@ -422,8 +427,12 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
 
         val needs = testGrowConditions()
-        if (needs == PlantGrowNeeds.SUN) {
-            if (tickCount%25==0) level().addParticle(PazServerParticles.NEEDS_SUN, x, y+eyeHeight+0.55, z, 0.0, 0.0, 0.0)
+        if (tickCount%25==0) {
+            when (needs) {
+                PlantGrowNeeds.SUN -> PazServerParticles.NEEDS_SUN
+                PlantGrowNeeds.WATER -> PazServerParticles.NEEDS_WATER
+                else -> null
+            }?.let { level().addParticle(it, x, y+eyeHeight+0.55, z, 0.0, 0.0, 0.0) }
         }
     }
 
@@ -504,8 +513,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     fun testGrowConditions(): PlantGrowNeeds {
         val farmBlock = getBlockBelow()
         if (!farmBlock.`is`(PazTags.BlockTags.FARMABLE)) return PlantGrowNeeds.SOIL
-        if (farmBlock.hasProperty(BlockStateProperties.MOISTURE)) {
-            if (farmBlock.getValue(BlockStateProperties.MOISTURE) < 7) return PlantGrowNeeds.WATER
+        if (receivedWater <= 0) {
+            if (exposedToRain()) receivedWater+=1
+            return PlantGrowNeeds.WATER
         }
         if (seedGrowCooldown > 0) {
             --seedGrowCooldown
@@ -523,6 +533,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     fun sunIsVisible() : Boolean {
         return level().isBrightOutside && level().getBrightness(LightLayer.SKY, BlockPos.containing(x, eyeY, z)) >= 7
     }
+    fun exposedToRain(): Boolean = level().isRainingAt(blockPosition().above())
     open fun sleepsDuringNight(): Boolean = false
     open fun sleepsDuringDay(): Boolean = false
 
