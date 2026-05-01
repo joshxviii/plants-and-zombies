@@ -43,7 +43,7 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
         private const val MAX_FOLLOW_DIST = 8.0
         private const val SUN_GROUPS_PER_AREA = 40
         private const val SUN_MERGE_DISTANCE = 0.5
-        private const val DEFAULT_LIFETIME = 1000
+        private const val DEFAULT_LIFETIME = 750
         private const val DEFAULT_HEALTH: Short = 5
         private const val DEFAULT_AGE: Short = 0
         private const val DEFAULT_VALUE: Short = 0

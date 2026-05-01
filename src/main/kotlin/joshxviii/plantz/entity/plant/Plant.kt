@@ -91,14 +91,18 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             pos: BlockPos,
             random: RandomSource
         ): Boolean {
-            val blockAtPos = level.getBlockState(pos)
-            val blockAbove = level.getBlockState(pos.above())
-
-            return blockAtPos.isAir
-                    && blockAbove.getCollisionShape(level, pos.above()).isEmpty
+            val blockBelow = level.getBlockState(pos.below())
+            return checkValidSpawn(level, pos)
+                    && blockBelow.`is`(PLANTABLE)
         }
 
-        private const val COFFEE_BUFF_DURATION =  48_000 // 2 days
+        fun checkValidSpawn(level: LevelAccessor, pos: BlockPos): Boolean {
+            val blockAtPos = level.getBlockState(pos)
+            return level.getEntitiesOfClass(Plant::class.java, AABB(pos).inflate(32.0)) { it.tickCount > 0 }.isEmpty()
+                    && blockAtPos.getCollisionShape(level, pos.above()).isEmpty
+        }
+
+        private const val COFFEE_BUFF_DURATION =  72_000 // 2.5 days
         private const val NUTRIENT_SUPPLY_MAX = 160  // ticks before suffocating when on invalid ground
         // time and sun cost
         private const val SEED_TIME = 7800
@@ -396,14 +400,14 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             )
         }
 
-        if (coffeeBuff>0 ) {
+        if (coffeeBuff > 0) {
             coffeeBuff--
-            if (getRandom().nextInt(25) == 0) {
+            if (level().isClientSide && getRandom().nextInt(35) == 0) {
                 addParticlesAroundSelf(
                     level,
                     PazServerParticles.ENERGIZED,
+                    horizontalSpreadScale = 0.0,
                     amount = 1..2,
-                    speed = 0.024
                 )
             }
         }
@@ -537,9 +541,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         state = PlantState.GROW
-
-        if (spawnReason == EntitySpawnReason.NATURAL
-            && (!onValidGround() || isOverlappingWithOther(blockPosition()))) this.discard()
+        if (spawnReason == EntitySpawnReason.NATURAL) {}
 
         return groupData
     }
@@ -633,8 +635,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         playSound(SoundEvents.WITCH_DRINK, 1f, 1.5f)
         addParticlesAroundSelf(level,
             PazServerParticles.ENERGIZED,
-            amount = 16..18,
-            speed = 0.04
+            amount = 16..18
         )
     }
 
@@ -702,8 +703,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         level: Level = level(),
         particle: ParticleOptions = ParticleTypes.SPLASH,
         amount: IntRange = 8..9,
-        horizontalSpreadScale: Double = 0.3,
-        verticalSpreadScale: Double = 0.5,
+        horizontalSpreadScale: Double = boundingBox.xsize*0.5,
+        verticalSpreadScale: Double = boundingBox.ysize*0.5,
         height: Float = 0.2f,
         speed: Double = 0.0,
     ) {

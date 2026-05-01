@@ -5,7 +5,7 @@
         "particle": {
           "type": "minecraft:warped_spore"
         },
-        "probability": 0.01
+        "probability": 0.005
       }
     ],
     "minecraft:visual/fog_color": "#793397",
@@ -18,17 +18,102 @@
     "minecraft:visual/block_light_tint": "#75ca51",
     "minecraft:visual/sky_fog_end_distance": 64
   },
-  "carvers": "minecraft:cave",
+  "carvers": [
+    "minecraft:cave",
+    "minecraft:cave_extra_underground",
+    "minecraft:canyon"
+  ],
   "downfall": 0,
   "effects": {
-    "water_color": "#02cc0d",
+    "water_color": "#019609",
     "grass_color": "#767e5a",
     "foliage_color": "#52693d",
     "dry_foliage_color": "#52693d"
   },
-  "features": [],
+  "features": [
+    [],
+    [
+      "minecraft:lake_lava_underground"
+    ],
+    [
+      "minecraft:amethyst_geode"
+    ],
+    [],
+    [],
+    [
+      "minecraft:ore_dirt",
+      "minecraft:ore_gravel",
+      "minecraft:ore_granite_upper",
+      "minecraft:ore_granite_lower",
+      "minecraft:ore_diorite_upper",
+      "minecraft:ore_diorite_lower",
+      "minecraft:ore_andesite_upper",
+      "minecraft:ore_andesite_lower",
+      "minecraft:ore_tuff",
+      "minecraft:ore_coal_upper",
+      "minecraft:ore_coal_lower",
+      "minecraft:ore_iron_upper",
+      "minecraft:ore_iron_middle",
+      "minecraft:ore_iron_small",
+      "minecraft:ore_gold",
+      "minecraft:ore_gold_lower",
+      "minecraft:ore_redstone",
+      "minecraft:ore_redstone_lower",
+      "minecraft:ore_diamond",
+      "minecraft:ore_diamond_medium",
+      "minecraft:ore_diamond_large",
+      "minecraft:ore_diamond_buried",
+      "minecraft:ore_lapis",
+      "minecraft:ore_lapis_buried",
+      "minecraft:ore_copper",
+      "minecraft:underwater_magma",
+      "minecraft:disk_sand",
+      "minecraft:disk_clay",
+      "minecraft:disk_gravel"
+    ],
+    [],
+    [],
+    [
+      "minecraft:patch_leaf_litter",
+      "minecraft:glow_lichen",
+      "minecraft:brown_mushroom_normal",
+      "minecraft:red_mushroom_normal",
+      "minecraft:patch_pumpkin",
+      "minecraft:patch_firefly_bush_near_water"
+    ],
+    [
+      "minecraft:freeze_top_layer"
+    ]
+  ],
   "has_precipitation": true,
   "spawn_costs": {},
-  "spawners": {},
+  "spawners": {
+    "ambient": [
+      {
+        "type": "minecraft:bat",
+        "maxCount": 8,
+        "minCount": 8,
+        "weight": 10
+      }
+    ],
+    "axolotls": [],
+    "misc": [],
+    "water_ambient": [],
+    "water_creature": [],
+    "monster": [
+      {
+        "type": "plantz:browncoat",
+        "weight": 100,
+        "minCount": 15,
+        "maxCount": 30
+      },
+      {
+        "type": "plantz:newspaper_zombie",
+        "weight": 40,
+        "minCount": 1,
+        "maxCount": 6
+      }
+    ]
+  },
   "temperature": 2
 }

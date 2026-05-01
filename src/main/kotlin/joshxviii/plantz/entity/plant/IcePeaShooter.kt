@@ -1,18 +1,38 @@
 package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.PazTags.BlockTags.PLANTABLE
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.entity.projectile.PeaIce
+import net.minecraft.core.BlockPos
 import net.minecraft.tags.BlockTags
+import net.minecraft.util.RandomSource
+import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.block.state.BlockState
 
 class IcePeaShooter(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.ICE_PEA_SHOOTER, level) {
+
+    companion object {
+        fun checkIcePeaShooterSpawnRules(
+            type: EntityType<out Plant>,
+            level: LevelAccessor,
+            spawnReason: EntitySpawnReason,
+            pos: BlockPos,
+            random: RandomSource
+        ): Boolean {
+            val blockBelow = level.getBlockState(pos.below())
+            return checkValidSpawn(level, pos)
+                    && (blockBelow.`is`(PLANTABLE) || blockBelow.`is`(BlockTags.SNOW))
+        }
+    }
+
     override fun registerGoals() {
         super.registerGoals()
 

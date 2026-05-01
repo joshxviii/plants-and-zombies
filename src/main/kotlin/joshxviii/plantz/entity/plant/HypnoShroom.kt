@@ -25,6 +25,7 @@ class HypnoShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEn
 
     override fun actuallyHurt(level: ServerLevel, source: DamageSource, damage: Float) {
         super.actuallyHurt(level, source, damage)
+        if (isAsleep) return
         val attacker = source.entity
         if (attacker is LivingEntity && !attacker.isInvulnerable) {
             addParticlesAroundSelf(

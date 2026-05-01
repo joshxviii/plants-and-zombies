@@ -15,7 +15,7 @@ class EnergizedParticle private constructor(
 ) : RisingParticle(level, x, y, z, xd, yd, zd, sprites.first()) {
 
     init {
-        lifetime = 8
+        lifetime = 10
         setSpriteFromAge(sprites)
     }
 
@@ -25,14 +25,16 @@ class EnergizedParticle private constructor(
         zo = z
         if (age++ >= lifetime) remove()
         else {
-            move(xd, yd*0.1+0.04, zd)
-
+            val a = 1f-(age.toFloat() / lifetime)
+            val p = (0.8f + a * a * 4.9f)
+            move(xd*p, yd*1.14f, zd*p)
+            alpha = a+0.4f
             setSpriteFromAge(sprites)
         }
     }
 
     public override fun getLayer(): Layer {
-        return Layer.OPAQUE
+        return Layer.TRANSLUCENT
     }
 
     override fun move(xa: Double, ya: Double, za: Double) {
@@ -41,7 +43,7 @@ class EnergizedParticle private constructor(
     }
 
     override fun getQuadSize(a: Float): Float {
-        val s = 1.0f - (this.age + a) / this.lifetime
+        val s = 1.3f - (this.age + a) / this.lifetime
         return this.quadSize * (0.5f + s * s * 0.1f)
     }
 
