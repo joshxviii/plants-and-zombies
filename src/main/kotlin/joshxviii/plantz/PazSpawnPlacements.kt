@@ -40,7 +40,7 @@ object PazSpawnPlacements {
         registerSpawnPlacement(PazEntities.FUME_SHROOM, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_HYPNOSHROOM, PazEntities.HYPNOSHROOM,
-            weight = 1, minGroupSize = 1, maxGroupSize = 1, category = MobCategory.MONSTER)
+            weight = 3, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.HYPNOSHROOM, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_ICE_PEASHOOTER, PazEntities.ICE_PEA_SHOOTER,
@@ -90,9 +90,9 @@ object PazSpawnPlacements {
         registerSpawnPlacement(PazEntities.WALL_NUT, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_SUNSHROOM, PazEntities.SUN_SHROOM,
-            weight = 8, minGroupSize = 1, maxGroupSize = 2, category = MobCategory.MONSTER)
+            weight = 18, minGroupSize = 1, maxGroupSize = 2)
         addBiomeSpawn(PazTags.Biomes.HAS_SUNFLOWER, PazEntities.SUN_SHROOM,
-            weight = 1, minGroupSize = 1, maxGroupSize = 2, category = MobCategory.MONSTER)
+            weight = 2, minGroupSize = 1, maxGroupSize = 2)
         registerSpawnPlacement(PazEntities.SUN_SHROOM, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_COFFEE_BEAN, PazEntities.COFFEE_BEAN,
@@ -102,29 +102,29 @@ object PazSpawnPlacements {
 
         // region ZOMBIES
         addBiomeSpawn(PazTags.Biomes.HAS_BROWNCOAT, PazEntities.BROWN_COAT, category = MobCategory.MONSTER,
-            weight = 25, minGroupSize = 1, maxGroupSize = 4)
+            weight = 45, minGroupSize = 1, maxGroupSize = 4)
         registerSpawnPlacement(PazEntities.BROWN_COAT, PazZombie::checkZombieSpawnRules)
         addBiomeSpawn(PazTags.Biomes.HAS_NEWSPAPER_ZOMBIE, PazEntities.NEWSPAPER_ZOMBIE, category = MobCategory.MONSTER,
-            weight = 8, minGroupSize = 1, maxGroupSize = 1)
+            weight = 15, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.NEWSPAPER_ZOMBIE, PazZombie::checkZombieSpawnRules)
         addBiomeSpawn(PazTags.Biomes.HAS_ZOMBIE_YETI, PazEntities.ZOMBIE_YETI, category = MobCategory.MONSTER,
-            weight = 10, minGroupSize = 1, maxGroupSize = 1)
+            weight = 8, minGroupSize = 1, maxGroupSize = 1)
         addBiomeSpawn(PazTags.Biomes.HAS_ZOMBIE_YETI_ALT, PazEntities.ZOMBIE_YETI, category = MobCategory.MONSTER,
-            weight = 30, minGroupSize = 1, maxGroupSize = 2)
+            weight = 20, minGroupSize = 1, maxGroupSize = 2)
         registerSpawnPlacement(PazEntities.ZOMBIE_YETI, ZombieYeti::checkZombieYetiSpawnRules)
         addBiomeSpawn(PazTags.Biomes.HAS_DIGGER, PazEntities.DIGGER_ZOMBIE, category = MobCategory.MONSTER,
-            weight = 2, minGroupSize = 1, maxGroupSize = 1)
+            weight = 6, minGroupSize = 1, maxGroupSize = 1)
         addBiomeSpawn(PazTags.Biomes.HAS_DIGGER_ALT, PazEntities.DIGGER_ZOMBIE, category = MobCategory.MONSTER,
-            weight = 30, minGroupSize = 1, maxGroupSize = 2)
+            weight = 20, minGroupSize = 1, maxGroupSize = 2)
         registerSpawnPlacement(PazEntities.DIGGER_ZOMBIE, DiggerZombie::checkMinerSpawnRules)
         addBiomeSpawn(PazTags.Biomes.HAS_DISCO_ZOMBIE, PazEntities.DISCO_ZOMBIE, category = MobCategory.MONSTER,
-            weight = 4, minGroupSize = 1, maxGroupSize = 1)
+            weight = 8, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.DISCO_ZOMBIE, PazZombie::checkZombieSpawnRules)
         addBiomeSpawn(PazTags.Biomes.HAS_ALL_STAR, PazEntities.ALL_STAR, category = MobCategory.MONSTER,
-            weight = 6, minGroupSize = 1, maxGroupSize = 1)
+            weight = 10, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.ALL_STAR, PazZombie::checkZombieSpawnRules)
         addBiomeSpawn(PazTags.Biomes.HAS_IMP, PazEntities.IMP, category = MobCategory.MONSTER,
-            weight = 5, minGroupSize = 1, maxGroupSize = 1)
+            weight = 11, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.IMP, PazZombie::checkZombieSpawnRules)
         // endregion
     }

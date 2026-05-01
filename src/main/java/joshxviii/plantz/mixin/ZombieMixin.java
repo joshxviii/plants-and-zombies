@@ -57,7 +57,7 @@ public class ZombieMixin {
 
         boolean shouldAddEasyModeFlag = difficulty.getDifficulty()==Difficulty.EASY && level.getRandom().nextFloat()<0.02;
 
-        if(isLeader || shouldAddEasyModeFlag) {
+        if((isLeader || shouldAddEasyModeFlag) && !spawnReason.equals(EntitySpawnReason.REINFORCEMENT)) {
             var dropChance = spawnReason.equals(EntitySpawnReason.EVENT) ? 0.0F : 1.0F;
             if (entity instanceof Gargantuar) {}
             else if (entity instanceof ZombieYeti) {
