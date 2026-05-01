@@ -39,7 +39,7 @@ class KernelPult(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
                 if (hasButterShot) Butter(level(), this, spawnOffset = Vec2(-1f, 1f))
                 else Kernel(level(), this, spawnOffset = Vec2(-1f, 1f))
             },
-            velocity = 0.85,
+            velocity = 0.92,
             useHighArc = true,
             cooldownTime = 26,
             actionDelay = 12,

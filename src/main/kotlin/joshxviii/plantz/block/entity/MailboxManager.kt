@@ -34,7 +34,6 @@ object MailboxManager {
     }
 
     fun getMailboxesInLevel(level: Level): List<MailboxBlockEntity> {
-        PazMain.LOGGER.info("Getting mailboxes in level: ${level.dimension()}")
         val levelKey = level.dimension()
 
         return mailboxes[levelKey]?.mapNotNull { pos ->

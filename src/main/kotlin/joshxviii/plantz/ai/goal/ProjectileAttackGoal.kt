@@ -93,9 +93,9 @@ class ProjectileAttackGoal(
             target.z - projectile.z
         )
         val distanceRatio = (targetPosNow.horizontalDistance() / attackRadius).coerceIn(0.0, 1.0)
-        val finalVel = Mth.lerp(distanceRatio, velocity * 0.45, velocity)
+        val finalVel = if(useHighArc) Mth.lerp(distanceRatio, velocity * 0.45, velocity) else velocity
 
-        val targetPos = calculateMovingTargetPosition(target, projectile, finalVel)
+        val targetPos = if(useHighArc) calculateMovingTargetPosition(target, projectile, finalVel) else targetPosNow
         val arcs = calculateProjectileArcs(targetPos, projectile.gravity, finalVel)
         if (arcs==null) {// lose target if unreachable
             projectile.discard()

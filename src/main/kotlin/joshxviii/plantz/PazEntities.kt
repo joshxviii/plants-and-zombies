@@ -149,7 +149,7 @@ object PazEntities {
         attributes = Plant.Companion.PlantAttributes(
             attackDamage = 3.5,
             attackKnockback = 0.5,
-            followRange = 28.0,
+            followRange = 22.0,
         )
     )
     @JvmField val KERNEL_PULT: EntityType<KernelPult> = registerPlant(
@@ -161,7 +161,7 @@ object PazEntities {
         attributes = Plant.Companion.PlantAttributes(
             attackDamage = 2.5,
             attackKnockback = 0.5,
-            followRange = 30.0,
+            followRange = 26.0,
         )
     )
     @JvmField val MELON_PULT: EntityType<MelonPult> = registerPlant(
@@ -395,7 +395,7 @@ object PazEntities {
     @JvmField val NEEDLE: EntityType<Needle> = registerProjectile("needle", EntityType.Builder.of({_,l->Needle(l)}, MobCategory.MISC))
     @JvmField val SPORE: EntityType<Spore> = registerProjectile("spore", EntityType.Builder.of({_,l->Spore(l)}, MobCategory.MISC))
     @JvmField val CABBAGE: EntityType<Cabbage> = registerProjectile("cabbage", EntityType.Builder.of({_,l->Cabbage(l)}, MobCategory.MISC), width = 0.5f, height = 0.5f)
-    @JvmField val KERNEL: EntityType<Kernel> = registerProjectile("kernel", EntityType.Builder.of({_,l->Kernel(l)}, MobCategory.MISC))
+    @JvmField val KERNEL: EntityType<Kernel> = registerProjectile("kernel", EntityType.Builder.of({_,l->Kernel(l)}, MobCategory.MISC), width = 0.42f, height = 0.42f)
     @JvmField val BUTTER: EntityType<Butter> = registerProjectile("butter", EntityType.Builder.of({_,l->Butter(l)}, MobCategory.MISC), width = 0.75f, height = 0.5f)
     @JvmField val MELON: EntityType<Melon> = registerProjectile("melon", EntityType.Builder.of({_,l->Melon(l)}, MobCategory.MISC), width = 1.0f, height = 0.8f)
     // endregion

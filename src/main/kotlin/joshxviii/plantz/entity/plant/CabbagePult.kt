@@ -20,7 +20,7 @@ class CabbagePult(type: EntityType<out Plant>, level: Level) : Plant(PazEntities
             usingEntity = this,
             projectileFactory = { Cabbage(level(), this, spawnOffset = Vec2(-1f, 1f)) },
             useHighArc = true,
-            velocity = 0.75,
+            velocity = 0.85,
             cooldownTime = 30,
             actionDelay = 9))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, false, false) { target, level ->

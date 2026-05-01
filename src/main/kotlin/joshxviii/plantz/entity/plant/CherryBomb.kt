@@ -18,6 +18,20 @@ import net.minecraft.world.level.block.state.BlockState
 
 class CherryBomb(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CHERRY_BOMB, level) {
 
+    companion object {
+        fun checkCherryBombSpawnRules(
+            type: EntityType<out Plant>,
+            level: LevelAccessor,
+            spawnReason: EntitySpawnReason,
+            pos: BlockPos,
+            random: RandomSource
+        ): Boolean {
+            val blockBelow = level.getBlockState(pos.below())
+            return checkValidSpawn(level, pos)
+                    && (blockBelow.`is`(PLANTABLE) || !blockBelow.`is`(BlockTags.AIR))
+        }
+    }
+
     override fun registerGoals() {
         super.registerGoals()
         this.goalSelector.addGoal(1, ExplodeGoal(
