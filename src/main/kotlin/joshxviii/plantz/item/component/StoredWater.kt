@@ -3,6 +3,7 @@ package joshxviii.plantz.item.component
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import io.netty.buffer.ByteBuf
+import net.minecraft.ChatFormatting
 import net.minecraft.core.component.DataComponentGetter
 import net.minecraft.network.chat.Component
 import net.minecraft.network.codec.ByteBufCodecs
@@ -29,6 +30,7 @@ data class StoredWater(
         flag: TooltipFlag,
         components: DataComponentGetter
     ) {
+        consumer.accept(Component.translatable("component.stored_water.desc").withStyle(ChatFormatting.GRAY))
         //consumer.accept(Component.translatable("component.stored_water", storedWater, maxCapacity).withStyle(ChatFormatting.AQUA))
     }
 

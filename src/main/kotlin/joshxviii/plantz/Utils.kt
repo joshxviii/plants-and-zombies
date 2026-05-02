@@ -123,9 +123,8 @@ fun Player.removeSunFromStorageAndInventory(amount:Int = 1): Boolean {
 fun Player.getTotalSun(): Int {
     var count: Int = 0
     count += inventory.countItem(PazItems.SUN)
-    inventory.hasAnyMatching { itemStack ->
-        count += itemStack.get(PazComponents.STORED_SUN)?.storedSun ?: return@hasAnyMatching false
-        true
+    inventory.forEach { itemStack ->
+        count += itemStack.get(PazComponents.STORED_SUN)?.storedSun ?: 0
     }
     return count
 }
@@ -155,6 +154,8 @@ fun Entity.applyImpulse(xd: Double, yd: Double, zd: Double, pow: Float, uncertai
     this.needsSync = true
 }
 
+
+// AI/PATHFINDING
 fun <T : LivingEntity?> ServerEntityGetter.getFurthestEntities(
     entities: MutableList<out T>,
     targetConditions: TargetingConditions,
@@ -194,6 +195,7 @@ fun Path?.getEndPos(): BlockPos? = this?.endNode?.let { BlockPos(it.x, it.y, it.
 
 fun PathNavigation.moveToBlockPos(blockPos: BlockPos, speedModifier: Double) = this.moveTo(blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble(), speedModifier)
 
+// MODEL RENDERING
 fun List<String>.permutationsDescending(): List<String> = buildList {
     add(this@permutationsDescending.joinToString("_"))
     for (i in size - 1 downTo 1) {
@@ -208,80 +210,6 @@ fun LivingEntity.getMagicName(): String {
         else -> false
     }
     return if (hasMagicName) name.lowercase() else ""
-}
-
-
-fun Plant.processWateringItem(player: Player, item: ItemStack, hand: InteractionHand): Boolean {
-    val isWaterBottle = item.components.get(DataComponents.POTION_CONTENTS)?.`is`(Potions.WATER) == true
-    val isWaterBucket = item.`is`(Items.WATER_BUCKET)
-    val waterStorage = item.get(PazComponents.STORED_WATER)
-    val waterAmount = when (true) {
-        isWaterBottle -> {
-            player.setItemInHand(hand, ItemUtils.createFilledResult(item, player, ItemStack(Items.GLASS_BOTTLE)))
-            this.playSound(SoundEvents.BOTTLE_EMPTY)
-            1
-        }
-        isWaterBucket -> {
-            player.setItemInHand(hand, ItemStack(Items.BUCKET))
-            this.playSound(SoundEvents.BUCKET_EMPTY, 1.0f, 1.0f)
-            8
-        }
-        (waterStorage != null) -> {
-            if (waterStorage.hasWater()) {
-                this.playSound(PazSounds.WATERING_CAN)
-                item.set(PazComponents.STORED_WATER, waterStorage.removeWater(4))
-                4
-            }
-            else 0
-        }
-        else -> 0
-    }
-    this.receivedWater+=waterAmount
-    if (waterAmount>0) {
-        addParticlesAroundSelf()
-        return true
-    }
-    return false
-}
-
-/**
- * Process bonus interactions for certain seed packets when used on a plant.
- */
-fun Plant.processSeedPacketInteraction(player: Player, packet: ItemStack): PacketInteractionResult {
-    if (packet == null) return PacketInteractionResult.NO_INTERACTION
-    val type = packet.get(DataComponents.ENTITY_DATA)?.type()
-    val availableSun = player.getTotalSun()
-    val sunCost = packet.get(PazComponents.SUN_COST)?.sunCost?: 0
-    val cantAfford = sunCost > availableSun && !player.hasInfiniteMaterials()
-
-    val result = when (type) {
-        PazEntities.COFFEE_BEAN -> {
-            when {
-                isGrowingSeeds -> {
-                    player.sendOverlayMessage(Component.translatable("message.plantz.no_coffee_while_growing").withStyle(ChatFormatting.RED))
-                    PacketInteractionResult.FAIL
-                }
-                cantAfford -> PacketInteractionResult.CANT_AFFORD
-                isAsleep -> {
-                    applyCoffeeBuff()
-                    PacketInteractionResult.SUCCESS
-                }
-                else -> PacketInteractionResult.FAIL
-            }
-        }
-        else -> PacketInteractionResult.NO_INTERACTION
-    }
-    // show message
-    if (result == PacketInteractionResult.CANT_AFFORD) player.sendOverlayMessage(Component.translatable("message.plantz.not_enough_sun", availableSun, sunCost).withStyle(ChatFormatting.RED))
-    // remove used sun
-    if (result == PacketInteractionResult.SUCCESS && !player.hasInfiniteMaterials()) player.removeSunFromStorageAndInventory(sunCost)
-    return result
-}
-enum class PacketInteractionResult {
-    SUCCESS,
-    FAIL,
-    CANT_AFFORD,
-    NO_INTERACTION
 }
 
 fun resolveTextureLocation(base: String, suffixes: List<String>, rm: ResourceManager): Identifier? {

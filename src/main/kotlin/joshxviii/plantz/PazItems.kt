@@ -57,6 +57,7 @@ object PazItems {
         "sun_batterypack", ::SunBatteryItem,
         properties = Item.Properties()
             .stacksTo(1)
+            .rarity(Rarity.EPIC)
             .component(PazComponents.STORED_SUN, StoredSun())
     )
     @JvmField

@@ -499,7 +499,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     fun sunRequiredForSeeds(): Int {
         return Mth.floor(
             Mth.floor(PazEntities.getSunCostFromType(this.type)*2f).coerceAtLeast(4) *
-            if (receivedWater > 2) 0.5f else 1f// receive a bonus for larger water sources that reduces the sun needed by half.
+            if (receivedWater > 1) 0.5f else 1f// receive a bonus for larger water sources that reduces the sun needed by half.
         )
     }
     fun timeRequiredForSeeds() : Int {
@@ -589,42 +589,14 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }
 
             // sun iteration
-            if (itemStack.`is`(PazItems.SUN) ) {// heal
-                if (isTame && health < maxHealth) {
-                    itemStack.consume(1, player)
-                    sunHeal(1)
-                    addParticlesAroundSelf(level, ParticleTypes.HAPPY_VILLAGER)
-                    return InteractionResult.SUCCESS_SERVER
-                }
-                else if (!isTame) {// try to tame
-                    itemStack.consume(1, player)
-                    if (random.nextFloat() < (1f - (PazEntities.getSunCostFromType(this.type) / 14f))*0.5f) {
-                        tame(player)
-                        this.target = null
-                        level.broadcastEntityEvent(this, 7.toByte())
-                    } else level.broadcastEntityEvent(this, 6.toByte())
-                    return InteractionResult.SUCCESS_SERVER
-                }
-                else if (growNeeds == PlantGrowNeeds.SUN) {// grow seeds
-                    if (!verifyOwner(player)) return InteractionResult.FAIL
-                    itemStack.consume(1, player)
-                    playSound(// TODO make custom sound
-                        SoundEvents.BUBBLE_POP, 1.0f,
-                        receivedSun.toFloat()/sunRequiredForSeeds() + 0.9f
-                    )
-                    if (receivedSun++ >= sunRequiredForSeeds()) awardSeedPacket(player)
-                    return InteractionResult.SUCCESS_SERVER
-                }
-            }
+            if (processSunItem(player, itemStack, hand, growNeeds)) return InteractionResult.SUCCESS_SERVER
 
             // water interaction
-            if (growNeeds == PlantGrowNeeds.WATER) {
-                if (processWateringItem(player, itemStack, hand)) return InteractionResult.SUCCESS_SERVER
-            }
+            if (processWateringItem(player, itemStack, hand, growNeeds)) return InteractionResult.SUCCESS_SERVER
 
             // seed packet interaction
             if (itemStack.`is`(PazItems.SEED_PACKET)) {
-                if (processSeedPacketInteraction(player, itemStack) == PacketInteractionResult.SUCCESS){
+                if (processSeedPacketInteraction(player, itemStack) == PacketInteractionResult.SUCCESS) {
                     itemStack.consume(1, player)
                     return InteractionResult.SUCCESS_SERVER
                 }
@@ -754,12 +726,4 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             )
         }
     }
-
-}
-
-enum class PlantGrowNeeds {
-    SOIL,
-    SUN,
-    WATER,
-    TIME;
 }

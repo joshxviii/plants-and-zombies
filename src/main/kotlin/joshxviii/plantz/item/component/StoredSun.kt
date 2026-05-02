@@ -22,7 +22,7 @@ import java.util.function.Consumer
  */
 data class StoredSun(
     val storedSun: Int = 0,
-    val maxCapacity: Int = 512
+    val maxCapacity: Int = 320
 ) : TooltipProvider {
     override fun addToTooltip(
         context: Item.TooltipContext,
@@ -30,6 +30,7 @@ data class StoredSun(
         flag: TooltipFlag,
         components: DataComponentGetter
     ) {
+        consumer.accept(Component.translatable("component.stored_sun.desc").withStyle(ChatFormatting.GRAY))
         consumer.accept(Component.translatable("component.stored_sun", storedSun, maxCapacity).withStyle(ChatFormatting.YELLOW))
     }
 

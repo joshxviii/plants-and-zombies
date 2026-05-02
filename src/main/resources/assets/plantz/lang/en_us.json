@@ -55,7 +55,9 @@
   "effect.plantz.hypnotize": "Hypnotized",
   "effect.plantz.buttered": "Buttered",
 
+  "component.stored_sun.desc": "Stores and uses collected Sun",
   "component.stored_sun": "%s / %s",
+  "component.stored_water.desc": "Can be used to hydrate plants",
   "component.stored_water": "Water: %s / %s",
   "component.sun_cost": "Sun cost: %s",
   "component.blocks_damage.desc": "Blocks Projectiles:",
