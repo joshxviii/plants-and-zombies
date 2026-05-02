@@ -13,11 +13,13 @@ import joshxviii.plantz.PazEntities.NEWSPAPER_ZOMBIE
 import joshxviii.plantz.PazEntities.ZOMBIE_YETI
 import joshxviii.plantz.item.NewspaperItem
 import joshxviii.plantz.item.SeedPacketItem
+import joshxviii.plantz.item.SunBatteryItem
 import joshxviii.plantz.item.SunBottleItem
 import joshxviii.plantz.item.SunItem
 import joshxviii.plantz.item.WateringCanItem
 import joshxviii.plantz.item.component.BlocksProjectileDamage
 import joshxviii.plantz.item.component.SeedPacket
+import joshxviii.plantz.item.component.StoredSun
 import joshxviii.plantz.item.component.StoredWater
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
 import net.fabricmc.fabric.api.registry.FuelValueEvents
@@ -37,6 +39,7 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.BlockTags
+import net.minecraft.util.datafix.fixes.ItemStackComponentizationFix
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.EquipmentSlot
@@ -63,6 +66,13 @@ object PazItems {
     val SUN_BOTTLE: Item = registerItem(
         "sun_bottle", ::SunBottleItem,
         properties = Item.Properties().craftRemainder(GLASS_BOTTLE)
+    )
+    @JvmField
+    val SUN_BATTERYPACK: Item = registerItem(
+        "sun_batterypack", ::SunBatteryItem,
+        properties = Item.Properties()
+            .stacksTo(1)
+            .component(PazComponents.STORED_SUN, StoredSun())
     )
     @JvmField
     val WATERING_CAN: Item = registerItem(
@@ -180,6 +190,8 @@ object PazItems {
         }
 
         // Modify components
+        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_WATER)
+        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_SUN)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SEED_PACKET)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BLOCKS_PROJECTILE_DAMAGE)
 
