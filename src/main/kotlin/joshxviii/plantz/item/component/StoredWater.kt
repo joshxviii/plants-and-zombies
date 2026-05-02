@@ -14,6 +14,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.component.TooltipProvider
 import java.util.function.Consumer
+import kotlin.math.max
 
 /**
  * Represents a water storage component with adjustable capacity.
@@ -32,7 +33,7 @@ data class StoredWater(
         flag: TooltipFlag,
         components: DataComponentGetter
     ) {
-        consumer.accept(Component.translatable("component.stored_water", storedWater).withStyle(ChatFormatting.AQUA))
+        consumer.accept(Component.translatable("component.stored_water", storedWater, maxCapacity).withStyle(ChatFormatting.AQUA))
     }
 
     fun storagePercentage(): Float = (storedWater.toFloat() / maxCapacity)

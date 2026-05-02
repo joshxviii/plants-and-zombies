@@ -4,12 +4,10 @@ import joshxviii.plantz.PazMain.MODID
 import joshxviii.plantz.entity.plant.Chomper
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.item.component.SeedPacket
-import joshxviii.plantz.item.component.StoredWater
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
 import net.minecraft.core.component.DataComponents
-import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
@@ -18,7 +16,6 @@ import net.minecraft.server.level.ServerEntityGetter
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.sounds.SoundSource
 import net.minecraft.util.Mth
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.Entity
@@ -80,11 +77,59 @@ fun Entity.positionPlant(plant: Plant) {
     plant.yBodyRot = this.yHeadRot
 }
 
-fun Player.hasSpaceForItem(item: ItemStack): Boolean {
+fun Player.hasSpaceForSun(item: ItemStack): Boolean {
     val inv = this.inventory
     val hasFreeSlot = inv.freeSlot != -1
     val hasSlotWithSpace = inv.getSlotWithRemainingSpace(item) != -1
-    return hasFreeSlot || hasSlotWithSpace
+
+    val hasSunStorageItemWithSpace = inv.hasAnyMatching { it.get(PazComponents.STORED_SUN)?.hasRoomForSun(1) == true }
+
+    return ((hasFreeSlot || hasSlotWithSpace) && !this.hasInfiniteMaterials()) || hasSunStorageItemWithSpace
+}
+
+fun Player.tryAddSunToStorage(amount:Int = 1): Boolean {
+    return inventory.hasAnyMatching { itemStack ->
+        val storedSun = itemStack.get(PazComponents.STORED_SUN) ?: return@hasAnyMatching false
+        if (!storedSun.hasRoomForSun(amount))return@hasAnyMatching false
+
+        itemStack.set(PazComponents.STORED_SUN, storedSun.addSun(amount))
+        true
+    }
+}
+
+fun Player.removeSunFromStorageAndInventory(amount:Int = 1): Boolean {
+    var remainder = amount
+
+    val removedEnoughFromStorage = inventory.hasAnyMatching { itemStack ->
+        val storedSun = itemStack.get(PazComponents.STORED_SUN) ?: return@hasAnyMatching false
+        val sunToRemove = storedSun.storedSun.coerceAtMost(remainder)
+
+        itemStack.set(PazComponents.STORED_SUN, storedSun.removeSun(sunToRemove))
+        remainder -= sunToRemove
+
+        remainder <= 0
+    }
+
+    if (!removedEnoughFromStorage) {
+        val removedFromInventory = inventory.clearOrCountMatchingItems(
+            { it.`is`(PazItems.SUN) },
+            remainder,
+            inventoryMenu.getCraftSlots()
+        )
+        remainder -= removedFromInventory
+    }
+
+    return remainder <= 0
+}
+
+fun Player.getTotalSun(): Int {
+    var count: Int = 0
+    count += inventory.countItem(PazItems.SUN)
+    inventory.hasAnyMatching { itemStack ->
+        count += itemStack.get(PazComponents.STORED_SUN)?.storedSun ?: return@hasAnyMatching false
+        true
+    }
+    return count
 }
 
 fun Int.tickTimeFormat(): String = "%02d:%02d".format(

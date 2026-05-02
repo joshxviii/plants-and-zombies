@@ -25,11 +25,15 @@ data class StoredSun(
         flag: TooltipFlag,
         components: DataComponentGetter
     ) {
-        consumer.accept(Component.translatable("component.stored_sun", storedSun).withStyle(ChatFormatting.AQUA))
+        consumer.accept(Component.translatable("component.stored_sun", storedSun, maxCapacity).withStyle(ChatFormatting.YELLOW))
     }
 
     fun storagePercentage(): Float = (storedSun.toFloat() / maxCapacity)
     fun hasSun(sun: Int = 1): Boolean = storedSun >= sun
+    fun hasRoomForSun(sun: Int = 1): Boolean = storedSun + sun <= maxCapacity
+    fun isFull(): Boolean = storedSun == maxCapacity
+    fun addSun(sun: Int = 1): StoredSun = copy(storedSun = (storedSun + sun).coerceAtMost(maxCapacity))
+    fun removeSun(sun: Int = 1): StoredSun = copy(storedSun = (storedSun - sun).coerceAtLeast(0))
 
     companion object {
         val CODEC: Codec<StoredSun> = RecordCodecBuilder.create { inst ->

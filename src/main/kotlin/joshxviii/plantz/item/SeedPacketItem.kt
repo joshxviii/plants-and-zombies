@@ -4,7 +4,9 @@ import com.google.common.base.Predicate
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.getTotalSun
 import joshxviii.plantz.item.component.SeedPacket
+import joshxviii.plantz.removeSunFromStorageAndInventory
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Direction
 import net.minecraft.core.registries.BuiltInRegistries
@@ -60,7 +62,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             )
 
             // check that player has enough sun to plant
-            val availableSun = player?.inventory?.countItem(PazItems.SUN) ?: 0
+            val availableSun = player?.getTotalSun() ?: 0
             val sunCost = itemStack.get(PazComponents.SEED_PACKET)?.getSunCost() ?: 0
             if (sunCost > availableSun && player?.hasInfiniteMaterials() == false) {
                 player.sendOverlayMessage(
@@ -110,9 +112,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             if (entity != null) {
                 itemStack.consume(1, player)
                 if (player?.hasInfiniteMaterials() == false) {
-                    player.inventory.clearOrCountMatchingItems(Predicate<ItemStack> {
-                        it.`is`(PazItems.SUN)
-                    }, sunCost, player.inventoryMenu.getCraftSlots())
+                    player.removeSunFromStorageAndInventory(sunCost)
                     //player.cooldowns?.addCooldown(itemStack, 100)
                 }
                 entity.playSound(SoundEvents.BIG_DRIPLEAF_PLACE)

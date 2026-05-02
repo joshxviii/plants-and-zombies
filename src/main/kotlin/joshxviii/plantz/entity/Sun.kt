@@ -3,7 +3,8 @@ package joshxviii.plantz.entity
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.entity.plant.Plant
-import joshxviii.plantz.hasSpaceForItem
+import joshxviii.plantz.hasSpaceForSun
+import joshxviii.plantz.tryAddSunToStorage
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -245,7 +246,8 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
 
     fun tryToGiveSun(entity: Player): Boolean {
         val itemStack = PazItems.SUN.defaultInstance
-        return (!entity.isCreative && entity.inventory.add(itemStack)) || entity.isCreative
+        if (entity.tryAddSunToStorage()) return true
+        return (!entity.hasInfiniteMaterials() && entity.inventory.add(itemStack)) || entity.isCreative
     }
 
     fun getNearestEntity(range: Double = 3.5) : LivingEntity? {
@@ -255,7 +257,7 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
             LivingEntity::class.java,
             boundingBox.inflate(range),
             Predicate {
-                (it is Player && !(it.isSpectator || it.isCreative) && it.hasSpaceForItem(PazItems.SUN.defaultInstance)) ||
+                (it is Player && it.hasSpaceForSun(PazItems.SUN.defaultInstance)) ||
                 (it is Plant && it.health != it.maxHealth)
             }
         )
