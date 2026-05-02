@@ -18,6 +18,7 @@ import joshxviii.plantz.item.SunItem
 import joshxviii.plantz.item.WateringCanItem
 import joshxviii.plantz.item.component.BlocksProjectileDamage
 import joshxviii.plantz.item.component.SeedPacket
+import joshxviii.plantz.item.component.StoredWater
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
 import net.fabricmc.fabric.api.registry.FuelValueEvents
 import net.fabricmc.fabric.impl.item.ItemComponentTooltipProviderRegistryImpl
@@ -67,6 +68,8 @@ object PazItems {
     val WATERING_CAN: Item = registerItem(
         "watering_can", ::WateringCanItem,
         properties = Item.Properties()
+            .stacksTo(1)
+            .component(PazComponents.STORED_WATER, StoredWater())
     )
     @JvmField
     val NEWSPAPER: Item = registerItem(

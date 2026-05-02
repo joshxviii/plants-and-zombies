@@ -4,9 +4,12 @@ import joshxviii.plantz.PazMain.MODID
 import joshxviii.plantz.entity.plant.Chomper
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.item.component.SeedPacket
+import joshxviii.plantz.item.component.StoredWater
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
+import net.minecraft.core.component.DataComponents
+import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
@@ -14,7 +17,10 @@ import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerEntityGetter
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.resources.ResourceManager
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
 import net.minecraft.util.Mth
+import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.Entity.MoveFunction
 import net.minecraft.world.entity.EquipmentSlot
@@ -25,6 +31,9 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.ItemUtils
+import net.minecraft.world.item.Items
+import net.minecraft.world.item.alchemy.Potions
 import net.minecraft.world.level.pathfinder.Path
 import net.minecraft.world.phys.Vec3
 
@@ -158,6 +167,39 @@ fun LivingEntity.getMagicName(): String {
     return if (hasMagicName) name.lowercase() else ""
 }
 
+
+fun Plant.processWateringItem(player: Player, item: ItemStack, hand: InteractionHand): Boolean {
+    val isWaterBottle = item.components.get(DataComponents.POTION_CONTENTS)?.`is`(Potions.WATER) == true
+    val isWaterBucket = item.`is`(Items.WATER_BUCKET)
+    val waterStorage = item.get(PazComponents.STORED_WATER)
+    val waterAmount = when (true) {
+        isWaterBottle -> {
+            player.setItemInHand(hand, ItemUtils.createFilledResult(item, player, ItemStack(Items.GLASS_BOTTLE)))
+            this.playSound(SoundEvents.BOTTLE_EMPTY)
+            1
+        }
+        isWaterBucket -> {
+            player.setItemInHand(hand, ItemStack(Items.BUCKET))
+            this.playSound(SoundEvents.BUCKET_EMPTY, 1.0f, 1.0f)
+            8
+        }
+        (waterStorage != null) -> {
+            if (waterStorage.hasWater()) {
+                this.playSound(PazSounds.WATERING_CAN)
+                item.set(PazComponents.STORED_WATER, waterStorage.removeWater(4))
+                4
+            }
+            else 0
+        }
+        else -> 0
+    }
+    this.receivedWater+=waterAmount
+    if (waterAmount>0) {
+        addParticlesAroundSelf()
+        return true
+    }
+    return false
+}
 
 /**
  * Process bonus interactions for certain seed packets when used on a plant.

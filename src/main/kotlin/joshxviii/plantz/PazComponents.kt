@@ -2,6 +2,8 @@ package joshxviii.plantz
 
 import joshxviii.plantz.item.component.BlocksProjectileDamage
 import joshxviii.plantz.item.component.SeedPacket
+import joshxviii.plantz.item.component.StoredSun
+import joshxviii.plantz.item.component.StoredWater
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.registries.BuiltInRegistries
@@ -30,6 +32,26 @@ object PazComponents {
 //            .cacheEncoding()
 //    }
 
+
+    @JvmField
+    val STORED_WATER: DataComponentType<StoredWater> = register(
+        "stored_water"
+    ) { b: DataComponentType.Builder<StoredWater> ->
+        DataComponentType.builder<StoredWater>()
+            .persistent(StoredWater.CODEC)
+            .networkSynchronized(StoredWater.STREAM_CODEC)
+            .cacheEncoding()
+    }
+
+    @JvmField
+    val STORED_SUN: DataComponentType<StoredSun> = register(
+        "stored_sun"
+    ) { b: DataComponentType.Builder<StoredSun> ->
+        DataComponentType.builder<StoredSun>()
+            .persistent(StoredSun.CODEC)
+            .networkSynchronized(StoredSun.STREAM_CODEC)
+            .cacheEncoding()
+    }
 
     @JvmField
     val BLOCKS_PROJECTILE_DAMAGE: DataComponentType<BlocksProjectileDamage> = register(

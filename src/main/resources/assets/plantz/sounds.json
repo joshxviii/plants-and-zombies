@@ -2,9 +2,9 @@
 
   "item.watering_can": {
     "sounds": [
-      { "name": "entity/boat/paddle_water1", "volume": 1.0, "pitch": 2.0},
-      { "name": "entity/boat/paddle_water2", "volume": 1.0, "pitch": 2.0},
-      { "name": "entity/boat/paddle_water3", "volume": 1.0, "pitch": 2.0}
+      { "name": "item/bottle/empty1", "volume": 1.0, "pitch": 0.75},
+      { "name": "item/bottle/empty2", "volume": 1.0, "pitch": 0.75},
+      { "name": "item/bottle/empty3", "volume": 1.0, "pitch": 0.75}
     ], "subtitle": "plantz.subtitles.item.watering_can"
   },
 

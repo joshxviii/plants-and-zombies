@@ -365,9 +365,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
         if (!isRemoved) {
             val otherDimension = newLevel.dimension() != oldLevel.dimension()
-            if (otherDimension) {
-
-            }
         }
 
         return result
@@ -497,17 +494,29 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return success
     }
 
-    fun sunRequiredForSeeds(): Int = Mth.floor(PazEntities.getSunCostFromType(this.type)*2f).coerceAtLeast(4)
+    fun awardSeedPacket(player: Player) {
+        val level = level() as? ServerLevel ?: return
+        receivedSun = 0
+        receivedWater = 0
+        seedGrowCooldown = timeRequiredForSeeds()
+        val stack = SeedPacketItem.stackFor(this.type)
+        val itemEntity = ItemEntity(level, x, y + 0.5, z, stack)
+        level.addFreshEntity(itemEntity)
+        playSound(SoundEvents.ROOTED_DIRT_BREAK)
+        if (player is ServerPlayer) PazCriteria.GROW_SEEDS.trigger(player, 1)
+    }
 
+    fun sunRequiredForSeeds(): Int {
+        return Mth.floor(
+            Mth.floor(PazEntities.getSunCostFromType(this.type)*2f).coerceAtLeast(4) *
+            if (receivedWater > 1) 0.5f else 1f
+        )
+    }
     fun timeRequiredForSeeds() : Int {
         val sunCost = PazEntities.getSunCostFromType(this.type)
         val zenBotBonus = level().hasChunkAt(blockPosition()) && getBlockBelow().`is`(PazBlocks.ZEN_PLANT_POT)
         val time = SEED_TIME + (sunCost*SEED_TIME_SUN_MULTIPLIER) + random.nextInt(200)
         return if (zenBotBonus) (time*SEED_TIME_ZEN_MULTIPLIER).toInt() else time
-    }
-
-    open fun canSurviveOn(block: BlockState) : Boolean {
-        return block.`is`(PLANTABLE)
     }
 
     fun testGrowConditions(): PlantGrowNeeds {
@@ -536,6 +545,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     fun exposedToRain(): Boolean = level().isRainingAt(blockPosition().above())
     open fun sleepsDuringNight(): Boolean = false
     open fun sleepsDuringDay(): Boolean = false
+    open fun canSurviveOn(block: BlockState) : Boolean = block.`is`(PLANTABLE)
 
     fun getBlockBelow(): BlockState {
         val feetY = y - 0.001
@@ -569,6 +579,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun mobInteract(player: Player, hand: InteractionHand): InteractionResult {
         val itemStack = player.getItemInHand(hand)
         val level = level()
+        val growNeeds = testGrowConditions()
 
         if (level is ServerLevel) {
             // sun iteration
@@ -588,21 +599,14 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                     } else level.broadcastEntityEvent(this, 6.toByte())
                     return InteractionResult.SUCCESS_SERVER
                 }
-                else if (testGrowConditions() == PlantGrowNeeds.SUN) {// grow seeds
+                else if (growNeeds == PlantGrowNeeds.SUN) {// grow seeds
                     if (!verifyOwner(player)) return InteractionResult.FAIL
                     itemStack.consume(1, player)
-                    playSound(SoundEvents.BUBBLE_POP, 1.0f,// TODO make custom sound
+                    playSound(// TODO make custom sound
+                        SoundEvents.BUBBLE_POP, 1.0f,
                         receivedSun.toFloat()/sunRequiredForSeeds() + 0.9f
                     )
-                    if (receivedSun++ >= sunRequiredForSeeds()) {
-                        receivedSun = 0
-                        seedGrowCooldown = timeRequiredForSeeds()
-                        val stack = SeedPacketItem.stackFor(this.type)
-                        val itemEntity = ItemEntity(level, x, y + 0.5, z, stack)
-                        level.addFreshEntity(itemEntity)
-                        playSound(SoundEvents.ROOTED_DIRT_BREAK)
-                        if (player is ServerPlayer) PazCriteria.GROW_SEEDS.trigger(player, 1)
-                    }
+                    if (receivedSun++ >= sunRequiredForSeeds()) awardSeedPacket(player)
                     return InteractionResult.SUCCESS_SERVER
                 }
             }
@@ -621,6 +625,11 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 }
                 if (player is ServerPlayer) PazCriteria.RELOCATION.trigger(player, success)
                 return InteractionResult.SUCCESS_SERVER
+            }
+
+            // water interaction
+            if (growNeeds == PlantGrowNeeds.WATER) {
+                if (processWateringItem(player, itemStack, hand)) return InteractionResult.SUCCESS_SERVER
             }
 
             //coffee bean interaction
