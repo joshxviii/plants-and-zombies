@@ -1,5 +1,6 @@
 package joshxviii.plantz.entity.zombie
 
+import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
@@ -14,6 +15,7 @@ import net.minecraft.world.Difficulty
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
+import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
@@ -74,6 +76,19 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : PazZombie(typ
     }
     override fun getStepSound(): SoundEvent {
         return SoundEvents.ZOMBIE_STEP
+    }
+
+    override fun doPush(entity: Entity) {
+        super.doPush(entity)
+        if (isPathFinding && this.target!=null) {
+            if (entity is LivingEntity && entity !is Zombie) {
+                val level = level() as? ServerLevel?: return
+                entity.hurtServer(level, this.damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 2.5f)
+                entity.knockback(
+                    0.2, position().x - entity.position().x, position().z - entity.position().z
+                )
+            }
+        }
     }
 
     override fun isBaby(): Boolean = false

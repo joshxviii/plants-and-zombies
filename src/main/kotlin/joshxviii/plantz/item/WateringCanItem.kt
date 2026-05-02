@@ -15,13 +15,15 @@ import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.item.*
-import net.minecraft.world.item.alchemy.PotionContents
-import net.minecraft.world.item.alchemy.Potions
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.ItemUseAnimation
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.HitResult
 
@@ -60,12 +62,33 @@ class WateringCanItem(properties: Properties) : Item(properties) {
         val blockState = level.getBlockState(pos)
         val storedWaterComponent = itemStack.get(PazComponents.STORED_WATER)
 
+        //
         if (storedWaterComponent?.let { it.storedWater <= 0 } == true) return InteractionResult.PASS
         if (context.clickedFace != Direction.DOWN ) {
-            if (blockState.`is`(BlockTags.CONVERTABLE_TO_MUD)) {
+            var success: Boolean = false
+            if (blockState.`is`(BlockTags.CONVERTABLE_TO_MUD)) {// mud conversion
                 level.playSound(null, pos, SoundEvents.GENERIC_SPLASH, SoundSource.BLOCKS, 1.0f, 1.0f)
                 level.gameEvent(null, GameEvent.FLUID_PLACE, pos)
                 level.setBlockAndUpdate(pos, Blocks.MUD.defaultBlockState())
+                success = true
+            }
+            if (blockState.hasProperty(BlockStateProperties.MOISTURE)) {// farmland
+                level.setBlockAndUpdate(pos, blockState.setValue(BlockStateProperties.MOISTURE, 7))
+                success = true
+            }
+            if (blockState.`is`(Blocks.CAULDRON)) {
+                val newState: BlockState = Blocks.WATER_CAULDRON.defaultBlockState()
+                level.setBlockAndUpdate(pos, newState)
+                success = true
+            }
+            if (blockState.`is`(Blocks.WATER_CAULDRON) && blockState.hasProperty(BlockStateProperties.LEVEL_CAULDRON)) {
+                val waterLevel = blockState.getValue(BlockStateProperties.LEVEL_CAULDRON)
+                if (waterLevel<3) {
+                    level.setBlockAndUpdate(pos, blockState.setValue(BlockStateProperties.LEVEL_CAULDRON, waterLevel+1))
+                    success = true
+                }
+            }
+            if (success) {
                 itemStack.set(PazComponents.STORED_WATER, storedWaterComponent?.removeWater(2))
                 if (!level.isClientSide) {
                     val serverLevel = level as ServerLevel
