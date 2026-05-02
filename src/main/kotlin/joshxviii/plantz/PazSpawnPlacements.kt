@@ -1,6 +1,5 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.entity.gnome.Gnome
 import joshxviii.plantz.entity.plant.Cactus
 import joshxviii.plantz.entity.plant.CoffeeBean
 import joshxviii.plantz.entity.plant.IcePeaShooter
@@ -14,7 +13,6 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext
 import net.minecraft.tags.TagKey
 import net.minecraft.world.entity.*
 import net.minecraft.world.level.biome.Biome
-import net.minecraft.world.level.biome.Biomes
 import net.minecraft.world.level.levelgen.Heightmap
 
 object PazSpawnPlacements {

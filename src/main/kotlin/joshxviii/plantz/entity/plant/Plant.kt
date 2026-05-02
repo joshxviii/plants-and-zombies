@@ -1,6 +1,5 @@
 package joshxviii.plantz.entity.plant
 
-import com.google.common.base.Predicate
 import joshxviii.plantz.*
 import joshxviii.plantz.PazDataSerializers.DATA_COFFEE_BUFF
 import joshxviii.plantz.PazDataSerializers.DATA_COOLDOWN
@@ -15,18 +14,12 @@ import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.ai.goal.SleepGoal
 import joshxviii.plantz.entity.Sun
 import joshxviii.plantz.item.SeedPacketItem
-import joshxviii.plantz.item.component.SeedPacket
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents
-import net.fabricmc.fabric.api.event.player.BlockEvents
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Direction
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleOptions
-import net.minecraft.core.particles.ParticleType
 import net.minecraft.core.particles.ParticleTypes
-import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -37,8 +30,6 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.sounds.SoundEvents.FOX_SLEEP
-import net.minecraft.sounds.SoundSource
 import net.minecraft.tags.ItemTags
 import net.minecraft.util.Mth
 import net.minecraft.util.ProblemReporter.ScopedCollector
@@ -64,16 +55,11 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.level.BlockEventData
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.LightLayer
 import net.minecraft.world.level.ServerLevelAccessor
-import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.block.LevelEvent
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.portal.TeleportTransition
 import net.minecraft.world.level.storage.TagValueOutput
 import net.minecraft.world.level.storage.ValueInput
@@ -266,6 +252,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
+        output.putInt("plantz:ReceivedSun", receivedSun)
+        output.putInt("plantz:ReceivedWater", receivedWater)
         output.putInt("plantz:SeedGrowTime", seedGrowCooldown)
         output.putInt("plantz:CoffeeBuff", coffeeBuff)
         attachedPlayerReference.let { EntityReference.store(it, output, "plantz:AttachedPlayer") }
@@ -273,6 +261,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
+        receivedSun = input.getInt("plantz:ReceivedSun").getOrElse { 0 }
+        receivedWater = input.getInt("plantz:ReceivedWater").getOrElse { 0 }
         seedGrowCooldown = input.getInt("plantz:SeedGrowTime").getOrElse { timeRequiredForSeeds() }
         coffeeBuff = input.getInt("plantz:CoffeeBuff").getOrElse { 0 }
         attachedPlayerReference = Optional.ofNullable((EntityReference.read<LivingEntity>(input, "plantz:AttachedPlayer"))).getOrNull()
@@ -582,6 +572,22 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val growNeeds = testGrowConditions()
 
         if (level is ServerLevel) {
+            // shovel interaction
+            if (itemStack.`is`(ItemTags.SHOVELS)) {
+                if (!verifyOwner(player)) return InteractionResult.FAIL
+                val success = dropAsSeedPacketItem(force = !player.isCreative)
+                if (success) {
+                    // apply tool damage base on how damaged the plant was
+                    itemStack.hurtAndBreak(4, player, hand.asEquipmentSlot())
+                    playSound(SoundEvents.ROOTED_DIRT_BREAK)
+                    level.sendParticles(BlockParticleOption(
+                        ParticleTypes.BLOCK, getBlockBelow()),
+                        x, y+0.05, z, 16, 0.25,0.0,0.25, 0.4)
+                }
+                if (player is ServerPlayer) PazCriteria.RELOCATION.trigger(player, success)
+                return InteractionResult.SUCCESS_SERVER
+            }
+
             // sun iteration
             if (itemStack.`is`(PazItems.SUN) ) {// heal
                 if (isTame && health < maxHealth) {
@@ -611,30 +617,14 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 }
             }
 
-            // shovel interaction
-            if (itemStack.`is`(ItemTags.SHOVELS)) {
-                if (!verifyOwner(player)) return InteractionResult.FAIL
-                val success = dropAsSeedPacketItem(force = !player.isCreative)
-                if (success) {
-                    // apply tool damage base on how damaged the plant was
-                    itemStack.hurtAndBreak(4, player, hand.asEquipmentSlot())
-                    playSound(SoundEvents.ROOTED_DIRT_BREAK)
-                    level.sendParticles(BlockParticleOption(
-                        ParticleTypes.BLOCK, getBlockBelow()),
-                        x, y+0.05, z, 16, 0.25,0.0,0.25, 0.4)
-                }
-                if (player is ServerPlayer) PazCriteria.RELOCATION.trigger(player, success)
-                return InteractionResult.SUCCESS_SERVER
-            }
-
             // water interaction
             if (growNeeds == PlantGrowNeeds.WATER) {
                 if (processWateringItem(player, itemStack, hand)) return InteractionResult.SUCCESS_SERVER
             }
 
-            //coffee bean interaction
-            if (itemStack.components.has(PazComponents.SEED_PACKET)) {
-                if (processSeedPacketInteraction(player, itemStack.get(PazComponents.SEED_PACKET)) == PacketInteractionResult.SUCCESS){
+            // seed packet interaction
+            if (itemStack.`is`(PazItems.SEED_PACKET)) {
+                if (processSeedPacketInteraction(player, itemStack) == PacketInteractionResult.SUCCESS){
                     itemStack.consume(1, player)
                     return InteractionResult.SUCCESS_SERVER
                 }

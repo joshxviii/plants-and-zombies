@@ -3,21 +3,17 @@ package joshxviii.plantz.item.component
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import io.netty.buffer.ByteBuf
-import net.minecraft.ChatFormatting
 import net.minecraft.core.component.DataComponentGetter
-import net.minecraft.core.component.DataComponentType
 import net.minecraft.network.chat.Component
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
-import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.component.TooltipProvider
 import java.util.function.Consumer
-import kotlin.math.max
 
 /**
- * Represents a water storage component with adjustable capacity.
+ * Water storage component with adjustable capacity.
  * Used for the watering can.
  *
  * @property storedWater Current amount of water stored.
@@ -33,7 +29,7 @@ data class StoredWater(
         flag: TooltipFlag,
         components: DataComponentGetter
     ) {
-        consumer.accept(Component.translatable("component.stored_water", storedWater, maxCapacity).withStyle(ChatFormatting.AQUA))
+        //consumer.accept(Component.translatable("component.stored_water", storedWater, maxCapacity).withStyle(ChatFormatting.AQUA))
     }
 
     fun storagePercentage(): Float = (storedWater.toFloat() / maxCapacity)

@@ -3,10 +3,8 @@ package joshxviii.plantz.item.component
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import io.netty.buffer.ByteBuf
-import joshxviii.plantz.entity.Sun
 import net.minecraft.ChatFormatting
 import net.minecraft.core.component.DataComponentGetter
-import net.minecraft.core.component.DataComponentType
 import net.minecraft.network.chat.Component
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
@@ -15,6 +13,13 @@ import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.component.TooltipProvider
 import java.util.function.Consumer
 
+/**
+ * Sun storage component with adjustable capacity.
+ * Used for Sun Battery.
+ *
+ * @property storedSun Current amount of sun stored.
+ * @property maxCapacity
+ */
 data class StoredSun(
     val storedSun: Int = 0,
     val maxCapacity: Int = 512

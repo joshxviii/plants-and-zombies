@@ -1,6 +1,5 @@
 package joshxviii.plantz.entity.zombie
 
-import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazSounds

@@ -3,7 +3,6 @@ package joshxviii.plantz.item.component
 import com.mojang.serialization.Codec
 import net.minecraft.ChatFormatting
 import net.minecraft.core.component.DataComponentGetter
-import net.minecraft.core.component.DataComponentType
 import net.minecraft.network.chat.Component
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.world.item.Item
@@ -24,7 +23,6 @@ data class SunCost(
     }
 
     companion object {
-        lateinit var TYPE: DataComponentType<SunCost>
 
         val CODEC = Codec.INT.xmap(
             { SunCost(it) },

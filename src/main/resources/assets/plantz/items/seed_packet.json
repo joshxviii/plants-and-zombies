@@ -2,7 +2,7 @@
   "model": {
     "type": "minecraft:select",
     "property": "minecraft:component",
-    "component": "plantz:seed_packet",
+    "component": "minecraft:entity_data",
     "cases": [
       {
         "when": { "id": "plantz:sunflower" },

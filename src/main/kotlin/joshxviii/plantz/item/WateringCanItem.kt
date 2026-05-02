@@ -44,6 +44,7 @@ class WateringCanItem(properties: Properties) : Item(properties) {
                 if (level.getFluidState(pos).`is`(FluidTags.WATER)) {
                     itemStack.set(PazComponents.STORED_WATER, storedWaterComponent?.addWater())
                     level.gameEvent(player, GameEvent.FLUID_PICKUP, pos)
+                    level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0f, 0.9f)
                     return InteractionResult.SUCCESS
                 }
             }

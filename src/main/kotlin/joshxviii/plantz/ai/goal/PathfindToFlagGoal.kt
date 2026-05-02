@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.goal.Goal
-import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.pathfinder.Path
 import java.util.*
 import kotlin.math.max

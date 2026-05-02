@@ -3,7 +3,6 @@ package joshxviii.plantz.entity.zombie
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
-import joshxviii.plantz.PazTags
 import joshxviii.plantz.pazResource
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
@@ -17,7 +16,6 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.RandomSource
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes

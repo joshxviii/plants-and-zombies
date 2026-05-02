@@ -3,7 +3,6 @@ package joshxviii.plantz.ai.goal
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.core.particles.ParticleOptions
-import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.Mth

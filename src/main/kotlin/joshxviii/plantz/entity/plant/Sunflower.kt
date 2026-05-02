@@ -2,7 +2,6 @@ package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.ai.goal.GenerateSunGoal
-import joshxviii.plantz.ai.goal.SleepGoal
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.level.Level
 
