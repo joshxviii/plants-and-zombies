@@ -55,6 +55,8 @@
   "effect.plantz.hypnotize": "Гипноз",
   "effect.plantz.buttered": "Намасленный",
 
+  "component.stored_sun": "%s / %s",
+  "component.stored_water": "Вода: %s / %s",
   "component.sun_cost": "Стоимость в солнцах: %s",
   "component.blocks_damage.desc": "Блокирует снаряды:",
   "component.blocks_damage": "Шанс поломки: %s%%",
