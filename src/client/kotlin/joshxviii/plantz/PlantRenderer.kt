@@ -85,6 +85,7 @@ class PlantRenderer(
         state.coolDownAnimationState.copyFrom(entity.coolDownAnimationState)
         state.specialAnimation.copyFrom(entity.specialAnimation)
         state.sleepAnimationState.copyFrom(entity.sleepAnimationState)
+        state.bounceAnimationState.copyFrom(entity.bounceAnimation)
         state.texturePathExtra =
             when (entity) {
                 is WallNut -> when {
@@ -127,4 +128,5 @@ class PlantRenderState : LivingEntityRenderState() {
     val coolDownAnimationState: AnimationState = AnimationState()
     val specialAnimation: AnimationState = AnimationState()
     val sleepAnimationState: AnimationState = AnimationState()
+    val bounceAnimationState: AnimationState = AnimationState()
 }

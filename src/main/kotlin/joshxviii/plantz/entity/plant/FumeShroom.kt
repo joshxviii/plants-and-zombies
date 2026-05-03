@@ -11,9 +11,13 @@ import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.entity.monster.Enemy
+import net.minecraft.world.entity.monster.zombie.Zombie
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 
 class FumeShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEntities.FUME_SHROOM, level) {
@@ -45,9 +49,10 @@ class FumeShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEnt
             afterHitEntityEffect = {
                 it.addEffect(MobEffectInstance(PazEffects.TOXIC, 100, 0))
         }))
-        this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->
+        this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, LivingEntity::class.java, 5, true, false) { target, level ->
             target !is Plant
-                && target is Enemy
+                    && target is Zombie
+                    || (target is Enemy && isTame)
         })
     }
 

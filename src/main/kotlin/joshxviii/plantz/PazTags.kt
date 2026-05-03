@@ -52,6 +52,7 @@ object PazTags {
         val HAS_FIRE_PEASHOOTER = tag("plant/has_fire_peashooter")
         val HAS_FUMESHROOM = tag("plant/has_fumeshroom")
         val HAS_HYPNOSHROOM = tag("plant/has_hypnoshroom")
+        val HAS_DOOM_SHROOM = tag("plant/has_doomshroom")
         val HAS_ICE_PEASHOOTER = tag("plant/has_ice_peashooter")
         val HAS_CABBAGEPULT = tag("plant/has_cabbagepult")
         val HAS_KERNELPULT = tag("plant/has_kernelpult")

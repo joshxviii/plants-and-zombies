@@ -11,7 +11,7 @@ import net.minecraft.client.model.geom.builders.*;
 import org.jetbrains.annotations.NotNull;
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class PeaShooterModel extends EntityModel<@NotNull PlantRenderState> {
+public class PeaShooterModel extends PlantModel {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("peashooter"), "main");
 	private final ModelPart body;
 	private final ModelPart stem;
@@ -29,10 +29,6 @@ public class PeaShooterModel extends EntityModel<@NotNull PlantRenderState> {
 	private final ModelPart leaf_tip_3;
 	private final ModelPart leaf_4;
 	private final ModelPart leaf_tip_4;
-	private final KeyframeAnimation idleAnimation;
-	private final KeyframeAnimation actionAnimation;
-	private final KeyframeAnimation initAnimation;
-	private final KeyframeAnimation sleepAnimation;
 
 	public PeaShooterModel(ModelPart root) {
 		super(root);
@@ -108,9 +104,5 @@ public class PeaShooterModel extends EntityModel<@NotNull PlantRenderState> {
 		super.setupAnim(state);
 		this.stem.yRot = state.yRot * (float) (Math.PI / 180.0);
 		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
-		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
-		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
-		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
-		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

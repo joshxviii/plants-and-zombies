@@ -13,7 +13,7 @@ import net.minecraft.client.model.geom.builders.*;
 import org.jetbrains.annotations.NotNull;
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class CactusModel extends EntityModel<@NotNull PlantRenderState>{
+public class CactusModel extends PlantModel{
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("cactus"), "main");
 	private final ModelPart body;
 	private final ModelPart trunk;
@@ -25,10 +25,6 @@ public class CactusModel extends EntityModel<@NotNull PlantRenderState>{
 	private final ModelPart arms;
 	private final ModelPart arm_R;
 	private final ModelPart arm_L;
-	private final KeyframeAnimation idleAnimation;
-	private final KeyframeAnimation actionAnimation;
-	private final KeyframeAnimation initAnimation;
-	private final KeyframeAnimation sleepAnimation;
 
 	public CactusModel(ModelPart root) {
 		super(root);
@@ -103,9 +99,5 @@ public class CactusModel extends EntityModel<@NotNull PlantRenderState>{
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
 		this.head.yRot = state.yRot * (float) (Math.PI / 180.0);
-		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
-		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
-		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
-		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

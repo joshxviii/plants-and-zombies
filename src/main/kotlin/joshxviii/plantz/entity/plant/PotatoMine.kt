@@ -5,7 +5,9 @@ import joshxviii.plantz.ai.goal.ExplodeGoal
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.entity.monster.Enemy
+import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 
@@ -18,9 +20,10 @@ class PotatoMine(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
             detectRange = 2.0,
             actionPredicate = { cooldown < 0 && target.let { it!=null && it.distanceTo(this) <= 0.75} },
         ))
-        this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->
+        this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, LivingEntity::class.java, 5, true, false) { target, level ->
             target !is Plant
-                && target is Enemy
+                    && target is Zombie
+                    || (target is Enemy && isTame)
         })
     }
 

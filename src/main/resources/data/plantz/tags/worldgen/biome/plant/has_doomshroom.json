@@ -1,0 +1,10 @@
+{
+  "values": [
+    "minecraft:basalt_deltas",
+    "minecraft:mushroom_fields",
+    {
+      "id": "#c:is_mushroom",
+      "required": false
+    }
+  ]
+}

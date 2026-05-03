@@ -11,7 +11,7 @@ import net.minecraft.client.model.geom.builders.*;
 import org.jetbrains.annotations.NotNull;
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class PotatoMineModel extends EntityModel<@NotNull PlantRenderState> {
+public class PotatoMineModel extends PlantModel {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("potatomine"), "main");
 	private final ModelPart body;
 	private final ModelPart tiny_dirt;
@@ -19,10 +19,6 @@ public class PotatoMineModel extends EntityModel<@NotNull PlantRenderState> {
 	private final ModelPart head;
 	private final ModelPart potato;
 	private final ModelPart blinker;
-	private final KeyframeAnimation idleAnimation;
-	private final KeyframeAnimation cooldownAnimation;
-	private final KeyframeAnimation initAnimation;
-	private final KeyframeAnimation sleepAnimation;
 
 	public PotatoMineModel(ModelPart root) {
 		super(root);
@@ -63,10 +59,6 @@ public class PotatoMineModel extends EntityModel<@NotNull PlantRenderState> {
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
-		int i = state.getCooldown();
-		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
 		this.cooldownAnimation.apply(state.getCoolDownAnimationState(), state.ageInTicks);
-		if (i<0) this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
-		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

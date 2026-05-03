@@ -66,6 +66,8 @@
 
   "item.plantz.sun": "Sun",
   "item.plantz.sun_bottle": "Bottle of Sun",
+  "item.plantz.sun_battery": "Solar Battery",
+  "item.plantz.watering_can": "Watering Can",
   "item.plantz.cone": "Cone",
   "item.plantz.football_helmet": "Football Helmet",
   "item.plantz.newspaper": "Newspaper",
@@ -154,6 +156,7 @@
   "entity.plantz.fumeshroom": "Fume Shroom",
   "entity.plantz.scaredyshroom": "Scaredy Shroom",
   "entity.plantz.hypnoshroom": "Hypno Shroom",
+  "entity.plantz.doomshroom": "Doom Shroom",
   "entity.plantz.coffeebean": "Coffee Bean",
 
   "entity.plantz.browncoat": "Browncoat",

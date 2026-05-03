@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class CabbagePultModel extends EntityModel<@NotNull PlantRenderState> {
+public class CabbagePultModel extends PlantModel {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("cabbagepult"), "main");
 	private final ModelPart body;
 	private final ModelPart head;
@@ -29,10 +29,6 @@ public class CabbagePultModel extends EntityModel<@NotNull PlantRenderState> {
 	private final ModelPart leaf_2;
 	private final ModelPart leaf_3;
 	private final ModelPart leaf_4;
-	private final KeyframeAnimation idleAnimation;
-	private final KeyframeAnimation actionAnimation;
-	private final KeyframeAnimation initAnimation;
-	private final KeyframeAnimation sleepAnimation;
 
 	public CabbagePultModel(ModelPart root) {
 		super(root);
@@ -108,9 +104,5 @@ public class CabbagePultModel extends EntityModel<@NotNull PlantRenderState> {
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
 		this.head.yRot = state.yRot * (float) (Math.PI / 180.0);
-		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
-		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
-		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
-		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

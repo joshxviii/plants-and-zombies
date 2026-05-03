@@ -15,15 +15,11 @@ import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class SunShroomModel extends EntityModel<@NotNull PlantRenderState> {
+public class SunShroomModel extends PlantModel {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("sunshroom"),"main");
 	private final ModelPart body;
 	private final ModelPart head;
 	private final ModelPart cap;
-	private final KeyframeAnimation idleAnimation;
-	private final KeyframeAnimation initAnimation;
-	private final KeyframeAnimation actionAnimation;
-	private final KeyframeAnimation sleepAnimation;
 
 	public SunShroomModel(ModelPart root) {
 		super(root);
@@ -53,9 +49,5 @@ public class SunShroomModel extends EntityModel<@NotNull PlantRenderState> {
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
 		this.body.yRot = state.yRot * (float) (Math.PI / 180.0);
-		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
-		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
-		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
-		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

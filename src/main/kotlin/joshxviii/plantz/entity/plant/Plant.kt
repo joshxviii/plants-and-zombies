@@ -139,6 +139,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
     }
 
+    var bounceMarker = false
     open fun getMaxSwell() : Int = 30
     var oldSwell = 0; var swell = 0
     fun getSwelling(a: Float): Float = Mth.lerp(a, oldSwell.toFloat(), swell.toFloat()) / (getMaxSwell() - 2).toFloat()
@@ -176,10 +177,14 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     var receivedSun: Int
         get() = this.entityData.get(RECEIVED_SUN)
-        set(value) = this.entityData.set(RECEIVED_SUN, value.coerceAtLeast(0))
+        set(value) {
+            this.entityData.set(RECEIVED_SUN, value.coerceAtLeast(0))
+        }
     var receivedWater: Int
         get() = this.entityData.get(RECEIVED_WATER)
-        set(value) = this.entityData.set(RECEIVED_WATER, value.coerceAtLeast(0))
+        set(value) {
+            this.entityData.set(RECEIVED_WATER, value.coerceAtLeast(0))
+        }
     var seedGrowCooldown: Int
         get() = this.entityData.get(SEED_GROW_COOLDOWN)
         set(value) = this.entityData.set(SEED_GROW_COOLDOWN, value.coerceAtLeast(0))
@@ -217,6 +222,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     val coolDownAnimationState = AnimationState()
     val sleepAnimationState = AnimationState()
     val specialAnimation = AnimationState()
+    val bounceAnimation = AnimationState()
 
     init {
         cooldown = -1
@@ -465,6 +471,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             PlantState.GROW -> {
                 initAnimationState.startIfStopped(tickCount)
                 if (tickCount >= 19) {
+                    initAnimationState.stop()
                     idleAnimationStartTick = 0
                     state = if (cooldown >= 0) PlantState.COOLDOWN else PlantState.IDLE
                 }
@@ -570,7 +577,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val itemStack = player.getItemInHand(hand)
         val level = level()
         val growNeeds = testGrowConditions()
-
+        bounceAnimation.stop()
+        bounceAnimation.startIfStopped(tickCount)
         if (level is ServerLevel) {
             // shovel interaction
             if (itemStack.`is`(ItemTags.SHOVELS)) {

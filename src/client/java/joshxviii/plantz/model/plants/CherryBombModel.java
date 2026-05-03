@@ -11,7 +11,7 @@ import net.minecraft.client.model.geom.builders.*;
 import org.jetbrains.annotations.NotNull;
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class CherryBombModel extends EntityModel<@NotNull PlantRenderState> {
+public class CherryBombModel extends PlantModel {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("cherrybomb"), "main");
 	private final ModelPart body;
 	private final ModelPart stem;
@@ -23,9 +23,6 @@ public class CherryBombModel extends EntityModel<@NotNull PlantRenderState> {
 	private final ModelPart leaf2_tip_2;
 	private final ModelPart head_1;
 	private final ModelPart head_2;
-	private final KeyframeAnimation idleAnimation;
-	private final KeyframeAnimation initAnimation;
-	private final KeyframeAnimation sleepAnimation;
 
 	public CherryBombModel(ModelPart root) {
 		super(root);
@@ -74,8 +71,5 @@ public class CherryBombModel extends EntityModel<@NotNull PlantRenderState> {
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
-		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
-		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
-		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

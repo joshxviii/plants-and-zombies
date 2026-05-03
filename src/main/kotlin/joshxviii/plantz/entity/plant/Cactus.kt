@@ -10,9 +10,12 @@ import net.minecraft.tags.BlockTags
 import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.entity.monster.Enemy
+import net.minecraft.world.entity.monster.zombie.Zombie
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.block.Blocks
@@ -43,10 +46,11 @@ class Cactus(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CACT
             velocity = 1.5,
             cooldownTime = 40,
             actionDelay = 6))
-        this.targetSelector.addGoal(4, FurthestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->
+        this.targetSelector.addGoal(4, FurthestAttackableTargetGoal(this, LivingEntity::class.java, 5, true, false) { target, level ->
             target !is Plant
-                && target !is Creeper
-                && target is Enemy
+                    && target !is Creeper
+                    && target is Zombie
+                    || (target is Enemy && isTame)
         })
     }
 

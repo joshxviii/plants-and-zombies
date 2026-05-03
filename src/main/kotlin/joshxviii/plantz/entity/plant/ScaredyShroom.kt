@@ -1,11 +1,13 @@
 package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.PazSounds
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.entity.projectile.Spore
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
@@ -16,6 +18,7 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.zombie.Zombie
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.AABB
 
@@ -56,11 +59,15 @@ class ScaredyShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(Paz
             actionPredicate = {
                 !isHiding
             }))
-        this.goalSelector.addGoal(3, HideGoal(this, Zombie::class.java))
-        this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, _ ->
+        this.goalSelector.addGoal(3, HideGoal(this, LivingEntity::class.java) { target, _ ->
+            (!isTame && target is Player)
+                || target is Enemy
+        })
+        this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, LivingEntity::class.java, 5, true, false) { target, _ ->
             target !is Plant
-                && target is Enemy
-                && target !is Creeper
+                    && target !is Creeper
+                    && target is Zombie
+                    || (target is Enemy && isTame)
         })
     }
 
@@ -69,17 +76,19 @@ class ScaredyShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(Paz
         val shroom: ScaredyShroom,
         val targetType: Class<T>,
         val selector: TargetingConditions.Selector? = null,
-        var target: LivingEntity? = null,
     ) : Goal() {
         companion object {
             const val HIDE_DISTANCE: Double = 3.5
         }
         val targetConditions: TargetingConditions = TargetingConditions.forCombat().range(HIDE_DISTANCE).selector(selector)
+        var target: LivingEntity? = null
 
         override fun start() {
+            shroom.playSound(PazSounds.SCAREDYSHROOM_HIDE)
             shroom.isHiding = true
         }
         override fun stop() {
+            if (shroom.isHiding) shroom.playSound(PazSounds.SCAREDYSHROOM_PEEK)
             shroom.isHiding = false
         }
 

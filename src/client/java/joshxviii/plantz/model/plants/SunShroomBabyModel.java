@@ -16,10 +16,6 @@ public class SunShroomBabyModel extends SunShroomModel {
 	private final ModelPart body;
 	private final ModelPart head;
 	private final ModelPart cap;
-	private final KeyframeAnimation idleAnimation;
-	private final KeyframeAnimation initAnimation;
-	private final KeyframeAnimation actionAnimation;
-	private final KeyframeAnimation sleepAnimation;
 
 	public SunShroomBabyModel(ModelPart root) {
 		super(root);
@@ -49,9 +45,5 @@ public class SunShroomBabyModel extends SunShroomModel {
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
 		this.body.yRot = state.yRot * (float) (Math.PI / 180.0);
-		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
-		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
-		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
-		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

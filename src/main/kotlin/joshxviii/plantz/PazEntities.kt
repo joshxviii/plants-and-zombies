@@ -226,6 +226,15 @@ object PazEntities {
             followRange = 20.0
         )
     )
+    @JvmField val DOOM_SHROOM: EntityType<DoomShroom> = registerPlant(
+        "doomshroom", EntityType.Builder.of(::DoomShroom, MobCategory.CREATURE),
+        sunCost = 12,
+        eyeHeight = 0.6f,
+        attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 25.0,
+            followRange = 4.0
+        )
+    )
     @JvmField val COFFEE_BEAN: EntityType<CoffeeBean> = registerPlant(
         "coffeebean", EntityType.Builder.of(::CoffeeBean, MobCategory.CREATURE),
         sunCost = 3,

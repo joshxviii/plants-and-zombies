@@ -4,10 +4,12 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.entity.projectile.Spore
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.entity.monster.Enemy
+import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.Level
 
 class PuffShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEntities.PUFF_SHROOM, level) {
@@ -18,10 +20,11 @@ class PuffShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEnt
             usingEntity = this,
             projectileFactory = { Spore(level(), this) },
             cooldownTime = 20))
-        this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, false) { target, level ->
+        this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, LivingEntity::class.java, 5, true, false) { target, level ->
             target !is Plant
-                && target is Enemy
-                && target !is Creeper
+                    && target !is Creeper
+                    && target is Zombie
+                    || (target is Enemy && isTame)
         })
     }
 }

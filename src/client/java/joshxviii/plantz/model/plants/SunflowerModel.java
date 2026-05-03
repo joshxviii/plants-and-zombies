@@ -1,6 +1,7 @@
 package joshxviii.plantz.model.plants;
 
 import joshxviii.plantz.PlantRenderState;
+import joshxviii.plantz.animation.plants.SunShroomAnimation;
 import joshxviii.plantz.animation.plants.SunflowerAnimation;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
@@ -11,7 +12,7 @@ import net.minecraft.client.model.geom.builders.*;
 import org.jetbrains.annotations.NotNull;
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class SunflowerModel extends EntityModel<@NotNull PlantRenderState> {
+public class SunflowerModel extends PlantModel {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("sunflower"), "main");
 	private final ModelPart body;
@@ -28,10 +29,6 @@ public class SunflowerModel extends EntityModel<@NotNull PlantRenderState> {
 	private final ModelPart leaf_tip_3;
 	private final ModelPart leaf_4;
 	private final ModelPart leaf_tip_4;
-	private final KeyframeAnimation idleAnimation;
-	private final KeyframeAnimation actionAnimation;
-	private final KeyframeAnimation initAnimation;
-	private final KeyframeAnimation sleepAnimation;
 
 	public SunflowerModel(ModelPart root) {
 		super(root);
@@ -116,9 +113,5 @@ public class SunflowerModel extends EntityModel<@NotNull PlantRenderState> {
 		super.setupAnim(state);
 		this.stem.yRot = state.yRot * (float) (Math.PI / 180.0);
 		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
-		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
-		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
-		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
-		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

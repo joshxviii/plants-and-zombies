@@ -21,14 +21,19 @@ import net.minecraft.world.level.block.state.properties.EnumProperty
 import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.phys.shapes.CollisionContext
+import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 
 class GravestoneBlock(properties: Properties) : HorizontalDirectionalBlock(properties), SimpleWaterloggedBlock  {
     companion object {
         val CODEC: MapCodec<GravestoneBlock> = simpleCodec(::GravestoneBlock)
         val SHAPE: VoxelShape = Util.make {
-            column(12.0, 0.0, 6.0)
+            Shapes.or(
+                column(16.0, 6.0, 0.0, 2.0),
+                column(12.0, 4.0, 2.0, 16.0),
+            )
         }
+        val SHAPES: MutableMap<Direction.Axis, VoxelShape> = Shapes.rotateHorizontalAxis(SHAPE)
         val FACING: EnumProperty<Direction> = HorizontalDirectionalBlock.FACING
         val WATERLOGGED: BooleanProperty = BlockStateProperties.WATERLOGGED
     }
@@ -38,7 +43,8 @@ class GravestoneBlock(properties: Properties) : HorizontalDirectionalBlock(prope
     }
 
     override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
-        return SHAPE
+        val facing = state.getValue(FACING)
+        return SHAPES[facing.axis] as VoxelShape
     }
 
     override fun rotate(state: BlockState, rotation: Rotation): BlockState {

@@ -11,14 +11,10 @@ import net.minecraft.client.model.geom.builders.*;
 import org.jetbrains.annotations.NotNull;
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class WallNutModel extends EntityModel<@NotNull PlantRenderState> {
+public class WallNutModel extends PlantModel {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("wallnut"), "main");
 	private final ModelPart body;
 	private final ModelPart inner;
-	private final KeyframeAnimation idleAnimation;
-	private final KeyframeAnimation initAnimation;
-	private final KeyframeAnimation actionAnimation;
-	private final KeyframeAnimation sleepAnimation;
 
 	public WallNutModel(ModelPart root) {
 		super(root);
@@ -49,9 +45,5 @@ public class WallNutModel extends EntityModel<@NotNull PlantRenderState> {
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
 		body.yRot = 0.0F;
-		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
-		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
-		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
-		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

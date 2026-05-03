@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import static joshxviii.plantz.UtilsKt.pazResource;
 
 
-public class ChomperModel extends EntityModel<@NotNull PlantRenderState> {
+public class ChomperModel extends PlantModel {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("chomper"), "main");
 	private final ModelPart body;
 	private final ModelPart stem;
@@ -38,11 +38,6 @@ public class ChomperModel extends EntityModel<@NotNull PlantRenderState> {
 	private final ModelPart leaf_4;
 	private final ModelPart leaf_mid_4;
 	private final ModelPart leaf_tip_4;
-	private final KeyframeAnimation idleAnimation;
-	private final KeyframeAnimation actionAnimation;
-	private final KeyframeAnimation cooldownAnimation;
-	private final KeyframeAnimation initAnimation;
-	private final KeyframeAnimation sleepAnimation;
 
 	public ChomperModel(ModelPart root) {
 		super(root);
@@ -167,10 +162,6 @@ public class ChomperModel extends EntityModel<@NotNull PlantRenderState> {
 		super.setupAnim(state);
 		this.stem.yRot = state.yRot * (float) (Math.PI / 180.0);
 		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
-		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
-		if (!state.getCoolDownAnimationState().isStarted()) this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
-		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
-		this.cooldownAnimation.apply(state.getCoolDownAnimationState(), state.ageInTicks);
-		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
+		//if (!state.getCoolDownAnimationState().isStarted()) this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 	}
 }

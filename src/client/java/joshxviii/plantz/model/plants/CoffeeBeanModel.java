@@ -15,14 +15,10 @@ import org.jetbrains.annotations.NotNull;
 import static joshxviii.plantz.UtilsKt.pazResource;
 
 
-public class CoffeeBeanModel extends EntityModel<@NotNull PlantRenderState> {
+public class CoffeeBeanModel extends PlantModel {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("coffeebean"), "main");
 	private final ModelPart body;
 	private final ModelPart head;
-	private final KeyframeAnimation idleAnimation;
-	private final KeyframeAnimation actionAnimation;
-	private final KeyframeAnimation initAnimation;
-	private final KeyframeAnimation sleepAnimation;
 
 	public CoffeeBeanModel(ModelPart root) {
 		super(root);
@@ -53,9 +49,5 @@ public class CoffeeBeanModel extends EntityModel<@NotNull PlantRenderState> {
 		super.setupAnim(state);
 		this.body.zRot = Mth.sin(state.ageInTicks * 1.5f)*0.01f;
 		this.body.yRot = state.yRot * (float) (Mth.PI / 180.0);
-		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
-		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
-		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
-		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

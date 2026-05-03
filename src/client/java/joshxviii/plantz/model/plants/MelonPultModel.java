@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import static joshxviii.plantz.UtilsKt.pazResource;
 
 
-public class MelonPultModel extends EntityModel<@NotNull PlantRenderState> {
+public class MelonPultModel extends PlantModel {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("melonpult"), "main");
 	private final ModelPart body;
 	private final ModelPart head;
@@ -33,10 +33,6 @@ public class MelonPultModel extends EntityModel<@NotNull PlantRenderState> {
 	private final ModelPart leaf_tip_3;
 	private final ModelPart leaf_4;
 	private final ModelPart leaf_tip_4;
-	private final KeyframeAnimation idleAnimation;
-	private final KeyframeAnimation actionAnimation;
-	private final KeyframeAnimation initAnimation;
-	private final KeyframeAnimation sleepAnimation;
 
 	public MelonPultModel(ModelPart root) {
 		super(root);
@@ -118,9 +114,5 @@ public class MelonPultModel extends EntityModel<@NotNull PlantRenderState> {
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
 		this.body.yRot = state.yRot * (float) (Math.PI / 180.0);
-		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
-		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
-		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
-		this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
 	}
 }

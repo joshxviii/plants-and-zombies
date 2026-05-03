@@ -12,6 +12,8 @@ import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.monster.Enemy
+import net.minecraft.world.entity.monster.zombie.Zombie
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.ExplosionDamageCalculator
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.SimpleExplosionDamageCalculator
@@ -24,7 +26,12 @@ class ExplodeGoal(
     val radius: Float = 2.5f,
     val detectRange: Double = 9.0,
     val actionPredicate: Predicate<PathfinderMob> = Predicate { true },
-    selector: TargetingConditions.Selector? = { target, level -> target is Enemy && target !is Plant }
+    selector: TargetingConditions.Selector? = { target, level ->
+        target !is Plant
+            && target is Zombie
+            || (target is Enemy && plantEntity.isTame)
+            || (target is Player && !plantEntity.isTame)
+    }
 ) : Goal() {
     protected val targetConditions: TargetingConditions
 

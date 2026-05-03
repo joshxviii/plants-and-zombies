@@ -4,10 +4,12 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.entity.projectile.Cabbage
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.entity.monster.Enemy
+import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec2
 
@@ -23,10 +25,11 @@ class CabbagePult(type: EntityType<out Plant>, level: Level) : Plant(PazEntities
             velocity = 0.85,
             cooldownTime = 30,
             actionDelay = 9))
-        this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Mob::class.java, 5, false, false) { target, level ->
+        this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, LivingEntity::class.java, 5, false, false) { target, level ->
             target !is Plant
-                && target !is Creeper
-                && target is Enemy
+                    && target !is Creeper
+                    && target is Zombie
+                    || (target is Enemy && isTame)
         })
     }
 }
