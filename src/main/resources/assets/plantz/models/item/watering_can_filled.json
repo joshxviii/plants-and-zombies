@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "plantz:item/sun_batterypack"
+    "layer0": "plantz:item/watering_can_filled"
   }
 }

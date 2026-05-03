@@ -1,6 +1,42 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "plantz:item/watering_can"
+    "type": "minecraft:select",
+    "property": "minecraft:display_context",
+    "cases": [
+      {
+        "when": [
+          "thirdperson_righthand",
+          "thirdperson_lefthand"
+        ],
+        "model": {
+          "type": "minecraft:condition",
+          "property": "minecraft:has_component",
+          "component": "plantz:stored_water",
+          "ignore_default": true,
+          "on_true": {
+            "type": "minecraft:model",
+            "model": "plantz:block/watering_can_filled"
+          },
+          "on_false": {
+            "type": "minecraft:model",
+            "model": "plantz:block/watering_can"
+          }
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:condition",
+      "property": "minecraft:has_component",
+      "component": "plantz:stored_water",
+      "ignore_default": true,
+      "on_true": {
+        "type": "minecraft:model",
+        "model": "plantz:item/watering_can_filled"
+      },
+      "on_false": {
+        "type": "minecraft:model",
+        "model": "plantz:item/watering_can"
+      }
+    }
   }
 }

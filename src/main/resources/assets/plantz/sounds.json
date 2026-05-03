@@ -34,6 +34,13 @@
     "sounds": [{ "name": "mob/evocation_illager/fangs", "volume": 1.0, "pitch": 0.8 }], "subtitle": "plantz.subtitles.entity.chomper.attack"
   },
 
+  "entity.scaredyshroom.peek": {
+    "sounds": [{ "name": "plantz:entity/scaredyshroom/peek", "volume": 1.0, "pitch": 1.2 }], "subtitle": "plantz.subtitles.entity.scaredyshroom.hide"
+  },
+  "entity.scaredyshroom.hide": {
+    "sounds": [{ "name": "plantz:entity/scaredyshroom/hide", "volume": 1.0, "pitch": 1.2 }], "subtitle": "plantz.subtitles.entity.scaredyshroom.hide"
+  },
+
   "entity.plant_explode": {
     "sounds": [
       { "name": "minecraft:random/explode1", "volume": 1.0, "pitch": 1.9 },

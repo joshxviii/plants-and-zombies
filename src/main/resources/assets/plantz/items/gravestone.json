@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "plantz:item/sun_batterypack"
+    "model": "plantz:block/gravestone"
   }
 }

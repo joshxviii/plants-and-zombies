@@ -181,8 +181,9 @@ object PazBlocks {
     @JvmField val GRAVESTONE: Block = registerBlock(
         "gravestone",
         BlockBehaviour.Properties.of()
-            .sound(SoundType.STONE)
-            .strength(1.2F)
+            .sound(SoundType.TUFF_BRICKS)
+            .strength(2.25F)
+            .requiresCorrectToolForDrops()
             .pushReaction(PushReaction.BLOCK),
         ::GravestoneBlock,
     )

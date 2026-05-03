@@ -53,8 +53,8 @@ object PazItems {
         properties = Item.Properties().craftRemainder(GLASS_BOTTLE)
     )
     @JvmField
-    val SUN_BATTERYPACK: Item = registerItem(
-        "sun_batterypack", ::SunBatteryItem,
+    val SUN_BATTERY: Item = registerItem(
+        "sun_battery", ::SunBatteryItem,
         properties = Item.Properties()
             .stacksTo(1)
             .rarity(Rarity.EPIC)

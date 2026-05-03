@@ -42,6 +42,7 @@ object PazCreativeTab {
                 output.accept(SeedPacketItem.stackFor(PazEntities.FUME_SHROOM))
                 output.accept(SeedPacketItem.stackFor(PazEntities.SCAREDY_SHROOM))
                 output.accept(SeedPacketItem.stackFor(PazEntities.HYPNOSHROOM))
+                output.accept(SeedPacketItem.stackFor(PazEntities.DOOM_SHROOM))
                 output.accept(SeedPacketItem.stackFor(PazEntities.COFFEE_BEAN))
 
                 // zombie spawn eggs

@@ -131,6 +131,13 @@
         }
       },
       {
+        "when": { "id": "plantz:doomshroom" },
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/seed_packet/doomshroom"
+        }
+      },
+      {
         "when": { "id": "plantz:coffeebean" },
         "model": {
           "type": "minecraft:model",

@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "plantz:plant_pot"
+          "name": "plantz:gravestone"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "plantz:blocks/plant_pot"
+  "random_sequence": "plantz:blocks/gravestone"
 }
