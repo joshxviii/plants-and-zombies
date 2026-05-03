@@ -12,7 +12,7 @@
             {
               "function": "minecraft:set_components",
               "components": {
-                "plantz:seed_packet": {
+                "minecraft:entity_data": {
                   "id": "plantz:hypnoshroom"
                 }
               }

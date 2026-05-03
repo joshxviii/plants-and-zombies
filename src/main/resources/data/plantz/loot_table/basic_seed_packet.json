@@ -15,7 +15,7 @@
                 {
                   "function": "minecraft:set_components",
                   "components": {
-                    "plantz:seed_packet": {
+                    "minecraft:entity_data": {
                       "id": "plantz:sunflower"
                     }
                   }
@@ -30,7 +30,7 @@
                 {
                   "function": "minecraft:set_components",
                   "components": {
-                    "plantz:seed_packet": {
+                    "minecraft:entity_data": {
                       "id": "plantz:peashooter"
                     }
                   }
@@ -45,7 +45,7 @@
                 {
                   "function": "minecraft:set_components",
                   "components": {
-                    "plantz:seed_packet": {
+                    "minecraft:entity_data": {
                       "id": "plantz:wallnut"
                     }
                   }

@@ -16,7 +16,7 @@
                 {
                   "function": "minecraft:set_components",
                   "components": {
-                    "plantz:seed_packet": {
+                    "minecraft:entity_data": {
                       "id": "plantz:potatomine"
                     }
                   }
@@ -31,7 +31,7 @@
                 {
                   "function": "minecraft:set_components",
                   "components": {
-                    "plantz:seed_packet": {
+                    "minecraft:entity_data": {
                       "id": "plantz:cabbagepult"
                     }
                   }
@@ -46,7 +46,7 @@
                 {
                   "function": "minecraft:set_components",
                   "components": {
-                    "plantz:seed_packet": {
+                    "minecraft:entity_data": {
                       "id": "plantz:kernelpult"
                     }
                   }
@@ -61,7 +61,7 @@
                 {
                   "function": "minecraft:set_components",
                   "components": {
-                    "plantz:seed_packet": {
+                    "minecraft:entity_data": {
                       "id": "plantz:cherrybomb"
                     }
                   }

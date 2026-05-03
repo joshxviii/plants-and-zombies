@@ -3,7 +3,7 @@
     "icon": {
       "id": "plantz:seed_packet",
       "components": {
-        "plantz:seed_packet": {
+        "minecraft:entity_data": {
           "id": "plantz:melonpult"
         }
       }
@@ -159,6 +159,14 @@
       "conditions": {
         "entity": {
           "type": "plantz:hypnoshroom"
+        }
+      }
+    },
+    "plantz:doomshroom": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:doomshroom"
         }
       }
     },

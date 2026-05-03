@@ -3,7 +3,7 @@
     "icon": {
       "id": "plantz:seed_packet",
       "components": {
-        "plantz:seed_packet": {
+        "minecraft:entity_data": {
           "id": "plantz:hypnoshroom"
         }
       }
