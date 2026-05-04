@@ -63,7 +63,7 @@ object PazBlocks {
         "watering_can",
         BlockBehaviour.Properties.of()
             .sound(SoundType.LANTERN)
-            .strength(0.2F)
+            .strength(0.18F)
             .noOcclusion()
             .pushReaction(PushReaction.NORMAL),
         ::WateringCanBlock,

@@ -1,17 +1,18 @@
 # Changelog 1.5
 - Added Doom-Shroom
 - Added Gravestone Block
-	- Zombies will emerge from the ground when a PLant or Player is nearby
+	- Zombies will emerge from the ground when a Plant or Player is nearby
 - Added Watering Can
 - Added Solar Battery
 	- Can store sun and will automatically use sun when planting or interacting with Plants.
 - Plants now required water before sleeping
-	- Plants can be watered with Water Bottles, Water Buckets or Watering Cans.
+	- Plants can be watered with Rain, Water Bottles, Water Buckets or Watering Cans.
 	- Water Buckets and the Watering Can Reduce the amount of sun needed when the Plant wakes up by half.
 - Adjusted projectile firing logic for Plants and Zombies.
 - Wild plants will only attack zombies by default.
 - Wild Scaredy Shrooms now hide from the player.
 ### Technical Changes
+- Added a configuration file.
 - Removed SeedPacket Component
 - Added StoredSun item component
 - Added StoredWater item component

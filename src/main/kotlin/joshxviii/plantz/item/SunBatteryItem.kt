@@ -94,7 +94,7 @@ class SunBatteryItem(properties: Properties) : Item(properties) {
     ) {
         if (sunStorage.isFull()) return
 
-        val availableSpace = sunStorage.maxCapacity - sunStorage.storedSun
+        val availableSpace = sunStorage.max - sunStorage.storedSun
         val amountToAdd = sunStack.count.coerceAtMost(availableSpace)
 
         sunStack.shrink(amountToAdd)

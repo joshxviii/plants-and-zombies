@@ -98,6 +98,19 @@
 			}
 		},
 		{
+			"from": [9, 9, 11],
+			"to": [7, 6, 5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [9, 9, 15]},
+			"faces": {
+				"north": {"uv": [1.5, 3.25, 2, 4], "texture": "#0"},
+				"east": {"uv": [0, 3.25, 1.5, 4], "texture": "#0"},
+				"south": {"uv": [3.5, 3.25, 4, 4], "texture": "#0"},
+				"west": {"uv": [2, 3.25, 3.5, 4], "texture": "#0"},
+				"up": {"uv": [1.5, 3.25, 1, 1.75], "texture": "#0"},
+				"down": {"uv": [2, 1.75, 1.5, 3.25], "texture": "#0"}
+			}
+		},
+		{
 			"from": [7, 6, 5],
 			"to": [9, 9, 11],
 			"rotation": {"angle": 0, "axis": "y", "origin": [7, 6, 9]},
@@ -170,12 +183,13 @@
 				5,
 				6,
 				7,
+				8,
 				{
 					"name": "water",
 					"origin": [8, 8, 8],
 					"scope": 0,
 					"color": 0,
-					"children": [8]
+					"children": [9]
 				}
 			]
 		}

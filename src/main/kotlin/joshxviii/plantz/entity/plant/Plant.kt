@@ -98,12 +98,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                     && blockAtPos.getCollisionShape(level, pos.above()).isEmpty
         }
 
-        private const val COFFEE_BUFF_DURATION =  72_000 // 2.5 days
         private const val NUTRIENT_SUPPLY_MAX = 160  // ticks before suffocating when on invalid ground
-        // time and sun cost
-        private const val SEED_TIME = 7800
-        private const val SEED_TIME_SUN_MULTIPLIER = 2100
-        private const val SEED_TIME_ZEN_MULTIPLIER = 0.75
 
         val PLANT_STATE: EntityDataAccessor<PlantState> = SynchedEntityData.defineId<PlantState>(Plant::class.java, DATA_PLANT_STATE)
         val SWELL_DIR: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_SWELL_DIR)
@@ -124,7 +119,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             val movementSpeed: Double = 0.0,
             val followRange: Double = 14.0,
             val armor: Double = 0.0,
-            val sunCost: Int = 0
         ) {
             fun apply(builder: AttributeSupplier.Builder): AttributeSupplier.Builder {
                 return builder
@@ -134,7 +128,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                     .add(Attributes.ATTACK_KNOCKBACK, attackKnockback)
                     .add(Attributes.MOVEMENT_SPEED, movementSpeed)
                     .add(Attributes.ARMOR, armor)
-                    .add(PazAttributes.SUN_COST, sunCost.toDouble())
             }
         }
     }
@@ -177,14 +170,11 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     var receivedSun: Int
         get() = this.entityData.get(RECEIVED_SUN)
-        set(value) {
-            this.entityData.set(RECEIVED_SUN, value.coerceAtLeast(0))
-        }
+        set(value) = this.entityData.set(RECEIVED_SUN, value.coerceAtLeast(0))
     var receivedWater: Int
         get() = this.entityData.get(RECEIVED_WATER)
-        set(value) {
-            this.entityData.set(RECEIVED_WATER, value.coerceAtLeast(0))
-        }
+        set(value) = this.entityData.set(RECEIVED_WATER, value.coerceAtLeast(0))
+
     var seedGrowCooldown: Int
         get() = this.entityData.get(SEED_GROW_COOLDOWN)
         set(value) = this.entityData.set(SEED_GROW_COOLDOWN, value.coerceAtLeast(0))
@@ -254,6 +244,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         entityData.define(COFFEE_BUFF, 0)
         entityData.define(SLEEPING, false)
         entityData.define(ATTACHED_PLAYER, Optional.empty())
+    }
+
+    override fun onSyncedDataUpdated(accessor: EntityDataAccessor<*>) {
+        super.onSyncedDataUpdated(accessor)
+        if (accessor == RECEIVED_SUN || accessor == RECEIVED_WATER && level().isClientSide) {
+            funnyBounce()
+        }
     }
 
     override fun addAdditionalSaveData(output: ValueOutput) {
@@ -507,15 +504,15 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     fun sunRequiredForSeeds(): Int {
         return Mth.floor(
-            Mth.floor(PazEntities.getSunCostFromType(this.type)*2f).coerceAtLeast(4) *
+            Mth.floor(PazConfig.getSunCost(type)*2f).coerceAtLeast(4) *
             if (receivedWater > 1) 0.5f else 1f// receive a bonus for larger water sources that reduces the sun needed by half.
         )
     }
+
     fun timeRequiredForSeeds() : Int {
-        val sunCost = PazEntities.getSunCostFromType(this.type)
-        val zenBotBonus = level().hasChunkAt(blockPosition()) && getBlockBelow().`is`(PazBlocks.ZEN_PLANT_POT)
-        val time = SEED_TIME + (sunCost*SEED_TIME_SUN_MULTIPLIER) + random.nextInt(200)
-        return if (zenBotBonus) (time*SEED_TIME_ZEN_MULTIPLIER).toInt() else time
+        val sunCost = PazConfig.getSunCost(type)
+        val zenBuff = level().hasChunkAt(blockPosition()) && getBlockBelow().`is`(PazBlocks.ZEN_PLANT_POT)
+        return PazConfig.getGrowTime(sunCost, zenBuff)
     }
 
     fun testGrowConditions(): PlantGrowNeeds {
@@ -580,7 +577,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val level = level()
         val growNeeds = testGrowConditions()
 
-        if (true) {
+        if (level is ServerLevel) {
             // shovel interaction
             if (itemStack.`is`(ItemTags.SHOVELS)) {
                 if (!verifyOwner(player)) return InteractionResult.FAIL
@@ -589,7 +586,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                     // apply tool damage base on how damaged the plant was
                     itemStack.hurtAndBreak(4, player, hand.asEquipmentSlot())
                     playSound(SoundEvents.ROOTED_DIRT_BREAK)
-                    (level as? ServerLevel)?.sendParticles(BlockParticleOption(
+                    level.sendParticles(BlockParticleOption(
                         ParticleTypes.BLOCK, getBlockBelow()),
                         x, y+0.05, z, 16, 0.25,0.0,0.25, 0.4)
                 }
@@ -631,7 +628,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     fun applyCoffeeBuff() {
         val level = level() as? ServerLevel?: return
-        coffeeBuff = COFFEE_BUFF_DURATION
+        coffeeBuff = PazConfig.COFFEE_BUFF_DURATION
         playSound(SoundEvents.WITCH_DRINK, 1f, 1.5f)
         addParticlesAroundSelf(level,
             PazServerParticles.ENERGIZED,
@@ -669,7 +666,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun die(source: DamageSource) {
         super.die(source)
         if (source.entity is Player) {
-            val sunCost = PazEntities.getSunCostFromType(this.type)
+            val sunCost = PazConfig.getSunCost(type)
             val level = level() as? ServerLevel
             if (level!=null) Sun.award(level, position(), (sunCost/2) - random.nextInt(0,1))
         }

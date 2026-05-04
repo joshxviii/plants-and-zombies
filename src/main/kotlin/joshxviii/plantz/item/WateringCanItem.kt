@@ -28,6 +28,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.HitResult
+import org.apache.logging.log4j.core.net.Severity
 
 class WateringCanItem(properties: Properties) : BlockItem(PazBlocks.WATERING_CAN_BLOCK, properties) {
 
@@ -69,7 +70,7 @@ class WateringCanItem(properties: Properties) : BlockItem(PazBlocks.WATERING_CAN
         if (player?.isCrouching==true) return super.useOn(context)
         if (storedWaterComponent?.let { it.storedWater <= 0 } == true) return InteractionResult.PASS
         if (context.clickedFace != Direction.DOWN ) {
-            var success: Boolean = false
+            var success = false
             if (blockState.`is`(BlockTags.CONVERTABLE_TO_MUD)) {// mud conversion
                 level.playSound(null, pos, SoundEvents.GENERIC_SPLASH, SoundSource.BLOCKS, 1.0f, 1.0f)
                 level.gameEvent(null, GameEvent.FLUID_PLACE, pos)
@@ -95,10 +96,9 @@ class WateringCanItem(properties: Properties) : BlockItem(PazBlocks.WATERING_CAN
             if (success) {
                 itemStack.set(PazComponents.STORED_WATER, storedWaterComponent?.removeWater(2))
                 if (!level.isClientSide) {
-                    val serverLevel = level as ServerLevel
                     level.playSound(null, pos, PazSounds.WATERING_CAN, SoundSource.BLOCKS)
                     for (i in 0..4) {
-                        serverLevel.sendParticles(
+                        (level as? ServerLevel)?.sendParticles(
                             ParticleTypes.SPLASH,
                             pos.x + level.getRandom().nextDouble(),
                             (pos.y + 1).toDouble(),

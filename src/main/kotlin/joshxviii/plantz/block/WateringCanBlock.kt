@@ -9,17 +9,12 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.util.RandomSource
 import net.minecraft.util.Util
-import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
-import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.ScheduledTickAccess
-import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.HorizontalDirectionalBlock
-import net.minecraft.world.level.block.Rotation
-import net.minecraft.world.level.block.SimpleWaterloggedBlock
+import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
@@ -79,10 +74,6 @@ class WateringCanBlock(properties: Properties) : HorizontalDirectionalBlock(prop
             .setValue(STORED_WATER, waterStorage?.storedWater?: 0)
     }
 
-    override fun setPlacedBy(level: Level, pos: BlockPos, state: BlockState, by: LivingEntity?, itemStack: ItemStack) {
-        super.setPlacedBy(level, pos, state, by, itemStack)
-    }
-
     override fun getDrops(state: BlockState, params: LootParams.Builder): List<ItemStack> {
         val wateringCanItem = PazItems.WATERING_CAN.defaultInstance
         wateringCanItem.set(PazComponents.STORED_WATER, StoredWater(state.getValue(STORED_WATER)))
@@ -99,8 +90,12 @@ class WateringCanBlock(properties: Properties) : HorizontalDirectionalBlock(prop
         neighbourState: BlockState,
         random: RandomSource
     ): BlockState {
-        if (state.getValue(WATERLOGGED)) ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level))
-        return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random)
+        if (state.getValue(WATERLOGGED)) {
+            ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level))
+        }
+
+        return if (!state.canSurvive(level, pos)) Blocks.AIR.defaultBlockState()
+        else super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random)
     }
 
     override fun canSurvive(state: BlockState, level: LevelReader, pos: BlockPos): Boolean {

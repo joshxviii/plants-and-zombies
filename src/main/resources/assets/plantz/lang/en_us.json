@@ -80,6 +80,7 @@
   "item.plantz.seed_packet": "Seed Packet",
   "item.plantz.seed_packet.entity": "%s Seeds",
 
+  "item.plantz.gravestone": "Gravestone",
   "item.plantz.mailbox": "Mailbox",
   "item.plantz.light_gray_mailbox": "Light Gray Mailbox",
   "item.plantz.gray_mailbox": "Gray Mailbox",

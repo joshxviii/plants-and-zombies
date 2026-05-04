@@ -128,8 +128,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
         fun stackFor(type: EntityType<*>): ItemStack {
             val stack = ItemStack(PazItems.SEED_PACKET)
             stack.set(DataComponents.ENTITY_DATA, TypedEntityData.of(type, CompoundTag()))
-            //TODO fetch from config
-            stack.set(PazComponents.SUN_COST, SunCost(PazEntities.getSunCostFromType(type)))
+            stack.set(PazComponents.SUN_COST, SunCost(PazConfig.getSunCost(type)))
 
             return stack
         }

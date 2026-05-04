@@ -1,6 +1,7 @@
 package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazComponents
+import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
@@ -28,19 +29,19 @@ fun Plant.processSunItem(player: Player, item: ItemStack, hand: InteractionHand,
     val hasStoredSun = item.get(PazComponents.STORED_SUN)?.hasSun() == true
     val isSunItem = item.`is`(PazItems.SUN)
     if (!hasStoredSun && !isSunItem) return false
+    val level = level() as? ServerLevel?: return false
     var success = false
-    val isServer = level() is ServerLevel
 
-    if (isTame && isServer && health < maxHealth) {// heal
+    if (isTame && health < maxHealth) {// heal
         sunHeal(1)
         addParticlesAroundSelf(particle = ParticleTypes.HAPPY_VILLAGER)
         success = true
     }
-    else if (!isTame && isServer) {// try to tame
-        if (random.nextFloat() < (1f - (PazEntities.getSunCostFromType(type) / 14f))*0.2f) {
+    else if (!isTame) {// try to tame
+        if (random.nextFloat() < (1f - (PazConfig.getSunCost(type) / 14f))*0.2f) {
             tame(player)
-            level().broadcastEntityEvent(this, 7.toByte())
-        } else level().broadcastEntityEvent(this, 6.toByte())
+            level.broadcastEntityEvent(this, 7.toByte())
+        } else level.broadcastEntityEvent(this, 6.toByte())
         success = true
     }
     else if (growNeeds == PlantGrowNeeds.SUN && verifyOwner(player)) {// grow seeds
@@ -49,7 +50,6 @@ fun Plant.processSunItem(player: Player, item: ItemStack, hand: InteractionHand,
             receivedSun.toFloat()/sunRequiredForSeeds() + 0.9f
         )
         if (receivedSun++ >= sunRequiredForSeeds()) awardSeedPacket(player)
-        funnyBounce()
         success = true
     }
 

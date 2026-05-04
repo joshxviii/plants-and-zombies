@@ -39,8 +39,7 @@ class PlantRenderer(
         camera: CameraRenderState
     ) {
 
-        // TODO add debug config
-        if (false) collector.submitNameTag(
+        if (PazConfig.SHOW_DEBUG_INFO) collector.submitNameTag(
             poseStack, Vec3(0.0,state.eyeHeight.toDouble(),0.0), -20,
             Component.literal("${state.plantState.name}, ${state.cooldown}").withColor(0xFFFFFFF),
             true, -1, 20.0, camera

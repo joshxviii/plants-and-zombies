@@ -2,6 +2,7 @@ package joshxviii.plantz
 
 import joshxviii.plantz.raid.getZombieRaids
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
@@ -13,7 +14,9 @@ object PazMain : ModInitializer {
 	val LOGGER: Logger = LogManager.getLogger()
 
 	override fun onInitialize() {
+		PazConfig.load()
 
+		ServerLifecycleEvents.SERVER_STARTING.register { PazConfig.load() }
 		ServerTickEvents.END_LEVEL_TICK.register { it.getZombieRaids().tick(it) }
 
 		PazServerParticles.initialize()
