@@ -3,6 +3,7 @@ package joshxviii.plantz.entity.zombie
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazDataSerializers.DATA_ZOMBIE_STATE
+import joshxviii.plantz.PazItems
 import joshxviii.plantz.ai.ZombieState
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.BlockParticleOption
@@ -17,6 +18,7 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.entity.ai.goal.FloatGoal
@@ -45,6 +47,12 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         val ZOMBIE_STATE: EntityDataAccessor<ZombieState> = SynchedEntityData.defineId<ZombieState>(PazZombie::class.java, DATA_ZOMBIE_STATE)
     }
 
+    override fun onEquipItem(slot: EquipmentSlot, oldStack: ItemStack, stack: ItemStack) {
+        if (stack.`is`(PazItems.DUCKY_TUBE) && slot == EquipmentSlot.LEGS) this.getNavigation().setCanFloat(true);
+        else if (oldStack.`is`(PazItems.DUCKY_TUBE) && slot == EquipmentSlot.LEGS) this.getNavigation().setCanFloat(false);
+        super.onEquipItem(slot, oldStack, stack)
+    }
+
     var state: ZombieState
         get() = this.entityData.get(ZOMBIE_STATE)
         set(value) { this.entityData.set(ZOMBIE_STATE, value) }
@@ -60,7 +68,11 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
 
     override fun registerGoals() {
         super.registerGoals()
-        this.goalSelector.addGoal(1, FloatGoal(this))
+        //this.goalSelector.addGoal(1, FloatGoal(this))
+    }
+
+    override fun getFluidJumpThreshold(): Double {
+        return super.getFluidJumpThreshold()
     }
 
     override fun tick() {

@@ -255,7 +255,7 @@ object PazEntities {
             .add(Attributes.ATTACK_DAMAGE, 3.0)
             .add(Attributes.MAX_HEALTH, 35.0)
             .add(Attributes.MOVEMENT_SPEED, 0.225)
-            .add(Attributes.FOLLOW_RANGE, 16.0)
+            .add(Attributes.FOLLOW_RANGE, 18.0)
     )
     @JvmField val ZOMBIE_YETI: EntityType<ZombieYeti> =  registerZombie(
         "zombie_yeti",
@@ -294,7 +294,7 @@ object PazEntities {
             .add(Attributes.ATTACK_DAMAGE, 3.5)
             .add(Attributes.MAX_HEALTH, 20.0)
             .add(Attributes.MOVEMENT_SPEED, 0.3)
-            .add(Attributes.FOLLOW_RANGE, 16.0)
+            .add(Attributes.FOLLOW_RANGE, 24.0)
             .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.0)
     )
     @JvmField val ALL_STAR: EntityType<AllStar> =  registerZombie(

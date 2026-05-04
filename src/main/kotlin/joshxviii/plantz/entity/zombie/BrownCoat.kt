@@ -1,17 +1,20 @@
 package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.ai.ZombieState
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.tags.BlockTags
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.material.Fluids
 
 class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type, level) {
 
@@ -45,7 +48,9 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
         setCanPickUpLoot(true)
         setCanBreakDoors(true)
 
-        //getAttribute(Attributes.SPAWN_REINFORCEMENTS_CHANCE)?.addPermanentModifier(AttributeModifier(pazResource("browncoat"), this.random.nextDouble() * 10.25 + 0.5, AttributeModifier.Operation.ADD_VALUE))
+        if (level.getBlockState(blockPosition()).fluidState.type == Fluids.WATER) {
+            setItemSlot(EquipmentSlot.LEGS, PazItems.DUCKY_TUBE.defaultInstance)
+        }
 
         if (getItemBySlot(EquipmentSlot.HEAD).isEmpty){
             if (random.nextFloat() < 0.25) {

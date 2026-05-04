@@ -1,5 +1,6 @@
 package joshxviii.plantz.entity.zombie
 
+import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.ai.ZombieState
 import net.minecraft.core.particles.BlockParticleOption
@@ -13,10 +14,12 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.SpawnGroupData
 import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.material.Fluids
 
 class BackupDancer(type: EntityType<out BackupDancer>, level: Level) : PazZombie(type, level) {
 
@@ -60,6 +63,11 @@ class BackupDancer(type: EntityType<out BackupDancer>, level: Level) : PazZombie
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         state = ZombieState.EMERGING
+
+        if (level.getBlockState(blockPosition()).fluidState.type == Fluids.WATER) {
+            setItemSlot(EquipmentSlot.LEGS, PazItems.DUCKY_TUBE.defaultInstance)
+        }
+
         val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
         setCanBreakDoors(false)
 

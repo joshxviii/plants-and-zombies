@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.EnumProperty
 import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.level.material.Fluids
+import net.minecraft.world.level.pathfinder.PathComputationType
 import net.minecraft.world.phys.shapes.BooleanOp
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
@@ -73,6 +74,8 @@ class PlantPotBlock(properties: Properties) : HorizontalDirectionalBlock(propert
             .setValue(FACING, context.horizontalDirection.opposite)
             .setValue(WATERLOGGED, replacedFluidState.`is`(Fluids.WATER))
     }
+
+    override fun isPathfindable(state: BlockState, type: PathComputationType): Boolean = false
 
     override fun updateShape(
         state: BlockState,

@@ -24,7 +24,7 @@ public class DiggerZombieModel extends PazZombieModel {
 
 
 	public DiggerZombieModel(final ModelPart root) {
-		super(null, root.getChild("root"));
+		super(null, root);
 		this.actionAnimation = DiggerZombieAnimation.action.bake(root.getChild("root"));
 	}
 

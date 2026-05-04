@@ -190,7 +190,7 @@ abstract class PlantProjectile(
         )
     }
 
-    protected fun knockbackNearby(damage: Float = this.damage, distance: Double = 3.0) {
+    protected fun knockbackNearby(damage: Float = this.damage, distance: Double = 1.0) {
         val serverLevel = this.level() as? ServerLevel?: return
         serverLevel.getEntitiesOfClass(
             LivingEntity::class.java,

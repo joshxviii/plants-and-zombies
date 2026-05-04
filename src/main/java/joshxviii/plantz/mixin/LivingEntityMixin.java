@@ -1,6 +1,7 @@
 package joshxviii.plantz.mixin;
 
 import joshxviii.plantz.PazEffects;
+import joshxviii.plantz.PazItems;
 import joshxviii.plantz.PazTags;
 import joshxviii.plantz.PlantHeadAttachment;
 import joshxviii.plantz.entity.plant.Plant;
@@ -9,13 +10,21 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Util;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,6 +36,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Collection;
+import java.util.List;
+
+import static joshxviii.plantz.PazItems.DUCKY_TUBE_DAMAGE_INTERVAL;
 
 @Mixin(LivingEntity.class)
 abstract public class LivingEntityMixin implements PlantHeadAttachment {
@@ -37,6 +49,8 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment {
     @Shadow
     public abstract boolean hasEffect(Holder<MobEffect> effect);
 
+    @Shadow
+    public int swingTime;
     @Unique
     private CompoundTag plantData = new CompoundTag();
 
@@ -73,6 +87,40 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment {
         return ((Entity) (Object) this).getEntityData().get(DATA_HYPNO_ID);
     }
 
+    @Unique
+    private boolean prevFloatTag = false;
+
+    @Inject(method = "onEquipItem", at = @At("TAIL"))
+    private void plantz$checkFloatTag(EquipmentSlot slot, ItemStack oldStack, ItemStack stack, CallbackInfo ci) {
+        if ((LivingEntity) (Object) this instanceof PathfinderMob mob) {
+            if (stack.is(PazItems.DUCKY_TUBE) && slot == EquipmentSlot.LEGS) {
+                prevFloatTag = mob.getNavigation().canFloat();
+                mob.getNavigation().setCanFloat(true);
+            }
+            else if (oldStack.is(PazItems.DUCKY_TUBE) && slot == EquipmentSlot.LEGS) mob.getNavigation().setCanFloat(prevFloatTag);
+        }
+    }
+
+    @Inject(method = "aiStep", at = @At("HEAD"))
+    private void plantz$applyDuckyTubeBuoyancy(CallbackInfo ci) {
+        LivingEntity entity = (LivingEntity) (Object) this;
+
+        var item = entity.getItemBySlot(EquipmentSlot.LEGS);
+        if (!item.is(PazItems.DUCKY_TUBE)) return;
+        if (entity.level().getBlockState(entity.blockPosition().above()).getFluidState().getType() != Fluids.WATER ) return;
+
+        double upwardForce = 0.015;
+        if (entity.isEyeInFluid(FluidTags.WATER)) upwardForce = 0.135;
+        if (entity.isShiftKeyDown()) upwardForce *= 0.2;
+
+        entity.addDeltaMovement(new Vec3(0.0, upwardForce, 0.0));
+
+        entity.fallDistance = 0.0F;
+
+        if (!entity.level().isClientSide() && entity.tickCount % DUCKY_TUBE_DAMAGE_INTERVAL==0 && entity.getRandom().nextFloat() > 0.5f)
+            item.hurtAndBreak(1, entity, EquipmentSlot.LEGS);
+    }
+
     @Inject(method = "defineSynchedData", at = @At(value = "TAIL"))
     public void defineData(SynchedEntityData.Builder entityData, CallbackInfo ci) {
         entityData.define(DATA_HYPNO_ID, false);
@@ -88,6 +136,10 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment {
     private void loadHypnoFlag(ValueInput input, CallbackInfo ci) {
         ((Entity) (Object) this).getEntityData().set(DATA_HYPNO_ID, input.getBooleanOr("plantz:IsHypnotized", false));
         plantz$setPlantData(input.read("plantz:AttachedPlant", CompoundTag.CODEC).orElseGet(CompoundTag::new));
+        if ((LivingEntity) (Object) this instanceof PathfinderMob mob) {
+            prevFloatTag = mob.getNavigation().canFloat();
+            if (mob.getItemBySlot(EquipmentSlot.LEGS).is(PazItems.DUCKY_TUBE)) mob.getNavigation().setCanFloat(true);
+        }
     }
     @Inject(method = "onEffectAdded", at = @At(value = "TAIL"))
     public void onHypnoAdded(MobEffectInstance effect, Entity source, CallbackInfo ci) {

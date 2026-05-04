@@ -8,6 +8,7 @@ import joshxviii.plantz.model.plants.*
 import joshxviii.plantz.model.projectiles.*
 import joshxviii.plantz.model.zombies.*
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
+import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.ModelLayers
 import net.minecraft.client.model.geom.builders.LayerDefinition
@@ -16,8 +17,14 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers
 import net.minecraft.client.renderer.entity.ArmorModelSet
 import net.minecraft.client.renderer.entity.EntityRenderers
 import net.minecraft.client.renderer.entity.ThrownItemRenderer
+import net.minecraft.world.item.ItemStack
+import org.spongepowered.asm.mixin.Unique
+import java.util.function.Supplier
 
 object PazModels {
+
+    @JvmField
+    val IS_HYPNOTIZED_KEY: RenderStateDataKey<Boolean> = RenderStateDataKey.create { "plantz:hypnotized" }
 
     val EMPTY_LAYER: ModelLayerLocation = ModelLayerLocation(pazResource("empty"), "empty")
 

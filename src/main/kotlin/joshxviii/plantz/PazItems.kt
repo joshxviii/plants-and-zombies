@@ -37,6 +37,7 @@ import net.minecraft.world.item.Items.GLASS_BOTTLE
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.item.equipment.ArmorMaterials
 import net.minecraft.world.item.equipment.ArmorType
+import net.minecraft.world.item.equipment.EquipmentAssets
 import net.minecraft.world.item.equipment.Equippable
 import net.minecraft.world.level.block.DispenserBlock
 import java.util.function.Function
@@ -77,6 +78,25 @@ object PazItems {
                 mustBeUsing = true
             )
             ).component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
+    )
+    const val DUCKY_TUBE_DAMAGE_INTERVAL = 45
+    val DUCKY_EQUIP_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, pazResource("ducky_tube"))
+    @JvmField
+    val DUCKY_TUBE: Item = registerItem(
+        "ducky_tube",
+        properties = Item.Properties()
+            .durability(225)
+            .attributes(
+                ItemAttributeModifiers.builder()
+                    .add(
+                        Attributes.WATER_MOVEMENT_EFFICIENCY,
+                        AttributeModifier(pazResource("ducky_tube"), 1.5, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.LEGS
+                    ).build())
+            .component(DataComponents.EQUIPPABLE,
+                Equippable.builder(EquipmentSlot.LEGS)
+                .setAsset(DUCKY_EQUIP_ASSET)
+                .build())
     )
     @JvmField
     val FOOTBALL_HELMET: Item = registerItem(

@@ -2,6 +2,7 @@ package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -24,6 +25,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.gameevent.GameEvent
+import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.phys.Vec3
 import kotlin.math.max
 import kotlin.math.min
@@ -104,6 +106,9 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
+        if (level.getBlockState(blockPosition()).fluidState.type == Fluids.WATER) {
+            setItemSlot(EquipmentSlot.LEGS, PazItems.DUCKY_TUBE.defaultInstance)
+        }
         if (spawnReason != EntitySpawnReason.CONVERSION) setCanBreakDoors(true)
         return data
     }
@@ -165,12 +170,17 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
             do {// search for an empty space from minY to maxY
                 val belowState = level.getBlockState(pos.below())
                 val blockState = level.getBlockState(pos)
+                val fluidState = blockState.fluidState
                 if (belowState.isFaceSturdy(level, pos.below(), Direction.UP)) {
                     if (!level.isEmptyBlock(pos)) {
                         val blockState: BlockState = blockState
                         val shape = blockState.getCollisionShape(level, pos)
                         if (!shape.isEmpty) topOffset = shape.max(Direction.Axis.Y)
                     }
+                    success = true; break
+                }
+                if (fluidState.`is`(Fluids.WATER)) {
+                    topOffset = fluidState.getHeight(level, pos).toDouble()
                     success = true; break
                 }
                 pos = pos.below()

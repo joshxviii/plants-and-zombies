@@ -23,6 +23,7 @@ import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.phys.Vec3
 
 class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, level) {
@@ -136,6 +137,9 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
         val random = level.random
         val difficultyModifier = difficulty.specialMultiplier
         setCanBreakDoors(true)
+        if (level.getBlockState(blockPosition()).fluidState.type == Fluids.WATER) {
+            setItemSlot(EquipmentSlot.LEGS, PazItems.DUCKY_TUBE.defaultInstance)
+        }
         setItemSlot(EquipmentSlot.HEAD, PazItems.FOOTBALL_HELMET.asItem().defaultInstance)
         setDropChance(EquipmentSlot.HEAD, 0.0f)
         return data

@@ -22,7 +22,7 @@ public class GargantuarModel extends PazZombieModel {
 	public GargantuarModel(final ModelPart root) {
 		super(
 			GargantuarAnimation.init.bake(root.getChild("root")),
-			root.getChild("root")
+			root
 		);
 		this.attackAnimation = GargantuarAnimation.action.bake(root.getChild("root"));
 		this.throwAnimation = GargantuarAnimation.toss.bake(root.getChild("root"));

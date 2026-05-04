@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty
 import net.minecraft.world.level.block.state.properties.IntegerProperty
 import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.level.material.Fluids
+import net.minecraft.world.level.pathfinder.PathComputationType
 import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
@@ -79,6 +80,8 @@ class WateringCanBlock(properties: Properties) : HorizontalDirectionalBlock(prop
         wateringCanItem.set(PazComponents.STORED_WATER, StoredWater(state.getValue(STORED_WATER)))
         return listOf(wateringCanItem)
     }
+
+    override fun isPathfindable(state: BlockState, type: PathComputationType): Boolean = false
 
     override fun updateShape(
         state: BlockState,

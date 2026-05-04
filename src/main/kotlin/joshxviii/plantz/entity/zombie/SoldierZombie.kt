@@ -1,6 +1,7 @@
 package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.*
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.material.Fluids
 
 class SoldierZombie(type: EntityType<out SoldierZombie>, level: Level) : PazZombie(type, level) {
 
@@ -39,7 +41,9 @@ class SoldierZombie(type: EntityType<out SoldierZombie>, level: Level) : PazZomb
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
-
+        if (level.getBlockState(blockPosition()).fluidState.type == Fluids.WATER) {
+            setItemSlot(EquipmentSlot.LEGS, PazItems.DUCKY_TUBE.defaultInstance)
+        }
         //setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_PICKAXE.defaultInstance)
         setDropChance(EquipmentSlot.MAINHAND, 0.0f)
 

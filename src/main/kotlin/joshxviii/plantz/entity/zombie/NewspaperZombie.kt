@@ -19,6 +19,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.material.Fluids
 
 class NewspaperZombie(type: EntityType<out NewspaperZombie>, level: Level) : PazZombie(type, level) {
 
@@ -112,6 +113,9 @@ class NewspaperZombie(type: EntityType<out NewspaperZombie>, level: Level) : Paz
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
+        if (level.getBlockState(blockPosition()).fluidState.type == Fluids.WATER) {
+            setItemSlot(EquipmentSlot.LEGS, PazItems.DUCKY_TUBE.defaultInstance)
+        }
         setItemSlot(EquipmentSlot.MAINHAND, PazItems.NEWSPAPER.defaultInstance)
         setDropChance(EquipmentSlot.MAINHAND, 0.0f)
         return data

@@ -1,7 +1,4 @@
 {
-
-
-
   "advancements.plantz.big_three": "The Three Zombieteers",
   "advancements.plantz.big_three.description": "Defeat an All Star, Disco Zombie, and a Zombie Yeti.",
   "advancements.plantz.cone_head": "U R A Wizard!",
@@ -70,6 +67,7 @@
   "item.plantz.watering_can": "Watering Can",
   "item.plantz.cone": "Cone",
   "item.plantz.football_helmet": "Football Helmet",
+  "item.plantz.ducky_tube": "Ducky Tube",
   "item.plantz.newspaper": "Newspaper",
   "item.plantz.brainz_flag": "Brainz Flag",
   "item.plantz.plantz_flag": "Plantz Flag",

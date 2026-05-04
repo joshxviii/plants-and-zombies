@@ -14,7 +14,10 @@ import net.minecraft.tags.FluidTags
 import net.minecraft.util.Mth
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.MoverType
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
@@ -28,9 +31,17 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.HitResult
+import net.minecraft.world.phys.Vec3
 import org.apache.logging.log4j.core.net.Severity
 
 class WateringCanItem(properties: Properties) : BlockItem(PazBlocks.WATERING_CAN_BLOCK, properties) {
+
+    override fun inventoryTick(itemStack: ItemStack, level: ServerLevel, owner: Entity, slot: EquipmentSlot?) {
+        super.inventoryTick(itemStack, level, owner, slot)
+        if (slot == EquipmentSlot.MAINHAND) {
+            owner.setPos(owner.x, owner.y + 0.1, owner.z)
+        }
+    }
 
     override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResult {
         val itemStack = player.getItemInHand(hand)

@@ -121,7 +121,7 @@ public class KernelPultModel extends PlantModel {
 
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
-		this.head.yRot = state.yRot * (float) (Math.PI / 180.0);
 		super.setupAnim(state);
+		this.head.yRot = state.yRot * (float) (Math.PI / 180.0);
 	}
 }

@@ -16,7 +16,7 @@ public class ZombieYetiModel extends PazZombieModel {
 	private final KeyframeAnimation actionAnimation;
 
 	public ZombieYetiModel(final ModelPart root) {
-		super(null, root.getChild("root"));
+		super(null, root);
 		this.actionAnimation = ZombieYetiAnimation.action.bake(root.getChild("root"));
 	}
 

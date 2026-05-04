@@ -28,7 +28,7 @@ class Cabbage(
 
     override fun onHit(hitResult: HitResult) {
         super.onHit(hitResult)
-        knockbackNearby()
+        knockbackNearby(0.25f)
         spawnParticle(
             BlockParticleOption(
                 ParticleTypes.BLOCK,
