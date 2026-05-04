@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "plantz:zen_plant_pot"
+      "id": "plantz:watering_can"
     },
     "title": {
       "translate": "advancements.plantz.grow_plant_seeds"

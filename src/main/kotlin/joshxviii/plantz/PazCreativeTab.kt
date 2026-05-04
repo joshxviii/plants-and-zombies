@@ -59,7 +59,7 @@ object PazCreativeTab {
                 // gnome
                 //output.accept(PazItems.GNOME_SPAWN_EGG)
 
-                // other
+                // items
                 output.accept(PazItems.SUN)
                 output.accept(PazItems.SUN_BOTTLE)
                 output.accept(PazItems.WATERING_CAN)
@@ -78,6 +78,9 @@ object PazCreativeTab {
 
                 // mailboxes
                 PazBlocks.mailboxByColor.forEach { output.accept(it.value) }
+
+                // other
+                output.accept(PazBlocks.GRAVESTONE)
             }
             .build()
     )

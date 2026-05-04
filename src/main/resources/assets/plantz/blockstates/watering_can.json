@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "has_water=false,facing=north": { "model": "plantz:block/watering_can" },
+    "has_water=false,facing=south": { "model": "plantz:block/watering_can", "y": 180 },
+    "has_water=false,facing=east":  { "model": "plantz:block/watering_can", "y": 90 },
+    "has_water=false,facing=west":  { "model": "plantz:block/watering_can", "y": 270 },
+
+    "has_water=true,facing=north": { "model": "plantz:block/watering_can_filled" },
+    "has_water=true,facing=south": { "model": "plantz:block/watering_can_filled", "y": 180 },
+    "has_water=true,facing=east":  { "model": "plantz:block/watering_can_filled", "y": 90 },
+    "has_water=true,facing=west":  { "model": "plantz:block/watering_can_filled", "y": 270 }
+  }
+}

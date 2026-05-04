@@ -10,6 +10,7 @@ import net.minecraft.ChatFormatting
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.chat.Component
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -28,14 +29,15 @@ fun Plant.processSunItem(player: Player, item: ItemStack, hand: InteractionHand,
     val isSunItem = item.`is`(PazItems.SUN)
     if (!hasStoredSun && !isSunItem) return false
     var success = false
+    val isServer = level() is ServerLevel
 
-    if (isTame && health < maxHealth) {// heal
+    if (isTame && isServer && health < maxHealth) {// heal
         sunHeal(1)
         addParticlesAroundSelf(particle = ParticleTypes.HAPPY_VILLAGER)
         success = true
     }
-    else if (!isTame) {// try to tame
-        if (random.nextFloat() < (1f - (PazEntities.getSunCostFromType(type) / 14f))*0.5f) {
+    else if (!isTame && isServer) {// try to tame
+        if (random.nextFloat() < (1f - (PazEntities.getSunCostFromType(type) / 14f))*0.2f) {
             tame(player)
             level().broadcastEntityEvent(this, 7.toByte())
         } else level().broadcastEntityEvent(this, 6.toByte())
@@ -47,6 +49,7 @@ fun Plant.processSunItem(player: Player, item: ItemStack, hand: InteractionHand,
             receivedSun.toFloat()/sunRequiredForSeeds() + 0.9f
         )
         if (receivedSun++ >= sunRequiredForSeeds()) awardSeedPacket(player)
+        funnyBounce()
         success = true
     }
 
@@ -83,6 +86,7 @@ fun Plant.processWateringItem(player: Player, item: ItemStack, hand: Interaction
     this.receivedWater+=waterAmount
     if (waterAmount>0) {
         addParticlesAroundSelf()
+        funnyBounce()
         return true
     }
     return false

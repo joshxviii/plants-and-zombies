@@ -109,19 +109,6 @@
 				"up": {"uv": [2, 3.25, 1.5, 1.75], "texture": "#0"},
 				"down": {"uv": [2.5, 1.75, 2, 3.25], "texture": "#0"}
 			}
-		},
-		{
-			"from": [6, 1, 6],
-			"to": [10, 5, 10],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 1, 6]},
-			"faces": {
-				"north": {"uv": [1, 5, 2, 6], "texture": "#0"},
-				"east": {"uv": [0, 5, 1, 6], "texture": "#0"},
-				"south": {"uv": [3, 5, 4, 6], "texture": "#0"},
-				"west": {"uv": [2, 5, 3, 6], "texture": "#0"},
-				"up": {"uv": [2, 5, 1, 4], "texture": "#0"},
-				"down": {"uv": [3, 4, 2, 5], "texture": "#0"}
-			}
 		}
 	],
 	"display": {
@@ -161,23 +148,7 @@
 			"origin": [8, 8, 8],
 			"scope": 0,
 			"color": 0,
-			"children": [
-				0,
-				1,
-				2,
-				3,
-				4,
-				5,
-				6,
-				7,
-				{
-					"name": "water",
-					"origin": [8, 8, 8],
-					"scope": 0,
-					"color": 0,
-					"children": [8]
-				}
-			]
+			"children": [0, 1, 2, 3, 4, 5, 6, 7]
 		}
 	]
 }

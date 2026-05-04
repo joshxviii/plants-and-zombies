@@ -396,7 +396,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val target = this.target
         if (target != null) getLookControl().setLookAt(target, 180.0F, 180.0F);
 
-        if (isAsleep && tickCount % 12 == 0 && random.nextFloat()>0.6 && tickCount > 18 && isAlive) {
+        if (isAsleep && tickCount % 12 == 0 && random.nextFloat()>0.7 && tickCount > 18 && isAlive) {
             val direction = calculateViewVector(xRot, yHeadRot).scale(boundingBox.xsize)
             level().addParticle(
                 PazServerParticles.SLEEP,
@@ -476,6 +476,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             PlantState.GROWING -> {}
         }
     }
+    fun funnyBounce() {
+        bounceAnimation.stop()
+        bounceAnimation.startIfStopped(tickCount)
+    }
 
     /**
      * @param sunAmount the amount of sun used to heal.
@@ -516,7 +520,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     fun testGrowConditions(): PlantGrowNeeds {
         val farmBlock = getBlockBelow()
-        if (!farmBlock.`is`(PazTags.BlockTags.FARMABLE)) return PlantGrowNeeds.SOIL
+        if (!farmBlock.`is`(PazTags.BlockTags.FARMABLE) || !isTame) return PlantGrowNeeds.SOIL
         if (receivedWater <= 0) {
             if (exposedToRain()) receivedWater+=1
             return PlantGrowNeeds.WATER
@@ -575,9 +579,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val itemStack = player.getItemInHand(hand)
         val level = level()
         val growNeeds = testGrowConditions()
-        bounceAnimation.stop()
-        bounceAnimation.startIfStopped(tickCount)
-        if (level is ServerLevel) {
+
+        if (true) {
             // shovel interaction
             if (itemStack.`is`(ItemTags.SHOVELS)) {
                 if (!verifyOwner(player)) return InteractionResult.FAIL
@@ -586,7 +589,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                     // apply tool damage base on how damaged the plant was
                     itemStack.hurtAndBreak(4, player, hand.asEquipmentSlot())
                     playSound(SoundEvents.ROOTED_DIRT_BREAK)
-                    level.sendParticles(BlockParticleOption(
+                    (level as? ServerLevel)?.sendParticles(BlockParticleOption(
                         ParticleTypes.BLOCK, getBlockBelow()),
                         x, y+0.05, z, 16, 0.25,0.0,0.25, 0.4)
                 }
@@ -595,7 +598,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }
 
             // sun iteration
-            if (processSunItem(player, itemStack, hand, growNeeds)) return InteractionResult.SUCCESS_SERVER
+            if (processSunItem(player, itemStack, hand, growNeeds))  return InteractionResult.SUCCESS_SERVER
 
             // water interaction
             if (processWateringItem(player, itemStack, hand, growNeeds)) return InteractionResult.SUCCESS_SERVER

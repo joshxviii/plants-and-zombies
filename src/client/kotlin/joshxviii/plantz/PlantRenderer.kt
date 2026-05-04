@@ -38,15 +38,11 @@ class PlantRenderer(
         collector: SubmitNodeCollector,
         camera: CameraRenderState
     ) {
-//        poseStack.rotateAround(
-//            state.rotations,
-//            0f,0f,0f
-//        )
-        //TODO add debug config
-        collector.submitNameTag(
+
+        // TODO add debug config
+        if (false) collector.submitNameTag(
             poseStack, Vec3(0.0,state.eyeHeight.toDouble(),0.0), -20,
-            Component.literal("${state.plantState.name}, ${state.cooldown}")
-                .withColor(0xFFFFFFF),
+            Component.literal("${state.plantState.name}, ${state.cooldown}").withColor(0xFFFFFFF),
             true, -1, 20.0, camera
         )
 

@@ -230,6 +230,7 @@ object PazEntities {
         "doomshroom", EntityType.Builder.of(::DoomShroom, MobCategory.CREATURE),
         sunCost = 12,
         eyeHeight = 0.6f,
+        height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 25.0,
             followRange = 4.0

@@ -30,10 +30,17 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.state.properties.BooleanProperty
+import net.minecraft.world.level.block.state.properties.EnumProperty
+import net.minecraft.world.level.block.state.properties.IntegerProperty
+import net.minecraft.world.level.block.state.properties.RailShape
 import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.level.material.PushReaction
 
 object PazBlocks {
+    @JvmField val HAS_WATER = BooleanProperty.create("has_water");
+    @JvmField val STORED_WATER = IntegerProperty.create("stored_water", 0, 9999);
+
     @JvmField val PLANT_POT: Block = registerBlock(
         "plant_pot",
         BlockBehaviour.Properties.of()
@@ -52,6 +59,17 @@ object PazBlocks {
             .pushReaction(PushReaction.NORMAL),
         ::ZenPlantPotBlock
     )
+    @JvmField val WATERING_CAN_BLOCK: Block = registerBlock(
+        "watering_can",
+        BlockBehaviour.Properties.of()
+            .sound(SoundType.LANTERN)
+            .strength(0.2F)
+            .noOcclusion()
+            .pushReaction(PushReaction.NORMAL),
+        ::WateringCanBlock,
+        null
+    )
+
 
     @JvmField val MAILBOX: Block = registerBlock("mailbox", mailboxProperties(), ::MailboxBlock)
     @JvmField val LIGHT_GRAY_MAILBOX: Block = registerBlock("light_gray_mailbox", mailboxProperties(MapColor.COLOR_LIGHT_GRAY), {MailboxBlock(it, DyeColor.LIGHT_GRAY)})
@@ -197,16 +215,18 @@ object PazBlocks {
         name: String,
         properties: BlockBehaviour.Properties = BlockBehaviour.Properties.of(),
         blockFactory: (BlockBehaviour.Properties) -> Block = ::Block,
-        itemProperties: Item.Properties = Item.Properties()
+        itemProperties: Item.Properties? = Item.Properties(),
     ): Block {
         val key = ResourceKey.create(Registries.BLOCK, pazResource(name))
         val block = blockFactory(properties.setId(key))
         Registry.register(BuiltInRegistries.BLOCK, key, block)
 
         // Also register the block item
-        val itemKey = ResourceKey.create(Registries.ITEM, pazResource(name))
-        val blockItem = BlockItem(block, itemProperties.setId(itemKey))
-        Registry.register(BuiltInRegistries.ITEM, itemKey, blockItem)
+        if (itemProperties!=null) {
+            val itemKey = ResourceKey.create(Registries.ITEM, pazResource(name))
+            val blockItem = BlockItem(block, itemProperties.setId(itemKey))
+            Registry.register(BuiltInRegistries.ITEM, itemKey, blockItem)
+        }
 
         return block
     }
@@ -237,6 +257,5 @@ object PazBlocks {
     }
 
     fun initialize() {
-
     }
 }

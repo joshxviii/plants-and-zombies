@@ -1,5 +1,6 @@
 package joshxviii.plantz.item
 
+import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazSounds
 import net.minecraft.core.BlockPos
@@ -15,6 +16,7 @@ import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ItemUseAnimation
@@ -27,7 +29,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.HitResult
 
-class WateringCanItem(properties: Properties) : Item(properties) {
+class WateringCanItem(properties: Properties) : BlockItem(PazBlocks.WATERING_CAN_BLOCK, properties) {
 
     override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResult {
         val itemStack = player.getItemInHand(hand)
@@ -64,6 +66,7 @@ class WateringCanItem(properties: Properties) : Item(properties) {
         val storedWaterComponent = itemStack.get(PazComponents.STORED_WATER)
 
         //
+        if (player?.isCrouching==true) return super.useOn(context)
         if (storedWaterComponent?.let { it.storedWater <= 0 } == true) return InteractionResult.PASS
         if (context.clickedFace != Direction.DOWN ) {
             var success: Boolean = false
