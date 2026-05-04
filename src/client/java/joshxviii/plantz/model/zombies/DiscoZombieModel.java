@@ -20,12 +20,13 @@ import static joshxviii.plantz.UtilsKt.pazResource;
 
 public class DiscoZombieModel extends PazZombieModel {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("disco_zombie"), "main");
-	private final KeyframeAnimation initAnimation;
 	private final KeyframeAnimation actionAnimation;
 
 	public DiscoZombieModel(final ModelPart root) {
-		super(root.getChild("root"));
-		this.initAnimation = DiscoZombieAnimation.init.bake(root.getChild("root"));
+		super(
+			DiscoZombieAnimation.init.bake(root.getChild("root")),
+			root.getChild("root")
+		);
 		this.actionAnimation = DiscoZombieAnimation.dance.bake(root.getChild("root"));
 	}
 
@@ -38,6 +39,7 @@ public class DiscoZombieModel extends PazZombieModel {
 		PartDefinition body = root.addOrReplaceChild("body", CubeListBuilder.create().texOffs(48, 22).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -12.0F, 0.0F));
 
 		PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create().texOffs(2, 42).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 74).addBox(-4.5F, -8.5F, -4.5F, 9.0F, 9.0F, 9.0F, new CubeDeformation(0.0F))
 				.texOffs(0, 22).addBox(-7.0F, -12.0F, -2.5F, 14.0F, 10.0F, 10.0F, new CubeDeformation(0.0F))
 				.texOffs(34, 50).addBox(-6.0F, -8.0F, -4.25F, 12.0F, 8.0F, 0.0F, new CubeDeformation(0.0F))
 				.texOffs(0, 0).addBox(-7.5F, -12.5F, -3.0F, 15.0F, 11.0F, 11.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -12.0F, 0.0F));
@@ -45,10 +47,12 @@ public class DiscoZombieModel extends PazZombieModel {
 		PartDefinition hat = head.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.offset(0.0F, -8.0F, 0.0F));
 
 		PartDefinition left_arm = root.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(0, 58).addBox(0.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
-				.texOffs(52, 9).addBox(0.0F, 5.0F, -2.0F, 4.0F, 3.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(4.0F, -10.0F, 0.0F));
+				.texOffs(52, 9).addBox(0.0F, 5.0F, -2.0F, 4.0F, 3.0F, 5.0F, new CubeDeformation(0.0F))
+				.texOffs(88, 9).addBox(0.0F, -2.0F, -2.5F, 4.0F, 3.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(4.0F, -10.0F, 0.0F));
 
 		PartDefinition right_arm = root.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(14, 58).addBox(-3.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
-				.texOffs(70, 9).addBox(-4.0F, 5.0F, -2.0F, 4.0F, 3.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(-4.0F, -10.0F, 0.0F));
+				.texOffs(70, 9).addBox(-4.0F, 5.0F, -2.0F, 4.0F, 3.0F, 5.0F, new CubeDeformation(0.0F))
+				.texOffs(106, 9).addBox(-4.0F, -2.0F, -2.5F, 4.0F, 3.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(-4.0F, -10.0F, 0.0F));
 
 		PartDefinition left_leg = root.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(44, 58).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
 				.texOffs(72, 1).addBox(-2.0F, 7.0F, -2.5F, 5.0F, 3.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(2.0F, 0.0F, 0.0F));
@@ -63,7 +67,6 @@ public class DiscoZombieModel extends PazZombieModel {
 	public void setupAnim(@NotNull ZombieRenderState state) {
 		super.setupAnim(state);
 		PazZombieRenderState pazState = (PazZombieRenderState) state;
-		initAnimation.apply(pazState.getInitAnimationState(), pazState.ageInTicks);
 		actionAnimation.apply(pazState.getActionAnimationState(), pazState.ageInTicks);
 	}
 }

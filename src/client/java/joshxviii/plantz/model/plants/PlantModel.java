@@ -46,6 +46,6 @@ public class PlantModel extends EntityModel<@NotNull PlantRenderState> {
         if (actionAnimation!=null)   this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
         if (sleepAnimation!=null)    this.sleepAnimation.apply(state.getSleepAnimationState(), state.ageInTicks);
         if (cooldownAnimation!=null && !state.getInitAnimationState().isStarted()) this.cooldownAnimation.apply(state.getCoolDownAnimationState(), state.ageInTicks);
-        if (bounceAnimation!=null)   this.bounceAnimation.apply(state.getBounceAnimationState(), state.ageInTicks);
+        this.bounceAnimation.apply(state.getBounceAnimationState(), state.ageInTicks);
     }
 }

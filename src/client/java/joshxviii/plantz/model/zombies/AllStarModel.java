@@ -21,7 +21,7 @@ public class AllStarModel extends PazZombieModel {
     private final KeyframeAnimation actionAnimation;
 
     public AllStarModel(final ModelPart root) {
-        super(root.getChild("root"));
+        super(null, root.getChild("root"));
         this.actionAnimation = AllStarAnimation.action.bake(root.getChild("root"));
     }
 

@@ -1,5 +1,9 @@
 package joshxviii.plantz.model.zombies;
 
+import joshxviii.plantz.PazZombieRenderState;
+import joshxviii.plantz.animation.plants.PlantAnimations;
+import joshxviii.plantz.animation.zombies.ZombieAnimations;
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -8,13 +12,22 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.model.monster.zombie.ZombieModel;
 import net.minecraft.client.renderer.entity.state.ZombieRenderState;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
 public class PazZombieModel extends ZombieModel<@NotNull ZombieRenderState> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("paz_zombie"), "main");
-    public PazZombieModel(final ModelPart root) {
+
+    final KeyframeAnimation initAnimation;
+
+    public PazZombieModel(
+            @Nullable KeyframeAnimation initAnimation,
+            final ModelPart root
+    ) {
         super(root);
+        if (initAnimation==null) this.initAnimation = ZombieAnimations.rise.bake(root);
+        else this.initAnimation = initAnimation;
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -47,5 +60,7 @@ public class PazZombieModel extends ZombieModel<@NotNull ZombieRenderState> {
     @Override
     public void setupAnim(final ZombieRenderState state) {
         super.setupAnim(state);
+        PazZombieRenderState pazState = (PazZombieRenderState) state;
+        initAnimation.apply(pazState.getInitAnimationState(), pazState.ageInTicks);
     }
 }

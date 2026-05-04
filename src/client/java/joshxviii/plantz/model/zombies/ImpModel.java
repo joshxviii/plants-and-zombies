@@ -13,7 +13,7 @@ public class ImpModel extends PazZombieModel {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("imp"), "main");
 
     public ImpModel(final ModelPart root) {
-        super(root.getChild("root"));
+        super(null, root.getChild("root"));
     }
 
     public static LayerDefinition createBodyLayer() {

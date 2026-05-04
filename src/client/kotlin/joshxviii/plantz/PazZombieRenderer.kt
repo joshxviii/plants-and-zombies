@@ -28,8 +28,8 @@ import net.minecraft.world.entity.monster.zombie.Zombie
 
 class PazZombieRenderer(
     context: EntityRendererProvider.Context,
-    private val defaultModel: PazZombieModel = PazZombieModel(context.bakeLayer(PazZombieModel.LAYER_LOCATION)),
-    private val babyModel: PazZombieModel = PazZombieModel(context.bakeLayer(ModelLayers.ZOMBIE_BABY)),
+    private val defaultModel: PazZombieModel = PazZombieModel(null, context.bakeLayer(PazZombieModel.LAYER_LOCATION)),
+    private val babyModel: PazZombieModel = PazZombieModel(null, context.bakeLayer(ModelLayers.ZOMBIE_BABY)),
     armorSet: ArmorModelSet<ModelLayerLocation> = ModelLayers.ZOMBIE_ARMOR,
     babyArmorSet: ArmorModelSet<ModelLayerLocation> = ModelLayers.ZOMBIE_BABY_ARMOR
 ) : AbstractZombieRenderer<Zombie, ZombieRenderState, ZombieModel<ZombieRenderState>>(

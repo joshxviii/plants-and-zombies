@@ -18,12 +18,12 @@ public class GargantuarModel extends PazZombieModel {
 	private final KeyframeAnimation attackAnimation;
 	private final KeyframeAnimation smashAnimation;
 	private final KeyframeAnimation throwAnimation;
-	private final KeyframeAnimation initAnimation;
-
 
 	public GargantuarModel(final ModelPart root) {
-		super(root.getChild("root"));
-		this.initAnimation = GargantuarAnimation.init.bake(root.getChild("root"));
+		super(
+			GargantuarAnimation.init.bake(root.getChild("root")),
+			root.getChild("root")
+		);
 		this.attackAnimation = GargantuarAnimation.action.bake(root.getChild("root"));
 		this.throwAnimation = GargantuarAnimation.toss.bake(root.getChild("root"));
 		this.smashAnimation = GargantuarAnimation.attack.bake(root.getChild("root"));
