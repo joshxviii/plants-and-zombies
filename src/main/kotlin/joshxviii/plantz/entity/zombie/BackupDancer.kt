@@ -24,10 +24,6 @@ class BackupDancer(type: EntityType<out BackupDancer>, level: Level) : PazZombie
 
     }
 
-    private val noMoveControl = object : MoveControl(this) {
-        override fun getSpeedModifier(): Double = 0.0
-    }
-
     override fun getAmbientSound(): SoundEvent {
         return PazSounds.BACKUP_DANCER_AMBIENT
     }
@@ -53,21 +49,8 @@ class BackupDancer(type: EntityType<out BackupDancer>, level: Level) : PazZombie
     override fun canPickUpLoot(): Boolean = false
     override fun randomizeReinforcementsChance() {}
 
-    override fun getMoveControl(): MoveControl {
-        if (tickCount < 40) return noMoveControl
-        return super.getMoveControl()
-    }
-
     override fun tick() {
         super.tick()
-        val level = level()
-        if (tickCount < 15) {// dig out of ground animation
-            if(tickCount==1) playSound(SoundEvents.ROOTED_DIRT_HIT, 1.0f, 0.2f)
-            if (level is ServerLevel) level.sendParticles(
-                BlockParticleOption(ParticleTypes.BLOCK, level.getBlockState(blockPosition().below())),
-                x, y + 0.05, z, 8, 0.25, 0.0, 0.25, 0.4
-            )
-        }
     }
 
     override fun finalizeSpawn(

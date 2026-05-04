@@ -5,9 +5,12 @@ import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazDataSerializers.DATA_ZOMBIE_STATE
 import joshxviii.plantz.ai.ZombieState
 import net.minecraft.core.BlockPos
+import net.minecraft.core.particles.BlockParticleOption
+import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.RandomSource
 import net.minecraft.world.Difficulty
 import net.minecraft.world.damagesource.DamageSource
@@ -15,6 +18,7 @@ import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.entity.ai.goal.FloatGoal
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.item.ItemStack
@@ -41,21 +45,39 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         val ZOMBIE_STATE: EntityDataAccessor<ZombieState> = SynchedEntityData.defineId<ZombieState>(PazZombie::class.java, DATA_ZOMBIE_STATE)
     }
 
+    var state: ZombieState
+        get() = this.entityData.get(ZOMBIE_STATE)
+        set(value) { this.entityData.set(ZOMBIE_STATE, value) }
+
+    private val noMoveControl = object : MoveControl(this) {
+        override fun getSpeedModifier(): Double = 0.0
+    }
+
+    override fun getMoveControl(): MoveControl {
+        if (state == ZombieState.EMERGING) return noMoveControl
+        return super.getMoveControl()
+    }
+
     override fun registerGoals() {
         super.registerGoals()
         this.goalSelector.addGoal(1, FloatGoal(this))
     }
 
-    var state: ZombieState
-        get() = this.entityData.get(ZOMBIE_STATE)
-        set(value) { this.entityData.set(ZOMBIE_STATE, value) }
-
     override fun tick() {
         super.tick()
+        val level = level()
+
         when (state) {
             ZombieState.EMERGING -> {
                 isImmobile
                 emergeAnimation.startIfStopped(tickCount)
+                if (tickCount < 15) {
+                    if(tickCount==1) playSound(SoundEvents.ROOTED_DIRT_HIT, 1.0f, 0.2f)
+                    if (level is ServerLevel) level.sendParticles(
+                        BlockParticleOption(ParticleTypes.BLOCK, level.getBlockState(blockPosition().below())),
+                        x, y + 0.05, z, 8, 0.25, 0.0, 0.25, 0.4
+                    )
+                }
                 if (tickCount > emergingTime()) {
                     emergeAnimation.stop()
                     state = ZombieState.IDLE

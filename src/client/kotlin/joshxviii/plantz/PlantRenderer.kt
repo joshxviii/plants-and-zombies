@@ -39,6 +39,7 @@ class PlantRenderer(
         camera: CameraRenderState
     ) {
 
+        // debug info text
         if (PazConfig.SHOW_DEBUG_INFO) collector.submitNameTag(
             poseStack, Vec3(0.0,state.eyeHeight.toDouble(),0.0), -20,
             Component.literal("${state.plantState.name}, ${state.cooldown}").withColor(0xFFFFFFF),
@@ -46,7 +47,7 @@ class PlantRenderer(
         )
 
         model = if (state.isBaby && babyModel != null) babyModel else defaultModel
-        if (state.ageInTicks>1) super.submit(state, poseStack, collector, camera)
+        if (state.plantState != PlantState.INIT || state.ageInTicks>1) super.submit(state, poseStack, collector, camera)
     }
 
     override fun getShadowRadius(state: PlantRenderState): Float {

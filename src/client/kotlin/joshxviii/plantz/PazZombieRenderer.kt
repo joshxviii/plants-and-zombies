@@ -1,6 +1,7 @@
 package joshxviii.plantz
 
 import com.mojang.blaze3d.vertex.PoseStack
+import joshxviii.plantz.ai.ZombieState
 import joshxviii.plantz.entity.plant.Chomper
 import joshxviii.plantz.entity.plant.KernelPult
 import joshxviii.plantz.entity.plants.WallNut
@@ -22,9 +23,11 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.state.ZombieRenderState
 import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.entity.monster.zombie.Zombie
+import net.minecraft.world.phys.Vec3
 
 class PazZombieRenderer(
     context: EntityRendererProvider.Context,
@@ -47,10 +50,18 @@ class PazZombieRenderer(
     override fun submit(
         state: ZombieRenderState,
         poseStack: PoseStack,
-        submitNodeCollector: SubmitNodeCollector,
+        collector: SubmitNodeCollector,
         camera: CameraRenderState
     ) {
-        if (state.ageInTicks>1) super.submit(state, poseStack, submitNodeCollector, camera)
+        (state as PazZombieRenderState)
+
+        // debug info text
+        if (PazConfig.SHOW_DEBUG_INFO) collector.submitNameTag(
+            poseStack, Vec3(0.0,state.eyeHeight.toDouble(),0.0), -20,
+            Component.literal("${state.zombieState.name}").withColor(0xFFFFFFF),
+            true, -1, 20.0, camera
+        )
+        if (state.zombieState != ZombieState.EMERGING || state.ageInTicks>1) super.submit(state, poseStack, collector, camera)
     }
 
     override fun createRenderState(): PazZombieRenderState {
@@ -65,6 +76,7 @@ class PazZombieRenderer(
         super.extractRenderState(entity, state, partialTicks)
         (entity as PazZombie)
         (state as PazZombieRenderState)
+        state.zombieState = entity.state
         state.texturePath = BuiltInRegistries.ENTITY_TYPE.getKey(entity.type).path
         state.initAnimationState.copyFrom(entity.emergeAnimation)
         state.magicName = entity.customName?.string
@@ -104,6 +116,7 @@ class PazZombieRenderState : ZombieRenderState() {
     var texturePathExtra: String = ""
     var actionTime: Int = 0
     var isAngry: Boolean = false
+    var zombieState: ZombieState = ZombieState.IDLE
     val initAnimationState: AnimationState = AnimationState()
     val actionAnimationState: AnimationState = AnimationState()
     val specialAnimationState: AnimationState = AnimationState()
