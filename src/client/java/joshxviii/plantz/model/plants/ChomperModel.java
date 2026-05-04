@@ -40,7 +40,14 @@ public class ChomperModel extends PlantModel {
 	private final ModelPart leaf_tip_4;
 
 	public ChomperModel(ModelPart root) {
-		super(root);
+		super(
+			ChomperAnimation.init.bake(root),
+			ChomperAnimation.idle.bake(root),
+			ChomperAnimation.action.bake(root),
+			ChomperAnimation.sleep.bake(root),
+			ChomperAnimation.cooldown.bake(root),
+			root
+		);
 		this.body = root.getChild("body");
 		this.stem = this.body.getChild("stem");
 		this.stem_2 = this.stem.getChild("stem_2");
@@ -65,11 +72,6 @@ public class ChomperModel extends PlantModel {
 		this.leaf_4 = this.leaves.getChild("leaf_4");
 		this.leaf_mid_4 = this.leaf_4.getChild("leaf_mid_4");
 		this.leaf_tip_4 = this.leaf_mid_4.getChild("leaf_tip_4");
-		this.initAnimation = ChomperAnimation.init.bake(root);
-		this.idleAnimation = ChomperAnimation.idle.bake(root);
-		this.actionAnimation = ChomperAnimation.action.bake(root);
-		this.cooldownAnimation = ChomperAnimation.cooldown.bake(root);
-		this.sleepAnimation = ChomperAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -159,9 +161,8 @@ public class ChomperModel extends PlantModel {
 
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
+		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
 		super.setupAnim(state);
 		this.stem.yRot = state.yRot * (float) (Math.PI / 180.0);
-		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
-		//if (!state.getCoolDownAnimationState().isStarted()) this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
 	}
 }

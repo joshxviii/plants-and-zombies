@@ -215,7 +215,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         noPhysics = false
     }
 
-    private var idleAnimationStartTick: Int = 0
+    var idleAnimationStartTick: Int = 0
     val initAnimationState = AnimationState()
     val idleAnimationState = AnimationState()
     val actionAnimationState = AnimationState()
@@ -435,6 +435,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
      */
     private fun updateAnimationState() {
         when (state) {
+            PlantState.INIT -> {
+                initAnimationState.startIfStopped(tickCount)
+                if (tickCount >= 19) {
+                    state = PlantState.IDLE
+                    idleAnimationStartTick = 0
+                }
+            }
             PlantState.IDLE -> {
                 idleAnimationState.startIfStopped(tickCount - idleAnimationStartTick)
                 initAnimationState.stop()
@@ -449,33 +456,24 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }
             PlantState.ACTION -> {
                 actionAnimationState.startIfStopped(tickCount)
-                coolDownAnimationState.stop()
                 state = PlantState.COOLDOWN
             }
             PlantState.COOLDOWN -> {
                 idleAnimationState.startIfStopped(tickCount)
-                if (cooldown <= 0) {
-                    state = PlantState.IDLE
-                }
+                if (cooldown <= 0) state = PlantState.IDLE
+                if (isAsleep) state = PlantState.SLEEP
             }
             PlantState.RECHARGE -> state = PlantState.IDLE
             PlantState.SLEEP -> {
                 sleepAnimationState.startIfStopped(tickCount)
                 idleAnimationState.stop()
-                initAnimationState.stop()
+                //initAnimationState.stop()
                 actionAnimationState.stop()
                 coolDownAnimationState.stop()
                 specialAnimation.stop()
                 if (!isAsleep) state = PlantState.IDLE
             }
-            PlantState.GROW -> {
-                initAnimationState.startIfStopped(tickCount)
-                if (tickCount >= 19) {
-                    initAnimationState.stop()
-                    idleAnimationStartTick = 0
-                    state = if (cooldown >= 0) PlantState.COOLDOWN else PlantState.IDLE
-                }
-            }
+            PlantState.GROWING -> {}
         }
     }
 
@@ -567,7 +565,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        state = PlantState.GROW
+        state = PlantState.INIT
         if (spawnReason == EntitySpawnReason.NATURAL) {}
 
         return groupData

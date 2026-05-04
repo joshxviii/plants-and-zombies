@@ -27,7 +27,14 @@ public class CactusModel extends PlantModel{
 	private final ModelPart arm_L;
 
 	public CactusModel(ModelPart root) {
-		super(root);
+		super(
+			CactusAnimation.init.bake(root),
+			CactusAnimation.idle.bake(root),
+			CactusAnimation.action.bake(root),
+			CactusAnimation.sleep.bake(root),
+			null,
+			root
+		);
 		this.body = root.getChild("body");
 		this.trunk = this.body.getChild("trunk");
 		this.head = this.trunk.getChild("head");
@@ -38,10 +45,6 @@ public class CactusModel extends PlantModel{
 		this.arms = this.trunk.getChild("arms");
 		this.arm_R = this.arms.getChild("arm_R");
 		this.arm_L = this.arms.getChild("arm_L");
-		this.initAnimation = CactusAnimation.init.bake(root);
-		this.idleAnimation = CactusAnimation.idle.bake(root);
-		this.actionAnimation = CactusAnimation.action.bake(root);
-		this.sleepAnimation = CactusAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {

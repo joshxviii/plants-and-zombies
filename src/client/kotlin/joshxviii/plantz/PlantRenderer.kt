@@ -1,10 +1,12 @@
 package joshxviii.plantz
 
 import com.mojang.blaze3d.vertex.PoseStack
+import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.entity.plant.KernelPult
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.plants.WallNut
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.Font
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
@@ -12,9 +14,12 @@ import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
+import net.minecraft.util.FormattedCharSequence
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.AnimationState
+import net.minecraft.world.phys.Vec3
 import org.joml.Quaternionf
 import kotlin.math.pow
 
@@ -37,6 +42,14 @@ class PlantRenderer(
 //            state.rotations,
 //            0f,0f,0f
 //        )
+        //TODO add debug config
+        collector.submitNameTag(
+            poseStack, Vec3(0.0,state.eyeHeight.toDouble(),0.0), -20,
+            Component.literal("${state.plantState.name}, ${state.cooldown}")
+                .withColor(0xFFFFFFF),
+            true, -1, 20.0, camera
+        )
+
         model = if (state.isBaby && babyModel != null) babyModel else defaultModel
         if (state.ageInTicks>1) super.submit(state, poseStack, collector, camera)
     }
@@ -74,6 +87,7 @@ class PlantRenderer(
         } else {
             Quaternionf()
         }
+        state.plantState = entity.state
         state.swelling = entity.getSwelling(partialTick)
         state.cooldown = entity.cooldown
         state.isAsleep = entity.isAsleep
@@ -122,6 +136,7 @@ class PlantRenderState : LivingEntityRenderState() {
     var isAsleep: Boolean = false
     var texturePath: String = "default"
     var texturePathExtra: String = ""
+    var plantState: PlantState = PlantState.IDLE
     val initAnimationState: AnimationState = AnimationState()
     val idleAnimationState: AnimationState = AnimationState()
     val actionAnimationState: AnimationState = AnimationState()

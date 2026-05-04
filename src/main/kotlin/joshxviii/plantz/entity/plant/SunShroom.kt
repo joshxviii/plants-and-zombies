@@ -24,9 +24,5 @@ class SunShroom(
 
     override fun stateUpdated(state: PlantState) {
         super.stateUpdated(state)
-        if (state == PlantState.GROW) {
-            isBaby = true
-            age = -3400
-        }
     }
 }

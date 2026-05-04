@@ -62,6 +62,7 @@ object PazCreativeTab {
                 // other
                 output.accept(PazItems.SUN)
                 output.accept(PazItems.SUN_BOTTLE)
+                output.accept(PazItems.WATERING_CAN)
                 output.accept(PazBlocks.PLANT_POT)
                 output.accept(PazBlocks.ZEN_PLANT_POT)
                 output.accept(PazItems.PLANT_POT_MINECART)

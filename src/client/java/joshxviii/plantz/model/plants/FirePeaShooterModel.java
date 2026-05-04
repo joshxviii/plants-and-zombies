@@ -30,7 +30,14 @@ public class FirePeaShooterModel extends PlantModel {
 	private final ModelPart leaf_tip_4;
 
 	public FirePeaShooterModel(ModelPart root) {
-		super(root);
+		super(
+			FirePeaAnimation.init.bake(root),
+			FirePeaAnimation.idle.bake(root),
+			FirePeaAnimation.action.bake(root),
+			FirePeaAnimation.sleep.bake(root),
+				null,
+			root
+		);
 		this.body = root.getChild("body");
 		this.stem = this.body.getChild("stem");
 		this.stem_2 = this.stem.getChild("stem_2");
@@ -45,10 +52,6 @@ public class FirePeaShooterModel extends PlantModel {
 		this.leaf_tip_3 = this.leaf_3.getChild("leaf_tip_3");
 		this.leaf_4 = this.leaves.getChild("leaf_4");
 		this.leaf_tip_4 = this.leaf_4.getChild("leaf_tip_4");
-		this.initAnimation = FirePeaAnimation.init.bake(root);
-		this.idleAnimation = FirePeaAnimation.idle.bake(root);
-		this.actionAnimation = FirePeaAnimation.action.bake(root);
-		this.sleepAnimation = FirePeaAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -90,9 +93,8 @@ public class FirePeaShooterModel extends PlantModel {
 
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
-		super.setupAnim(state);
-
-		this.stem.yRot = state.yRot * (float) (Math.PI / 180.0);
 		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
+		super.setupAnim(state);
+		this.stem.yRot = state.yRot * (float) (Math.PI / 180.0);
 	}
 }

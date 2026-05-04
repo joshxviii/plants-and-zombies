@@ -21,17 +21,20 @@ public class PotatoMineModel extends PlantModel {
 	private final ModelPart blinker;
 
 	public PotatoMineModel(ModelPart root) {
-		super(root);
+		super(
+			PotatoMineAnimation.init.bake(root),
+			PotatoMineAnimation.idle.bake(root),
+			null,
+			PotatoMineAnimation.sleep.bake(root),
+			PotatoMineAnimation.cooldown.bake(root),
+			root
+		);
 		this.body = root.getChild("body");
 		this.tiny_dirt = this.body.getChild("tiny_dirt");
 		this.dirt = this.body.getChild("dirt");
 		this.head = this.body.getChild("head");
 		this.potato = this.head.getChild("potato");
 		this.blinker = this.head.getChild("blinker");
-		this.idleAnimation = PotatoMineAnimation.idle.bake(root);
-		this.initAnimation = PotatoMineAnimation.init.bake(root);
-		this.cooldownAnimation = PotatoMineAnimation.cooldown.bake(root);
-		this.sleepAnimation = PotatoMineAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -59,6 +62,5 @@ public class PotatoMineModel extends PlantModel {
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
-		this.cooldownAnimation.apply(state.getCoolDownAnimationState(), state.ageInTicks);
 	}
 }

@@ -101,7 +101,7 @@ object PazEntities {
         "potatomine",
         EntityType.Builder.of(::PotatoMine, MobCategory.CREATURE),
         sunCost = 3,
-        width = 0.55f,
+        width = 0.65f,
         height = 0.35f,
         attributes = Plant.Companion.PlantAttributes(
             followRange = 3.75,

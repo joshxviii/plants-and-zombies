@@ -21,15 +21,25 @@ public class SunShroomModel extends PlantModel {
 	private final ModelPart head;
 	private final ModelPart cap;
 
-	public SunShroomModel(ModelPart root) {
-		super(root);
+	public SunShroomModel(KeyframeAnimation initAnimation, KeyframeAnimation idleAnimation, KeyframeAnimation actionAnimation, KeyframeAnimation sleepAnimation, KeyframeAnimation cooldownAnimation, ModelPart root) {
+		super(initAnimation, idleAnimation, actionAnimation, sleepAnimation, cooldownAnimation, root);
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.cap = this.head.getChild("cap");
-		this.initAnimation = SunShroomAnimation.init.bake(root);
-		this.idleAnimation = SunShroomAnimation.idle.bake(root);
-		this.actionAnimation = SunShroomAnimation.action.bake(root);
-		this.sleepAnimation = SunShroomAnimation.sleep.bake(root);
+    }
+
+	public SunShroomModel(ModelPart root) {
+		super(
+			SunShroomAnimation.init.bake(root),
+			SunShroomAnimation.idle.bake(root),
+			SunShroomAnimation.action.bake(root),
+			SunShroomAnimation.sleep.bake(root),
+			null,
+			root
+		);
+		this.body = root.getChild("body");
+		this.head = this.body.getChild("head");
+		this.cap = this.head.getChild("cap");
 	}
 
 	public static LayerDefinition createBodyLayer() {

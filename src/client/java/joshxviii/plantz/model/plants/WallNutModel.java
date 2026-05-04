@@ -17,13 +17,16 @@ public class WallNutModel extends PlantModel {
 	private final ModelPart inner;
 
 	public WallNutModel(ModelPart root) {
-		super(root);
+		super(
+			WallNutAnimation.init.bake(root),
+			WallNutAnimation.idle.bake(root),
+			WallNutAnimation.action.bake(root),
+			WallNutAnimation.sleep.bake(root),
+			null,
+			root
+		);
 		this.body = root.getChild("body");
 		this.inner = this.body.getChild("inner");
-		this.initAnimation = WallNutAnimation.init.bake(root);
-		this.idleAnimation = WallNutAnimation.idle.bake(root);
-		this.actionAnimation = WallNutAnimation.action.bake(root);
-		this.sleepAnimation = WallNutAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {

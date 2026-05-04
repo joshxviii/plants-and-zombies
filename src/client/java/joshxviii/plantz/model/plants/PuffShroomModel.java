@@ -20,15 +20,18 @@ public class PuffShroomModel extends PlantModel {
 	private final ModelPart cap;
 
 	public PuffShroomModel(ModelPart root) {
-		super(root);
+		super(
+			PuffShroomAnimation.init.bake(root),
+			PuffShroomAnimation.idle.bake(root),
+			PuffShroomAnimation.action.bake(root),
+			PuffShroomAnimation.sleep.bake(root),
+			null,
+			root
+		);
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.barrel = this.head.getChild("barrel");
 		this.cap = this.head.getChild("cap");
-		this.initAnimation = PuffShroomAnimation.init.bake(root);
-		this.idleAnimation = PuffShroomAnimation.idle.bake(root);
-		this.actionAnimation = PuffShroomAnimation.action.bake(root);
-		this.sleepAnimation = PuffShroomAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {

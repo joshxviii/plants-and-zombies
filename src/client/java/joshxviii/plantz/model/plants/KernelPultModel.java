@@ -36,7 +36,14 @@ public class KernelPultModel extends PlantModel {
 	private final ModelPart leaf_tip_4;
 
 	public KernelPultModel(ModelPart root) {
-		super(root);
+		super(
+			KernelPultAnimation.init.bake(root),
+			KernelPultAnimation.idle.bake(root),
+			KernelPultAnimation.action.bake(root),
+			KernelPultAnimation.sleep.bake(root),
+				null,
+			root
+		);
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.eyebrows = this.head.getChild("eyebrows");
@@ -55,10 +62,6 @@ public class KernelPultModel extends PlantModel {
 		this.leaf_tip_3 = this.leaf_3.getChild("leaf_tip_3");
 		this.leaf_4 = this.leaves.getChild("leaf_4");
 		this.leaf_tip_4 = this.leaf_4.getChild("leaf_tip_4");
-		this.initAnimation = KernelPultAnimation.init.bake(root);
-		this.idleAnimation = KernelPultAnimation.idle.bake(root);
-		this.actionAnimation = KernelPultAnimation.action.bake(root);
-		this.sleepAnimation = KernelPultAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -118,7 +121,7 @@ public class KernelPultModel extends PlantModel {
 
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
-		super.setupAnim(state);
 		this.head.yRot = state.yRot * (float) (Math.PI / 180.0);
+		super.setupAnim(state);
 	}
 }

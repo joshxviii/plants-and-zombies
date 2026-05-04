@@ -20,14 +20,17 @@ public class HypnoShroomModel extends PlantModel {
 	private final ModelPart cap;
 
 	public HypnoShroomModel(ModelPart root) {
-		super(root);
+		super(
+			HypnoShroomAnimation.init.bake(root),
+			HypnoShroomAnimation.idle.bake(root),
+			HypnoShroomAnimation.action.bake(root),
+			HypnoShroomAnimation.sleep.bake(root),
+				null,
+			root
+		);
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.cap = this.body.getChild("cap");
-		this.initAnimation = HypnoShroomAnimation.init.bake(root);
-		this.idleAnimation = HypnoShroomAnimation.idle.bake(root);
-		this.actionAnimation = HypnoShroomAnimation.action.bake(root);
-		this.sleepAnimation = HypnoShroomAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {

@@ -25,7 +25,14 @@ public class CherryBombModel extends PlantModel {
 	private final ModelPart head_2;
 
 	public CherryBombModel(ModelPart root) {
-		super(root);
+		super(
+			CherryBombAnimation.init.bake(root),
+			CherryBombAnimation.idle.bake(root),
+			null,
+			CherryBombAnimation.sleep.bake(root),
+			null,
+			root
+		);
 		this.body = root.getChild("body");
 		this.stem = this.body.getChild("stem");
 		this.stem2 = this.stem.getChild("stem2");
@@ -36,9 +43,7 @@ public class CherryBombModel extends PlantModel {
 		this.leaf2_tip_2 = this.leaf2.getChild("leaf2_tip_2");
 		this.head_1 = this.stem.getChild("head_1");
 		this.head_2 = this.stem.getChild("head_2");
-		this.initAnimation = CherryBombAnimation.init.bake(root);
-		this.idleAnimation = CherryBombAnimation.idle.bake(root);
-		this.sleepAnimation = CherryBombAnimation.sleep.bake(root);
+
 	}
 
 	public static LayerDefinition createBodyLayer() {

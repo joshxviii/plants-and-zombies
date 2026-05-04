@@ -57,7 +57,7 @@ class Chomper(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CHO
         if (chewTime > 0) {
             chewTime--
             cooldown = chewTime
-            coolDownAnimationState.startIfStopped(tickCount)
+            coolDownAnimationState.startIfStopped(tickCount - idleAnimationStartTick)
             if (tickCount % 24 == 0) playSound(SoundEvents.CAMEL_EAT, 0.15f, 0.9f) // TODO Custom Sound
             if (random.nextInt(12) == 0) {
                 val eyeHeight = eyeHeight.toDouble()

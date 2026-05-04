@@ -1,6 +1,7 @@
 package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.ai.goal.ExplodeGoal
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.entity.*
@@ -42,6 +43,7 @@ class PotatoMine(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
 
     override fun tick() {
         super.tick()
+        if (cooldown>0) coolDownAnimationState.startIfStopped(tickCount)
     }
 
     override fun getMaxSwell() = 4

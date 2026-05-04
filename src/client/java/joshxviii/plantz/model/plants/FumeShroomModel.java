@@ -25,7 +25,14 @@ public class FumeShroomModel extends PlantModel {
 	private final ModelPart barrel;
 
 	public FumeShroomModel(ModelPart root) {
-		super(root);
+		super(
+			FumeShroomAnimation.init.bake(root),
+			FumeShroomAnimation.idle.bake(root),
+			FumeShroomAnimation.action.bake(root),
+			FumeShroomAnimation.sleep.bake(root),
+				null,
+			root
+		);
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.eyebrows = this.head.getChild("eyebrows");
@@ -34,10 +41,6 @@ public class FumeShroomModel extends PlantModel {
 		this.cap = this.head.getChild("cap");
 		this.spout = this.cap.getChild("spout");
 		this.barrel = this.spout.getChild("barrel");
-		this.initAnimation = FumeShroomAnimation.init.bake(root);
-		this.idleAnimation = FumeShroomAnimation.idle.bake(root);
-		this.actionAnimation = FumeShroomAnimation.action.bake(root);
-		this.sleepAnimation =  FumeShroomAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {

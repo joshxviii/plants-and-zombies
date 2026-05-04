@@ -35,7 +35,14 @@ public class MelonPultModel extends PlantModel {
 	private final ModelPart leaf_tip_4;
 
 	public MelonPultModel(ModelPart root) {
-		super(root);
+		super(
+			MelonPultAnimation.init.bake(root),
+			MelonPultAnimation.idle.bake(root),
+			MelonPultAnimation.action.bake(root),
+			MelonPultAnimation.sleep.bake(root),
+			null,
+			root
+		);
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.eyebrows = this.head.getChild("eyebrows");
@@ -54,10 +61,7 @@ public class MelonPultModel extends PlantModel {
 		this.leaf_tip_3 = this.leaf_3.getChild("leaf_tip_3");
 		this.leaf_4 = this.leaves.getChild("leaf_4");
 		this.leaf_tip_4 = this.leaf_4.getChild("leaf_tip_4");
-		this.initAnimation = MelonPultAnimation.init.bake(root);
-		this.idleAnimation = MelonPultAnimation.idle.bake(root);
-		this.actionAnimation = MelonPultAnimation.action.bake(root);
-		this.sleepAnimation = MelonPultAnimation.sleep.bake(root);
+
 	}
 
 	public static LayerDefinition createBodyLayer() {

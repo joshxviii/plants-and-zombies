@@ -31,7 +31,14 @@ public class CabbagePultModel extends PlantModel {
 	private final ModelPart leaf_4;
 
 	public CabbagePultModel(ModelPart root) {
-		super(root);
+		super(
+			CabbagePultAnimation.init.bake(root),
+			CabbagePultAnimation.idle.bake(root),
+			CabbagePultAnimation.action.bake(root),
+			CabbagePultAnimation.sleep.bake(root),
+			null,
+			root
+		);
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.eyebrows = this.head.getChild("eyebrows");
@@ -46,10 +53,6 @@ public class CabbagePultModel extends PlantModel {
 		this.leaf_2 = this.leaves.getChild("leaf_2");
 		this.leaf_3 = this.leaves.getChild("leaf_3");
 		this.leaf_4 = this.leaves.getChild("leaf_4");
-		this.initAnimation = CabbagePultAnimation.init.bake(root);
-		this.idleAnimation = CabbagePultAnimation.idle.bake(root);
-		this.actionAnimation = CabbagePultAnimation.action.bake(root);
-		this.sleepAnimation = CabbagePultAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {

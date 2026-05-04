@@ -22,15 +22,18 @@ public class DoomShroomModel extends PlantModel {
 	private final ModelPart eyes;
 
 	public DoomShroomModel(ModelPart root) {
-		super(root);
+		super(
+			DoomShroomAnimation.init.bake(root),
+			DoomShroomAnimation.idle.bake(root),
+			DoomShroomAnimation.action.bake(root),
+			DoomShroomAnimation.sleep.bake(root),
+				null,
+			root
+		);
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.cap = this.head.getChild("cap");
 		this.eyes = this.cap.getChild("eyes");
-		this.initAnimation = DoomShroomAnimation.init.bake(root);
-		this.idleAnimation = DoomShroomAnimation.idle.bake(root);
-		this.actionAnimation = DoomShroomAnimation.action.bake(root);
-		this.sleepAnimation = DoomShroomAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {

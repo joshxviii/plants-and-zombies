@@ -24,15 +24,18 @@ public class ScaredyShroomModel extends PlantModel {
 	private final KeyframeAnimation hideAnimation;
 
 	public ScaredyShroomModel(ModelPart root) {
-		super(root);
+		super(
+			ScaredyShroomAnimation.init.bake(root),
+			ScaredyShroomAnimation.idle.bake(root),
+			ScaredyShroomAnimation.action.bake(root),
+			ScaredyShroomAnimation.sleep.bake(root),
+			null,
+			root
+		);
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.barrel = this.head.getChild("barrel");
 		this.cap = this.body.getChild("cap");
-		this.initAnimation = ScaredyShroomAnimation.init.bake(root);
-		this.idleAnimation = ScaredyShroomAnimation.idle.bake(root);
-		this.actionAnimation = ScaredyShroomAnimation.action.bake(root);
-		this.sleepAnimation = ScaredyShroomAnimation.sleep.bake(root);
 		this.hideAnimation = ScaredyShroomAnimation.hide.bake(root);
 	}
 

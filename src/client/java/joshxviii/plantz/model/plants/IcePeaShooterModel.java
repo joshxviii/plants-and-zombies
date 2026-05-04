@@ -31,7 +31,14 @@ public class IcePeaShooterModel extends PlantModel {
 	private final ModelPart leaf_tip_4;
 
 	public IcePeaShooterModel(ModelPart root) {
-		super(root);
+		super(
+			IcePeaAnimation.init.bake(root),
+			IcePeaAnimation.idle.bake(root),
+			IcePeaAnimation.action.bake(root),
+			IcePeaAnimation.sleep.bake(root),
+				null,
+			root
+		);
 		this.body = root.getChild("body");
 		this.stem = this.body.getChild("stem");
 		this.stem_2 = this.stem.getChild("stem_2");
@@ -47,10 +54,6 @@ public class IcePeaShooterModel extends PlantModel {
 		this.leaf_tip_3 = this.leaf_3.getChild("leaf_tip_3");
 		this.leaf_4 = this.leaves.getChild("leaf_4");
 		this.leaf_tip_4 = this.leaf_4.getChild("leaf_tip_4");
-		this.initAnimation = IcePeaAnimation.init.bake(root);
-		this.idleAnimation = IcePeaAnimation.idle.bake(root);
-		this.actionAnimation = IcePeaAnimation.action.bake(root);
-		this.sleepAnimation = IcePeaAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -108,8 +111,8 @@ public class IcePeaShooterModel extends PlantModel {
 
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
+		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
 		super.setupAnim(state);
 		this.stem.yRot = state.yRot * (float) (Math.PI / 180.0);
-		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
 	}
 }

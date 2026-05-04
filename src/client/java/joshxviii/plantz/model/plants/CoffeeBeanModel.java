@@ -21,13 +21,16 @@ public class CoffeeBeanModel extends PlantModel {
 	private final ModelPart head;
 
 	public CoffeeBeanModel(ModelPart root) {
-		super(root);
+		super(
+			CoffeeBeanAnimation.init.bake(root),
+			CoffeeBeanAnimation.idle.bake(root),
+			CoffeeBeanAnimation.action.bake(root),
+			CoffeeBeanAnimation.sleep.bake(root),
+			null,
+			root
+		);
         this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
-		this.initAnimation = CoffeeBeanAnimation.init.bake(root);
-		this.idleAnimation = CoffeeBeanAnimation.idle.bake(root);
-		this.actionAnimation = CoffeeBeanAnimation.action.bake(root);
-		this.sleepAnimation = CoffeeBeanAnimation.sleep.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -46,8 +49,8 @@ public class CoffeeBeanModel extends PlantModel {
 
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
-		super.setupAnim(state);
 		this.body.zRot = Mth.sin(state.ageInTicks * 1.5f)*0.01f;
+		super.setupAnim(state);
 		this.body.yRot = state.yRot * (float) (Mth.PI / 180.0);
 	}
 }
