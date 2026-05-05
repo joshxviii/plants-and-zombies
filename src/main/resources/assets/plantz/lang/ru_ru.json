@@ -1,7 +1,4 @@
 {
-
-
-
   "advancements.plantz.big_three": "Три зомбитёра",
   "advancements.plantz.big_three.description": "Победите Зомби футболиста, Зомби танцора диско и Зомби йети.",
   "advancements.plantz.cone_head": "Ты волшебник!",
@@ -55,7 +52,9 @@
   "effect.plantz.hypnotize": "Гипноз",
   "effect.plantz.buttered": "Намасленный",
 
+  "component.stored_sun.desc": "Хранит и использует собранное Солнце",
   "component.stored_sun": "%s / %s",
+  "component.stored_water.desc": "Может использоваться для полива растений",
   "component.stored_water": "Вода: %s / %s",
   "component.sun_cost": "Стоимость в солнцах: %s",
   "component.blocks_damage.desc": "Блокирует снаряды:",
@@ -64,8 +63,11 @@
 
   "item.plantz.sun": "Солнце",
   "item.plantz.sun_bottle": "Пузырёк с солнцем",
+  "item.plantz.sun_battery": "Солнечная батарея",
+  "item.plantz.watering_can": "Лейка",
   "item.plantz.cone": "Конус",
   "item.plantz.football_helmet": "Футбольный шлем",
+  "item.plantz.ducky_tube": "Утиный круг",
   "item.plantz.newspaper": "Газета",
   "item.plantz.brainz_flag": "Флаг мозгов",
   "item.plantz.plantz_flag": "Флаг растений",
@@ -76,6 +78,7 @@
   "item.plantz.seed_packet": "Пакетик семян",
   "item.plantz.seed_packet.entity": "Семена %s",
 
+  "item.plantz.gravestone": "Надгробие",
   "item.plantz.mailbox": "Почтовый ящик",
   "item.plantz.light_gray_mailbox": "Светло-серый почтовый ящик",
   "item.plantz.gray_mailbox": "Серый почтовый ящик",
@@ -90,7 +93,7 @@
   "item.plantz.light_blue_mailbox": "Голубой почтовый ящик",
   "item.plantz.blue_mailbox": "Синий почтовый ящик",
   "item.plantz.purple_mailbox": "Фиолетовый почтовый ящик",
-  "item.plantz.magenta_mailbox": "Сиреневый почтовый ящик",
+  "item.plantz.magenta_mailbox": "Пурпурный почтовый ящик",
   "item.plantz.pink_mailbox": "Розовый почтовый ящик",
 
   "item.minecraft.potion.effect.hypnotize": "Зелье гипноза",
@@ -130,7 +133,7 @@
   "block.plantz.light_blue_mailbox": "Голубой почтовый ящик",
   "block.plantz.blue_mailbox": "Синий почтовый ящик",
   "block.plantz.purple_mailbox": "Фиолетовый почтовый ящик",
-  "block.plantz.magenta_mailbox": "Сиреневый почтовый ящик",
+  "block.plantz.magenta_mailbox": "Пурпурный почтовый ящик",
   "block.plantz.pink_mailbox": "Розовый почтовый ящик",
 
   "entity.plantz.empty": "Пусто",
@@ -152,6 +155,7 @@
   "entity.plantz.fumeshroom": "Дымогриб",
   "entity.plantz.scaredyshroom": "Страхогриб",
   "entity.plantz.hypnoshroom": "Гипногриб",
+  "entity.plantz.doomshroom": "Гриб судьбы",
   "entity.plantz.coffeebean": "Кофейное Зерно",
 
   "entity.plantz.browncoat": "Горожанин",
