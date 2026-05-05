@@ -19,6 +19,7 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.control.MoveControl
+import net.minecraft.world.entity.ai.goal.FloatGoal
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.vehicle.boat.AbstractBoat
@@ -66,6 +67,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
 
     override fun registerGoals() {
         super.registerGoals()
+        goalSelector.addGoal(1, FloatGoal(this))
         goalSelector.addGoal(1, SmashAttackGoal(this))
         goalSelector.addGoal(2, ThrowImpGoal(this))
     }
@@ -132,6 +134,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
     }
 
     override fun emergingTime(): Int = 80
+    override fun canEquipDuckyInWater(): Boolean = false
     override fun getSoundVolume(): Float =  2.5f
 
     override fun doPush(entity: Entity) {

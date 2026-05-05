@@ -259,6 +259,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         output.putInt("plantz:ReceivedWater", receivedWater)
         output.putInt("plantz:SeedGrowTime", seedGrowCooldown)
         output.putInt("plantz:CoffeeBuff", coffeeBuff)
+        output.putInt("plantz:Cooldown", cooldown)
         attachedPlayerReference.let { EntityReference.store(it, output, "plantz:AttachedPlayer") }
     }
 
@@ -268,6 +269,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         receivedWater = input.getInt("plantz:ReceivedWater").getOrElse { 0 }
         seedGrowCooldown = input.getInt("plantz:SeedGrowTime").getOrElse { timeRequiredForSeeds() }
         coffeeBuff = input.getInt("plantz:CoffeeBuff").getOrElse { 0 }
+        cooldown = input.getInt("plantz:Cooldown").getOrElse { -1 }
         attachedPlayerReference = Optional.ofNullable((EntityReference.read<LivingEntity>(input, "plantz:AttachedPlayer"))).getOrNull()
     }
 

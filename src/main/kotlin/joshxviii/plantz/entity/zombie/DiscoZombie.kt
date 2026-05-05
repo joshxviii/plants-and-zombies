@@ -102,9 +102,6 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
-        if (level.getBlockState(blockPosition()).fluidState.type == Fluids.WATER) {
-            setItemSlot(EquipmentSlot.LEGS, PazItems.DUCKY_TUBE.defaultInstance)
-        }
         if (spawnReason != EntitySpawnReason.CONVERSION) setCanBreakDoors(true)
         return data
     }

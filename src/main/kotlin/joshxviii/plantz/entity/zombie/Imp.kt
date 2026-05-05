@@ -67,10 +67,6 @@ class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie
             setCanPickUpLoot(false)
             setCanBreakDoors(true)
 
-            if (level.getBlockState(blockPosition()).fluidState.type == Fluids.WATER) {
-                setItemSlot(EquipmentSlot.LEGS, PazItems.DUCKY_TUBE.defaultInstance)
-            }
-
             //getAttribute(Attributes.SPAWN_REINFORCEMENTS_CHANCE)?.addPermanentModifier(AttributeModifier(pazResource("browncoat"), this.random.nextDouble() * 10.25 + 0.5, AttributeModifier.Operation.ADD_VALUE))
 
             if (getItemBySlot(EquipmentSlot.HEAD).isEmpty){

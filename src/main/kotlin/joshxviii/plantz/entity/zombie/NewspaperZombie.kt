@@ -111,9 +111,7 @@ class NewspaperZombie(type: EntityType<out NewspaperZombie>, level: Level) : Paz
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
-        if (level.getBlockState(blockPosition()).fluidState.type == Fluids.WATER) {
-            setItemSlot(EquipmentSlot.LEGS, PazItems.DUCKY_TUBE.defaultInstance)
-        }
+
         setItemSlot(EquipmentSlot.MAINHAND, PazItems.NEWSPAPER.defaultInstance)
         setDropChance(EquipmentSlot.MAINHAND, 0.0f)
         return data

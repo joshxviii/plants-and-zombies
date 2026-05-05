@@ -56,11 +56,7 @@ class BackupDancer(type: EntityType<out BackupDancer>, level: Level) : PazZombie
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        state = ZombieState.EMERGING
-
-        if (level.getBlockState(blockPosition()).fluidState.type == Fluids.WATER) {
-            setItemSlot(EquipmentSlot.LEGS, PazItems.DUCKY_TUBE.defaultInstance)
-        }
+        if (spawnReason == EntitySpawnReason.MOB_SUMMONED) state = ZombieState.EMERGING
 
         val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
         setCanBreakDoors(false)

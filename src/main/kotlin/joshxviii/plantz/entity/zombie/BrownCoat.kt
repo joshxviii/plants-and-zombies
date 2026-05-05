@@ -54,10 +54,6 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
         setCanPickUpLoot(true)
         setCanBreakDoors(true)
 
-        if (level.getBlockState(blockPosition()).fluidState.type == Fluids.WATER) {
-            setItemSlot(EquipmentSlot.LEGS, PazItems.DUCKY_TUBE.defaultInstance)
-        }
-
         if (getItemBySlot(EquipmentSlot.HEAD).isEmpty){
             if (random.nextFloat() < 0.25) {
                 setItemSlot(EquipmentSlot.HEAD, PazBlocks.CONE.asItem().defaultInstance)

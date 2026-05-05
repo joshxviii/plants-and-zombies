@@ -135,9 +135,7 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
         val random = level.random
         val difficultyModifier = difficulty.specialMultiplier
         setCanBreakDoors(true)
-        if (level.getBlockState(blockPosition()).fluidState.type == Fluids.WATER) {
-            setItemSlot(EquipmentSlot.LEGS, PazItems.DUCKY_TUBE.defaultInstance)
-        }
+
         setItemSlot(EquipmentSlot.HEAD, PazItems.FOOTBALL_HELMET.asItem().defaultInstance)
         setDropChance(EquipmentSlot.HEAD, 0.0f)
         return data

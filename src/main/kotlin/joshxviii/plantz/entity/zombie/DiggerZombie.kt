@@ -91,10 +91,6 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
     ): SpawnGroupData? {
         val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
 
-        if (level.getBlockState(blockPosition()).fluidState.type == Fluids.WATER) {
-            setItemSlot(EquipmentSlot.LEGS, PazItems.DUCKY_TUBE.defaultInstance)
-        }
-
         isLeftHanded = false
         setCanBreakDoors(true)
         setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_PICKAXE.defaultInstance)

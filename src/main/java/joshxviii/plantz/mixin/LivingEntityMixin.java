@@ -5,11 +5,14 @@ import joshxviii.plantz.PazItems;
 import joshxviii.plantz.PazTags;
 import joshxviii.plantz.PlantHeadAttachment;
 import joshxviii.plantz.entity.plant.Plant;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Util;
 import net.minecraft.world.effect.MobEffect;
@@ -22,6 +25,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
@@ -89,15 +93,21 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment {
 
     @Unique
     private boolean prevFloatTag = false;
+    @Unique
+    private float prevWaterMalus = 0f;
 
     @Inject(method = "onEquipItem", at = @At("TAIL"))
     private void plantz$checkFloatTag(EquipmentSlot slot, ItemStack oldStack, ItemStack stack, CallbackInfo ci) {
         if ((LivingEntity) (Object) this instanceof PathfinderMob mob) {
             if (stack.is(PazItems.DUCKY_TUBE) && slot == EquipmentSlot.LEGS) {
                 prevFloatTag = mob.getNavigation().canFloat();
+                prevWaterMalus = mob.getPathfindingMalus(PathType.WATER);
                 mob.getNavigation().setCanFloat(true);
             }
-            else if (oldStack.is(PazItems.DUCKY_TUBE) && slot == EquipmentSlot.LEGS) mob.getNavigation().setCanFloat(prevFloatTag);
+            else if (oldStack.is(PazItems.DUCKY_TUBE) && slot == EquipmentSlot.LEGS) {
+                mob.getNavigation().setCanFloat(prevFloatTag);
+                mob.setPathfindingMalus(PathType.WATER, 0.0F);
+            }
         }
     }
 
@@ -107,7 +117,7 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment {
 
         var item = entity.getItemBySlot(EquipmentSlot.LEGS);
         if (!item.is(PazItems.DUCKY_TUBE)) return;
-        var fluidType = entity.level().getBlockState(entity.blockPosition().above()).getFluidState().getType();
+        var fluidType = entity.level().getBlockState(BlockPos.containing(entity.position().relative(Direction.UP, entity.getBbHeight()*.5))).getFluidState().getType();
         if (fluidType == Fluids.EMPTY ) return;
 
         //base
@@ -143,7 +153,11 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment {
         plantz$setPlantData(input.read("plantz:AttachedPlant", CompoundTag.CODEC).orElseGet(CompoundTag::new));
         if ((LivingEntity) (Object) this instanceof PathfinderMob mob) {
             prevFloatTag = mob.getNavigation().canFloat();
-            if (mob.getItemBySlot(EquipmentSlot.LEGS).is(PazItems.DUCKY_TUBE)) mob.getNavigation().setCanFloat(true);
+            prevWaterMalus = mob.getPathfindingMalus(PathType.WATER);
+            if (mob.getItemBySlot(EquipmentSlot.LEGS).is(PazItems.DUCKY_TUBE)) {
+                mob.getNavigation().setCanFloat(true);
+                mob.setPathfindingMalus(PathType.WATER, 0.0F);
+            }
         }
     }
     @Inject(method = "onEffectAdded", at = @At(value = "TAIL"))

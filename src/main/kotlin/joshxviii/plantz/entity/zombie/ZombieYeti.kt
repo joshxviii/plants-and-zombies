@@ -15,6 +15,7 @@ import net.minecraft.world.Difficulty
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
+import net.minecraft.world.entity.ai.goal.FloatGoal
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
@@ -44,6 +45,7 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : PazZombie(typ
 
     override fun registerGoals() {
         super.registerGoals()
+        goalSelector.addGoal(1, FloatGoal(this))
         goalSelector.addGoal(2, ProjectileAttackGoal(
             usingEntity = this,
             projectileFactory = {
@@ -91,6 +93,7 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : PazZombie(typ
         }
     }
 
+    override fun canEquipDuckyInWater(): Boolean = false
     override fun canPickUpLoot(): Boolean = false
     override fun randomizeReinforcementsChance() {}
 

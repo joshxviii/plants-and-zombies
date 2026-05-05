@@ -1,8 +1,9 @@
-# Changelog 1.5
+# Changelog 1.4
 - Added Doom-Shroom
 - Added Gravestone Block
-	- Zombies will emerge from the ground when a Plant or Player is nearby
+	- Zombies will emerge from the ground near the gravestone during the night.
 - Added Ducky Tube
+	- Browncoats and Newspaper Zombies can spawn in lakes and oceans with the Ducky Tube.
 - Added Watering Can
 - Added Solar Battery
 	- Can store sun and will automatically use sun when planting or interacting with Plants.
@@ -12,16 +13,14 @@
 - Adjusted projectile firing logic for Plants and Zombies.
 - Wild plants will only attack zombies by default.
 - Wild Scaredy Shrooms now hide from the player.
+- Adjusted spawn rates.
 ### Technical Changes
 - Added a configuration file.
-- Removed SeedPacket Component
-- Added StoredSun item component
-- Added StoredWater item component
-- Added SunCost item component
-
-# Changelog 1.4
-- Leader Zombies cannot spawn leaders as reinforcements
-- Adjusted spawn rates
+- Removed SeedPacket Component.
+- Added StoredSun item component.
+- Added StoredWater item component.
+- Added SunCost item component.
+- Leader Zombies can no longer spawn leaders as reinforcements.
 
 # Changelog 1.3
 - Bug fixes.

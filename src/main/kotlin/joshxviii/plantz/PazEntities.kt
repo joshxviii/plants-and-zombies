@@ -306,7 +306,6 @@ object PazEntities {
         attributes = Zombie.createAttributes()
             .add(Attributes.ATTACK_DAMAGE, 8.0)
             .add(Attributes.MAX_HEALTH, 75.0)
-            .add(Attributes.SCALE, 1.1)
             .add(Attributes.STEP_HEIGHT, 1.0)
             .add(Attributes.MOVEMENT_SPEED, 0.23)
             .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 1.5)

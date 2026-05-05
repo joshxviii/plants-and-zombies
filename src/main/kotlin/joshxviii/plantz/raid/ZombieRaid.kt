@@ -251,7 +251,7 @@ class ZombieRaid(
                 }
                 val randX = pos.x + random.nextInt(11) - 5
                 val randZ = pos.z + random.nextInt(11) - 5
-                val randY = level.getHeight(Heightmap.Types.WORLD_SURFACE, randX, randZ)
+                val randY = level.getHeight(Heightmap.Types.OCEAN_FLOOR, randX, randZ)
                 val randomPos = MutableBlockPos(randX,randY,randZ)
                 joinRaid(level, zombie, wavesSpawned+1, false, randomPos)
             }
