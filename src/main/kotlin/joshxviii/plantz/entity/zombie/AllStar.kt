@@ -118,8 +118,6 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
         goalSelector.addGoal(1, ChargeGoal(this))
     }
 
-    override fun isBaby(): Boolean = false
-    override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {}
     override fun canPickUpLoot(): Boolean = false
 
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {

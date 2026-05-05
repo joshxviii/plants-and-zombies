@@ -69,8 +69,6 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
         }
     }
 
-
-
     override fun registerGoals() {
         super.registerGoals()
         goalSelector.addGoal(1,SummonBackupGoal(this))
@@ -94,8 +92,6 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
         return result
     }
 
-    override fun isBaby(): Boolean = false
-    override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {}
     override fun canPickUpLoot(): Boolean = false
     override fun randomizeReinforcementsChance() {}
 

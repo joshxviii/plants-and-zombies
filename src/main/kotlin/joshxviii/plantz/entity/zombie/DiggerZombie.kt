@@ -76,8 +76,6 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
         return result
     }
 
-    override fun isBaby(): Boolean = false
-    override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {}
     override fun canPickUpLoot(): Boolean = true
     override fun getPreferredWeaponType(): TagKey<Item> = PazTags.ItemTags.DIGGER_PREFERRED_WEAPONS
     override fun wantsToPickUp(level: ServerLevel, itemStack: ItemStack): Boolean {

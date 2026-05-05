@@ -16,6 +16,10 @@ import net.minecraft.world.level.material.Fluids
 
 class SoldierZombie(type: EntityType<out SoldierZombie>, level: Level) : PazZombie(type, level) {
 
+    init {
+        xpReward = 10
+    }
+
     override fun getAmbientSound(): SoundEvent {
         return PazSounds.BROWNCOAT_AMBIENT
     }
@@ -44,8 +48,7 @@ class SoldierZombie(type: EntityType<out SoldierZombie>, level: Level) : PazZomb
         if (level.getBlockState(blockPosition()).fluidState.type == Fluids.WATER) {
             setItemSlot(EquipmentSlot.LEGS, PazItems.DUCKY_TUBE.defaultInstance)
         }
-        //setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_PICKAXE.defaultInstance)
-        setDropChance(EquipmentSlot.MAINHAND, 0.0f)
+        setItemSlot(EquipmentSlot.MAINHAND, PazItems.DYE_BLASTER.defaultInstance)
 
         return data
     }

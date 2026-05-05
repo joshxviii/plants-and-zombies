@@ -66,8 +66,8 @@ class ScaredyShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(Paz
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, LivingEntity::class.java, 5, true, false) { target, _ ->
             target !is Plant
                     && target !is Creeper
-                    && target is Zombie
-                    || (target is Enemy && isTame)
+                    && (target is Zombie
+                    || (target is Enemy && isTame))
         })
     }
 

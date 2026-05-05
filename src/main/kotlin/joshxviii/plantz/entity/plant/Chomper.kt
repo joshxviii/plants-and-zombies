@@ -44,11 +44,11 @@ class Chomper(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CHO
         this.goalSelector.addGoal(1, ChompAttackGoal(this))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, LivingEntity::class.java, 5, true, false) { target, level ->
             target !is Plant
-                    && target is Zombie
+                    && (target is Zombie
                     || target is AbstractFish
                     || target is Chicken
                     || (target is Enemy && isTame)
-                    || (target is Player && !isTame)
+                    || (target is Player && !isTame))
         })
     }
 

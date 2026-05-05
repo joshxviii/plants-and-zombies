@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.BlockTags
+import net.minecraft.util.RandomSource
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
@@ -36,6 +37,11 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
         return result
     }
 
+    override fun isBaby(): Boolean = isBabyZombie()
+    override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {
+        randomEquip(random, difficulty)
+    }
+
     override fun finalizeSpawn(
         level: ServerLevelAccessor,
         difficulty: DifficultyInstance,
@@ -60,7 +66,6 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
                 setItemSlot(EquipmentSlot.HEAD, Items.BUCKET.defaultInstance)
             }
         }
-
 
         return data
     }

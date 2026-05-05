@@ -107,11 +107,16 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment {
 
         var item = entity.getItemBySlot(EquipmentSlot.LEGS);
         if (!item.is(PazItems.DUCKY_TUBE)) return;
-        if (entity.level().getBlockState(entity.blockPosition().above()).getFluidState().getType() != Fluids.WATER ) return;
+        var fluidType = entity.level().getBlockState(entity.blockPosition().above()).getFluidState().getType();
+        if (fluidType == Fluids.EMPTY ) return;
 
-        double upwardForce = 0.015;
+        //base
+        double upwardForce = fluidType == Fluids.LAVA ? 0.1 : 0.015;
+        // submerged
         if (entity.isEyeInFluid(FluidTags.WATER)) upwardForce = 0.135;
-        if (entity.isShiftKeyDown()) upwardForce *= 0.2;
+        if (entity.isEyeInFluid(FluidTags.LAVA)) upwardForce = 0.15;
+        // sneaking
+        if (entity.isShiftKeyDown()) upwardForce *= fluidType == Fluids.LAVA? 0.0 : 0.2;
 
         entity.addDeltaMovement(new Vec3(0.0, upwardForce, 0.0));
 

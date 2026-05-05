@@ -2,9 +2,6 @@ package joshxviii.plantz
 
 import com.mojang.blaze3d.vertex.PoseStack
 import joshxviii.plantz.ai.ZombieState
-import joshxviii.plantz.entity.plant.Chomper
-import joshxviii.plantz.entity.plant.KernelPult
-import joshxviii.plantz.entity.plants.WallNut
 import joshxviii.plantz.entity.zombie.AllStar
 import joshxviii.plantz.entity.zombie.DiscoZombie
 import joshxviii.plantz.entity.zombie.Gargantuar

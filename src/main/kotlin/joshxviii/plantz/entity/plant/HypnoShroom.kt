@@ -21,8 +21,8 @@ class HypnoShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEn
 
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, LivingEntity::class.java, 5, true, false) { target, level ->
             target !is Plant
-                    && target is Zombie
-                    || (target is Enemy && isTame)
+                    && (target is Zombie
+                    || (target is Enemy && isTame))
         })
     }
 

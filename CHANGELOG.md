@@ -2,6 +2,7 @@
 - Added Doom-Shroom
 - Added Gravestone Block
 	- Zombies will emerge from the ground when a Plant or Player is nearby
+- Added Ducky Tube
 - Added Watering Can
 - Added Solar Battery
 	- Can store sun and will automatically use sun when planting or interacting with Plants.

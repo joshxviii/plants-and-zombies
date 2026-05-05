@@ -17,9 +17,9 @@ import net.minecraft.world.phys.Vec3
 
 class Butter(
     level: Level,
-    owner: Plant? = null,
+    owner: LivingEntity? = null,
     spawnOffset: Vec2 = Vec2.ZERO,
-) : PlantProjectile(
+) : PazProjectile(
     PazEntities.BUTTER, level, owner, spawnOffset,
     PazDamageTypes.PLANT,
     damage = 3.5f,

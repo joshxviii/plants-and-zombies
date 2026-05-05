@@ -114,7 +114,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
         data class PlantAttributes(
             val maxHealth: Double = 20.0,
-            val attackDamage: Double = 1.5,
+            val attackDamage: Double = 1.0,
             val attackKnockback: Double = 0.001,
             val movementSpeed: Double = 0.0,
             val followRange: Double = 14.0,

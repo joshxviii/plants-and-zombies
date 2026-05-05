@@ -82,6 +82,11 @@ class WateringCanItem(properties: Properties) : BlockItem(PazBlocks.WATERING_CAN
         if (storedWaterComponent?.let { it.storedWater <= 0 } == true) return InteractionResult.PASS
         if (context.clickedFace != Direction.DOWN ) {
             var success = false
+            if (blockState.`is`(BlockTags.FIRE)) {
+                level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.2f, 1.0f)
+                level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
+                success = true
+            }
             if (blockState.`is`(BlockTags.CONVERTABLE_TO_MUD)) {// mud conversion
                 level.playSound(null, pos, SoundEvents.GENERIC_SPLASH, SoundSource.BLOCKS, 1.0f, 1.0f)
                 level.gameEvent(null, GameEvent.FLUID_PLACE, pos)

@@ -39,7 +39,7 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : PazZombie(typ
     }
 
     init {
-        xpReward = 20
+        xpReward = 25
     }
 
     override fun registerGoals() {
@@ -91,8 +91,6 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : PazZombie(typ
         }
     }
 
-    override fun isBaby(): Boolean = false
-    override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {}
     override fun canPickUpLoot(): Boolean = false
     override fun randomizeReinforcementsChance() {}
 

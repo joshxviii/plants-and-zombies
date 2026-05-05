@@ -5,6 +5,7 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.phys.HitResult
@@ -13,9 +14,9 @@ import net.minecraft.world.phys.Vec3
 
 class Kernel(
     level: Level,
-    owner: Plant? = null,
+    owner: LivingEntity? = null,
     spawnOffset: Vec2 = Vec2.ZERO,
-) : PlantProjectile(
+) : PazProjectile(
     PazEntities.KERNEL, level, owner, spawnOffset,
     PazDamageTypes.PLANT,
     damage = 1.0f

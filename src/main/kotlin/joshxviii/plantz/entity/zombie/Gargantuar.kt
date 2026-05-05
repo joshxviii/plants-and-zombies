@@ -160,8 +160,6 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
         this.playSound(SoundEvents.WARDEN_STEP, 6.0f, 0.9f)
     }
 
-    override fun isBaby(): Boolean = false
-    override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {}
     override fun canPickUpLoot(): Boolean = false
     override fun randomizeReinforcementsChance() {}
 

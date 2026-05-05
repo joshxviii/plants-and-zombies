@@ -23,10 +23,6 @@ import net.minecraft.world.level.material.Fluids
 
 class BackupDancer(type: EntityType<out BackupDancer>, level: Level) : PazZombie(type, level) {
 
-    init {
-
-    }
-
     override fun getAmbientSound(): SoundEvent {
         return PazSounds.BACKUP_DANCER_AMBIENT
     }
@@ -47,8 +43,6 @@ class BackupDancer(type: EntityType<out BackupDancer>, level: Level) : PazZombie
         return result
     }
 
-    override fun isBaby(): Boolean = false
-    override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {}
     override fun canPickUpLoot(): Boolean = false
     override fun randomizeReinforcementsChance() {}
 

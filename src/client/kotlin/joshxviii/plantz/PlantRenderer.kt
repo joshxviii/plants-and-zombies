@@ -4,9 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.entity.plant.KernelPult
 import joshxviii.plantz.entity.plant.Plant
-import joshxviii.plantz.entity.plants.WallNut
+import joshxviii.plantz.entity.plant.WallNut
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.Font
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
@@ -16,7 +15,6 @@ import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
-import net.minecraft.util.FormattedCharSequence
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.phys.Vec3

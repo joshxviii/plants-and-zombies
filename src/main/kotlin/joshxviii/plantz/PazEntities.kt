@@ -9,7 +9,7 @@ import joshxviii.plantz.entity.PlantPotMinecart
 import joshxviii.plantz.entity.Sun
 import joshxviii.plantz.entity.gnome.Gnome
 import joshxviii.plantz.entity.plant.*
-import joshxviii.plantz.entity.plants.WallNut
+import joshxviii.plantz.entity.plant.WallNut
 import joshxviii.plantz.entity.projectile.*
 import joshxviii.plantz.entity.zombie.*
 import joshxviii.plantz.mixin.MobAccessor
@@ -102,7 +102,7 @@ object PazEntities {
         "ice_peashooter",
         EntityType.Builder.of(::IcePeaShooter, MobCategory.CREATURE),
         attributes = Plant.Companion.PlantAttributes(
-            attackDamage = 2.5,
+            attackDamage = 1.5,
         )
     )
     @JvmField val REPEATER: EntityType<Repeater> = registerPlant(
@@ -113,7 +113,7 @@ object PazEntities {
         "fire_peashooter",
         EntityType.Builder.of(::FirePeaShooter, MobCategory.CREATURE).fireImmune(),
         attributes = Plant.Companion.PlantAttributes(
-            attackDamage = 2.5,
+            attackDamage = 1.5,
         )
     )
     @JvmField val CACTUS: EntityType<Cactus> = registerPlant(
@@ -123,7 +123,7 @@ object PazEntities {
         height = 1.25f,
         eyeHeight = 0.85f,
         attributes = Plant.Companion.PlantAttributes(
-            attackDamage = 3.5,
+            attackDamage = 2.0,
             followRange = 34.0,
         )
     )
@@ -133,7 +133,7 @@ object PazEntities {
         width = 0.9f,
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
-            attackDamage = 3.5,
+            attackDamage = 2.5,
             attackKnockback = 0.5,
             followRange = 22.0,
         )
@@ -144,7 +144,7 @@ object PazEntities {
         width = 0.9f,
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
-            attackDamage = 2.5,
+            attackDamage = 2.0,
             attackKnockback = 0.5,
             followRange = 26.0,
         )
@@ -167,7 +167,7 @@ object PazEntities {
         eyeHeight = 0.3f,
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 12.0,
-            attackDamage = 1.0,
+            attackDamage = 0.75,
             followRange = 10.0,
         )
     )
@@ -178,7 +178,7 @@ object PazEntities {
         eyeHeight = 0.5f,
         attributes = Plant.Companion.PlantAttributes(
             followRange = 22.0,
-            attackDamage = 1.5,
+            attackDamage = 1.0,
         )
     )
     @JvmField val FUME_SHROOM: EntityType<FumeShroom> = registerPlant(
@@ -187,7 +187,7 @@ object PazEntities {
         width = 0.8f,
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
-            attackDamage = 3.0,
+            attackDamage = 2.5,
         )
     )
     @JvmField val SUN_SHROOM: EntityType<SunShroom> = registerPlant(
@@ -374,12 +374,13 @@ object PazEntities {
     @JvmField val PEA: EntityType<Pea> = registerProjectile("pea", EntityType.Builder.of({_,l->Pea(l)}, MobCategory.MISC))
     @JvmField val PEA_ICE: EntityType<PeaIce> = registerProjectile("pea_ice", EntityType.Builder.of({_,l->PeaIce(l)}, MobCategory.MISC))
     @JvmField val PEA_FIRE: EntityType<PeaFire> = registerProjectile("pea_fire", EntityType.Builder.of({_,l->PeaFire(l)}, MobCategory.MISC))
-    @JvmField val NEEDLE: EntityType<Needle> = registerProjectile("needle", EntityType.Builder.of({_,l->Needle(l)}, MobCategory.MISC))
+    @JvmField val NEEDLE: EntityType<Needle> = registerProjectile("needle", EntityType.Builder.of({_,l->Needle(l)}, MobCategory.MISC), width = 0.42f, height = 0.42f)
     @JvmField val SPORE: EntityType<Spore> = registerProjectile("spore", EntityType.Builder.of({_,l->Spore(l)}, MobCategory.MISC))
     @JvmField val CABBAGE: EntityType<Cabbage> = registerProjectile("cabbage", EntityType.Builder.of({_,l->Cabbage(l)}, MobCategory.MISC), width = 0.5f, height = 0.5f)
     @JvmField val KERNEL: EntityType<Kernel> = registerProjectile("kernel", EntityType.Builder.of({_,l->Kernel(l)}, MobCategory.MISC), width = 0.42f, height = 0.42f)
     @JvmField val BUTTER: EntityType<Butter> = registerProjectile("butter", EntityType.Builder.of({_,l->Butter(l)}, MobCategory.MISC), width = 0.75f, height = 0.5f)
     @JvmField val MELON: EntityType<Melon> = registerProjectile("melon", EntityType.Builder.of({_,l->Melon(l)}, MobCategory.MISC), width = 1.0f, height = 0.8f)
+    @JvmField val PAINT_BALL: EntityType<PaintBall> = registerProjectile("paint_ball", EntityType.Builder.of({ _, l->PaintBall(l)}, MobCategory.MISC), width = 0.42f, height = 0.42f)
     // endregion
 
     //region Other

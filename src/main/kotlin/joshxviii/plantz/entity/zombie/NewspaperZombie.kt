@@ -97,8 +97,6 @@ class NewspaperZombie(type: EntityType<out NewspaperZombie>, level: Level) : Paz
         setCanBreakDoors(true)
     }
 
-    override fun isBaby(): Boolean = false
-    override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {}
     override fun getPreferredWeaponType(): TagKey<Item> = PazTags.ItemTags.NEWSPAPER_ZOMBIE_PREFERRED_WEAPONS
     override fun canPickUpLoot(): Boolean = true
 

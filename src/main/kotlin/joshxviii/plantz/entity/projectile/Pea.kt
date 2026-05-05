@@ -5,6 +5,7 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.HitResult
@@ -12,16 +13,16 @@ import net.minecraft.world.phys.Vec2
 
 class Pea(
     level: Level,
-    owner: Plant? = null,
+    owner: LivingEntity? = null,
     spawnOffset: Vec2 = Vec2.ZERO,
-) : PlantProjectile(PazEntities.PEA, level, owner, spawnOffset,
+) : PazProjectile(PazEntities.PEA, level, owner, spawnOffset,
     PazDamageTypes.PLANT
 ) {
     override fun isOnFire(): Boolean {
         val onFire = super.isOnFire()
         if (onFire) {
             val level = level() as ServerLevel
-            val p = PeaFire(level(), plantOwner)
+            val p = PeaFire(level(), entityOwner)
             spawnProjectile(p, level, ItemStack.EMPTY)
             p.deltaMovement = deltaMovement
             discard()

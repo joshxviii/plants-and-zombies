@@ -13,9 +13,9 @@ import net.minecraft.world.phys.Vec2
 
 class PeaIce(
     level: Level,
-    owner: Plant? = null,
+    owner: LivingEntity? = null,
     spawnOffset: Vec2 = Vec2.ZERO,
-) : PlantProjectile(PazEntities.PEA_ICE, level, owner, spawnOffset,
+) : PazProjectile(PazEntities.PEA_ICE, level, owner, spawnOffset,
     PazDamageTypes.FREEZE
 ) {
     override fun afterHitEntityEffect(target: LivingEntity) {

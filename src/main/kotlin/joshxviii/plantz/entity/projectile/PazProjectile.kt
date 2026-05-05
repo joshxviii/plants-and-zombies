@@ -20,6 +20,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.InsideBlockEffectApplier
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.OwnableEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.Projectile
@@ -30,36 +31,36 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.*
 import kotlin.math.sign
 
-abstract class PlantProjectile(
-    type: EntityType<out PlantProjectile>,
+abstract class PazProjectile(
+    type: EntityType<out PazProjectile>,
     level: Level,
-    val plantOwner: Plant? = null,
+    val entityOwner: LivingEntity? = null,
     val spawnOffset: Vec2 = Vec2.ZERO,
     val damageType: ResourceKey<DamageType> = PazDamageTypes.PLANT,
-    var damage : Float = (plantOwner as? LivingEntity)?.attributes?.getValue(Attributes.ATTACK_DAMAGE)?.toFloat()?:1.0f,
-    var knockback : Double = (plantOwner as? LivingEntity)?.attributes?.getValue(Attributes.ATTACK_KNOCKBACK)?:0.0
+    var damage : Float = (entityOwner as? LivingEntity)?.attributes?.getValue(Attributes.ATTACK_DAMAGE)?.toFloat()?:1.0f,
+    var knockback : Double = (entityOwner as? LivingEntity)?.attributes?.getValue(Attributes.ATTACK_KNOCKBACK)?:0.0
 ) : Projectile(type, level) {
 
     protected var inGroundTime: Int = 0
     private var piercingIgnoreEntityIds = mutableSetOf<Int>()
 
     companion object {
-        val PIERCE_LEVEL: EntityDataAccessor<Byte> = SynchedEntityData.defineId<Byte>(PlantProjectile::class.java, EntityDataSerializers.BYTE)
-        val IN_GROUND: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(PlantProjectile::class.java, EntityDataSerializers.BOOLEAN)
+        val PIERCE_LEVEL: EntityDataAccessor<Byte> = SynchedEntityData.defineId<Byte>(PazProjectile::class.java, EntityDataSerializers.BYTE)
+        val IN_GROUND: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(PazProjectile::class.java, EntityDataSerializers.BOOLEAN)
     }
 
     init {
-        if (plantOwner != null) {
-            setOwner(plantOwner)
-            val direction = plantOwner.headLookAngle
+        if (entityOwner != null) {
+            setOwner(entityOwner)
+            val direction = entityOwner.headLookAngle
             setPos(
-                plantOwner.x+direction.x*spawnOffset.x,
-                plantOwner.y+plantOwner.eyeHeight+spawnOffset.y,
-                plantOwner.z+direction.z*spawnOffset.x
+                entityOwner.x+direction.x*spawnOffset.x,
+                entityOwner.y+entityOwner.eyeHeight+spawnOffset.y,
+                entityOwner.z+direction.z*spawnOffset.x
             )
             setRot(
-                plantOwner.xRot,
-                plantOwner.yRot
+                entityOwner.xRot,
+                entityOwner.yRot
             )
         }
     }
@@ -246,8 +247,8 @@ abstract class PlantProjectile(
     }
 
     override fun canHitEntity(entity: Entity): Boolean {
-        val playerOwner = plantOwner?.owner as? Player
-        return if (entity.hasSameOwner(plantOwner)) false
+        val playerOwner = (entityOwner as? OwnableEntity)?.owner as? Player
+        return if (entity.hasSameOwner(entityOwner)) false
         else if (playerOwner!= null && entity.`is`(playerOwner)) false
         else entity !is Plant && entity !is Projectile && super.canHitEntity(entity) && !this.piercingIgnoreEntityIds.contains(entity.id)
     }

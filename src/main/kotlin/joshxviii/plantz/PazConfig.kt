@@ -24,7 +24,7 @@ object PazConfig {
     private var data = Data()
 
     data class Data(
-        var seedGrowTime: Int = 7800,
+        var seedGrowTime: Int = 8100,
         var extraGrowTimePerSun: Int = 2100,
         var zenPotTimeReduction: Double = 0.75,
         var sunCosts: MutableMap<String, Int> = mutableMapOf(

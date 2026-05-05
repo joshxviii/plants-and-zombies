@@ -49,8 +49,8 @@ class KernelPult(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, LivingEntity::class.java, 5, false, false) { target, level ->
             target !is Plant
                     && target !is Creeper
-                    && target is Zombie
-                    || (target is Enemy && isTame)
+                    && (target is Zombie
+                    || (target is Enemy && isTame))
         })
     }
 }

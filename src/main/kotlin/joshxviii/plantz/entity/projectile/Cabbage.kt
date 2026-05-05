@@ -7,6 +7,7 @@ import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.phys.HitResult
@@ -15,9 +16,9 @@ import net.minecraft.world.phys.Vec3
 
 class Cabbage(
     level: Level,
-    owner: Plant? = null,
+    owner: LivingEntity? = null,
     spawnOffset: Vec2 = Vec2.ZERO,
-) : PlantProjectile(
+) : PazProjectile(
     PazEntities.CABBAGE, level, owner, spawnOffset,
     PazDamageTypes.PLANT,
     damage = 2.5f,

@@ -39,7 +39,6 @@ class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie
     }
 
     override fun isBaby(): Boolean = true
-    override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {}
     override fun canPickUpLoot(): Boolean = false
 
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {

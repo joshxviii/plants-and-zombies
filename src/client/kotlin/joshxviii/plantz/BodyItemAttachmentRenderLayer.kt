@@ -13,11 +13,30 @@ import net.minecraft.client.renderer.entity.state.HumanoidRenderState
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.client.renderer.item.ItemStackRenderState
 import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
 
 class DuckyTubeRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
     parent: RenderLayerParent<S, M>
+) : BodyItemAttachmentRenderLayer<S, M>(
+    parent = parent,
+    expectedItem = PazItems.DUCKY_TUBE,
+    stackSelector = { it.legsEquipment },
+)
+
+class DyeVatRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
+    parent: RenderLayerParent<S, M>
+) : BodyItemAttachmentRenderLayer<S, M>(
+    parent = parent,
+    expectedItem = PazItems.DYE_BLASTER,
+    stackSelector = { it.mainHandItemStack },
+)
+
+abstract class BodyItemAttachmentRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
+    parent: RenderLayerParent<S, M>,
+    private val expectedItem: Item,
+    private val stackSelector: (HumanoidRenderState) -> ItemStack,
 ) : RenderLayer<S, M>(parent) {
 
     private val itemRenderState = ItemStackRenderState()
@@ -32,8 +51,9 @@ class DuckyTubeRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
     ) {
         val humanoidModel = parentModel as? HumanoidModel<*> ?: return
         val humanState = state as? HumanoidRenderState ?: return
+        val itemStack = stackSelector(humanState)
 
-        if (!humanState.legsEquipment.`is`(PazItems.DUCKY_TUBE)) return
+        if (!itemStack.`is`(expectedItem)) return
 
         poseStack.pushPose()
 
@@ -41,15 +61,17 @@ class DuckyTubeRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
             poseStack.translate(0.0, 0.8, 0.0)
             poseStack.scale(0.5f, 0.5f, 0.5f)
         }
+
         if (humanoidModel is PazZombieModel) humanoidModel.body
         else humanoidModel.body.translateAndRotate(poseStack)
+
         poseStack.mulPose(Axis.ZP.rotationDegrees(180.0f))
 
         val minecraft = Minecraft.getInstance()
         itemRenderState.clear()
         minecraft.itemModelResolver.updateForTopItem(
             itemRenderState,
-            humanState.legsEquipment,
+            itemStack,
             ItemDisplayContext.HEAD,
             minecraft.level,
             null,
@@ -65,6 +87,4 @@ class DuckyTubeRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
 
         poseStack.popPose()
     }
-
 }
-

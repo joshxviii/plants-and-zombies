@@ -14,6 +14,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.RandomSource
 import net.minecraft.world.Difficulty
+import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.entity.EntitySpawnReason
@@ -128,4 +129,10 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
 
     override fun isSunSensitive(): Boolean = false
     override fun convertsInWater(): Boolean = false
+    override fun isBaby(): Boolean = false
+    override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {}
+    fun isBabyZombie() = super.isBaby()
+    fun randomEquip(random: RandomSource, difficulty: DifficultyInstance) {
+        super.populateDefaultEquipmentSlots(random, difficulty)
+    }
 }
