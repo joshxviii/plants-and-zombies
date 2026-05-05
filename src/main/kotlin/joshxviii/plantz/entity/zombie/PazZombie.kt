@@ -4,8 +4,10 @@ import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazDataSerializers.DATA_ZOMBIE_STATE
 import joshxviii.plantz.PazItems
+import joshxviii.plantz.PazTags
 import joshxviii.plantz.ai.ZombieState
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Holder
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -18,13 +20,13 @@ import net.minecraft.world.Difficulty
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
-import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.material.Fluids
 
 abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie(type, level) {
@@ -39,15 +41,18 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             pos: BlockPos,
             random: RandomSource
         ): Boolean {
+            val biome: Holder<Biome> = level.getBiome(pos)
             val canSpawn = level.difficulty != Difficulty.PEACEFUL
-                    && (EntitySpawnReason.ignoresLightRequirements(spawnReason) || isDarkEnoughToSpawn(level, pos, random))
+                    && (EntitySpawnReason.ignoresLightRequirements(spawnReason) || biome.`is`(PazTags.Biomes.DAY_SPAWNS) || isDarkEnoughToSpawn(level, pos, random))
 
             val inWater = level.getFluidState(pos).`is`(FluidTags.WATER)
 
-            return if (inWater)
-                    EntitySpawnReason.isSpawner(spawnReason) || (random.nextFloat() < 0.1f && pos.y > level.seaLevel-3)
+            return canSpawn &&
+                if (inWater)
+                    if (biome.`is`(PazTags.Biomes.WATER_SPAWNS)) (EntitySpawnReason.isSpawner(spawnReason) || (random.nextFloat() < 0.1f && pos.y > level.seaLevel-3))
+                    else false
                 else
-                    canSpawn && (checkMobSpawnRules(type, level, spawnReason, pos, random))
+                    (checkMobSpawnRules(type, level, spawnReason, pos, random))
         }
 
         val ZOMBIE_STATE: EntityDataAccessor<ZombieState> = SynchedEntityData.defineId<ZombieState>(PazZombie::class.java, DATA_ZOMBIE_STATE)
@@ -74,11 +79,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
 
     override fun registerGoals() {
         super.registerGoals()
-        //this.goalSelector.addGoal(1, FloatGoal(this))
-    }
-
-    override fun getFluidJumpThreshold(): Double {
-        return super.getFluidJumpThreshold()
+        this.navigation
     }
 
     var waterTime = -1
@@ -142,6 +143,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     open fun emergingTime(): Int = 40
     open fun canEquipDuckyInWater() = true
 
+    override fun maxUpStep(): Float = if (isInWater) 0.5f else super.maxUpStep()
     override fun isSunSensitive(): Boolean = false
     override fun convertsInWater(): Boolean = false
     override fun canSpawnInLiquids(): Boolean = canEquipDuckyInWater()

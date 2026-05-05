@@ -1,5 +1,6 @@
 {
   "values": [
+    "plantz:graveyard",
     "#minecraft:is_beach",
     "#minecraft:is_taiga",
     "#minecraft:is_savanna",

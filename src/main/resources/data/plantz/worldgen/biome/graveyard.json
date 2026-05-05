@@ -13,10 +13,15 @@
     "minecraft:visual/cloud_color": 7437954,
     "minecraft:visual/sunrise_sunset_color": 10165001,
     "minecraft:visual/sky_light_color": "#b694d1",
-    "minecraft:visual/ambient_light_color": "#070409",
+    "minecraft:visual/ambient_light_color": "#221d29",
     "minecraft:visual/water_fog_color": "#2c522e",
     "minecraft:visual/sky_fog_end_distance": 64,
-    "minecraft:visual/water_fog_start_distance": 4
+    "minecraft:visual/water_fog_start_distance": 4,
+    "minecraft:gameplay/monsters_burn": {
+      "modifier": "override",
+      "argument": false
+    },
+    "minecraft:visual/sky_light_factor": 0.7
   },
   "carvers": [
     "minecraft:cave",
@@ -86,7 +91,8 @@
       "minecraft:freeze_top_layer"
     ],
     [
-      "plantz:gravestone"
+      "plantz:dead_trees",
+      "plantz:gravestones"
     ]
   ],
   "has_precipitation": true,
@@ -100,24 +106,8 @@
         "weight": 10
       }
     ],
-    "axolotls": [],
-    "misc": [],
-    "water_ambient": [],
-    "water_creature": [],
-    "monster": [
-      {
-        "type": "plantz:browncoat",
-        "weight": 100,
-        "minCount": 15,
-        "maxCount": 30
-      },
-      {
-        "type": "plantz:newspaper_zombie",
-        "weight": 40,
-        "minCount": 1,
-        "maxCount": 6
-      }
-    ]
+    "monster": [],
+    "creature": []
   },
   "temperature": 2
 }

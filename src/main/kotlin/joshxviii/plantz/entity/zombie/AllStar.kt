@@ -141,7 +141,6 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
         return data
     }
 
-
     private class ChargeGoal(
         val allStar: AllStar,
     ) : Goal() {

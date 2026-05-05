@@ -68,6 +68,7 @@ object PazTags {
         val HAS_WALLNUT = tag("plant/has_wallnut")
 
         val WATER_SPAWNS = tag("zombie/water_spawns")
+        val DAY_SPAWNS = tag("zombie/day_spawns")
         val HAS_BROWNCOAT = tag("zombie/has_browncoat")
         val HAS_NEWSPAPER_ZOMBIE = tag("zombie/has_newspaper_zombie")
         val HAS_DIGGER = tag("zombie/has_digger")

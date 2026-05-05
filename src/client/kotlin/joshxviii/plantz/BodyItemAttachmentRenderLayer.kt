@@ -59,7 +59,7 @@ abstract class BodyItemAttachmentRenderLayer<S : LivingEntityRenderState, M : En
 
         if (state.isBaby) {
             poseStack.translate(0.0, 0.8, 0.0)
-            poseStack.scale(0.5f, 0.5f, 0.5f)
+            poseStack.scale(0.55f, 0.55f, 0.55f)
         }
 
         if (humanoidModel is PazZombieModel) humanoidModel.body

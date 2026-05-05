@@ -366,7 +366,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     override fun getDefaultGravity(): Double = if (isAttached()) 0.0 else super.getDefaultGravity()
-    override fun doPush(entity: Entity) { if (entity!=attachedEntity) super.doPush(entity)}
+    override fun doPush(entity: Entity) { }
     override fun isAffectedByBlocks(): Boolean = if (isAttached()) !isRemoved else super.isAffectedByBlocks()
 
     override fun tick() {
