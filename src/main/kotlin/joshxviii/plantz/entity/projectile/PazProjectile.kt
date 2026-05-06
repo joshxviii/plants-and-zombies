@@ -252,10 +252,8 @@ abstract class PazProjectile(
     }
 
     override fun canHitEntity(entity: Entity): Boolean {
-        val playerOwner = (entityOwner as? OwnableEntity)?.owner as? Player
         if ((entity is Plant && entityOwner is Plant) || (entity is Enemy && entityOwner is Enemy)) return false
         return if (this.hasSameRootOwner(entity)) false
-        else if (playerOwner != null && (entity.`is`(playerOwner) || (entity is Player && PazConfig.COOP_PLANTING))) false
         else entity !is Projectile && super.canHitEntity(entity) && !this.piercingIgnoreEntityIds.contains(entity.id)
     }
 

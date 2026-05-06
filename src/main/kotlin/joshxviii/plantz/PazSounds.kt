@@ -61,6 +61,7 @@ object PazSounds {
     @JvmField val APPLY_ZOMBIE_OMEN = register("event.mob_effect.zombie_omen")
 
     @JvmField val PLANT_EXPLODE = registerForHolder("entity.plant_explode")
+    @JvmField val POTATOMINE_EXPLODE = registerForHolder("entity.potatomine.explode")
     @JvmField val SNOWCHUNK_HIT = registerForHolder("entity.snowchunk")
 
     @JvmField val MUSIC_DISC_GRASSY_GROOVE = registerForHolder("music_disc.grassy_groove")

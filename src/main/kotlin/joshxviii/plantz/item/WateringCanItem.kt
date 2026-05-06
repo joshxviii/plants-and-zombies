@@ -36,13 +36,6 @@ import org.apache.logging.log4j.core.net.Severity
 
 class WateringCanItem(properties: Properties) : BlockItem(PazBlocks.WATERING_CAN_BLOCK, properties) {
 
-    override fun inventoryTick(itemStack: ItemStack, level: ServerLevel, owner: Entity, slot: EquipmentSlot?) {
-        super.inventoryTick(itemStack, level, owner, slot)
-        if (slot == EquipmentSlot.MAINHAND) {
-            owner.setPos(owner.x, owner.y + 0.1, owner.z)
-        }
-    }
-
     override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResult {
         val itemStack = player.getItemInHand(hand)
         val storedWaterComponent = itemStack.get(PazComponents.STORED_WATER)
@@ -78,7 +71,7 @@ class WateringCanItem(properties: Properties) : BlockItem(PazBlocks.WATERING_CAN
         val storedWaterComponent = itemStack.get(PazComponents.STORED_WATER)
 
         //
-        if (player?.isCrouching==true) return super.useOn(context)
+        if (player?.isShiftKeyDown==true) return super.useOn(context)
         if (storedWaterComponent?.let { it.storedWater <= 0 } == true) return InteractionResult.PASS
         if (context.clickedFace != Direction.DOWN ) {
             var success = false

@@ -132,16 +132,14 @@ fun Int.tickTimeFormat(): String = "%02d:%02d".format(
 fun Entity.hasSameRootOwner(target: Entity?): Boolean {
     if (target == null) return false
 
+    if (this is Plant && this.isTame
+        && PazConfig.COOP_PLANTING
+        && ((target is TamableAnimal && target.isTame) || target is Player)) return true
+
     val owner = extractRootOwner(this) ?: return false
     if (owner.`is`(target)) return true
 
     val targetOwner = extractRootOwner(target) ?: return false
-
-    if (PazConfig.COOP_PLANTING &&
-        this is Plant && this.isTame &&
-        ((target is TamableAnimal && target.isTame) || target is Player)) {
-        return true
-    }
 
     return owner.`is`(targetOwner)
 }

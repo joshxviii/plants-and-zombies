@@ -1,10 +1,15 @@
 package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.PazSounds
 import joshxviii.plantz.hasSameRootOwner
+import net.minecraft.core.particles.ItemParticleOption
+import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 
@@ -19,7 +24,7 @@ class PotatoMine(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        cooldown = 180 + random.nextInt(-40, 30)
+        cooldown = 190 + random.nextInt(-20, 20)
         return super.finalizeSpawn(level, difficulty, spawnReason, groupData)
     }
 
@@ -32,8 +37,22 @@ class PotatoMine(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
     override fun doPush(entity: Entity) {
         if (isGrowingSeeds || cooldown > 0) return
         if (entity is Plant || (entity is Player && isTame) || this.hasSameRootOwner(entity)) return
-        else {
-            explode(radius = 1f)
-        }
+        explode(
+            radius = 1f,
+            sound = PazSounds.POTATOMINE_EXPLODE,
+        )
+        addParticlesAroundSelf(
+            particle = ItemParticleOption(
+                ParticleTypes.ITEM,
+                Items.POTATO
+            ),
+            amount = 22..24,
+            speed = 0.2,
+        )
+        addParticlesAroundSelf(
+            particle = ParticleTypes.LARGE_SMOKE,
+            amount = 3..3,
+            speed = 0.1,
+        )
     }
 }

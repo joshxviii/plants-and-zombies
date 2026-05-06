@@ -312,8 +312,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun getLeashOffset(): Vec3 = Vec3.ZERO
     override fun getPickResult(): ItemStack = SeedPacketItem.stackFor(this.type)
     override fun wantsToAttack(target: LivingEntity, owner: LivingEntity): Boolean {
-        if (isTame && target is Player && PazConfig.COOP_PLANTING) return false
-        return (target !is Plant && super.wantsToAttack(target, owner))
+        return if (this.hasSameOwner(target)) false
+        else (target !is Plant && super.wantsToAttack(target, owner))
     }
     override fun canAttack(target: LivingEntity): Boolean = super.canAttack(target) && !this.hasSameOwner(target)
     override fun canUsePortal(ignorePassenger: Boolean): Boolean = super.canUsePortal(ignorePassenger) && !isAttached()
