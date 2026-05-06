@@ -20,6 +20,7 @@ import java.util.function.Consumer
 object PazWorldGen: TerraBlenderApi {
 
     override fun onTerraBlenderInitialized() {
+        return // TODO finish graveyard biome
         Regions.register(OverworldRegion("graveyard"))
         SurfaceRuleManager.addSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD, PazMain.MODID, SurfaceRuleData.makeRules())
     }

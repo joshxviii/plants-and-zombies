@@ -1,10 +1,8 @@
 package joshxviii.plantz.mixin;
 
-import joshxviii.plantz.PazEffects;
-import joshxviii.plantz.PazItems;
-import joshxviii.plantz.PazTags;
-import joshxviii.plantz.PlantHeadAttachment;
+import joshxviii.plantz.*;
 import joshxviii.plantz.entity.plant.Plant;
+import joshxviii.plantz.entity.plant.PlantUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -12,15 +10,18 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Util;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.FluidState;
@@ -36,8 +37,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.Collection;
 import java.util.List;
@@ -179,6 +182,18 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment {
     public void stopTargetingFriendlies(LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
         if (this.hasEffect(PazEffects.HYPNOTIZE) && (target instanceof Plant || target instanceof Player || target.hasEffect(PazEffects.HYPNOTIZE))) {
             cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(method = "hurtServer", at = @At("HEAD"), cancellable = true)
+    public void ownerIgnorePlantAttacks(ServerLevel level, DamageSource source, float damage, CallbackInfoReturnable<Boolean> cir) {
+        var self = (LivingEntity) (Object) this;
+        var sourceEntity = source.getEntity();
+        if (sourceEntity instanceof Plant plant) {
+            if (plant.hasSameOwner(self)) {
+                cir.setReturnValue(false);
+                cir.cancel();
+            }
         }
     }
 }

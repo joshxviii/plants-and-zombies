@@ -5,6 +5,7 @@
 	- Can store sun and will automatically use sun when planting or interacting with Plants.
 - Added Gravestone Block
 	- Zombies will emerge from the ground near the gravestone during the night.
+- Added The Graveyard biome
 ### Technical Changes
 
 

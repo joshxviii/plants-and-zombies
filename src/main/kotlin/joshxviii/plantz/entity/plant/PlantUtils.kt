@@ -44,7 +44,7 @@ fun Plant.explode(
 ) {
     val level = this.level()
     val source = this.damageSources().source(damageType, this,
-        if (PazConfig.PLAYER_CREDIT_FOR_PLANT_KILLS) this.rootOwner else null)
+        if (PazConfig.PLAYER_CREDIT_FOR_PLANT_KILLS) this.rootOwner else this)
     level.explode(
         this,
         source,

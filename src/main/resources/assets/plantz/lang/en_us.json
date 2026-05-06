@@ -35,10 +35,12 @@
   "death.attack.zombie_smash": "%1$s was smashed by %2$s",
   "death.attack.zombie_trample": "%1$s was trampled by %2$s",
   "death.attack.plant": "%1$s was killed by %2$s",
-  "death.attack.chomp_plant": "%1$s was chomped by %2$s",
   "death.attack.ice_plant": "%1$s was frozen to death by %2$s",
   "death.attack.fire_plant": "%1$s was incinerated by %2$s",
   "death.attack.fume_plant": "%1$s inhaled too many of %2$s's toxic fumes",
+  "death.attack.chomp_plant": "%1$s was chomped by %2$s",
+  "death.attack.explode_plant": "%1$s was blown up by %2$s",
+  "death.attack.paint": "%1$s was turned into an art piece by %2$s",
 
   "event.plantz.zombie_raid": "Zombie Raid",
   "event.plantz.zombie_raid.wave": "Wave %s | Next wave in %s",

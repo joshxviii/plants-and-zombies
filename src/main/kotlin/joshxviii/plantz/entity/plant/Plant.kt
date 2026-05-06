@@ -315,7 +315,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         if (isTame && target is Player && PazConfig.COOP_PLANTING) return false
         return (target !is Plant && super.wantsToAttack(target, owner))
     }
-    override fun canAttack(target: LivingEntity): Boolean = super.canAttack(target) && !target.hasSameRootOwner(this)
+    override fun canAttack(target: LivingEntity): Boolean = super.canAttack(target) && !this.hasSameOwner(target)
     override fun canUsePortal(ignorePassenger: Boolean): Boolean = super.canUsePortal(ignorePassenger) && !isAttached()
     fun isAttached(): Boolean = attachedEntity!=null
 
@@ -686,6 +686,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             return false
         }
         return true
+    }
+
+    fun hasSameOwner(target: Entity): Boolean {
+        return this.hasSameRootOwner(target)
     }
 
     fun dropAsSeedPacketItem(force: Boolean = false): Boolean {
