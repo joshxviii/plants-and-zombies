@@ -94,16 +94,7 @@ class PazZombieRenderer(
 
     override fun getTextureLocation(state: ZombieRenderState): Identifier {
         (state as PazZombieRenderState)
-
-        val base = "textures/entity/zombie/${state.texturePath}/${state.texturePath}"
-        val rm = Minecraft.getInstance().resourceManager
-
-        val suffixes = buildList {
-            if (!state.texturePathExtra.isEmpty()) add(state.texturePathExtra)
-            if (state.isBaby) add("baby")
-        }
-
-        return resolveTextureLocation(base, rm, suffixes)?: pazResource("${base}.png")
+        return state.getTextureLocation()
     }
 }
 
@@ -117,4 +108,27 @@ class PazZombieRenderState : ZombieRenderState() {
     val initAnimationState: AnimationState = AnimationState()
     val actionAnimationState: AnimationState = AnimationState()
     val specialAnimationState: AnimationState = AnimationState()
+
+    // TODO create a common abstract render state for texture resolution
+    fun getSuffixes(): MutableList<String> {
+        val suffixes = mutableListOf<String>().apply {
+            if (texturePathExtra.isNotEmpty()) add(texturePathExtra)
+            if (isBaby)   add("baby")
+        }
+        return suffixes
+    }
+
+    fun getTextureLocation(): Identifier {
+        val base = "textures/entity/zombie/${texturePath}/${texturePath}"
+        val rm = Minecraft.getInstance().resourceManager
+
+        val textureLocation = resolveTextureLocation(base, rm, getSuffixes())
+        return textureLocation?: pazResource("${base}.png")
+    }
+
+    fun getEmissiveTextureLocation(): Identifier? {
+        val base = "textures/entity/zombie/${texturePath}/${texturePath}"
+        val rm = Minecraft.getInstance().resourceManager
+        return resolveTextureLocation(base, rm, getSuffixes().apply { add("emissive") })
+    }
 }

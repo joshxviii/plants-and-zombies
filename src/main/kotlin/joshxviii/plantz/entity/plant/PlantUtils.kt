@@ -139,6 +139,7 @@ fun Plant.processWateringItem(player: Player, item: ItemStack, hand: Interaction
     }
     this.receivedWater+=waterAmount
     if (waterAmount>0) {
+        seedGrowCooldown = timeRequiredForSeeds()
         addParticlesAroundSelf()
         funnyBounce()
         return true

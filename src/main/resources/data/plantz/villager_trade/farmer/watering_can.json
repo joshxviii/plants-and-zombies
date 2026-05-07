@@ -1,0 +1,22 @@
+{
+  "additional_wants": {
+    "id": "plantz:sun",
+    "count": {
+      "min": 10,
+      "max": 16
+    }
+  },
+  "gives": {
+    "id": "plantz:watering_can"
+  },
+  "max_uses": 3,
+  "reputation_discount": 0.2,
+  "wants": {
+    "count": {
+      "min": 6,
+      "max": 8
+    },
+    "id": "minecraft:emerald"
+  },
+  "xp": 10
+}

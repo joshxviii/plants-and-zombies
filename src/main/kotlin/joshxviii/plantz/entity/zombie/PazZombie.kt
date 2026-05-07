@@ -201,6 +201,5 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         }
 
         return data
-
     }
 }

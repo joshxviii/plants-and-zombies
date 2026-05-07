@@ -116,8 +116,7 @@ class PlantRenderer(
     }
 
     override fun getTextureLocation(state: PlantRenderState): Identifier {
-        val texture = state.getTextureLocation()
-        return texture
+        return state.getTextureLocation()
     }
 }
 
@@ -141,6 +140,7 @@ class EmissivePlantLayer<M : EntityModel<PlantRenderState>>(
     override fun renderType(): RenderType = RenderTypes.lines()
 }
 
+
 class PlantRenderState : LivingEntityRenderState() {
     var rotations: Quaternionf = Quaternionf()
     var swelling: Float = 0f
@@ -159,9 +159,10 @@ class PlantRenderState : LivingEntityRenderState() {
     val sleepAnimationState: AnimationState = AnimationState()
     val bounceAnimationState: AnimationState = AnimationState()
 
+    // TODO create a common abstract render state for texture resolution
     fun getSuffixes(): MutableList<String> {
         val suffixes = mutableListOf<String>().apply {
-            if (texturePathExtra.isEmpty()) add(texturePathExtra)
+            if (texturePathExtra.isNotEmpty()) add(texturePathExtra)
             if (isBaby)   add("baby")
             if (isAsleep) add("sleep")
         }

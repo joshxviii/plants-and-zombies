@@ -210,7 +210,7 @@ object PazEntities {
         eyeHeight = 0.6f,
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
-            maxHealth = 25.0,
+            maxHealth = 30.0,
             followRange = 4.0
         )
     )

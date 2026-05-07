@@ -10,8 +10,13 @@
           "children": [
             {
               "type": "minecraft:item",
+              "name": "plantz:watering_can",
+              "weight": 2
+            },
+            {
+              "type": "minecraft:item",
               "name": "plantz:seed_packet",
-              "weight": 5,
+              "weight": 8,
               "functions": [
                 {
                   "function": "minecraft:set_components",
@@ -26,7 +31,7 @@
             {
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
-              "weight": 3,
+              "weight": 6,
               "functions": [
                 {
                   "function": "minecraft:set_components",
@@ -41,7 +46,7 @@
             {
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
-              "weight": 3,
+              "weight": 5,
               "functions": [
                 {
                   "function": "minecraft:set_components",
@@ -56,7 +61,7 @@
             {
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
-              "weight": 2,
+              "weight": 4,
               "functions": [
                 {
                   "function": "minecraft:set_components",

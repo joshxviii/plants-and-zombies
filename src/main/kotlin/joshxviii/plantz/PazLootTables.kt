@@ -1,9 +1,12 @@
 package joshxviii.plantz
 
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents
+import net.fabricmc.fabric.api.registry.VillagerInteractionRegistries
 import net.minecraft.core.registries.Registries
+import net.minecraft.data.tags.VillagerTradesTagsProvider
 import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
+import net.minecraft.world.item.trading.VillagerTrade
 import net.minecraft.world.level.storage.loot.BuiltInLootTables
 import net.minecraft.world.level.storage.loot.LootPool
 import net.minecraft.world.level.storage.loot.LootTable
@@ -19,6 +22,12 @@ object PazLootTables {
         name: String
     ) : ResourceKey<LootTable> {
         return ResourceKey.create(Registries.LOOT_TABLE, pazResource(name) )
+    }
+
+    private fun registerVillagerTrade(
+        name: String
+    ) : ResourceKey<VillagerTrade> {
+        return ResourceKey.create(Registries.VILLAGER_TRADE, pazResource(name) )
     }
 
     fun initialize() {
@@ -40,7 +49,8 @@ object LootInjector {
         BuiltInLootTables.VILLAGE_TAIGA_HOUSE,
     )
     private val injections = hashSetOf(
-        BuiltInLootTables.FISHING_TREASURE
+        BuiltInLootTables.FISHING_TREASURE,
+        BuiltInLootTables.BASTION_TREASURE,
     ).apply { addAll(villageHouseBuiltInLootTables) }
 
     private val injectionIds = injections.map {it.identifier()}.toSet()

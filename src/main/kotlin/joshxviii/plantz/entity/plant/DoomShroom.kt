@@ -36,14 +36,14 @@ class DoomShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEnt
         }
     }
 
-    override fun getMaxSwellTime(): Int = 60
+    override fun getMaxSwellTime(): Int = 48
 
     override fun registerGoals() {
         super.registerGoals()
         this.goalSelector.addGoal(1, ExplodeGoal(
             plantEntity = this,
             explosionRadius = 7f,
-            activateRange = 4.5,
+            activateRange = 4.75,
             destroyBlocks = true,
             actionEndEffect = {
                 addParticlesAroundSelf(

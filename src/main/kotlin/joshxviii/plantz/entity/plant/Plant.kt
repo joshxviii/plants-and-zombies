@@ -239,7 +239,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         entityData.define(COOLDOWN, 0)
         entityData.define(RECEIVED_SUN, 0)
         entityData.define(RECEIVED_WATER, 0)
-        entityData.define(SEED_GROW_COOLDOWN, timeRequiredForSeeds())
+        entityData.define(SEED_GROW_COOLDOWN, 0)
         entityData.define(COFFEE_BUFF, 0)
         entityData.define(SLEEPING, false)
         entityData.define(ATTACHED_PLAYER, Optional.empty())
@@ -266,7 +266,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         super.readAdditionalSaveData(input)
         receivedSun = input.getInt("plantz:ReceivedSun").getOrElse { 0 }
         receivedWater = input.getInt("plantz:ReceivedWater").getOrElse { 0 }
-        seedGrowCooldown = input.getInt("plantz:SeedGrowTime").getOrElse { timeRequiredForSeeds() }
+        seedGrowCooldown = input.getInt("plantz:SeedGrowTime").getOrElse { 0 }
         coffeeBuff = input.getInt("plantz:CoffeeBuff").getOrElse { 0 }
         cooldown = input.getInt("plantz:Cooldown").getOrElse { -1 }
         attachedPlayerReference = Optional.ofNullable((EntityReference.read<LivingEntity>(input, "plantz:AttachedPlayer"))).getOrNull()
@@ -321,8 +321,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
         if ( attachedEntity.let { it!=null && source.entity?.`is`(it)==true } ) return false
-        return if (source.`is`(PazDamageTypes.PLANT_AOE)) false
-        else super.hurtServer(
+        return super.hurtServer(
             level,
             if (source.entity is Zombie && source.`is`(DamageTypes.MOB_ATTACK)) DamageSource(
                 level.registryAccess().get(PazDamageTypes.ZOMBIE_EAT).get(),
@@ -334,17 +333,15 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     override fun hurtClient(source: DamageSource): Boolean {
-        return if (source.`is`(PazDamageTypes.PLANT_AOE)) false
-        else super.hurtClient(source)
+        return super.hurtClient(source)
     }
 
     override fun actuallyHurt(level: ServerLevel, source: DamageSource, damage: Float) {
-        if (source.`is`(PazDamageTypes.PLANT_AOE)) return
         val potProtection: Boolean = hasPlantPotProtection() && source.entity is Enemy
         super.actuallyHurt(
             level,
             source,
-            if (potProtection) damage/2 else damage
+            if (potProtection) (damage * PazConfig.PLANT_POT_DAMAGE_REDUCTION).toFloat() else damage
         )
     }
 
@@ -498,7 +495,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val level = level() as? ServerLevel ?: return
         receivedSun = 0
         receivedWater = 0
-        seedGrowCooldown = timeRequiredForSeeds()
         val stack = SeedPacketItem.stackFor(this.type)
         val itemEntity = ItemEntity(level, x, y + 0.5, z, stack)
         level.addFreshEntity(itemEntity)

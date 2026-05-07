@@ -27,8 +27,9 @@ object PazConfig {
         var playerCreditForPlantKills: Boolean = false,
         var seedGrowTime: Int = 8100,
         var extraGrowTimePerSun: Int = 2100,
-        var zenPotTimeReduction: Double = 0.75,
+        var zenPotTimeReduction: Double = 0.25,
         var hydrationSunReduction: Double = 0.5,
+        var plantPotDamageReduction: Double = 0.5,
         var sunCosts: MutableMap<String, Int> = mutableMapOf(
             "plantz:sunflower"          to 5,
             "plantz:peashooter"         to 5,
@@ -48,7 +49,7 @@ object PazConfig {
             "plantz:fumeshroom"         to 6,
             "plantz:sunshroom"          to 4,
             "plantz:hypnoshroom"        to 7,
-            "plantz:doomshroom"         to 20,
+            "plantz:doomshroom"         to 16,
             "plantz:coffeebean"         to 3,
         ),
         var coffeeBuffDuration: Int = 60_000,
@@ -93,11 +94,14 @@ object PazConfig {
         get() = config.playerCreditForPlantKills
 
     val HYDRATION_SUN_REDUCTION: Double
-        get() = config.hydrationSunReduction.coerceIn(0.0, 1.0)
+        get() = 1f - config.hydrationSunReduction.coerceIn(0.0, 1.0)
+
+    val PLANT_POT_DAMAGE_REDUCTION: Double
+        get() = 1f - config.plantPotDamageReduction.coerceIn(0.0, 1.0)
 
     fun getGrowTime(sunCost: Int, zenBuff: Boolean): Int {
         val time = config.seedGrowTime.coerceAtLeast(0) + (sunCost * config.extraGrowTimePerSun.coerceAtLeast(0))
-        return if (zenBuff) (time * config.zenPotTimeReduction.coerceIn(0.0, 1.0)).toInt() else time
+        return if (zenBuff) (time * (1f - config.zenPotTimeReduction.coerceIn(0.0, 1.0))).toInt() else time
     }
 
     fun getSunCost(type: EntityType<*>?): Int {

@@ -226,7 +226,7 @@ fun LivingEntity.getMagicName(): String {
 fun resolveTextureLocation(base: String, rm: ResourceManager, suffixes: List<String> = listOf()): Identifier? {
     for (suffix in suffixes.permutationsDescending()) {
         if (suffix.isEmpty()) break
-        val candidate = pazResource("${base}${suffix}.png")
+        val candidate = pazResource("${base}_${suffix}.png")
         if (rm.getResource(candidate).isPresent) return candidate
     }
     return null

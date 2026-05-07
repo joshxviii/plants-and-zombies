@@ -1,5 +1,6 @@
 package joshxviii.plantz.model.zombies;
 
+import joshxviii.plantz.PazEntities;
 import joshxviii.plantz.PazZombieRenderState;
 import joshxviii.plantz.animation.plants.PlantAnimations;
 import joshxviii.plantz.animation.zombies.ZombieAnimations;
@@ -63,6 +64,7 @@ public class PazZombieModel extends ZombieModel<@NotNull ZombieRenderState> {
     public void setupAnim(final ZombieRenderState state) {
         super.setupAnim(state);
         PazZombieRenderState pazState = (PazZombieRenderState) state;
-        initAnimation.apply(pazState.getInitAnimationState(), pazState.ageInTicks);
+        // Gargantuar has his arms down, so he needs to call his own init animation later.
+        if (pazState.entityType != PazEntities.GARGANTUAR) initAnimation.apply(pazState.getInitAnimationState(), pazState.ageInTicks);
     }
 }
