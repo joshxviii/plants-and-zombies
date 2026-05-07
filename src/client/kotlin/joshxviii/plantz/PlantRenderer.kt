@@ -10,8 +10,13 @@ import net.minecraft.client.model.EntityModel
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.MobRenderer
+import net.minecraft.client.renderer.entity.RenderLayerParent
+import net.minecraft.client.renderer.entity.layers.EyesLayer
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
+import net.minecraft.client.renderer.rendertype.RenderType
+import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.client.renderer.state.level.CameraRenderState
+import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
@@ -30,6 +35,10 @@ class PlantRenderer(
     defaultModel,
     0.5f
 ) {
+    init {
+        addLayer(EmissivePlantLayer(this))
+    }
+
     override fun submit(
         state: PlantRenderState,
         poseStack: PoseStack,
@@ -107,18 +116,29 @@ class PlantRenderer(
     }
 
     override fun getTextureLocation(state: PlantRenderState): Identifier {
-        val base = "textures/entity/plant/${state.texturePath}/${state.texturePath}"
-        val rm = Minecraft.getInstance().resourceManager
-
-        val suffixes = buildList {
-            if (!state.texturePathExtra.isEmpty()) add(state.texturePathExtra)
-            if (state.isBaby)   add("baby")
-            if (state.isAsleep) add("sleep")
-        }
-
-        val textureLocation = resolveTextureLocation(base, suffixes, rm)
-        return textureLocation ?: pazResource("$base.png")
+        val texture = state.getTextureLocation()
+        return texture
     }
+}
+
+class EmissivePlantLayer<M : EntityModel<PlantRenderState>>(
+    renderer: RenderLayerParent<PlantRenderState, M>,
+) : EyesLayer<PlantRenderState, M>(renderer) {
+
+    override fun submit(
+        poseStack: PoseStack,
+        submitNodeCollector: SubmitNodeCollector,
+        lightCoords: Int,
+        state: PlantRenderState,
+        yRot: Float,
+        xRot: Float
+    ) {
+        val textureLocation = state.getEmissiveTextureLocation() ?: return
+        val renderType = RenderTypes.eyes(textureLocation)
+        submitNodeCollector.order(1).submitModel(this.parentModel, state, poseStack, renderType, lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
+    }
+
+    override fun renderType(): RenderType = RenderTypes.lines()
 }
 
 class PlantRenderState : LivingEntityRenderState() {
@@ -138,4 +158,27 @@ class PlantRenderState : LivingEntityRenderState() {
     val specialAnimation: AnimationState = AnimationState()
     val sleepAnimationState: AnimationState = AnimationState()
     val bounceAnimationState: AnimationState = AnimationState()
+
+    fun getSuffixes(): MutableList<String> {
+        val suffixes = mutableListOf<String>().apply {
+            if (texturePathExtra.isEmpty()) add(texturePathExtra)
+            if (isBaby)   add("baby")
+            if (isAsleep) add("sleep")
+        }
+        return suffixes
+    }
+
+    fun getTextureLocation(): Identifier {
+        val base = "textures/entity/plant/${texturePath}/${texturePath}"
+        val rm = Minecraft.getInstance().resourceManager
+
+        val textureLocation = resolveTextureLocation(base, rm, getSuffixes())
+        return textureLocation?: pazResource("${base}.png")
+    }
+
+    fun getEmissiveTextureLocation(): Identifier? {
+        val base = "textures/entity/plant/${texturePath}/${texturePath}"
+        val rm = Minecraft.getInstance().resourceManager
+        return resolveTextureLocation(base, rm, getSuffixes().apply { add("emissive") })
+    }
 }

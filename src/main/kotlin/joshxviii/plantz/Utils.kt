@@ -3,6 +3,7 @@ package joshxviii.plantz
 import joshxviii.plantz.PazMain.MODID
 import joshxviii.plantz.entity.plant.Chomper
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.entity.zombie.DiscoZombie
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
 import net.minecraft.nbt.CompoundTag
@@ -213,18 +214,19 @@ fun List<String>.permutationsDescending(): List<String> = buildList {
 }
 
 fun LivingEntity.getMagicName(): String {
-    val name = this.customName?.string ?: return ""
+    val name = this.customName?.string?.lowercase() ?: return ""
     val hasMagicName: Boolean = when (this) {
-        is Chomper -> name == "Chester"
+        is Chomper -> name == "chester"
+        is DiscoZombie -> name == "mj"
         else -> false
     }
-    return if (hasMagicName) name.lowercase() else ""
+    return if (hasMagicName) name else ""
 }
 
-fun resolveTextureLocation(base: String, suffixes: List<String>, rm: ResourceManager): Identifier? {
+fun resolveTextureLocation(base: String, rm: ResourceManager, suffixes: List<String> = listOf()): Identifier? {
     for (suffix in suffixes.permutationsDescending()) {
         if (suffix.isEmpty()) break
-        val candidate = pazResource("${base}_${suffix}.png")
+        val candidate = pazResource("${base}${suffix}.png")
         if (rm.getResource(candidate).isPresent) return candidate
     }
     return null

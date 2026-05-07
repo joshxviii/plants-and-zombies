@@ -103,7 +103,7 @@ class PazZombieRenderer(
             if (state.isBaby) add("baby")
         }
 
-        return resolveTextureLocation(base, suffixes, rm) ?: pazResource("$base.png")
+        return resolveTextureLocation(base, rm, suffixes)?: pazResource("${base}.png")
     }
 }
 
