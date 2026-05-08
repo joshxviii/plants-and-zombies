@@ -1,6 +1,9 @@
 package joshxviii.plantz.entity.plant
 
-import joshxviii.plantz.*
+import joshxviii.plantz.NukeBlastParticleOptions
+import joshxviii.plantz.NukeSmokeParticleOptions
+import joshxviii.plantz.NukeWaveParticleOptions
+import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazTags.BlockTags.PLANTABLE
 import joshxviii.plantz.ai.goal.ExplodeGoal
 import net.minecraft.core.BlockPos

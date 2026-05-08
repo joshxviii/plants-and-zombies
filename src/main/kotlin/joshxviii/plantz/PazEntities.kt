@@ -9,7 +9,6 @@ import joshxviii.plantz.entity.PlantPotMinecart
 import joshxviii.plantz.entity.Sun
 import joshxviii.plantz.entity.gnome.Gnome
 import joshxviii.plantz.entity.plant.*
-import joshxviii.plantz.entity.plant.WallNut
 import joshxviii.plantz.entity.projectile.*
 import joshxviii.plantz.entity.zombie.*
 import joshxviii.plantz.mixin.MobAccessor
@@ -65,7 +64,7 @@ object PazEntities {
         width = 1.0f,
         height = 1.1f,
         attributes = Plant.Companion.PlantAttributes(
-            maxHealth = 25.0,
+            maxHealth = 40.0,
         )
     )
     @JvmField val CHOMPER: EntityType<Chomper> = registerPlant(
@@ -85,7 +84,6 @@ object PazEntities {
         width = 0.625f,
         height = 0.7f,
         attributes = Plant.Companion.PlantAttributes(
-            maxHealth = 50.0,
             followRange = 3.75,
         )
     )
@@ -155,7 +153,7 @@ object PazEntities {
         width = 0.9f,
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
-            maxHealth = 50.0,
+            maxHealth = 35.0,
             attackDamage = 6.5,
             followRange = 38.0,
         )
@@ -177,6 +175,7 @@ object PazEntities {
         height = 0.9f,
         eyeHeight = 0.5f,
         attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 18.0,
             followRange = 22.0,
             attackDamage = 1.0,
         )
@@ -210,7 +209,7 @@ object PazEntities {
         eyeHeight = 0.6f,
         height = 0.8f,
         attributes = Plant.Companion.PlantAttributes(
-            maxHealth = 30.0,
+            maxHealth = 28.0,
             followRange = 4.0
         )
     )

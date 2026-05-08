@@ -13,7 +13,6 @@ import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.util.RandomSource
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
@@ -23,7 +22,6 @@ import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
-import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.phys.Vec3
 
 class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, level) {

@@ -2,7 +2,6 @@ package joshxviii.plantz.entity.projectile
 
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazEntities
-import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.sounds.SoundEvent
@@ -21,7 +20,6 @@ class Cabbage(
 ) : PazProjectile(
     PazEntities.CABBAGE, level, owner, spawnOffset,
     PazDamageTypes.PLANT,
-    damage = 2.5f,
     knockback = 0.15
 ) {
     override fun getDefaultGravity(): Double = 0.03

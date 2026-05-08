@@ -2,11 +2,10 @@ package joshxviii.plantz.item
 
 import joshxviii.plantz.*
 import joshxviii.plantz.entity.plant.Plant
-import joshxviii.plantz.item.component.SunCost
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup.level
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.core.component.DataComponentMap
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
@@ -35,6 +34,19 @@ import java.util.*
 
 class SeedPacketItem(properties: Properties) : Item(properties) {
 
+    override fun components(): DataComponentMap {
+        return super.components().apply {}
+    }
+
+    override fun getDefaultInstance(): ItemStack {
+        val default = super.getDefaultInstance()
+        default.set(DataComponents.ENTITY_DATA, TypedEntityData.of(EntityType.PIG, CompoundTag()))
+        return default
+    }
+
+    override fun asItem(): Item {
+        return super.asItem()
+    }
 
     override fun getName(itemStack: ItemStack): Component {
         val component = itemStack.get(DataComponents.ENTITY_DATA) ?: return super.getName(itemStack)
@@ -112,7 +124,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
         else pos.relative(face)
 
         val availableSun = player.getTotalSun()
-        val sunCost = itemStack.get(PazComponents.SUN_COST)?.sunCost ?: 0
+        val sunCost = itemStack.get(PazComponents.SUN_COST)?.getSunCost(entityType) ?: 0
         if (sunCost > availableSun && !player.hasInfiniteMaterials()) {
             player.sendOverlayMessage(
                 Component.translatable("message.plantz.not_enough_sun", availableSun, sunCost).withStyle(ChatFormatting.RED)
@@ -165,7 +177,16 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
         itemStack.consume(1, player)
         if (!player.hasInfiniteMaterials()) {
             player.removeSunFromStorageAndInventory(sunCost)
-            //if (PazConfig.PLANT_COOLDOWN_ENABLED) player.cooldowns.addCooldown()
+            // set cooldown
+            val group = BuiltInRegistries.ENTITY_TYPE.getKey(entityType)
+            if (PazConfig.PLANT_COOLDOWN_ENABLED) {
+                val cooldownTime = PazConfig.getCooldownTime(sunCost)
+                itemStack.set(DataComponents.USE_COOLDOWN, UseCooldown(cooldownTime, Optional.of(group)))
+                player.cooldowns.addCooldown(group, (cooldownTime*20).toInt())
+            } else {
+                player.cooldowns.removeCooldown(group)
+                itemStack.set(DataComponents.USE_COOLDOWN, UseCooldown(0f))
+            }
         }
         entity.playSound(SoundEvents.BIG_DRIPLEAF_PLACE)
         if (entity is TamableAnimal) entity.tame(player)
@@ -178,10 +199,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
     companion object {
         fun stackFor(type: EntityType<*>): ItemStack {
             val stack = ItemStack(PazItems.SEED_PACKET)
-            val sunCost = PazConfig.getSunCost(type)
             stack.set(DataComponents.ENTITY_DATA, TypedEntityData.of(type, CompoundTag()))
-            stack.set(PazComponents.SUN_COST, SunCost(sunCost))
-            //stack.set(DataComponents.USE_COOLDOWN, UseCooldown(PazConfig.getCooldownTime(sunCost), Optional.of(BuiltInRegistries.ENTITY_TYPE.getKey(type))))
 
             return stack
         }

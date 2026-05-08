@@ -1,12 +1,6 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.entity.plant.Cactus
-import joshxviii.plantz.entity.plant.CherryBomb
-import joshxviii.plantz.entity.plant.CoffeeBean
-import joshxviii.plantz.entity.plant.DoomShroom
-import joshxviii.plantz.entity.plant.IcePeaShooter
-import joshxviii.plantz.entity.plant.Plant
-import joshxviii.plantz.entity.plant.SeaShroom
+import joshxviii.plantz.entity.plant.*
 import joshxviii.plantz.entity.zombie.DiggerZombie
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.entity.zombie.ZombieYeti

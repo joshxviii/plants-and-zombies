@@ -8,7 +8,6 @@ import joshxviii.plantz.PazDataSerializers.DATA_RECEIVED_SUN
 import joshxviii.plantz.PazDataSerializers.DATA_RECEIVED_WATER
 import joshxviii.plantz.PazDataSerializers.DATA_SEED_GROW_COOLDOWN
 import joshxviii.plantz.PazDataSerializers.DATA_SLEEPING
-import joshxviii.plantz.PazDataSerializers.DATA_SWELL_DIR
 import joshxviii.plantz.PazTags.BlockTags.PLANTABLE
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.ai.goal.SleepGoal
@@ -56,12 +55,7 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
-import net.minecraft.world.level.Level
-import net.minecraft.world.level.LevelAccessor
-import net.minecraft.world.level.LevelReader
-import net.minecraft.world.level.LightLayer
-import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.*
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.portal.TeleportTransition
 import net.minecraft.world.level.storage.TagValueOutput
@@ -532,7 +526,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     open fun sleepsDuringNight(): Boolean = false
     open fun sleepsDuringDay(): Boolean = this.`is`(PazTags.EntityTypes.MUSHROOM)
     open fun canSurviveOn(block: BlockState) : Boolean = block.`is`(PLANTABLE)
-    open fun canSurviveOnWater() : Boolean = false
 
     fun getBlockBelow(): BlockState {
         val feetY = y - 0.001
@@ -585,7 +578,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 if (success) {
                     // apply tool damage base on how damaged the plant was
                     itemStack.hurtAndBreak(4, player, hand.asEquipmentSlot())
-                    playSound(if (getBlockBelow().fluidState.isFull) SoundEvents.BUCKET_EMPTY
+                    playSound(if (getBlockBelow().fluidState.isFull) SoundEvents.BUCKET_FILL
                     else SoundEvents.ROOTED_DIRT_BREAK)
                     level.sendParticles(BlockParticleOption(
                         ParticleTypes.BLOCK, getBlockBelow()),

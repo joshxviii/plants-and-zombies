@@ -1,9 +1,7 @@
 package joshxviii.plantz
 
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents
-import net.fabricmc.fabric.api.registry.VillagerInteractionRegistries
 import net.minecraft.core.registries.Registries
-import net.minecraft.data.tags.VillagerTradesTagsProvider
 import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.item.trading.VillagerTrade

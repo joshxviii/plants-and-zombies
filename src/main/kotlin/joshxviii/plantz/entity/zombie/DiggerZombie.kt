@@ -1,6 +1,5 @@
 package joshxviii.plantz.entity.zombie
 
-import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.ai.goal.MineBlocksToTargetGoal
@@ -22,7 +21,6 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
-import net.minecraft.world.level.material.Fluids
 
 
 class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie(type, level) {

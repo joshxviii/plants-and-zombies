@@ -57,8 +57,8 @@ object PazConfig {
         var coffeeBuffDuration: Int = 60_000,
         var sunCostTamingThreshold: Int = 30,
         var plantCooldownEnabled: Boolean = false,
-        var plantCooldownTime: Double = 1.0,
-        var plantCooldownTimePerSun: Double = 1.75,
+        var plantCooldownTime: Double = 4.0,
+        var plantCooldownTimePerSun: Double = 2.5,
         var sunBatteryMax: Int = 320,
         var showDebugInfo: Boolean = false,
     )
@@ -130,8 +130,8 @@ object PazConfig {
                 putDefaultSunCost(entityId, it)
                 it
             }
-        ?: 0 // config
-        return value.coerceAtLeast(0)
+        ?: -1 // not in id list
+        return value.coerceAtLeast(-1)
     }
     fun getTameChance(type: EntityType<*>?): Double {
         val a = config.sunCostTamingThreshold

@@ -4,24 +4,12 @@ import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.entity.projectile.PaintBall
-import joshxviii.plantz.entity.projectile.PeaIce
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
-import net.minecraft.world.entity.ai.goal.MoveThroughVillageGoal
-import net.minecraft.world.entity.ai.goal.SpearUseGoal
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
-import net.minecraft.world.entity.animal.golem.IronGolem
-import net.minecraft.world.entity.animal.turtle.Turtle
-import net.minecraft.world.entity.monster.zombie.Zombie
-import net.minecraft.world.entity.monster.zombie.ZombifiedPiglin
-import net.minecraft.world.entity.npc.villager.AbstractVillager
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 

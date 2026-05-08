@@ -2,7 +2,6 @@ package joshxviii.plantz.entity.projectile
 
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazEntities
-import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.core.particles.ItemParticleOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.world.entity.LivingEntity
@@ -19,7 +18,7 @@ class Melon(
 ) : PazProjectile(
     PazEntities.MELON, level, owner, spawnOffset,
     PazDamageTypes.PLANT,
-    damage = 5.0f,
+    damage = 4.5f,
     knockback = 0.4
 ) {
     override fun getDefaultGravity(): Double = 0.03

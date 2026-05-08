@@ -3,7 +3,6 @@ package joshxviii.plantz.entity.plant
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
-import joshxviii.plantz.entity.projectile.Spore
 import joshxviii.plantz.entity.projectile.WaterSpore
 import net.minecraft.core.BlockPos
 import net.minecraft.tags.FluidTags
@@ -16,8 +15,6 @@ import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.LevelAccessor
-import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.state.BlockState
 

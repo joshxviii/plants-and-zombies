@@ -54,6 +54,7 @@ public class DoomShroomModel extends PlantModel {
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
+		this.cap.xRot += state.xRot * (float) (Math.PI / 280.0);
 		this.body.yRot = state.yRot * (float) (Math.PI / 180.0);
 	}
 }

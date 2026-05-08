@@ -89,7 +89,7 @@ fun Plant.processWateringItem(player: Player, item: ItemStack, hand: Interaction
 fun Plant.processSeedPacketInteraction(player: Player, packet: ItemStack): PacketInteractionResult {
     val type = packet.get(DataComponents.ENTITY_DATA)?.type()
     val availableSun = player.getTotalSun()
-    val sunCost = packet.get(PazComponents.SUN_COST)?.sunCost?: 0
+    val sunCost = packet.get(PazComponents.SUN_COST)?.getSunCost(type)?: 0
     val cantAfford = sunCost > availableSun && !player.hasInfiniteMaterials()
 
     val result = when (type) {
