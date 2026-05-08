@@ -12,6 +12,8 @@
 # Changelog 1.4
 - Added Doom-Shroom
   - Found in Basalt Deltas and in Bastion treasure chests.
+- Added Sea-Shroom
+    - Found in oceans and rivers and from fishing.
 - Added Ducky Tube
 	- Makes the user float in water while equipped.
     - Browncoats and Newspaper Zombies can spawn in lakes and oceans with the Ducky Tube. 
@@ -39,8 +41,8 @@
     - `hydrationSunReduction` – When the plant has received water from a watering can or water bucket, this value will reduce the amount of sun needed to receive seeds when a plant wakes up. _(1.0 = 100% reduction in sun needed (minimum of 1))_
     - `plantPotDamageReduction` – Amount of enemy damage that is reduced when planted in any plant pot. _(1.0 = negate 100% of enemy damage.)_
 - Removed SeedPacket Component.
-- Added StoredSun item component.
-- Added StoredWater item component.
+- Added StoredSun item component. Used by Solar Battery.
+- Added StoredWater item component. Used by Watering Can.
 - Added SunCost item component.
 
 # Changelog 1.3

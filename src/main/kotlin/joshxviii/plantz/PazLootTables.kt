@@ -49,6 +49,7 @@ object LootInjector {
         BuiltInLootTables.VILLAGE_TAIGA_HOUSE,
     )
     private val injections = hashSetOf(
+        BuiltInLootTables.FISHING_FISH,
         BuiltInLootTables.FISHING_TREASURE,
         BuiltInLootTables.BASTION_TREASURE,
     ).apply { addAll(villageHouseBuiltInLootTables) }
