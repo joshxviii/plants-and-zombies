@@ -26,8 +26,8 @@ object PazConfig {
     data class Data(
         var coopPlanting: Boolean = true,
         var playerCreditForPlantKills: Boolean = false,
-        var seedGrowTime: Int = 8100,
-        var extraGrowTimePerSun: Int = 2100,
+        var seedGrowTime: Int = 12000,
+        var extraGrowTimePerSun: Int = 2400,
         var zenPotTimeReduction: Double = 0.25,
         var hydrationSunReduction: Double = 0.5,
         var plantPotDamageReduction: Double = 0.5,
@@ -54,12 +54,12 @@ object PazConfig {
             "plantz:seashroom"          to 0,
             "plantz:coffeebean"         to 3,
         ),
-        var coffeeBuffDuration: Int = 60_000,
+        var coffeeBuffDuration: Int = 48_000,
         var sunCostTamingThreshold: Int = 30,
         var plantCooldownEnabled: Boolean = false,
         var plantCooldownTime: Double = 4.0,
         var plantCooldownTimePerSun: Double = 2.5,
-        var sunBatteryMax: Int = 320,
+        var solarBatteryMax: Int = 320,
         var showDebugInfo: Boolean = false,
     )
 
@@ -88,7 +88,7 @@ object PazConfig {
         get() = config.coffeeBuffDuration.coerceAtLeast(0)
 
     val SUN_BATTERY_MAX: Int
-        get() = config.sunBatteryMax.coerceAtLeast(0)
+        get() = config.solarBatteryMax.coerceAtLeast(0)
 
     val SHOW_DEBUG_INFO: Boolean
         get() = config.showDebugInfo

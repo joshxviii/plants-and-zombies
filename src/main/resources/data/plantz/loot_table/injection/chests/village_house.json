@@ -11,7 +11,7 @@
             {
               "type": "minecraft:item",
               "name": "plantz:watering_can",
-              "weight": 2
+              "weight": 1
             },
             {
               "type": "minecraft:item",

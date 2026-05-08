@@ -19,13 +19,18 @@
     - Browncoats and Newspaper Zombies can spawn in lakes and oceans with the Ducky Tube. 
     - Zombies with Ducky Tubes spawn more often while it's raining.
 - Added Watering Can
-  - Can be bought by a level 3 farmer.
+  - Can be obtained from a level 3 farmer or from fishing.
+- Added Solar Battery
+    - ***Currently not obtainable outside of Creative mode.***
+    - Can store sun items and automatically picks up sun from plants.
+    - Can be used for sun-based plant interactions.
 - Plants now required water to grow.
 	- Plants can be watered with Rain, Water Bottles, Water Buckets or Watering Cans.
 	- Water Buckets and the Watering Can will reduce the amount of sun needed when the Plant wakes up.
 - Adjusted projectile firing logic for Plants and Zombies.
 - Wild plants will only be aggro'd towards zombies by default, not other enemies.
 - Wild Scaredy Shrooms now hide from the player.
+- Plant explosions and other attacks from tamed plants will not damage the owner. If `coopPlanting` is eabled this extends to other players as well.
 - Adjusted spawn rates.
 ### Technical Changes
 - Leader Zombies can no longer spawn leaders as reinforcements.
@@ -40,6 +45,8 @@
     - `zenPotTimeReduction` – This value is multiplied by the final growth time when plants are zen potted. _(1.0 = 100% reduction in sleep needed, aka no sleep.)_
     - `hydrationSunReduction` – When the plant has received water from a watering can or water bucket, this value will reduce the amount of sun needed to receive seeds when a plant wakes up. _(1.0 = 100% reduction in sun needed (minimum of 1))_
     - `plantPotDamageReduction` – Amount of enemy damage that is reduced when planted in any plant pot. _(1.0 = negate 100% of enemy damage.)_
+    - `plantCooldownEnabled` – Toggle for cooldown when plaing plants.
+    - `solarBatteryMax` – Maximum amount of sun that can be stored in the battery.
 - Removed SeedPacket Component.
 - Added StoredSun item component. Used by Solar Battery.
 - Added StoredWater item component. Used by Watering Can.

@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "plantz:block/sun_battery" },
+    "facing=south": { "model": "plantz:block/sun_battery", "y": 180 },
+    "facing=east":  { "model": "plantz:block/sun_battery", "y": 90 },
+    "facing=west":  { "model": "plantz:block/sun_battery", "y": 270 }
+  }
+}
