@@ -13,12 +13,7 @@
     "plantz:cabbagepult",
     "plantz:kernelpult",
     "plantz:melonpult",
-    "plantz:puffshroom",
-    "plantz:fumeshroom",
-    "plantz:scaredyshroom",
-    "plantz:sunshroom",
-    "plantz:hypnoshroom",
-    "plantz:doomshroom",
-    "plantz:coffeebean"
+    "plantz:coffeebean",
+    "#plantz:mushroom"
   ]
 }
