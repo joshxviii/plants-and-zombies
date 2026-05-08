@@ -25,7 +25,7 @@ class NukeWaveParticle(
 
     init {
         this.quadSize = scale
-        this.lifetime = (14 + (floor(this.quadSize / 5))).toInt()
+        this.lifetime = (10 + (floor(this.quadSize / 5))).toInt()
         this.setParticleSpeed(xa, ya, za)
     }
 

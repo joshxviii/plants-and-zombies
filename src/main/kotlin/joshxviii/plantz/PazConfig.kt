@@ -51,10 +51,14 @@ object PazConfig {
             "plantz:sunshroom"          to 4,
             "plantz:hypnoshroom"        to 7,
             "plantz:doomshroom"         to 16,
+            "plantz:seashroom"          to 0,
             "plantz:coffeebean"         to 3,
         ),
         var coffeeBuffDuration: Int = 60_000,
         var sunCostTamingThreshold: Int = 30,
+        var plantCooldownEnabled: Boolean = true,
+        var plantCooldownTime: Int = 10,
+        var plantCooldownTimePerSun: Int = 15,
         var sunBatteryMax: Int = 320,
         var showDebugInfo: Boolean = false,
     )
@@ -101,9 +105,17 @@ object PazConfig {
     val PLANT_POT_DAMAGE_REDUCTION: Double
         get() = 1f - config.plantPotDamageReduction.coerceIn(0.0, 1.0)
 
+    val PLANT_COOLDOWN_ENABLED: Boolean
+        get() = config.plantCooldownEnabled
+
     fun getGrowTime(sunCost: Int, zenBuff: Boolean): Int {
         val time = config.seedGrowTime.coerceAtLeast(0) + (sunCost * config.extraGrowTimePerSun.coerceAtLeast(0))
         return if (zenBuff) (time * (1f - config.zenPotTimeReduction.coerceIn(0.0, 1.0))).toInt() else time
+    }
+
+    fun getCooldownTime(sunCost: Int): Int {
+        val time = config.plantCooldownTime.coerceAtLeast(1) + (sunCost * config.plantCooldownTimePerSun.coerceAtLeast(0))
+        return time
     }
 
     fun getSunCost(type: EntityType<*>?): Int {
@@ -113,9 +125,12 @@ object PazConfig {
     fun getSunCost(entityId: Identifier?): Int {
         if (entityId == null) return 0
         val key = entityId.toString()
-        val value = config.sunCosts[key] // config
-            ?: defaultConfig.sunCosts[key] // default
-            ?: 0 // key not found
+        val value = config.sunCosts[key]?:// config
+            defaultConfig.sunCosts[key]?.let {// default
+                putDefaultSunCost(entityId, it)
+                it
+            }
+        ?: 0 // config
         return value.coerceAtLeast(0)
     }
     fun getTameChance(type: EntityType<*>?): Double {
@@ -128,5 +143,6 @@ object PazConfig {
 
     fun putDefaultSunCost(entityId: Identifier, sunCost: Int) {
         config.sunCosts.putIfAbsent(entityId.toString(), sunCost.coerceAtLeast(0))
+        save()
     }
 }

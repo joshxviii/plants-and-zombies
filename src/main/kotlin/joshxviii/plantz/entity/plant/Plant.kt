@@ -55,6 +55,7 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.LightLayer
@@ -101,7 +102,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         private const val NUTRIENT_SUPPLY_MAX = 160  // ticks before suffocating when on invalid ground
 
         val PLANT_STATE: EntityDataAccessor<PlantState> = SynchedEntityData.defineId<PlantState>(Plant::class.java, DATA_PLANT_STATE)
-        val SWELL_DIR: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_SWELL_DIR)
         val COOLDOWN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_COOLDOWN)
         val COFFEE_BUFF: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_COFFEE_BUFF)
         val RECEIVED_SUN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, DATA_RECEIVED_SUN)
@@ -131,16 +131,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }
         }
     }
-
-    open fun getMaxSwellTime() : Int = 30
-    var oldSwell = 0; var swell = 0
-    fun getSwelling(a: Float): Float = Mth.lerp(a, oldSwell.toFloat(), swell.toFloat()) / (getMaxSwellTime() - 2).toFloat()
-
-    var swellDir: Int
-        get() = this.entityData.get(SWELL_DIR)
-        set(value) {
-            this.entityData.set(SWELL_DIR, value)
-        }
 
     private var nutrientSupply = NUTRIENT_SUPPLY_MAX
 
@@ -235,7 +225,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
         entityData.define(PLANT_STATE, PlantState.IDLE)
-        entityData.define(SWELL_DIR, 0)
         entityData.define(COOLDOWN, 0)
         entityData.define(RECEIVED_SUN, 0)
         entityData.define(RECEIVED_WATER, 0)
@@ -270,11 +259,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         coffeeBuff = input.getInt("plantz:CoffeeBuff").getOrElse { 0 }
         cooldown = input.getInt("plantz:Cooldown").getOrElse { -1 }
         attachedPlayerReference = Optional.ofNullable((EntityReference.read<LivingEntity>(input, "plantz:AttachedPlayer"))).getOrNull()
-    }
-
-    fun calculateSwell() {
-        oldSwell = swell
-        swell = (swell + swellDir).coerceIn(0, getMaxSwellTime())
     }
 
     override fun getAmbientSound(): SoundEvent? = super.getAmbientSound()// TODO make custom sounds
@@ -385,8 +369,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 if (nutrientSupply < 100 && random.nextInt(10) == 0) addParticlesAroundSelf(level)
             } else nutrientSupply = NUTRIENT_SUPPLY_MAX
         }
-
-        calculateSwell()
 
         --cooldown
         if (!this.isNoAi) { updateAnimationState() }
@@ -540,8 +522,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
     fun exposedToRain(): Boolean = level().isRainingAt(blockPosition().above())
     open fun sleepsDuringNight(): Boolean = false
-    open fun sleepsDuringDay(): Boolean = false
+    open fun sleepsDuringDay(): Boolean = this.`is`(PazTags.EntityTypes.MUSHROOM)
     open fun canSurviveOn(block: BlockState) : Boolean = block.`is`(PLANTABLE)
+    open fun canSurviveOnWater() : Boolean = false
 
     fun getBlockBelow(): BlockState {
         val feetY = y - 0.001
@@ -599,7 +582,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }
 
             // sun iteration
-            if (processSunItem(player, itemStack, hand, growNeeds))  return InteractionResult.SUCCESS_SERVER
+            if (processSunItem(player, itemStack, hand, growNeeds)) return InteractionResult.SUCCESS_SERVER
 
             // water interaction
             if (processWateringItem(player, itemStack, hand, growNeeds)) return InteractionResult.SUCCESS_SERVER

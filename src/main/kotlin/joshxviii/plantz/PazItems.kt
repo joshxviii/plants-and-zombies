@@ -37,6 +37,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.*
 import net.minecraft.world.item.Items.GLASS_BOTTLE
 import net.minecraft.world.item.component.ItemAttributeModifiers
+import net.minecraft.world.item.component.UseCooldown
 import net.minecraft.world.item.equipment.ArmorMaterials
 import net.minecraft.world.item.equipment.ArmorType
 import net.minecraft.world.item.equipment.EquipmentAssets
@@ -136,6 +137,7 @@ object PazItems {
         "seed_packet", ::SeedPacketItem,
         properties = Item.Properties()
             .component(PazComponents.SUN_COST, SunCost())
+            .component(DataComponents.USE_COOLDOWN, UseCooldown(0f))
     )
     @JvmField
     val PLANT_POT_MINECART: Item = registerItem(

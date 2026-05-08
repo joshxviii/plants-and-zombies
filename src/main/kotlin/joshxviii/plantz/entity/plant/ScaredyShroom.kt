@@ -22,7 +22,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.AABB
 
-class ScaredyShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEntities.SCAREDY_SHROOM, level) {
+class ScaredyShroom(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.SCAREDY_SHROOM, level) {
 
     companion object {
         val HIDING_FLAG: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(ScaredyShroom::class.java, EntityDataSerializers.BOOLEAN)

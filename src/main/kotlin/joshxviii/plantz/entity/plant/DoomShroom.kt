@@ -19,8 +19,7 @@ import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
 
-class DoomShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEntities.DOOM_SHROOM, level) {
-
+class DoomShroom(type: EntityType<out Explosive>, level: Level) : Explosive(PazEntities.DOOM_SHROOM, level) {
 
     companion object {
         fun checkDoomShroomSpawnRules(
@@ -41,7 +40,7 @@ class DoomShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEnt
     override fun registerGoals() {
         super.registerGoals()
         this.goalSelector.addGoal(1, ExplodeGoal(
-            plantEntity = this,
+            explosiveEntity = this,
             explosionRadius = 7f,
             activateRange = 4.75,
             destroyBlocks = true,

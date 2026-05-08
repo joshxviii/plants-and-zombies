@@ -6,6 +6,7 @@ import joshxviii.plantz.entity.plant.CoffeeBean
 import joshxviii.plantz.entity.plant.DoomShroom
 import joshxviii.plantz.entity.plant.IcePeaShooter
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.entity.plant.SeaShroom
 import joshxviii.plantz.entity.zombie.DiggerZombie
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.entity.zombie.ZombieYeti
@@ -47,8 +48,12 @@ object PazSpawnPlacements {
         registerSpawnPlacement(PazEntities.HYPNOSHROOM, Plant::checkPlantSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_DOOM_SHROOM, PazEntities.DOOM_SHROOM,
-            weight = 40, minGroupSize = 1, maxGroupSize = 1)
+            weight = 25, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.DOOM_SHROOM, DoomShroom::checkDoomShroomSpawnRules)
+
+        addBiomeSpawn(PazTags.Biomes.HAS_SEA_SHROOM, PazEntities.SEA_SHROOM,
+            weight = 9, minGroupSize = 1, maxGroupSize = 2)
+        registerSpawnPlacement(PazEntities.SEA_SHROOM, SeaShroom::checkSeaShroomSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_ICE_PEASHOOTER, PazEntities.ICE_PEA_SHOOTER,
             weight = 5, minGroupSize = 1, maxGroupSize = 2)

@@ -13,7 +13,7 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 
-class PotatoMine(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.POTATO_MINE, level) {
+class PotatoMine(type: EntityType<out Explosive>, level: Level) : Explosive(PazEntities.POTATO_MINE, level) {
     override fun registerGoals() {
         super.registerGoals()
     }
@@ -31,12 +31,10 @@ class PotatoMine(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
     override fun tick() {
         super.tick()
         if (cooldown>0) coolDownAnimationState.startIfStopped(tickCount)
+        if (swell == getMaxSwellTime()) potatoMineExplode()
     }
 
-    override fun getMaxSwellTime() = 4
-    override fun doPush(entity: Entity) {
-        if (isGrowingSeeds || cooldown > 0) return
-        if (entity is Plant || (entity is Player && isTame) || this.hasSameRootOwner(entity)) return
+    fun potatoMineExplode() {
         explode(
             radius = 1f,
             sound = PazSounds.POTATOMINE_EXPLODE,
@@ -54,5 +52,13 @@ class PotatoMine(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
             amount = 3..3,
             speed = 0.1,
         )
+        discard()
+    }
+
+    override fun getMaxSwellTime() = 4
+    override fun doPush(entity: Entity) {
+        if (isGrowingSeeds || cooldown > 0) return
+        if (entity is Plant || (entity is Player && isTame) || this.hasSameRootOwner(entity)) return
+        potatoMineExplode()
     }
 }

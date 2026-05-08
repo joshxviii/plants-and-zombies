@@ -11,9 +11,9 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 
 class SunShroom(
-    type: EntityType<out Mushroom>,
+    type: EntityType<out Plant>,
     level: Level,
-) : Mushroom(PazEntities.SUN_SHROOM, level) {
+) : Plant(PazEntities.SUN_SHROOM, level) {
     override fun attackGoals() {}
 
     override fun registerGoals() {

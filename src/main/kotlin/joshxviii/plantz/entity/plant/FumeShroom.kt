@@ -20,7 +20,7 @@ import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 
-class FumeShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEntities.FUME_SHROOM, level) {
+class FumeShroom(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.FUME_SHROOM, level) {
     companion object {
         val SPRAY_TIME_ID: EntityDataAccessor<Int> =
             SynchedEntityData.defineId<Int>(FumeShroom::class.java, EntityDataSerializers.INT)

@@ -43,6 +43,7 @@ object PazCreativeTab {
                 output.accept(SeedPacketItem.stackFor(PazEntities.SCAREDY_SHROOM))
                 output.accept(SeedPacketItem.stackFor(PazEntities.HYPNOSHROOM))
                 output.accept(SeedPacketItem.stackFor(PazEntities.DOOM_SHROOM))
+                output.accept(SeedPacketItem.stackFor(PazEntities.SEA_SHROOM))
                 output.accept(SeedPacketItem.stackFor(PazEntities.COFFEE_BEAN))
 
                 // zombie spawn eggs
@@ -63,6 +64,7 @@ object PazCreativeTab {
                 // items
                 output.accept(PazItems.SUN)
                 output.accept(PazItems.SUN_BOTTLE)
+                //output.accept(PazItems.SUN_BATTERY)
                 output.accept(PazItems.WATERING_CAN)
                 output.accept(PazBlocks.PLANT_POT)
                 output.accept(PazBlocks.ZEN_PLANT_POT)

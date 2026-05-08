@@ -28,6 +28,7 @@ object PazTags {
 
     object EntityTypes {
         @JvmField val PLANT = tag("plant")
+        @JvmField val MUSHROOM = tag("mushroom")
         @JvmField val PLANT_PROJECTILE = tag("plant_projectile")
         @JvmField val CANNOT_CHOMP = tag("cannot_be_chomped")
         @JvmField val CANNOT_HYPNOTIZE = tag("cannot_be_hypnotized")
@@ -53,6 +54,7 @@ object PazTags {
         val HAS_FUMESHROOM = tag("plant/has_fumeshroom")
         val HAS_HYPNOSHROOM = tag("plant/has_hypnoshroom")
         val HAS_DOOM_SHROOM = tag("plant/has_doomshroom")
+        val HAS_SEA_SHROOM = tag("plant/has_seashroom")
         val HAS_ICE_PEASHOOTER = tag("plant/has_ice_peashooter")
         val HAS_CABBAGEPULT = tag("plant/has_cabbagepult")
         val HAS_KERNELPULT = tag("plant/has_kernelpult")

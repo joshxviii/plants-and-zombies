@@ -10,29 +10,19 @@
           "children": [
             {
               "type": "minecraft:item",
-              "name": "plantz:seed_packet",
-              "weight": 2,
-              "functions": [
-                {
-                  "function": "minecraft:set_components",
-                  "components": {
-                    "minecraft:entity_data": {
-                      "id": "plantz:melonpult"
-                    }
-                  }
-                }
-              ]
+              "name": "plantz:watering_can",
+              "weight": 3
             },
             {
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
-              "weight": 3,
+              "weight": 4,
               "functions": [
                 {
                   "function": "minecraft:set_components",
                   "components": {
                     "minecraft:entity_data": {
-                      "id": "plantz:chomper"
+                      "id": "plantz:seashroom"
                     }
                   }
                 }

@@ -170,6 +170,14 @@
         }
       }
     },
+    "plantz:seashroom": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:seashroom"
+        }
+      }
+    },
     "plantz:coffeebean": {
       "trigger": "minecraft:tame_animal",
       "conditions": {

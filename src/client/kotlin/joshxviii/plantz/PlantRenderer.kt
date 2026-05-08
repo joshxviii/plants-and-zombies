@@ -2,6 +2,7 @@ package joshxviii.plantz
 
 import com.mojang.blaze3d.vertex.PoseStack
 import joshxviii.plantz.ai.PlantState
+import joshxviii.plantz.entity.plant.Explosive
 import joshxviii.plantz.entity.plant.KernelPult
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.plant.WallNut
@@ -91,7 +92,7 @@ class PlantRenderer(
             Quaternionf()
         }
         state.plantState = entity.state
-        state.swelling = entity.getSwelling(partialTick)
+        if (entity is Explosive) state.swelling = entity.getSwelling(partialTick)
         state.cooldown = entity.cooldown
         state.isAsleep = entity.isAsleep
         state.damagedAmount = entity.damagedPercent

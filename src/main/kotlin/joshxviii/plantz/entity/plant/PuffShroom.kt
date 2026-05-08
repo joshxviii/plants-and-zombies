@@ -12,7 +12,7 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.Level
 
-class PuffShroom(type: EntityType<out Mushroom>, level: Level) : Mushroom(PazEntities.PUFF_SHROOM, level) {
+class PuffShroom(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.PUFF_SHROOM, level) {
     override fun registerGoals() {
         super.registerGoals()
 
