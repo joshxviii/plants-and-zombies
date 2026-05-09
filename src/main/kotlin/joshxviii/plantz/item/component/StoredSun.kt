@@ -9,10 +9,13 @@ import net.minecraft.core.component.DataComponentGetter
 import net.minecraft.network.chat.Component
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
+import net.minecraft.util.Mth
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.component.TooltipProvider
 import java.util.function.Consumer
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Sun storage component with adjustable capacity.
@@ -37,7 +40,8 @@ data class StoredSun(
         consumer.accept(Component.translatable("component.stored_sun", storedSun, max).withStyle(ChatFormatting.YELLOW))
     }
 
-    fun storagePercentage(): Float = (storedSun.toFloat() / max)
+    fun getLevel(): Int = if (hasSun()) max(1,(Mth.floor(storagePercentage() * 15f))) else 0// used for light level and redstone signal
+    fun storagePercentage(): Float = (storedSun / max.toFloat())
     fun hasSun(sun: Int = 1): Boolean = storedSun >= sun
     fun hasRoomForSun(sun: Int = 1): Boolean = storedSun + sun <= max
     fun isFull(): Boolean = storedSun == max

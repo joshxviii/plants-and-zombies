@@ -3,6 +3,8 @@ package joshxviii.plantz.item
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazItems
+import joshxviii.plantz.block.entity.MailboxBlockEntity
+import joshxviii.plantz.block.entity.SunBatteryBlockEntity
 import joshxviii.plantz.item.component.StoredSun
 import net.minecraft.util.Mth
 import net.minecraft.world.InteractionResult
@@ -14,7 +16,9 @@ import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.item.context.UseOnContext
+import net.minecraft.world.level.block.state.BlockState
 
 class SunBatteryItem(properties: Properties) : BlockItem(PazBlocks.SUN_BATTERY_BLOCK, properties) {
 
@@ -22,6 +26,27 @@ class SunBatteryItem(properties: Properties) : BlockItem(PazBlocks.SUN_BATTERY_B
         val player = context.player
         if (player?.isShiftKeyDown==true) return super.useOn(context)
         return InteractionResult.PASS
+    }
+
+    override fun place(placeContext: BlockPlaceContext): InteractionResult {
+        val item = placeContext.itemInHand.copyAndClear()
+        val result = super.place(placeContext)
+        if (result == InteractionResult.SUCCESS) {
+            (placeContext.level.getBlockEntity(placeContext.clickedPos) as? SunBatteryBlockEntity)?.let {
+                it.theItem = item
+                item.get(PazComponents.STORED_SUN)?.let { sun -> it.updateLevel(sun.getLevel()) }
+            }
+        }
+        return result
+    }
+
+    override fun getPlacementState(context: BlockPlaceContext): BlockState? {
+        val state = super.getPlacementState(context)?: return null
+        return state
+    }
+
+    override fun updatePlacementContext(context: BlockPlaceContext): BlockPlaceContext? {
+        return super.updatePlacementContext(context)
     }
 
     override fun isBarVisible(stack: ItemStack): Boolean {

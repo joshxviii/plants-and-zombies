@@ -39,7 +39,6 @@ import net.minecraft.world.level.material.PushReaction
 object PazBlocks {
     @JvmField val HAS_WATER = BooleanProperty.create("has_water");
     @JvmField val STORED_WATER = IntegerProperty.create("stored_water", 0, 9999);
-    @JvmField val STORED_SUN = IntegerProperty.create("stored_sun", 0, PazConfig.SUN_BATTERY_MAX);
 
     @JvmField val PLANT_POT: Block = registerBlock(
         "plant_pot",
@@ -85,6 +84,8 @@ object PazBlocks {
         ::SunBatteryBlockEntity,
         SUN_BATTERY_BLOCK
     )
+    @JvmField val SUN_BATTERY_POI = PoiHelper.register(pazResource("sun_battery"), 8, 16, SUN_BATTERY_BLOCK)
+
 
     @JvmField val MAILBOX: Block = registerBlock("mailbox", mailboxProperties(), ::MailboxBlock)
     @JvmField val LIGHT_GRAY_MAILBOX: Block = registerBlock("light_gray_mailbox", mailboxProperties(MapColor.COLOR_LIGHT_GRAY), {MailboxBlock(it, DyeColor.LIGHT_GRAY)})

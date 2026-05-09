@@ -1,10 +1,15 @@
 package joshxviii.plantz.entity
 
+import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.PazBlocks.SUN_BATTERY_POI
+import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
+import joshxviii.plantz.block.entity.SunBatteryBlockEntity
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.hasSpaceForSun
 import joshxviii.plantz.tryAddSunToStorage
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument.blockPos
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -13,12 +18,13 @@ import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
-import net.minecraft.tags.FluidTags
 import net.minecraft.util.ExtraCodecs
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
+import net.minecraft.world.entity.ai.village.poi.PoiManager.Occupancy
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.entity.EntityTypeTest
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
@@ -35,6 +41,8 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
     private var health = 5
     private var count = 1
     private var followingEntity: LivingEntity? = null
+    private var batteryPos: Vec3? = null
+    private var batteryState: BlockState? = null
     private val interpolation = InterpolationHandler(this)
 
     companion object {
@@ -102,6 +110,7 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
         get() = entityData.get(DATA_VALUE)
         private set(value) {
             entityData.set(DATA_VALUE, value)
+            if (value <= 0) discard()
         }
 
     constructor(level: Level, pos: Vec3, roughly: Vec3, value: Int) : this(PazEntities.SUN, level) {
@@ -152,20 +161,17 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
         else {
             super.tick()
             val colliding = !level().noCollision(boundingBox)
-            if (isEyeInFluid(FluidTags.WATER)) setUnderwaterMovement()
-            else if (!colliding) applyGravity()
+            if (!colliding) applyGravity()
 
-            if (level().getFluidState(blockPosition()).`is`(FluidTags.LAVA)) {
-                setDeltaMovement(
-                    ((random.nextFloat() - random.nextFloat()) * 0.2f).toDouble(),
-                    0.2,
-                    ((random.nextFloat() - random.nextFloat()) * 0.2f).toDouble()
-                )
-            }
 
             if (tickCount % ENTITY_SCAN_PERIOD == 1) scanForMerges()
+            moveTowardsClosestTarget()
+            if (tickCount % 20 == 0) {
+                batteryPos = getNearestBattery(MAX_FOLLOW_DIST)
+                followingEntity = getNearestEntity(MAX_FOLLOW_DIST)
+            }
 
-            followNearbyEntity()
+            if (batteryPos != null) needsSync = true
             if (followingEntity == null && !level().isClientSide && colliding) {
                 val nextColliding = !level().noCollision(boundingBox.move(deltaMovement))
                 if (nextColliding) {
@@ -176,7 +182,7 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
 
             val fallSpeed = deltaMovement.y
             move(MoverType.SELF, deltaMovement)
-            applyEffectsFromBlocks()
+            //applyEffectsFromBlocks()
             var friction = 0.97f
             if (onGround()) {
                 friction = level().getBlockState(blockPosBelowThatAffectsMyMovement).block.getFriction() * 0.97f
@@ -193,30 +199,47 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
 
     fun getLifeTime(): Int = DEFAULT_LIFETIME
 
-    private fun followNearbyEntity() {
-        followingEntity = getNearestEntity(MAX_FOLLOW_DIST)
-//        if (followingEntity == null
-//            || followingEntity!!.isSpectator
-//            || followingEntity!!.distanceToSqr(this) > 64.0
-//            || followingEntity!!.health == followingEntity!!.maxHealth
-//        ) {
-//            followingEntity = getNearestEntity(8.0)
-//        }
+    private fun moveTowardsClosestTarget() {
+        val targetPos: Vec3 = when {
+            batteryPos != null && shouldPrioritizeBattery() -> batteryPos
+            followingEntity != null -> followingEntity?.position()
+            else -> null
+        } ?: return
 
-        if (followingEntity != null) {
-            val delta = Vec3(
-                followingEntity!!.x - x,
-                (followingEntity!!.y + followingEntity!!.eyeHeight - y),
-                followingEntity!!.z - z
-            )
-            val length = delta.lengthSqr()
-            val power = 1.0 - sqrt(length) / MAX_FOLLOW_DIST
-            deltaMovement = deltaMovement.add(delta.normalize().multiply(Vec3(1.0,1.5,1.0)).scale(power * power * 0.1))
-            if ( boundingBox.inflate(0.1).intersects(followingEntity!!.boundingBox) ) {
-                touchedEntity(followingEntity)
+        val delta = targetPos.subtract(position())
+        val distanceSq = delta.lengthSqr()
+        val distance = sqrt(distanceSq)
 
+        if (distance > MAX_FOLLOW_DIST) return
+        val power = (1.0 - distance / MAX_FOLLOW_DIST).coerceAtLeast(0.0)
+
+        val movement = delta.normalize()
+            .multiply(1.0, 1.5, 1.0)
+            .scale(power * power * 0.1)
+
+        deltaMovement = deltaMovement.add(movement)
+        when {
+            batteryPos!= null && distanceSq < 0.25 -> { touchedBattery(batteryPos!!) }
+            followingEntity != null && boundingBox.inflate(0.1).intersects(followingEntity!!.boundingBox) -> {
+                touchedEntity(followingEntity!!)
             }
         }
+    }
+
+    private fun shouldPrioritizeBattery(): Boolean {
+        val entityDis = followingEntity?.distanceToSqr(position()) ?: Double.POSITIVE_INFINITY
+        val batteryDis = batteryPos?.distanceToSqr(position()) ?: Double.POSITIVE_INFINITY
+        return batteryDis < entityDis
+    }
+
+    private fun touchedBattery(pos: Vec3) {
+        val blockPos = BlockPos.containing(pos)
+        (level().getBlockEntity(blockPos) as? SunBatteryBlockEntity)?.let {
+            if (it.isFull()) return
+            it.addSun(1)
+            value--
+        }
+        this.level().blockEvent(blockPos, PazBlocks.SUN_BATTERY_BLOCK, 1, 2)
     }
 
     private fun touchedEntity(entity: LivingEntity?) {
@@ -240,7 +263,6 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
                 }
             }
             if (successCount>0) playPickupSound()
-            if (value <= 0) discard()
         }
     }
 
@@ -269,6 +291,20 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
             }
         }
         return result
+    }
+
+    fun getNearestBattery(range: Double = 4.5): Vec3? {
+        val poiManager = (level() as? ServerLevel)?.poiManager ?: return null
+        val batteryPos: BlockPos = poiManager.findClosest(
+            { it.value() == SUN_BATTERY_POI },
+            blockPosition(),
+            range.toInt(),
+            Occupancy.ANY
+        ).orElse(null)?: return null
+        (level().getBlockEntity(batteryPos) as? SunBatteryBlockEntity)?.let {
+            if (it.isFull()) return null
+        }
+        return batteryPos.let { Vec3(it.x+0.5, it.y+0.5, it.z+0.5) }
     }
 
     private fun playPickupSound() {
