@@ -36,18 +36,13 @@ class SunRenderer(context: EntityRendererProvider.Context) :
         camera: CameraRenderState
     ) {
         poseStack.pushPose()
-        val icon = state.icon
-        val u0 = (icon % 4 * 16 + 0) / 64.0f
-        val u1 = (icon % 4 * 16 + 16) / 64.0f
-        val v0 = (icon / 4 * 16 + 0) / 64.0f
-        val v1 = (icon / 4 * 16 + 16) / 64.0f
         val r = 1.0f
         val xo = 0.5f
         val yo = 0.25f
-        val br = 255.0f
         val rr = state.ageInTicks / 4.0f
-        val rc = 255
-        val gc = 255
+        val br = 0xFFFF77
+        val rc = 0xFFFF77
+        val gc = 0xFFFF77
         val bc = ((Mth.sin(rr + 10.0) + r) * xo * br).toInt()
         poseStack.translate(0.0f, 0.1f, 0.0f)
         poseStack.mulPose(camera.orientation)
@@ -58,11 +53,11 @@ class SunRenderer(context: EntityRendererProvider.Context) :
         if (!isFlashing) submitNodeCollector.submitCustomGeometry(
             poseStack,
             EMISSIVE_SUN,
-        ) { pose: PoseStack.Pose?, buffer: VertexConsumer? ->
-            vertex(buffer!!, pose!!, -xo, -yo, rc, gc, bc, u0, v1, state.lightCoords)
-            vertex(buffer, pose, xo, -yo, rc, gc, bc, u1, v1, state.lightCoords)
-            vertex(buffer, pose, xo, 0.75f, rc, gc, bc, u1, v0, state.lightCoords)
-            vertex(buffer, pose, -xo, 0.75f, rc, gc, bc, u0, v0, state.lightCoords)
+        ) { pose: PoseStack.Pose, buffer: VertexConsumer ->
+            vertex(buffer, pose, -xo, -yo, rc, gc, bc, 0f, 1f, state.lightCoords)
+            vertex(buffer, pose, xo, -yo, rc, gc, bc, 1f, 1f, state.lightCoords)
+            vertex(buffer, pose, xo, 0.75f, rc, gc, bc, 1f, 0f, state.lightCoords)
+            vertex(buffer, pose, -xo, 0.75f, rc, gc, bc, 0f, 0f, state.lightCoords)
         }
         poseStack.popPose()
 
@@ -82,12 +77,12 @@ class SunRenderer(context: EntityRendererProvider.Context) :
 
     companion object {
         private val SUN_LOCATION = pazResource("textures/entity/sun.png")
-        private val RENDER_TYPE = RenderTypes.itemTranslucent(SUN_LOCATION)
-        private val EMISSIVE_SUN =
+        public val RENDER_TYPE = RenderTypes.itemTranslucent(SUN_LOCATION)
+        public val EMISSIVE_SUN =
             RenderType.create(
                 "sun",
-                RenderSetup.builder(RenderPipelines.EYES)
-                    .withTexture("Sampler0", pazResource("textures/entity/sun.png"))
+                RenderSetup.builder(RenderPipelines.ENERGY_SWIRL)
+                    .withTexture("Sampler0", SUN_LOCATION)
                     .setOutputTarget(OutputTarget.ITEM_ENTITY_TARGET)
                     .useLightmap()
                     .useOverlay()

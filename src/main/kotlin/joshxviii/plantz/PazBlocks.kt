@@ -72,7 +72,7 @@ object PazBlocks {
         "sun_battery",
         BlockBehaviour.Properties.of()
             .sound(SoundType.COPPER_BULB)
-            .strength(0.5F)
+            .strength(0.25F)
             .noOcclusion()
             .pushReaction(PushReaction.BLOCK)
             .lightLevel(SunBatteryBlock.LIGHT_EMISSION),

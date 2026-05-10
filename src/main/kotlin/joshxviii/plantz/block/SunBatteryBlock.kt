@@ -3,6 +3,7 @@ package joshxviii.plantz.block
 import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazConfig
+import joshxviii.plantz.PazItems
 import joshxviii.plantz.block.entity.SunBatteryBlockEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -71,13 +72,15 @@ class SunBatteryBlock(properties: Properties) : BaseEntityBlock(properties), Sim
         hand: InteractionHand,
         hitResult: BlockHitResult
     ): InteractionResult {
-//        if (itemStack.`is`(PazItems.SUN)) {
-//            val storedSun = state.getValue(STORED_SUN)
-//            if (storedSun >= PazConfig.SUN_BATTERY_MAX) return InteractionResult.FAIL
-//            itemStack.consume(1, player)
-//            level.setBlockAndUpdate(pos, state.setValue(STORED_SUN, storedSun + 1))
-//            return InteractionResult.SUCCESS
-//        }
+        if (itemStack.`is`(PazItems.SUN)) {
+            val blockEntity = level.getBlockEntity(pos)
+            (blockEntity as? SunBatteryBlockEntity)?.let {
+                if (it.isFull()) return InteractionResult.FAIL
+                it.addSun(1)
+                itemStack.consume(1, player)
+                return InteractionResult.SUCCESS
+            }
+        }
         return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult)
     }
 

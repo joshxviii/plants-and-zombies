@@ -1,6 +1,7 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.block.entity.FlagBlockEntity
+import joshxviii.plantz.block.entity.SunBatteryBlockEntity
 import joshxviii.plantz.model.FlagBlockModel
 import joshxviii.plantz.model.GnomeArmorModel
 import joshxviii.plantz.model.GnomeModel
@@ -159,5 +160,6 @@ object PazModels {
         EntityRenderers.register(PazEntities.THROWN_SUN_BOTTLE) { ThrownItemRenderer(it) }
 
         BlockEntityRenderers.register<FlagBlockEntity, FlagRenderState>(PazBlocks.FLAG_BLOCK_ENTITY) { FlagRenderer(FlagBlockModel(it.bakeLayer(FlagBlockModel.LAYER_LOCATION))) }
+        BlockEntityRenderers.register<SunBatteryBlockEntity, SunBatteryRenderSate>(PazBlocks.SUN_BATTERY_BLOCK_ENTITY) { SunBatteryRenderer() }
     }
 }

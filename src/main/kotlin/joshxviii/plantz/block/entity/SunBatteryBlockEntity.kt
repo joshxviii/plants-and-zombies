@@ -7,6 +7,9 @@ import joshxviii.plantz.PazItems
 import joshxviii.plantz.block.SunBatteryBlock
 import joshxviii.plantz.item.component.StoredSun
 import net.minecraft.core.BlockPos
+import net.minecraft.core.component.DataComponentGetter
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
 import net.minecraft.util.Mth
 import net.minecraft.world.Container
 import net.minecraft.world.item.ItemStack
@@ -23,29 +26,36 @@ class SunBatteryBlockEntity(
 ) : BlockEntity(
     PazBlocks.SUN_BATTERY_BLOCK_ENTITY, worldPosition, blockState
 ), BlockContainerSingleItem {
-    private var item: ItemStack? = ItemStack.EMPTY
+    private var item: ItemStack = PazItems.SUN_BATTERY.defaultInstance
 
-    fun getStoredSun(): Int {
-        val storedSun = item?.get(PazComponents.STORED_SUN)?.storedSun ?: 0
-        return storedSun
+    fun getStoredSunPercent(): Float {
+        return item.get(PazComponents.STORED_SUN)?.storagePercentage() ?: 0f
     }
 
     fun addSun(amount: Int) {
-        val newStoredSun = item?.get(PazComponents.STORED_SUN)?.addSun(amount) ?: StoredSun(amount)
-        item?.set(PazComponents.STORED_SUN, newStoredSun)
+        val newStoredSun = item.get(PazComponents.STORED_SUN)?.addSun(amount) ?: StoredSun(amount)
+        item.set(PazComponents.STORED_SUN, newStoredSun)
+        level?.let {
+            it.playSound(null, blockPos, SoundEvents.BUBBLE_POP, SoundSource.BLOCKS, 0.6f, getStoredSunPercent()+0.5f+(it.random.nextFloat()*0.1f))
+        }
         updateLevel(newStoredSun.getLevel())
     }
 
     fun isFull(): Boolean {
-        return item?.get(PazComponents.STORED_SUN)?.isFull() ?: false
+        return item.get(PazComponents.STORED_SUN)?.isFull() ?: false
     }
 
     fun updateLevel(sunLevel: Int) {
-        level!!.setBlock(blockPos, blockState.setValue(SunBatteryBlock.LEVEL, sunLevel), 3)
+        level?.setBlock(blockPos, blockState.setValue(SunBatteryBlock.LEVEL, sunLevel), 3)
     }
 
     override fun canTakeItem(into: Container, slot: Int, itemStack: ItemStack): Boolean {
         return false
+    }
+
+    override fun applyImplicitComponents(components: DataComponentGetter) {
+        super.applyImplicitComponents(components)
+        item.set(PazComponents.STORED_SUN, components.get(PazComponents.STORED_SUN) ?: StoredSun())
     }
 
     override fun getContainerBlockEntity(): BlockEntity = this
@@ -61,11 +71,11 @@ class SunBatteryBlockEntity(
 
     override fun loadAdditional(input: ValueInput) {
         super.loadAdditional(input)
-        this.item = input.read("Item", ItemStack.CODEC).orElse(ItemStack.EMPTY)
+        this.item = input.read("Item", ItemStack.CODEC).orElse(ItemStack.EMPTY)?: ItemStack.EMPTY
     }
 
     override fun getTheItem(): ItemStack {
-        return this.item?: ItemStack.EMPTY
+        return this.item
     }
 
     override fun setTheItem(itemStack: ItemStack) {
