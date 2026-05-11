@@ -1,6 +1,7 @@
 package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.PazTags.EntityTypes.WALLNUT_DEFLECTABLE
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
@@ -18,9 +19,10 @@ class WallNut(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.WAL
     override fun canBeCollidedWith(other: Entity?): Boolean = this.isAlive && other != attachedEntity
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
-        val entity = source.directEntity
-        return if (entity is AbstractArrow && entity !is ThrownTrident) false
-        else super.hurtServer(level, source, damage)
+        source.directEntity?.let {
+            if (it.`is`(WALLNUT_DEFLECTABLE)) return false
+        }
+        return super.hurtServer(level, source, damage)
     }
 
     override fun actuallyHurt(level: ServerLevel, source: DamageSource, damage: Float) {
