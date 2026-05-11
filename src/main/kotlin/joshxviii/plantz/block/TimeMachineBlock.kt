@@ -119,7 +119,7 @@ class TimeMachineBlock(properties: Properties) : BaseEntityBlock(properties), Si
     }
 
     override fun canSurvive(state: BlockState, level: LevelReader, pos: BlockPos): Boolean {
-        return canSurvive(state, level, pos)
+        return super.canSurvive(state, level, pos)
     }
 
     override fun codec(): MapCodec<out TimeMachineBlock> { return CODEC }

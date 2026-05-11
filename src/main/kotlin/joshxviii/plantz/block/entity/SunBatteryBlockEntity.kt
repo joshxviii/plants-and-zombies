@@ -33,7 +33,7 @@ class SunBatteryBlockEntity(
         val newStoredSun = batteryItem.get(PazComponents.STORED_SUN)?.addSun(amount) ?: StoredSun(amount)
         batteryItem.set(PazComponents.STORED_SUN, newStoredSun)
         level?.let {
-            it.playSound(null, blockPos, SoundEvents.BUBBLE_POP, SoundSource.BLOCKS, 0.6f, getStoredSunPercent()+0.5f+(it.random.nextFloat()*0.1f))
+            it.playSound(null, blockPos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, SoundSource.BLOCKS, 0.6f, getStoredSunPercent()+0.5f+(it.random.nextFloat()*0.1f))
         }
         updateLevel(newStoredSun.getLevel())
     }
@@ -63,21 +63,21 @@ class SunBatteryBlockEntity(
 
     override fun saveAdditional(output: ValueOutput) {
         super.saveAdditional(output)
-        output.store("BatteryItem", ItemStack.CODEC, this.batteryItem?: ItemStack.EMPTY)
+        if (!batteryItem.isEmpty) output.store("BatteryItem", ItemStack.CODEC, batteryItem)
     }
 
     override fun loadAdditional(input: ValueInput) {
         super.loadAdditional(input)
-        this.batteryItem = input.read("BatteryItem", ItemStack.CODEC).orElse(ItemStack.EMPTY)?: ItemStack.EMPTY
+        batteryItem = input.read("BatteryItem", ItemStack.CODEC).orElse(ItemStack.EMPTY)?: ItemStack.EMPTY
     }
 
     override fun getTheItem(): ItemStack {
-        return this.batteryItem
+        return batteryItem
     }
 
     override fun setTheItem(itemStack: ItemStack) {
         if (!itemStack.`is`(PazItems.SUN_BATTERY)) return
-        this.batteryItem = itemStack
+        batteryItem = itemStack
     }
 
 }

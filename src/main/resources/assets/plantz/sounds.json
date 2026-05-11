@@ -66,7 +66,6 @@
     { "name": "plantz:entity/gnome/voice_1/hurt_2", "volume": 1.0 },
     { "name": "plantz:entity/gnome/voice_1/hurt_3", "volume": 1.0 }
   ], "subtitle": "plantz.subtitles.entity.gnome.hurt"},
-  "entity.gnome.voice_1.jump": {"sounds": [{ "name": "plantz:entity/gnome/voice_1/jump", "volume": 1.0 }], "subtitle": "entity.gnome.jump"},
   "entity.gnome.voice_1.death": {"sounds": [{ "name": "plantz:entity/gnome/voice_1/death", "volume": 1.0 }], "subtitle": "entity.gnome.death"},
 
   "entity.gnome.voice_2.ambient": {"sounds": [
@@ -79,73 +78,7 @@
     { "name": "plantz:entity/gnome/voice_2/hurt_2", "volume": 1.0 },
     { "name": "plantz:entity/gnome/voice_2/hurt_3", "volume": 1.0 }
   ], "subtitle": "plantz.subtitles.entity.gnome.hurt"},
-  "entity.gnome.voice_2.jump": {"sounds": [{ "name": "plantz:entity/gnome/voice_2/jump", "volume": 1.0 }], "subtitle": "entity.gnome.jump"},
   "entity.gnome.voice_2.death": {"sounds": [{ "name": "plantz:entity/gnome/voice_2/death", "volume": 1.0 }], "subtitle": "entity.gnome.death"},
-
-  "entity.gnome.voice_3.ambient": {"sounds": [
-    { "name": "plantz:entity/gnome/voice_3/ambient_1", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_3/ambient_2", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_3/ambient_3", "volume": 1.0 }
-  ], "subtitle": "plantz.subtitles.entity.gnome.ambient"},
-  "entity.gnome.voice_3.hurt": {"sounds": [
-    { "name": "plantz:entity/gnome/voice_3/hurt_1", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_3/hurt_2", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_3/hurt_3", "volume": 1.0 }
-  ], "subtitle": "plantz.subtitles.entity.gnome.hurt"},
-  "entity.gnome.voice_3.jump": {"sounds": [{ "name": "plantz:entity/gnome/voice_3/jump", "volume": 1.0 }], "subtitle": "entity.gnome.jump"},
-  "entity.gnome.voice_3.death": {"sounds": [{ "name": "plantz:entity/gnome/voice_3/death", "volume": 1.0 }], "subtitle": "entity.gnome.death"},
-
-  "entity.gnome.voice_4.ambient": {"sounds": [
-    { "name": "plantz:entity/gnome/voice_4/ambient_1", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_4/ambient_2", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_4/ambient_3", "volume": 1.0 }
-  ], "subtitle": "plantz.subtitles.entity.gnome.ambient"},
-  "entity.gnome.voice_4.hurt": {"sounds": [
-    { "name": "plantz:entity/gnome/voice_4/hurt_1", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_4/hurt_2", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_4/hurt_3", "volume": 1.0 }
-  ], "subtitle": "plantz.subtitles.entity.gnome.hurt"},
-  "entity.gnome.voice_4.jump": {"sounds": [{ "name": "plantz:entity/gnome/voice_4/jump", "volume": 1.0 }], "subtitle": "entity.gnome.jump"},
-  "entity.gnome.voice_4.death": {"sounds": [{ "name": "plantz:entity/gnome/voice_4/death", "volume": 1.0 }], "subtitle": "entity.gnome.death"},
-
-  "entity.gnome.voice_5.ambient": {"sounds": [
-    { "name": "plantz:entity/gnome/voice_5/ambient_1", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_5/ambient_2", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_5/ambient_3", "volume": 1.0 }
-  ], "subtitle": "plantz.subtitles.entity.gnome.ambient"},
-  "entity.gnome.voice_5.hurt": {"sounds": [
-    { "name": "plantz:entity/gnome/voice_5/hurt_1", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_5/hurt_2", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_5/hurt_3", "volume": 1.0 }
-  ], "subtitle": "plantz.subtitles.entity.gnome.hurt"},
-  "entity.gnome.voice_5.jump": {"sounds": [{ "name": "plantz:entity/gnome/voice_5/jump", "volume": 1.0 }], "subtitle": "entity.gnome.jump"},
-  "entity.gnome.voice_5.death": {"sounds": [{ "name": "plantz:entity/gnome/voice_5/death", "volume": 1.0 }], "subtitle": "entity.gnome.death"},
-
-  "entity.gnome.voice_6.ambient": {"sounds": [
-    { "name": "plantz:entity/gnome/voice_6/ambient_1", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_6/ambient_2", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_6/ambient_3", "volume": 1.0 }
-  ], "subtitle": "entity.gnome.ambient"},
-  "entity.gnome.voice_6.hurt": {"sounds": [
-    { "name": "plantz:entity/gnome/voice_6/hurt_1", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_6/hurt_2", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_6/hurt_3", "volume": 1.0 }
-  ], "subtitle": "plantz.subtitles.entity.gnome.hurt"},
-  "entity.gnome.voice_6.jump": {"sounds": [{ "name": "plantz:entity/gnome/voice_6/jump", "volume": 1.0 }], "subtitle": "entity.gnome.jump"},
-  "entity.gnome.voice_6.death": {"sounds": [{ "name": "plantz:entity/gnome/voice_6/death", "volume": 1.0 }], "subtitle": "entity.gnome.death"},
-  
-  "entity.gnome.voice_7.ambient": {"sounds": [
-    { "name": "plantz:entity/gnome/voice_7/ambient_1", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_7/ambient_2", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_7/ambient_3", "volume": 1.0 }
-  ], "subtitle": "entity.gnome.ambient"},
-  "entity.gnome.voice_7.hurt": {"sounds": [
-    { "name": "plantz:entity/gnome/voice_7/hurt_1", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_7/hurt_2", "volume": 1.0 },
-    { "name": "plantz:entity/gnome/voice_7/hurt_3", "volume": 1.0 }
-  ], "subtitle": "plantz.subtitles.entity.gnome.hurt"},
-  "entity.gnome.voice_7.jump": {"sounds": [{ "name": "plantz:entity/gnome/voice_7/jump", "volume": 1.0 }], "subtitle": "entity.gnome.jump"},
-  "entity.gnome.voice_7.death": {"sounds": [{ "name": "plantz:entity/gnome/voice_7/death", "volume": 1.0 }], "subtitle": "entity.gnome.death"},
 
   "entity.gnome.jump": {"sounds": [{ "name": "plantz:entity/gnome/jump", "volume": 0.2, "pitch": 1.2}], "subtitle": "entity.gnome.jump"},
 
@@ -169,23 +102,23 @@
 
   "entity.newspaper_zombie.ambient": {
     "sounds": [
-      { "name": "plantz:entity/newspaper_zombie/ambient_1", "volume": 0.8 },
-      { "name": "plantz:entity/newspaper_zombie/ambient_2", "volume": 0.8 },
-      { "name": "plantz:entity/newspaper_zombie/ambient_3", "volume": 0.8 }
+      { "name": "plantz:entity/browncoat/ambient_1", "volume": 0.8 },
+      { "name": "plantz:entity/browncoat/ambient_2", "volume": 0.8 },
+      { "name": "plantz:entity/browncoat/ambient_3", "volume": 0.8 }
     ], "subtitle": "plantz.subtitles.entity.newspaper_zombie.ambient"
   },
   "entity.newspaper_zombie.angry_ambient": {
     "sounds": [
-      { "name": "plantz:entity/newspaper_zombie/angry_ambient_1", "volume": 0.8 },
-      { "name": "plantz:entity/newspaper_zombie/angry_ambient_2", "volume": 0.8 },
-      { "name": "plantz:entity/newspaper_zombie/angry_ambient_3", "volume": 0.8 }
+      { "name": "plantz:entity/browncoat/angry_ambient_1", "volume": 0.8 },
+      { "name": "plantz:entity/browncoat/angry_ambient_2", "volume": 0.8 },
+      { "name": "plantz:entity/browncoat/angry_ambient_3", "volume": 0.8 }
     ], "subtitle": "plantz.subtitles.entity.newspaper_zombie.angry_ambient"
   },
   "entity.newspaper_zombie.hurt": {
     "sounds": [
-      { "name": "plantz:entity/newspaper_zombie/hurt_1", "volume": 0.8 },
-      { "name": "plantz:entity/newspaper_zombie/hurt_2", "volume": 0.8 },
-      { "name": "plantz:entity/newspaper_zombie/hurt_3", "volume": 0.8 }
+      { "name": "plantz:entity/browncoat/hurt_1", "volume": 0.8 },
+      { "name": "plantz:entity/browncoat/hurt_2", "volume": 0.8 },
+      { "name": "plantz:entity/browncoat/hurt_3", "volume": 0.8 }
     ], "subtitle": "plantz.subtitles.entity.browncoat.hurt"
   },
   "entity.newspaper_zombie.death": {

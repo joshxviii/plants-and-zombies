@@ -127,7 +127,7 @@ object PazSpawnPlacements {
         addBiomeSpawn(PazTags.Biomes.HAS_DIGGER, PazEntities.DIGGER_ZOMBIE, category = MobCategory.MONSTER,
             weight = 8, minGroupSize = 1, maxGroupSize = 1)
         addBiomeSpawn(PazTags.Biomes.HAS_DIGGER_ALT, PazEntities.DIGGER_ZOMBIE, category = MobCategory.MONSTER,
-            weight = 20, minGroupSize = 1, maxGroupSize = 2)
+            weight = 11, minGroupSize = 1, maxGroupSize = 2)
         registerSpawnPlacement(PazEntities.DIGGER_ZOMBIE, DiggerZombie::checkMinerSpawnRules)
         addBiomeSpawn(PazTags.Biomes.HAS_DISCO_ZOMBIE, PazEntities.DISCO_ZOMBIE, category = MobCategory.MONSTER,
             weight = 12, minGroupSize = 1, maxGroupSize = 1)

@@ -3,10 +3,12 @@ package joshxviii.plantz.block
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.PazCriteria
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.RandomSource
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -72,7 +74,9 @@ class MailboxBlock(
         hitResult: BlockHitResult
     ): InteractionResult {
         val mailbox = getMailboxEntity(level, pos)?: return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult)
-        return if (mailbox.tryToGetMail()) InteractionResult.SUCCESS
+        val success = mailbox.tryToGetMail()
+        if (player is ServerPlayer) PazCriteria.SEND_MAIL.trigger(player, success)
+        return if (success) InteractionResult.SUCCESS
         else InteractionResult.TRY_WITH_EMPTY_HAND
     }
 

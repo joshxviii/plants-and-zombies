@@ -46,7 +46,7 @@ class TimeMachineBlockEntity(
 
     override fun saveAdditional(output: ValueOutput) {
         super.saveAdditional(output)
-        output.store("Item", ItemStack.CODEC, this.item)
+        if (!item.isEmpty) output.store("Item", ItemStack.CODEC, this.item)
     }
 
     override fun loadAdditional(input: ValueInput) {
@@ -59,11 +59,11 @@ class TimeMachineBlockEntity(
 
     override fun getScreenOpeningData(player: ServerPlayer): TimeMachineData = TimeMachineData(blockPos)
     override fun getDisplayName(): Component  = Component.translatable("block.plantz.time_machine")
-    override fun createMenu(containerId: Int, inventory: Inventory, player: Player): AbstractContainerMenu = TimeMachineMenu(containerId, inventory, blockPos)
+    override fun createMenu(containerId: Int, inventory: Inventory, player: Player): AbstractContainerMenu = TimeMachineMenu(containerId, inventory, blockPos, this)
 
 
     override fun getTheItem(): ItemStack = item
     override fun setTheItem(itemStack: ItemStack) {
-        item = ItemStack.EMPTY
+        item = itemStack
     }
 }
