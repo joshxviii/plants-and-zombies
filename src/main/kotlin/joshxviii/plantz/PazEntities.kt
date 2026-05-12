@@ -261,7 +261,7 @@ object PazEntities {
             .eyeHeight(1.74f)
             .clientTrackingRange(8),
         attributes = Zombie.createAttributes()
-            .add(Attributes.ATTACK_DAMAGE, 3.0)
+            .add(Attributes.ATTACK_DAMAGE, 2.0)
             .add(Attributes.MAX_HEALTH, 35.0)
             .add(Attributes.MOVEMENT_SPEED, 0.225)
             .add(Attributes.FOLLOW_RANGE, 26.0)

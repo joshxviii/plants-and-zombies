@@ -1,5 +1,6 @@
 package joshxviii.plantz.ai.goal
 
+import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.ai.pathfinding.MinerNodeEvaluator
 import joshxviii.plantz.canReachTarget
@@ -7,18 +8,20 @@ import joshxviii.plantz.getEndPos
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundSource
+import net.minecraft.tags.BlockTags
 import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.LevelEvent
 import net.minecraft.world.level.gamerules.GameRules
+import net.minecraft.world.phys.Vec3
 import kotlin.math.abs
 import kotlin.math.min
 
 class MineBlocksToTargetGoal(
     val miner: PathfinderMob,
     private val maxBreakRange: Float = 2.25f,
-    private val verticalBlockRange: Int = 3,
+    private val verticalBlockRange: Int = 4,
 ) : Goal() {
 
     companion object {
@@ -49,23 +52,24 @@ class MineBlocksToTargetGoal(
     }
 
     override fun canUse(): Boolean {
+        if (breakTime > 0) return true
         if (--breakCooldownTime > 0) return false
         if (miner.isDeadOrDying || !miner.isAggressive) return false
         if (level.gameRules.get(GameRules.MOB_GRIEFING)==false) return false
-        val targetPos = miner.navigation.path.getEndPos() ?: miner.target?.blockPosition()?: return false
+        val targetPos = miner.target?.blockPosition()?: miner.navigation.path.getEndPos() ?:  return false
 
         breakTargetPos?.let {
-            if (!miner.navigation.path.canReachTarget(targetPos)) return true
+            if (miner.navigation.path.canReachTarget(targetPos)) return false
         }
 
-        val minerPos = miner.blockPosition()
+        val minerPos = miner.blockPosition()// if the target is right above or below, dig straight up or down
         if ( abs(minerPos.y - targetPos.y)>1
             && abs(minerPos.x - targetPos.x)<2
             && abs(minerPos.z - targetPos.z)<2
         ) {
             for (i in 0..min(abs(minerPos.y - targetPos.y), verticalBlockRange)) {
                 val testBlock = if (minerPos.y < targetPos.y) minerPos.above(i) else minerPos.below(i)
-                //level.levelEvent(LevelEvent.PARTICLES_ELECTRIC_SPARK, testBlock, 15)
+                if (PazConfig.SHOW_DEBUG_INFO) level.levelEvent(LevelEvent.PARTICLES_ELECTRIC_SPARK, testBlock, 15)
 
                 if (isBlockWithinRange(testBlock) && isBlockMineable(testBlock)) {
                     breakTargetPos = testBlock
@@ -74,23 +78,41 @@ class MineBlocksToTargetGoal(
             }
         }
 
-        val path = miner.navigation.path ?: return false
-
+        val path = miner.navigation.path ?: return false// check the next nodes in the miners path for breakable blocks
         for (i in path.nextNodeIndex until min(path.nextNodeIndex + 2, path.nodeCount)) {
              val node = path.getNode(i)
 
              // Check vertical positions (middle, top then bottom)
-            listOf(node.y+1, node.y+2, if(targetPos.y>miner.y) null else node.y ).forEach { y ->
+            listOf(node.y+1, node.y+2, if(miner.target?.let { it.y > miner.y }==true) null else node.y ).forEach { y ->
                  if (y==null) return@forEach
                  val testBlock = BlockPos(node.x, y, node.z)
-                 //level.levelEvent(LevelEvent.PARTICLES_ELECTRIC_SPARK, testBlock, 15)
+                 if (PazConfig.SHOW_DEBUG_INFO) level.levelEvent(LevelEvent.PARTICLES_ELECTRIC_SPARK, testBlock, 15)
 
                  if (isBlockWithinRange(testBlock) && isBlockMineable(testBlock)) {
                      breakTargetPos = testBlock
                      return true
                  }
              }
-         }
+        }
+
+        miner.target?.let {// finally just check for blocks in the direction the miner is facing
+            if (it.distanceToSqr(miner.position())<2 || it.y > miner.y-2) return false
+            val direction = miner.calculateViewVector(0f,miner.yRot).scale(1.0)
+            for (i in listOf(1,0)) {
+                val testBlock = BlockPos.containing(
+                    Vec3(
+                        direction.x + miner.x,
+                        direction.y + miner.y + i,
+                        direction.z + miner.z
+                    )
+                )
+                if (PazConfig.SHOW_DEBUG_INFO) level.levelEvent(LevelEvent.PARTICLES_ELECTRIC_SPARK, testBlock, 15)
+                if (isBlockWithinRange(testBlock) && isBlockMineable(testBlock)) {
+                    breakTargetPos = testBlock
+                    return true
+                }
+            }
+        }
 
         return false
     }
@@ -101,6 +123,7 @@ class MineBlocksToTargetGoal(
         if (!isBlockMineable(targetBlock)) return
         val targetBlockState = level.getBlockState(targetBlock)
         if (breakTime>=0) {
+            miner.navigation.setSpeedModifier(0.0)
             //level.levelEvent(LevelEvent.PARTICLES_ELECTRIC_SPARK, targetBlock, 15)
             if (!miner.swinging) {
                 level.playSound(null, targetBlock, targetBlockState.soundType.hitSound, SoundSource.BLOCKS, 0.3f,
@@ -112,7 +135,7 @@ class MineBlocksToTargetGoal(
 
         val blockBreakTime = getBlockBreakTime(breakTargetPos)
 
-        val progress = if (blockBreakTime>0) (this.breakTime * 10 / blockBreakTime) else -1
+        val progress = if (blockBreakTime>0) (this.breakTime * 18 / blockBreakTime) else -1
         if (progress != this.lastBreakProgress) {
             level.destroyBlockProgress(miner.id, targetBlock, progress)
             this.lastBreakProgress = progress
@@ -151,13 +174,13 @@ class MineBlocksToTargetGoal(
     private fun isBlockWithinRange(pos: BlockPos?): Boolean {
         if (pos == null) return false
         val distance = miner.distanceToSqr(pos.x.toDouble(), miner.y, pos.z.toDouble())
-        return distance < maxBreakRange
+        return distance < maxBreakRange * maxBreakRange
     }
 
     private fun isBlockMineable(pos: BlockPos?) : Boolean {
         if (pos == null) return false
         val blockState = miner.level().getBlockState(pos)
-        return (blockState.`is`(PazTags.BlockTags.DIGGER_BREAKABLE))
+        return blockState.`is`(PazTags.BlockTags.DIGGER_BREAKABLE) || (blockState.`is`(BlockTags.MINEABLE_WITH_PICKAXE) && !blockState.`is`(BlockTags.INCORRECT_FOR_IRON_TOOL))
     }
 
 }

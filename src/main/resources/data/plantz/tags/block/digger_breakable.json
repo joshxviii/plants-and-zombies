@@ -3,12 +3,19 @@
   "values": [
     "plantz:plant_pot",
     "minecraft:pointed_dripstone",
+    "minecraft:bricks",
+    "#minecraft:stone_bricks",
+    "#minecraft:rails",
     "#minecraft:dirt",
     "#minecraft:sand",
     "#minecraft:terracotta",
     "#minecraft:sculk_replaceable",
     "#minecraft:overworld_carver_replaceables",
     "#minecraft:nether_carver_replaceables",
+    {
+      "id": "#c:glass_blocks",
+      "required": false
+    },
     {
       "id": "#c:cobblestones",
       "required": false

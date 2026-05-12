@@ -25,6 +25,7 @@
   - Added response messages when sending mail.
 - Fixed issues with projectiles phasing through entities, hitting entities multiple times, and not being deflected
 - Watering Can can take water out of a cauldron by crouching.
+- Improved Digger zombie pathfinding, block breaking speed and what blocks it can break
 - Gargantuar can only drop plant pot helmet when killed by a plant
 - Added 1.25% a chance for non leader zombies to spawn with flag when the local difficulty is < 1.2
 
