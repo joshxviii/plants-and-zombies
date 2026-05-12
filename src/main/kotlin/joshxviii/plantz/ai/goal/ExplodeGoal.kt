@@ -63,6 +63,7 @@ class ExplodeGoal(
             currentTarget == null -> -1
             currentTarget.isDeadOrDying -> -1
             explosiveEntity.distanceToSqr(currentTarget) > DISTANCE_SQR -> -1
+            !explosiveEntity.canAttack(currentTarget) -> -1
             else -> 1
         }
 

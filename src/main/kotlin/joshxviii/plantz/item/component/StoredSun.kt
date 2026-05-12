@@ -13,6 +13,7 @@ import net.minecraft.util.Mth
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.component.TooltipProvider
+import java.util.Optional
 import java.util.function.Consumer
 import kotlin.math.max
 import kotlin.math.min
@@ -51,8 +52,9 @@ data class StoredSun(
     companion object {
         val CODEC: Codec<StoredSun> = RecordCodecBuilder.create { inst ->
             inst.group(
-                Codec.INT.fieldOf("stored_sun").forGetter { it.storedSun.coerceIn(0, it.max) },
-            ).apply(inst, ::StoredSun)
+                Codec.INT.optionalFieldOf("stored_sun").forGetter { Optional.of(it.storedSun.coerceIn(0, it.max)) },
+                Codec.BOOL.optionalFieldOf("is_fully_charged").forGetter { Optional.ofNullable(it.isFull()) },
+            ).apply(inst) { storedSun, _ -> StoredSun(storedSun.orElse(0)?:0) }
         }
 
         val STREAM_CODEC: StreamCodec<ByteBuf, StoredSun> = StreamCodec.composite(

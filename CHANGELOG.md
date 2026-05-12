@@ -17,6 +17,7 @@
 - Updated list of projectiles that wallnut can deflect.
 - Wall Nut can now be planted on most solid blocks
 - Potatomine can be planted on sand and gravel blocks.
+- Explosive plants will no longer continue to explode after being tamed.
 - Endermen will now avoid plant projectiles
 - Fixed a bug were plants could still damage player owners with "coopPlanting" and "playerCreditForPlantKills" enabled. 
 - Mailboxes have been updated.

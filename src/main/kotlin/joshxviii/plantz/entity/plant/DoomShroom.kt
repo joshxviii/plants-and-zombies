@@ -46,7 +46,7 @@ class DoomShroom(type: EntityType<out Explosive>, level: Level) : Explosive(PazE
         this.goalSelector.addGoal(1, ExplodeGoal(
             explosiveEntity = this,
             explosionRadius = 7f,
-            activateRange = 4.75,
+            activateRange = 4.0,
             destroyBlocks = true,
             actionEndEffect = {
                 //TODO custom sounds
