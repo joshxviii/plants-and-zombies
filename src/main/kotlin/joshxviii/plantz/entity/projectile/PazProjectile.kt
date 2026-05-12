@@ -21,11 +21,16 @@ import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.projectile.Projectile
+import net.minecraft.world.entity.projectile.ProjectileDeflection
 import net.minecraft.world.entity.projectile.ProjectileUtil
+import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.*
+import java.util.*
+import java.util.function.Predicate
+import java.util.function.ToDoubleFunction
 import kotlin.math.sign
 
 abstract class PazProjectile(
@@ -63,10 +68,13 @@ abstract class PazProjectile(
     }
 
     override fun tick() {
+        val level = level()
         val blockPos: BlockPos = this.blockPosition()
-        val blockState: BlockState = this.level().getBlockState(blockPos)
+        val blockState: BlockState = level.getBlockState(blockPos)
+        val movement = deltaMovement
+        val physicsEnabled: Boolean = !this.noPhysics
         if (!blockState.isAir) {
-            val shape = blockState.getCollisionShape(this.level(), blockPos)
+            val shape = blockState.getCollisionShape(level, blockPos)
             if (!shape.isEmpty) {
                 val position = this.position()
                 for (aabb in shape.toAabbs()) {
@@ -90,23 +98,66 @@ abstract class PazProjectile(
 
         this.handleFirstTickBubbleColumn()
 
-        val result =
-            ProjectileUtil.getHitResultOnMoveVector(this) { entity: Entity? -> this.canHitEntity(entity!!) }
-        val newPosition =
-            if (result.type != HitResult.Type.MISS) result.getLocation()
-            else this.position().add(this.deltaMovement)
-        if (result.type != HitResult.Type.MISS && this.isAlive) {
-            this.hitTargetOrDeflectSelf(result)
+        val originalPosition = this.position()
+        if (physicsEnabled) {
+            val blockHitResult = this.level()
+                .clipIncludingBorder(
+                    ClipContext(
+                        originalPosition,
+                        originalPosition.add(movement),
+                        ClipContext.Block.COLLIDER,
+                        ClipContext.Fluid.NONE,
+                        this
+                    )
+                )
+            this.stepMoveAndHit(blockHitResult)
+        } else {
+            this.setPos(originalPosition.add(movement))
+            this.applyEffectsFromBlocks()
         }
-        this.setPos(newPosition)
-        this.applyEffectsFromBlocks()
 
         applyInertia()
-        if(!this.isInGround()) {
-            this.applyGravity()
-        }
+        if(!this.isInGround()) this.applyGravity()
 
         super.tick()
+    }
+
+    private fun stepMoveAndHit(blockHitResult: BlockHitResult) {
+        while (this.isAlive) {
+            val initialPosition = this.position()
+            val entitiesHit = findHitEntities(initialPosition, blockHitResult.getLocation())
+                .toList()
+                .sortedBy { initialPosition.distanceToSqr(it.entity.position()) }
+            val firstEntityHit = entitiesHit.firstOrNull()
+            val nextLocation = (firstEntityHit ?: blockHitResult).location
+            this.setPos(nextLocation)
+            this.applyEffectsFromBlocks(initialPosition, nextLocation)
+            if (portalProcess != null && portalProcess!!.isInsidePortalThisTick) handlePortal()
+
+            if (entitiesHit.isEmpty()) {
+                if (this.isAlive && blockHitResult.type != HitResult.Type.MISS) {
+                    this.hitTargetOrDeflectSelf(blockHitResult)
+                    this.needsSync = true
+                }
+                break
+            } else if (this.isAlive && !this.noPhysics) {
+                val deflection: ProjectileDeflection = if (isAlive) entitiesHit
+                    .map { hitTargetOrDeflectSelf(it) }
+                    .find { it != ProjectileDeflection.NONE } ?: ProjectileDeflection.NONE
+                    else ProjectileDeflection.NONE
+                this.needsSync = true
+                if (this.getPierceLevel() > 0 && deflection === ProjectileDeflection.NONE) {
+                    continue
+                }
+                break
+            }
+        }
+    }
+
+    protected open fun findHitEntities(from: Vec3, to: Vec3): MutableCollection<EntityHitResult> {
+        return ProjectileUtil.getManyEntityHitResult(
+            this.level(), this, from, to, this.boundingBox.expandTowards(this.deltaMovement).inflate(1.0), { entity: Entity -> this.canHitEntity(entity) }, false
+        )
     }
 
     override fun onHitEntity(hitResult: EntityHitResult) {

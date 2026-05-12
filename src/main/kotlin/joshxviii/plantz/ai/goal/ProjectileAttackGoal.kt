@@ -54,7 +54,6 @@ class ProjectileAttackGoal(
 
         distanceSqr = usingEntity.distanceToSqr(target)
 
-
         usingEntity.lookControl.setLookAt(target, 30f, 30f)
         usingEntity.isAggressive = true
 
@@ -124,11 +123,11 @@ class ProjectileAttackGoal(
     private fun calculateMovingTargetPosition(target: LivingEntity, projectile: Entity, v: Double): Vec3 {
         val basePos = Vec3(
             target.x - projectile.x,
-            target.boundingBox.minY + (target.bbHeight / 3.0) - projectile.y,
+            target.boundingBox.minY + (target.bbHeight * 0.5) - projectile.y,
             target.z - projectile.z
         )
 
-        val targetVel = target.deltaMovement
+        val targetVel = target.knownSpeed
         if (targetVel.lengthSqr() <= 0.000001) return basePos
 
         val g = projectile.gravity

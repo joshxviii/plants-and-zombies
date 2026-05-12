@@ -181,7 +181,7 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
                 val backup = PazEntities.BACKUP_DANCER.create(level, EntitySpawnReason.MOB_SUMMONED)?: return
                 // apply hypnotize-effect if present
                 backup.snapTo(BlockPos(Vec3i(x.toInt(),(pos.y+topOffset).toInt(),z.toInt())), angle * (180.0f / Math.PI.toFloat()), 0.0f)
-                backup.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.MOB_SUMMONED, null)
+                backup.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.REINFORCEMENT, null)
                 val effect = summoner.activeEffects.find { it.effect.`is`(PazEffects.HYPNOTIZE.unwrapKey().get()) }
                 if (effect!=null) backup.addEffect(effect)
                 level.addFreshEntity(backup)

@@ -15,6 +15,7 @@
 - Mailboxes have been updated.
   - All players can now access mailboxes from any loaded chunk within the same dimension.
   - The address list is now sorted by distance from the current mailbox.
+- Fixed issues with projectiles phasing through entities, hitting entities multiple times, and not being deflected
 
 # Changelog 1.4
 - Added Doom-Shroom

@@ -11,6 +11,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileDeflection;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -21,20 +22,20 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Set;
 
 @Mixin(Projectile.class)
 public class ProjectileMixin {
 
-    @Inject(method = "onHit", at = @At(value = "HEAD"), cancellable = true)
-    public void paz$onHit(final HitResult hitResult, CallbackInfo ci) {
+    @Inject(method = "hitTargetOrDeflectSelf", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;deflection(Lnet/minecraft/world/entity/projectile/Projectile;)Lnet/minecraft/world/entity/projectile/ProjectileDeflection;"), cancellable = true)
+    public void deflection(HitResult hitResult, CallbackInfoReturnable<ProjectileDeflection> cir) {
         var type = hitResult.getType();
         if (type == HitResult.Type.ENTITY) {
             var entity = ((EntityHitResult) hitResult).getEntity();
             var projectile = (Projectile) (Object) this;
-            var level = entity.level();
-            if (entity instanceof LivingEntity livingEntity && level instanceof ServerLevel serverLevel) {
+            if (entity instanceof LivingEntity livingEntity) {
                 for (EquipmentSlot slot : slots) {
                     ItemStack item = livingEntity.getItemBySlot(slot);
                     BlocksProjectileDamage component = item.getComponents().get(PazComponents.BLOCKS_PROJECTILE_DAMAGE);
@@ -46,7 +47,7 @@ public class ProjectileMixin {
                     if (!matchesSlot) continue;
 
                     float breakChance = component.getBreakChance();
-                    if (entity.getRandom().nextFloat() < breakChance) {
+                    if (entity.level() instanceof ServerLevel && entity.getRandom().nextFloat() < breakChance) {
                         item.shrink(1);
                         projectile.playSound(SoundEvents.ITEM_BREAK.value());
                     }
@@ -58,7 +59,9 @@ public class ProjectileMixin {
                         else hitSound = PazSounds.PROJECTILE_HIT_CONE;
 
                         projectile.playSound(hitSound);
-                        ci.cancel();
+                        var deflection = ProjectileDeflection.REVERSE;
+                        deflection.deflect(projectile, entity, projectile.getRandom());
+                        cir.setReturnValue(deflection);
                     }
                 }
             }

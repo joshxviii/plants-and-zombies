@@ -36,7 +36,7 @@ public class ZombieMixin {
     static private final String LEADER_MODIFIER_ID = "leader_zombie_bonus";
 
     @ModifyArgs(method = "hurtServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Monster;hurtServer(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
-    private void updateDamage(Args args) {// exploding plants deal 100 dmg
+    private void updateDamage(Args args) {
         DamageSource source = args.get(1);
         float damage = args.get(2);
         if (source.is(PazDamageTypes.PLANT_AOE)) args.set(2, damage*3f);
@@ -58,7 +58,7 @@ public class ZombieMixin {
 
         boolean shouldAddEasyModeFlag = difficulty.getDifficulty()==Difficulty.EASY && level.getRandom().nextFloat()<0.01;
 
-        if((isLeader || shouldAddEasyModeFlag) && !spawnReason.equals(EntitySpawnReason.REINFORCEMENT)) {
+        if((isLeader || shouldAddEasyModeFlag) && !(spawnReason.equals(EntitySpawnReason.REINFORCEMENT))) {
             var dropChance = spawnReason.equals(EntitySpawnReason.EVENT) ? 0.0F : 1.0F;
             if (entity instanceof Gargantuar) {}
             else if (entity instanceof ZombieYeti) {
