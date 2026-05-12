@@ -1,10 +1,10 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.inventory.MailboxMenu
-import joshxviii.plantz.network.MailboxListResponsePayload
+import joshxviii.plantz.networking.MailboxListResponsePayload
 import joshxviii.plantz.networking.SendMailResponsePayload
+import joshxviii.plantz.networking.ServerConfigResponsePayload
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
-import net.minecraft.sounds.SoundEvents
 
 object PazClientNetwork {
 
@@ -30,5 +30,17 @@ object PazClientNetwork {
             }
 
         }
+
+        ClientPlayNetworking.registerGlobalReceiver(ServerConfigResponsePayload.ID) { payload, context ->
+            context.client().execute {
+                try {
+                    PazConfig.server = PazConfig.GSON.fromJson(payload.json, ServerConfig::class.java)
+                    PazMain.LOGGER.info("Server config synced!")
+                } catch (e: Exception) {
+                    PazMain.LOGGER.error("Failed to parse server config", e)
+                }
+            }
+        }
+
     }
 }

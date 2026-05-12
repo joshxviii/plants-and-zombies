@@ -11,6 +11,7 @@ import net.minecraft.core.Vec3i
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerEntityGetter
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.Mth
@@ -131,7 +132,7 @@ fun Entity.hasSameRootOwner(target: Entity?): Boolean {
     if (target == null) return false
 
     if (this is Plant && this.isTame
-        && PazConfig.COOP_PLANTING
+        && (level() is ServerLevel && PazConfig.COOP_PLANTING)
         && ((target is TamableAnimal && target.isTame) || target is Player)) return true
 
     val owner = extractRootOwner(this) ?: return false

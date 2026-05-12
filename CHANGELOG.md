@@ -11,7 +11,7 @@
   - The light level and redstone level changes depending on the store amount of sun.
 - Adjusted spawn rates and drop chances.
 - Reduced sun fuel amount by half.
-- Made sun a little easier to pickup
+- Made sun a little easier to pick up
 - Increased the amount of healing sun gives to plants.
 - Disco zombie can now only spawn backup when there are < 3 backup dances nearby rather than < 4
 - Updated list of projectiles that wallnut can deflect.
@@ -19,17 +19,18 @@
 - Potatomine can be planted on sand and gravel blocks.
 - Explosive plants will no longer continue to explode after being tamed.
 - Endermen will now avoid plant projectiles
-- Fixed a bug were plants could still damage player owners with "coopPlanting" and "playerCreditForPlantKills" enabled. 
+- Fixed a bug where plants could still damage player owners with "coopPlanting" and "playerCreditForPlantKills" enabled. 
 - Mailboxes have been updated.
   - All players can now access mailboxes from any loaded chunk within the same dimension.
   - The address list is now sorted by distance from the current mailbox.
   - Added response messages when sending mail.
 - Fixed issues with projectiles phasing through entities, hitting entities multiple times, and not being deflected
-- Watering Can can take water out of a cauldron by crouching.
-- Improved Digger zombie pathfinding, block breaking speed and what blocks it can break
-- Gargantuar can only drop plant pot helmet when killed by a plant
-- Added 1.25% a chance for non leader zombies to spawn with flag when the local difficulty is < 1.2
-
+- The Watering Can is able to take water out of a cauldron by crouching.
+- Improved Digger zombie pathfinding, block breaking speed, and what blocks it can break
+- Gargantuar can only drop a plant pot helmet when killed by a plant
+- Added 1.25% a chance for non-leader zombies to spawn with a flag when the local difficulty is < 1.2
+- Separated server and client config options
+- Fixed an issue where the server and client config settings would clash and cause errors.
 
 # Changelog 1.4
 - Added Doom-Shroom
@@ -47,7 +48,7 @@
     - Can store sun items and automatically picks up sun from plants.
     - Can be used for sun-based plant interactions.
 - Plants now required water to grow.
-	- Plants can be watered with Rain, Water Bottles, Water Buckets or Watering Cans.
+	- Plants can be watered with Rain, Water Bottles, Water Buckets, or Watering Cans.
 	- Water Buckets and the Watering Can will reduce the amount of sun needed when the Plant wakes up.
 - Adjusted projectile firing logic for Plants and Zombies.
 - Wild plants will only be aggro'd towards zombies by default, not other enemies.

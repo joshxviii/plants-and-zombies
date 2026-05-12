@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents
 
 object PazClient : ClientModInitializer {
 	override fun onInitializeClient() {
+		PazConfig.load()
 		PazModels.registerAll()
 		PazParticles.registerAll()
 		PazScreens.registerAll()

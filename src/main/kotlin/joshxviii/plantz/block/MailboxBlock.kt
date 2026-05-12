@@ -6,7 +6,7 @@ import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazCriteria
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.block.entity.MailboxManager
-import joshxviii.plantz.network.MailboxListResponsePayload
+import joshxviii.plantz.networking.MailboxListResponsePayload
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction

@@ -1,4 +1,4 @@
-package joshxviii.plantz.network
+package joshxviii.plantz.networking
 
 import joshxviii.plantz.MailboxData
 import joshxviii.plantz.pazResource
