@@ -218,7 +218,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     // only apply up/down movement
     override fun getDeltaMovement(): Vec3 = Vec3(0.0, super.deltaMovement.y, 0.0)
     override fun setDeltaMovement(deltaMovement: Vec3) {
-        if (!onGround()) return super.setDeltaMovement(deltaMovement)
+        if (!onGround() || isInWater) return super.setDeltaMovement(deltaMovement)
     }
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
