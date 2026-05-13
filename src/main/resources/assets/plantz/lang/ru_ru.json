@@ -82,6 +82,7 @@
   "item.plantz.seed_packet": "Пакетик семян",
   "item.plantz.seed_packet.entity": "Семена %s",
 
+  "item.plantz.time_machine": "Машина времени",
   "item.plantz.gravestone": "Надгробие",
   "item.plantz.mailbox": "Почтовый ящик",
   "item.plantz.light_gray_mailbox": "Светло-серый почтовый ящик",
@@ -123,6 +124,7 @@
 
   "jukebox_song.plantz.grassy_groove": "joshxviii - Grassy Groove",
 
+  "block.plantz.time_machine": "Машина времени",
   "block.plantz.mailbox": "Почтовый ящик",
   "block.plantz.light_gray_mailbox": "Светло-серый почтовый ящик",
   "block.plantz.gray_mailbox": "Серый почтовый ящик",
@@ -182,6 +184,8 @@
   "container.plantz.mailbox_coords": "%d, %d, %d",
   "container.plantz.address_search": "Искать почтовые ящики...",
   "container.plantz.no_address": "Нет доступных почтовых ящиков.",
+  "container.plantz.mailbox_full": "Этот почтовый ящик переполнен!",
+  "container.plantz.mailbox_success": "Отправлено!",
 
   "plantz.subtitles.projectile.deflected": "Снаряд отражён",
   "plantz.subtitles.projectile.fire": "Выстрел снарядом",
