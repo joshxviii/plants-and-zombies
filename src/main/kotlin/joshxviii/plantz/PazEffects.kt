@@ -1,6 +1,7 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.effect.ButteredMobEffect
+import joshxviii.plantz.effect.ElectrifyMobEffect
 import joshxviii.plantz.effect.HypnotizedMobEffect
 import joshxviii.plantz.effect.ToxicMobEffect
 import joshxviii.plantz.effect.ZombieOmenMobEffect
@@ -26,6 +27,9 @@ object PazEffects {
     @JvmField val ZOMBIE_OMEN : Holder<MobEffect> = register("zombie_omen",
         ZombieOmenMobEffect(MobEffectCategory.NEUTRAL, 1297708, PazServerParticles.ZOMBIE_OMEN)
             .withSoundOnAdded(PazSounds.APPLY_ZOMBIE_OMEN))
+    @JvmField val ELECTRIFIED : Holder<MobEffect> = register("electrified",
+        ElectrifyMobEffect(MobEffectCategory.HARMFUL, 0x87FFFB, PazServerParticles.ELECTRIFIED))
+            //.withSoundOnAdded(PazSounds.APPLY_ZOMBIE_OMEN))
     @JvmField val BUTTERED: Holder<MobEffect> = register("buttered",
         ButteredMobEffect(MobEffectCategory.HARMFUL, 13416767, PazServerParticles.BUTTER_DRIP)
             .addAttributeModifier(Attributes.MOVEMENT_SPEED, pazResource("effect.buttered"), -999.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
@@ -46,6 +50,7 @@ object PazEffects {
 
     @JvmField val HYPNOTIZE_POTION: Holder<Potion> = registerPotion("hypnotize", MobEffectInstance(HYPNOTIZE, 3600))
     @JvmField val BUTTERED_POTION: Holder<Potion> = registerPotion("buttered", MobEffectInstance(BUTTERED, 100))
+    @JvmField val ELECTRIFIED_POTION: Holder<Potion> = registerPotion("electrified", MobEffectInstance(ELECTRIFIED, 100))
     fun registerPotion(name: String, effects: MobEffectInstance): Holder<Potion> {
         val potion = Potion(name, effects)
         return Registry.registerForHolder(

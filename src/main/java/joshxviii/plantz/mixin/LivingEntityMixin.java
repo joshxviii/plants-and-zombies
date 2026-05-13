@@ -191,6 +191,10 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment {
         var self = (LivingEntity) (Object) this;
         var sourceEntity = source.getEntity();
         var directEntity = source.getDirectEntity();
+        if (source.is(PazTags.DamageTypes.IS_ELECTRIC) && self.is(PazTags.EntityTypes.IMMUNE_TO_ELECTRICITY)) {
+            cir.setReturnValue(false);
+            cir.cancel();
+        }
         if (sourceEntity instanceof Plant plant) {
             if (plant.hasSameOwner(self)) {
                 cir.setReturnValue(false);

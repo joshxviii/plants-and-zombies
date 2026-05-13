@@ -15,7 +15,7 @@ class PeaIce(
     owner: LivingEntity? = null,
     spawnOffset: Vec2 = Vec2.ZERO,
 ) : PazProjectile(PazEntities.PEA_ICE, level, owner, spawnOffset,
-    PazDamageTypes.FREEZE
+    PazDamageTypes.PLANT_FREEZE
 ) {
     override fun afterHitEntityEffect(target: LivingEntity) {
         super.afterHitEntityEffect(target)

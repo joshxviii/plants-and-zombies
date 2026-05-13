@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "#plantz:plant_attack"
+    "#plantz:plant_attack",
+    "#plantz:is_electric"
   ]
 }

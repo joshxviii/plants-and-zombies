@@ -11,13 +11,15 @@ object PazDamageTypes {
     @JvmField
     val PLANT_AOE = registerDamageType("plant_explode")
     @JvmField
-    val FREEZE = registerDamageType("plant_freeze")
+    val PLANT_FREEZE = registerDamageType("plant_freeze")
     @JvmField
-    val FIRE = registerDamageType("plant_fire")
+    val PLANT_FIRE = registerDamageType("plant_fire")
     @JvmField
-    val CHOMP = registerDamageType("plant_chomp")
+    val PLANT_ELECTRIC = registerDamageType("plant_electric")
     @JvmField
-    val FUME = registerDamageType("plant_fume")
+    val PLANT_CHOMP = registerDamageType("plant_chomp")
+    @JvmField
+    val PLANT_FUME = registerDamageType("plant_fume")
     @JvmField
     val ZOMBIE_EAT = registerDamageType("zombie_eat")
     @JvmField
@@ -26,6 +28,8 @@ object PazDamageTypes {
     val ZOMBIE_TRAMPLE = registerDamageType("zombie_trample")
     @JvmField
     val PAINT = registerDamageType("paint")
+    @JvmField
+    val ZAP = registerDamageType("electric_zap")
 
     private fun registerDamageType(
         name: String

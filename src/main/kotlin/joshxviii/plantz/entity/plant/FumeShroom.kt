@@ -40,7 +40,7 @@ class FumeShroom(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
             usingEntity = this,
             beamRange = 8.0,
             beamWidth = 2.0,
-            damageType = PazDamageTypes.FUME,
+            damageType = PazDamageTypes.PLANT_FUME,
             cooldownTime = 35,
             actionDelay = 12,
             afterHitEntityEffect = {

@@ -47,6 +47,14 @@ object PazParticles {
             EmberParticle.Provider(spriteSet)
         }
 
+        it.register(PazServerParticles.ELECTRIFIED) { spriteSet ->
+            ElectrifiedParticle.Provider(spriteSet)
+        }
+
+        it.register(PazServerParticles.ELECTRIC_ARC) { _ ->
+            ElectricArcParticle.Provider()
+        }
+
         it.register(PazServerParticles.ENERGIZED) { spriteSet ->
             EnergizedParticle.Provider(spriteSet)
         }

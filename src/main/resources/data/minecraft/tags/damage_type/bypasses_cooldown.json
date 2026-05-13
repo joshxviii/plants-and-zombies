@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "#plantz:plant_attack",
+    "#plantz:is_electric",
     "plantz:paint"
   ]
 }

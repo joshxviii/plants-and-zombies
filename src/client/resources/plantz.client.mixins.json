@@ -11,6 +11,7 @@
   "mixins": [
     "AvatarRendererMixin",
     "HumanoidModelMixin",
-    "LivingEntityRendererMixin"
+    "LivingEntityRendererMixin",
+    "ParticleEngineMixin"
   ]
 }

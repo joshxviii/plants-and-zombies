@@ -55,6 +55,7 @@
   "effect.plantz.toxic": "Toxic",
   "effect.plantz.hypnotize": "Hypnotized",
   "effect.plantz.buttered": "Buttered",
+  "effect.plantz.electrified": "Electrified",
 
   "component.stored_sun.desc": "Stores and uses collected Sun",
   "component.stored_sun": "%s / %s",

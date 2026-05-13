@@ -13,7 +13,7 @@ class PeaFire(
     owner: LivingEntity? = null,
     spawnOffset: Vec2 = Vec2.ZERO,
 ) : PazProjectile(PazEntities.PEA_FIRE, level, owner, spawnOffset,
-    PazDamageTypes.FIRE,
+    PazDamageTypes.PLANT_FIRE,
 ) {
     override fun afterHitEntityEffect(target: LivingEntity) {
         super.afterHitEntityEffect(target)

@@ -42,6 +42,7 @@ data class ServerConfig(
         "plantz:kernelpult"         to 6,
         "plantz:melonpult"          to 10,
         "plantz:bonkchoy"           to 4,
+        "plantz:tanglekelp"         to 2,
         "plantz:puffshroom"         to 0,
         "plantz:scaredyshroom"      to 3,
         "plantz:fumeshroom"         to 6,
