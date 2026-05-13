@@ -96,6 +96,13 @@
         }
       },
       {
+        "when": { "id": "plantz:bonkchoy" },
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/seed_packet/bonkchoy"
+        }
+      },
+      {
         "when": { "id": "plantz:puffshroom" },
         "model": {
           "type": "minecraft:model",

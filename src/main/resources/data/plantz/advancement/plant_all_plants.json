@@ -122,6 +122,14 @@
         }
       }
     },
+    "plantz:bonkchoy": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:bonkchoy"
+        }
+      }
+    },
     "plantz:puffshroom": {
       "trigger": "minecraft:tame_animal",
       "conditions": {

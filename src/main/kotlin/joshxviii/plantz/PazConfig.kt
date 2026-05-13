@@ -41,6 +41,7 @@ data class ServerConfig(
         "plantz:cabbagepult"        to 5,
         "plantz:kernelpult"         to 6,
         "plantz:melonpult"          to 10,
+        "plantz:bonkchoy"           to 4,
         "plantz:puffshroom"         to 0,
         "plantz:scaredyshroom"      to 3,
         "plantz:fumeshroom"         to 6,
@@ -48,7 +49,7 @@ data class ServerConfig(
         "plantz:hypnoshroom"        to 7,
         "plantz:doomshroom"         to 16,
         "plantz:seashroom"          to 0,
-        "plantz:coffeebean"         to 3,
+        "plantz:coffeebean"         to 2,
     ),
 )
 data class ClientConfig(
@@ -78,7 +79,6 @@ object PazConfig {
         if (FabricLoader.getInstance().environmentType == EnvType.CLIENT) {
             client = loadConfig(clientConfigPath, ClientConfig())
         }
-        // Server config is always loaded on both sides (will be overwritten on client by sync)
         server = loadConfig(serverConfigPath, ServerConfig())
     }
 

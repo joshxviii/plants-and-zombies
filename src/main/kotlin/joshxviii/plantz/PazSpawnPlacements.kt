@@ -65,6 +65,10 @@ object PazSpawnPlacements {
             weight = 2, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.MELON_PULT, Plant::checkPlantSpawnRules)
 
+        addBiomeSpawn(PazTags.Biomes.HAS_BONK_CHOY, PazEntities.BONK_CHOY,
+            weight = 5, minGroupSize = 1, maxGroupSize = 1)
+        registerSpawnPlacement(PazEntities.BONK_CHOY, Plant::checkPlantSpawnRules)
+
         addBiomeSpawn(PazTags.Biomes.HAS_PEASHOOTER, PazEntities.PEA_SHOOTER,
             weight = 8, minGroupSize = 1, maxGroupSize = 2)
         registerSpawnPlacement(PazEntities.PEA_SHOOTER, Plant::checkPlantSpawnRules)

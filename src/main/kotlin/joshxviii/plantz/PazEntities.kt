@@ -158,6 +158,16 @@ object PazEntities {
             followRange = 38.0,
         )
     )
+    @JvmField val BONK_CHOY: EntityType<BonkChoy> = registerPlant(
+        "bonkchoy",
+        EntityType.Builder.of(::BonkChoy, MobCategory.CREATURE),
+        height = 0.8f,
+        attributes = Plant.Companion.PlantAttributes(
+            attackDamage = 5.0,
+            attackKnockback = 0.2,
+            followRange = 4.0,
+        )
+    )
     @JvmField val PUFF_SHROOM: EntityType<PuffShroom> = registerPlant(
         "puffshroom", EntityType.Builder.of(::PuffShroom, MobCategory.CREATURE),
         width = 0.5f,

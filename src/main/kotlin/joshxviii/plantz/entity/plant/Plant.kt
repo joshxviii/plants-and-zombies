@@ -307,7 +307,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     fun isAttached(): Boolean = attachedEntity!=null
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
-        source.entity?.let { if (hasSameOwner(it)) return false }
+        if (source.directEntity != owner) source.entity?.let { if (hasSameOwner(it)) return false }
         if ( attachedEntity.let { it!=null && source.entity?.`is`(it)==true } ) return false
         return super.hurtServer(
             level,
@@ -325,7 +325,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     override fun actuallyHurt(level: ServerLevel, source: DamageSource, damage: Float) {
-        source.entity?.let { if (hasSameOwner(it)) return }
+        if (source.directEntity != owner) source.entity?.let { if (hasSameOwner(it)) return }
         val potProtection: Boolean = hasPlantPotProtection() && source.entity is Enemy
         super.actuallyHurt(
             level,
