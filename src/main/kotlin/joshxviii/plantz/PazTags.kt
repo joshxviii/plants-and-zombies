@@ -67,6 +67,7 @@ object PazTags {
         val HAS_MELONPULT = tag("plant/has_melonpult")
         val HAS_POTATOMINE = tag("plant/has_potatomine")
         val HAS_BONK_CHOY = tag("plant/has_bonkchoy")
+        val HAS_TANGLE_KELP = tag("plant/has_tanglekelp")
         val HAS_PUFFSHROOM = tag("plant/has_puffshroom")
         val HAS_SUNSHROOM = tag("plant/has_sunshroom")
         val HAS_FUMESHROOM = tag("plant/has_fumeshroom")

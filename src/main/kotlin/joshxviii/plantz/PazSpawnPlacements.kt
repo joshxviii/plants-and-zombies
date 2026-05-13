@@ -69,6 +69,10 @@ object PazSpawnPlacements {
             weight = 5, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.BONK_CHOY, Plant::checkPlantSpawnRules)
 
+        addBiomeSpawn(PazTags.Biomes.HAS_TANGLE_KELP, PazEntities.TANGLE_KELP,
+            weight = 6, minGroupSize = 2, maxGroupSize = 5)
+        registerSpawnPlacement(PazEntities.TANGLE_KELP, TangleKelp::checkTangleKelpSpawnRules, spawnPlacements = SpawnPlacementTypes.IN_WATER)
+
         addBiomeSpawn(PazTags.Biomes.HAS_PEASHOOTER, PazEntities.PEA_SHOOTER,
             weight = 8, minGroupSize = 1, maxGroupSize = 2)
         registerSpawnPlacement(PazEntities.PEA_SHOOTER, Plant::checkPlantSpawnRules)

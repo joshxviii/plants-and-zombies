@@ -168,6 +168,17 @@ object PazEntities {
             followRange = 4.0,
         )
     )
+    @JvmField val TANGLE_KELP: EntityType<TangleKelp> = registerPlant(
+        "tanglekelp", EntityType.Builder.of(::TangleKelp, MobCategory.CREATURE),
+        width = 1.0f,
+        height = 0.4f,
+        eyeHeight = 0.5f,
+        attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 14.0,
+            attackDamage = 0.75,
+            followRange = 1.0,
+        )
+    )
     @JvmField val PUFF_SHROOM: EntityType<PuffShroom> = registerPlant(
         "puffshroom", EntityType.Builder.of(::PuffShroom, MobCategory.CREATURE),
         width = 0.5f,

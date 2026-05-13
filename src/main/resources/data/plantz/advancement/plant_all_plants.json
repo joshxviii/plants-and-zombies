@@ -130,6 +130,14 @@
         }
       }
     },
+    "plantz:tanglekelp": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:tanglekelp"
+        }
+      }
+    },
     "plantz:puffshroom": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
