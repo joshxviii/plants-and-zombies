@@ -187,7 +187,7 @@
   "container.plantz.mailbox_coords": "%d, %d, %d",
   "container.plantz.address_search": "Search mailboxes...",
   "container.plantz.no_address": "No other mailboxes found.",
-  "container.plantz.mailbox_full": "This mailbox is full!",
+  "container.plantz.mailbox_full": "That mailbox is full!",
   "container.plantz.mailbox_success": "Sent!",
 
   "plantz.subtitles.projectile.deflected": "Projectile deflected",

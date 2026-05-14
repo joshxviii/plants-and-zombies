@@ -13,11 +13,10 @@
 - Solar battery can be placed and will absorb nearby sun.
   - The light level and redstone level changes depending on the store amount of sun.
 - Added Electrified Mob Effect.
-  - Mobs with the effect will zap nearby entities while in water or hit with any other type of electric damage.
-  - Mobs with a higher level of the effect will apply a lower level of the electrified effect to entities it zapped. The higher the level, the more the effect will chain to other mobs.
+- Being struck by lightning will now apply the Electrified effect.
 - Added translations for seven new languages.
   - Spanish - @Maxi1978
-  - Portuguese - @theplayeris1
+  - Portuguese - @theplayeris1, @Arthurow
   - Filipino - @Arseus
   - Turkish - @TangHere
   - Chinese - @_spos777
@@ -29,7 +28,6 @@
 - Fixed an issue where the server and client config settings would clash and cause errors.
 - Adjusted spawn rates and drop chances.
 - The Watering Can is able to take water out of a cauldron by crouching.
-- Being struck by lightning will now apply the Electrified effect.
 - Mailboxes have been updated.
   - All players can now access mailboxes from any loaded chunk within the same dimension.
   - The address list is now sorted by distance from the current mailbox.
@@ -38,13 +36,14 @@
 - Made sun a little easier to pick up
 - Increased the amount of healing sun gives to plants.
 - Fixed issues with projectiles phasing through entities, hitting entities multiple times, and not being deflected
+- Easter egg skins no longer apply when any custom name is given.
 #### Plants:
 - Updated list of projectiles that wallnut can deflect.
 - Wall Nut can now be planted on most solid blocks
 - Potatomine can be planted on sand and gravel blocks.
 - Explosive plants will no longer continue to explode after being tamed.
 - Endermen will now avoid plant projectiles
-- Fixed a bug where plants could still damage player owners with "coopPlanting" and "playerCreditForPlantKills" enabled.
+- Fixed a bug where plants could still damage player owners when "coopPlanting" and "playerCreditForPlantKills" were enabled.
 #### Zombies:
 - Disco zombie can now only spawn backup when there are < 3 backup dances nearby rather than < 4
 - Improved Digger zombie pathfinding, block breaking speed, and what blocks it can break

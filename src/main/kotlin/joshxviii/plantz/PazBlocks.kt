@@ -179,7 +179,7 @@ object PazBlocks {
             .pushReaction(PushReaction.DESTROY),
         ::FlagBlock,
         Item.Properties()
-            .stacksTo(1)
+            .stacksTo(16)
             .rarity(Rarity.RARE)
             .equippableUnswappable(EquipmentSlot.OFFHAND)
             .component(
@@ -204,7 +204,7 @@ object PazBlocks {
             .pushReaction(PushReaction.DESTROY),
         ::FlagBlock,
         Item.Properties()
-            .stacksTo(1)
+            .stacksTo(16)
             .rarity(Rarity.RARE)
             .equippableUnswappable(EquipmentSlot.OFFHAND)
             .component(
