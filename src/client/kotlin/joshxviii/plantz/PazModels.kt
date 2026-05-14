@@ -59,9 +59,10 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(ChomperModel.LAYER_LOCATION) { ChomperModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(CherryBombModel.LAYER_LOCATION) { CherryBombModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(PotatoMineModel.LAYER_LOCATION) { PotatoMineModel.createBodyLayer() }
-        ModelLayerRegistry.registerModelLayer(IcePeaShooterModel.LAYER_LOCATION) { IcePeaShooterModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(RepeaterModel.LAYER_LOCATION) { RepeaterModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(IcePeaShooterModel.LAYER_LOCATION) { IcePeaShooterModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(FirePeaShooterModel.LAYER_LOCATION) { FirePeaShooterModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(ElectricPeaShooterModel.LAYER_LOCATION) { ElectricPeaShooterModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(CactusModel.LAYER_LOCATION) { CactusModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(CabbagePultModel.LAYER_LOCATION) { CabbagePultModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(KernelPultModel.LAYER_LOCATION) { KernelPultModel.createBodyLayer() }
@@ -112,9 +113,10 @@ object PazModels {
         EntityRenderers.register(PazEntities.CHOMPER) {PlantRenderer(ChomperModel(it.bakeLayer(ChomperModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.CHERRY_BOMB) { PlantRenderer(CherryBombModel(it.bakeLayer(CherryBombModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.POTATO_MINE) { PlantRenderer(PotatoMineModel(it.bakeLayer(PotatoMineModel.LAYER_LOCATION)), it) }
-        EntityRenderers.register(PazEntities.ICE_PEA_SHOOTER) { PlantRenderer(IcePeaShooterModel(it.bakeLayer(IcePeaShooterModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.REPEATER) { PlantRenderer(RepeaterModel(it.bakeLayer(RepeaterModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.ICE_PEA_SHOOTER) { PlantRenderer(IcePeaShooterModel(it.bakeLayer(IcePeaShooterModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.FIRE_PEA_SHOOTER) { PlantRenderer(FirePeaShooterModel(it.bakeLayer(FirePeaShooterModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.ELECTRIC_PEA_SHOOTER) { PlantRenderer(ElectricPeaShooterModel(it.bakeLayer(ElectricPeaShooterModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.CACTUS) { PlantRenderer(CactusModel(it.bakeLayer(CactusModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.CABBAGE_PULT) { PlantRenderer(CabbagePultModel(it.bakeLayer(CabbagePultModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.KERNEL_PULT) { PlantRenderer(KernelPultModel(it.bakeLayer(KernelPultModel.LAYER_LOCATION)), it) }

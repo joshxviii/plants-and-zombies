@@ -15,7 +15,7 @@ import kotlin.math.pow
 
 data class ServerConfig(
     var coopPlanting: Boolean = true,
-    var playerCreditForPlantKills: Boolean = true,
+    var playerCreditForPlantKills: Boolean = false,
     var seedGrowTime: Int = 12000,
     var extraGrowTimePerSun: Int = 2400,
     var zenPotTimeReduction: Double = 0.25,

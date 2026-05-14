@@ -46,7 +46,7 @@ open class MeleeAttackActionGoal(
         val damage : Float = usingEntity.attributes.getValue(Attributes.ATTACK_DAMAGE).toFloat() * damageMultiplier
         val knockback : Double = usingEntity.attributes.getValue(Attributes.ATTACK_KNOCKBACK)
         val source = usingEntity.damageSources().source(damageType, usingEntity,
-            if (PazConfig.PLAYER_CREDIT_FOR_PLANT_KILLS && usingEntity is OwnableEntity) usingEntity.rootOwner else null)
+            if (PazConfig.PLAYER_CREDIT_FOR_PLANT_KILLS && usingEntity is OwnableEntity) usingEntity.rootOwner else usingEntity)
 
         if (target.hurtServer(usingEntity.level() as ServerLevel, source, damage)) {
             target.knockback(

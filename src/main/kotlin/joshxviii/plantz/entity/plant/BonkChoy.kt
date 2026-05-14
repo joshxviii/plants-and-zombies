@@ -13,6 +13,7 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.SpawnGroupData
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
@@ -23,25 +24,6 @@ class BonkChoy(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.BO
 
     companion object {
         val USE_UPPERCUT: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(BonkChoy::class.java, EntityDataSerializers.BOOLEAN)
-    }
-
-    var useUppercut: Boolean
-        get() = this.entityData.get(USE_UPPERCUT)
-        set(value) = this.entityData.set(USE_UPPERCUT, value)
-
-    override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
-        super.defineSynchedData(entityData)
-        entityData.define(USE_UPPERCUT, false)
-    }
-
-    override fun registerGoals() {
-        super.registerGoals()
-        this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, LivingEntity::class.java, 5, true, false) { target, level ->
-            target !is Plant
-                    && (target is Zombie
-                    || (target is Enemy && isTame)
-                    || (target is Player && !isTame))
-        })
     }
 
     // normal attack
@@ -67,6 +49,39 @@ class BonkChoy(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.BO
         }
     )
 
+    var useUppercut: Boolean
+        get() = this.entityData.get(USE_UPPERCUT)
+        set(value) = this.entityData.set(USE_UPPERCUT, value)
+
+    init {
+        reassessAttack()
+    }
+
+    override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
+        super.defineSynchedData(entityData)
+        entityData.define(USE_UPPERCUT, false)
+    }
+
+    override fun registerGoals() {
+        super.registerGoals()
+        this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, LivingEntity::class.java, 5, true, false) { target, level ->
+            target !is Plant
+                    && target !is Creeper
+                    && (target is Zombie
+                    || (target is Enemy && isTame)
+                    || (target is Player && !isTame))
+        })
+    }
+
+    fun reassessAttack() {
+        goalSelector.removeGoal(punchGoal)
+        goalSelector.removeGoal(uppercutGoal)
+        if (useUppercut)
+            goalSelector.addGoal(1, uppercutGoal)
+        else
+            goalSelector.addGoal(1, punchGoal)
+    }
+
     override fun finalizeSpawn(
         level: ServerLevelAccessor,
         difficulty: DifficultyInstance,
@@ -80,19 +95,5 @@ class BonkChoy(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.BO
     override fun cooldownFinished() {
         useUppercut = random.nextFloat() < 0.45f
         reassessAttack()
-    }
-
-    override fun stateUpdated(state: PlantState) {
-        super.stateUpdated(state)
-        if (state == PlantState.IDLE) reassessAttack()
-    }
-
-    fun reassessAttack() {
-        goalSelector.removeGoal(punchGoal)
-        goalSelector.removeGoal(uppercutGoal)
-        if (useUppercut)
-            goalSelector.addGoal(1, uppercutGoal)
-        else
-            goalSelector.addGoal(1, punchGoal)
     }
 }
