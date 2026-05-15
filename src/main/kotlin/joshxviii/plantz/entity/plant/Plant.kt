@@ -340,7 +340,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     protected fun <T: Plant> convertToPlantType(
         plantType: EntityType<T>,
-        level: ServerLevel = level() as ServerLevel,
         afterConversion: (plantEntity: Plant) -> Unit = {}) {
         convertTo(plantType, ConversionParams.single(this, true, true)) { newPlant ->
             owner?.let {
@@ -501,11 +500,12 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return success
     }
 
-    fun awardSeedPacket(player: Player) {
+    open fun getZenGrownSeedType(): EntityType<*> = type
+    protected fun awardSeedPacket(player: Player) {
         val level = level() as? ServerLevel ?: return
         receivedSun = 0
         receivedWater = 0
-        val stack = SeedPacketItem.stackFor(this.type)
+        val stack = SeedPacketItem.stackFor(getZenGrownSeedType())
         val itemEntity = ItemEntity(level, x, y + 0.5, z, stack)
         level.addFreshEntity(itemEntity)
         playSound(SoundEvents.ROOTED_DIRT_BREAK)

@@ -32,6 +32,8 @@ class ElectricPeaShooter(type: EntityType<out Plant>, level: Level) : Plant(PazE
         })
     }
 
+    override fun getZenGrownSeedType(): EntityType<*> = PazEntities.PEA_SHOOTER
+
     override fun tick() {
         super.tick()
 
