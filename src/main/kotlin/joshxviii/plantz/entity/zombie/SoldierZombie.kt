@@ -67,19 +67,6 @@ class SoldierZombie(type: EntityType<out SoldierZombie>, level: Level) : PazZomb
         addBehaviourGoalsNoMelee()
     }
 
-    override fun getAmbientSound(): SoundEvent {
-        return PazSounds.BROWNCOAT_AMBIENT
-    }
-    override fun getHurtSound(source: DamageSource): SoundEvent {
-        return PazSounds.BROWNCOAT_HURT
-    }
-    override fun getDeathSound(): SoundEvent {
-        return PazSounds.BROWNCOAT_DEATH
-    }
-    override fun getStepSound(): SoundEvent {
-        return SoundEvents.ZOMBIE_STEP
-    }
-
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         val result = super.doHurtTarget(level, target)
         return result

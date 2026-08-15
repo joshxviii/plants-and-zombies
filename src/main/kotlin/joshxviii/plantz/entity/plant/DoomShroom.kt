@@ -23,7 +23,7 @@ import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
 
-class DoomShroom(type: EntityType<out Explosive>, level: Level) : Explosive(PazEntities.DOOM_SHROOM, level) {
+class DoomShroom(type: EntityType<out ExplosivePlant>, level: Level) : ExplosivePlant(PazEntities.DOOM_SHROOM, level) {
 
     companion object {
         fun checkDoomShroomSpawnRules(

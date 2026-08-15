@@ -5,7 +5,7 @@ import joshxviii.plantz.PazConfig
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.entity.plant.BonkChoy
 import joshxviii.plantz.entity.plant.ExplodeONut
-import joshxviii.plantz.entity.plant.Explosive
+import joshxviii.plantz.entity.plant.ExplosivePlant
 import joshxviii.plantz.entity.plant.KernelPult
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.plant.WallNut
@@ -15,10 +15,7 @@ import joshxviii.plantz.renderer.isMagicName
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
-import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.client.renderer.entity.RenderLayerParent
-import net.minecraft.client.renderer.entity.layers.EyesLayer
-import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.client.renderer.state.level.CameraRenderState
@@ -96,7 +93,7 @@ class PlantRenderer(
             Quaternionf()
         }
         state.plantState = entity.state
-        if (entity is Explosive) state.swelling = entity.getSwelling(partialTick)
+        if (entity is ExplosivePlant) state.swelling = entity.getSwelling(partialTick)
         state.cooldown = entity.cooldown
         state.isAsleep = entity.isAsleep
         state.damagedAmount = entity.damagedPercent

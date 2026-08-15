@@ -124,6 +124,8 @@
   "item.plantz.plant_pot_helmet": "Plant Pot Helmet",
   "item.plantz.seed_packet": "Empty Seed Packet",
   "item.plantz.seed_packet.entity": "%s Seeds",
+  "item.plantz.blueprint": "Machine Blueprint",
+  "item.plantz.blueprint.entity": "%s Blueprint",
 
   "item.plantz.white_balloon": "White Balloon",
   "item.plantz.light_gray_balloon": "Light Gray Balloon",

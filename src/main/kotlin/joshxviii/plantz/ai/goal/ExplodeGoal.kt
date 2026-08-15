@@ -1,6 +1,6 @@
 package joshxviii.plantz.ai.goal
 
-import joshxviii.plantz.entity.plant.Explosive
+import joshxviii.plantz.entity.plant.ExplosivePlant
 import net.minecraft.core.Holder
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -12,7 +12,7 @@ import java.util.*
 import java.util.function.Predicate
 
 class ExplodeGoal(
-    private val explosiveEntity: Explosive,
+    private val explosiveEntity: ExplosivePlant,
     val explosionRadius: Float = 2.5f,
     val sound: Holder.Reference<SoundEvent> = SoundEvents.GENERIC_EXPLODE,
     val destroyBlocks: Boolean = false,

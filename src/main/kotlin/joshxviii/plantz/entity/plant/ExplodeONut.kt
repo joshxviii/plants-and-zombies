@@ -5,23 +5,19 @@ import joshxviii.plantz.NukeSmokeParticleOptions
 import joshxviii.plantz.NukeWaveParticleOptions
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazTags.EntityTypes.WALLNUT_DEFLECTABLE
-import net.minecraft.core.Direction
 import net.minecraft.core.Holder
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
-import net.minecraft.tags.BlockTags
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.monster.zombie.Zombie
-import net.minecraft.world.entity.projectile.arrow.AbstractArrow
-import net.minecraft.world.entity.projectile.arrow.ThrownTrident
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 
-class ExplodeONut(type: EntityType<out Explosive>, level: Level) : Explosive(PazEntities.EXPLODE_O_NUT, level) {
+class ExplodeONut(type: EntityType<out ExplosivePlant>, level: Level) : ExplosivePlant(PazEntities.EXPLODE_O_NUT, level) {
 
     override fun attackGoals() {}
 

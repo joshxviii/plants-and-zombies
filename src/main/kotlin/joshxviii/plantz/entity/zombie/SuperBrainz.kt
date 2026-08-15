@@ -220,20 +220,6 @@ class SuperBrainz(type: EntityType<out SuperBrainz>, level: Level) : PazZombie(t
         addBehaviourGoalsNoMelee()
     }
 
-    //TODO custom sounds
-    override fun getAmbientSound(): SoundEvent {
-        return SoundEvents.EMPTY
-    }
-    override fun getHurtSound(source: DamageSource): SoundEvent {
-        return SoundEvents.EMPTY
-    }
-    override fun getDeathSound(): SoundEvent {
-        return SoundEvents.EMPTY
-    }
-    override fun getStepSound(): SoundEvent {
-        return SoundEvents.EMPTY
-    }
-
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         val result = super.doHurtTarget(level, target)
         return result

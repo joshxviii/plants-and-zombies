@@ -87,11 +87,6 @@ object PazItems {
         properties = Item.Properties()
     )
     @JvmField
-    val BOT_BLUEPRINT: Item = registerItem(
-        "bot_blueprint",
-        properties = Item.Properties()
-    )
-    @JvmField
     val NEWSPAPER: Item = registerItem(
         "newspaper", ::NewspaperItem,
         properties = Item.Properties()
@@ -189,6 +184,11 @@ object PazItems {
                         EquipmentSlotGroup.HEAD
                     ).build()
             )
+    )
+    @JvmField
+    val BLUEPRINT: Item = registerItem(
+        "blueprint", ::BlueprintItem,
+        properties = Item.Properties()
     )
     @JvmField
     val SEED_PACKET: Item = registerItem(

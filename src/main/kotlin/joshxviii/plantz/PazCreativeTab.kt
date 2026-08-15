@@ -1,5 +1,6 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.item.BlueprintItem
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
@@ -68,6 +69,12 @@ object PazCreativeTab {
                 output.accept(PazItems.PIRATE_CAPTAIN_SPAWN_EGG)
                 output.accept(PazItems.SUPER_BRAINZ_SPAWN_EGG)
                 output.accept(PazItems.GARGANTUAR_SPAWN_EGG)
+
+                // machine blueprints
+                //output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_TURRET))
+                //output.accept(BlueprintItem.stackFor(PazEntities.ELECTRO_TURRET))
+                //output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_DRONE))
+                //output.accept(BlueprintItem.stackFor(PazEntities.LAWN_MOWER))
 
                 // gnome
                 if (parameters.hasPermissions()) output.accept(PazItems.GNOME_SPAWN_EGG)

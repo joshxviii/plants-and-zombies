@@ -25,19 +25,6 @@ class PirateCaptain(type: EntityType<out PirateCaptain>, level: Level) : PazZomb
         xpReward = 80
     }
 
-    override fun getAmbientSound(): SoundEvent {
-        return SoundEvents.EMPTY
-    }
-    override fun getHurtSound(source: DamageSource): SoundEvent {
-        return SoundEvents.EMPTY
-    }
-    override fun getDeathSound(): SoundEvent {
-        return SoundEvents.EMPTY
-    }
-    override fun getStepSound(): SoundEvent {
-        return SoundEvents.EMPTY
-    }
-
     override fun handleAttributes(difficultyModifier: Float, spawnReason: EntitySpawnReason) {}
 
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {

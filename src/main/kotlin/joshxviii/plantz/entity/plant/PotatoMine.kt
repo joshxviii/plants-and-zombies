@@ -9,7 +9,6 @@ import net.minecraft.core.particles.ItemParticleOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvent
-import net.minecraft.tags.BlockTags
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.Entity
@@ -20,10 +19,9 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
-import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
 
-class PotatoMine(type: EntityType<out Explosive>, level: Level) : Explosive(PazEntities.POTATO_MINE, level) {
+class PotatoMine(type: EntityType<out ExplosivePlant>, level: Level) : ExplosivePlant(PazEntities.POTATO_MINE, level) {
     override fun registerGoals() {
         super.registerGoals()
     }

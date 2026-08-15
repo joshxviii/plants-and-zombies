@@ -1,0 +1,60 @@
+package joshxviii.plantz.entity.zombie
+
+import PazOwnableZombie
+import joshxviii.plantz.item.BlueprintItem
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.*
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.Level
+import java.util.*
+
+abstract class ZombieRobot(type: EntityType<out ZombieRobot>, level: Level) : PazOwnableZombie(type, level) {
+
+    companion object {
+        val DATA_OWNERUUID_ID: EntityDataAccessor<Optional<EntityReference<LivingEntity>>> = SynchedEntityData.defineId(ZombieRobot::class.java, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE)
+    }
+
+    init {
+        xpReward = 2
+    }
+
+    override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
+        super.defineSynchedData(entityData)
+        entityData.define(DATA_OWNERUUID_ID, Optional.empty())
+    }
+
+    override fun getOwnerReference(): EntityReference<LivingEntity>? {
+        return this.entityData.get(DATA_OWNERUUID_ID).orElse(null);
+    }
+
+    fun setOwner(owner: LivingEntity?) {
+        this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable<LivingEntity>(owner).map { EntityReference.of(it) })
+    }
+
+    fun setOwnerReference(owner: EntityReference<LivingEntity>?) {
+        this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable<EntityReference<LivingEntity>>(owner))
+    }
+
+    override fun getAmbientSound(): SoundEvent = SoundEvents.EMPTY
+    override fun getHurtSound(source: DamageSource): SoundEvent = SoundEvents.EMPTY
+    override fun getDeathSound(): SoundEvent = SoundEvents.EMPTY
+    override fun getStepSound(): SoundEvent = SoundEvents.EMPTY
+
+    override fun getPickResult(): ItemStack = BlueprintItem.stackFor(this.type)
+
+    override fun canEquipDuckyInWater(): Boolean = false
+    override fun canPickUpLoot(): Boolean = false
+    override fun canBreakDoors(): Boolean = false
+    override fun canHoldItem(itemStack: ItemStack): Boolean = false
+    override fun isBaby() = false
+
+    override fun registerGoals() {
+
+    }
+
+}
