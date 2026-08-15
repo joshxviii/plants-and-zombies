@@ -13,14 +13,21 @@ import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.client.renderer.state.level.ParticleGroupRenderState
+import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
 import net.minecraft.world.phys.Vec3
-import kotlin.math.cos
 import kotlin.math.sin
 
 class BeamParticleGroup(engine: ParticleEngine) : ParticleGroup<BeamParticle>(engine) {
     companion object {
-        val RENDER_TYPE = RenderType.create(
+        val OUTER_BEAM = RenderType.create(
+            "outer_beam",
+            RenderSetup.builder(RenderPipelines.BEACON_BEAM_TRANSLUCENT)
+                .withTexture("Sampler0", pazResource("textures/particle/beam_outer.png"))
+                .setOutputTarget(OutputTarget.MAIN_TARGET)
+                .createRenderSetup()
+        )
+        val INNER_BEAM = RenderType.create(
             "beam",
             RenderSetup.builder(RenderPipelines.BEACON_BEAM_TRANSLUCENT)
                 .withTexture("Sampler0", pazResource("textures/particle/beam.png"))
@@ -54,7 +61,7 @@ class BeamParticleGroup(engine: ParticleEngine) : ParticleGroup<BeamParticle>(en
                     alpha = particle.alpha,
                     age = particle.particleAge,
                     lifetime = particle.lifetime,
-                    gameTime = particle.gameTime + partialTicks,
+                    gameTime = particle.gameTime.toFloat(),
                     partialTicks = partialTicks,
                     random = RandomSource.create(particle.hashCode().toLong())
                 )
@@ -79,20 +86,67 @@ class BeamParticleGroup(engine: ParticleEngine) : ParticleGroup<BeamParticle>(en
 
         override fun submit(collector: SubmitNodeCollector, camera: CameraRenderState) {
             for (state in renderStates) {
-                collector.submitCustomGeometry(PoseStack(), RENDER_TYPE) { _, buffer ->
+                collector.submitCustomGeometry(PoseStack(), OUTER_BEAM) { _, buffer ->
+                    renderBeam(buffer, state, true)
+                }
+                collector.submitCustomGeometry(PoseStack(), INNER_BEAM) { _, buffer ->
                     renderBeam(buffer, state)
                 }
             }
         }
 
-        private fun renderBeam(buffer: VertexConsumer, state: BeamParticleRenderState) {
-            val waveCycle = sin(state.gameTime * 0.1f) * 0.2f + 0.8f
+        private fun renderBeam(buffer: VertexConsumer, state: BeamParticleRenderState, outer: Boolean = false) {
+            val waveCycle = sin((state.gameTime ) ) * 0.2f + 0.8f
             val ageFactor = 1f - (state.age.toFloat() / state.lifetime)
-            val mainAlpha = state.alpha * waveCycle
-            val width = state.width * ageFactor
-            val scroll = (state.gameTime * -.2f) % 32
+            val mainAlpha = waveCycle * ageFactor
+            val width = state.width * waveCycle * ageFactor
+            val scroll = (state.gameTime * .2f) % 2f
 
-            renderBeamBox(buffer, state.startPos, state.targetPos, width, state.color, mainAlpha, scroll)
+            if (outer) renderBeamCross(buffer, state.startPos, state.targetPos, width, state.color, mainAlpha, scroll)
+            else renderBeamBox(buffer, state.startPos, state.targetPos, width, state.color, mainAlpha, scroll)
+        }
+
+        private fun renderBeamCross(buffer: VertexConsumer, from: Vec3, to: Vec3, width: Float, color: Int, alpha: Float, scroll: Float) {
+            val r = ((color shr 16) and 0xFF) / 255f
+            val g = ((color shr 8) and 0xFF) / 255f
+            val b = (color and 0xFF) / 255f
+
+            val dir = to.subtract(from)
+            val length = dir.length().toFloat()
+            if (length < 1.0E-4f) return
+
+            val direction = dir.scale(1.0 / length)
+
+            var right = direction.cross(Vec3(0.0, 1.0, 0.0))
+            if (right.lengthSqr() < 1.0E-6) {
+                right = direction.cross(Vec3(1.0, 0.0, 0.0))
+            }
+            right = right.normalize()
+            val up = right.cross(direction).normalize()
+
+            val hw = width * 1.0
+            val v0 = scroll
+            val v1 = scroll + length / width
+
+            drawCrossPlane(buffer, from, to, right, hw, r, g, b, alpha, v0, v1)
+            drawCrossPlane(buffer, from, to, up, hw, r, g, b, alpha, v0, v1)
+        }
+
+        private fun drawCrossPlane(buffer: VertexConsumer, from: Vec3, to: Vec3, axis: Vec3, hw: Double, r: Float, g: Float, b: Float, alpha: Float, v0: Float, v1: Float) {
+            val p1 = from.add(axis.scale(hw))
+            val p2 = from.subtract(axis.scale(hw))
+            val p3 = to.subtract(axis.scale(hw))
+            val p4 = to.add(axis.scale(hw))
+
+            vertex(buffer, p1, r, g, b, alpha, 0f, v0)
+            vertex(buffer, p2, r, g, b, alpha, 1f, v0)
+            vertex(buffer, p3, r, g, b, alpha, 1f, v1)
+            vertex(buffer, p4, r, g, b, alpha, 0f, v1)
+
+            vertex(buffer, p1, r, g, b, alpha, 0f, v0)
+            vertex(buffer, p4, r, g, b, alpha, 0f, v1)
+            vertex(buffer, p3, r, g, b, alpha, 1f, v1)
+            vertex(buffer, p2, r, g, b, alpha, 1f, v0)
         }
 
         private fun renderBeamBox(buffer: VertexConsumer, from: Vec3, to: Vec3, width: Float, color: Int, alpha: Float, scroll: Float) {

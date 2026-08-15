@@ -24,13 +24,13 @@ class BeamParticle private constructor(
     var gameTime: Long = 0
 
     init {
-        gameTime = world.gameTime
         lifetime = lifeTime
         hasPhysics = false
     }
 
     override fun tick() {
         super.tick()
+        gameTime = world.gameTime
     }
 
     override fun getGroup(): ParticleRenderType = PazParticles.BEAM

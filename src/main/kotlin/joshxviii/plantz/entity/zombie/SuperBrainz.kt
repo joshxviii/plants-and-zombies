@@ -184,7 +184,7 @@ class SuperBrainz(type: EntityType<out SuperBrainz>, level: Level) : PazZombie(t
                 val laserStart = calculateUpVector(this.xRot + 95, this.yHeadRot + 25).scale(0.9).add(startPos)
                 if (variant != SuperBrainzVariant.ELECTRO) (level() as ServerLevel).sendParticles(
                     BeamParticleOptions(endPos.offsetRandom(random, .25f),
-                        color = variant.beamColor, width = 0.14f, lifeTime = 10),
+                        color = variant.beamColor, width = 0.28f, lifeTime = 10),
                     laserStart.x, laserStart.y, laserStart.z,
                     1, 0.0, 0.0, 0.0, 0.0
                 )
