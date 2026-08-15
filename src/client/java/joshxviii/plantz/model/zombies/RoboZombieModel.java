@@ -8,6 +8,7 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
@@ -19,9 +20,11 @@ public class RoboZombieModel extends PazZombieModel {
     private final KeyframeAnimation walkAnimation;
     private final KeyframeAnimation idleAnimation;
     private final KeyframeAnimation tankIdleAnimation;
+    ModelPart treads;
 
     public RoboZombieModel(final ModelPart root) {
         super(null, root);
+        treads = root.getChild("root").getChild("treads");
         this.bashAnimation = RoboZombieAnimation.attack.bake(root.getChild("root"));
         this.shootAnimation = RoboZombieAnimation.missile.bake(root.getChild("root"));
         this.walkAnimation = RoboZombieAnimation.walk.bake(root.getChild("root"));
@@ -89,7 +92,14 @@ public class RoboZombieModel extends PazZombieModel {
         float animationSpeed = state.walkAnimationSpeed;
         walkAnimation.applyWalk(animationPos, animationSpeed, 2f, 2f);
 
-        if (roboState.isTankTransformation()) tankIdleAnimation.apply(roboState.getIdleAnimationState(), roboState.ageInTicks);
+        if (roboState.isTankTransformation()) {
+            tankIdleAnimation.apply(roboState.getIdleAnimationState(), roboState.ageInTicks);
+            var dir = state.getMovementDirection();
+            if (dir.lengthSqr() > 0.005) {
+                this.treads.yRot = -roboState.bodyRot * (float) (Math.PI / 180.0);
+                this.treads.yRot += dir.rotation().y * Mth.DEG_TO_RAD;
+            }
+        }
         else idleAnimation.apply(roboState.getIdleAnimationState(), roboState.ageInTicks);
         shootAnimation.apply(roboState.getShootAnimationState(), roboState.ageInTicks);
         bashAnimation.apply(roboState.getBashAnimationState(), roboState.ageInTicks);

@@ -374,7 +374,7 @@ object PazEntities {
             .eyeHeight(1.74f)
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
-            attackDamage = 7.0,
+            attackDamage = 6.0,
             maxHealth = 60.0,
             movementSpeed = 0.235,
             spawnReinforcementsChance = 0.1,
@@ -401,7 +401,7 @@ object PazEntities {
             .eyeHeight(1.74f)
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
-            attackDamage = 8.0,
+            attackDamage = 7.0,
             maxHealth = 75.0,
             stepHeight = 1.0,
             movementSpeed = 0.23,
@@ -457,7 +457,7 @@ object PazEntities {
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
             armor = 16.0,
-            attackDamage = 8.0,
+            attackDamage = 10.0,
             maxHealth = 100.0,
             stepHeight = 1.0,
             movementSpeed = 0.23,
@@ -525,6 +525,12 @@ object PazEntities {
     )
     @JvmField val ELECTRO_TURRET: EntityType<Turret> = registerTurret(
         "electro_turret",
+        attributes = createMobAttributes()
+            .add(Attributes.MAX_HEALTH, 20.0)
+            .add(Attributes.ATTACK_DAMAGE, 2.0)
+    )
+    @JvmField val DRONE_TURRET: EntityType<Turret> = registerTurret(
+        "drone_turret",
         attributes = createMobAttributes()
             .add(Attributes.MAX_HEALTH, 20.0)
             .add(Attributes.ATTACK_DAMAGE, 2.0)

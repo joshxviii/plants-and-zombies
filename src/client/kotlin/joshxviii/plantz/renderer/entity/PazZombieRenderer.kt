@@ -25,6 +25,7 @@ import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
+import net.minecraft.util.Mth
 import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.phys.Vec3
 
@@ -74,6 +75,7 @@ open class PazZombieRenderer(
         state.zombieState = entity.state
         state.emergeAnimationState.copyFrom(entity.emergeAnimation)
         state.floatAnimationState.copyFrom(entity.floatAnimation)
+        state.movementDirection = Mth.lerp(partialTicks.toDouble() * .5, entity.moveDirO, entity.moveDir)
         if (entity is DiscoZombie) state.actionAnimationState.copyFrom(entity.summonAnimation)
         if (entity is AllStar) state.actionAnimationState.copyFrom(entity.chargeAnimation)
         if (entity is NewspaperZombie) state.isAngry = entity.isAngry()
@@ -128,6 +130,7 @@ open class PazZombieRenderState : ZombieRenderState() {
         const val TEXTURE_PATH = "textures/entity/zombie"
     }
 
+    var movementDirection: Vec3 = Vec3.ZERO
     var customName: String = ""
     var textureExtra: List<String> = listOf()
     var isAngry: Boolean = false

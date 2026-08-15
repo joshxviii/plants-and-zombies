@@ -1,9 +1,7 @@
 package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazBlocks
-import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazDataSerializers.DATA_ZOMBIE_STATE
-import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazTags
@@ -52,12 +50,15 @@ import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
+import net.minecraft.world.phys.Vec3
 import kotlin.math.max
 
 abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie(type, level) {
 
     val emergeAnimation : AnimationState = AnimationState()
     val floatAnimation : AnimationState = AnimationState()
+    var moveDir = Vec3.ZERO
+    var moveDirO = Vec3.ZERO
 
     companion object {
         fun checkPazZombieSpawnRules(
@@ -196,6 +197,9 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     var waterTime = -1
     override fun tick() {
         super.tick()
+        moveDirO = moveDir
+        moveDir = deltaMovement
+
         val serverLevel = level() as? ServerLevel
 
         if (isEyeInFluid(FluidTags.WATER)) {

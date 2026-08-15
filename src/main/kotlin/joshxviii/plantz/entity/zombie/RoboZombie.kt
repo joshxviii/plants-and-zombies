@@ -17,6 +17,8 @@ import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 
 class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(type, level) {
 
@@ -31,6 +33,14 @@ class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(typ
     init {
         xpReward = 30
     }
+
+    val walkNavigation = NavigateToTargetGoal(this)
+    val tankNavigation = NavigateToTargetGoal(
+        this,
+        speedModifier = 1.25,
+        keepAwayDistance = 5.0,
+        alwaysFaceTarget = true
+    )
 
     var missileCooldown = 0
 
@@ -57,9 +67,31 @@ class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(typ
         entityData.define(BASH_TIME_ID, 0)
     }
 
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+        output.putBoolean("isTransformed", isTransformed)
+    }
+
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+        isTransformed = input.getBooleanOr("isTransformed", false)
+        reassessNavigation()
+    }
+
+    fun transform() {
+        isTransformed = !isTransformed
+        reassessNavigation()
+    }
+
+    fun reassessNavigation() {
+        goalSelector.removeGoal(walkNavigation)
+        goalSelector.removeGoal(tankNavigation)
+        if (isTransformed) goalSelector.addGoal(3, tankNavigation)
+        else goalSelector.addGoal(3, walkNavigation)
+    }
+
     override fun registerGoals() {
         super.registerGoals()
-        goalSelector.addGoal(3, NavigateToTargetGoal(this))
         goalSelector.addGoal(1, MeleeAttackActionGoal(
             usingEntity = this,
             damageType = DamageTypes.MOB_ATTACK,
@@ -149,6 +181,7 @@ class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(typ
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
+        reassessNavigation()
         val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
 
         if (spawnReason != EntitySpawnReason.CONVERSION) {
