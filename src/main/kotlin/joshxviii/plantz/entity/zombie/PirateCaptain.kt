@@ -1,8 +1,10 @@
 package joshxviii.plantz.entity.zombie
 
+import it.unimi.dsi.fastutil.ints.IntList
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.ai.ZombieState
+import net.minecraft.core.component.DataComponents
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -15,11 +17,30 @@ import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.SpawnGroupData
+import net.minecraft.world.item.DyeColor
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.component.FireworkExplosion
+import net.minecraft.world.item.component.Fireworks
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 
 class PirateCaptain(type: EntityType<out PirateCaptain>, level: Level) : PazZombie(type, level) {
+
+    companion object {
+        private fun getFirework(color: DyeColor, flightDuration: Int): ItemStack {
+            val rocket = ItemStack(Items.FIREWORK_ROCKET).apply { set(
+                DataComponents.FIREWORKS,
+                Fireworks(
+                    flightDuration.toByte().toInt(),
+                    listOf(
+                        FireworkExplosion(FireworkExplosion.Shape.BURST, IntList.of(color.fireworkColor), IntList.of(), false, false)
+                    )
+                )
+            ) }
+            return rocket
+        }
+    }
 
     init {
         xpReward = 80

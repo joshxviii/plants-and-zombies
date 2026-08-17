@@ -526,6 +526,7 @@ object PazEntities {
         EntityType.Builder.of(::ZombieTurret, MobCategory.MISC).sized(0.8f, 1.0f),
         attributes = PazZombie.Companion.PazZombieAttributes(
             maxHealth = 10.0,
+            followRange = 20.0
         )
     )
     @JvmField val ELECTRO_TURRET: EntityType<ElectroTurret> = registerZombie(
@@ -533,6 +534,7 @@ object PazEntities {
         EntityType.Builder.of(::ElectroTurret, MobCategory.MISC).sized(0.8f, 1.0f),
         attributes = PazZombie.Companion.PazZombieAttributes(
             maxHealth = 10.0,
+            followRange = 16.0
         )
     )
     @JvmField val ZOMBIE_DRONE: EntityType<ZombieDrone> = registerZombie(
@@ -540,6 +542,7 @@ object PazEntities {
         EntityType.Builder.of(::ZombieDrone, MobCategory.MISC).sized(0.8f, 1.0f),
         attributes = PazZombie.Companion.PazZombieAttributes(
             maxHealth = 10.0,
+            followRange = 32.0
         )
     )
     @JvmField val LAWN_MOWER: EntityType<LawnMower> = registerOther(
@@ -575,6 +578,7 @@ object PazEntities {
     @JvmField val BUTTER: EntityType<Butter> = registerProjectile("butter", EntityType.Builder.of({_,l->Butter(l)}, MobCategory.MISC), width = 0.75f, height = 0.5f)
     @JvmField val MELON: EntityType<Melon> = registerProjectile("melon", EntityType.Builder.of({_,l->Melon(l)}, MobCategory.MISC), width = 1.0f, height = 0.8f)
     @JvmField val PAINT_BALL: EntityType<PaintBall> = registerProjectile("paint_ball", EntityType.Builder.of({ _, l->PaintBall(l)}, MobCategory.MISC), width = 0.42f, height = 0.42f)
+    @JvmField val LASER_BULLET: EntityType<LaserBullet> = registerProjectile("laser_bullet", EntityType.Builder.of({ _, l-> LaserBullet(l)}, MobCategory.MISC), width = 0.5f, height = 0.5f)
     @JvmField val MISSILE: EntityType<Missile> = registerProjectile("missile", EntityType.Builder.of({ _, l->Missile(l)}, MobCategory.MISC), width = 0.42f, height = 0.42f)
     // endregion
 

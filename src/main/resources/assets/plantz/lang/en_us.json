@@ -272,6 +272,11 @@
   "entity.plantz.imp": "Imp",
   "entity.plantz.gargantuar": "Gargantuar",
 
+  "entity.plantz.zombie_turret": "Zombie Turret",
+  "entity.plantz.elctro_turret": "Electro Turret",
+  "entity.plantz.zombie_drone": "Zombie Drone",
+  "entity.plantz.lawn_mower": "Lawn Mower",
+
   "entity.plantz.gnome": "Garden Gnome",
   "entity.plantz.plant_pot_minecart": "Minecart with Plant Pot",
 
@@ -297,9 +302,7 @@
   "plantz.subtitles.entity.zombie_yeti.ambient": "Zombie Yeti groans",
   "plantz.subtitles.entity.zombie_yeti.death": "Zombie Yeti dies",
   "plantz.subtitles.entity.zombie_yeti.hurt": "Zombie Yeti hurt",
-  "plantz.subtitles.entity.browncoat.ambient": "Zombie groans",
-  "plantz.subtitles.entity.browncoat.death": "Zombie dies",
-  "plantz.subtitles.entity.browncoat.hurt": "Zombie hurt",
+
   "plantz.subtitles.entity.newspaper_zombie.ambient": "Newspaper Zombie groans",
   "plantz.subtitles.entity.newspaper_zombie.death": "Newspaper Zombie dies",
   "plantz.subtitles.entity.newspaper_zombie.hurt": "Newspaper Zombie hurt",

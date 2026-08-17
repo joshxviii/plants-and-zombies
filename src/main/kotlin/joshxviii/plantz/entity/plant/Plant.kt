@@ -235,6 +235,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     // disables body control
+    protected val noLookControl = object : LookControl(this) {}
     override fun createBodyControl(): BodyRotationControl = object : BodyRotationControl(this) { override fun clientTick() {} }
 
     // only apply up/down movement
@@ -377,7 +378,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     fun hasPlantPotProtection(): Boolean= getBlockBelow().`is`(PazTags.BlockTags.PLANT_POT) || isAttached()
 
     override fun setPos(x: Double, y: Double, z: Double) {
-        if (this.isPassenger || isAttached()) super.setPos(x, y, z)
+        if (this.isPassenger || isAttached() || !onGround()) super.setPos(x, y, z)
         else super.setPos(Mth.floor(x) + 0.5, y, Mth.floor(z) + 0.5)
     }
 

@@ -30,7 +30,6 @@ class ScaredyShroom(type: EntityType<out Plant>, level: Level) : Plant(PazEntiti
         get() = this.entityData.get(HIDING_FLAG)
         set(value) = this.entityData.set(HIDING_FLAG, value)
 
-    private val noLookControl = object : LookControl(this) {}
     override fun getLookControl(): LookControl =  if (isHiding) noLookControl else super.getLookControl()
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {

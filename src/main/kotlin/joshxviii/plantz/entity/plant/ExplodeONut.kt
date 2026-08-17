@@ -39,6 +39,7 @@ class ExplodeONut(type: EntityType<out ExplosivePlant>, level: Level) : Explosiv
 
     override fun tickDeath() {
         if (lastDamageSource?.directEntity != null && deathTime == 0) explode()
+        else super.tickDeath()
     }
 
     override fun explode(
