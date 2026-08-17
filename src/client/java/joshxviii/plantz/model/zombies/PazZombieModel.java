@@ -11,10 +11,11 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.model.monster.zombie.ZombieModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class PazZombieModel extends ZombieModel<@NotNull PazZombieRenderState> {
+public class PazZombieModel<S extends PazZombieRenderState> extends ZombieModel<S> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("paz_zombie"), "main");
 
     final KeyframeAnimation initAnimation;
@@ -62,7 +63,7 @@ public class PazZombieModel extends ZombieModel<@NotNull PazZombieRenderState> {
     }
 
     @Override
-    public void setupAnim(final PazZombieRenderState state) {
+    public void setupAnim(final @NotNull S state) {
         super.setupAnim(state);
         if (state.getZombieState() == ZombieState.FLYING) {
             var animationPos = state.walkAnimationPos;

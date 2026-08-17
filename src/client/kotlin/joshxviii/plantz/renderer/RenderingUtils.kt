@@ -4,6 +4,7 @@ import joshxviii.plantz.PazEntities.MAGIC_NAMES
 import joshxviii.plantz.pazResource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState
+import net.minecraft.client.renderer.entity.state.EntityRenderState
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.resources.Identifier
 import net.minecraft.server.packs.resources.ResourceManager
@@ -41,7 +42,7 @@ fun BlockEntityRenderState.getTextureLocation(path: String): Identifier {
     return pazResource("${path}.png")
 }
 
-fun LivingEntityRenderState.getTextureLocation(basePath: String, suffixes: MutableList<String> = mutableListOf()): Identifier {
+fun EntityRenderState.getTextureLocation(basePath: String, suffixes: MutableList<String> = mutableListOf()): Identifier {
     val entityName = entityType.toShortString().lowercase()
     val base = "${basePath}/${entityName}/${entityName}"
     val rm = Minecraft.getInstance().resourceManager
@@ -50,7 +51,7 @@ fun LivingEntityRenderState.getTextureLocation(basePath: String, suffixes: Mutab
     return textureLocation?: pazResource("${base}.png")
 }
 
-fun LivingEntityRenderState.getEmissiveTextureLocation(basePath: String, suffixes: MutableList<String> = mutableListOf()): Identifier? {
+fun EntityRenderState.getEmissiveTextureLocation(basePath: String, suffixes: MutableList<String> = mutableListOf()): Identifier? {
     val entityName = entityType.toShortString().lowercase()
     val base = "${basePath}/${entityName}/${entityName}"
     val rm = Minecraft.getInstance().resourceManager

@@ -9,6 +9,7 @@ import joshxviii.plantz.entity.Balloon
 import joshxviii.plantz.entity.PlantPotMinecart
 import joshxviii.plantz.entity.Sun
 import joshxviii.plantz.entity.blueprint_machines.ElectroTurret
+import joshxviii.plantz.entity.blueprint_machines.LawnMower
 import joshxviii.plantz.entity.blueprint_machines.ZombieDrone
 import joshxviii.plantz.entity.blueprint_machines.ZombieTurret
 import joshxviii.plantz.entity.gnome.Gnome
@@ -521,22 +522,22 @@ object PazEntities {
 
     @JvmField val ZOMBIE_TURRET: EntityType<ZombieTurret> = registerZombie(
         "zombie_turret",
-        EntityType.Builder.of(::ZombieTurret, MobCategory.MISC).sized(1.7f, 3.2f),
+        EntityType.Builder.of(::ZombieTurret, MobCategory.MISC).sized(0.8f, 1.0f),
         attributes = PazZombie.Companion.PazZombieAttributes()
     )
     @JvmField val ELECTRO_TURRET: EntityType<ElectroTurret> = registerZombie(
         "electro_turret",
-        EntityType.Builder.of(::ElectroTurret, MobCategory.MISC).sized(1.7f, 3.2f),
+        EntityType.Builder.of(::ElectroTurret, MobCategory.MISC).sized(0.8f, 1.0f),
         attributes = PazZombie.Companion.PazZombieAttributes()
     )
     @JvmField val ZOMBIE_DRONE: EntityType<ZombieDrone> = registerZombie(
         "zombie_drone",
-        EntityType.Builder.of(::ZombieDrone, MobCategory.MISC).sized(1.7f, 3.2f),
+        EntityType.Builder.of(::ZombieDrone, MobCategory.MISC).sized(0.8f, 1.0f),
         attributes = PazZombie.Companion.PazZombieAttributes()
     )
-    @JvmField val LAWN_MOWER: EntityType<ZombieDrone> = register(
+    @JvmField val LAWN_MOWER: EntityType<LawnMower> = registerOther(
         "lawn_mower",
-        EntityType.Builder.createNothing(MobCategory.MISC)
+        EntityType.Builder.of(::LawnMower, MobCategory.MISC).sized(0.8f, 0.6f),
     )
 
     @JvmField val GNOME: EntityType<Gnome> =  registerGnome(
@@ -641,6 +642,16 @@ object PazEntities {
     ): EntityType<T> {
         builder.sized(width, height).eyeHeight(0.0f)
         return register(name, builder)
+    }
+
+    private fun <T : LivingEntity> registerOther(
+        name : String,
+        builder: EntityType.Builder<T> = EntityType.Builder.createNothing(MobCategory.MISC),
+        attributes: AttributeSupplier.Builder = createMobAttributes()
+    ): EntityType<T> {
+        val type = register(name, builder)
+        FabricDefaultAttributeRegistry.register(type, attributes)
+        return type
     }
 
     private fun <T : Entity> register(

@@ -17,8 +17,8 @@ import net.minecraft.world.item.DyeColor
 
 class BalloonRenderer(
     context: EntityRendererProvider.Context,
-    val model: BalloonModel<BalloonRenderState>
-) : net.minecraft.client.renderer.entity.EntityRenderer<Balloon, BalloonRenderState>(context) {
+) : EntityRenderer<Balloon, BalloonRenderState>(context) {
+    val model: BalloonModel<BalloonRenderState> = BalloonModel(context.bakeLayer(BalloonModel.LAYER_LOCATION))
 
     override fun submit(
         state: BalloonRenderState,
@@ -59,7 +59,7 @@ class BalloonRenderer(
     }
 }
 
-class BalloonRenderState : net.minecraft.client.renderer.entity.state.EntityRenderState() {
+class BalloonRenderState : EntityRenderState() {
     var color: DyeColor = DyeColor.WHITE
     @JvmField
     var yRot: Float = 0f

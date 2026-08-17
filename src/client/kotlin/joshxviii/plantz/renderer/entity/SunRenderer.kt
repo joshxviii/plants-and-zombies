@@ -19,14 +19,14 @@ import net.minecraft.util.Mth
 import kotlin.math.floor
 
 class SunRenderer(context: EntityRendererProvider.Context) :
-    net.minecraft.client.renderer.entity.EntityRenderer<Sun, SunRenderState>(context) {
+    EntityRenderer<Sun, SunRenderState>(context) {
     init {
         this.shadowRadius = 0.15f
         this.shadowStrength = 0.75f
     }
 
     override fun getBlockLightLevel(entity: Sun, blockPos: BlockPos): Int {
-        return Mth.clamp(super.getBlockLightLevel(entity, blockPos) + 7, 0, 15)
+        return 15
     }
 
     override fun submit(

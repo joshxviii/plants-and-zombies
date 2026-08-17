@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:generic",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "plantz:blue_garden_gnome"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:red_garden_gnome"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:green_garden_gnome"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:yellow_garden_gnome"
+        }
+      ]
+    }
+  ],
+  "random_sequence": "chests/gnomes"
+}

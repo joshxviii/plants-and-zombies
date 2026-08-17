@@ -31,16 +31,16 @@ import net.minecraft.world.phys.Vec3
 
 open class PazZombieRenderer(
     context: EntityRendererProvider.Context,
-    private val defaultModel: PazZombieModel = PazZombieModel(null, context.bakeLayer(PazZombieModel.LAYER_LOCATION)),
-    private val babyModel: PazZombieModel = PazZombieModel(null, context.bakeLayer(ModelLayers.ZOMBIE_BABY)),
+    private val defaultModel: PazZombieModel<PazZombieRenderState> = PazZombieModel(null, context.bakeLayer(PazZombieModel.LAYER_LOCATION)),
+    private val babyModel: PazZombieModel<PazZombieRenderState> = PazZombieModel(null, context.bakeLayer(ModelLayers.ZOMBIE_BABY)),
     armorSet: ArmorModelSet<ModelLayerLocation> = ModelLayers.ZOMBIE_ARMOR,
     babyArmorSet: ArmorModelSet<ModelLayerLocation> = ModelLayers.ZOMBIE_BABY_ARMOR
-) : AbstractZombieRenderer<PazZombie, PazZombieRenderState, PazZombieModel>(
+) : AbstractZombieRenderer<PazZombie, PazZombieRenderState, PazZombieModel<PazZombieRenderState>>(
     context,
     defaultModel,
     babyModel,
-    ArmorModelSet.bake<PazZombieModel>(armorSet, context.modelSet) { root: ModelPart -> PazZombieModel(null, root) },
-    ArmorModelSet.bake<PazZombieModel>(babyArmorSet, context.modelSet) { root: ModelPart -> PazZombieModel(null, root) }
+    ArmorModelSet.bake(armorSet, context.modelSet) { root: ModelPart -> PazZombieModel(null, root) },
+    ArmorModelSet.bake(babyArmorSet, context.modelSet) { root: ModelPart -> PazZombieModel(null, root) }
 ) {
 
     init {

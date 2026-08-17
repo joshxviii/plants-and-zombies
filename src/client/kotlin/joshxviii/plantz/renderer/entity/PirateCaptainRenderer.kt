@@ -18,7 +18,7 @@ import net.minecraft.world.entity.AnimationState
 
 class PirateCaptainRenderer(
     context: EntityRendererProvider.Context,
-    private val model: PazZombieModel = PirateCaptainModel(context.bakeLayer(PirateCaptainModel.LAYER_LOCATION)),
+    private val model: PazZombieModel<PazZombieRenderState> = PirateCaptainModel(context.bakeLayer(PirateCaptainModel.LAYER_LOCATION)),
 ): PazZombieRenderer(context, model, model) {
 
     override fun submit(

@@ -7,10 +7,12 @@ import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.ServerLevelAccessor
 import java.util.*
 
 abstract class ZombieRobot(type: EntityType<out ZombieRobot>, level: Level) : PazOwnableZombie(type, level) {
@@ -55,6 +57,19 @@ abstract class ZombieRobot(type: EntityType<out ZombieRobot>, level: Level) : Pa
 
     override fun registerGoals() {
 
+    }
+
+    override fun finalizeSpawn(
+        level: ServerLevelAccessor,
+        difficulty: DifficultyInstance,
+        spawnReason: EntitySpawnReason,
+        groupData: SpawnGroupData?
+    ): SpawnGroupData? {
+        val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
+
+
+
+        return data
     }
 
 }
