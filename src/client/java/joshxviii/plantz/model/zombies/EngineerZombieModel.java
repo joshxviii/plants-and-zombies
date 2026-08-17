@@ -5,8 +5,11 @@
 
 package joshxviii.plantz.model.zombies;
 
+import joshxviii.plantz.animation.zombies.DiscoZombieAnimation;
+import joshxviii.plantz.animation.zombies.EngineerZombieAnimation;
 import joshxviii.plantz.renderer.entity.PazZombieRenderState;
 
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -17,10 +20,12 @@ import static joshxviii.plantz.UtilsKt.pazResource;
 
 public class EngineerZombieModel extends PazZombieModel {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("engineer"), "main");
+	private final KeyframeAnimation actionAnimation;
 
 
 	public EngineerZombieModel(final ModelPart root) {
 		super(null, root);
+		this.actionAnimation = EngineerZombieAnimation.build.bake(root.getChild("root"));
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -54,5 +59,6 @@ public class EngineerZombieModel extends PazZombieModel {
 	@Override
 	public void setupAnim(@NotNull PazZombieRenderState state) {
 		super.setupAnim(state);
+		actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
 	}
 }

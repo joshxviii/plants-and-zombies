@@ -349,8 +349,9 @@ object PazEntities {
             .eyeHeight(1.74f)
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
-            attackDamage = 1.5,
-            maxHealth = 30.0
+            movementSpeed = 0.24,
+            maxHealth = 35.0,
+            followRange = 40.0,
         )
     )
     @JvmField val ZOMBIE_YETI: EntityType<ZombieYeti> =  registerZombie(
@@ -523,17 +524,23 @@ object PazEntities {
     @JvmField val ZOMBIE_TURRET: EntityType<ZombieTurret> = registerZombie(
         "zombie_turret",
         EntityType.Builder.of(::ZombieTurret, MobCategory.MISC).sized(0.8f, 1.0f),
-        attributes = PazZombie.Companion.PazZombieAttributes()
+        attributes = PazZombie.Companion.PazZombieAttributes(
+            maxHealth = 10.0,
+        )
     )
     @JvmField val ELECTRO_TURRET: EntityType<ElectroTurret> = registerZombie(
         "electro_turret",
         EntityType.Builder.of(::ElectroTurret, MobCategory.MISC).sized(0.8f, 1.0f),
-        attributes = PazZombie.Companion.PazZombieAttributes()
+        attributes = PazZombie.Companion.PazZombieAttributes(
+            maxHealth = 10.0,
+        )
     )
     @JvmField val ZOMBIE_DRONE: EntityType<ZombieDrone> = registerZombie(
         "zombie_drone",
         EntityType.Builder.of(::ZombieDrone, MobCategory.MISC).sized(0.8f, 1.0f),
-        attributes = PazZombie.Companion.PazZombieAttributes()
+        attributes = PazZombie.Companion.PazZombieAttributes(
+            maxHealth = 10.0,
+        )
     )
     @JvmField val LAWN_MOWER: EntityType<LawnMower> = registerOther(
         "lawn_mower",

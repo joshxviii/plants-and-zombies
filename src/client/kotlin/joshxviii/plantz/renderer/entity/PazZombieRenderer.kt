@@ -77,6 +77,7 @@ open class PazZombieRenderer(
         state.floatAnimationState.copyFrom(entity.floatAnimation)
         state.movementDirection = Mth.lerp(partialTicks.toDouble() * .5, entity.moveDirO, entity.moveDir)
         if (entity is DiscoZombie) state.actionAnimationState.copyFrom(entity.summonAnimation)
+        if (entity is EngineerZombie) state.actionAnimationState.copyFrom(entity.buildAnimation)
         if (entity is AllStar) state.actionAnimationState.copyFrom(entity.chargeAnimation)
         if (entity is NewspaperZombie) state.isAngry = entity.isAngry()
         state.customName = entity.customName?.string ?: ""

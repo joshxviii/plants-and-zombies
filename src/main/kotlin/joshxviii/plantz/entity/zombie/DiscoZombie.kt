@@ -107,6 +107,7 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
     ) : Goal() {
         companion object {
             const val DEFAULT_AMOUNT = 3
+            const val SUMMON_DISTANCE = 2
             const val SUMMON_DELAY_TIME = 75
             val backupTargeting: TargetingConditions = TargetingConditions.forNonCombat().range(16.0).ignoreLineOfSight().ignoreInvisibilityTesting()
         }
@@ -145,8 +146,8 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
             for(i in 1..amount) {
                 // get x/z coords based on angle
                 val b = a*i-a*(amount+1)*.5
-                val x = summoner.x + Mth.cos(b+angleToTarget)*2
-                val z = summoner.z + Mth.sin(b+angleToTarget)*2
+                val x = summoner.x + Mth.cos(b+angleToTarget)*SUMMON_DISTANCE
+                val z = summoner.z + Mth.sin(b+angleToTarget)*SUMMON_DISTANCE
                 tryCreateBackupDancer(x, z, minY, maxY, angleToTarget)
             }
         }

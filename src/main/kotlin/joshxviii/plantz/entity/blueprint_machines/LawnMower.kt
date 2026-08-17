@@ -27,6 +27,7 @@ class LawnMower(type: EntityType<out LawnMower>, level: Level) : LivingEntity(ty
         source: DamageSource,
         damage: Float
     ): Boolean {
+        setRemoved(RemovalReason.KILLED)
         return true
     }
 
