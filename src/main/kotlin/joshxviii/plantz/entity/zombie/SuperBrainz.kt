@@ -155,7 +155,7 @@ class SuperBrainz(type: EntityType<out SuperBrainz>, level: Level) : PazZombie(t
     override fun registerGoals() {
         super.registerGoals()
         goalSelector.addGoal(3, NavigateToTargetGoal(this))
-        goalSelector.addGoal(1, MeleeAttackActionGoal(// smash
+        goalSelector.addGoal(4, MeleeAttackActionGoal(// smash
             this,
             damageType = DamageTypes.MOB_ATTACK,
             actionDelay = 8,
@@ -166,7 +166,7 @@ class SuperBrainz(type: EntityType<out SuperBrainz>, level: Level) : PazZombie(t
                 punchTime=1
             }
         ))
-        goalSelector.addGoal(2, BeamAttackGoal(
+        goalSelector.addGoal(4, BeamAttackGoal(
             this,
             beamRange = 12.0,
             beamWidth = 1.0,

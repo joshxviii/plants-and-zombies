@@ -48,7 +48,7 @@ class SoldierZombie(type: EntityType<out SoldierZombie>, level: Level) : PazZomb
     override fun registerGoals() {
         super.registerGoals()
         this.goalSelector.addGoal(3, NavigateToTargetGoal(this, keepAwayDistance = 7.0, alwaysFaceTarget = true))
-        this.goalSelector.addGoal(2, ProjectileAttackGoal(
+        this.goalSelector.addGoal(4, ProjectileAttackGoal(
             usingEntity = this,
             projectileFactory =  { PaintBall(level(), this, color = dyeColor, damage = 1f) },
             velocity = 1.1,

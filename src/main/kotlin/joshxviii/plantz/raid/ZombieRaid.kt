@@ -110,12 +110,6 @@ class ZombieRaid(
     private val waveZombieMap: MutableMap<Int, MutableSet<Zombie>> = Maps.newHashMap<Int, MutableSet<Zombie>>()
     var waveSpawnPos : BlockPos? = null
 
-    data class WaveSpawnEntry(
-        val type: ZombieRaiderType,
-        val count: Int,
-        val configure: (Zombie) -> Unit = {},
-    )
-
     enum class ZombieRaidStatus(private val state: String) : StringRepresentable {
         ONGOING("ongoing"),
         NEXT_WAVE("next_wave"),
@@ -278,7 +272,7 @@ class ZombieRaid(
 
         for ((type, count, configure) in waveEntries) {
             for (i in 0..<count) {
-                val zombie = type.entityType.create(level, EntitySpawnReason.EVENT) ?: break
+                val zombie = type.create(level, EntitySpawnReason.EVENT) ?: break
                 if (!leaderSet) {
                     setLeader(wavesSpawned + 1, zombie)
                     leaderSet = true

@@ -164,7 +164,7 @@ class NavigateToTargetGoal(
         return if (keepAwayDistance > 0.0) {
             val desired = getKeepAwayPosition(target, keepAwayDistance)
             mob.navigation.createPath(desired.x, desired.y, desired.z, 0)
-        } else  mob.navigation.createPath(target, 0)
+        } else mob.navigation.createPath(target, 0)
     }
 
     private fun getKeepAwayPosition(

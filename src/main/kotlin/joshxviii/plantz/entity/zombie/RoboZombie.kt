@@ -92,7 +92,7 @@ class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(typ
 
     override fun registerGoals() {
         super.registerGoals()
-        goalSelector.addGoal(1, MeleeAttackActionGoal(
+        goalSelector.addGoal(4, MeleeAttackActionGoal(
             usingEntity = this,
             damageType = DamageTypes.MOB_ATTACK,
             actionDelay = 10,
@@ -103,7 +103,7 @@ class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(typ
                 bashTime=1
             }
         ))
-        goalSelector.addGoal(2, ProjectileAttackGoal(
+        goalSelector.addGoal(4, ProjectileAttackGoal(
             usingEntity = this,
             projectileFactory =  { Missile(level(), this) },
             velocity = 1.0,
