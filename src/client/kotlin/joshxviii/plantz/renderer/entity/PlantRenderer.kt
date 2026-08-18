@@ -15,7 +15,10 @@ import joshxviii.plantz.renderer.isMagicName
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.client.renderer.entity.RenderLayerParent
+import net.minecraft.client.renderer.entity.layers.EyesLayer
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.client.renderer.state.level.CameraRenderState
@@ -32,7 +35,7 @@ class PlantRenderer(
     private val defaultModel: EntityModel<PlantRenderState>,
     context: EntityRendererProvider.Context,
     private val babyModel: EntityModel<PlantRenderState>? = null,
-) : net.minecraft.client.renderer.entity.MobRenderer<Plant, PlantRenderState, EntityModel<PlantRenderState>>(
+) : MobRenderer<Plant, PlantRenderState, EntityModel<PlantRenderState>>(
     context,
     defaultModel,
     0.5f
@@ -132,7 +135,7 @@ class PlantRenderer(
 
 class EmissivePlantLayer<M : EntityModel<PlantRenderState>>(
     renderer: RenderLayerParent<PlantRenderState, M>,
-) : net.minecraft.client.renderer.entity.layers.EyesLayer<PlantRenderState, M>(renderer) {
+) : EyesLayer<PlantRenderState, M>(renderer) {
 
     override fun submit(
         poseStack: PoseStack,
@@ -151,7 +154,7 @@ class EmissivePlantLayer<M : EntityModel<PlantRenderState>>(
 }
 
 
-class PlantRenderState : net.minecraft.client.renderer.entity.state.LivingEntityRenderState() {
+class PlantRenderState : LivingEntityRenderState() {
     companion object {
         const val TEXTURE_PATH = "textures/entity/plant"
     }

@@ -132,6 +132,7 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(ButterModel.LAYER_LOCATION) { ButterModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(MelonModel.LAYER_LOCATION) { MelonModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(SmallProjectileModel.LAYER_LOCATION) { SmallProjectileModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(LaserBulletModel.LAYER_LOCATION) { LaserBulletModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(MissileModel.LAYER_LOCATION) { MissileModel.createBodyLayer() }
 
         ModelLayerRegistry.registerModelLayer(PazZombieModel.LAYER_LOCATION) { PazZombieModel.createBodyLayer() }
@@ -207,8 +208,8 @@ object PazModels {
 
         EntityRenderers.register(PazEntities.PEA) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.PEA_ICE) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }
-        EntityRenderers.register(PazEntities.PEA_FIRE) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it, emissive = true) }
-        EntityRenderers.register(PazEntities.PEA_ELECTRIC) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it, emissive = true) }
+        EntityRenderers.register(PazEntities.PEA_FIRE) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.PEA_ELECTRIC) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.SPORE) { ProjectileRenderer(SmallProjectileModel(it.bakeLayer(SmallProjectileModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.WATER_SPORE) { ProjectileRenderer(SmallProjectileModel(it.bakeLayer(SmallProjectileModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.NEEDLE) { ProjectileRenderer(NeedleModel(it.bakeLayer(NeedleModel.LAYER_LOCATION)), it) }
@@ -217,6 +218,7 @@ object PazModels {
         EntityRenderers.register(PazEntities.BUTTER) { ProjectileRenderer(ButterModel(it.bakeLayer(ButterModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.MELON) { ProjectileRenderer(MelonModel(it.bakeLayer(MelonModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.PAINT_BALL) { ProjectileRenderer(SmallProjectileModel(it.bakeLayer(SmallProjectileModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.LASER_BULLET) { ProjectileRenderer(LaserBulletModel(it.bakeLayer(LaserBulletModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.MISSILE) { ProjectileRenderer(MissileModel(it.bakeLayer(MissileModel.LAYER_LOCATION)), it) }
 
         EntityRenderers.register(PazEntities.BROWN_COAT) { PazZombieRenderer(it) }

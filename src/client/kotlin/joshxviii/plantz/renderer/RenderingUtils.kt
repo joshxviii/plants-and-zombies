@@ -42,6 +42,14 @@ fun BlockEntityRenderState.getTextureLocation(path: String): Identifier {
     return pazResource("${path}.png")
 }
 
+fun EntityRenderState.getProjectileTextureLocation(basePath: String, emissive: Boolean = false): Identifier? {
+    val entityName = entityType.toShortString().lowercase()
+    val path = "${basePath}/${entityName}${if (emissive) "_emissive" else ""}.png"
+    val texture = pazResource(path)
+    val isValid = Minecraft.getInstance().resourceManager.getResource(texture).isPresent
+    return if (isValid) texture else null
+}
+
 fun EntityRenderState.getTextureLocation(basePath: String, suffixes: MutableList<String> = mutableListOf()): Identifier {
     val entityName = entityType.toShortString().lowercase()
     val base = "${basePath}/${entityName}/${entityName}"

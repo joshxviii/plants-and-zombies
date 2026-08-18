@@ -100,6 +100,8 @@ abstract class PazProjectile(
             }
         }
 
+        if (tickCount > lifeTime()) discard()
+
         val inGround = this.isInGround()
         if (inGround) {
             inGroundTime++
@@ -273,6 +275,7 @@ abstract class PazProjectile(
 
     open fun getHitSound(): SoundEvent = SoundEvents.HONEY_BLOCK_BREAK
     open fun stickInGroundTime(): Int = 0
+    open fun lifeTime(): Int = 2400
 
     private fun shouldFall(): Boolean {
         return this.isInGround() && this.level().noCollision(AABB(this.position(), this.position()).inflate(0.06))

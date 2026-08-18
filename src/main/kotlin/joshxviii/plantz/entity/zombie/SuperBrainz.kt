@@ -12,10 +12,7 @@ import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.sounds.SoundEvent
-import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.DifficultyInstance
-import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
@@ -175,7 +172,7 @@ class SuperBrainz(type: EntityType<out SuperBrainz>, level: Level) : PazZombie(t
             beamWidth = 1.0,
             actionDelay = 10,
             doNotExtendPastTarget = true,
-            damageType = PazDamageTypes.ZOMBIE_BEAM,
+            damageType = PazDamageTypes.ZOMBIE_ENERGY,
             damageMultiplier = 0.2f,
             actionPredicate = {
                 state != ZombieState.FLYING && beamCooldown<=0 && punchTime<=0

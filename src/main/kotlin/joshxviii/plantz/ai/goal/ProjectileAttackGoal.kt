@@ -36,6 +36,7 @@ class ProjectileAttackGoal(
     val attackRadius: Float = usingEntity.attributes.getValue(Attributes.FOLLOW_RANGE).toFloat(),
     val useHighArc: Boolean = false,
     val soundEvent: SoundEvent? = PazSounds.PROJECTILE_FIRE,
+    val leadShots: Boolean = true,
 ) : ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionSuccessEffect, actionEndEffect, actionPredicate, delayedEffectDelay, delayedEffect) {
     var distanceSqr: Double = 0.0
 
@@ -79,7 +80,7 @@ class ProjectileAttackGoal(
                     usingEntity.stopUsingItem()
                 }
             }
-        } else usingEntity.startUsingItem(ProjectileUtil.getWeaponHoldingHand(usingEntity, Items.BOW))
+        } else usingEntity.startUsingItem(ProjectileUtil.getWeaponHoldingHand(usingEntity, usingEntity.weaponItem.item))
     }
 
     override fun doAction() : Boolean {// fire projectile
@@ -99,7 +100,7 @@ class ProjectileAttackGoal(
         val finalVel = if(useHighArc) Mth.lerp(distanceRatio, velocity * 0.45, velocity) else velocity
 
         val targetPos = calculateMovingTargetPosition(target, projectile, finalVel)
-        val arcs = calculateProjectileArcs(targetPos, projectile.gravity, finalVel)
+        val arcs = calculateProjectileArcs(targetPos, projectile.gravity.coerceAtLeast(0.000001), finalVel)
         if (arcs==null) {// lose target if unreachable
             projectile.discard()
             usingEntity.target = null
@@ -133,9 +134,9 @@ class ProjectileAttackGoal(
         )
 
         val targetVel = target.knownSpeed
-        if (targetVel.lengthSqr() <= 0.000001) return basePos
+        if (!leadShots || targetVel.lengthSqr() <= 0.000001) return basePos
 
-        val g = projectile.gravity
+        val g = projectile.gravity.coerceAtLeast(0.000001)
 
         var predicted = basePos
 

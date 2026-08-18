@@ -3,7 +3,7 @@
   "values": [
     "#plantz:ignored_by_plants",
     "#plantz:is_electric",
-    "plantz:zombie_beam",
+    "plantz:zombie_energy",
     "plantz:toxic"
   ]
 }

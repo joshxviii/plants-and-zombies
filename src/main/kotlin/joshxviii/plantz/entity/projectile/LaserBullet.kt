@@ -26,53 +26,50 @@ class LaserBullet(
     level: Level,
     owner: LivingEntity? = null,
     spawnOffset: Vec2 = Vec2.ZERO,
-    color: DyeColor = DyeColor.WHITE,
+    color: Int = DEFAULT_COLOR,
     damage: Float = 0.5f,
-) : PazProjectile(PazEntities.PAINT_BALL, level, owner, spawnOffset,
-    PazDamageTypes.PAINT, damage, knockback = 0.01
+) : PazProjectile(PazEntities.LASER_BULLET, level, owner, spawnOffset,
+    PazDamageTypes.ENERGY, damage, knockback = 0.02
 ) {
     companion object {
+        const val DEFAULT_COLOR: Int = 0xFF44EE
         val COLOR: EntityDataAccessor<Int> = SynchedEntityData.defineId(LaserBullet::class.java, EntityDataSerializers.INT)
     }
 
-    var dyeColor: DyeColor
-        get() = DyeColor.byId(entityData.get(COLOR))
-        set(value) = entityData.set(COLOR, value.id)
+    var laserColor: Int
+        get() = this.entityData.get(COLOR)
+        set(value) = this.entityData.set(COLOR, value)
 
     init {
-        dyeColor = color
+        laserColor = color
     }
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
-        entityData.define(COLOR,  DyeColor.WHITE.id)
+        entityData.define(COLOR, DEFAULT_COLOR)
     }
 
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
-        output.store("dyeColor", DyeColor.CODEC, dyeColor)
+        output.putInt("laserColor", laserColor)
     }
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
-        input.read("dyeColor", DyeColor.CODEC).ifPresent { dyeColor -> this.dyeColor = dyeColor }
+        laserColor = input.getIntOr("laserColor", DEFAULT_COLOR)
     }
 
     override fun tick() {
         super.tick()
-        spawnParticle(
-            PaintParticleOptions(dyeColor.fireworkColor, 0.95f),
-            spread = Vec3(0.01,0.01,0.01),
-            speed = 0.015
-        )
     }
 
-    override fun getDefaultGravity(): Double { return 0.04 }
+    override fun lifeTime(): Int = 80
+    override fun getDefaultGravity(): Double { return 0.0 }
 
     override fun onHit(hitResult: HitResult) {
         super.onHit(hitResult)
         spawnParticle(
-            PaintParticleOptions(dyeColor.fireworkColor, 1.95f),
+            PaintParticleOptions(laserColor, 1.95f),
             amount = 18,
             speed = 0.25
         )
@@ -80,16 +77,5 @@ class LaserBullet(
 
     override fun afterHitEntityEffect(target: LivingEntity) {
         super.afterHitEntityEffect(target)
-        val p = PazEffects.PAINTED[dyeColor] ?: return
-        val oldEffectInstance = target.getEffect(p)
-        if (oldEffectInstance != null) {
-            val effectInstance = MobEffectInstance(p, 180, oldEffectInstance.amplifier+1, false, true, false)
-            target.addEffect(effectInstance)
-        }
-        else {
-            val effectInstance = PazEffects.PAINTED[dyeColor]?.let { MobEffectInstance(it, 180, 0, false, true, false) } ?: return
-            target.addEffect(effectInstance)
-        }
-        if (target is Sheep && target.hurtMarked) target.color = dyeColor
     }
 }

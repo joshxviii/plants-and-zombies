@@ -58,8 +58,8 @@ public class ZombieTurretModel<T extends BlueprintMachineRenderState> extends En
 
 	@Override
 	public void setupAnim(@NonNull T state) {
-		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
 		super.setupAnim(state);
+		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
 		this.neck.yRot = state.yRot * (float) (Math.PI / 180.0);
 	}
 }
