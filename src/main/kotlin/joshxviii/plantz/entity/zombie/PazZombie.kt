@@ -287,13 +287,15 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     }
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
-        return if (source.`is`(PazTags.DamageTypes.IGNORED_BY_ZOMBIES) && !source.directEntity.isHypnotized()) false else super.hurtServer(level, source, damage)
+        return if ((source.`is`(PazTags.DamageTypes.IGNORED_BY_ZOMBIES) || source.isZombieFireworkExplosion()) && !source.directEntity.isHypnotized()) false else super.hurtServer(level, source, damage)
     }
     override fun hurtClient(source: DamageSource): Boolean {
-        return if (source.`is`(PazTags.DamageTypes.IGNORED_BY_ZOMBIES) && !source.directEntity.isHypnotized()) false else super.hurtClient(source)
+        return if ((source.`is`(PazTags.DamageTypes.IGNORED_BY_ZOMBIES) || source.isZombieFireworkExplosion()) && !source.directEntity.isHypnotized()) false else super.hurtClient(source)
     }
     override fun actuallyHurt(level: ServerLevel, source: DamageSource, damage: Float) {
-        if (source.`is`(PazTags.DamageTypes.IGNORED_BY_ZOMBIES) && !source.directEntity.isHypnotized()) return
+        if ((source.`is`(PazTags.DamageTypes.IGNORED_BY_ZOMBIES) || source.isZombieFireworkExplosion()) && !source.directEntity.isHypnotized()) {
+            return
+        }
         super.actuallyHurt(level, source, damage)
     }
 

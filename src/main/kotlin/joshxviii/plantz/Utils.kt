@@ -15,6 +15,10 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.Mth
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageType
+import net.minecraft.world.damagesource.DamageTypes
+import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.Entity.MoveFunction
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -175,6 +179,12 @@ fun Entity.hasSameRootOwner(target: Entity?): Boolean {
 fun Entity?.isHypnotized(): Boolean {
     val self = this
     return self is LivingEntity && self.hasEffect(PazEffects.HYPNOTIZE)
+}
+
+fun DamageSource.isZombieFireworkExplosion(): Boolean {
+    val hurtBy = entity ?: return false
+    val isFirework = typeHolder().`is`(DamageTypes.FIREWORKS)
+    return isFirework && hurtBy.`is`(PazTags.EntityTypes.ZOMBIE_RAIDERS)
 }
 
 private fun extractRootOwner(entity: Entity): Entity? = when (entity) {

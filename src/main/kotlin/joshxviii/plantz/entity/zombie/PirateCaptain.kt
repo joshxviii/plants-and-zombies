@@ -2,24 +2,26 @@ package joshxviii.plantz.entity.zombie
 
 import it.unimi.dsi.fastutil.ints.IntList
 import joshxviii.plantz.PazEntities
-import joshxviii.plantz.PazSounds
-import joshxviii.plantz.ai.ZombieState
+import joshxviii.plantz.ai.goal.NavigateToTargetGoal
+import joshxviii.plantz.ai.goal.ProjectileAttackGoal
+import joshxviii.plantz.entity.projectile.Missile
+import joshxviii.plantz.entity.zombie.RoboZombie.Companion.MISSILE_COOLDOWN_TIME
 import net.minecraft.core.component.DataComponents
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.DifficultyInstance
-import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.entity.AnimationState
-import net.minecraft.world.entity.ConversionParams
-import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.EntitySpawnReason
-import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.entity.SpawnGroupData
+import net.minecraft.world.entity.*
+import net.minecraft.world.entity.projectile.FireworkRocketEntity
+import net.minecraft.world.entity.projectile.ProjectileUtil
+import net.minecraft.world.item.CrossbowItem
 import net.minecraft.world.item.DyeColor
+import net.minecraft.world.item.FireworkRocketItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.component.ChargedProjectiles
 import net.minecraft.world.item.component.FireworkExplosion
 import net.minecraft.world.item.component.Fireworks
 import net.minecraft.world.level.Level
@@ -28,22 +30,68 @@ import net.minecraft.world.level.ServerLevelAccessor
 class PirateCaptain(type: EntityType<out PirateCaptain>, level: Level) : PazZombie(type, level) {
 
     companion object {
-        private fun getFirework(color: DyeColor, flightDuration: Int): ItemStack {
+        private fun getFirework(): ItemStack {
             val rocket = ItemStack(Items.FIREWORK_ROCKET).apply { set(
                 DataComponents.FIREWORKS,
                 Fireworks(
-                    flightDuration.toByte().toInt(),
+                    3,
                     listOf(
-                        FireworkExplosion(FireworkExplosion.Shape.BURST, IntList.of(color.fireworkColor), IntList.of(), false, false)
+                        FireworkExplosion(FireworkExplosion.Shape.LARGE_BALL, IntList.of(0xFF8C00, 0xFFFD700), IntList.of(0x28232C, 0xB22222), false, false),
+                        FireworkExplosion(FireworkExplosion.Shape.SMALL_BALL, IntList.of(0xFFFFFF), IntList.of(0x777777), false, false)
                     )
                 )
             ) }
             return rocket
         }
+        val SHOT_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(PirateCaptain::class.java, EntityDataSerializers.INT)
+        const val FIREWORK_COOLDOWN = 200
     }
 
     init {
         xpReward = 80
+    }
+
+    var shootTime: Int
+        get() = this.entityData.get(SHOT_TIME_ID)
+        set(value) = this.entityData.set(SHOT_TIME_ID, value)
+
+    override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
+        super.defineSynchedData(entityData)
+        entityData.define(SHOT_TIME_ID, 0)
+    }
+
+    override fun registerGoals() {
+        super.registerGoals()
+        goalSelector.addGoal(2, ProjectileAttackGoal(
+            usingEntity = this,
+            projectileFactory =  {
+                FireworkRocketEntity(level(), getFirework(), this, x, y+eyeHeight, z, true)
+            },
+            velocity = 0.5,
+            actionDelay = 60,
+            soundEvent = SoundEvents.CROSSBOW_SHOOT,
+            usePredicate = { shootTime<=0 },
+            actionStartEffect = {
+                shootTime=random.nextIntBetweenInclusive(1, 40)
+                startUsingItem(ProjectileUtil.getWeaponHoldingHand(this, weaponItem.item))
+            },
+            actionEndEffect = {
+                val item = weaponItem
+                if (item.item is CrossbowItem) {
+                    weaponItem.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY)
+                    stopUsingItem()
+                }
+            }
+        ))
+        goalSelector.addGoal(3, NavigateToTargetGoal(this, keepAwayDistance = 6.0, alwaysFaceTarget = true))
+    }
+
+    override fun addBehaviourGoals() {
+        addBehaviourGoalsNoMelee()
+    }
+
+    override fun getProjectile(heldWeapon: ItemStack): ItemStack {
+        return getFirework()
     }
 
     override fun handleAttributes(difficultyModifier: Float, spawnReason: EntitySpawnReason) {}
@@ -58,6 +106,11 @@ class PirateCaptain(type: EntityType<out PirateCaptain>, level: Level) : PazZomb
 
     override fun tick() {
         super.tick()
+        if (shootTime>0) {
+            if (shootTime++>FIREWORK_COOLDOWN) {
+                shootTime=0
+            }
+        }
     }
 
     override fun remove(reason: RemovalReason) {

@@ -42,7 +42,7 @@ class ProjectileAttackGoal(
     var distanceSqr: Double = 0.0
 
     init {
-        flags = EnumSet.of(Flag.LOOK)
+        //flags = EnumSet.of(Flag.LOOK)
     }
 
     override fun canUse(): Boolean = (

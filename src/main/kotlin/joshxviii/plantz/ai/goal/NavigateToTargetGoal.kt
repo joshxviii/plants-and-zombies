@@ -98,8 +98,8 @@ class NavigateToTargetGoal(
             val distance = mob.distanceTo(target)
 
             if (alwaysFaceTarget) {
-                if (distance < keepAwayDistance) {
-                    mob.navigation.stop()
+                if (distance <= keepAwayDistance + DISTANCE_TOLERANCE) {
+                    if (distance in keepAwayDistance - DISTANCE_TOLERANCE..keepAwayDistance + DISTANCE_TOLERANCE) mob.navigation.stop()
                     ++strafingTime
                     if (strafingTime % 20 == 0 && mob.random.nextFloat()<0.3) strafingClockwise = !strafingClockwise
                     mob.moveControl.strafe(-0.7f, if (strafingClockwise) 0.7f else -0.7f)

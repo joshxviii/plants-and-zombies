@@ -72,7 +72,9 @@ public class PirateCaptainModel extends PazZombieModel {
         this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
         this.head.yRot = state.yRot * (float) (Math.PI / 180.0);
 
-        AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, false, state);
+        AnimationUtils.animateCrossbowHold(this.leftArm, this.rightArm, this.head, true);
+        if (state.ticksUsingItem > 0 && state.ticksUsingItem < 50) AnimationUtils.animateCrossbowCharge(this.rightArm, this.leftArm, 60, state.ticksUsingItem, true);
+        else AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, false, state);
         float animationPos = state.walkAnimationPos;
         float animationSpeed = state.walkAnimationSpeed;
         walkAnimation.applyWalk(animationPos, animationSpeed, 2.5f, 1.0f);
