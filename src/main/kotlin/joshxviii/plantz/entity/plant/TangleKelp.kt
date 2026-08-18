@@ -1,22 +1,19 @@
 package joshxviii.plantz.entity.plant
 
-import joshxviii.plantz.ElectricArcParticleOptions
-import joshxviii.plantz.PazBlocks
-import joshxviii.plantz.PazDamageTypes
-import joshxviii.plantz.PazEffects
-import joshxviii.plantz.PazEntities
+import joshxviii.plantz.*
 import joshxviii.plantz.ai.goal.MeleeAttackActionGoal
-import joshxviii.plantz.hasSameRootOwner
 import net.minecraft.core.BlockPos
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
-import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.FluidTags
+import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
+import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
@@ -30,8 +27,6 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.Vec3
-import net.minecraft.util.Mth
-import net.minecraft.world.effect.MobEffectInstance
 import kotlin.math.sqrt
 
 class TangleKelp(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.TANGLE_KELP, level) {

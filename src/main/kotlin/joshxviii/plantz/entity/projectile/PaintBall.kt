@@ -4,12 +4,9 @@ import joshxviii.plantz.PaintParticleOptions
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazEntities
-import joshxviii.plantz.effect.PaintedMobEffect
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
-import net.minecraft.util.ARGB
-import net.minecraft.world.effect.MobEffectCategory
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.animal.sheep.Sheep
@@ -17,7 +14,6 @@ import net.minecraft.world.item.DyeColor
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
-import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3

@@ -1,10 +1,10 @@
 package joshxviii.plantz.entity.plant
 
-import joshxviii.plantz.*
-import net.minecraft.ChatFormatting
+import joshxviii.plantz.PazComponents
+import joshxviii.plantz.PazConfig
+import joshxviii.plantz.PazItems
+import joshxviii.plantz.PazSounds
 import net.minecraft.core.component.DataComponents
-import net.minecraft.core.particles.ParticleTypes
-import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.InteractionHand

@@ -1,6 +1,9 @@
 package joshxviii.plantz.model.blueprint_machines;
 
+import joshxviii.plantz.animation.blueprint_machines.ZombieTurretAnimation;
+import joshxviii.plantz.animation.zombies.EngineerZombieAnimation;
 import joshxviii.plantz.renderer.entity.BlueprintMachineRenderState;
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -17,6 +20,10 @@ public class ZombieTurretModel<T extends BlueprintMachineRenderState> extends En
 	private final ModelPart head;
 	private final ModelPart jaw;
 	private final ModelPart turrent;
+	private final KeyframeAnimation initAnimation;
+	private final KeyframeAnimation idleAnimation;
+	private final KeyframeAnimation actionAnimation;
+
 
 	public ZombieTurretModel(ModelPart root) {
 		super(root);
@@ -25,6 +32,9 @@ public class ZombieTurretModel<T extends BlueprintMachineRenderState> extends En
 		this.head = this.neck.getChild("head");
 		this.jaw = this.head.getChild("jaw");
 		this.turrent = this.head.getChild("turrent");
+		this.initAnimation = ZombieTurretAnimation.init.bake(root);
+		this.idleAnimation = ZombieTurretAnimation.idle.bake(root);
+		this.actionAnimation = ZombieTurretAnimation.action.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -61,5 +71,8 @@ public class ZombieTurretModel<T extends BlueprintMachineRenderState> extends En
 		super.setupAnim(state);
 		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
 		this.neck.yRot = state.yRot * (float) (Math.PI / 180.0);
+		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
+		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
+		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
 	}
 }

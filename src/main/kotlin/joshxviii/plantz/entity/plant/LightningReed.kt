@@ -1,10 +1,6 @@
 package joshxviii.plantz.entity.plant
 
-import joshxviii.plantz.ElectricArcParticleOptions
-import joshxviii.plantz.PazDamageTypes
-import joshxviii.plantz.PazEffects
-import joshxviii.plantz.PazEntities
-import joshxviii.plantz.PazServerParticles
+import joshxviii.plantz.*
 import joshxviii.plantz.ai.goal.MeleeAttackActionGoal
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel

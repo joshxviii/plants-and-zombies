@@ -2,6 +2,7 @@ package joshxviii.plantz.renderer.entity
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
+import joshxviii.plantz.entity.zombie.ZombieRobot
 import joshxviii.plantz.model.blueprint_machines.ZombieTurretModel
 import joshxviii.plantz.renderer.getEmissiveTextureLocation
 import joshxviii.plantz.renderer.getTextureLocation
@@ -19,6 +20,7 @@ import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.Identifier
+import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.entity.LivingEntity
 
 class BlueprintMachineRenderer(
@@ -43,9 +45,15 @@ class BlueprintMachineRenderer(
     }
 
     override fun getFlipDegrees(): Float = 0f
+    override fun shouldShowName(entity: LivingEntity, distanceToCameraSq: Double): Boolean = false
 
     override fun extractRenderState(entity: LivingEntity, state: BlueprintMachineRenderState, partialTicks: Float) {
         super.extractRenderState(entity, state, partialTicks)
+        if (entity is ZombieRobot) {
+            state.initAnimationState.copyFrom(entity.initAnimation)
+            state.idleAnimationState.copyFrom(entity.idleAnimation)
+            state.actionAnimationState.copyFrom(entity.actionAnimation)
+        }
     }
 
     override fun createRenderState(): BlueprintMachineRenderState {
@@ -82,5 +90,7 @@ class BlueprintMachineRenderState : LivingEntityRenderState() {
     companion object {
         const val TEXTURE_PATH = "textures/entity/blueprint_machine"
     }
-
+    val initAnimationState: AnimationState = AnimationState()
+    val idleAnimationState: AnimationState = AnimationState()
+    val actionAnimationState: AnimationState = AnimationState()
 }

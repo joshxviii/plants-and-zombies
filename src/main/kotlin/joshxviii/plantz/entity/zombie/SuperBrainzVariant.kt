@@ -2,11 +2,8 @@ package joshxviii.plantz.entity.zombie
 
 import com.mojang.serialization.Codec
 import io.netty.buffer.ByteBuf
-import joshxviii.plantz.pazResource
-import net.minecraft.core.ClientAsset
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
-import net.minecraft.resources.Identifier
 import net.minecraft.util.ByIdMap
 import net.minecraft.util.StringRepresentable
 import java.util.function.IntFunction

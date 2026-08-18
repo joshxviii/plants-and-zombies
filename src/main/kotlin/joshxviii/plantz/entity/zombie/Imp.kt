@@ -1,19 +1,7 @@
 package joshxviii.plantz.entity.zombie
 
-import joshxviii.plantz.NukeBlastParticleOptions
-import joshxviii.plantz.NukeSmokeParticleOptions
-import joshxviii.plantz.NukeWaveParticleOptions
-import joshxviii.plantz.PazBlocks
-import joshxviii.plantz.PazDamageTypes
-import joshxviii.plantz.PazDataSerializers.BROWN_COAT_VARIANT
+import joshxviii.plantz.*
 import joshxviii.plantz.PazDataSerializers.IMP_VARIANT
-import joshxviii.plantz.PazEffects
-import joshxviii.plantz.PazEntities
-import joshxviii.plantz.PazSounds
-import joshxviii.plantz.PazTags
-import joshxviii.plantz.applyImpulse
-import net.minecraft.core.BlockPos
-import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers

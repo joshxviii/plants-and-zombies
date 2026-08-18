@@ -15,6 +15,7 @@ import net.minecraft.world.entity.projectile.ProjectileUtil
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.phys.Vec3
+import java.util.EnumSet
 import java.util.function.Predicate
 import kotlin.math.atan
 import kotlin.math.sqrt
@@ -40,6 +41,10 @@ class ProjectileAttackGoal(
 ) : ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionSuccessEffect, actionEndEffect, actionPredicate, delayedEffectDelay, delayedEffect) {
     var distanceSqr: Double = 0.0
 
+    init {
+        flags = EnumSet.of(Flag.LOOK)
+    }
+
     override fun canUse(): Boolean = (
         usingEntity.tickCount>cooldownTime
             && usingEntity.target?.isAlive == true
@@ -49,8 +54,9 @@ class ProjectileAttackGoal(
     override fun stop() {
         super.stop()
         usingEntity.isAggressive = false
-        usingEntity.stopUsingItem()
         usingEntity.target = null
+        usingEntity.releaseUsingItem()
+        usingEntity.stopUsingItem()
     }
 
     override fun canDoAction(): Boolean {// check distance and line of sight
@@ -69,22 +75,17 @@ class ProjectileAttackGoal(
     override fun tick() {
         super.tick()
 
-        if (usingEntity.isUsingItem) {
-            if (!canDoAction()) {
-                usingEntity.isAggressive = false
-                usingEntity.stopUsingItem()
-            }
-            else {
-                val pullTime: Int = usingEntity.ticksUsingItem
-                if (pullTime >= actionDelay-1) {
-                    usingEntity.stopUsingItem()
-                }
-            }
-        } else usingEntity.startUsingItem(ProjectileUtil.getWeaponHoldingHand(usingEntity, usingEntity.weaponItem.item))
+        val target = usingEntity.target
+        target?.let {
+            usingEntity.lookControl.setLookAt(it, 30.0f, 30.0f)
+        }
+
+        //usingEntity.startUsingItem(ProjectileUtil.getWeaponHoldingHand(usingEntity, usingEntity.weaponItem.item))
     }
 
     override fun doAction() : Boolean {// fire projectile
-       val target = usingEntity.target?: return false
+        //usingEntity.releaseUsingItem()
+        val target = usingEntity.target?: return false
 
         val level = usingEntity.level() as ServerLevel
         val projectile = projectileFactory()

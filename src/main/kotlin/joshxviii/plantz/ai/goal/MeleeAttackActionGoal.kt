@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.OwnableEntity
 import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.attributes.Attributes
+import java.util.EnumSet
 import java.util.function.Predicate
 
 open class MeleeAttackActionGoal(
@@ -31,6 +32,10 @@ open class MeleeAttackActionGoal(
     val afterHitEntityEffect: (target: LivingEntity) -> Unit = {},
 ) : ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionSuccessEffect, actionEndEffect, actionPredicate, delayedEffectDelay, delayedEffect) {
 
+    init {
+        flags = EnumSet.of(Flag.LOOK)
+    }
+
     override fun canUse(): Boolean = (
         actionPredicate.test(usingEntity)
             && usingEntity.tickCount>cooldownTime
@@ -47,6 +52,7 @@ open class MeleeAttackActionGoal(
 
     override fun doAction() : Boolean {
         val target = usingEntity.target?: return false
+        usingEntity.lookControl.setLookAt(target, 30.0f, 30.0f)
         if (!isReachable(target)) return false
 
         val damage : Float = usingEntity.attributes.getValue(Attributes.ATTACK_DAMAGE).toFloat() * damageMultiplier

@@ -1,15 +1,10 @@
 package joshxviii.plantz.entity.zombie
 
-import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.*
 import joshxviii.plantz.PazDataSerializers.DATA_ZOMBIE_STATE
-import joshxviii.plantz.PazEntities
-import joshxviii.plantz.PazItems
-import joshxviii.plantz.PazSounds
-import joshxviii.plantz.PazTags
 import joshxviii.plantz.ai.ZombieState
 import joshxviii.plantz.ai.goal.FlyingPathfindingGoal
 import joshxviii.plantz.entity.Balloon
-import joshxviii.plantz.isHypnotized
 import joshxviii.plantz.item.BalloonItem
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.BlockParticleOption

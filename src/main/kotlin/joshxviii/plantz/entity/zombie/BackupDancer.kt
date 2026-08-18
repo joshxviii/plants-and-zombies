@@ -1,7 +1,6 @@
 package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazSounds
-import joshxviii.plantz.ai.ZombieState
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents

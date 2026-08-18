@@ -1,10 +1,8 @@
 package joshxviii.plantz.entity.zombie
 
-import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
-import joshxviii.plantz.ai.goal.NavigateToTargetGoal
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -24,7 +22,6 @@ import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal
 import net.minecraft.world.entity.ai.goal.Goal
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level

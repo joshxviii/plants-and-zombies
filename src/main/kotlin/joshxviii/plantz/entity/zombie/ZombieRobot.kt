@@ -17,7 +17,6 @@ import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
-import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.zombie.Zombie
@@ -25,15 +24,26 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
-import org.spongepowered.asm.mixin.injection.selectors.TargetSelector
 import java.util.*
+import kotlin.Int
 
 abstract class ZombieRobot(type: EntityType<out ZombieRobot>, level: Level) : PazOwnableZombie(type, level) {
 
     companion object {
         val DATA_OWNERUUID_ID: EntityDataAccessor<Optional<EntityReference<LivingEntity>>> = SynchedEntityData.defineId(ZombieRobot::class.java, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE)
+        val ACTION_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(ZombieRobot::class.java, EntityDataSerializers.INT)
     }
+
+    val initAnimation : AnimationState = AnimationState()
+    val idleAnimation : AnimationState = AnimationState()
+    val actionAnimation : AnimationState = AnimationState()
+
+    var actionTime: Int
+        get() = this.entityData.get(ACTION_TIME_ID)
+        set(value) = this.entityData.set(ACTION_TIME_ID, value)
 
     init {
         xpReward = 2
@@ -55,6 +65,17 @@ abstract class ZombieRobot(type: EntityType<out ZombieRobot>, level: Level) : Pa
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
         entityData.define(DATA_OWNERUUID_ID, Optional.empty())
+        entityData.define(ACTION_TIME_ID, 0)
+    }
+
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+        output.putInt("actionTime", actionTime)
+    }
+
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+        input.getIntOr("actionTime", 0)
     }
 
     override fun getOwnerReference(): EntityReference<LivingEntity>? {
@@ -63,6 +84,11 @@ abstract class ZombieRobot(type: EntityType<out ZombieRobot>, level: Level) : Pa
 
     override fun doPush(entity: Entity) {}
 
+    override fun tick() {
+        super.tick()
+        if (tickCount < 20) initAnimation.startIfStopped(tickCount)
+        idleAnimation.startIfStopped(tickCount)
+    }
 
     fun setOwner(owner: LivingEntity?) {
         this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable<LivingEntity>(owner).map { EntityReference.of(it) })

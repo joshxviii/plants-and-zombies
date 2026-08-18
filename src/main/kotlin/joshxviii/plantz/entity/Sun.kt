@@ -1,17 +1,10 @@
 package joshxviii.plantz.entity
 
-import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.*
 import joshxviii.plantz.PazBlocks.SUN_BATTERY_POI
-import joshxviii.plantz.PazConfig
-import joshxviii.plantz.PazEntities
-import joshxviii.plantz.PazItems
 import joshxviii.plantz.block.entity.SunBatteryBlockEntity
 import joshxviii.plantz.entity.plant.Plant
-import joshxviii.plantz.hasSpaceForSun
-import joshxviii.plantz.tryAddSunToStorage
-import net.minecraft.commands.arguments.coordinates.BlockPosArgument.blockPos
 import net.minecraft.core.BlockPos
-import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
