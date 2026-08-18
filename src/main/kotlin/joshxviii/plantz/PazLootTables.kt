@@ -19,7 +19,9 @@ object PazLootTables {
     @JvmField
     val GRAVESTONE_TREASURE = registerLootTable("chests/gravestone_treasure")
 
-    @JvmField val DEFAULT_MAIL_REWARD = registerLootTable("chests/raid/default_mail_reward")
+    @JvmField val DIFFICULTY_EASY_MAIL_REWARD = registerLootTable("chests/raid/difficulty_easy_mail_reward")
+    @JvmField val DIFFICULTY_HARD_MAIL_REWARD = registerLootTable("chests/raid/difficulty_hard_mail_reward")
+    @JvmField val ZOMBOSS_MAIL_REWARD = registerLootTable("chests/raid/zomboss_mail_reward")
     @JvmField val BUCKET_MAIL_REWARD = registerLootTable("chests/raid/bucket_mail_reward")
     @JvmField val HALFTIME_MAIL_REWARD = registerLootTable("chests/raid/halftime_mail_reward")
     @JvmField val WINTER_MAIL_REWARD = registerLootTable("chests/raid/winter_mail_reward")

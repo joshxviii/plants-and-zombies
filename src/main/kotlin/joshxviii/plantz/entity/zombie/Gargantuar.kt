@@ -102,9 +102,9 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
     override fun registerGoals() {
         super.registerGoals()
         goalSelector.addGoal(1, FloatGoal(this))
-        goalSelector.addGoal(4, NavigateToTargetGoal(this))
+        goalSelector.addGoal(3, NavigateToTargetGoal(this))
         goalSelector.addGoal(2, ThrowImpGoal(this))
-        goalSelector.addGoal(1, MeleeAttackActionGoal(// smash
+        goalSelector.addGoal(2, MeleeAttackActionGoal(// smash
             this,
             damageType = DamageTypes.MOB_ATTACK,
             actionDelay = 16,
@@ -156,7 +156,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
                 playSound(SoundEvents.MACE_SMASH_GROUND_HEAVY, 1.0f, 0.9f)
             }
         ))
-        goalSelector.addGoal(2, MeleeAttackActionGoal(// punch
+        goalSelector.addGoal(3, MeleeAttackActionGoal(// punch
             this,
             damageType = DamageTypes.MOB_ATTACK,
             actionDelay = 15,

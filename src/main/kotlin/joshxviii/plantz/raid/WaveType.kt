@@ -38,7 +38,7 @@ enum class WaveType(
     private val creditsRequired: Boolean,
     private val weightFn: (ZombieRaid, Boolean) -> Float,
     private val spawnFn: (ZombieRaid, Boolean) -> List<WaveSpawnEntry>,
-    val lootTable: ResourceKey<LootTable> = PazLootTables.DEFAULT_MAIL_REWARD
+    val lootTableFn: (Int, Boolean) ->  ResourceKey<LootTable> = { _, _ -> PazLootTables.DIFFICULTY_EASY_MAIL_REWARD }
 ): StringRepresentable {
     DEFAULT(
         minWave = 0,
@@ -50,7 +50,8 @@ enum class WaveType(
             .mapNotNull { type ->
                 val count = getSpawnCountFor(raid, type, credits)
                 if (count <= 0) null else WaveSpawnEntry(type, count)
-            } }
+            } },
+        lootTableFn = { waveNum, _ -> if (waveNum > 6) PazLootTables.DIFFICULTY_HARD_MAIL_REWARD else PazLootTables.DIFFICULTY_EASY_MAIL_REWARD }
     ),
     BUCKET_BRIGADE(
         minWave = 1,
@@ -67,11 +68,11 @@ enum class WaveType(
                 WaveSpawnEntry(ZombieRaiderType.NEWSPAPER_ZOMBIE, newspaperZombie.coerceAtLeast(1), ::spawnBucketHeads),
             )
         },
-        lootTable = PazLootTables.BUCKET_MAIL_REWARD
+        lootTableFn = { _, _ -> PazLootTables.BUCKET_MAIL_REWARD }
     ),
-    HALFTIME_SHOW(
-        minWave = 3,
-        maxWave = 6,
+    HALFTIME_SHOWDOWN(
+        minWave = 2,
+        maxWave = 5,
         creditsRequired = false,
         weightFn = { raid, credits ->
             0.11f + (raid.zombieRaidOmenLevel * 0.04f) + if (credits) 0.04f else 0f
@@ -84,7 +85,7 @@ enum class WaveType(
                 WaveSpawnEntry(ZombieRaiderType.IMP, impCount.coerceAtLeast(1), ::spawnFootBallHelmets)
             )
         },
-        lootTable = PazLootTables.HALFTIME_MAIL_REWARD
+        lootTableFn = { _, _ -> PazLootTables.HALFTIME_MAIL_REWARD}
     ),
     WINTER_WONDERLAND(
         minWave = 4,
@@ -103,11 +104,11 @@ enum class WaveType(
                 WaveSpawnEntry(ZombieRaiderType.ZOMBIE_YETI, yetiCount.coerceAtLeast(2))
             )
         },
-        lootTable = PazLootTables.WINTER_MAIL_REWARD
+        lootTableFn = { _, _ -> PazLootTables.WINTER_MAIL_REWARD}
     ),
     PIRATE_INVASION(
         minWave = 5,
-        maxWave = 10,
+        maxWave = 14,
         creditsRequired = false,
         weightFn = { raid, credits ->
             0.19f + (raid.zombieRaidOmenLevel * 0.09f) + if (credits) 0.15f else 0f
@@ -124,11 +125,11 @@ enum class WaveType(
                 WaveSpawnEntry(ZombieRaiderType.GARGANTUAR, gargantuarCount, ::spawnPirateZombies)
             )
         },
-        lootTable = PazLootTables.PIRATE_MAIL_REWARD
+        lootTableFn = { _, _ -> PazLootTables.PIRATE_MAIL_REWARD}
     ),
     ROBO_ARMY(
-        minWave = 4,
-        maxWave = 10,
+        minWave = 6,
+        maxWave = 15,
         creditsRequired = true,
         weightFn = { raid, credits ->
             if (!credits) 0f else 0.2f + (raid.zombieRaidOmenLevel * 0.05f)
@@ -143,11 +144,11 @@ enum class WaveType(
                 WaveSpawnEntry(ZombieRaiderType.SOLDIER_ZOMBIE, soldierCount.coerceAtLeast(2))
             )
         },
-        lootTable = PazLootTables.ARMY_MAIL_REWARD
+        lootTableFn = { _, _ -> PazLootTables.ARMY_MAIL_REWARD}
     ),
     LEAGUE_OF_AWESOMENESS(
-        minWave = 5,
-        maxWave = 10,
+        minWave = 8,
+        maxWave = 20,
         creditsRequired = true,
         weightFn = { raid, credits ->
             if (!credits) 0f else 0.2f + (raid.zombieRaidOmenLevel * 0.05f)
@@ -160,7 +161,7 @@ enum class WaveType(
                 WaveSpawnEntry(ZombieRaiderType.SUPER_BRAINZ, superCount.coerceAtLeast(1), ::spawnLeagueZombies)
             )
         },
-        lootTable = PazLootTables.LEAGUE_MAIL_REWARD
+        lootTableFn = { _, _ -> PazLootTables.LEAGUE_MAIL_REWARD}
     );
 
 
@@ -202,10 +203,10 @@ enum class WaveType(
                     bonusSpawns = 1
                 }
                 ZombieRaiderType.ALL_STAR -> bonusSpawns = if (!isEasy && wave > 2) random.nextInt(2 + (raid.zombieRaidOmenLevel / 2)) else 0
-                ZombieRaiderType.ZOMBIE_YETI -> bonusSpawns = if (!isEasy && wave > 3) 1 + (raid.zombieRaidOmenLevel / 3) else 0
+                ZombieRaiderType.ZOMBIE_YETI -> bonusSpawns = if (!isEasy && wave > 3) 1 + (raid.zombieRaidOmenLevel / 5) else 0
                 ZombieRaiderType.IMP -> bonusSpawns = if (wave > 2) random.nextInt(wave + (raid.zombieRaidOmenLevel / 2)) else 0
                 ZombieRaiderType.GARGANTUAR -> bonusSpawns = if (creditsUnlocked && wave > 4) 1 else 0
-                ZombieRaiderType.ENGINEER_ZOMBIE -> bonusSpawns = if (creditsUnlocked && wave > 1) 1 + (raid.zombieRaidOmenLevel / 3) else 0
+                ZombieRaiderType.ENGINEER_ZOMBIE -> bonusSpawns = if (creditsUnlocked && wave > 1) 1 + (raid.zombieRaidOmenLevel / 8) else 0
                 ZombieRaiderType.SOLDIER_ZOMBIE -> bonusSpawns = if (creditsUnlocked && wave > 2) 1 + random.nextInt(2) else 0
                 ZombieRaiderType.ROBO_ZOMBIE -> bonusSpawns = if (creditsUnlocked && wave > 4) 1 else 0
                 ZombieRaiderType.PIRATE_CAPTAIN -> bonusSpawns = if (creditsUnlocked && wave > 3) 1 else 0
@@ -280,7 +281,7 @@ enum class WaveType(
     }
 
     fun isAvailable(raid: ZombieRaid, creditsUnlocked: Boolean): Boolean {
-        return raid.wavesSpawned+1 in minWave..maxWave && (!creditsRequired || creditsUnlocked)
+        return raid.wavesSpawned in minWave..maxWave && (!creditsRequired || creditsUnlocked)
     }
 
     fun weight(raid: ZombieRaid, creditsUnlocked: Boolean): Float = weightFn(raid, creditsUnlocked)
@@ -298,20 +299,20 @@ enum class ZombieRaiderType(
     private val requiresCredits: Boolean = false,
 ) {
     // default spawns per wave
-    BROWN_COAT(PazEntities.BROWN_COAT,             intArrayOf(6,      8,      10,     12,     16,     20,     25,     25,     30,   25)),
-    NEWSPAPER_ZOMBIE(PazEntities.NEWSPAPER_ZOMBIE, intArrayOf(1,      1,      0,      2,      0,      1,      2,      1,      3,    2 )),
-    DIGGER_ZOMBIE(PazEntities.DIGGER_ZOMBIE,       intArrayOf(0,      1,      1,      0,      2,      1,      1,      2,      3,    3 )),
-    DISCO_ZOMBIE(PazEntities.DISCO_ZOMBIE,         intArrayOf(0,      0,      0,      1,      3,      3,      4,      2,      3,    5 )),
-    ALL_STAR(PazEntities.ALL_STAR,                 intArrayOf(0,      0,      1,      0,      2,      4,      3,      3,      5,    5 )),
-    ZOMBIE_YETI(PazEntities.ZOMBIE_YETI,           intArrayOf(0,      0,      0,      0,      1,      0,      2,      1,      2,    3 )),
-    IMP(PazEntities.IMP,                           intArrayOf(0,      1,      1,      0,      2,      2,      5,      5,      4,    8 )),
-    ENGINEER_ZOMBIE(PazEntities.ENGINEER_ZOMBIE,   intArrayOf(0,      0,      1,      2,      1,      1,      2,      2,      3,    4 ), true),
-    SOLDIER_ZOMBIE(PazEntities.SOLDIER_ZOMBIE,     intArrayOf(0,      0,      0,      0,      1,      0,      0,      1,      0,    1 ), true),
-    ROBO_ZOMBIE(PazEntities.ROBO_ZOMBIE,           intArrayOf(0,      0,      0,      0,      0,      1,      1,      2,      2,    4 ), true),
-    PIRATE_CAPTAIN(PazEntities.PIRATE_CAPTAIN,     intArrayOf(0,      0,      0,      0,      0,      0,      0,      0,      0,    0 ), true),
-    SUPER_BRAINZ(PazEntities.SUPER_BRAINZ,         intArrayOf(0,      0,      0,      0,      0,      0,      1,      1,      2,    4 ), true),
-    GARGANTUAR(PazEntities.GARGANTUAR,             intArrayOf(0,      0,      0,      0,      0,      1,      0,      2,      1,    3 ));
-    //                                                        1       2       3       4       5       6       7       8       9     10
+    BROWN_COAT(PazEntities.BROWN_COAT,             intArrayOf(6,      8,      10,     12,     16,     20,     25,     25,     30,   25,     25,     25,     25,     25,     25,     25,     25,     25,     25,     25,)),
+    NEWSPAPER_ZOMBIE(PazEntities.NEWSPAPER_ZOMBIE, intArrayOf(1,      1,      0,      2,      0,      1,      2,      1,      3,    2 ,     2 ,     2 ,     2 ,     2 ,     2 ,     2 ,     2 ,     2 ,     2 ,     2 ,)),
+    DIGGER_ZOMBIE(PazEntities.DIGGER_ZOMBIE,       intArrayOf(0,      1,      1,      0,      2,      1,      1,      2,      3,    3 ,     3 ,     3 ,     3 ,     3 ,     3 ,     3 ,     3 ,     3 ,     3 ,     3 ,)),
+    DISCO_ZOMBIE(PazEntities.DISCO_ZOMBIE,         intArrayOf(0,      0,      0,      1,      3,      3,      4,      2,      3,    5 ,     5 ,     5 ,     5 ,     5 ,     5 ,     5 ,     5 ,     5 ,     5 ,     5 ,)),
+    ALL_STAR(PazEntities.ALL_STAR,                 intArrayOf(0,      0,      1,      0,      2,      4,      3,      3,      5,    5 ,     5 ,     5 ,     5 ,     5 ,     5 ,     5 ,     5 ,     5 ,     5 ,     5 ,)),
+    ZOMBIE_YETI(PazEntities.ZOMBIE_YETI,           intArrayOf(0,      0,      0,      0,      1,      0,      2,      1,      2,    3 ,     3 ,     3 ,     3 ,     3 ,     3 ,     3 ,     3 ,     3 ,     3 ,     3 ,)),
+    IMP(PazEntities.IMP,                           intArrayOf(0,      1,      1,      0,      2,      2,      5,      5,      4,    8 ,     8 ,     8 ,     8 ,     8 ,     8 ,     8 ,     8 ,     8 ,     8 ,     8 ,)),
+    ENGINEER_ZOMBIE(PazEntities.ENGINEER_ZOMBIE,   intArrayOf(0,      0,      0,      0,      1,      0,      1,      1,      0,    1 ,     1 ,     1 ,     1 ,     1 ,     1 ,     1 ,     1 ,     1 ,     1 ,     1 ,), true),
+    SOLDIER_ZOMBIE(PazEntities.SOLDIER_ZOMBIE,     intArrayOf(0,      0,      0,      0,      1,      0,      0,      1,      0,    1 ,     1 ,     1 ,     1 ,     1 ,     1 ,     1 ,     1 ,     1 ,     1 ,     1 ,), true),
+    ROBO_ZOMBIE(PazEntities.ROBO_ZOMBIE,           intArrayOf(0,      0,      0,      0,      0,      0,      0,      0,      0,    0 ,     0 ,     0 ,     0 ,     0 ,     0 ,     0 ,     0 ,     0 ,     0 ,     0 ,), true),
+    PIRATE_CAPTAIN(PazEntities.PIRATE_CAPTAIN,     intArrayOf(0,      0,      0,      0,      0,      0,      0,      0,      0,    0 ,     0 ,     0 ,     0 ,     0 ,     0 ,     0 ,     0 ,     0 ,     0 ,     0 ,), true),
+    SUPER_BRAINZ(PazEntities.SUPER_BRAINZ,         intArrayOf(0,      0,      0,      0,      0,      0,      0,      0,      1,    0 ,     0 ,     2 ,     0 ,     0 ,     0 ,     1 ,     0 ,     0 ,     1 ,     0 ,), true),
+    GARGANTUAR(PazEntities.GARGANTUAR,             intArrayOf(0,      0,      0,      0,      0,      0,      0,      0,      1,    0 ,     1 ,     1 ,     1 ,     2 ,     2 ,     2 ,     3 ,     3 ,     3 ,     4 ,));
+    //                                                        1       2       3       4       5       6       7       8       9     10      11      12      13      14      15      16      17      18      19      20
 
 
     companion object {

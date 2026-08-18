@@ -64,9 +64,9 @@ class ZombieRaid(
 ) {
     companion object {
         fun getWaveSpawnCount(difficulty: Difficulty, omenLevel: Int, creditsUnlocked: Boolean): Int {
-            val baseWaves = 3 + difficulty.id * 2
-            val omenBonus = omenLevel.coerceAtLeast(0)
-            val creditsBonus = if (creditsUnlocked) 1 else 0
+            val baseWaves = 3 + difficulty.id
+            val omenBonus = omenLevel.coerceAtLeast(0) * 2
+            val creditsBonus = if (creditsUnlocked) 2 else 0
             return baseWaves + omenBonus + creditsBonus
         }
         fun getStartMessage(creditsUnlocked: Boolean): Component {
@@ -185,7 +185,7 @@ class ZombieRaid(
             zombieRaidEvent.players.forEach { player ->// advancement
                 PazCriteria.WIN_ZOMBIE_RAID.trigger(player, ZombieRaidContext(center))
                 val effect = MobEffectInstance(PazEffects.GARDEN_HERO, 18000, zombieRaidOmenLevel, false, true)
-                val lootTables = waveTypes.map { it.lootTable }.toList()
+                val lootTables = waveTypes.mapIndexed { i, it -> it.lootTableFn(i + 1,starterHasSeenCredits) }.toList()// get loot tables for each wave
                 (effect.effect.value() as? GardenHeroEffect)?.lootTables = lootTables
                 player.addEffect(effect)
                 player.sendSystemMessage(ZOMBIE_RAID_VICTORY)
