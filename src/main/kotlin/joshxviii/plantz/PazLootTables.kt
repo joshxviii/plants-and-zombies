@@ -19,15 +19,15 @@ object PazLootTables {
     @JvmField
     val GRAVESTONE_TREASURE = registerLootTable("chests/gravestone_treasure")
 
-    @JvmField val MAIL_REWARD_DEFAULT_EASY = registerLootTable("chests/raid/mail_reward_default_easy")
-    @JvmField val MAIL_REWARD_DEFAULT_HARD = registerLootTable("chests/raid/mail_reward_default_hard")
-    @JvmField val MAIL_REWARD_BUCKET = registerLootTable("chests/raid/mail_reward_bucket")
-    @JvmField val MAIL_REWARD_HALFTIME = registerLootTable("chests/raid/mail_reward_halftime")
-    @JvmField val MAIL_REWARD_WINTER = registerLootTable("chests/raid/mail_reward_winter")
-    @JvmField val MAIL_REWARD_PIRATE = registerLootTable("chests/raid/mail_reward_pirate")
-    @JvmField val MAIL_REWARD_ARMY = registerLootTable("chests/raid/mail_reward_army")
-    @JvmField val MAIL_REWARD_LEAGUE = registerLootTable("chests/raid/mail_reward_league")
-    @JvmField val MAIL_REWARD_ZOMBOSS = registerLootTable("chests/raid/mail_reward_zomboss")
+    @JvmField val MAIL_REWARD_DEFAULT_EASY = registerLootTable("raid/mail_reward_default_easy")
+    @JvmField val MAIL_REWARD_DEFAULT_HARD = registerLootTable("raid/mail_reward_default_hard")
+    @JvmField val MAIL_REWARD_BUCKET = registerLootTable("raid/mail_reward_bucket")
+    @JvmField val MAIL_REWARD_HALFTIME = registerLootTable("raid/mail_reward_halftime")
+    @JvmField val MAIL_REWARD_WINTER = registerLootTable("raid/mail_reward_winter")
+    @JvmField val MAIL_REWARD_PIRATE = registerLootTable("raid/mail_reward_pirate")
+    @JvmField val MAIL_REWARD_ARMY = registerLootTable("raid/mail_reward_army")
+    @JvmField val MAIL_REWARD_LEAGUE = registerLootTable("raid/mail_reward_league")
+    @JvmField val MAIL_REWARD_ZOMBOSS = registerLootTable("raid/mail_reward_zomboss")
 
     private fun registerLootTable(
         name: String

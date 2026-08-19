@@ -100,9 +100,10 @@ class ZombieRaid(
         val ZOMBIE_RAID_VICTORY: Component = Component.translatable("event.plantz.zombie_raid.victory").withStyle(ChatFormatting.YELLOW)
         val ZOMBIE_RAID_DEFEAT: Component = Component.translatable("event.plantz.zombie_raid.defeat").withStyle(ChatFormatting.RED)
         const val WAVE_DURATION_TICKS: Int = 3000 // 2.5 minutes
-        const val PRE_RAID_TICKS: Int = 300
+        const val PRE_RAID_TICKS: Int = 160
         const val POST_RAID_TICKS: Int = 80
         const val SPAWN_DISTANCE: Int = 96
+        const val GARDEN_HERO_EFFECT_DURATION: Int = 72000
     }
 
     private val waveToLeaderMap: MutableMap<Int, Zombie> = Maps.newHashMap<Int, Zombie>()
@@ -179,7 +180,7 @@ class ZombieRaid(
             postRaidTicks = POST_RAID_TICKS
             zombieRaidEvent.players.forEach { player ->// advancement
                 PazCriteria.WIN_ZOMBIE_RAID.trigger(player, ZombieRaidContext(center))
-                val effect = MobEffectInstance(PazEffects.GARDEN_HERO, 18000, zombieRaidOmenLevel, false, true)
+                val effect = MobEffectInstance(PazEffects.GARDEN_HERO, GARDEN_HERO_EFFECT_DURATION, zombieRaidOmenLevel, false, true)
                 val lootTables = waveTypes.mapIndexed { i, it -> it.lootTableFn(i + 1,starterHasSeenCredits) }.toList()// get loot tables for each wave
                 (effect.effect.value() as? GardenHeroEffect)?.lootTables = lootTables
                 player.addEffect(effect)
