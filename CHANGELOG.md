@@ -52,13 +52,16 @@
 - Repeaters no longer spawn naturally.
 #### Zombies:
 - Updated the Zombie Raid event.
+  - The amount of waves a raid has is now determined by: (zombie omen level * 2) + (the game's difficulty) + (2 if the end credits have been seen).
+  - After the end credits have been seen, waves during a raid will be more difficult.
   - Added Special wave types:
     - "Bucket Brigade" can occur during waves 1–3.
     - "Half-time Showdown" can occur during waves 2–5.
     - "Winter Wonderland" can occur during waves 4–9.
     - "Pirate Invasion" can occur during waves 5–14.
-    - "Robo Army" can occur during waves 6–15.
-    - "League of Awesomeness" can occur during waves 8–19.
+    - "Robo Army" can occur during waves 6–15. (Only after the end credits have been seen)
+    - "League of Awesomeness" can occur during waves 8–19. (Only after the end credits have been seen)
+- Added the Hero of the Garden effect.
   - When a raid is completed, all players will receive the Hero of the Garden effect.
   - While the effect is active, interacting with a mailbox will grant special loot for each completed wave in the raid.
 - Added Desert, Snow, and Pirate Variants for the Browncoat Zombie.

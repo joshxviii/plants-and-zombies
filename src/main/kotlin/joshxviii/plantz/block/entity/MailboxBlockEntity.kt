@@ -55,7 +55,7 @@ class MailboxBlockEntity(
     private var name: Component? = null
     private var ejectTimer: Int = 0
     private var tickCount : Int = 0
-    private var heroMailBuffer: List<ResourceKey<LootTable>> = emptyList()
+    private var heroMailBuffer: MutableList<ResourceKey<LootTable>> = mutableListOf()
     private var heroMailIndex: Int = 0
 
     companion object {
@@ -73,17 +73,18 @@ class MailboxBlockEntity(
             }
 
             if (state.getValue(STATE) == MailboxState.EJECTING) {
-                if (blockEntity.heroMailBuffer.isNotEmpty()) {// Hero Mail Rewards
+                val buffer = blockEntity.heroMailBuffer
+                if (buffer.isNotEmpty()) {// Hero Mail Rewards
                     val dropPos = blockEntity.blockState.getValue(FACING).unitVec3.scale(0.75).add(blockEntity.blockPos.center)
-                    if (blockEntity.ejectTimer % HERO_MAIL_EJECT_DELAY == 0) blockEntity.heroMailBuffer.getOrNull(blockEntity.heroMailIndex)?.let {
+                    if (blockEntity.ejectTimer % HERO_MAIL_EJECT_DELAY == 0) buffer.getOrNull(blockEntity.heroMailIndex)?.let {
                         val items = blockEntity.getHeroMail(it)
                         items.forEach { item ->
                             Containers.dropItemStack(level, dropPos.x, dropPos.y, dropPos.z, item)
                         }
-                        blockEntity.playSound(SoundEvents.VAULT_EJECT_ITEM)
+                        blockEntity.playSound(SoundEvents.VAULT_EJECT_ITEM, (blockEntity.heroMailIndex / buffer.size) * 0.4f + 1.0f)
                         blockEntity.heroMailIndex++
-                        if (blockEntity.heroMailIndex >= blockEntity.heroMailBuffer.size) {
-                            blockEntity.heroMailBuffer = emptyList()
+                        if (blockEntity.heroMailIndex >= buffer.size) {
+                            buffer.clear()
                             blockEntity.heroMailIndex = 0
                         }
                     }
@@ -117,7 +118,7 @@ class MailboxBlockEntity(
         val dropPos = blockState.getValue(FACING).unitVec3.scale(0.75).add(blockPos.center)
         if (heroEffect != null) {
             player.removeEffect(PazEffects.GARDEN_HERO)
-            heroMailBuffer = heroEffect.lootTables
+            heroMailBuffer = heroEffect.lootTables.toMutableList()
             updateMailboxState(MailboxState.EJECTING)
             ejectTimer = HERO_MAIL_EJECT_DELAY * heroMailBuffer.size
             setChanged()

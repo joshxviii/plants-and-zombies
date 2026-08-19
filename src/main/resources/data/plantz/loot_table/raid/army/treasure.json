@@ -7,16 +7,6 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:diamond_hoe",
-          "weight": 3
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:diamond_shovel",
-          "weight": 3
-        },
-        {
-          "type": "minecraft:item",
           "name": "minecraft:experience_bottle",
           "weight": 8,
           "functions": [
@@ -26,17 +16,6 @@
                 "min": 3,
                 "max": 6
               }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:potion",
-          "weight": 8,
-          "functions": [
-            {
-              "function": "minecraft:set_potion",
-              "id": "minecraft:regeneration"
             }
           ]
         },
@@ -61,7 +40,7 @@
               "enchantments": {
                 "minecraft:smite": {
                   "min": 1,
-                  "max": 3
+                  "max": 4
                 }
               }
             }
@@ -82,24 +61,9 @@
           ]
         },
         {
-          "type": "minecraft:loot_table",
-          "value": "plantz:balloons",
+          "type": "minecraft:item",
+          "name": "plantz:dye_blaster",
           "weight": 4
-        },
-        {
-          "type": "minecraft:item",
-          "name": "plantz:watering_can",
-          "weight": 3
-        },
-        {
-          "type": "minecraft:item",
-          "name": "plantz:plant_pot_helmet",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:loot_table",
-          "value": "plantz:gnomes",
-          "weight": 1
         }
       ]
     }

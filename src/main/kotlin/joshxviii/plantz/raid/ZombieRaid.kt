@@ -64,10 +64,11 @@ class ZombieRaid(
 ) {
     companion object {
         fun getWaveSpawnCount(difficulty: Difficulty, omenLevel: Int, creditsUnlocked: Boolean): Int {
+            //if (creditsUnlocked && omenLevel >= 5) return 20 // Force Zomboss wave with lvl 5 omen and after credits are unlocked
             val baseWaves = 3 + difficulty.id
             val omenBonus = omenLevel.coerceAtLeast(0) * 2
             val creditsBonus = if (creditsUnlocked) 2 else 0
-            return baseWaves + omenBonus + creditsBonus
+            return (baseWaves + omenBonus + creditsBonus).coerceAtMost(20)
         }
         fun getStartMessage(creditsUnlocked: Boolean): Component {
             return if (creditsUnlocked) ZOMBIE_RAID_BAR_START_CREDITS else ZOMBIE_RAID_BAR_START

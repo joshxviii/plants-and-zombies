@@ -8,7 +8,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:ominous_bottle",
-          "weight": 55,
+          "weight": 60,
           "functions": [
             {
               "function": "minecraft:set_ominous_bottle_amplifier",
@@ -34,7 +34,7 @@
         {
           "type": "minecraft:item",
           "name": "plantz:ducky_tube",
-          "weight": 10
+          "weight": 5
         }
       ],
       "functions": [
@@ -53,7 +53,7 @@
       "conditions": [
         {
           "condition": "minecraft:random_chance",
-          "chance": 0.25
+          "chance": 0.33
         }
       ]
     },
@@ -88,7 +88,7 @@
       "conditions": [
         {
           "condition": "minecraft:random_chance",
-          "chance": 0.4
+          "chance": 0.2
         }
       ]
     },

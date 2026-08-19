@@ -3,25 +3,18 @@
   "pools": [
     {
       "rolls": 1,
+      "bonus_rolls": 0,
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:baked_potato",
-          "weight": 20,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 3,
-                "max": 8
-              }
-            }
-          ]
+          "name": "minecraft:bucket",
+          "weight": 8
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:golden_carrot",
-          "weight": 9,
+          "name": "minecraft:experience_bottle",
+          "weight": 10,
+          "conditions": [],
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -34,50 +27,55 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_ingot",
-          "weight": 16,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 1,
-                "max": 5
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:gold_ingot",
-          "weight": 12,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 1,
-                "max": 3
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:emerald",
+          "name": "minecraft:potion",
           "weight": 10,
           "functions": [
             {
+              "function": "minecraft:set_potion",
+              "id": "minecraft:strong_healing"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:brainz_alloy",
+          "weight": 18,
+          "conditions": [],
+          "functions": [
+            {
               "function": "minecraft:set_count",
               "count": {
-                "min": 2,
+                "min": 4,
+                "max": 10
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:cone",
+          "weight": 4,
+          "conditions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
                 "max": 3
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:ducky_tube",
+          "weight": 3,
+          "conditions": [],
+          "functions": [
+          ]
         }
-      ],
-      "functions": []
+      ]
     }
   ],
-  "functions": [],
-  "random_sequence": "plantz:raid/default_mail_rewards"
+  "random_sequence": "minecraft:raid/default_mail_rewards"
 }

@@ -37,7 +37,7 @@ enum class WaveType(
     private val creditsRequired: Boolean,
     private val weightFn: (ZombieRaid, Boolean) -> Float,
     private val spawnFn: (ZombieRaid, Boolean) -> List<WaveSpawnEntry>,
-    val lootTableFn: (Int, Boolean) ->  ResourceKey<LootTable> = { _, _ -> PazLootTables.DEFAULT_EASY_MAIL_REWARD }
+    val lootTableFn: (Int, Boolean) ->  ResourceKey<LootTable> = { _, _ -> PazLootTables.MAIL_REWARD_DEFAULT_EASY }
 ): StringRepresentable {
     DEFAULT(
         minWave = 0,
@@ -68,7 +68,7 @@ enum class WaveType(
                 , WaveSpawnEntry(PazEntities.SOLDIER_ZOMBIE, soldierCount)
             )
         },
-        lootTableFn = { waveNum, _ -> if (waveNum > 7) PazLootTables.DEFAULT_HARD_MAIL_REWARD else PazLootTables.DEFAULT_EASY_MAIL_REWARD }
+        lootTableFn = { waveNum, _ -> if (waveNum > 7) PazLootTables.MAIL_REWARD_DEFAULT_HARD else PazLootTables.MAIL_REWARD_DEFAULT_EASY }
     ),
     BUCKET_BRIGADE(
         minWave = 1,
@@ -85,7 +85,7 @@ enum class WaveType(
                 , WaveSpawnEntry(PazEntities.NEWSPAPER_ZOMBIE, newspaperZombie.coerceAtLeast(1), ::spawnBucketBrigade)
             )
         },
-        lootTableFn = { _, _ -> PazLootTables.BUCKET_MAIL_REWARD }
+        lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_BUCKET }
     ),
     HALFTIME_SHOWDOWN(
         minWave = 2,
@@ -102,7 +102,7 @@ enum class WaveType(
                 , WaveSpawnEntry(PazEntities.IMP, impCount.coerceAtLeast(1), ::spawnHalftimeShowdown)
             )
         },
-        lootTableFn = { _, _ -> PazLootTables.HALFTIME_MAIL_REWARD}
+        lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_HALFTIME}
     ),
     WINTER_WONDERLAND(
         minWave = 4,
@@ -121,7 +121,7 @@ enum class WaveType(
                 , WaveSpawnEntry(PazEntities.ZOMBIE_YETI, yetiCount.coerceAtLeast(2))
             )
         },
-        lootTableFn = { _, _ -> PazLootTables.WINTER_MAIL_REWARD}
+        lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_WINTER}
     ),
     PIRATE_INVASION(
         minWave = 5,
@@ -142,7 +142,7 @@ enum class WaveType(
                 , WaveSpawnEntry(PazEntities.GARGANTUAR, gargantuarCount, ::spawnPirateInvasion)
             )
         },
-        lootTableFn = { _, _ -> PazLootTables.PIRATE_MAIL_REWARD}
+        lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_PIRATE}
     ),
     ROBO_ARMY(
         minWave = 6,
@@ -161,7 +161,7 @@ enum class WaveType(
                 , WaveSpawnEntry(PazEntities.SOLDIER_ZOMBIE, soldierCount.coerceAtLeast(2))
             )
         },
-        lootTableFn = { _, _ -> PazLootTables.ARMY_MAIL_REWARD}
+        lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_ARMY}
     ),
     LEAGUE_OF_AWESOMENESS(
         minWave = 8,
@@ -178,7 +178,7 @@ enum class WaveType(
                 , WaveSpawnEntry(PazEntities.SUPER_BRAINZ, superCount.coerceAtLeast(1), ::spawnLeagueOfAwesomeness)
             )
         },
-        lootTableFn = { _, _ -> PazLootTables.LEAGUE_MAIL_REWARD}
+        lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_LEAGUE}
     );
 
 

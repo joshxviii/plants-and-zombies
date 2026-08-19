@@ -2,22 +2,25 @@
   "type": "minecraft:generic",
   "pools": [
     {
-      "rolls": 1,
+      "rolls": {
+        "min": 1,
+        "max": 2
+      },
       "entries": [
         {
           "type": "minecraft:loot_table",
           "value": "plantz:raid/default_hard/materials",
-          "weight": 20
+          "weight": 15
         },
         {
           "type": "minecraft:loot_table",
-          "value": "plantz:raid/default_hard/seeds",
-          "weight": 4
+          "value": "plantz:raid/winter/seeds",
+          "weight": 6
         },
         {
           "type": "minecraft:loot_table",
-          "value": "plantz:raid/default_hard/treasure",
-          "weight": 10
+          "value": "plantz:raid/winter/treasure",
+          "weight": 12
         }
       ],
       "functions": []
