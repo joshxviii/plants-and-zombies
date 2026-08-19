@@ -21,6 +21,7 @@
   - Zombies will emerge from the ground near the gravestone during the night.
 - Added The Graveyard biome.
 - Added Garden Gnome Blocks.
+- Added Tacos as a food item. It can be received as a raid reward or crafted with ingredients from [Farmer's Delight](https://modrinth.com/mod/farmers-delight-refabricated).
 - The Football Helmet now gives increased speed and step height while sprinting. Nearby Mobs will also be knocked back.
 - Added Freeze Mob Effect.
 - Added "Hero of the Garden" Effect.

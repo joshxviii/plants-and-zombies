@@ -5,6 +5,27 @@
     "component": "minecraft:entity_data",
     "cases": [
       {
+        "when": { "id": "plantz:zombie_turret" },
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/blueprint/zombie_turret"
+        }
+      },
+      {
+        "when": { "id": "plantz:zombie_drone" },
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/blueprint/zombie_drone"
+        }
+      },
+      {
+        "when": { "id": "plantz:electro_turret" },
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/blueprint/electro_turret"
+        }
+      },
+      {
         "when": { "id": "plantz:lawn_mower" },
         "model": {
           "type": "minecraft:model",

@@ -20,6 +20,20 @@
         },
         {
           "type": "minecraft:item",
+          "name": "plantz:taco",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 3,
+                "max": 6
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "minecraft:golden_carrot",
           "weight": 9,
           "functions": [

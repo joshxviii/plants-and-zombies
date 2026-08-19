@@ -101,7 +101,7 @@ object PazItems {
     @JvmField
     val TACO: Item = registerItem(
         "taco",
-        properties = Item.Properties().food(FoodProperties.Builder().nutrition(7).saturationModifier(1.4f).build())
+        properties = Item.Properties().food(FoodProperties.Builder().nutrition(9).saturationModifier(1.1f).build())
     )
     const val DUCKY_TUBE_DAMAGE_INTERVAL = 45
     val DUCKY_EQUIP_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, pazResource("ducky_tube"))

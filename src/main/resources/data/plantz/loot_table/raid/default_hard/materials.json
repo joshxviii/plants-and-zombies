@@ -13,7 +13,21 @@
               "function": "minecraft:set_count",
               "count": {
                 "min": 2,
-                "max": 5
+                "max": 6
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:taco",
+          "weight": 18,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 3,
+                "max": 10
               }
             }
           ]
