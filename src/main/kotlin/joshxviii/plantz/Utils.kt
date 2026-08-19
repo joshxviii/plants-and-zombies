@@ -2,6 +2,7 @@ package joshxviii.plantz
 
 import joshxviii.plantz.PazMain.MODID
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.raid.WaveType
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
@@ -9,6 +10,7 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
+import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerEntityGetter
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
@@ -16,9 +18,7 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.Mth
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.damagesource.DamageTypes
-import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.Entity.MoveFunction
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -28,15 +28,29 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.component.AttackRange
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.pathfinder.Path
+import net.minecraft.world.level.storage.loot.LootTable
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import kotlin.math.sqrt
 
 fun pazResource(path: String): Identifier = Identifier.fromNamespaceAndPath(MODID, path)
+
+interface GardenHeroRewards {
+    fun `plantz$getWaveList`(): MutableList<WaveType>
+    fun `plantz$setWaveList`(value: MutableList<WaveType>)
+    companion object {
+        fun collectRewards(player: ServerPlayer): MutableList<ResourceKey<LootTable>> {
+            player as GardenHeroRewards
+            val rewards = player.`plantz$getWaveList`().mapIndexed { waveNumber, type ->
+                type.lootTableFn(waveNumber, player.seenCredits)
+            }.toMutableList()
+            return rewards
+        }
+    }
+}
 
 interface PlantHeadAttachment {
     fun `plantz$hasPlantOnHead`(): Boolean
@@ -45,7 +59,7 @@ interface PlantHeadAttachment {
     fun `plantz$getPlantData`(): CompoundTag
     fun `plantz$setPlantData`(value: CompoundTag)
     companion object {
-        fun potBlockInteraction(state: BlockState, level: Level, pos: BlockPos, player: Player, ) : InteractionResult {
+        fun potBlockInteraction(state: BlockState, level: Level, pos: BlockPos, player: Player) : InteractionResult {
             if (level !is ServerLevel) return InteractionResult.PASS
             val hasPlant = (player as PlantHeadAttachment).`plantz$hasPlantOnHead`()
             if (hasPlant && player.isShiftKeyDown) {

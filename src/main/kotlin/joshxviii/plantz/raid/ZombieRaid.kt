@@ -225,8 +225,7 @@ class ZombieRaid(
             zombieRaidEvent.players.forEach { player ->// advancement
                 PazCriteria.WIN_ZOMBIE_RAID.trigger(player, ZombieRaidContext(center))
                 val effect = MobEffectInstance(PazEffects.GARDEN_HERO, GARDEN_HERO_EFFECT_DURATION, zombieRaidOmenLevel, false, true)
-                val lootTables = waveTypes.mapIndexed { i, it -> it.lootTableFn(i + 1,starterHasSeenCredits) }.toList()// get loot tables for each wave
-                (effect.effect.value() as? GardenHeroEffect)?.lootTables = lootTables
+                (player as GardenHeroRewards).`plantz$setWaveList`(waveTypes)
                 player.addEffect(effect)
                 player.sendSystemMessage(ZOMBIE_RAID_VICTORY)
                 showTitleMessage(ZOMBIE_RAID_VICTORY_TITLE)

@@ -4,14 +4,15 @@ import com.mojang.serialization.Codec;
 import joshxviii.plantz.*;
 import joshxviii.plantz.effect.PaintedMobEffect;
 import joshxviii.plantz.entity.plant.Plant;
+import joshxviii.plantz.raid.WaveType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
+import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,16 +40,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static joshxviii.plantz.PazDataSerializers.DATA_PAINT_COLORS;
 import static joshxviii.plantz.PazItems.DUCKY_TUBE_DAMAGE_INTERVAL;
 
 @Mixin(LivingEntity.class)
-abstract public class LivingEntityMixin implements PlantHeadAttachment {
+abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHeroRewards {
 
     @Unique
     private static final EntityDataAccessor<Boolean> DATA_HYPNO_ID = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.BOOLEAN);
@@ -67,6 +66,9 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment {
 
     @Unique
     private CompoundTag plantData = new CompoundTag();
+
+    @Unique
+    private List<WaveType> completedRaidWaveList = List.of();
 
     @Unique
     private @Nullable Plant plantEntity = null;
@@ -95,6 +97,18 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment {
     public boolean plantz$hasPlantOnHead() {
         return plantEntity != null &&  plantEntity.isAlive() && !plantEntity.isRemoved();
     }
+
+    @Override
+    public @NotNull List<WaveType> plantz$getWaveList() {
+        return completedRaidWaveList;
+    }
+
+    @Override
+    public void plantz$setWaveList(@NotNull List<WaveType> value) {
+        completedRaidWaveList = value;
+    }
+
+
 
     @Unique
     public boolean plantz$getHypnoId() {
@@ -162,7 +176,7 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment {
         entityData.define(DATA_PAINTED_COLORS, new HashMap<>());
     }
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    private void saveHypnoFlag(ValueOutput output, CallbackInfo ci) {
+    private void saveCustomFlags(ValueOutput output, CallbackInfo ci) {
         var self = (LivingEntity) (Object) this;
         output.putBoolean("plantz:IsHypnotized", self.getEntityData().get(DATA_HYPNO_ID));
         output.putBoolean("plantz:IsFrozen", self.getEntityData().get(DATA_FREEZE_ID));
@@ -170,14 +184,18 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment {
         if (!this.plantz$getPlantData().isEmpty()) {
             output.store("plantz:AttachedPlant", CompoundTag.CODEC, this.plantz$getPlantData());
         }
+        if (self instanceof ServerPlayer) output.store("plantz:CompletedWaveList", Codec.list(WaveType.Companion.getCODEC()), this.plantz$getWaveList());
+
     }
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    private void loadHypnoFlag(ValueInput input, CallbackInfo ci) {
+    private void loadCustomFlags(ValueInput input, CallbackInfo ci) {
         var self = (LivingEntity) (Object) this;
         self.getEntityData().set(DATA_HYPNO_ID, input.getBooleanOr("plantz:IsHypnotized", false));
         self.getEntityData().set(DATA_FREEZE_ID, input.getBooleanOr("plantz:IsFrozen", false));
         self.getEntityData().set(DATA_PAINTED_COLORS, input.read("plantz:PaintedColor", Codec.unboundedMap(Codec.INT, Codec.INT)).orElseGet(HashMap::new));
         plantz$setPlantData(input.read("plantz:AttachedPlant", CompoundTag.CODEC).orElseGet(CompoundTag::new));
+        if (self instanceof ServerPlayer) plantz$setWaveList(input.read("plantz:CompletedWaveList", Codec.list(WaveType.Companion.getCODEC())).orElseGet(List::of));
+
         if (self instanceof PathfinderMob mob) {
             prevFloatTag = mob.getNavigation().canFloat();
             prevWaterMalus = mob.getPathfindingMalus(PathType.WATER);
