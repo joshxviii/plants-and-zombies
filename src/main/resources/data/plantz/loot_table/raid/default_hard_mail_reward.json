@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:generic",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "value": "plantz:raid/default_hard/materials",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:loot_table",
+          "value": "plantz:raid/default_hard/seeds",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:loot_table",
+          "value": "plantz:raid/default_hard/treasure",
+          "weight": 10
+        }
+      ],
+      "functions": []
+    }
+  ],
+  "functions": [],
+  "random_sequence": "plantz:raid/default_mail_rewards"
+}

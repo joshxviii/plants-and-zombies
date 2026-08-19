@@ -37,7 +37,7 @@ enum class WaveType(
     private val creditsRequired: Boolean,
     private val weightFn: (ZombieRaid, Boolean) -> Float,
     private val spawnFn: (ZombieRaid, Boolean) -> List<WaveSpawnEntry>,
-    val lootTableFn: (Int, Boolean) ->  ResourceKey<LootTable> = { _, _ -> PazLootTables.DIFFICULTY_EASY_MAIL_REWARD }
+    val lootTableFn: (Int, Boolean) ->  ResourceKey<LootTable> = { _, _ -> PazLootTables.DEFAULT_EASY_MAIL_REWARD }
 ): StringRepresentable {
     DEFAULT(
         minWave = 0,
@@ -47,7 +47,7 @@ enum class WaveType(
         spawnFn = { raid, credits ->
             val wave = raid.wavesSpawned
             val omenLevel = raid.zombieRaidOmenLevel
-            val brownCoatCount = 4 + wave * if (credits) 6 else 4 + (omenLevel * 2)
+            val brownCoatCount = 4 + wave * if (credits) 6 else 4 + (omenLevel * 3)
             val newspaperCount = 1 + wave + (omenLevel / 2)
             val diggerCount = if (wave > 2) 1 + wave / 2 + (omenLevel / 2) else 0
             val impCount = if (wave > 4) 1 + (wave - 5) + (omenLevel / 2) else 0
@@ -68,7 +68,7 @@ enum class WaveType(
                 , WaveSpawnEntry(PazEntities.SOLDIER_ZOMBIE, soldierCount)
             )
         },
-        lootTableFn = { waveNum, _ -> if (waveNum > 7) PazLootTables.DIFFICULTY_HARD_MAIL_REWARD else PazLootTables.DIFFICULTY_EASY_MAIL_REWARD }
+        lootTableFn = { waveNum, _ -> if (waveNum > 7) PazLootTables.DEFAULT_HARD_MAIL_REWARD else PazLootTables.DEFAULT_EASY_MAIL_REWARD }
     ),
     BUCKET_BRIGADE(
         minWave = 1,

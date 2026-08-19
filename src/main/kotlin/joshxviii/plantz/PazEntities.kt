@@ -351,7 +351,7 @@ object PazEntities {
         attributes = PazZombie.Companion.PazZombieAttributes(
             movementSpeed = 0.24,
             maxHealth = 35.0,
-            followRange = 40.0,
+            followRange = 32.0,
         )
     )
     @JvmField val ZOMBIE_YETI: EntityType<ZombieYeti> =  registerZombie(
