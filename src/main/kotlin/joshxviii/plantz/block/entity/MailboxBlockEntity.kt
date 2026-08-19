@@ -34,10 +34,12 @@ import net.minecraft.world.Containers
 import net.minecraft.world.SimpleContainer
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.entity.vehicle.minecart.Minecart
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.ValueInput
@@ -60,7 +62,7 @@ class MailboxBlockEntity(
     private var heroMailIndex: Int = 0
 
     companion object {
-        const val HERO_MAIL_EJECT_DELAY = 12
+        const val HERO_MAIL_EJECT_DELAY = 10
         val DEFAULT_NAME = Component.translatable("item.plantz.mailbox");
 
         fun tick(level: Level, pos: BlockPos, state: BlockState, blockEntity: MailboxBlockEntity) {
@@ -82,7 +84,7 @@ class MailboxBlockEntity(
                         items.forEach { item ->
                             Containers.dropItemStack(level, dropPos.x, dropPos.y, dropPos.z, item)
                         }
-                        blockEntity.playSound(SoundEvents.VAULT_EJECT_ITEM, (blockEntity.heroMailIndex / buffer.size) * 0.4f + 1.0f)
+                        blockEntity.playSound(SoundEvents.VAULT_EJECT_ITEM, (blockEntity.heroMailIndex / buffer.size.toFloat()) * 0.2f + 1.0f)
                         blockEntity.heroMailIndex++
                         if (blockEntity.heroMailIndex >= buffer.size) {
                             buffer.clear()
@@ -209,7 +211,7 @@ class MailboxBlockEntity(
     override fun removeComponentsFromTag(output: ValueOutput) {
         output.discard("CustomName")
     }
-    private fun playSound(event: SoundEvent, pitch: Float = 0.9f) {
+    fun playSound(event: SoundEvent, pitch: Float = 0.9f) {
         val direction = blockState.getValue(FACING).unitVec3i
         val x = worldPosition.x + 0.5 + direction.x / 2.0
         val y = worldPosition.y + 0.5 + direction.y / 2.0

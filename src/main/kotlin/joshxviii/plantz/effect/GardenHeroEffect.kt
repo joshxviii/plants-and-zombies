@@ -21,4 +21,17 @@ class GardenHeroEffect(
         super.onEffectRemoved(effectInstance, entity)
     }
 
+    // add default waves to list when effect is added
+    override fun onEffectAdded(effectInstance: MobEffectInstance, entity: LivingEntity) {
+        val hero = (entity as? GardenHeroRewards)?: return
+        val waveList = hero.`plantz$getWaveList`()
+        if (waveList.isEmpty()) {
+            val newList = mutableListOf<WaveType>()
+            for (i in 0..effectInstance.amplifier) {
+                newList.add(WaveType.DEFAULT)
+            }
+            hero.`plantz$setWaveList`(newList)
+        }
+    }
+
 }

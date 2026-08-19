@@ -10,10 +10,10 @@
   },
   "mixins": [
     "AvatarRendererMixin",
+    "BossHealthOverlayAccessor",
+    "BossHealthOverlayMixin",
     "GuiMixin",
     "HumanoidModelMixin",
-    "LivingEntityRendererMixin",
-    "BossHealthOverlayMixin",
-    "BossHealthOverlayAccessor"
+    "LivingEntityRendererMixin"
   ]
 }

@@ -10,7 +10,6 @@ import joshxviii.plantz.*
 import joshxviii.plantz.advancement.ZombieRaidContext
 import joshxviii.plantz.block.entity.FlagBlockEntity
 import joshxviii.plantz.block.entity.FlagBlockEntity.Companion.MAX_HEALTH
-import joshxviii.plantz.effect.GardenHeroEffect
 import joshxviii.plantz.networking.ZombieRaidClientData
 import joshxviii.plantz.networking.ZombieRaidResponsePayload
 import net.minecraft.SharedConstants
