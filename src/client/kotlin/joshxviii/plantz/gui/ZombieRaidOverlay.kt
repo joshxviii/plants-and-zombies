@@ -3,6 +3,7 @@ package joshxviii.plantz.gui
 import joshxviii.plantz.PazClientNetwork.ZombieRaidClientCache
 import joshxviii.plantz.PazConfig
 import joshxviii.plantz.pazResource
+import joshxviii.plantz.raid.ZombieRaid
 import joshxviii.plantz.tickTimeFormat
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
@@ -11,8 +12,8 @@ import net.minecraft.client.gui.components.LerpingBossEvent
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
+import net.minecraft.util.ARGB
 import net.minecraft.util.Mth
-import kotlin.math.floor
 
 object ZombieRaidOverlay {
 
@@ -59,7 +60,7 @@ object ZombieRaidOverlay {
         graphics.blit(RenderPipelines.GUI_TEXTURED, PLANT_FLAG_SPRITE, flagHealthX-7, flagHealthY-5, 7f*flagFrame, 0f, 7, 10, 14, 10)
 
         // zombie health
-        val zombieHealthPercent = (raidEvent.currentZombieHealth / raidEvent.totalZombieHealth).coerceIn(0f, 1f)
+        val zombieHealthPercent = (raidEvent.zombieHealth / raidEvent.zombieHealthMax).coerceIn(0f, 1f)
         if (zombieHealthPercent > 0f) {
             val zombieBarWidth = Mth.floor(barWidth * zombieHealthPercent)
             val zombieHealthX = x + (bgWidth-barWidth) - 17
@@ -67,7 +68,7 @@ object ZombieRaidOverlay {
             graphics.blit(RenderPipelines.GUI_TEXTURED, HEALTH_BAR_ZOMBIES, zombieHealthX, zombieHealthY, 0f, 0f, zombieBarWidth, barHeight, barWidth, barHeight)
             val headWidth = 10
             val headCount = zombieBarWidth / 8
-            for (i in 0..headCount) {
+            if (raidEvent.status != ZombieRaid.ZombieRaidStatus.NEXT_WAVE) for (i in 0..headCount) {
                 val headX = zombieHealthX + (i * 8)
                 val headY = zombieHealthY - if (i % 2 == 0) 3 else 0
                 val headFrame = i % 4f
@@ -76,17 +77,27 @@ object ZombieRaidOverlay {
         }
 
         // timer
-        val timer = Component.literal(raidEvent.waveTimer.tickTimeFormat())
+        val time = raidEvent.waveTimer
+        val timer = Component.literal(time.tickTimeFormat())
+
         val textX = screenWidth / 2 - font.width(timer) / 2
         val textY = y + 18
-        graphics.outlineText(font, timer, textX, textY)
+        val textColor = when (time) {
+            in -1..200 -> 0xFF5555
+            in 201..600 -> 0xFFFF55
+            else -> 0xFFFFFF
+        }
+        if (raidEvent.status != ZombieRaid.ZombieRaidStatus.NEXT_WAVE) graphics.outlineText(font, timer, textX, textY,
+            color = textColor,
+            outlineColor = ARGB.multiply(textColor, 0x333333),
+        )
 
         val waveText = "${raidEvent.wavesSpawned} / ${raidEvent.numWaves}"
         val waveX = screenWidth / 2 - font.width(waveText) / 2
-        graphics.text(font, waveText, waveX, textY+16, -1)
+        graphics.text(font, waveText, waveX, textY+14, -1)
         if (PazConfig.SHOW_DEBUG_INFO) {
             val textX = screenWidth / 2 - font.width(raidEvent.status.name) / 2
-            graphics.text(font, raidEvent.status.name, textX, textY+32, -1)
+            graphics.text(font, raidEvent.status.name, textX, textY+30, -1)
         }
 
     }

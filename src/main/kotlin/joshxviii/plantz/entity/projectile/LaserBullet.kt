@@ -23,7 +23,7 @@ class LaserBullet(
     PazDamageTypes.ENERGY, damage, knockback = 0.02
 ) {
     companion object {
-        const val DEFAULT_COLOR: Int = 0xFF44EE
+        const val DEFAULT_COLOR: Int = 0xFF99EE
         val COLOR: EntityDataAccessor<Int> = SynchedEntityData.defineId(LaserBullet::class.java, EntityDataSerializers.INT)
     }
 

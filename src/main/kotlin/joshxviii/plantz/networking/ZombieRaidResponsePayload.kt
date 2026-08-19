@@ -2,10 +2,8 @@ package joshxviii.plantz.networking
 
 import joshxviii.plantz.pazResource
 import joshxviii.plantz.raid.ZombieRaid
-import net.minecraft.core.BlockPos
 import net.minecraft.core.UUIDUtil
 import net.minecraft.network.RegistryFriendlyByteBuf
-import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
@@ -26,18 +24,18 @@ class ZombieRaidResponsePayload(
                 ByteBufCodecs.VAR_INT, { it.data.numWaves },
                 ByteBufCodecs.VAR_INT, { it.data.waveTimer },
                 ByteBufCodecs.VAR_INT, { it.data.activeTime },
-                ByteBufCodecs.FLOAT,   { it.data.totalZombieHealth },
-                ByteBufCodecs.FLOAT,   { it.data.currentZombieHealth },
+                ByteBufCodecs.FLOAT,   { it.data.zombieHealth },
+                ByteBufCodecs.FLOAT,   { it.data.zombieHealthMax },
                 ByteBufCodecs.FLOAT,   { it.data.flagHealth },
                 ByteBufCodecs.FLOAT,   { it.data.flagMaxHealth },
                 ByteBufCodecs.BOOL,    { it.data.seenCredits },
                 ByteBufCodecs.BOOL,    { it.terminate },
-                { id, statusOrd, waves, num, timer, activeTime, totalH, curH, flagH, flagMax, credits, terminate ->
+                { id, statusOrd, waves, num, timer, activeTime, zombieH, zombieMax, flagH, flagMax, credits, terminate ->
                     ZombieRaidResponsePayload(
                         ZombieRaidClientData(
                             id,
                             ZombieRaid.ZombieRaidStatus.entries[statusOrd],
-                            waves, num, timer, activeTime, totalH, curH, flagH, flagMax, credits
+                            waves, num, timer, activeTime, zombieH, zombieMax, flagH, flagMax, credits
                         ),
                         terminate
                     )
@@ -56,8 +54,8 @@ data class ZombieRaidClientData(
     val numWaves: Int = 0,
     val waveTimer: Int = 0,
     val activeTime: Int = 0,
-    val totalZombieHealth: Float = 0f,
-    val currentZombieHealth: Float = 0f,
+    val zombieHealth: Float = 0f,
+    val zombieHealthMax: Float = 0f,
     val flagHealth: Float = 0f,
     val flagMaxHealth: Float = 0f,
     val seenCredits: Boolean = false

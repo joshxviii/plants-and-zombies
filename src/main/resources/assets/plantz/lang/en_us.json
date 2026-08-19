@@ -69,7 +69,9 @@
   "event.plantz.zombie_raid.special_wave.league_of_awesomeness": "League of Awesomeness!",
   "event.plantz.zombie_raid.special_wave.robo_army": "Robo Army!",
   "event.plantz.zombie_raid.victory": "The Zombies were defeated!",
-  "event.plantz.zombie_raid.defeat": "The flag was destroyed...",
+  "event.plantz.zombie_raid.victory_title": "VICTORY!",
+  "event.plantz.zombie_raid.defeat": "The flag was destroyed.",
+  "event.plantz.zombie_raid.defeat_title": "DEFEAT",
 
   "effect.plantz.zombie_omen": "Zombie Omen",
   "effect.plantz.toxic": "Toxic",

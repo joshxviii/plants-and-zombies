@@ -161,6 +161,10 @@ fun Int.tickTimeFormat(): String = "%02d:%02d".format(
     (this / 20) % 60,
 )
 
+fun Int.tickSecondFormat(): String = "%2d".format(
+    (this / 20),
+)
+
 fun Entity.hasSameRootOwner(target: Entity?): Boolean {
     if (target == null) return false
 

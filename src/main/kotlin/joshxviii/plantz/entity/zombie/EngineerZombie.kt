@@ -78,7 +78,7 @@ class EngineerZombie(type: EntityType<out EngineerZombie>, level: Level) : PazZo
                 buildAnimation.stop()
                 buildingTime=0
             }
-        }
+        } else if(buildAnimation.isStarted) buildAnimation.stop()
     }
 
     override fun getAmbientSound(): SoundEvent {
@@ -139,8 +139,6 @@ class EngineerZombie(type: EntityType<out EngineerZombie>, level: Level) : PazZo
 
         override fun stop() {
             super.stop()
-            engineerZombie.buildAnimation.stop()
-            engineerZombie.buildingTime=0
         }
 
         private fun tryBuildBot() {
