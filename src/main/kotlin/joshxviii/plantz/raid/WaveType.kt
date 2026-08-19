@@ -47,7 +47,7 @@ enum class WaveType(
         spawnFn = { raid, credits ->
             val wave = raid.wavesSpawned
             val omenLevel = raid.zombieRaidOmenLevel
-            val brownCoatCount = 4 + wave * if (credits) 6 else 4 + (omenLevel * 3)
+            val brownCoatCount = 4 + wave * omenLevel * if (credits) 6 else 4
             val newspaperCount = 1 + wave + (omenLevel / 2)
             val diggerCount = if (wave > 2) 1 + wave / 2 + (omenLevel / 2) else 0
             val impCount = if (wave > 4) 1 + (wave - 5) + (omenLevel / 2) else 0
@@ -112,9 +112,9 @@ enum class WaveType(
             0.12f + (raid.zombieRaidOmenLevel * 0.04f) + if (credits) 0.05f else 0f
         },
         spawnFn = { raid, credits ->
-            val browncoatCount = 5 + raid.wavesSpawned * if (credits) 4 else 2 + (raid.zombieRaidOmenLevel / 2)
+            val browncoatCount = 5 + (raid.wavesSpawned / 3) * (raid.zombieRaidOmenLevel / 4) * if (credits) 4 else 2
             val impCount = 2 + raid.wavesSpawned * if (credits) 2 else 1 + (raid.zombieRaidOmenLevel / 2)
-            val yetiCount = 1 + raid.wavesSpawned / 3 + (raid.zombieRaidOmenLevel / 3)
+            val yetiCount = 1 + raid.wavesSpawned / 3 + (raid.zombieRaidOmenLevel / 7)
             listOf(
                 WaveSpawnEntry(PazEntities.BROWN_COAT, browncoatCount.coerceAtLeast(5), ::spawnWinterWonderland)
                 , WaveSpawnEntry(PazEntities.IMP, impCount.coerceAtLeast(2), ::spawnWinterWonderland)
@@ -163,7 +163,7 @@ enum class WaveType(
         },
         lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_ARMY}
     ),
-    LEAGUE_OF_AWESOMENESS(
+    LEAGUE_OF_AWESOME(
         minWave = 8,
         maxWave = 20,
         creditsRequired = true,
@@ -174,8 +174,8 @@ enum class WaveType(
             val browncoatCount = 4 + raid.wavesSpawned * 3 + (raid.zombieRaidOmenLevel / 2)
             val superCount = 1 + raid.wavesSpawned / 4 + (raid.zombieRaidOmenLevel / 3)
             listOf(
-                WaveSpawnEntry(PazEntities.BROWN_COAT, browncoatCount.coerceAtLeast(5), ::spawnLeagueOfAwesomeness)
-                , WaveSpawnEntry(PazEntities.SUPER_BRAINZ, superCount.coerceAtLeast(1), ::spawnLeagueOfAwesomeness)
+                WaveSpawnEntry(PazEntities.BROWN_COAT, browncoatCount.coerceAtLeast(5), ::spawnLeagueOfAwesome)
+                , WaveSpawnEntry(PazEntities.SUPER_BRAINZ, superCount.coerceAtLeast(1), ::spawnLeagueOfAwesome)
             )
         },
         lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_LEAGUE}
@@ -245,7 +245,7 @@ enum class WaveType(
             }
         }
 
-        fun spawnLeagueOfAwesomeness(zombie: Zombie) {
+        fun spawnLeagueOfAwesome(zombie: Zombie) {
             if (zombie is SuperBrainz) zombie.variant = SuperBrainzVariant.pickRandomVariant()
             if (zombie is BrownCoat) { }
         }

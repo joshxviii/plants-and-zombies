@@ -17,8 +17,8 @@ class GardenHeroEffect(
 ) : MobEffect(category, color) {
 
     override fun onEffectRemoved(effectInstance: MobEffectInstance, entity: LivingEntity) {
-        super.onEffectRemoved(effectInstance, entity)
         (entity as? GardenHeroRewards)?.`plantz$setWaveList`(mutableListOf())
+        super.onEffectRemoved(effectInstance, entity)
     }
 
 }

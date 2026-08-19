@@ -37,6 +37,7 @@ import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.food.FoodProperties
 import net.minecraft.world.item.*
 import net.minecraft.world.item.Items.GLASS_BOTTLE
 import net.minecraft.world.item.component.ItemAttributeModifiers
@@ -96,6 +97,11 @@ object PazItems {
                 mustBeUsing = true
             )
             ).component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
+    )
+    @JvmField
+    val TACO: Item = registerItem(
+        "taco",
+        properties = Item.Properties().food(FoodProperties.Builder().nutrition(7).saturationModifier(1.4f).build())
     )
     const val DUCKY_TUBE_DAMAGE_INTERVAL = 45
     val DUCKY_EQUIP_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, pazResource("ducky_tube"))

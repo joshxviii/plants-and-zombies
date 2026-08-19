@@ -96,6 +96,9 @@ object PazCreativeTab {
                 output.accept(PazBlocks.BRAINZ_FLAG)
                 output.accept(PazBlocks.PLANTZ_FLAG)
 
+                output.accept(PazItems.TACO)
+
+
                 // other
                 if (parameters.hasPermissions()) output.accept(PazItems.BRAINZIUM)
                 output.accept(PazItems.BRAINZ_ALLOY)

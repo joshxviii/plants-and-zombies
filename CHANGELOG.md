@@ -60,7 +60,7 @@
     - "Winter Wonderland" can occur during waves 4–9.
     - "Pirate Invasion" can occur during waves 5–14.
     - "Robo Army" can occur during waves 6–15. (Only after the end credits have been seen)
-    - "League of Awesomeness" can occur during waves 8–19. (Only after the end credits have been seen)
+    - "League of Awesome" can occur during waves 8–19. (Only after the end credits have been seen)
 - Added the Hero of the Garden effect.
   - When a raid is completed, all players will receive the Hero of the Garden effect.
   - While the effect is active, interacting with a mailbox will grant special loot for each completed wave in the raid.
@@ -82,7 +82,7 @@
 - Added Pirate Captain Zombie
   - Spawns during the "Pirate Invasion" special wave. 
 - Added Super Brainz
-  - Spawns during the "League of Awesomeness" special zombie raid.
+  - Spawns during the "League of Awesome" special zombie raid.
 - Zombies will now attack Wall Nuts when walking into them.
 ### Technical Changes
 

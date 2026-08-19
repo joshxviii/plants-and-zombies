@@ -118,10 +118,10 @@ class MailboxBlockEntity(
 
         val dropPos = blockState.getValue(FACING).unitVec3.scale(0.75).add(blockPos.center)
         if (heroEffect != null) {
-            player.removeEffect(heroEffect)
             heroMailBuffer = (player as? ServerPlayer)?.let { GardenHeroRewards.collectRewards(it) }?: mutableListOf()
             updateMailboxState(MailboxState.EJECTING)
             ejectTimer = HERO_MAIL_EJECT_DELAY * heroMailBuffer.size
+            player.removeEffect(heroEffect)
             setChanged()
             return true
         }
