@@ -32,7 +32,7 @@ class NavigateToTargetGoal(
     private var strafingClockwise = true
 
     init {
-        flags = EnumSet.of(Flag.MOVE, Flag.LOOK)
+        flags = EnumSet.of(Flag.MOVE)
     }
 
     override fun canUse(): Boolean {

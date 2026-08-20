@@ -16,6 +16,10 @@ class GardenHeroEffect(
     color: Int,
 ) : MobEffect(category, color) {
 
+    companion object {
+        const val EFFECT_COLOR = 0x8100AB
+    }
+
     override fun onEffectRemoved(effectInstance: MobEffectInstance, entity: LivingEntity) {
         (entity as? GardenHeroRewards)?.`plantz$setWaveList`(mutableListOf())
         super.onEffectRemoved(effectInstance, entity)

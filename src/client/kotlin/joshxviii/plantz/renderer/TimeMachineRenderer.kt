@@ -19,6 +19,7 @@ class TimeMachineRenderer() : BlockEntityRenderer<TimeMachineBlockEntity, TimeMa
     override fun createRenderState(): TimeMachineRenderSate {
         return TimeMachineRenderSate()
     }
+
     override fun extractRenderState(
         blockEntity: TimeMachineBlockEntity,
         state: TimeMachineRenderSate,

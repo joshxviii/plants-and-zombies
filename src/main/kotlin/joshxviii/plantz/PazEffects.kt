@@ -41,7 +41,7 @@ object PazEffects {
         ZombieOmenMobEffect(MobEffectCategory.NEUTRAL, 1297708, PazServerParticles.ZOMBIE_OMEN)
             .withSoundOnAdded(PazSounds.APPLY_ZOMBIE_OMEN))
     @JvmField val GARDEN_HERO : Holder<MobEffect> = register("hero_of_the_garden",
-        GardenHeroEffect(MobEffectCategory.BENEFICIAL, 0x36AD55))
+        GardenHeroEffect(MobEffectCategory.BENEFICIAL, GardenHeroEffect.EFFECT_COLOR))
     @JvmField val ELECTRIFIED : Holder<MobEffect> = register("electrified",
         ElectrifyMobEffect(MobEffectCategory.HARMFUL, 0x87FFFB, PazServerParticles.ELECTRIFIED))
     @JvmField val PAINTED : Map<DyeColor, Holder<MobEffect>> = (

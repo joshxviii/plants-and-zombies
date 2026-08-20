@@ -30,14 +30,14 @@ class BonkChoy(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.BO
     val punchGoal = MeleeAttackActionGoal(
         usingEntity = this,
         actionDelay = 7,
-        cooldownTime = 20,
+        cooldownTime = 16,
     )
 
     // uppercut
     val uppercutGoal = MeleeAttackActionGoal(
         usingEntity = this,
         actionDelay = 18,
-        cooldownTime = 60,
+        cooldownTime = 40,
         damageMultiplier = 2.0f,
         actionSuccessEffect = {
             //TODO custom sounds

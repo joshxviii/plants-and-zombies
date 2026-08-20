@@ -50,7 +50,7 @@ class DyeBlasterItem(properties: Properties) : ProjectileWeaponItem(properties) 
     override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResult {
         val itemStack: ItemStack = player.getItemInHand(hand)
         val foundProjectile = !player.getProjectile(itemStack).isEmpty
-        if (!player.hasInfiniteMaterials() && !foundProjectile) return InteractionResult.FAIL
+        if (!player.hasInfiniteMaterials() && !foundProjectile && !player.isAlive) return InteractionResult.FAIL
         else {
             player.startUsingItem(hand)
             return InteractionResult.CONSUME
