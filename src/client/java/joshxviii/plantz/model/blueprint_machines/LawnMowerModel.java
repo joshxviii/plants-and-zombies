@@ -8,9 +8,8 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import org.jspecify.annotations.NonNull;
 
-import javax.swing.text.html.parser.Entity;
-
 import static joshxviii.plantz.UtilsKt.pazResource;
+
 public class LawnMowerModel<T extends BlueprintMachineRenderState> extends EntityModel<T> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("lawn_mower"), "main");
 	private final ModelPart body;

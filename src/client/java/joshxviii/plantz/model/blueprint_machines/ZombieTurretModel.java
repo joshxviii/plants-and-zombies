@@ -1,7 +1,6 @@
 package joshxviii.plantz.model.blueprint_machines;
 
 import joshxviii.plantz.animation.blueprint_machines.ZombieTurretAnimation;
-import joshxviii.plantz.animation.zombies.EngineerZombieAnimation;
 import joshxviii.plantz.renderer.entity.BlueprintMachineRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;

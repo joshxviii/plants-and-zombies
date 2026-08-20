@@ -5,6 +5,7 @@
     "plantz:gnome",
     "plantz:super_brainz",
     "plantz:robo_zombie",
-    "plantz:imp"
+    "plantz:imp",
+    "#plantz:zombie_robots"
   ]
 }

@@ -367,7 +367,6 @@ object PazEntities {
             knockbackResistance = 0.5,
             scale = 1.25,
             stepHeight = 1.0,
-            interactionRange = 2.5,
             spawnReinforcementsChance = 0.0,
         )
     )
@@ -515,7 +514,7 @@ object PazEntities {
             explosionKnockbackResistance = 0.7,
             scale = 1.33,
             stepHeight = 1.0,
-            interactionRange = 2.0,
+            attackRange = 2.0,
             spawnReinforcementsChance = 0.0,
         )
     )
@@ -525,24 +524,35 @@ object PazEntities {
         "zombie_turret",
         EntityType.Builder.of(::ZombieTurret, MobCategory.MISC).sized(0.8f, 1.0f),
         attributes = PazZombie.Companion.PazZombieAttributes(
-            maxHealth = 10.0,
-            followRange = 20.0
+            maxHealth = 8.0,
+            armor = 7.0,
+            followRange = 20.0,
+            attackDamage = 1.5,
+            spawnReinforcementsChance = 0.0,
         )
     )
     @JvmField val ELECTRO_TURRET: EntityType<ElectroTurret> = registerZombie(
         "electro_turret",
         EntityType.Builder.of(::ElectroTurret, MobCategory.MISC).sized(0.8f, 1.0f),
         attributes = PazZombie.Companion.PazZombieAttributes(
-            maxHealth = 10.0,
-            followRange = 16.0
+            maxHealth = 8.0,
+            armor = 7.0,
+            attackRange = 7.75,
+            followRange = 8.5,
+            attackDamage = 2.0,
+            spawnReinforcementsChance = 0.0,
         )
     )
     @JvmField val ZOMBIE_DRONE: EntityType<ZombieDrone> = registerZombie(
         "zombie_drone",
         EntityType.Builder.of(::ZombieDrone, MobCategory.MISC).sized(0.8f, 1.0f),
         attributes = PazZombie.Companion.PazZombieAttributes(
-            maxHealth = 10.0,
-            followRange = 32.0
+            maxHealth = 8.0,
+            armor = 7.0,
+            followRange = 28.0,
+            attackDamage = 3.0,
+            flyingSpeed = 0.18,
+            spawnReinforcementsChance = 0.0,
         )
     )
     @JvmField val LAWN_MOWER: EntityType<LawnMower> = registerOther(

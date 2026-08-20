@@ -1,10 +1,8 @@
 package joshxviii.plantz.model.zombies;
 
 import joshxviii.plantz.animation.zombies.PirateCaptainGhostAnimation;
-import joshxviii.plantz.animation.zombies.RoboZombieAnimation;
 import joshxviii.plantz.renderer.entity.PazZombieRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
-import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;

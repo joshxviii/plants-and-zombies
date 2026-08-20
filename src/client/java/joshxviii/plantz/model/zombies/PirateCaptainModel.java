@@ -1,9 +1,6 @@
 package joshxviii.plantz.model.zombies;
 
 import joshxviii.plantz.animation.zombies.PirateCaptainAnimation;
-import joshxviii.plantz.animation.zombies.RoboZombieAnimation;
-import joshxviii.plantz.renderer.entity.PirateCaptainRenderState;
-import joshxviii.plantz.renderer.entity.RoboZombieRenderState;
 import joshxviii.plantz.renderer.entity.PazZombieRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.AnimationUtils;

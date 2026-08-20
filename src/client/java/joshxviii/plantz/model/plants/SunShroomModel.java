@@ -3,8 +3,8 @@ package joshxviii.plantz.model.plants;// Made with Blockbench 5.0.7
 // Paste this class into your mod and generate all required imports
 
 
-import joshxviii.plantz.renderer.entity.PlantRenderState;
 import joshxviii.plantz.animation.plants.SunShroomAnimation;
+import joshxviii.plantz.renderer.entity.PlantRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;

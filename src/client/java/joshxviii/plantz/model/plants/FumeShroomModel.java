@@ -1,7 +1,7 @@
 package joshxviii.plantz.model.plants;
 
-import joshxviii.plantz.renderer.entity.PlantRenderState;
 import joshxviii.plantz.animation.plants.FumeShroomAnimation;
+import joshxviii.plantz.renderer.entity.PlantRenderState;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;

@@ -1,8 +1,8 @@
 package joshxviii.plantz.model.plants;
 
-import joshxviii.plantz.renderer.entity.PlantRenderState;
 import joshxviii.plantz.ai.PlantState;
 import joshxviii.plantz.animation.plants.PlantAnimations;
+import joshxviii.plantz.renderer.entity.PlantRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;

@@ -47,19 +47,25 @@ abstract class ZombieRobot(type: EntityType<out ZombieRobot>, level: Level) : Pa
 
     init {
         xpReward = 2
-        this.lookControl = object : LookControl(this) { override fun clampHeadRotationToBody() {} }
+        noLookControl()
     }
 
     override fun setPos(x: Double, y: Double, z: Double) {
-        if (this.isPassenger || !onGround()) super.setPos(x, y, z)
+        if (!clampToGrid() || this.isPassenger || !onGround()) super.setPos(x, y, z)
         else super.setPos(Mth.floor(x) + 0.5, y, Mth.floor(z) + 0.5)
+    }
+
+    open fun clampToGrid() = true
+
+    open fun noLookControl() {
+        this.lookControl = object : LookControl(this) {override fun clampHeadRotationToBody() {}}
     }
 
     override fun createBodyControl(): BodyRotationControl = object : BodyRotationControl(this) { override fun clientTick() {} }
 
-    override fun getDeltaMovement(): Vec3 = Vec3(0.0, super.deltaMovement.y, 0.0)
+    override fun getDeltaMovement(): Vec3 = if (clampToGrid()) Vec3(0.0, super.deltaMovement.y, 0.0) else super.getDeltaMovement()
     override fun setDeltaMovement(deltaMovement: Vec3) {
-        if (!onGround() || isInWater) return super.setDeltaMovement(deltaMovement)
+        if (!clampToGrid() || !onGround() || isInWater) return super.setDeltaMovement(deltaMovement)
     }
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {

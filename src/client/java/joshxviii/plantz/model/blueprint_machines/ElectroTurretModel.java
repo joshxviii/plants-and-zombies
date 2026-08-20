@@ -1,6 +1,8 @@
 package joshxviii.plantz.model.blueprint_machines;
 
+import joshxviii.plantz.animation.blueprint_machines.ElectroTurretAnimation;
 import joshxviii.plantz.renderer.entity.BlueprintMachineRenderState;
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -20,6 +22,9 @@ public class ElectroTurretModel<T extends BlueprintMachineRenderState> extends E
 	private final ModelPart left_hand;
 	private final ModelPart head;
 	private final ModelPart turrent;
+	private final KeyframeAnimation initAnimation;
+	private final KeyframeAnimation idleAnimation;
+	private final KeyframeAnimation actionAnimation;
 
 	public ElectroTurretModel(ModelPart root) {
 		super(root);
@@ -31,6 +36,9 @@ public class ElectroTurretModel<T extends BlueprintMachineRenderState> extends E
 		this.left_hand = this.left_arm.getChild("left_hand");
 		this.head = this.neck.getChild("head");
 		this.turrent = this.head.getChild("turrent");
+		this.initAnimation = ElectroTurretAnimation.init.bake(root);
+		this.idleAnimation = ElectroTurretAnimation.idle.bake(root);
+		this.actionAnimation = ElectroTurretAnimation.action.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -75,5 +83,10 @@ public class ElectroTurretModel<T extends BlueprintMachineRenderState> extends E
 	@Override
 	public void setupAnim(@NonNull T state) {
 		super.setupAnim(state);
+		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
+		this.neck.yRot = state.yRot * (float) (Math.PI / 180.0);
+		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
+		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);
+		this.actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
 	}
 }

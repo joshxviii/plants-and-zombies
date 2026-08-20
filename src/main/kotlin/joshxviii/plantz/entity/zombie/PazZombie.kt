@@ -94,7 +94,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             val maxHealth: Double = 20.0,
             val attackDamage: Double = 1.0,
             val attackKnockback: Double = 0.4,
-            val attackRange: Double = 2.5,
+            val attackRange: Double = 1.5,
             val movementSpeed: Double = ZOMBIE_SPEED,
             val flyingSpeed: Double = ZOMBIE_SPEED * .5,
             val jumpStrength: Double = 0.42,
@@ -104,7 +104,6 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             val explosionKnockbackResistance: Double = 0.0,
             val knockbackResistance: Double = 0.2,
             val stepHeight: Double = 0.6,
-            val interactionRange: Double = 1.7,
             val scale: Double = 1.0,
             val waterMovementEfficiency: Double = 0.0
         ) {
@@ -114,7 +113,6 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
                     .add(Attributes.FOLLOW_RANGE, followRange)
                     .add(Attributes.ATTACK_DAMAGE, attackDamage)
                     .add(Attributes.ATTACK_KNOCKBACK, attackKnockback)
-                    .add(Attributes.ENTITY_INTERACTION_RANGE, attackRange)
                     .add(Attributes.MOVEMENT_SPEED, movementSpeed)
                     .add(Attributes.JUMP_STRENGTH, jumpStrength)
                     .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, spawnReinforcementsChance)
@@ -122,7 +120,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
                     .add(Attributes.EXPLOSION_KNOCKBACK_RESISTANCE, explosionKnockbackResistance)
                     .add(Attributes.KNOCKBACK_RESISTANCE, knockbackResistance)
                     .add(Attributes.STEP_HEIGHT, stepHeight)
-                    .add(Attributes.ENTITY_INTERACTION_RANGE, interactionRange)
+                    .add(Attributes.ENTITY_INTERACTION_RANGE, attackRange)
                     .add(Attributes.SCALE, scale)
                     .add(Attributes.FLYING_SPEED, flyingSpeed)
                     .add(Attributes.WATER_MOVEMENT_EFFICIENCY, waterMovementEfficiency)
@@ -235,7 +233,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             }
             ZombieState.FLYING -> {
                 floatAnimation.startIfStopped(tickCount)
-                if (serverLevel!=null && this !is SuperBrainz ) {
+                if (serverLevel!=null && this !is SuperBrainz && this !is ZombieRobot ) {
                     balloons.removeIf { !it.isAlive || it.leashHolder != this }
                     if (balloons.isEmpty()) state = ZombieState.IDLE
                 }
