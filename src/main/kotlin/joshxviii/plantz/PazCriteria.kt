@@ -11,6 +11,9 @@ object PazCriteria {
     val SEND_MAIL = registerCriteria("send_mail", SimpleCriterionTrigger(SendMailCriteria.CODEC))
 
     @JvmField
+    val RECEIVE_HERO_MAIL = registerCriteria("receive_hero_mail", SimpleCriterionTrigger(ReceiveHeroMailCriteria.CODEC))
+
+    @JvmField
     val RELOCATION = registerCriteria("relocate", SimpleCriterionTrigger(RelocatePlantCriteria.CODEC))
 
     @JvmField
@@ -24,6 +27,9 @@ object PazCriteria {
 
     @JvmField
     val WIN_ZOMBIE_RAID = registerCriteria("win_zombie_raid", SimpleCriterionTrigger(ZombieRaidCriteria.CODEC))
+
+    @JvmField
+    val START_HARDEST_RAID = registerCriteria("start_hardest_raid", SimpleCriterionTrigger(ZombieHardestRaidCriteria.CODEC))
 
     fun <T, E : SimpleCriterionCondition<T>> registerCriteria(
         name: String,

@@ -8,8 +8,7 @@
     },
     "description": {
       "translate": "advancements.plantz.win_zombie_raid.description"
-    },
-    "frame": "challenge"
+    }
   },
   "parent": "plantz:craft_plant_flag",
   "criteria": {

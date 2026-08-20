@@ -87,9 +87,9 @@ class ZombieRaid(
         fun getWaveSpawnCount(difficulty: Difficulty, omenLevel: Int, creditsUnlocked: Boolean): Int {
             //if (creditsUnlocked && omenLevel >= 5) return 20 // Force Zomboss wave with lvl 5 omen and after credits are unlocked
             val baseWaves = 3 + difficulty.id
-            val omenBonus = omenLevel.coerceAtLeast(0) * 2
+            val omenBonus = omenLevel.coerceAtLeast(1) * 2
             val creditsBonus = if (creditsUnlocked) 2 else 0
-            return (baseWaves + omenBonus + creditsBonus).coerceAtMost(20)
+            return (baseWaves + omenBonus + creditsBonus).coerceAtMost(MAXIMUM_WAVE_COUNT)
         }
         fun getStartMessage(creditsUnlocked: Boolean): Component {
             return if (creditsUnlocked) ZOMBIE_RAID_BAR_START_CREDITS else ZOMBIE_RAID_BAR_START
@@ -128,6 +128,7 @@ class ZombieRaid(
         const val SPAWN_DISTANCE: Int = 96
         const val GARDEN_HERO_EFFECT_DURATION: Int = 72000
         const val COUNTDOWN_BEFORE_LOSS: Int = 200 //10 seconds
+        const val MAXIMUM_WAVE_COUNT: Int = 20
     }
 
     private val waveToLeaderMap: MutableMap<Int, Zombie> = Maps.newHashMap<Int, Zombie>()
@@ -153,7 +154,6 @@ class ZombieRaid(
     init {
         active = true
         zombieRaidEvent.progress = 0.0f
-        numWaves = getWaveSpawnCount(difficulty, zombieRaidOmenLevel, starterHasSeenCredits)
     }
 
     fun tick(level: ServerLevel) {
@@ -170,6 +170,13 @@ class ZombieRaid(
         if (level.tickRateManager().isFrozen) return
         ticksActive++
         refreshRaidProfile(level)
+        if (ticksActive == 1L) {
+            if (numWaves>=MAXIMUM_WAVE_COUNT && starterHasSeenCredits) {
+                zombieRaidEvent.players.forEach { player ->
+                    PazCriteria.START_HARDEST_RAID.trigger(player, true)
+                }
+            }
+        }
 
         if (SharedConstants.DEBUG_RAIDS) {// DEBUG INFO
             level.playSound(null, center, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.05f, 1.5f)
@@ -296,7 +303,7 @@ class ZombieRaid(
 
     fun absorbRaidOmen(player: ServerPlayer): Boolean {
         val effect = player.getEffect(PazEffects.ZOMBIE_OMEN)?: return false
-        zombieRaidOmenLevel += effect.amplifier
+        zombieRaidOmenLevel += effect.amplifier+1
         starterHasSeenCredits = starterHasSeenCredits || player.seenCredits
         return true
     }

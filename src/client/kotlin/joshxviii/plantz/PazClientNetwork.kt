@@ -1,20 +1,14 @@
 package joshxviii.plantz
 
-import com.mojang.authlib.minecraft.client.MinecraftClient
-import jdk.jfr.EventFactory
 import joshxviii.plantz.inventory.MailboxMenu
 import joshxviii.plantz.networking.MailboxListResponsePayload
 import joshxviii.plantz.networking.SendMailResponsePayload
 import joshxviii.plantz.networking.ServerConfigResponsePayload
 import joshxviii.plantz.networking.ZombieRaidClientData
 import joshxviii.plantz.networking.ZombieRaidResponsePayload
-import joshxviii.plantz.raid.ZombieRaid
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.Minecraft
-import net.minecraft.core.BlockPos
-import java.util.EventListener
 import java.util.UUID
 
 object PazClientNetwork {

@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:time_machine"
+    },
+    "title": {
+      "translate": "advancements.plantz.time_machine"
+    },
+    "description": {
+      "translate": "advancements.plantz.time_machine.description"
+    },
+    "frame": "challenge",
+    "hidden": true
+  },
+  "parent": "plantz:solar_power",
+  "criteria": {
+    "has_time_machine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "plantz:time_machine"
+          }
+        ]
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

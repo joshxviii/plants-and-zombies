@@ -79,7 +79,7 @@ object PazCreativeTab {
                 // gnome
                 if (parameters.hasPermissions()) output.accept(PazItems.GNOME_SPAWN_EGG)
 
-                // items
+                // items + blocks
                 output.accept(PazItems.SUN_BATTERY)
                 output.accept(PazItems.SUN)
                 output.accept(PazItems.SUN_BOTTLE)
@@ -95,11 +95,7 @@ object PazCreativeTab {
                 output.accept(PazItems.DYE_BLASTER)
                 output.accept(PazBlocks.BRAINZ_FLAG)
                 output.accept(PazBlocks.PLANTZ_FLAG)
-
                 output.accept(PazItems.TACO)
-
-
-                // other
                 if (parameters.hasPermissions()) output.accept(PazItems.BRAINZIUM)
                 output.accept(PazItems.BRAINZ_ALLOY)
                 output.accept(PazBlocks.BRAINZ_ALLOY_BLOCK)
@@ -109,14 +105,13 @@ object PazCreativeTab {
                 output.accept(PazBlocks.REINFORCED_BRAINZ_ALLOY_BLOCK)
                 output.accept(PazBlocks.BRAINZ_ALLOY_FENCE)
                 output.accept(PazBlocks.GRAVESTONE)
-                if (parameters.hasPermissions()) output.accept(PazBlocks.BLUE_GARDEN_GNOME)
+                output.accept(PazBlocks.BLUE_GARDEN_GNOME)
                 output.accept(PazBlocks.GREEN_GARDEN_GNOME)
                 output.accept(PazBlocks.RED_GARDEN_GNOME)
                 output.accept(PazBlocks.YELLOW_GARDEN_GNOME)
-                output.accept(PazBlocks.TIME_MACHINE)
+                if (parameters.hasPermissions()) output.accept(PazBlocks.TIME_MACHINE)
 
-
-                //music
+                // music
                 output.accept(PazItems.MUSIC_DISC_GRASSY_GROOVE)
 
                 // balloons

@@ -1,0 +1,20 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:purple_mailbox"
+    },
+    "title": {
+      "translate": "advancements.plantz.receive_hero_mail"
+    },
+    "description": {
+      "translate": "advancements.plantz.receive_hero_mail.description"
+    }
+  },
+  "parent": "plantz:send_mail",
+  "criteria": {
+    "receive_hero_mail": {
+      "trigger": "plantz:receive_hero_mail"
+    }
+  },
+  "sends_telemetry_event": false
+}

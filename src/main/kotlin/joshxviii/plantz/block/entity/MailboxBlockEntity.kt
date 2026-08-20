@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec
 import joshxviii.plantz.GardenHeroRewards
 import joshxviii.plantz.MailboxData
 import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.PazCriteria
 import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.block.MailboxBlock.Companion.FACING
@@ -120,10 +121,12 @@ class MailboxBlockEntity(
 
         val dropPos = blockState.getValue(FACING).unitVec3.scale(0.75).add(blockPos.center)
         if (heroEffect != null) {
-            heroMailBuffer = (player as? ServerPlayer)?.let { GardenHeroRewards.collectRewards(it) }?: mutableListOf()
+            if (player !is ServerPlayer) return false
+            heroMailBuffer = GardenHeroRewards.collectRewards(player)
             updateMailboxState(MailboxState.EJECTING)
             ejectTimer = HERO_MAIL_EJECT_DELAY * heroMailBuffer.size
             player.removeEffect(heroEffect)
+            PazCriteria.RECEIVE_HERO_MAIL.trigger(player, true)
             setChanged()
             return true
         }

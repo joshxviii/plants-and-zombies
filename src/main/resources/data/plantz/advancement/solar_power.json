@@ -1,0 +1,39 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:sun_battery",
+      "components": {
+        "plantz:stored_sun": {
+          "stored_sun": 1,
+          "is_fully_charged": true
+        }
+      }
+    },
+    "title": {
+      "translate": "advancements.plantz.solar_power"
+    },
+    "description": {
+      "translate": "advancements.plantz.solar_power.description"
+    }
+  },
+  "parent": "plantz:plant_pot_minecart",
+  "criteria": {
+    "has_sun_battery": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "plantz:sun_battery",
+            "components": {
+              "plantz:stored_sun": {
+                "stored_sun": 512,
+                "is_fully_charged": true
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

@@ -2,6 +2,7 @@ package joshxviii.plantz.gui
 
 import joshxviii.plantz.inventory.TimeMachineMenu
 import joshxviii.plantz.pazResource
+import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.gui.screens.inventory.LoomScreen
@@ -13,6 +14,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.contents.objects.AtlasSprite
 import net.minecraft.resources.Identifier
+import net.minecraft.util.ARGB
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.Slot
 
@@ -43,6 +45,11 @@ class TimeMachineScreen(
         if (!batterySlot.hasItem()) {
             graphics.blit(RenderPipelines.GUI_TEXTURED, SUN_BATTERY_SLOT, xo + batterySlot.x, yo + batterySlot.y, 0f, 0f, 16, 16, 16, 16)
         }
+
+        val wipText = Component.translatable("container.plantz.time_machine.wip").withStyle(ChatFormatting.BOLD)
+        val textWidth = font.width(wipText)
+        val textColor = 0xCC4444
+        graphics.outlineText(font, wipText, xo + (imageWidth / 2) - (textWidth / 2), yo + 64, color = textColor, outlineColor = ARGB.multiply(textColor, 0x333333))
     }
 
     override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {

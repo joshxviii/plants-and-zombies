@@ -1,5 +1,6 @@
 package joshxviii.plantz.networking
 
+import joshxviii.plantz.PazCriteria
 import joshxviii.plantz.block.MailboxState
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.block.entity.MailboxMailQueue
@@ -13,6 +14,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.item.ItemStack
@@ -71,6 +73,7 @@ data class SendMailRequestPayload(val targetPos: BlockPos) : CustomPacketPayload
                     Component.translatable("container.plantz.mailbox_full", targetBE?.name ?: Component.translatable("item.plantz.mailbox")).withColor(0xFF0000)
                 ))
             }
+            PazCriteria.SEND_MAIL.trigger(player, success)
         }
     }
 
