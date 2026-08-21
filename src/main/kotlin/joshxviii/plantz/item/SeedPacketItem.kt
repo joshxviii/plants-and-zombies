@@ -128,7 +128,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
         val sunCost = itemStack.get(PazComponents.SUN_COST)?.getSunCost(entityType) ?: 0
         if (sunCost > availableSun && !player.hasInfiniteMaterials()) {
             player.sendOverlayMessage(
-                Component.translatable("message.plantz.not_enough_sun", availableSun, sunCost).withStyle(ChatFormatting.RED)
+                Component.translatable("message.plantz.not_enough_item", PazItems.SUN.name(), availableSun, sunCost).withStyle(ChatFormatting.RED)
             )
             return InteractionResult.FAIL
         }

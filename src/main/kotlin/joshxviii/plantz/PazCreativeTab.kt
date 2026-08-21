@@ -71,10 +71,10 @@ object PazCreativeTab {
                 output.accept(PazItems.GARGANTUAR_SPAWN_EGG)
 
                 // machine blueprints
-                //output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_TURRET))
-                //output.accept(BlueprintItem.stackFor(PazEntities.ELECTRO_TURRET))
-                //output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_DRONE))
-                //output.accept(BlueprintItem.stackFor(PazEntities.LAWN_MOWER))
+                output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_TURRET))
+                output.accept(BlueprintItem.stackFor(PazEntities.ELECTRO_TURRET))
+                output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_DRONE))
+                if (parameters.hasPermissions()) output.accept(BlueprintItem.stackFor(PazEntities.LAWN_MOWER))
 
                 // gnome
                 if (parameters.hasPermissions()) output.accept(PazItems.GNOME_SPAWN_EGG)

@@ -1,5 +1,6 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.item.component.BrainzAlloyCost
 import joshxviii.plantz.item.component.BlocksProjectileDamage
 import joshxviii.plantz.item.component.StoredSun
 import joshxviii.plantz.item.component.StoredWater
@@ -16,41 +17,41 @@ object PazComponents {
     @JvmField
     val SUN_COST: DataComponentType<SunCost> = register(
         "sun_cost"
-    ) { b: DataComponentType.Builder<SunCost> ->
-        DataComponentType.builder<SunCost>()
-            .persistent(SunCost.CODEC)
-            .networkSynchronized(SunCost.STREAM_CODEC)
-            .cacheEncoding()
+    ) { it.persistent(SunCost.CODEC)
+        .networkSynchronized(SunCost.STREAM_CODEC)
+        .cacheEncoding()
+    }
+
+    @JvmField
+    val BRAINZ_ALLOY_COST: DataComponentType<BrainzAlloyCost> = register(
+        "brainz_alloy_cost"
+    ) { it.persistent(BrainzAlloyCost.CODEC)
+        .networkSynchronized(BrainzAlloyCost.STREAM_CODEC)
+        .cacheEncoding()
     }
 
     @JvmField
     val STORED_WATER: DataComponentType<StoredWater> = register(
         "stored_water"
-    ) { b: DataComponentType.Builder<StoredWater> ->
-        DataComponentType.builder<StoredWater>()
-            .persistent(StoredWater.CODEC)
-            .networkSynchronized(StoredWater.STREAM_CODEC)
-            .cacheEncoding()
+    ) { it.persistent(StoredWater.CODEC)
+        .networkSynchronized(StoredWater.STREAM_CODEC)
+        .cacheEncoding()
     }
 
     @JvmField
     val STORED_SUN: DataComponentType<StoredSun> = register(
         "stored_sun"
-    ) { b: DataComponentType.Builder<StoredSun> ->
-        DataComponentType.builder<StoredSun>()
-            .persistent(StoredSun.CODEC)
-            .networkSynchronized(StoredSun.STREAM_CODEC)
-            .cacheEncoding()
+    ) { it.persistent(StoredSun.CODEC)
+        .networkSynchronized(StoredSun.STREAM_CODEC)
+        .cacheEncoding()
     }
 
     @JvmField
     val BLOCKS_PROJECTILE_DAMAGE: DataComponentType<BlocksProjectileDamage> = register(
         "blocks_projectile_damage"
-    ) { b: DataComponentType.Builder<BlocksProjectileDamage> ->
-        DataComponentType.builder<BlocksProjectileDamage>()
-            .persistent(BlocksProjectileDamage.CODEC)
-            .networkSynchronized(BlocksProjectileDamage.STREAM_CODEC)
-            .cacheEncoding()
+    ) { it.persistent(BlocksProjectileDamage.CODEC)
+        .networkSynchronized(BlocksProjectileDamage.STREAM_CODEC)
+        .cacheEncoding()
     }
 
     private fun <T : Any> register(name: String, builder: UnaryOperator<DataComponentType.Builder<T>>): DataComponentType<T> {

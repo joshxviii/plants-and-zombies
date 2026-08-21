@@ -31,7 +31,7 @@ class ElectroTurret(type: EntityType<out ElectroTurret>, level: Level) : ZombieR
         this.goalSelector.addGoal(1, MeleeAttackActionGoal(
             usingEntity = this,
             actionDelay = 9,
-            damageType = PazDamageTypes.ZOMBIE_ELECTRIC,
+            damageType = PazDamageTypes.ZAP,
             usePredicate = { actionTime<=0 },
             actionStartEffect = { actionTime=1 },
             beforeHitEntityEffect = {

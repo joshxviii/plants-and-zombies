@@ -19,6 +19,7 @@ import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.monster.Enemy
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.entity.projectile.ProjectileDeflection
 import net.minecraft.world.entity.projectile.ProjectileUtil
@@ -369,7 +370,7 @@ abstract class PazProjectile(
         if (entity is Projectile) return false
         if (piercingIgnoreEntityIds.contains(entity.id)) return false
         val owner = entityOwner
-        if ((entity is Plant && owner is Plant) || (entity is Enemy && owner is Enemy)) return false
+        if ((entity is Plant && owner is Plant && entity.owner !is Enemy) || (entity is Enemy && owner is Enemy && extractRootOwner(owner) !is Player)) return false
         if (this.hasSameRootOwner(entity)) return false
         return super.canHitEntity(entity)
     }

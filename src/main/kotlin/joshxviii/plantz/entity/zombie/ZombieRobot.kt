@@ -2,6 +2,7 @@ package joshxviii.plantz.entity.zombie
 
 import PazOwnableZombie
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.hasSameRootOwner
 import joshxviii.plantz.item.BlueprintItem
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -24,11 +25,11 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.entity.UniquelyIdentifyable
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
 import java.util.*
-import kotlin.Int
 
 abstract class ZombieRobot(type: EntityType<out ZombieRobot>, level: Level) : PazOwnableZombie(type, level) {
 
@@ -68,6 +69,14 @@ abstract class ZombieRobot(type: EntityType<out ZombieRobot>, level: Level) : Pa
         if (!clampToGrid() || !onGround() || isInWater) return super.setDeltaMovement(deltaMovement)
     }
 
+    fun setOwner(owner: LivingEntity?) {
+        this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(owner).map { EntityReference.of(it) })
+    }
+
+    fun setOwnerReference(owner: EntityReference<LivingEntity>) {
+        this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(owner))
+    }
+
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
         entityData.define(DATA_OWNERUUID_ID, Optional.empty())
@@ -76,11 +85,16 @@ abstract class ZombieRobot(type: EntityType<out ZombieRobot>, level: Level) : Pa
 
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
+        EntityReference.store(ownerReference, output, "Owner")
         output.putInt("actionTime", actionTime)
     }
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
+        val owner = EntityReference.readWithOldOwnerConversion<LivingEntity>(input, "Owner", this.level())
+        if (owner != null) {
+            try { setOwnerReference(owner) } catch (ignored: Throwable) { }
+        } else this.entityData.set(DATA_OWNERUUID_ID, Optional.empty())
         input.getIntOr("actionTime", 0)
     }
 
@@ -88,20 +102,14 @@ abstract class ZombieRobot(type: EntityType<out ZombieRobot>, level: Level) : Pa
         return this.entityData.get(DATA_OWNERUUID_ID).orElse(null);
     }
 
-    override fun doPush(entity: Entity) {}
+    override fun doPush(entity: Entity) {
+        if (!clampToGrid()) super.doPush(entity)
+    }
 
     override fun tick() {
         super.tick()
         if (tickCount < 20) initAnimation.startIfStopped(tickCount)
         idleAnimation.startIfStopped(tickCount)
-    }
-
-    fun setOwner(owner: LivingEntity?) {
-        this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable<LivingEntity>(owner).map { EntityReference.of(it) })
-    }
-
-    fun setOwnerReference(owner: EntityReference<LivingEntity>?) {
-        this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable<EntityReference<LivingEntity>>(owner))
     }
 
     override fun getAmbientSound(): SoundEvent = SoundEvents.EMPTY
@@ -126,12 +134,17 @@ abstract class ZombieRobot(type: EntityType<out ZombieRobot>, level: Level) : Pa
             if (this.owner is Player) (
                 entity !is Plant &&
                 entity !is Creeper &&
+                !entity.hasSameRootOwner(this.owner) &&
                 (entity is Zombie || (entity is Enemy))
             )
             else (
                 entity is Player || entity is Plant
             )
         })
+    }
+
+    override fun ignoreZombieDamage(): Boolean {
+        return this.owner !is Player
     }
 
     override fun finalizeSpawn(

@@ -16,6 +16,7 @@ import joshxviii.plantz.PazEntities.SOLDIER_ZOMBIE
 import joshxviii.plantz.PazEntities.SUPER_BRAINZ
 import joshxviii.plantz.PazEntities.ZOMBIE_YETI
 import joshxviii.plantz.item.*
+import joshxviii.plantz.item.component.BrainzAlloyCost
 import joshxviii.plantz.item.component.BlocksProjectileDamage
 import joshxviii.plantz.item.component.StoredSun
 import joshxviii.plantz.item.component.StoredWater
@@ -23,6 +24,7 @@ import joshxviii.plantz.item.component.SunCost
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
 import net.fabricmc.fabric.api.registry.FuelValueEvents
 import net.fabricmc.fabric.impl.item.ItemComponentTooltipProviderRegistryImpl
+import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.dispenser.BlockSource
@@ -195,6 +197,10 @@ object PazItems {
     val BLUEPRINT: Item = registerItem(
         "blueprint", ::BlueprintItem,
         properties = Item.Properties()
+            .stacksTo(1)
+            .durability(20)
+            .component(PazComponents.BRAINZ_ALLOY_COST, BrainzAlloyCost())
+            .component(DataComponents.BREAK_SOUND, SoundEvents.WOLF_ARMOR_BREAK)
     )
     @JvmField
     val SEED_PACKET: Item = registerItem(
@@ -277,6 +283,7 @@ object PazItems {
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_WATER)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_SUN)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
+        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BRAINZ_ALLOY_COST)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BLOCKS_PROJECTILE_DAMAGE)
 
         DefaultItemComponentEvents.MODIFY.register {

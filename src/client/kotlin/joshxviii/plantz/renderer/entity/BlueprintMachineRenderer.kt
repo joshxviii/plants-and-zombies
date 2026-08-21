@@ -2,6 +2,7 @@ package joshxviii.plantz.renderer.entity
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
+import joshxviii.plantz.ai.ZombieState
 import joshxviii.plantz.entity.zombie.ZombieRobot
 import joshxviii.plantz.model.blueprint_machines.ZombieTurretModel
 import joshxviii.plantz.renderer.getEmissiveTextureLocation
@@ -41,7 +42,7 @@ class BlueprintMachineRenderer(
         collector: SubmitNodeCollector,
         camera: CameraRenderState
     ) {
-        super.submit(state, poseStack, collector, camera)
+        if (state.ageInTicks>1) super.submit(state, poseStack, collector, camera)
     }
 
     override fun getFlipDegrees(): Float = 0f

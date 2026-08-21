@@ -67,7 +67,9 @@ public class ZombieDroneModel<T extends BlueprintMachineRenderState> extends Ent
 	@Override
 	public void setupAnim(@NonNull T state) {
 		super.setupAnim(state);
-		this.head.xRot = state.xRot * Mth.DEG_TO_RAD;
+		this.body.xRot = state.xRot * Mth.DEG_TO_RAD * .25f;
+
+		this.head.xRot = state.xRot * Mth.DEG_TO_RAD * .1f;
 		this.head.yRot = state.yRot * Mth.DEG_TO_RAD;
 		this.initAnimation.apply(state.getInitAnimationState(), state.ageInTicks);
 		this.idleAnimation.apply(state.getIdleAnimationState(), state.ageInTicks);

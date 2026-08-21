@@ -27,6 +27,7 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.Projectile
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
@@ -82,6 +83,7 @@ interface PlantHeadAttachment {
     }
 }
 
+fun Item.name(): Component = Component.translatable(this.descriptionId)
 
 fun Entity.canWearPlant(): Boolean {
     return this is LivingEntity && this.getItemBySlot(EquipmentSlot.HEAD).`is`(PazItems.PLANT_POT_HELMET)
@@ -136,7 +138,7 @@ fun Player.tryAddSunToStorage(amount:Int = 1): Boolean {
     }
 }
 
-fun Player.removeSunFromStorageAndInventory(amount:Int = 1): Boolean {
+fun Player.removeSunFromStorageAndInventory(amount:Int = 1): Int {
     var remainder = amount
 
     val removedEnoughFromStorage = inventory.hasAnyMatching { itemStack ->
@@ -149,25 +151,23 @@ fun Player.removeSunFromStorageAndInventory(amount:Int = 1): Boolean {
         remainder <= 0
     }
 
-    if (!removedEnoughFromStorage) {
-        val removedFromInventory = inventory.clearOrCountMatchingItems(
-            { it.`is`(PazItems.SUN) },
-            remainder,
-            inventoryMenu.getCraftSlots()
-        )
-        remainder -= removedFromInventory
-    }
+    if (!removedEnoughFromStorage) remainder -= removeItemFromInventory(PazItems.SUN, remainder)
 
-    return remainder <= 0
+    return remainder
 }
 
 fun Player.getTotalSun(): Int {
-    var count: Int = 0
-    count += inventory.countItem(PazItems.SUN)
+    var count: Int = getItemCount(PazItems.SUN)
     inventory.forEach { itemStack ->
         count += itemStack.get(PazComponents.STORED_SUN)?.storedSun ?: 0
     }
     return count
+}
+
+fun Player.getItemCount(itemType: Item): Int = inventory.countItem(itemType)
+
+fun Player.removeItemFromInventory(itemType: Item, amount: Int = 1): Int {
+    return inventory.clearOrCountMatchingItems({ it.`is`(itemType) }, amount, inventoryMenu.getCraftSlots())
 }
 
 fun Int.tickTimeFormat(): String = "%02d:%02d".format(
@@ -205,7 +205,7 @@ fun DamageSource.isZombieFireworkExplosion(): Boolean {
     return isFirework && hurtBy.`is`(PazTags.EntityTypes.ZOMBIE_RAIDERS)
 }
 
-private fun extractRootOwner(entity: Entity): Entity? = when (entity) {
+fun extractRootOwner(entity: Entity): Entity? = when (entity) {
     is OwnableEntity -> entity.rootOwner
     is Projectile -> (entity.owner as? OwnableEntity)?.rootOwner ?: entity.owner
     else -> null
