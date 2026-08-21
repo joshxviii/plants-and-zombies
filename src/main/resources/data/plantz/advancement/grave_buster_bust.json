@@ -13,7 +13,8 @@
     },
     "description": {
       "translate": "advancements.plantz.grave_buster_bust.description"
-    }
+    },
+    "frame": "goal"
   },
   "parent": "plantz:grow_plant_seeds",
   "criteria": {

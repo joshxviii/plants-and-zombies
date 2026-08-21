@@ -8,7 +8,8 @@
     },
     "description": {
       "translate": "advancements.plantz.taco_time.description"
-    }
+    },
+    "frame": "goal"
   },
   "parent": "plantz:craft_plant_flag",
   "criteria": {

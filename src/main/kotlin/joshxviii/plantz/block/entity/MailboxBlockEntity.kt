@@ -87,7 +87,12 @@ class MailboxBlockEntity(
 
                         if (blockEntity.heroMailIndex == TACO_TIME_WAVE-1) {// Add taco reward when reaching wave 10
                             items.addAll(blockEntity.getHeroMail(PazLootTables.MAIL_REWARDS_TACO))
-                            blockEntity.playSound(SoundEvents.VAULT_INSERT_ITEM)// TODO add surprise horn taco sfx
+                            blockEntity.playSound(SoundEvents.PLAYER_LEVELUP, 1.6f)// TODO add surprise horn taco sfx
+                            (level as? ServerLevel)?.sendParticles(
+                                PazServerParticles.CONFETTI,
+                                dropPos.x, dropPos.y, dropPos.z, 16,
+                                0.1, 0.2, 0.1, 0.075
+                            )
                         }
 
                         items.forEach { item ->

@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleGroupRegistry
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry
 import net.minecraft.client.particle.CritParticle
 import net.minecraft.client.particle.ParticleRenderType
-import net.minecraft.client.particle.SnowflakeParticle
 import net.minecraft.client.particle.SpellParticle
 import net.minecraft.client.particle.SplashParticle
 
@@ -129,6 +128,10 @@ object PazParticles {
 
         it.register(PazServerParticles.PAINT_BALL) { spriteSet ->
             PaintBallParticle.Provider(spriteSet)
+        }
+
+        it.register(PazServerParticles.CONFETTI) { spriteSet ->
+            ConfettiParticle.Provider(spriteSet)
         }
 
         it.register(PazServerParticles.ZOMBIE_OMEN) { sprite ->

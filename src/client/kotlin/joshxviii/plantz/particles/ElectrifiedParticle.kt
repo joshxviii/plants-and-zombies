@@ -47,6 +47,8 @@ class ElectrifiedParticle private constructor(
         }
     }
 
+
+
     override fun getLayer(): Layer {
         return Layer.TRANSLUCENT
     }

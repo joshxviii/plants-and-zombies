@@ -6,6 +6,7 @@ import joshxviii.plantz.networking.SendMailResponsePayload
 import joshxviii.plantz.networking.ServerConfigResponsePayload
 import joshxviii.plantz.networking.ZombieRaidClientData
 import joshxviii.plantz.networking.ZombieRaidResponsePayload
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.Minecraft
@@ -24,11 +25,9 @@ object PazClientNetwork {
 
     fun initialize() {
 
-        ClientTickEvents.START_LEVEL_TICK.register {
-            Minecraft.getInstance().player?.let { player ->
-                if (player.tickCount % 200 == 0) {
-                    //ZombieRaidClientCache.clear()
-                }
+        ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register { client, level ->
+            client.player?.let {
+                ZombieRaidClientCache.clear()
             }
         }
 
