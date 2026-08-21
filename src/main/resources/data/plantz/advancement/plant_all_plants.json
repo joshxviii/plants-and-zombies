@@ -16,7 +16,7 @@
     },
     "frame": "challenge"
   },
-  "parent": "plantz:grow_plant_seeds",
+  "parent": "plantz:grave_buster",
   "criteria": {
     "plantz:sunflower": {
       "trigger": "minecraft:tame_animal",

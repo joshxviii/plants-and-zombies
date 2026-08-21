@@ -6,12 +6,14 @@ import joshxviii.plantz.MailboxData
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazCriteria
 import joshxviii.plantz.PazEffects
+import joshxviii.plantz.PazLootTables
 import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.block.MailboxBlock.Companion.FACING
 import joshxviii.plantz.block.MailboxBlock.Companion.STATE
 import joshxviii.plantz.block.MailboxState
 import joshxviii.plantz.effect.GardenHeroEffect
 import joshxviii.plantz.inventory.MailboxMenu
+import joshxviii.plantz.raid.ZombieRaid.Companion.TACO_TIME_WAVE
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
@@ -81,10 +83,17 @@ class MailboxBlockEntity(
                 if (buffer.isNotEmpty()) {// Hero Mail Rewards
                     val dropPos = blockEntity.blockState.getValue(FACING).unitVec3.scale(0.75).add(blockEntity.blockPos.center)
                     if (blockEntity.ejectTimer % HERO_MAIL_EJECT_DELAY == 0) buffer.getOrNull(blockEntity.heroMailIndex)?.let {
-                        val items = blockEntity.getHeroMail(it)
+                        val items = blockEntity.getHeroMail(it).toMutableList()
+
+                        if (blockEntity.heroMailIndex == TACO_TIME_WAVE-1) {// Add taco reward when reaching wave 10
+                            items.addAll(blockEntity.getHeroMail(PazLootTables.MAIL_REWARDS_TACO))
+                            blockEntity.playSound(SoundEvents.VAULT_INSERT_ITEM)// TODO add surprise horn taco sfx
+                        }
+
                         items.forEach { item ->
                             Containers.dropItemStack(level, dropPos.x, dropPos.y, dropPos.z, item)
                         }
+
                         blockEntity.playSound(SoundEvents.VAULT_EJECT_ITEM, (blockEntity.heroMailIndex / buffer.size.toFloat()) * 0.2f + 1.0f)
                         blockEntity.heroMailIndex++
                         if (blockEntity.heroMailIndex >= buffer.size) {

@@ -21,13 +21,13 @@
         {
           "type": "minecraft:item",
           "name": "plantz:taco",
-          "weight": 18,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
-                "min": 3,
-                "max": 10
+                "min": 2,
+                "max": 5
               }
             }
           ]

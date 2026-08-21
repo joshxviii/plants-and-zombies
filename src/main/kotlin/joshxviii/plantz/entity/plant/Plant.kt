@@ -544,7 +544,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val itemEntity = ItemEntity(level, x, y + 0.5, z, stack)
         level.addFreshEntity(itemEntity)
         playSound(SoundEvents.ROOTED_DIRT_BREAK)
-        if (player is ServerPlayer) PazCriteria.GROW_SEEDS.trigger(player, 1)
+        if (player is ServerPlayer) PazCriteria.GROW_SEEDS.trigger(player, true)
     }
 
     fun sunRequiredForSeeds(): Int {

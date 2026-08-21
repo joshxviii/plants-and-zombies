@@ -1,0 +1,25 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:seed_packet",
+      "components": {
+        "minecraft:entity_data": {
+          "id": "plantz:grave_buster"
+        }
+      }
+    },
+    "title": {
+      "translate": "advancements.plantz.grave_buster_bust"
+    },
+    "description": {
+      "translate": "advancements.plantz.grave_buster_bust.description"
+    }
+  },
+  "parent": "plantz:grow_plant_seeds",
+  "criteria": {
+    "grave_buster_bust": {
+      "trigger": "plantz:grave_buster_bust"
+    }
+  },
+  "sends_telemetry_event": false
+}

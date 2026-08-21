@@ -1,0 +1,89 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:taco"
+    },
+    "title": {
+      "translate": "advancements.plantz.taco_time"
+    },
+    "description": {
+      "translate": "advancements.plantz.taco_time.description"
+    }
+  },
+  "parent": "plantz:craft_plant_flag",
+  "criteria": {
+    "wave_1": {
+      "conditions": {
+        "wave_number": 1
+      },
+      "trigger": "plantz:raid_wave"
+    },
+    "wave_2": {
+      "conditions": {
+        "wave_number": 2
+      },
+      "trigger": "plantz:raid_wave"
+    },
+    "wave_3": {
+      "conditions": {
+        "wave_number": 3
+      },
+      "trigger": "plantz:raid_wave"
+    },
+    "wave_4": {
+      "conditions": {
+        "wave_number": 4
+      },
+      "trigger": "plantz:raid_wave"
+    },
+    "wave_5": {
+      "conditions": {
+        "wave_number": 5
+      },
+      "trigger": "plantz:raid_wave"
+    },
+    "wave_6": {
+      "conditions": {
+        "wave_number": 6
+      },
+      "trigger": "plantz:raid_wave"
+    },
+    "wave_7": {
+      "conditions": {
+        "wave_number": 7
+      },
+      "trigger": "plantz:raid_wave"
+    },
+    "wave_8": {
+      "conditions": {
+        "wave_number": 8
+      },
+      "trigger": "plantz:raid_wave"
+    },
+    "wave_9": {
+      "conditions": {
+        "wave_number": 9
+      },
+      "trigger": "plantz:raid_wave"
+    },
+    "wave_10": {
+      "conditions": {
+        "wave_number": 10
+      },
+      "trigger": "plantz:raid_wave"
+    }
+  },
+  "requirements": [
+    ["wave_1"],
+    ["wave_2"],
+    ["wave_3"],
+    ["wave_4"],
+    ["wave_5"],
+    ["wave_6"],
+    ["wave_7"],
+    ["wave_8"],
+    ["wave_9"],
+    ["wave_10"]
+  ],
+  "sends_telemetry_event": true
+}

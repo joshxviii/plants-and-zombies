@@ -129,6 +129,7 @@ class ZombieRaid(
         const val GARDEN_HERO_EFFECT_DURATION: Int = 72000
         const val COUNTDOWN_BEFORE_LOSS: Int = 200 //10 seconds
         const val MAXIMUM_WAVE_COUNT: Int = 20
+        const val TACO_TIME_WAVE = 10
     }
 
     private val waveToLeaderMap: MutableMap<Int, Zombie> = Maps.newHashMap<Int, Zombie>()
@@ -229,7 +230,7 @@ class ZombieRaid(
             status = ZombieRaidStatus.VICTORY
             postRaidTicks = POST_RAID_TICKS
             zombieRaidEvent.players.forEach { player ->// advancement
-                PazCriteria.WIN_ZOMBIE_RAID.trigger(player, ZombieRaidContext(center))
+                PazCriteria.WIN_ZOMBIE_RAID.trigger(player, true)
                 val effect = MobEffectInstance(PazEffects.GARDEN_HERO, GARDEN_HERO_EFFECT_DURATION, zombieRaidOmenLevel, false, true)
                 (player as GardenHeroRewards).`plantz$setWaveList`(waveTypes)
                 player.addEffect(effect)
@@ -252,6 +253,9 @@ class ZombieRaid(
         if (shouldSpawnNextWave()) {
             val spawnPos = findRandomSpawnPos(level, 20) ?: center
             spawnNextWave(level, spawnPos)
+            zombieRaidEvent.players.forEach { player ->
+                PazCriteria.RAID_WAVE_TRIGGER.trigger(player, wavesSpawned)
+            }
         }
         else if (waveTimer <= 0) {// destroy flag when timer runs out
             (level.getBlockEntity(center) as? FlagBlockEntity)?.hurt(999f)

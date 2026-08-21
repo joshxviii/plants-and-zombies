@@ -1,15 +1,19 @@
 package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.PazCriteria
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazLootTables
 import joshxviii.plantz.ai.goal.ActionGoal
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.item.ItemEntity
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.loot.LootParams
@@ -75,6 +79,9 @@ class GraveBuster(type: EntityType<out Plant>, level: Level) : Plant(PazEntities
                 items.forEach { item ->
                     val entity = ItemEntity(level, graveBuster.x, graveBuster.y-1f, graveBuster.z, item)
                     level.addFreshEntity(entity)
+                }
+                (graveBuster.owner as? ServerPlayer)?.let {
+                    PazCriteria.GRAVE_BUSTER_BUST.trigger(it, true)
                 }
                 return true
             }
