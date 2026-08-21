@@ -22,12 +22,12 @@ class ConfettiParticle(
     companion object {
         fun getColor(): Int {
             return listOf(
-                0xFF0000,
+                0xFF254A,
+                0xFFE804,
+                0x0053FF,
                 0x00FF00,
-                0x0000FF,
-                0xFF00FF,
-                0xFFFF00,
-                0x00FFFF,
+                0xE522FF,
+                0xFF8120,
             ).random()
         }
     }
@@ -64,10 +64,6 @@ class ConfettiParticle(
 
     override fun getQuadSize(a: Float): Float {
         return 0.15f
-    }
-
-    override fun setPos(x: Double, y: Double, z: Double) {
-        super.setPos(x, y, z)
     }
 
     override fun extractRotatedQuad(particleTypeRenderState: QuadParticleRenderState, rotation: Quaternionf, x: Float, y: Float, z: Float, partialTickTime: Float) {

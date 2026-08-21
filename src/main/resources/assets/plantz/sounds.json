@@ -274,6 +274,11 @@
       { "name": "block/trial_spawner/ambient_ominous3", "volume": 6.0, "pitch": 1.0 }
     ], "subtitle": "plantz.subtitles.event.raid.special_wave"
   },
+
+  "event.raid.taco_reward": {
+    "sounds": [{ "name": "plantz:event/taco_reward" }], "subtitle": "plantz.subtitles.event.raid.taco_reward"
+  },
+
   "event.mob_effect.hypnotized": {
     "sounds": [{ "name": "enchant/thorns/hit1", "volume": 1.0, "pitch": 1.3 }], "subtitle": "plantz.subtitles.event.mob_effect.hypnotized"
   },

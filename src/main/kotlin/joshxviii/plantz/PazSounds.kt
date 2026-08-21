@@ -65,6 +65,7 @@ object PazSounds {
     @JvmField val SNOWCHUNK_HIT = registerForHolder("entity.snowchunk")
 
     @JvmField val SPECIAL_WAVE = registerForHolder("event.raid.special_wave")
+    @JvmField var TACO_REWARD = register("event.raid.taco_reward")
 
 
     @JvmField val MUSIC_DISC_GRASSY_GROOVE = registerForHolder("music_disc.grassy_groove")

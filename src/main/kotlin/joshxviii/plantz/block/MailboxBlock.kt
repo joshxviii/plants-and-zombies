@@ -115,7 +115,7 @@ class MailboxBlock(
                     .sortedBy { it.blockPos.distSqr(pos) }
 
                 player.openMenu(currentMailbox)
-                currentMailbox?.playSound(SoundEvents.COPPER_CHEST_OPEN, 1.5f)
+                currentMailbox?.playSound(SoundEvents.COPPER_CHEST_OPEN, 0.3f, 1.5f)
                 (player.containerMenu as? MailboxMenu)?.availableMailboxes = mailboxes
                 ServerPlayNetworking.send(player as ServerPlayer, MailboxListResponsePayload(level.dimension(), mailboxes))
             }

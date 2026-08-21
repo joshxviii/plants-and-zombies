@@ -3,6 +3,7 @@ package joshxviii.plantz.effect
 import joshxviii.plantz.GardenHeroRewards
 import joshxviii.plantz.PazLootTables
 import joshxviii.plantz.raid.WaveType
+import joshxviii.plantz.raid.ZombieRaid
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.effect.MobEffect
@@ -31,7 +32,7 @@ class GardenHeroEffect(
         val waveList = hero.`plantz$getWaveList`()
         if (waveList.isEmpty()) {
             val newList = mutableListOf<WaveType>()
-            for (i in 0..effectInstance.amplifier) {
+            for (i in 0..effectInstance.amplifier.coerceAtMost(ZombieRaid.MAXIMUM_WAVE_COUNT - 1)) {
                 newList.add(WaveType.DEFAULT)
             }
             hero.`plantz$setWaveList`(newList)
