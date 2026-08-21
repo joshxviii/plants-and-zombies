@@ -52,6 +52,8 @@
     - Repeater has a 60% chance to produce Peashooter seeds.
 - Repeaters no longer spawn naturally.
 #### Zombies:
+- Added the Hero of the Garden effect.
+  - While the effect is active, interacting with a mailbox will grant hero rewards based on the effect's level.
 - Updated the Zombie Raid event.
   - The amount of waves a raid has is now determined by: (zombie omen level * 2) + (the game's difficulty) + (2 if the end credits have been seen).
   - After the end credits have been seen, waves during a raid will be more difficult.
@@ -62,9 +64,9 @@
     - "Pirate Invasion" can occur during waves 5–14.
     - "Robo Army" can occur during waves 6–15. (Only after the end credits have been seen)
     - "League of Awesome" can occur during waves 8–19. (Only after the end credits have been seen)
-- Added the Hero of the Garden effect.
-  - When a raid is completed, all players will receive the Hero of the Garden effect.
-  - While the effect is active, interacting with a mailbox will grant special loot for each completed wave in the raid.
+  - When a raid is completed, all players participating in the raid will receive the Hero of the Garden effect.
+  - Special waves add unique loot to the item pool when claiming raid hero rewards.
+  - Every 10 waves completed add bonus tacos to the hero reward pool.
 - Added Desert, Snow, and Pirate Variants for the Browncoat Zombie.
   - The pirate browncoat will spawn during the "Pirate Invasion" special wave.
   - The snow browncoat will spawn during the "Winter Wonderland" special wave.
@@ -86,6 +88,11 @@
   - Spawns during the "League of Awesome" special zombie raid.
 - Zombies will now attack Wall Nuts when walking into them.
 ### Technical Changes
+- Added BrainzAlloyCost item component.
+- Added configuration options.
+  - `alloyCost` – A list of entity ids paired with an integer.
+  - `showHiddenItemsInCreativeTab` – Enables some W.I.P items in the creative tab.
+
 
 # Changelog 1.4.2
 ### Hotfix
