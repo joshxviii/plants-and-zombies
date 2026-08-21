@@ -126,7 +126,7 @@ class BlueprintItem(
             ParticleTypes.CAMPFIRE_COSY_SMOKE, entity.x, entity.y, entity.z,
             6, 0.2, 0.2, 0.2, 0.01
         )
-        if (entity is ZombieRobot) entity.owner = player
+        //if (entity is ZombieRobot) entity.owner = player
         level.gameEvent(player, GameEvent.ENTITY_PLACE, spawnPos)
 
         return InteractionResult.SUCCESS

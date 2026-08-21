@@ -68,7 +68,7 @@ enum class WaveType(
                 , WaveSpawnEntry(PazEntities.SOLDIER_ZOMBIE, soldierCount)
             )
         },
-        lootTableFn = { waveNum, _ -> if (waveNum > 7) PazLootTables.MAIL_REWARD_DEFAULT_HARD else PazLootTables.MAIL_REWARD_DEFAULT_EASY }
+        lootTableFn = { waveNum, _ -> if (waveNum==10) PazLootTables.MAIL_REWARDS_TACO else if (waveNum > 7) PazLootTables.MAIL_REWARD_DEFAULT_HARD else PazLootTables.MAIL_REWARD_DEFAULT_EASY }
     ),
     BUCKET_BRIGADE(
         minWave = 1,

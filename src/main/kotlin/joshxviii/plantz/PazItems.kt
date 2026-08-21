@@ -203,6 +203,11 @@ object PazItems {
             .component(DataComponents.BREAK_SOUND, SoundEvents.WOLF_ARMOR_BREAK)
     )
     @JvmField
+    val LETTER: Item = registerItem(
+        "letter",
+        properties = Item.Properties()
+    )
+    @JvmField
     val SEED_PACKET: Item = registerItem(
         "seed_packet", ::SeedPacketItem,
         properties = Item.Properties()

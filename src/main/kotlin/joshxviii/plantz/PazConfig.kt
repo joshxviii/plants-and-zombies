@@ -72,6 +72,7 @@ data class ServerConfig(
 )
 data class ClientConfig(
     var showDebugInfo: Boolean = false,
+    var showHiddenItemsInCreativeTab: Boolean = false,
 )
 
 object PazConfig {
@@ -122,6 +123,9 @@ object PazConfig {
 
     val SHOW_DEBUG_INFO: Boolean
         get() = client.showDebugInfo
+
+    val SHOW_HIDDEN_ITEMS: Boolean
+        get() = client.showHiddenItemsInCreativeTab
 
     val COFFEE_BUFF_DURATION: Int
         get() = server.coffeeBuffDuration.coerceAtLeast(0)

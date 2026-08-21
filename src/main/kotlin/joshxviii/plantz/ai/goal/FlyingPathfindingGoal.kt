@@ -67,8 +67,6 @@ open class FlyingPathfindingGoal (
         flySpeedMultiplier = if (distance <= 0.75) .5
         else 1.0
 
-        if (entity is Enemy) entity.setAggressive(distance < 10.0)
-
         moveDirection = moveDirection.lerp(targetPosition.normalize(), 0.4)
 
         entity.lookAt(target, 30.0f, 30.0f)
