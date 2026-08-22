@@ -7,7 +7,7 @@
       },
       "trigger": "minecraft:recipe_unlocked"
     },
-    "has_brainz_alloy": {
+    "has_brainz_alloy_block": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [

@@ -30,10 +30,15 @@ object PazEffects {
 
     @JvmField val TOXIC: Holder<MobEffect> = register("toxic",
         ToxicMobEffect(MobEffectCategory.HARMFUL, 10762143))
-    @JvmField val FREEZE: Holder<MobEffect> = register("freeze",
-        FreezeMobEffect(MobEffectCategory.HARMFUL, 0x74F0FF, PazServerParticles.FROZEN)
-            .addAttributeModifier(Attributes.MOVEMENT_SPEED, pazResource("effect.freeze"), -0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
-            .addAttributeModifier(Attributes.ATTACK_DAMAGE, pazResource("effect.freeze"), -0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+    @JvmField val FROZEN: Holder<MobEffect> = register("frozen",
+        FreezeMobEffect(MobEffectCategory.HARMFUL, 0x74F0FF, PazServerParticles.CHILLED)
+            .addAttributeModifier(Attributes.MOVEMENT_SPEED, pazResource("effect.frozen"), -999.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+            .addAttributeModifier(Attributes.ATTACK_DAMAGE, pazResource("effect.frozen"), -999.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+    )
+    @JvmField val CHILLED: Holder<MobEffect> = register("chilled",
+        FreezeMobEffect(MobEffectCategory.HARMFUL, 0x74F0FF, PazServerParticles.CHILLED)
+            .addAttributeModifier(Attributes.MOVEMENT_SPEED, pazResource("effect.chilled"), -0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+            .addAttributeModifier(Attributes.ATTACK_DAMAGE, pazResource("effect.chilled"), -0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
     )
     @JvmField val HYPNOTIZE: Holder<MobEffect> = register("hypnotize",
         HypnotizedMobEffect(MobEffectCategory.NEUTRAL, 15841255))

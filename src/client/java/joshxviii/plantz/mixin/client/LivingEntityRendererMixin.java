@@ -45,16 +45,16 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extend
     private void checkForHypnoEffect(T entity, S state, float partialTicks, CallbackInfo ci) {
         boolean hasHypno = ((LivingEntityAccessor) entity).plantz$getHypnoId();
         state.setData(HAS_HYPNO_KEY, hasHypno);
-        boolean hasFreeze = ((LivingEntityAccessor) entity).plantz$getFreezeId();
+        boolean hasFreeze = ((LivingEntityAccessor) entity).plantz$getChillId();
         state.setData(HAS_FREEZE_KEY, hasFreeze);
         Map<Integer, Integer> paintColors = ((LivingEntityAccessor) entity).plantz$getPaintedColors();
         state.setData(PAINT_COLORS_KEY, paintColors);
     }
 
     @Unique
-    private static final int PLANTZ_HYPNO_TINT = 0xFFD036FF;
+    private static final int PLANTZ_HYPNO_TINT = ARGB.opaque(0xD036FF);
     @Unique
-    private static final int PLANTZ_FREEZE_TINT = 0xFF0098DC;
+    private static final int PLANTZ_FREEZE_TINT = ARGB.opaque(0x0098DC);
 
     @ModifyExpressionValue(
         method = "submit*",

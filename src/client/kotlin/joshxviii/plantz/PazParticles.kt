@@ -29,7 +29,7 @@ object PazParticles {
             SplashParticle.Provider(sprite)
         }
 
-        it.register(PazServerParticles.FROZEN) { sprite ->
+        it.register(PazServerParticles.CHILLED) { sprite ->
             SplashParticle.Provider(sprite)
         }
 

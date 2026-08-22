@@ -1,9 +1,7 @@
 package joshxviii.plantz.mixin.client;
 
-import com.google.common.hash.HashCode;
 import joshxviii.plantz.PazEffects;
 import joshxviii.plantz.PazModels;
-import joshxviii.plantz.effect.FreezeMobEffect;
 import joshxviii.plantz.effect.PaintedMobEffect;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -51,8 +49,8 @@ public abstract class GuiMixin {
                 extractPaintOverlay(graphics, paintedMobEffect.getRandomness(), paintedMobEffect.getPaintColor(), it.getAmplifier(), (it.getDuration()/80f));
             }
         });
-        var freezeEffect = player.getEffect(PazEffects.FREEZE);
-        if (freezeEffect != null) extractTextureOverlay(graphics, FREEZE_OUTLINE_LOCATION, freezeEffect.getDuration() / 20f);
+        if (player.hasEffect(PazEffects.CHILLED)) extractTextureOverlay(graphics, FREEZE_OUTLINE_LOCATION, 0.15f);
+        if (player.hasEffect(PazEffects.FROZEN)) extractTextureOverlay(graphics, FREEZE_OUTLINE_LOCATION, 1.0f);
     }
 
     @Unique

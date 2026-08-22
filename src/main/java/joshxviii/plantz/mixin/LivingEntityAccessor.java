@@ -13,8 +13,8 @@ public interface LivingEntityAccessor {
     @Invoker("plantz$getHypnoId")
     boolean plantz$getHypnoId();
 
-    @Invoker("plantz$getFreezeId")
-    boolean plantz$getFreezeId();
+    @Invoker("plantz$getChillId")
+    boolean plantz$getChillId();
 
     @Invoker("plantz$getPaintedColors")
     Map<Integer, Integer> plantz$getPaintedColors();

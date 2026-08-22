@@ -29,7 +29,6 @@ import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -51,7 +50,7 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     @Unique
     private static final EntityDataAccessor<Boolean> DATA_HYPNO_ID = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.BOOLEAN);
     @Unique
-    private static final EntityDataAccessor<Boolean> DATA_FREEZE_ID = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> DATA_CHILL_ID = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.BOOLEAN);
     @Unique
     private static final EntityDataAccessor<Map<Integer, Integer>> DATA_PAINTED_COLORS = SynchedEntityData.defineId(LivingEntity.class, DATA_PAINT_COLORS);
 
@@ -115,8 +114,8 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
         return ((Entity) (Object) this).getEntityData().get(DATA_HYPNO_ID);
     }
     @Unique
-    public boolean plantz$getFreezeId() {
-        return ((Entity) (Object) this).getEntityData().get(DATA_FREEZE_ID);
+    public boolean plantz$getChillId() {
+        return ((Entity) (Object) this).getEntityData().get(DATA_CHILL_ID);
     }
     @Unique
     public Map<Integer, Integer> plantz$getPaintedColors() {
@@ -172,14 +171,14 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     @Inject(method = "defineSynchedData", at = @At(value = "TAIL"))
     public void defineData(SynchedEntityData.Builder entityData, CallbackInfo ci) {
         entityData.define(DATA_HYPNO_ID, false);
-        entityData.define(DATA_FREEZE_ID, false);
+        entityData.define(DATA_CHILL_ID, false);
         entityData.define(DATA_PAINTED_COLORS, new HashMap<>());
     }
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
     private void saveCustomFlags(ValueOutput output, CallbackInfo ci) {
         var self = (LivingEntity) (Object) this;
         output.putBoolean("plantz:IsHypnotized", self.getEntityData().get(DATA_HYPNO_ID));
-        output.putBoolean("plantz:IsFrozen", self.getEntityData().get(DATA_FREEZE_ID));
+        output.putBoolean("plantz:IsFrozen", self.getEntityData().get(DATA_CHILL_ID));
         output.store("plantz:PaintedColor", Codec.unboundedMap(Codec.INT, Codec.INT), self.getEntityData().get(DATA_PAINTED_COLORS));
         if (!this.plantz$getPlantData().isEmpty()) {
             output.store("plantz:AttachedPlant", CompoundTag.CODEC, this.plantz$getPlantData());
@@ -191,7 +190,7 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     private void loadCustomFlags(ValueInput input, CallbackInfo ci) {
         var self = (LivingEntity) (Object) this;
         self.getEntityData().set(DATA_HYPNO_ID, input.getBooleanOr("plantz:IsHypnotized", false));
-        self.getEntityData().set(DATA_FREEZE_ID, input.getBooleanOr("plantz:IsFrozen", false));
+        self.getEntityData().set(DATA_CHILL_ID, input.getBooleanOr("plantz:IsFrozen", false));
         self.getEntityData().set(DATA_PAINTED_COLORS, input.read("plantz:PaintedColor", Codec.unboundedMap(Codec.INT, Codec.INT)).orElseGet(HashMap::new));
         plantz$setPlantData(input.read("plantz:AttachedPlant", CompoundTag.CODEC).orElseGet(CompoundTag::new));
         if (self instanceof ServerPlayer) plantz$setWaveList(input.read("plantz:CompletedWaveList", Codec.list(WaveType.Companion.getCODEC())).orElseGet(List::of));
@@ -218,7 +217,7 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     public void updateEffects() {
         var self = (LivingEntity) (Object) this;
         self.getEntityData().set(DATA_HYPNO_ID, this.hasEffect(PazEffects.HYPNOTIZE));
-        self.getEntityData().set(DATA_FREEZE_ID, this.hasEffect(PazEffects.FREEZE));
+        self.getEntityData().set(DATA_CHILL_ID, this.hasEffect(PazEffects.CHILLED) || this.hasEffect(PazEffects.FROZEN));
         self.getEntityData().set(DATA_PAINTED_COLORS, PaintedMobEffect.getPaintColors(self));
     }
 
@@ -228,7 +227,7 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
         if (newEffect.is(PazEffects.HYPNOTIZE)) {
             cir.setReturnValue(!entity.is(PazTags.EntityTypes.CANNOT_HYPNOTIZE));
         }
-        if (newEffect.is(PazEffects.FREEZE)) {
+        if (newEffect.is(PazEffects.CHILLED) || newEffect.is(PazEffects.FROZEN)) {
             cir.setReturnValue(entity.canFreeze());
         }
         updateEffects();

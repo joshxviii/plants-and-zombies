@@ -19,7 +19,7 @@ class PeaIce(
 ) {
     override fun afterHitEntityEffect(target: LivingEntity) {
         super.afterHitEntityEffect(target)
-        target.addEffect(MobEffectInstance(PazEffects.FREEZE, 100, 0))
+        target.addEffect(MobEffectInstance(PazEffects.CHILLED, 100, 0))
     }
 
     override fun onHit(hitResult: HitResult) {
