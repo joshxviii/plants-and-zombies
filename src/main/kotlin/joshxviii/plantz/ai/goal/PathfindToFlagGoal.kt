@@ -26,7 +26,7 @@ class PathfindToFlagGoal(
     var navCooldown: Int = SEARCH_COOLDOWN
 
     init {
-        flags = EnumSet.of<Flag>(Flag.MOVE, Flag.LOOK)
+        flags = EnumSet.of<Flag>(Flag.MOVE)
     }
 
     override fun canUse(): Boolean {

@@ -23,7 +23,7 @@ import net.minecraft.world.level.storage.ValueOutput
 class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(type, level) {
 
     companion object {
-        const val MISSILE_COOLDOWN_TIME = 190
+        const val MISSILE_COOLDOWN_TIME = 210
 
         val TANK_TRANSFORMATION: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(RoboZombie::class.java, EntityDataSerializers.BOOLEAN)
         val MISSILE_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(RoboZombie::class.java, EntityDataSerializers.INT)

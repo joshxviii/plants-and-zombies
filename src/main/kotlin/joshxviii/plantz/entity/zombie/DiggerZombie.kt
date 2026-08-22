@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.ItemTags
+import net.minecraft.tags.StructureTags
 import net.minecraft.tags.TagKey
 import net.minecraft.util.RandomSource
 import net.minecraft.world.Difficulty
@@ -34,10 +35,12 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
             random: RandomSource
         ): Boolean {
             val below = pos.below()
+            val isMineshaftSpawn = (level as ServerLevel).structureManager().getStructureWithPieceAt(pos, StructureTags.MINESHAFT).isValid
+
             return level.difficulty != Difficulty.PEACEFUL
-                    && (EntitySpawnReason.ignoresLightRequirements(spawnReason) || isDarkEnoughToSpawn(level, pos, random))
+                    && ((EntitySpawnReason.ignoresLightRequirements(spawnReason) || isDarkEnoughToSpawn(level, pos, random))
                     && checkMobSpawnRules(type, level, spawnReason, pos, random)
-                    && pos.y < 10
+                    && pos.y < 10) || isMineshaftSpawn
         }
     }
 

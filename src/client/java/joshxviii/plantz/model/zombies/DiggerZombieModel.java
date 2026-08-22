@@ -20,7 +20,6 @@ import static joshxviii.plantz.UtilsKt.pazResource;
 public class DiggerZombieModel extends PazZombieModel {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("digger"), "main");
 	private final KeyframeAnimation actionAnimation;
-	private final AnimationState mineAnimationState = new AnimationState();
 
 
 	public DiggerZombieModel(final ModelPart root) {

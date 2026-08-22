@@ -4,8 +4,6 @@ import it.unimi.dsi.fastutil.ints.IntList
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.ai.goal.NavigateToTargetGoal
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
-import joshxviii.plantz.entity.projectile.Missile
-import joshxviii.plantz.entity.zombie.RoboZombie.Companion.MISSILE_COOLDOWN_TIME
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -17,8 +15,6 @@ import net.minecraft.world.entity.*
 import net.minecraft.world.entity.projectile.FireworkRocketEntity
 import net.minecraft.world.entity.projectile.ProjectileUtil
 import net.minecraft.world.item.CrossbowItem
-import net.minecraft.world.item.DyeColor
-import net.minecraft.world.item.FireworkRocketItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ChargedProjectiles

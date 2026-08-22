@@ -37,7 +37,7 @@ class SuperBrainz(type: EntityType<out SuperBrainz>, level: Level) : PazZombie(t
         val BEAM_MODE_SPEED_ID: Identifier = pazResource("beam_mode")
         private val BEAM_MODE_SPEED = AttributeModifier(BEAM_MODE_SPEED_ID, -0.3, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
 
-        const val BEAM_COOLDOWN = 350
+        const val BEAM_COOLDOWN = 280
         const val BEAM_MODE_TIME = 80
     }
 
@@ -116,7 +116,8 @@ class SuperBrainz(type: EntityType<out SuperBrainz>, level: Level) : PazZombie(t
         }
 
         updateCapeState()
-        if (level() is ServerLevel && tickCount % 60 == 0) when (state) {
+        val level = level() as? ServerLevel?: return
+        if (tickCount % 60 == 0) when (state) {
             ZombieState.IDLE -> {
                 target?.let {
                     if (it.y > y + 4.5) state = ZombieState.FLYING
@@ -124,11 +125,15 @@ class SuperBrainz(type: EntityType<out SuperBrainz>, level: Level) : PazZombie(t
                 if (moveControl.wantedY > y + 4.5) state = ZombieState.FLYING
             }
             ZombieState.FLYING -> {
-                val floorHeight = y - level().getHeight(Heightmap.Types.WORLD_SURFACE, blockPosition()).toDouble()
+                val floorHeight = y - level.getHeight(Heightmap.Types.WORLD_SURFACE, blockPosition()).toDouble()
                 if (floorHeight<2) state = ZombieState.IDLE
             }
             else -> {}
         }
+        if (state == ZombieState.FLYING && tickCount%2==0) level.sendParticles(
+            ParticleTypes.WHITE_SMOKE,
+            x, boundingBox.ysize*0.5+y, z, 2, 0.1, 0.2, 0.1, 0.05
+        )
     }
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {

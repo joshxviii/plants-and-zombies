@@ -1,6 +1,9 @@
 package joshxviii.plantz.model.zombies;
 
+import joshxviii.plantz.animation.zombies.DiggerZombieAnimation;
+import joshxviii.plantz.animation.zombies.ImpAnimation;
 import joshxviii.plantz.renderer.entity.PazZombieRenderState;
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -11,9 +14,11 @@ import static joshxviii.plantz.UtilsKt.pazResource;
 
 public class ImpModel extends PazZombieModel {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("imp"), "main");
+    private final KeyframeAnimation actionAnimation;
 
     public ImpModel(final ModelPart root) {
         super(null, root);
+        this.actionAnimation = ImpAnimation.action.bake(root.getChild("root"));
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -44,6 +49,10 @@ public class ImpModel extends PazZombieModel {
     @Override
     public void setupAnim(@NotNull PazZombieRenderState state) {
         state.isBaby = true;
+        float tempAttackTime = state.attackTime;
+        state.attackTime = 0;
         super.setupAnim(state);
+        state.attackTime = tempAttackTime;
+        actionAnimation.applyWalk(state.attackTime*6f, 1.0f, 1.0f, 1.0f);
     }
 }

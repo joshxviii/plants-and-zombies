@@ -39,6 +39,12 @@ class EngineerZombie(type: EntityType<out EngineerZombie>, level: Level) : PazZo
     companion object {
         val BUILD_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(EngineerZombie::class.java, EntityDataSerializers.INT)
         const val BUILD_TIME = 60
+
+        val ZOMBIE_BOTS = listOf<EntityType<out ZombieRobot>>(
+            PazEntities.ZOMBIE_TURRET,
+            PazEntities.ELECTRO_TURRET,
+            PazEntities.ZOMBIE_DRONE
+        )
     }
 
     val buildAnimation : AnimationState = AnimationState()
@@ -127,7 +133,7 @@ class EngineerZombie(type: EntityType<out EngineerZombie>, level: Level) : PazZo
 
         override fun canUse(): Boolean {
             if (engineerZombie.buildingTime>0) return true
-            val nearbyBots: Int = getServerLevel(engineerZombie.level()).getNearbyEntities(ZombieRobot::class.java, botTargeting, engineerZombie, engineerZombie.boundingBox.inflate(16.0)).size
+            val nearbyBots: Int = getServerLevel(engineerZombie.level()).getNearbyEntities(ZombieRobot::class.java, botTargeting, engineerZombie, engineerZombie.boundingBox.inflate(28.0)).size
             return engineerZombie.target != null && !engineerZombie.isDeadOrDying && (engineerZombie.target?.isAlive == true) && nearbyBots < 2
         }
 
@@ -182,7 +188,7 @@ class EngineerZombie(type: EntityType<out EngineerZombie>, level: Level) : PazZo
             } while (pos.y >= Mth.floor(minY) - 1)
 
             if (success) {
-                val bot : ZombieRobot = PazEntities.ZOMBIE_TURRET.create(level, EntitySpawnReason.MOB_SUMMONED)?: return
+                val bot : ZombieRobot = ZOMBIE_BOTS.random().create(level, EntitySpawnReason.MOB_SUMMONED)?: return
                 bot.snapTo(BlockPos(Vec3i(x.toInt(),(pos.y+topOffset).toInt(),z.toInt())), angle * Mth.RAD_TO_DEG, 0.0f)
                 bot.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.REINFORCEMENT, null)
                 bot.owner = engineerZombie
