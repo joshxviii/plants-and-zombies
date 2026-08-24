@@ -79,11 +79,11 @@ class PaintBall(
         val p = PazEffects.PAINTED[dyeColor] ?: return
         val oldEffectInstance = target.getEffect(p)
         if (oldEffectInstance != null) {
-            val effectInstance = MobEffectInstance(p, 180, oldEffectInstance.amplifier+1, false, true, false)
+            val effectInstance = MobEffectInstance(p, 220, oldEffectInstance.amplifier+1, false, true, false)
             target.addEffect(effectInstance)
         }
         else {
-            val effectInstance = PazEffects.PAINTED[dyeColor]?.let { MobEffectInstance(it, 180, 0, false, true, false) } ?: return
+            val effectInstance = PazEffects.PAINTED[dyeColor]?.let { MobEffectInstance(it, 220, 0, false, true, false) } ?: return
             target.addEffect(effectInstance)
         }
         if (target is Sheep && target.hurtMarked) target.color = dyeColor

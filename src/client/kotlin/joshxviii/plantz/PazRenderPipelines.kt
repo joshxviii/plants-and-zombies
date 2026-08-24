@@ -4,8 +4,13 @@ import com.mojang.blaze3d.pipeline.BlendFunction
 import com.mojang.blaze3d.pipeline.ColorTargetState
 import com.mojang.blaze3d.pipeline.DepthStencilState
 import com.mojang.blaze3d.pipeline.RenderPipeline
+import com.mojang.blaze3d.shaders.UniformType
+import com.mojang.blaze3d.systems.RenderPass
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
+import net.fabricmc.loader.api.FabricLoader
+import net.irisshaders.iris.api.v0.IrisApi
+import net.irisshaders.iris.api.v0.IrisProgram
 import net.minecraft.client.renderer.RenderPipelines
 
 object PazRenderPipelines {
@@ -27,5 +32,33 @@ object PazRenderPipelines {
             .withDepthStencilState(DepthStencilState.DEFAULT)
             .build())
 
-    fun initialize() {}
+    @JvmField
+    val PAINT_OVERLAY: RenderPipeline = RenderPipelines.register(
+        RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
+            .withUniform("PaintInfo", UniformType.UNIFORM_BUFFER)
+            .withLocation(pazResource("pipeline/paint_overlay"))
+            .withFragmentShader(pazResource("core/paint_overlay"))
+            .withShaderDefine("ALPHA_CUTOUT", 0.1f)
+            .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
+            .withSampler("Sampler0")
+            .withCull(false)
+            .build()
+    )
+
+    fun initialize() {
+        if (FabricLoader.getInstance().isModLoaded("iris")) {
+            registerIrisCompat()
+        }
+    }
+
+    private fun registerIrisCompat() {
+        try {
+            IrisApi.getInstance().assignPipeline(
+                PAINT_OVERLAY,
+                IrisProgram.ENTITIES
+            )
+        } catch (t: Throwable) {
+            PazMain.LOGGER.warn("Iris present but assignPipeline failed", t)
+        }
+    }
 }

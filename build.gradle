@@ -18,6 +18,7 @@ repositories {
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
 	maven { url = 'https://maven.minecraftforge.net/' }
+	maven { url = "https://api.modrinth.com/maven" }
 }
 
 loom {
@@ -43,6 +44,8 @@ dependencies {
 	implementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
 	implementation "com.github.glitchfiend:TerraBlender-fabric:${project.terrablender_version}"
+
+	compileOnly "maven.modrinth:iris:${project.iris_version}"
 }
 
 processResources {

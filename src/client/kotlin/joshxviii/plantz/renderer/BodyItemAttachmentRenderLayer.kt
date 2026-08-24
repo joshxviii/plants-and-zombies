@@ -2,15 +2,16 @@ package joshxviii.plantz.renderer
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
+import joshxviii.plantz.PaintInfoUniforms
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazModels.PAINT_COLORS_KEY
+import joshxviii.plantz.PazRenderPipelines.PAINT_OVERLAY
 import joshxviii.plantz.model.zombies.PazZombieModel
-import joshxviii.plantz.pazResource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.HumanoidModel
-import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.SubmitNodeCollector
+import net.minecraft.client.renderer.entity.LivingEntityRenderer
 import net.minecraft.client.renderer.entity.RenderLayerParent
 import net.minecraft.client.renderer.entity.layers.RenderLayer
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState
@@ -19,43 +20,40 @@ import net.minecraft.client.renderer.item.ItemStackRenderState
 import net.minecraft.client.renderer.rendertype.LayeringTransform
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
-import net.minecraft.client.renderer.rendertype.TextureTransform.OffsetTextureTransform
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.Identifier
+import net.minecraft.util.ARGB
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
 
-class PaintLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(renderer: RenderLayerParent<S, M>) : RenderLayer<S, M>(
+class PaintLayer<S : LivingEntityRenderState, M : EntityModel<in S>>( private val renderer: RenderLayerParent<S, M>) : RenderLayer<S, M>(
     renderer
 ) {
     companion object {
-        val PAINT_TEXTURE_1 = pazResource("textures/entity/paint_overlay/paint_1.png")
-        val PAINT_TEXTURE_2 = pazResource("textures/entity/paint_overlay/paint_2.png")
-        val PAINT_TEXTURE_3 = pazResource("textures/entity/paint_overlay/paint_3.png")
-        val PAINT_TEXTURE_4 = pazResource("textures/entity/paint_overlay/paint_4.png")
-
-        private fun getTextureFromAmplifier(amplifier: Int): Identifier {
-            return when {
-                amplifier < 10 * 0.25 -> PAINT_TEXTURE_1
-                amplifier < 10 * 0.5 -> PAINT_TEXTURE_2
-                amplifier < 10 * 0.75 -> PAINT_TEXTURE_3
-                else -> PAINT_TEXTURE_4
-            }
-        }
-
-        fun paintOverlay(amplifier: Int = 0, uOffset: Float = 0.0f, vOffset: Float = 0.0f): RenderType {
+        fun paintOverlay(entityTexture: Identifier, amplifier: Int = 0, color: Int = 0): RenderType {
             return RenderType.create(
-                "paint_overlay",
-                RenderSetup.builder(RenderPipelines.ENTITY_CUTOUT)
-                    .withTexture("Sampler0", getTextureFromAmplifier(amplifier))
-                    .setTextureTransform(OffsetTextureTransform(uOffset, vOffset))
+                "paint_overlay_${amplifier}",
+                RenderSetup.builder(PAINT_OVERLAY)
+                    .withTexture("Sampler0", entityTexture)
                     .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
                     .useOverlay()
                     .sortOnUpload()
                     .createRenderSetup()
             )
         }
+    }
+
+    private fun entityTexture(state: S): Identifier? {
+        val living = renderer as? LivingEntityRenderer<*, S, M> ?: return null
+        return living.getTextureLocation(state)
+    }
+
+    fun alphaFromAmplifier(rgb: Int, amplifier: Int): Int {
+        val t = amplifier.coerceIn(0, 10) / 10f
+        val strength = 0.20f + t * 0.55f
+        val a = (strength * 255f).toInt().coerceIn(50, 255)
+        return (a shl 24) or (rgb and 0x00FFFFFF)
     }
 
     override fun submit(
@@ -66,25 +64,42 @@ class PaintLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(renderer: R
         yRot: Float,
         xRot: Float
     ) {
-        poseStack.pushPose()
-        //poseStack.scale(1.5f, 1.5f, 1.5f)
+        val texture = entityTexture(state) ?: return
         val colors = state.getDataOrDefault(PAINT_COLORS_KEY, mapOf())
-        for (i in colors.size - 1 downTo 0) {
-            val color = colors.keys.elementAtOrNull(i) ?: continue
-            val amplifier = colors.values.elementAtOrNull(i) ?: continue
-            if (color != -1) collector.order(i).submitModel(
-                parentModel,
-                state,
-                poseStack,
-                paintOverlay(amplifier),
-                lightCoords,
-                OverlayTexture.NO_OVERLAY,
-                color,
-                null,
-                state.outlineColor,
-                null
-            )
+        var colorMix = -1
+        var amplifier = 0
+        colors.forEach { (color, amp) ->
+            amplifier += amp
+            if (colorMix == -1) {
+                colorMix = ARGB.opaque(color)
+                return@forEach
+            }
+            colorMix = ARGB.average(colorMix, ARGB.opaque(color))
         }
+
+//        PaintInfoUniforms.amplifierToNoise(amplifier).let { (scale, strength) ->
+//            PaintInfoUniforms.write(scale, strength)
+//        }
+        //TODO remove dynamic uniform and make into static shader since changing the uniform is not really working with multiple instances of entities.
+        // changing the alpha, mixing the colors and keeping the noise static gives a good enough effect.
+        // [paint_overlay.fhs] and [paint_info]
+        PaintInfoUniforms.write(64f, 2.0f)
+
+        if (colorMix == -1) return
+        poseStack.pushPose()
+
+        collector.order(0).submitModel(
+            parentModel,
+            state,
+            poseStack,
+            paintOverlay(texture, amplifier, colorMix),
+            lightCoords,
+            OverlayTexture.NO_OVERLAY,
+            alphaFromAmplifier(colorMix, amplifier),
+            null,
+            state.outlineColor,
+            null
+        )
         poseStack.popPose()
     }
 
