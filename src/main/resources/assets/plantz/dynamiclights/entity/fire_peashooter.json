@@ -1,0 +1,10 @@
+{
+  "match": {
+    "type": "plantz:fire_peashooter"
+  },
+  "luminance": {
+    "type": "lambdynlights:wet_sensitive",
+    "dry": 10,
+    "wet": 4
+  }
+}
