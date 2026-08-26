@@ -5,11 +5,23 @@ import joshxviii.plantz.networking.SendMailRequestPayload
 import joshxviii.plantz.networking.SendMailRequestPayload.Companion.handleSendMailPacket
 import joshxviii.plantz.networking.SendMailResponsePayload
 import joshxviii.plantz.networking.ServerConfigResponsePayload
+import joshxviii.plantz.networking.ZombieRaidClientData
 import joshxviii.plantz.networking.ZombieRaidResponsePayload
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
+import java.util.UUID
 
 object PazNetwork {
+
+    object ZombieRaidClientCache {
+        private val active = mutableMapOf<UUID, ZombieRaidClientData>()
+
+        fun get() = active.values.firstOrNull()
+        fun get(id: UUID) = active[id]
+        fun put(data: ZombieRaidClientData) { active[data.id] = data }
+        fun remove(id: UUID) { active.remove(id) }
+        fun clear() { active.clear() }
+    }
 
     fun initialize() {
         // Register payloads

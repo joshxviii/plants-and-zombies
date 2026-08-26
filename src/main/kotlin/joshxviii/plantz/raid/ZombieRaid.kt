@@ -417,7 +417,7 @@ class ZombieRaid(
         val data = ZombieRaidClientData(
             id = zombieRaidEvent.id,
             status = status,
-            currentWaveType = waveTypes.last(),
+            currentWaveType = waveTypes.lastOrNull()?: WaveType.DEFAULT,
             wavesSpawned = wavesSpawned,
             activeTime = ticksActive.toInt(),
             numWaves = numWaves,

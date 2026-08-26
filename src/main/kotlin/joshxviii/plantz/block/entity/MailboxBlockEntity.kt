@@ -25,6 +25,7 @@ import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.util.Mth
+import net.minecraft.util.RandomSource
 import net.minecraft.world.Container
 import net.minecraft.world.ContainerHelper
 import net.minecraft.world.SimpleContainer
@@ -44,6 +45,7 @@ import net.minecraft.world.level.storage.loot.LootTable
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import net.minecraft.world.phys.Vec3
+import org.apache.logging.log4j.core.jmx.Server
 import kotlin.jvm.optionals.getOrDefault
 
 class MailboxBlockEntity(
@@ -60,6 +62,7 @@ class MailboxBlockEntity(
     companion object {
         const val HERO_MAIL_EJECT_DELAY = 50
         val DEFAULT_NAME = Component.translatable("item.plantz.mailbox");
+        private fun spread(spread: Double, random: RandomSource): Double = (2.0 * random.nextDouble() - 1.0) * spread
 
         fun tick(level: Level, pos: BlockPos, state: BlockState, blockEntity: MailboxBlockEntity) {
             blockEntity.tickCount++
@@ -78,14 +81,8 @@ class MailboxBlockEntity(
                         val items = blockEntity.getHeroMail(it).toMutableList()
 
                         if ((blockEntity.heroMailIndex+1) % TACO_TIME_WAVE==0) {// Add taco reward ever 10 waves
-                            val pos = blockEntity.getDropPos()
                             items.addAll(blockEntity.getHeroMail(PazLootTables.MAIL_REWARDS_TACO))
-                            blockEntity.playSound(PazSounds.TACO_REWARD, 0.65f)
-                            (level as? ServerLevel)?.sendParticles(
-                                PazServerParticles.CONFETTI,
-                                pos.x, pos.y, pos.z, 16,
-                                0.1, 0.2, 0.1, 0.075
-                            )
+                            blockEntity.confetti()
                         }
 
                         items.forEach { item -> blockEntity.ejectItem(item) }
@@ -170,6 +167,27 @@ class MailboxBlockEntity(
                 random.triangle(0.0, 0.11485000171139836) + direction.x, random.triangle(0.2, 0.11485000171139836) + direction.y, random.triangle(0.0, 0.11485000171139836) + direction.z
             )
             level.addFreshEntity(entity)
+        }
+    }
+
+    private fun confetti(amount: Int = 25) {
+        playSound(PazSounds.TACO_REWARD, 0.65f)
+
+        val level = level as? ServerLevel?: return
+        val s = 0.2
+        val pos = getDropPos()
+        val v = blockState.getValue(FACING).unitVec3
+
+        repeat(amount) {
+            level.sendParticles(
+                PazServerParticles.CONFETTI,
+                pos.x + spread(s, level.random), pos.y + spread(s, level.random), pos.z + spread(s, level.random),
+                0,
+                v.x + (level.random.nextGaussian() * 0.5),
+                v.y + (level.random.nextGaussian() * 0.5),
+                v.z + (level.random.nextGaussian() * 0.5),
+                0.2
+            )
         }
     }
 

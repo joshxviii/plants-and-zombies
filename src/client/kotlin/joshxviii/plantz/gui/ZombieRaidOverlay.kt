@@ -1,6 +1,6 @@
 package joshxviii.plantz.gui
 
-import joshxviii.plantz.PazClientNetwork.ZombieRaidClientCache
+import joshxviii.plantz.PazNetwork.ZombieRaidClientCache
 import joshxviii.plantz.PazConfig
 import joshxviii.plantz.block.entity.FlagBlockEntity
 import joshxviii.plantz.pazResource
@@ -38,7 +38,7 @@ object ZombieRaidOverlay {
         val bgWidth = 256
         val bgHeight = 32
         val font = Minecraft.getInstance().font
-        val raidEvent = ZombieRaidClientCache.active.values.firstOrNull() ?: return
+        val raidEvent = ZombieRaidClientCache.get() ?: return
         val credits = raidEvent.seenCredits
 
         val screenWidth = graphics.guiWidth()

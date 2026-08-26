@@ -43,7 +43,7 @@ enum class WaveType(
         minWave = 0,
         maxWave = 99,
         creditsRequired = false,
-        weightFn = { _, credits -> if (credits) 0.5f else 1f },
+        weightFn = { _, credits -> if (credits) 1.2f else 1.75f },
         spawnFn = { raid, credits ->
             val wave = raid.wavesSpawned
             val omenLevel = raid.zombieRaidOmenLevel
@@ -128,7 +128,7 @@ enum class WaveType(
         maxWave = 14,
         creditsRequired = false,
         weightFn = { raid, credits ->
-            0.19f + (raid.zombieRaidOmenLevel * 0.09f) + if (credits) 0.15f else 0f
+            0.13f + (raid.zombieRaidOmenLevel * 0.05f) + if (credits) 0.08f else 0f
         },
         spawnFn = { raid, credits ->
             val browncoatCount = 6 + raid.wavesSpawned * if (credits) 4 else 2 + (raid.zombieRaidOmenLevel / 2)

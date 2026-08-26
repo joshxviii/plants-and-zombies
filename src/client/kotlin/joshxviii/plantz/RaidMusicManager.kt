@@ -1,6 +1,6 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.PazClientNetwork.ZombieRaidClientCache
+import joshxviii.plantz.PazNetwork.ZombieRaidClientCache
 import joshxviii.plantz.PazSounds.RAID_MUSIC_ARMY
 import joshxviii.plantz.PazSounds.RAID_MUSIC_BUCKET
 import joshxviii.plantz.PazSounds.RAID_MUSIC_HALFTIME
@@ -15,14 +15,17 @@ import joshxviii.plantz.networking.ZombieRaidClientData
 import joshxviii.plantz.raid.WaveType
 import joshxviii.plantz.raid.ZombieRaid
 import net.minecraft.client.Minecraft
-import net.minecraft.client.resources.sounds.AbstractSoundInstance
+import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance
 import net.minecraft.client.resources.sounds.SoundInstance
 import net.minecraft.client.resources.sounds.SoundInstance.Attenuation
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundSource
 import net.minecraft.util.RandomSource
+import kotlin.collections.set
 
 object RaidMusicManager {
+    const val FADE_IN_TIME = 60
+
     private val random = RandomSource.create()
     val minecraft = Minecraft.getInstance()
     var activeLayers: MutableMap<Int, RaidMusicSoundInstance> = mutableMapOf()
@@ -38,30 +41,40 @@ object RaidMusicManager {
         RAID_MUSIC_LEAGUE,
         RAID_MUSIC_ZOMBOSS
     )
-    var targetIndex: Int = 0
+    var targetIndex: Int = -1
     var raidEvent: ZombieRaidClientData? = null
 
     fun tick() {
-        raidEvent = ZombieRaidClientCache.active.values.firstOrNull() ?: return
+        raidEvent = ZombieRaidClientCache.get().also { event ->
+            if (event == null && activeLayers.isNotEmpty()) {// fade out when leaving raid
+               activeLayers.values.forEach { it.volume -= 1f / (FADE_IN_TIME*2).coerceAtLeast(1) }
+               activeLayers[targetIndex]?.let { if (it.volume <= 0.0f) stop() }
+            }
+        }
         val event = raidEvent?: return
+
+        //stop music when raid is complete
         if (event.status != ZombieRaid.ZombieRaidStatus.ONGOING && event.status != ZombieRaid.ZombieRaidStatus.NEXT_WAVE) {
             stop()
             return
         }
-        minecraft.musicManager.stopPlaying()
 
+        // transition between song layers
+        minecraft.musicManager.stopPlaying()
         if (shouldUpdateMusic()) {
             targetIndex = getLayerIndex(event.currentWaveType, event.wavesSpawned)
             activeLayers.forEach { (index, layer) ->
-                if (index == targetIndex) layer.volume = 1.0f
-                else layer.volume = 0.0f
+                if (index == targetIndex) layer.volume += 1f / FADE_IN_TIME.coerceAtLeast(1)
+                else layer.volume -= 1f / FADE_IN_TIME.coerceAtLeast(1)
             }
         }
     }
 
     fun start() {
+        stop()
         raidMusicLayer.forEachIndexed { index, layer ->
             val layer = RaidMusicSoundInstance(layer.value())
+            layer.volume = 0.0f
             activeLayers[index] = layer
             minecraft.soundManager.play(layer)
         }
@@ -69,16 +82,20 @@ object RaidMusicManager {
 
     fun stop() {
         activeLayers.forEach { (_, layer) ->
-            minecraft.soundManager.stop(layer)
+            layer.stopLayer()
         }
         activeLayers.clear()
-        targetIndex = 0
+        targetIndex = -1
     }
 
     fun shouldUpdateMusic(): Boolean {
-        targetIndex
+        if (activeLayers.isEmpty() || activeLayers[targetIndex]?.isStopped == true) start()
+
         raidEvent?.let {
             if (getLayerIndex(it.currentWaveType, it.wavesSpawned) != targetIndex) return true
+        }
+        activeLayers[targetIndex]?.let {
+            if (it.volume < 1.0f) return true
         }
         return false
     }
@@ -100,10 +117,10 @@ object RaidMusicManager {
 
 class RaidMusicSoundInstance(
     val layer: SoundEvent,
-): AbstractSoundInstance(layer.location, SoundSource.MUSIC, SoundInstance.createUnseededRandom()) {
+): AbstractTickableSoundInstance(layer, SoundSource.MUSIC, SoundInstance.createUnseededRandom()) {
 
     init {
-        volume = 1.0f
+        volume = 0.0f
         looping = true
         delay = 0
         attenuation = Attenuation.NONE
@@ -111,6 +128,10 @@ class RaidMusicSoundInstance(
     }
 
     fun setVolume(volume: Float) {
-        this.volume = volume
+        this.volume = volume.coerceIn(0.0f, 1.0f)
     }
+
+    fun stopLayer() = this.stop()
+
+    override fun tick() {}
 }

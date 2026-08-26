@@ -27,7 +27,10 @@ object PazMain : ModInitializer {
 
 	override fun onInitialize() {
 		PazConfig.load()
-		ServerLifecycleEvents.SERVER_STARTING.register { PazConfig.load() }
+		ServerLifecycleEvents.SERVER_STARTING.register {
+			PazNetwork.ZombieRaidClientCache.clear()
+			PazConfig.load()
+		}
 		ServerPlayerEvents.JOIN.register { player ->
 			val json = PazConfig.let { it.GSON.toJson(it.server) }
 			val payload = ServerConfigResponsePayload(json)
