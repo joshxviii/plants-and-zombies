@@ -2,6 +2,7 @@ package joshxviii.plantz.gui
 
 import joshxviii.plantz.PazClientNetwork.ZombieRaidClientCache
 import joshxviii.plantz.PazConfig
+import joshxviii.plantz.block.entity.FlagBlockEntity
 import joshxviii.plantz.pazResource
 import joshxviii.plantz.raid.ZombieRaid
 import joshxviii.plantz.tickTimeFormat
@@ -51,7 +52,7 @@ object ZombieRaidOverlay {
         val barWidth = 98
         val barHeight = 5
 
-        val flagHealthPercent = (raidEvent.flagHealth / raidEvent.flagMaxHealth).coerceIn(0f, 1f)
+        val flagHealthPercent = (raidEvent.flagHealth / FlagBlockEntity.MAX_HEALTH).coerceIn(0f, 1f)
         val flagBarWidth = Mth.floor(barWidth * flagHealthPercent)
         val flagHealthX = x + 17 + (barWidth - flagBarWidth)
         val flagHealthY = y + 15

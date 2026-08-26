@@ -70,6 +70,18 @@ object PazSounds {
 
     @JvmField val MUSIC_DISC_GRASSY_GROOVE = registerForHolder("music_disc.grassy_groove")
 
+    @JvmField val RAID_MUSIC_LOW = registerForHolder("music.raid.low")
+    @JvmField val RAID_MUSIC_MEDIUM = registerForHolder("music.raid.medium")
+    @JvmField val RAID_MUSIC_HIGH = registerForHolder("music.raid.high")
+    @JvmField val RAID_MUSIC_BUCKET = registerForHolder("music.raid.bucket")
+    @JvmField val RAID_MUSIC_HALFTIME = registerForHolder("music.raid.halftime")
+    @JvmField val RAID_MUSIC_WINTER = registerForHolder("music.raid.winter")
+    @JvmField val RAID_MUSIC_PIRATE = registerForHolder("music.raid.pirate")
+    @JvmField val RAID_MUSIC_ARMY = registerForHolder("music.raid.army")
+    @JvmField val RAID_MUSIC_LEAGUE = registerForHolder("music.raid.league")
+    @JvmField val RAID_MUSIC_ZOMBOSS = registerForHolder("music.raid.zomboss")
+
+
     private fun registerGnomeSoundVariants(): Map<GnomeSoundVariant, GnomeSoundVariant.GnomeSoundSet> {
         return GnomeSoundVariant.entries.associateWith { soundVariant ->
             val id = soundVariant.serializedName

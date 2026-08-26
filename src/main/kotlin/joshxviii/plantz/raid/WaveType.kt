@@ -262,10 +262,10 @@ enum class WaveType(
     fun popupMessage(): Component {
         return Component.translatable("event.plantz.zombie_raid.special_wave.${name.lowercase()}")
     }
-}
 
-data class WaveSpawnEntry(
-    val entityType: EntityType<out Zombie>,
-    val count: Int = 1,
-    val configure: (Zombie) -> Unit = {},
-)
+    data class WaveSpawnEntry(
+        val entityType: EntityType<out Zombie>,
+        val count: Int = 1,
+        val configure: (Zombie) -> Unit = {},
+    )
+}

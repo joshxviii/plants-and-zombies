@@ -417,6 +417,7 @@ class ZombieRaid(
         val data = ZombieRaidClientData(
             id = zombieRaidEvent.id,
             status = status,
+            currentWaveType = waveTypes.last(),
             wavesSpawned = wavesSpawned,
             activeTime = ticksActive.toInt(),
             numWaves = numWaves,
@@ -424,7 +425,6 @@ class ZombieRaid(
             zombieHealthMax = if (status != ZombieRaidStatus.NEXT_WAVE) totalZombieHealth else 1f,
             zombieHealth = getHealthOfZombies(),
             flagHealth = flag?.health ?: 0f,
-            flagMaxHealth = MAX_HEALTH,
             seenCredits = starterHasSeenCredits
         )
 
@@ -508,11 +508,11 @@ class ZombieRaid(
     fun stop() {
         active = false
         val data = ZombieRaidClientData(id = zombieRaidEvent.id)
+        status = ZombieRaidStatus.STOPPED
         zombieRaidEvent.players.forEach { player ->// terminate raid connection
             player.connection.send(ClientboundCustomPayloadPacket(ZombieRaidResponsePayload(data, true)))
         }
         zombieRaidEvent.removeAllPlayers()
-        status = ZombieRaidStatus.STOPPED
     }
     fun isStopped(): Boolean = status == ZombieRaidStatus.STOPPED
 }
