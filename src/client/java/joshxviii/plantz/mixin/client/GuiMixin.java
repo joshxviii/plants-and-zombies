@@ -2,6 +2,7 @@ package joshxviii.plantz.mixin.client;
 
 import joshxviii.plantz.PazEffects;
 import joshxviii.plantz.PazModels;
+import joshxviii.plantz.ZombieHudMarkers;
 import joshxviii.plantz.effect.PaintedMobEffect;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -51,6 +52,8 @@ public abstract class GuiMixin {
         });
         if (player.hasEffect(PazEffects.CHILLED)) extractTextureOverlay(graphics, FREEZE_OUTLINE_LOCATION, 0.15f);
         if (player.hasEffect(PazEffects.FROZEN)) extractTextureOverlay(graphics, FREEZE_OUTLINE_LOCATION, 1.0f);
+
+        ZombieHudMarkers.INSTANCE.renderIcons(graphics, deltaTracker.getGameTimeDeltaPartialTick(false));
     }
 
     @Unique

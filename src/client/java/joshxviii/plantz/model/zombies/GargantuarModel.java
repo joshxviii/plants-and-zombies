@@ -3,6 +3,7 @@ package joshxviii.plantz.model.zombies;
 import joshxviii.plantz.animation.zombies.GargantuarAnimation;
 import joshxviii.plantz.renderer.entity.GargantuarRenderState;
 import joshxviii.plantz.renderer.entity.PazZombieRenderState;
+import joshxviii.plantz.renderer.entity.SuperBrainzRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -96,7 +97,7 @@ public class GargantuarModel extends PazZombieModel {
 
 		walkAnimation.applyWalk(animationPos, animationSpeed, 2.0f, 2.0f);
 
-		GargantuarRenderState gargState = (GargantuarRenderState) state;
+		if (!(state instanceof GargantuarRenderState gargState)) return;
 		initAnimation.apply(gargState.getEmergeAnimationState(), gargState.ageInTicks);
 		punchAnimation.apply(gargState.getPunchAnimationState(), gargState.ageInTicks);
 		smashAnimation.apply(gargState.getSmashAnimationState(), gargState.ageInTicks);

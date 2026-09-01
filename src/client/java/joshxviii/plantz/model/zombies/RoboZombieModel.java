@@ -1,6 +1,7 @@
 package joshxviii.plantz.model.zombies;
 
 import joshxviii.plantz.animation.zombies.RoboZombieAnimation;
+import joshxviii.plantz.renderer.entity.GargantuarRenderState;
 import joshxviii.plantz.renderer.entity.PazZombieRenderState;
 import joshxviii.plantz.renderer.entity.RoboZombieRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
@@ -87,7 +88,7 @@ public class RoboZombieModel extends PazZombieModel {
         this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
         this.head.yRot = state.yRot * (float) (Math.PI / 180.0);
 
-        RoboZombieRenderState roboState = (RoboZombieRenderState) state;
+        if (!(state instanceof RoboZombieRenderState roboState)) return;
         float animationPos = state.walkAnimationPos;
         float animationSpeed = state.walkAnimationSpeed;
         walkAnimation.applyWalk(animationPos, animationSpeed, 2f, 2f);

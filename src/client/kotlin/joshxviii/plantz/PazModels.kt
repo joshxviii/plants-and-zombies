@@ -158,7 +158,6 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(ZombieDroneModel.LAYER_LOCATION) { ZombieDroneModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(LawnMowerModel.LAYER_LOCATION) { LawnMowerModel.createBodyLayer() }
 
-
         ModelLayerRegistry.registerModelLayer(GnomeModel.LAYER_LOCATION) { GnomeModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(ARMOR_LAYER_LOCATION.head)  { GnomeArmorModel.createHeadLayer() }
         ModelLayerRegistry.registerModelLayer(ARMOR_LAYER_LOCATION.chest) { GnomeArmorModel.createChestLayer() }

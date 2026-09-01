@@ -98,7 +98,7 @@ public class SuperBrainzModel extends PazZombieModel {
         AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, false, state);
         this.head.xRot = state.xRot * Mth.DEG_TO_RAD;
 
-        SuperBrainzRenderState superBrainzState = (SuperBrainzRenderState) state;
+        if (!(state instanceof SuperBrainzRenderState superBrainzState)) return;
         float animationPos = state.walkAnimationPos;
         float animationSpeed = state.walkAnimationSpeed;
         if (superBrainzState.getZombieState() == ZombieState.FLYING)
