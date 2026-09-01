@@ -1,22 +1,18 @@
 package joshxviii.plantz.ai.goal
 
+import joshxviii.plantz.*
 import joshxviii.plantz.PazBlocks.PLANTZ_FLAG
 import joshxviii.plantz.PazBlocks.PLANTZ_FLAG_POI
-import joshxviii.plantz.PazEffects
-import joshxviii.plantz.attackRange
 import joshxviii.plantz.block.entity.FlagBlockEntity
-import joshxviii.plantz.canReachTarget
-import joshxviii.plantz.lookAtBlockPos
-import joshxviii.plantz.moveToBlockPos
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Holder
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.entity.ai.village.poi.PoiManager.Occupancy
-import net.minecraft.world.entity.ai.village.poi.PoiType
+import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.pathfinder.Path
+import net.minecraft.world.phys.HitResult
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
@@ -39,6 +35,7 @@ class DestroyFlagGoal(
     }
 
     override fun canUse(): Boolean {
+        mob.target?.let { if(it.isAlive && mob.withinAttackRange(it)) return false }
         if (searchCooldown > 0) {
             searchCooldown--
             if (searchCooldown <= 0) {
@@ -47,13 +44,14 @@ class DestroyFlagGoal(
                 path = mob.getNavigation().createPath(flagPos, 0)
             }
         }
-        return targetFlagPos!=null && !mob.hasEffect(PazEffects.HYPNOTIZE)
+        return targetFlagPos!=null && !mob.hasEffect(PazEffects.HYPNOTIZE) && canSeeFlag()
     }
 
     override fun canContinueToUse(): Boolean {
+        mob.target?.let { if(it.isAlive && mob.withinAttackRange(it)) return false }
         val flagPos = targetFlagPos?: return false
         val isValid = mob.level().getBlockState(flagPos).`is`(PLANTZ_FLAG)
-        return isValid
+        return isValid && canSeeFlag()
     }
 
     override fun stop() {
@@ -115,5 +113,12 @@ class DestroyFlagGoal(
             Occupancy.ANY
         ).orElse(null)
         return flagPoi
+    }
+
+    fun canSeeFlag(): Boolean {
+        targetFlagPos?.let {
+            return mob.level().clip(ClipContext(mob.eyePosition, it.center, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, mob)).type == HitResult.Type.MISS
+        }
+        return false
     }
 }

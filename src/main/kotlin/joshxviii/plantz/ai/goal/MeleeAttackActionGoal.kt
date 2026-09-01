@@ -4,6 +4,7 @@ import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.attackRange
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.withinAttackRange
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.damagesource.DamageType
@@ -47,13 +48,13 @@ open class MeleeAttackActionGoal(
         val target = usingEntity.target?: return false
         usingEntity.lookControl.setLookAt(target, 30f, 30f)
 
-        return isReachable(target) && usePredicate.test(usingEntity);
+        return usingEntity.withinAttackRange(target) && usePredicate.test(usingEntity);
     }
 
     override fun doAction() : Boolean {
         val target = usingEntity.target?: return false
         usingEntity.lookControl.setLookAt(target, 30.0f, 30.0f)
-        if (!isReachable(target)) return false
+        if (!usingEntity.withinAttackRange(target)) return false
 
         val damage : Float = usingEntity.attributes.getValue(Attributes.ATTACK_DAMAGE).toFloat() * damageMultiplier
         val knockback : Double = usingEntity.attributes.getValue(Attributes.ATTACK_KNOCKBACK)
@@ -72,11 +73,5 @@ open class MeleeAttackActionGoal(
         }
 
         return false
-    }
-
-    fun isReachable(target: LivingEntity): Boolean {
-        val range = usingEntity.attackRange()
-        val distance = usingEntity.distanceToSqr(target)
-        return distance <= (range * range) * rangeMultiplier
     }
 }
