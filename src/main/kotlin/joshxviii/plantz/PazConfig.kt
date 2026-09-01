@@ -72,6 +72,7 @@ data class ServerConfig(
 )
 data class ClientConfig(
     var showDebugInfo: Boolean = false,
+    var alwaysShowHeadMarkers: Boolean = false,
     var showHiddenItemsInCreativeTab: Boolean = false,
 )
 
@@ -123,6 +124,9 @@ object PazConfig {
 
     val SHOW_DEBUG_INFO: Boolean
         get() = client.showDebugInfo
+
+    val ALWAYS_SHOW_HEAD_MARKERS: Boolean
+        get() = client.alwaysShowHeadMarkers
 
     val SHOW_HIDDEN_ITEMS: Boolean
         get() = client.showHiddenItemsInCreativeTab

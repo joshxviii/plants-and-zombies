@@ -63,6 +63,24 @@ public class PazZombieModel<S extends PazZombieRenderState> extends ZombieModel<
 
     @Override
     public void setupAnim(final @NotNull S state) {
+        if (state.getHeadOnly()) {
+            this.head.visible = true;
+            this.body.visible = false;
+            this.hat.visible = false;
+            this.leftArm.visible = false;
+            this.rightArm.visible = false;
+            this.leftLeg.visible = false;
+            this.rightLeg.visible = false;
+        }
+        else {
+            this.head.visible = true;
+            this.body.visible = true;
+            this.hat.visible = true;
+            this.leftArm.visible = true;
+            this.rightArm.visible = true;
+            this.leftLeg.visible = true;
+            this.rightLeg.visible = true;
+        }
         super.setupAnim(state);
         if (state.getZombieState() == ZombieState.FLYING) {
             var animationPos = state.walkAnimationPos;

@@ -45,6 +45,20 @@ object PazRenderPipelines {
             .build()
     )
 
+    @JvmField
+    val HEAD_MARKER: RenderPipeline = RenderPipelines.register(
+        RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
+            .withLocation(pazResource("pipeline/head_marker"))
+            .build()
+    )
+    @JvmField
+    val HEAD_MARKER_OUTLINE: RenderPipeline = RenderPipelines.register(
+        RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
+            .withLocation(pazResource("pipeline/head_marker_outline"))
+            .withFragmentShader(pazResource("core/head_marker_outline"))
+            .build()
+    )
+
     fun initialize() {
         if (FabricLoader.getInstance().isModLoaded("iris")) {
             registerIrisCompat()
@@ -53,10 +67,13 @@ object PazRenderPipelines {
 
     private fun registerIrisCompat() {
         try {
-            IrisApi.getInstance().assignPipeline(
-                PAINT_OVERLAY,
-                IrisProgram.ENTITIES
-            )
+            IrisApi.getInstance().let{
+                it.assignPipeline(
+                    PAINT_OVERLAY,
+                    IrisProgram.ENTITIES
+                )
+            }
+
         } catch (t: Throwable) {
             PazMain.LOGGER.warn("Iris present but assignPipeline failed", t)
         }

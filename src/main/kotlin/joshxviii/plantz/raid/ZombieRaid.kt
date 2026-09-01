@@ -10,6 +10,7 @@ import joshxviii.plantz.*
 import joshxviii.plantz.advancement.ZombieRaidContext
 import joshxviii.plantz.block.entity.FlagBlockEntity
 import joshxviii.plantz.block.entity.FlagBlockEntity.Companion.MAX_HEALTH
+import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.networking.ZombieRaidClientData
 import joshxviii.plantz.networking.ZombieRaidResponsePayload
 import net.minecraft.SharedConstants
@@ -372,6 +373,7 @@ class ZombieRaid(
         for (zombies in waveZombieMap.values) {
             if (zombies.remove(zombie)) {
                 if (removeFromTotalHealth) totalZombieHealth -= zombie.health
+                (zombie as? ZombieRaider)?.`plantz$setIsFromRaid`(false)
                 sendClientUpdate(level)
                 setDirty(level)
                 break
@@ -393,20 +395,13 @@ class ZombieRaid(
         if (zombies.contains(zombie)) return false
         var existingCopy: Zombie? = null
 
-        for (r in zombies) {
-            if (r.getUUID() == zombie.getUUID()) {
-                existingCopy = r
-                break
-            }
-        }
+        zombies.firstOrNull { it.getUUID() == zombie.getUUID() }?.let { existingCopy = it }
 
-        if (existingCopy != null) {
-            zombies.remove(existingCopy)
-            zombies.add(zombie)
-        }
+        if (existingCopy != null) zombies.remove(existingCopy)
 
         zombies.add(zombie)
         totalZombieHealth += zombie.maxHealth
+        (zombie as? ZombieRaider)?.`plantz$setIsFromRaid`(true)
 
         sendClientUpdate(level)
         return true

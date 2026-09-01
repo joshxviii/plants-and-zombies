@@ -84,8 +84,8 @@ object ZombieRaidOverlay {
         val textX = screenWidth / 2 - font.width(timer) / 2
         val textY = y + 18
         val textColor = when (time) {
-            in -1..200 -> 0xFF5555
-            in 201..600 -> 0xFFFF55
+            in -1..600 -> 0xFF5555
+            in 601..1200 -> 0xFFFF55
             else -> 0xFFFFFF
         }
         if (raidEvent.status != ZombieRaid.ZombieRaidStatus.NEXT_WAVE) graphics.outlineText(font, timer, textX, textY,

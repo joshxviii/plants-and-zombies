@@ -31,8 +31,8 @@ import net.minecraft.world.phys.Vec3
 
 open class PazZombieRenderer(
     context: EntityRendererProvider.Context,
-    private val defaultModel: PazZombieModel<PazZombieRenderState> = PazZombieModel(null, context.bakeLayer(PazZombieModel.LAYER_LOCATION)),
-    private val babyModel: PazZombieModel<PazZombieRenderState> = PazZombieModel(null, context.bakeLayer(ModelLayers.ZOMBIE_BABY)),
+    val defaultModel: PazZombieModel<PazZombieRenderState> = PazZombieModel(null, context.bakeLayer(PazZombieModel.LAYER_LOCATION)),
+    val babyModel: PazZombieModel<PazZombieRenderState> = PazZombieModel(null, context.bakeLayer(ModelLayers.ZOMBIE_BABY)),
     armorSet: ArmorModelSet<ModelLayerLocation> = ModelLayers.ZOMBIE_ARMOR,
     babyArmorSet: ArmorModelSet<ModelLayerLocation> = ModelLayers.ZOMBIE_BABY_ARMOR
 ) : AbstractZombieRenderer<PazZombie, PazZombieRenderState, PazZombieModel<PazZombieRenderState>>(
@@ -62,6 +62,10 @@ open class PazZombieRenderer(
         if (state.zombieState != ZombieState.EMERGING || state.ageInTicks>1) super.submit(state, poseStack, collector, camera)
     }
 
+    override fun shouldRenderLayers(state: PazZombieRenderState): Boolean {
+        return super.shouldRenderLayers(state)
+    }
+    
     override fun createRenderState(): PazZombieRenderState {
         return PazZombieRenderState()
     }
@@ -72,6 +76,7 @@ open class PazZombieRenderer(
 
     override fun extractRenderState(entity: PazZombie, state: PazZombieRenderState, partialTicks: Float) {
         super.extractRenderState(entity, state, partialTicks)
+        state.headOnly = false
         state.zombieState = entity.state
         state.emergeAnimationState.copyFrom(entity.emergeAnimation)
         state.floatAnimationState.copyFrom(entity.floatAnimation)
@@ -131,6 +136,7 @@ open class PazZombieRenderState : ZombieRenderState() {
         const val TEXTURE_PATH = "textures/entity/zombie"
     }
 
+    var headOnly: Boolean = false
     var movementDirection: Vec3 = Vec3.ZERO
     var customName: String = ""
     var textureExtra: List<String> = listOf()

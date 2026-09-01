@@ -2,7 +2,9 @@ package joshxviii.plantz
 
 import joshxviii.plantz.PazMain.MODID
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.networking.ZombieRaidClientData
 import joshxviii.plantz.raid.WaveType
+import joshxviii.plantz.raid.ZombieRaid
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
@@ -35,6 +37,7 @@ import net.minecraft.world.level.pathfinder.Path
 import net.minecraft.world.level.storage.loot.LootTable
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
+import org.joml.Vector3f
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -52,6 +55,11 @@ interface GardenHeroRewards {
             return rewards
         }
     }
+}
+
+interface ZombieRaider {
+    fun `plantz$getIsFromRaid`(): Boolean
+    fun `plantz$setIsFromRaid`(value: Boolean)
 }
 
 interface PlantHeadAttachment {
