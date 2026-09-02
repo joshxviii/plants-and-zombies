@@ -95,11 +95,6 @@
           "type": "minecraft:item",
           "name": "plantz:plant_pot_helmet",
           "weight": 2
-        },
-        {
-          "type": "minecraft:loot_table",
-          "value": "plantz:gnomes",
-          "weight": 1
         }
       ]
     }

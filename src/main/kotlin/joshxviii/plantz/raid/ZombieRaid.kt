@@ -7,10 +7,7 @@ import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import it.unimi.dsi.fastutil.ints.IntList
 import joshxviii.plantz.*
-import joshxviii.plantz.advancement.ZombieRaidContext
 import joshxviii.plantz.block.entity.FlagBlockEntity
-import joshxviii.plantz.block.entity.FlagBlockEntity.Companion.MAX_HEALTH
-import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.networking.ZombieRaidClientData
 import joshxviii.plantz.networking.ZombieRaidResponsePayload
 import net.minecraft.SharedConstants
@@ -130,7 +127,7 @@ class ZombieRaid(
         const val GARDEN_HERO_EFFECT_DURATION: Int = 72000
         const val COUNTDOWN_BEFORE_LOSS: Int = 200 //10 seconds
         const val MAXIMUM_WAVE_COUNT: Int = 20
-        const val TACO_TIME_WAVE = 10
+        const val TACO_REWARD_INTERVAL = 5
     }
 
     private val waveToLeaderMap: MutableMap<Int, Zombie> = Maps.newHashMap<Int, Zombie>()

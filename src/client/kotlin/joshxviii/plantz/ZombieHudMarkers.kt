@@ -54,10 +54,12 @@ object ZombieHudMarkers {
         }
     }
 
-    fun headIcon(graphics: GuiGraphicsExtractor, zombie: Zombie, x: Int, y: Int, use3DIcon: Boolean = true) {
+    fun headIcon(graphics: GuiGraphicsExtractor, zombie: Zombie, x: Int, y: Int, use3DIcon: Boolean = false) {
         val mc = Minecraft.getInstance()
         val partial = mc.deltaTracker.getGameTimeDeltaPartialTick(false)
         val state = (mc.entityRenderDispatcher.extractEntity(zombie, partial) as? PazZombieRenderState)?.also {// state to render model as
+            it.walkAnimationPos = 0f
+            it.walkAnimationSpeed = 0f
             it.deathTime = 0f
             it.isAngry = true
             it.isBaby = zombie.isBaby
@@ -83,18 +85,18 @@ object ZombieHudMarkers {
         val h = mc.window.guiScaledHeight
 
         // outline
-        submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale, outlinePad = 1.15f)
+        submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale * state.scale, outlinePad = 1.15f)
 
         // head icon
         if (use3DIcon) graphics.guiRenderState.addPicturesInPictureState(GuiEntityRenderState(state, Vector3f((cx.toFloat() - w * 0.5f) / baseScale, zombie.eyeHeight + (cy.toFloat() - h * 0.5f ) / baseScale, 0f), Quaternionf().rotateX(Mth.PI), null, 0, 0, w, h, baseScale, null))
-        else submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale)
+        else submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale * state.scale)
 
 
         if (zombie.mainHandItem.`is`(PazBlocks.BRAINZ_FLAG.asItem()) || zombie.offhandItem.`is`(PazBlocks.BRAINZ_FLAG.asItem())) {
             graphics.pose().pushMatrix()
             graphics.pose().translate(cx.toFloat(), cy.toFloat())
-            graphics.pose().scale(baseScale/16f)
-            graphics.item(PazBlocks.BRAINZ_FLAG.asItem().defaultInstance, -2, -8)
+            graphics.pose().scale(baseScale/24f)
+            graphics.item(PazBlocks.BRAINZ_FLAG.asItem().defaultInstance, -4, -4)
             graphics.pose().popMatrix()
         }
     }
@@ -118,7 +120,7 @@ object ZombieHudMarkers {
                 val pose = PoseStack()
                 pose.pushPose()
                 pose.translate(cx, cy, if (outlinePad>0f) 149.0 else 150.0)
-                pose.translate(0.0, ICON_SIZE*0.5 + outlinePad*.25, 0.0)
+                pose.translate(0.0, (ICON_SIZE + outlinePad)*0.5, 0.0)
                 pose.scale(scale, scale, scale)
                 if (outlinePad>0f) pose.scale(outlinePad, outlinePad, outlinePad)
                 model.head.setPos(0f, 0f, 0f)

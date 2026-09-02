@@ -6,7 +6,7 @@ import joshxviii.plantz.block.MailboxBlock.Companion.FACING
 import joshxviii.plantz.block.MailboxBlock.Companion.STATE
 import joshxviii.plantz.block.MailboxState
 import joshxviii.plantz.inventory.MailboxMenu
-import joshxviii.plantz.raid.ZombieRaid.Companion.TACO_TIME_WAVE
+import joshxviii.plantz.raid.ZombieRaid.Companion.TACO_REWARD_INTERVAL
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
@@ -45,7 +45,6 @@ import net.minecraft.world.level.storage.loot.LootTable
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import net.minecraft.world.phys.Vec3
-import org.apache.logging.log4j.core.jmx.Server
 import kotlin.jvm.optionals.getOrDefault
 
 class MailboxBlockEntity(
@@ -80,7 +79,7 @@ class MailboxBlockEntity(
                     if (blockEntity.ejectTimer % Mth.floor((HERO_MAIL_EJECT_DELAY+buffer.size)/buffer.size.toFloat()) == 0) buffer.getOrNull(blockEntity.heroMailIndex)?.let {
                         val items = blockEntity.getHeroMail(it).toMutableList()
 
-                        if ((blockEntity.heroMailIndex+1) % TACO_TIME_WAVE==0) {// Add taco reward ever 10 waves
+                        if ((blockEntity.heroMailIndex+1) % TACO_REWARD_INTERVAL==0) {// Add taco reward ever 10 waves
                             items.addAll(blockEntity.getHeroMail(PazLootTables.MAIL_REWARDS_TACO))
                             blockEntity.confetti()
                         }

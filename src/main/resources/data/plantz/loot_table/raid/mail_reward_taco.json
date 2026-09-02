@@ -7,6 +7,7 @@
         {
           "type": "minecraft:item",
           "name": "plantz:taco",
+          "weight": 30,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -16,6 +17,11 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:loot_table",
+          "value": "plantz:gnomes",
+          "weight": 1
         }
       ]
     }

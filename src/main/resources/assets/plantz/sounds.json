@@ -276,7 +276,7 @@
   },
 
   "event.raid.taco_reward": {
-    "sounds": [{ "name": "plantz:event/taco_reward" }], "subtitle": "plantz.subtitles.event.raid.taco_reward"
+    "sounds": [{ "name": "plantz:event/taco_reward", "volume": 1.0, "pitch": 1.0  }], "subtitle": "plantz.subtitles.event.raid.taco_reward"
   },
 
   "event.mob_effect.hypnotized": {
