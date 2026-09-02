@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "plantz:block/lawn_flamingo" },
+    "facing=south": { "model": "plantz:block/lawn_flamingo", "y": 180 },
+    "facing=east":  { "model": "plantz:block/lawn_flamingo", "y": 90 },
+    "facing=west":  { "model": "plantz:block/lawn_flamingo", "y": 270 }
+  }
+}

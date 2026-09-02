@@ -116,6 +116,8 @@ object PazBlocks {
         YELLOW_GARDEN_GNOME
     )
 
+    @JvmField val LAWN_FLAMINGO: Block = registerBlock("lawn_flamingo", gardenGnomeProperties(), { LawnFlamingo(it) })
+
     @JvmField val MAILBOX: Block = registerBlock("mailbox", mailboxProperties(), ::MailboxBlock)
     @JvmField val LIGHT_GRAY_MAILBOX: Block = registerBlock("light_gray_mailbox", mailboxProperties(MapColor.COLOR_LIGHT_GRAY), {MailboxBlock(it, DyeColor.LIGHT_GRAY)})
     @JvmField val GRAY_MAILBOX: Block = registerBlock("gray_mailbox", mailboxProperties(MapColor.COLOR_GRAY), {MailboxBlock(it, DyeColor.GRAY)})

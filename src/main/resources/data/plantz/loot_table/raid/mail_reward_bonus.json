@@ -7,7 +7,7 @@
         {
           "type": "minecraft:item",
           "name": "plantz:taco",
-          "weight": 30,
+          "weight": 35,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -17,6 +17,11 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:lawn_flamingo",
+          "weight": 3
         },
         {
           "type": "minecraft:loot_table",

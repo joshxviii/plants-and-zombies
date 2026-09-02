@@ -127,7 +127,7 @@ class ZombieRaid(
         const val GARDEN_HERO_EFFECT_DURATION: Int = 72000
         const val COUNTDOWN_BEFORE_LOSS: Int = 200 //10 seconds
         const val MAXIMUM_WAVE_COUNT: Int = 20
-        const val TACO_REWARD_INTERVAL = 5
+        const val BONUS_REWARD_INTERVAL = 5
     }
 
     private val waveToLeaderMap: MutableMap<Int, Zombie> = Maps.newHashMap<Int, Zombie>()
