@@ -6,7 +6,7 @@ import joshxviii.plantz.block.MailboxBlock.Companion.FACING
 import joshxviii.plantz.block.MailboxBlock.Companion.STATE
 import joshxviii.plantz.block.MailboxState
 import joshxviii.plantz.inventory.MailboxMenu
-import joshxviii.plantz.raid.ZombieRaid.Companion.TACO_REWARD_INTERVAL
+import joshxviii.plantz.raid.ZombieRaid.Companion.BONUS_REWARD_INTERVAL
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
@@ -77,14 +77,12 @@ class MailboxBlockEntity(
                 val buffer = blockEntity.heroMailBuffer
                 if (buffer.isNotEmpty()) {// Hero Mail Rewards
                     if (blockEntity.ejectTimer % Mth.floor((HERO_MAIL_EJECT_DELAY+buffer.size)/buffer.size.toFloat()) == 0) buffer.getOrNull(blockEntity.heroMailIndex)?.let {
-                        val items = blockEntity.getHeroMail(it).toMutableList()
+                        blockEntity.getHeroMail(it).forEach { item -> blockEntity.ejectItem(item) }
 
-                        if ((blockEntity.heroMailIndex+1) % TACO_REWARD_INTERVAL==0) {// Add taco reward ever 10 waves
-                            items.addAll(blockEntity.getHeroMail(PazLootTables.MAIL_REWARDS_TACO))
+                        if ((blockEntity.heroMailIndex+1) % BONUS_REWARD_INTERVAL==0) {// Add bonus reward every 5 waves
+                            blockEntity.getHeroMail(PazLootTables.MAIL_REWARDS_BONUS).forEach { item -> blockEntity.ejectItem(item, glow = true) }
                             blockEntity.confetti()
                         }
-
-                        items.forEach { item -> blockEntity.ejectItem(item) }
 
                         blockEntity.playSound(SoundEvents.VAULT_EJECT_ITEM, .5f, (blockEntity.heroMailIndex / buffer.size.toFloat()) * 0.2f + 1.0f)
                         blockEntity.heroMailIndex++
@@ -154,7 +152,7 @@ class MailboxBlockEntity(
     }
 
     private fun getDropPos(): Vec3 = blockState.getValue(FACING).unitVec3.scale(0.6).add(blockPos.center)
-    private fun ejectItem(item: ItemStack) {
+    private fun ejectItem(item: ItemStack, glow: Boolean = false) {
         val level = level as? ServerLevel ?: return
         val random = level.getRandom()
         val dropPos = getDropPos()
@@ -165,6 +163,7 @@ class MailboxBlockEntity(
             entity.setDeltaMovement(
                 random.triangle(0.0, 0.11485000171139836) + direction.x, random.triangle(0.2, 0.11485000171139836) + direction.y, random.triangle(0.0, 0.11485000171139836) + direction.z
             )
+            if (glow) entity.setGlowingTag(true)
             level.addFreshEntity(entity)
         }
     }
