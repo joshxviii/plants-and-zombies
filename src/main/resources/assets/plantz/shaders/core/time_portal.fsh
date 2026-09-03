@@ -92,6 +92,7 @@ void main() {
 
     float alpha = circle * vertexColor.a * (0.55 + energy * 0.35 + rim * 0.5);
     alpha = clamp(alpha, 0.0, 1.0);
+    if (alpha < 0.4) discard;
 
     vec4 color = vec4(core, alpha);
     fragColor = apply_fog(

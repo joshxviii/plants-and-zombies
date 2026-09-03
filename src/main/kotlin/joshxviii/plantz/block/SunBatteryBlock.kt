@@ -140,9 +140,7 @@ class SunBatteryBlock(properties: Properties) : BaseEntityBlock(properties), Sim
     }
 
     override fun hasAnalogOutputSignal(state: BlockState): Boolean = state.getValue(LEVEL) > 0
-    override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos, direction: Direction): Int {
-        return state.getValue(LEVEL)
-    }
+    override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos, direction: Direction): Int = state.getValue(LEVEL)
 
     override fun getCloneItemStack(level: LevelReader, pos: BlockPos, state: BlockState, includeData: Boolean): ItemStack {
         return (level.getBlockEntity(pos) as? SunBatteryBlockEntity)?.theItem?:

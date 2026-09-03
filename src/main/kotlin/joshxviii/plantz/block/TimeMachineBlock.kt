@@ -171,5 +171,8 @@ class TimeMachineBlock(properties: Properties) : BaseEntityBlock(properties), Si
         return super.canSurvive(state, level, pos)
     }
 
+    override fun hasAnalogOutputSignal(state: BlockState): Boolean = state.getValue(LEVEL) > 0
+    override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos, direction: Direction): Int = if (state.getValue(STATE) == TimeMachineState.ACTIVE) state.getValue(LEVEL) else 0
+
     override fun codec(): MapCodec<out TimeMachineBlock> { return CODEC }
 }

@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.core.Direction
-import net.minecraft.util.ARGB
 import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec3
 import kotlin.math.cos
@@ -25,8 +24,7 @@ import kotlin.math.sin
 class TimeMachineRenderer() : BlockEntityRenderer<TimeMachineBlockEntity, TimeMachineRenderSate> {
 
     companion object {
-        // 0x00c8f5
-        const val PORTAL_COLOR = 0xa500f5
+        const val PORTAL_COLOR = 0x00daf5
         // place holder textures
         private val TEXTURE_PORTAL_BACKGROUND = pazResource("textures/block/time_machine/portal0.png")
         private val TEXTURE_PORTAL_FOREGROUND = pazResource("textures/block/time_machine/portal1.png")
@@ -67,7 +65,7 @@ class TimeMachineRenderer() : BlockEntityRenderer<TimeMachineBlockEntity, TimeMa
         poseStack.translate(0.5f, 2.5f, 0.5f)
         poseStack.mulPose(Axis.YP.rotationDegrees(state.facing.toYRot()))
         poseStack.scale(s, s, s)
-        //poseStack.mulPose(Axis.ZP.rotation(-(Math.PI * open).toFloat()))
+        poseStack.mulPose(Axis.YP.rotation(cos(Math.PI * state.activePortalTime/40f).toFloat() * 0.01f))
         collector.submitCustomGeometry(poseStack, TIME_PORTAL) { pose, buffer ->
             GuiUtil.plane(pose, buffer, state.lightCoords, color = color)
         }

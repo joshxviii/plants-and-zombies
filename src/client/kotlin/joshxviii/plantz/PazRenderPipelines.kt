@@ -88,7 +88,7 @@ object PazRenderPipelines {
                 )
                 it.assignPipeline(
                     TIME_PORTAL,
-                    IrisProgram.BASIC
+                    IrisProgram.PARTICLES_TRANSLUCENT
                 )
             }
 
