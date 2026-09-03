@@ -41,7 +41,7 @@ object GuiUtil {
         overlay: Int = OverlayTexture.NO_OVERLAY
     ) {
         buffer.addVertex(pose, x, y, 0.0f)
-            .setColor(ARGB.red(color), ARGB.green(color), ARGB.blue(color), 0xFF)
+            .setColor(ARGB.red(color), ARGB.green(color), ARGB.blue(color), ARGB.alpha(color))
             .setUv(u, v)
             .setOverlay(overlay)
             .setLight(lightCoords)

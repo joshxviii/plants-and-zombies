@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
-import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.core.Direction
 import net.minecraft.util.ARGB
@@ -26,8 +25,9 @@ import kotlin.math.sin
 class TimeMachineRenderer() : BlockEntityRenderer<TimeMachineBlockEntity, TimeMachineRenderSate> {
 
     companion object {
-        const val PORTAL_COLOR = 0x27FF4B
-        // place hodler textures
+        // 0x00c8f5
+        const val PORTAL_COLOR = 0xa500f5
+        // place holder textures
         private val TEXTURE_PORTAL_BACKGROUND = pazResource("textures/block/time_machine/portal0.png")
         private val TEXTURE_PORTAL_FOREGROUND = pazResource("textures/block/time_machine/portal1.png")
         public val TIME_PORTAL =
@@ -59,23 +59,21 @@ class TimeMachineRenderer() : BlockEntityRenderer<TimeMachineBlockEntity, TimeMa
         if (state.activePortalTime <= 0) return
         val open = Mth.lerp((state.activePortalTime / 20f.toDouble()).coerceIn(0.0, 1.0).pow(0.6), 0.0, 1.0)
 
-        val s = open.toFloat() * 3f
+        val s = 3f
         val a = (open * 255).toInt()
         val color = (a shl 24) or PORTAL_COLOR
 
         poseStack.pushPose()
         poseStack.translate(0.5f, 2.5f, 0.5f)
-        val d = .25f
-        //poseStack.translate(state.facing.stepX.toFloat()*-d, 0.0f, state.facing.stepZ.toFloat()*-d)
         poseStack.mulPose(Axis.YP.rotationDegrees(state.facing.toYRot()))
         poseStack.scale(s, s, s)
-        poseStack.mulPose(Axis.ZP.rotation(-(Math.PI * open).toFloat()))
+        //poseStack.mulPose(Axis.ZP.rotation(-(Math.PI * open).toFloat()))
         collector.submitCustomGeometry(poseStack, TIME_PORTAL) { pose, buffer ->
-            GuiUtil.plane(pose, buffer, state.lightCoords, color = ARGB.color(0xFF, color))
+            GuiUtil.plane(pose, buffer, state.lightCoords, color = color)
         }
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0f))
         collector.submitCustomGeometry(poseStack, TIME_PORTAL) { pose, buffer ->
-            GuiUtil.plane(pose, buffer, state.lightCoords, color = ARGB.color(0xFF, color))
+            GuiUtil.plane(pose, buffer, state.lightCoords, color = color)
         }
 
         poseStack.popPose()

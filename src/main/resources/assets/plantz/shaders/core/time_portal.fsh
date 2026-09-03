@@ -30,7 +30,10 @@ float noise(vec2 p) {
 }
 
 void main() {
-    vec2 uv = texCoord0 * 2.0 - 1.0;
+    const float TEXELS = 48.0;
+    vec2 pixCoord = floor(texCoord0 * TEXELS) / TEXELS;
+
+    vec2 uv = pixCoord * 2.0 - 1.0;
     float r = length(uv);
     float angle = atan(uv.y, uv.x);
 
@@ -68,7 +71,7 @@ void main() {
     vec4 front = texture(Sampler1, tuv * 1.4 + vec2(t * 0.05, -t * 0.03));
 
     float n = noise(warped * 5.0 + t * 0.5);
-    float energy = smoothstep(0.35, 0.85, n) * (1.0 - r);
+    float energy = smoothstep(0.65, 0.95, n+1.0) * (1.0 - r);
 
     float rim = smoothstep(0.50, 0.90, rWarp) * smoothstep(1.02, 0.78, rWarp);
 

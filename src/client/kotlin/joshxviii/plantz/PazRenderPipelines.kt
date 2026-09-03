@@ -88,7 +88,7 @@ object PazRenderPipelines {
                 )
                 it.assignPipeline(
                     TIME_PORTAL,
-                    IrisProgram.BEACON_BEAM
+                    IrisProgram.BASIC
                 )
             }
 
