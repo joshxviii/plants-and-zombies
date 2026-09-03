@@ -3,6 +3,7 @@ package joshxviii.plantz
 import joshxviii.plantz.block.*
 import joshxviii.plantz.block.entity.*
 import joshxviii.plantz.item.component.BlocksProjectileDamage
+import joshxviii.plantz.item.component.StoredWater.Companion.DEFAULT_CAPACITY
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.fabricmc.fabric.api.`object`.builder.v1.world.poi.PoiHelper
 import net.minecraft.core.BlockPos
@@ -19,8 +20,11 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.Item.BASE_ATTACK_DAMAGE_ID
+import net.minecraft.world.item.Item.BASE_ATTACK_SPEED_ID
 import net.minecraft.world.item.Rarity
 import net.minecraft.world.item.component.ItemAttributeModifiers
+import net.minecraft.world.item.component.Weapon
 import net.minecraft.world.item.equipment.Equippable
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.IronBarsBlock
@@ -38,7 +42,7 @@ import net.minecraft.world.level.material.PushReaction
 
 object PazBlocks {
     @JvmField val HAS_WATER = BooleanProperty.create("has_water");
-    @JvmField val STORED_WATER = IntegerProperty.create("stored_water", 0, 9999);
+    @JvmField val STORED_WATER = IntegerProperty.create("stored_water", 0, DEFAULT_CAPACITY);
 
     @JvmField val PLANT_POT: Block = registerBlock(
         "plant_pot",
@@ -116,7 +120,15 @@ object PazBlocks {
         YELLOW_GARDEN_GNOME
     )
 
-    @JvmField val LAWN_FLAMINGO: Block = registerBlock("lawn_flamingo", gardenGnomeProperties(), { LawnFlamingo(it) })
+    @JvmField val LAWN_FLAMINGO: Block = registerBlock(
+        "lawn_flamingo", gardenGnomeProperties(MapColor.COLOR_PINK),
+        { LawnFlamingo(it) },
+        Item.Properties()
+            .component(DataComponents.WEAPON, Weapon(1))
+            .attributes(
+                ItemAttributeModifiers.builder().add(Attributes.ATTACK_DAMAGE, AttributeModifier(BASE_ATTACK_DAMAGE_ID, 2.0, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND).add(Attributes.ATTACK_SPEED, AttributeModifier(BASE_ATTACK_SPEED_ID, -2.5, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND).build()
+            )
+    )
 
     @JvmField val MAILBOX: Block = registerBlock("mailbox", mailboxProperties(), ::MailboxBlock)
     @JvmField val LIGHT_GRAY_MAILBOX: Block = registerBlock("light_gray_mailbox", mailboxProperties(MapColor.COLOR_LIGHT_GRAY), {MailboxBlock(it, DyeColor.LIGHT_GRAY)})

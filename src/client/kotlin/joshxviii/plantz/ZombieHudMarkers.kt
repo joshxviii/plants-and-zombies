@@ -54,7 +54,7 @@ object ZombieHudMarkers {
         }
     }
 
-    fun headIcon(graphics: GuiGraphicsExtractor, zombie: Zombie, x: Int, y: Int, use3DIcon: Boolean = false) {
+    fun headIcon(graphics: GuiGraphicsExtractor, zombie: Zombie, x: Int, y: Int, use3dIcon: Boolean = false) {
         val mc = Minecraft.getInstance()
         val partial = mc.deltaTracker.getGameTimeDeltaPartialTick(false)
         val state = (mc.entityRenderDispatcher.extractEntity(zombie, partial) as? PazZombieRenderState)?.also {// state to render model as
@@ -88,9 +88,10 @@ object ZombieHudMarkers {
         submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale * state.scale, outlinePad = 1.15f)
 
         // head icon
-        if (use3DIcon) graphics.guiRenderState.addPicturesInPictureState(GuiEntityRenderState(state, Vector3f((cx.toFloat() - w * 0.5f) / baseScale, zombie.eyeHeight + (cy.toFloat() - h * 0.5f ) / baseScale, 0f), Quaternionf().rotateX(Mth.PI), null, 0, 0, w, h, baseScale, null))
+        // TODO [use3dIcon] uses a copied render of the entity model with everything except the head removed.
+        //  it definitely has an impact on performance, but I can't find a better way to render worn head items like the cones/football helmets.
+        if (use3dIcon) graphics.guiRenderState.addPicturesInPictureState(GuiEntityRenderState(state, Vector3f((cx.toFloat() - w * 0.5f) / baseScale, zombie.eyeHeight + (cy.toFloat() - h * 0.5f ) / baseScale, 0f), Quaternionf().rotateX(Mth.PI), null, 0, 0, w, h, baseScale, null))
         else submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale * state.scale)
-
 
         if (zombie.mainHandItem.`is`(PazBlocks.BRAINZ_FLAG.asItem()) || zombie.offhandItem.`is`(PazBlocks.BRAINZ_FLAG.asItem())) {
             graphics.pose().pushMatrix()

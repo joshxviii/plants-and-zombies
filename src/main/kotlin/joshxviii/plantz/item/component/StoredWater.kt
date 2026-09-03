@@ -22,7 +22,7 @@ import java.util.function.Consumer
  */
 data class StoredWater(
     val storedWater: Int = 0,
-    val maxCapacity: Int = 32
+    val maxCapacity: Int = DEFAULT_CAPACITY
 ) : TooltipProvider {
     override fun addToTooltip(
         context: Item.TooltipContext,
@@ -41,6 +41,8 @@ data class StoredWater(
     fun removeWater(water: Int = 1): StoredWater = copy(storedWater = (storedWater - water).coerceAtLeast(0))
 
     companion object {
+        const val DEFAULT_CAPACITY = 32
+
         val CODEC: Codec<StoredWater> = RecordCodecBuilder.create { inst ->
             inst.group(
                 Codec.INT.fieldOf("stored_water").forGetter { it.storedWater.coerceIn(0,it.maxCapacity) },

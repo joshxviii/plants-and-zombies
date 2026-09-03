@@ -238,7 +238,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     // only apply up/down movement
     override fun getDeltaMovement(): Vec3 = Vec3(0.0, super.deltaMovement.y, 0.0)
     override fun setDeltaMovement(deltaMovement: Vec3) {
-        if (!onGround() || isInWater) return super.setDeltaMovement(deltaMovement)
+        if (!clampToGrid() || !onGround() || isInWater) return super.setDeltaMovement(deltaMovement)
     }
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
@@ -375,7 +375,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     fun hasPlantPotProtection(): Boolean= getBlockBelow().`is`(PazTags.BlockTags.PLANT_POT) || isAttached()
 
     override fun setPos(x: Double, y: Double, z: Double) {
-        if (this.isPassenger || isAttached() || !onGround()) super.setPos(x, y, z)
+        if (!clampToGrid() || this.isPassenger || isAttached() || !onGround()) super.setPos(x, y, z)
         else super.setPos(Mth.floor(x) + 0.5, y, Mth.floor(z) + 0.5)
     }
 
@@ -392,7 +392,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     override fun getDefaultGravity(): Double = if (isAttached()) 0.0 else super.getDefaultGravity()
-    override fun doPush(entity: Entity) {}
+    override fun doPush(entity: Entity) { if (!clampToGrid()) super.doPush(entity) }
     override fun isAffectedByBlocks(): Boolean = if (isAttached()) !isRemoved else super.isAffectedByBlocks()
 
     override fun tick() {
@@ -588,6 +588,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     open fun sleepsDuringDay(): Boolean = this.`is`(PazTags.EntityTypes.MUSHROOM)
     open fun canSurviveOn(block: BlockState) : Boolean = block.`is`(PLANTABLE)
     open fun canPlaceOn(block: BlockState) : Boolean = canSurviveOn(block)
+    open fun clampToGrid() = true
     open fun cooldownFinished() {}
 
     private fun updatePlantPower(level: ServerLevel) {
