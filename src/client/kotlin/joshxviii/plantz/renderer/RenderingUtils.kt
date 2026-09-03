@@ -8,9 +8,6 @@ import net.minecraft.client.renderer.entity.state.EntityRenderState
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.resources.Identifier
 import net.minecraft.server.packs.resources.ResourceManager
-import kotlin.collections.component1
-import kotlin.collections.component2
-
 
 
 // MODEL RENDERING

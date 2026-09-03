@@ -11,12 +11,10 @@ import joshxviii.plantz.model.GnomeModel
 import net.minecraft.client.model.HumanoidModel.ArmPose
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
-import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.client.renderer.entity.RenderLayerParent
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer
 import net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer
-import net.minecraft.client.renderer.entity.layers.RenderLayer
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState
 import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.client.resources.model.EquipmentClientInfo.LayerType

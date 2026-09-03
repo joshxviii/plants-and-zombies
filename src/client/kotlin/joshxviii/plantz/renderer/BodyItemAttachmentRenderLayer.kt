@@ -7,6 +7,7 @@ import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazModels.PAINT_COLORS_KEY
 import joshxviii.plantz.PazRenderPipelines.PAINT_OVERLAY
 import joshxviii.plantz.model.zombies.PazZombieModel
+import joshxviii.plantz.pazResource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.HumanoidModel

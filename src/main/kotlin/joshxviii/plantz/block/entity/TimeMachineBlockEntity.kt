@@ -31,10 +31,13 @@ class TimeMachineBlockEntity(
 ) : BlockEntity(PazBlocks.TIME_MACHINE_ENTITY, worldPosition, blockState), BlockContainerSingleItem, ExtendedMenuProvider<TimeMachineData> {
     var item: ItemStack = ItemStack.EMPTY
     var tickCount: Int = 0
+    var activeTime: Int = 0
 
     companion object {
         fun tick(level: Level, pos: BlockPos, state: BlockState, blockEntity: TimeMachineBlockEntity) {
             blockEntity.tickCount++
+            if (state.getValue(STATE) == TimeMachineState.ACTIVE) blockEntity.activeTime++
+            else blockEntity.activeTime = 0
 
             if (level.isClientSide) return
             blockEntity.item.get(PazComponents.STORED_SUN)?.let {
@@ -47,7 +50,9 @@ class TimeMachineBlockEntity(
                     }
                 }
                 else blockEntity.updateTimeMachineState(TimeMachineState.BATTERY)
-            } ?: blockEntity.updateTimeMachineState(TimeMachineState.INACTIVE)
+            } ?: {
+                blockEntity.updateTimeMachineState(TimeMachineState.INACTIVE)
+            }
         }
     }
 
@@ -63,15 +68,15 @@ class TimeMachineBlockEntity(
 
     override fun getContainerBlockEntity(): BlockEntity = this
 
-
     override fun getScreenOpeningData(player: ServerPlayer): TimeMachineData = TimeMachineData(blockPos)
     override fun getDisplayName(): Component  = Component.translatable("block.plantz.time_machine")
     override fun createMenu(containerId: Int, inventory: Inventory, player: Player): AbstractContainerMenu = TimeMachineMenu(containerId, inventory, blockPos, this)
 
-
     override fun getTheItem(): ItemStack = item
     override fun setTheItem(itemStack: ItemStack) {
         item = itemStack
+        if (itemStack.isEmpty) updateTimeMachineState(TimeMachineState.INACTIVE)
+        setChanged()
     }
 
     fun updateTimeMachineState(newState: TimeMachineState) {

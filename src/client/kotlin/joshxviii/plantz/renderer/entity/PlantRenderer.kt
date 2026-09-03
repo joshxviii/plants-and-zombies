@@ -3,12 +3,7 @@ package joshxviii.plantz.renderer.entity
 import com.mojang.blaze3d.vertex.PoseStack
 import joshxviii.plantz.PazConfig
 import joshxviii.plantz.ai.PlantState
-import joshxviii.plantz.entity.plant.BonkChoy
-import joshxviii.plantz.entity.plant.ExplodeONut
-import joshxviii.plantz.entity.plant.ExplosivePlant
-import joshxviii.plantz.entity.plant.KernelPult
-import joshxviii.plantz.entity.plant.Plant
-import joshxviii.plantz.entity.plant.WallNut
+import joshxviii.plantz.entity.plant.*
 import joshxviii.plantz.renderer.getEmissiveTextureLocation
 import joshxviii.plantz.renderer.getTextureLocation
 import joshxviii.plantz.renderer.isMagicName

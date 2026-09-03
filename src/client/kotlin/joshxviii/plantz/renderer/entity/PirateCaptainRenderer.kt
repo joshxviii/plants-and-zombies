@@ -1,19 +1,15 @@
 package joshxviii.plantz.renderer.entity
 
 import com.mojang.blaze3d.vertex.PoseStack
-import joshxviii.plantz.PazEntities
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.entity.zombie.PirateCaptain
 import joshxviii.plantz.entity.zombie.PirateCaptainGhost
-import joshxviii.plantz.entity.zombie.RoboZombie
 import joshxviii.plantz.model.zombies.PazZombieModel
 import joshxviii.plantz.model.zombies.PirateCaptainModel
-import joshxviii.plantz.model.zombies.RoboZombieModel
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.state.level.CameraRenderState
-import net.minecraft.util.ARGB
 import net.minecraft.world.entity.AnimationState
 
 class PirateCaptainRenderer(

@@ -1,20 +1,16 @@
 package joshxviii.plantz.renderer.entity
 
 import com.mojang.blaze3d.vertex.PoseStack
-import com.mojang.math.Axis
-import joshxviii.plantz.ai.ZombieState
 import joshxviii.plantz.entity.zombie.ZombieRobot
 import joshxviii.plantz.model.blueprint_machines.ZombieTurretModel
 import joshxviii.plantz.renderer.getEmissiveTextureLocation
 import joshxviii.plantz.renderer.getTextureLocation
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.renderer.SubmitNodeCollector
-import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.LivingEntityRenderer
 import net.minecraft.client.renderer.entity.RenderLayerParent
 import net.minecraft.client.renderer.entity.layers.EyesLayer
-import net.minecraft.client.renderer.entity.state.EntityRenderState
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.rendertype.RenderTypes

@@ -11,7 +11,7 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier
 
 /**
- * Address button used to populate list in mailbox gui
+ * Address button used to populate mailbox list gui
  */
 class AddressButton(
     val mailboxData: MailboxData,

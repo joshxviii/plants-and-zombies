@@ -5,7 +5,6 @@ import com.mojang.blaze3d.pipeline.ColorTargetState
 import com.mojang.blaze3d.pipeline.DepthStencilState
 import com.mojang.blaze3d.pipeline.RenderPipeline
 import com.mojang.blaze3d.shaders.UniformType
-import com.mojang.blaze3d.systems.RenderPass
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
 import net.fabricmc.loader.api.FabricLoader
@@ -31,6 +30,21 @@ object PazRenderPipelines {
             .withCull(false).withVertexFormat(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS)
             .withDepthStencilState(DepthStencilState.DEFAULT)
             .build())
+
+    @JvmField
+    val TIME_PORTAL: RenderPipeline = RenderPipelines.register(RenderPipeline.builder(*arrayOf(
+            RenderPipelines.MATRICES_PROJECTION_SNIPPET,
+            RenderPipelines.FOG_SNIPPET,
+            RenderPipelines.GLOBALS_SNIPPET))
+        .withLocation(pazResource("pipeline/time_portal"))
+        .withVertexShader(pazResource("core/time_portal"))
+        .withFragmentShader(pazResource("core/time_portal"))
+        .withSampler("Sampler0").withSampler("Sampler1")
+        .withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
+        .withDepthStencilState(DepthStencilState.DEFAULT)
+        .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
+        .build()
+    )
 
     @JvmField
     val PAINT_OVERLAY: RenderPipeline = RenderPipelines.register(
@@ -71,6 +85,10 @@ object PazRenderPipelines {
                 it.assignPipeline(
                     PAINT_OVERLAY,
                     IrisProgram.ENTITIES
+                )
+                it.assignPipeline(
+                    TIME_PORTAL,
+                    IrisProgram.BEACON_BEAM
                 )
             }
 
