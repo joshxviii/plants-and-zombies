@@ -7,6 +7,7 @@ import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazModels.PAINT_COLORS_KEY
 import joshxviii.plantz.PazRenderPipelines.PAINT_OVERLAY
 import joshxviii.plantz.model.zombies.PazZombieModel
+import joshxviii.plantz.pazResource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.HumanoidModel
@@ -31,11 +32,13 @@ class PaintLayer<S : LivingEntityRenderState, M : EntityModel<in S>>( private va
     renderer
 ) {
     companion object {
+        private val NOISE_TEXTURE = pazResource("textures/entity/paint_overlay.png")
         fun paintOverlay(entityTexture: Identifier, amplifier: Int = 0, color: Int = 0): RenderType {
             return RenderType.create(
                 "paint_overlay_${amplifier}",
                 RenderSetup.builder(PAINT_OVERLAY)
                     .withTexture("Sampler0", entityTexture)
+                    .withTexture("Sampler1", NOISE_TEXTURE)
                     .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
                     .useOverlay()
                     .sortOnUpload()
@@ -76,6 +79,7 @@ class PaintLayer<S : LivingEntityRenderState, M : EntityModel<in S>>( private va
             }
             colorMix = ARGB.average(colorMix, ARGB.opaque(color))
         }
+        if (amplifier == 0) return
 
 //        PaintInfoUniforms.amplifierToNoise(amplifier).let { (scale, strength) ->
 //            PaintInfoUniforms.write(scale, strength)

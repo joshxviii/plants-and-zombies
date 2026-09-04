@@ -41,6 +41,7 @@ object PazRenderPipelines {
             .withShaderDefine("ALPHA_CUTOUT", 0.1f)
             .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
             .withSampler("Sampler0")
+            .withSampler("Sampler1")
             .withCull(false)
             .build()
     )
