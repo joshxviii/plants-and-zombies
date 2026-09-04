@@ -1,6 +1,7 @@
 package joshxviii.plantz.inventory
 
 import joshxviii.plantz.PazMenus
+import kotlinx.coroutines.channels.ticker
 import net.minecraft.core.BlockPos
 import net.minecraft.world.Container
 import net.minecraft.world.SimpleContainer
@@ -18,10 +19,11 @@ class TimeMachineMenu(
     private val timeMachine: Container = SimpleContainer(1),
 ) : AbstractContainerMenu(PazMenus.TIME_MACHINE_MENU, containerId) {
 
-    val batterySlot: Slot = addSlot(Slot(timeMachine, 0, 80, 39))
+    val batterySlot: Slot = addSlot(Slot(timeMachine, 0, 42, 42))
+    val time: Int = 0
 
     init {
-        addStandardInventorySlots(inventory, 8, 98)
+        addStandardInventorySlots(inventory, 24, 101)
     }
 
     override fun quickMoveStack(player: Player, slotIndex: Int): ItemStack {

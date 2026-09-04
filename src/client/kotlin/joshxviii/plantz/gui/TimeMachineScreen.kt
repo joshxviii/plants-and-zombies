@@ -1,22 +1,16 @@
 package joshxviii.plantz.gui
 
-import joshxviii.plantz.gui.MailboxScreen.Companion.SEND_BUTTON
-import joshxviii.plantz.gui.MailboxScreen.Companion.SEND_BUTTON_HOVER
-import joshxviii.plantz.gui.MailboxScreen.Companion.SEND_BUTTON_PRESS
+import joshxviii.plantz.gui.Fonts.withFont
 import joshxviii.plantz.inventory.TimeMachineMenu
 import joshxviii.plantz.pazResource
-import net.minecraft.ChatFormatting
+import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphicsExtractor
-import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
-import net.minecraft.client.gui.screens.inventory.LoomScreen
 import net.minecraft.client.input.KeyEvent
 import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.client.renderer.RenderPipelines
-import net.minecraft.client.renderer.texture.SpriteContents
-import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.contents.objects.AtlasSprite
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier
 import net.minecraft.util.ARGB
 import net.minecraft.world.entity.player.Inventory
@@ -26,7 +20,9 @@ class TimeMachineScreen(
     val menu: TimeMachineMenu,
     val inventory: Inventory,
     title: Component,
-) : AbstractContainerScreen<TimeMachineMenu>(menu, inventory, title, 176, 180) {
+) : AbstractContainerScreen<TimeMachineMenu>(menu, inventory, title, 208, 183) {
+
+    var time: Int = 0
 
     companion object {
         val BACKGROUND: Identifier = pazResource("textures/gui/time_machine/background.png")
@@ -37,7 +33,11 @@ class TimeMachineScreen(
         super.init()
         val xo = (width - imageWidth) / 2
         val yo = (height - imageHeight) / 2
+        this.leftPos = xo
+        this.topPos = yo
     }
+
+    override fun extractLabels(graphics: GuiGraphicsExtractor, xm: Int, ym: Int) {}
 
     override fun extractBackground(graphics: GuiGraphicsExtractor, xm: Int, ym: Int, a: Float) {
         val xo = leftPos
@@ -50,13 +50,17 @@ class TimeMachineScreen(
             graphics.blit(RenderPipelines.GUI_TEXTURED, SUN_BATTERY_SLOT, xo + batterySlot.x, yo + batterySlot.y, 0f, 0f, 16, 16, 16, 16)
         }
 
-        val wipText = Component.translatable("container.plantz.time_machine.wip").withStyle(ChatFormatting.BOLD)
-        val textWidth = font.width(wipText)
-        val textColor = 0xCC4444
+        val dimensionName = "Overworld"
+        val wipText = Component.translatable("container.plantz.time_machine.display", dimensionName).withoutShadow().withFont(Fonts.DOT_DISPLAY)
+        val displayWidth = 70
+        val textColor = 0xff4545
+        font.substrByWidth(wipText, displayWidth).let {
+            graphics.outlineText(font, Component.literal(it.string).withFont(Fonts.DOT_DISPLAY), xo + 119, yo + 20, textColor, ARGB.multiply(textColor, 0x111111))
+        }
+    }
 
-        graphics.outlineText(font, wipText, xo + (imageWidth / 2) - (textWidth / 2), yo + 64, color = textColor, outlineColor = ARGB.multiply(textColor, 0x333333))
-
-
+    override fun containerTick() {
+        time++
     }
 
     override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {

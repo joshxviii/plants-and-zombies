@@ -311,7 +311,9 @@
   "container.plantz.no_address": "No other mailboxes found.",
   "container.plantz.mailbox_full": "That mailbox is full!",
   "container.plantz.mailbox_success": "Sent!",
+
   "container.plantz.time_machine.wip": "???",
+  "container.plantz.time_machine.display": "NEXT STOP: %s",
 
   "plantz.subtitles.projectile.deflected": "Projectile deflected",
   "plantz.subtitles.projectile.fire": "Projectile fired",

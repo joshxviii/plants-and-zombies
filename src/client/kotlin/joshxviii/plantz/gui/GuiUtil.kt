@@ -2,19 +2,28 @@ package joshxviii.plantz.gui
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
+import joshxviii.plantz.pazResource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
-import net.minecraft.client.gui.components.Button.DEFAULT_NARRATION
-import net.minecraft.client.gui.components.Button.OnPress
+import net.minecraft.client.gui.font.FontManager
 import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.FontDescription
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier
 import net.minecraft.util.ARGB
+
+object Fonts {
+    val DOT_DISPLAY: Identifier = pazResource("dot_display")
+
+    fun Component.withFont(font: Identifier): Component =
+        this.copy().withStyle { it.withFont(FontDescription.Resource(font)) }
+
+}
 
 object GuiUtil {
     fun plane(
@@ -49,7 +58,7 @@ object GuiUtil {
     }
 }
 
-fun GuiGraphicsExtractor.outlineText(font: Font, text: MutableComponent, x: Int = 0, y: Int = 0, color: Int = 0xFFFFFF, outlineColor: Int = 0x000000) {
+fun GuiGraphicsExtractor.outlineText(font: Font, text: Component, x: Int = 0, y: Int = 0, color: Int = 0xFFFFFF, outlineColor: Int = 0x000000) {
     text(font, text, x+1, y, ARGB.opaque(outlineColor), false)
     text(font, text, x-1, y, ARGB.opaque(outlineColor), false)
     text(font, text, x, y+1, ARGB.opaque(outlineColor), false)

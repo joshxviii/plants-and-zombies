@@ -1,0 +1,11 @@
+{
+  "providers": [
+    {
+      "type": "ttf",
+      "file": "plantz:dot_display.ttf",
+      "size": 12,
+      "oversample": 4.0,
+      "shift": [0, 0]
+    }
+  ]
+}
