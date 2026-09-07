@@ -23,21 +23,6 @@ import kotlin.math.sin
 
 class TimeMachineRenderer() : BlockEntityRenderer<TimeMachineBlockEntity, TimeMachineRenderSate> {
 
-    companion object {
-        const val PORTAL_COLOR = 0x00daf5
-        // place holder textures
-        private val TEXTURE_PORTAL_BACKGROUND = pazResource("textures/block/time_machine/portal0.png")
-        private val TEXTURE_PORTAL_FOREGROUND = pazResource("textures/block/time_machine/portal1.png")
-        public val TIME_PORTAL =
-            RenderType.create(
-                "time_portal",
-                RenderSetup.builder(PazRenderPipelines.TIME_PORTAL)
-                    .withTexture("Sampler0", TEXTURE_PORTAL_BACKGROUND)
-                    .withTexture("Sampler1", TEXTURE_PORTAL_FOREGROUND)
-                    .createRenderSetup()
-            )
-    }
-
     override fun submit(
         state: TimeMachineRenderSate,
         poseStack: PoseStack,
@@ -45,36 +30,6 @@ class TimeMachineRenderer() : BlockEntityRenderer<TimeMachineBlockEntity, TimeMa
         camera: CameraRenderState
     ) {
         submitSun(state, poseStack, collector, camera)
-        submitPortal(state, poseStack, collector, camera)
-    }
-
-    fun submitPortal(
-        state: TimeMachineRenderSate,
-        poseStack: PoseStack,
-        collector: SubmitNodeCollector,
-        camera: CameraRenderState
-    ) {
-        if (state.activePortalTime <= 0) return
-        val open = Mth.lerp((state.activePortalTime / 20f.toDouble()).coerceIn(0.0, 1.0).pow(0.6), 0.0, 1.0)
-
-        val s = 3f
-        val a = (open * 255).toInt()
-        val color = (a shl 24) or PORTAL_COLOR
-
-        poseStack.pushPose()
-        poseStack.translate(0.5f, 2.5f, 0.5f)
-        poseStack.mulPose(Axis.YP.rotationDegrees(state.facing.toYRot()))
-        poseStack.scale(s, s, s)
-        poseStack.mulPose(Axis.YP.rotation(cos(Math.PI * state.activePortalTime/40f).toFloat() * 0.01f))
-        collector.submitCustomGeometry(poseStack, TIME_PORTAL) { pose, buffer ->
-            GuiUtil.plane(pose, buffer, state.lightCoords, color = color)
-        }
-        poseStack.mulPose(Axis.YP.rotationDegrees(180.0f))
-        collector.submitCustomGeometry(poseStack, TIME_PORTAL) { pose, buffer ->
-            GuiUtil.plane(pose, buffer, state.lightCoords, color = color)
-        }
-
-        poseStack.popPose()
     }
 
     fun submitSun(state: TimeMachineRenderSate, poseStack: PoseStack, collector: SubmitNodeCollector, camera: CameraRenderState) {

@@ -27,6 +27,7 @@ import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.item.component.Weapon
 import net.minecraft.world.item.equipment.Equippable
 import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.IronBarsBlock
 import net.minecraft.world.level.block.SlabBlock
 import net.minecraft.world.level.block.SoundType
@@ -39,6 +40,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.IntegerProperty
 import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.level.material.PushReaction
+import java.util.function.ToIntFunction
 
 object PazBlocks {
     @JvmField val HAS_WATER = BooleanProperty.create("has_water");
@@ -107,6 +109,28 @@ object PazBlocks {
         TIME_MACHINE
     )
 
+    @JvmField val TIME_PORTAL: Block = registerBlock(
+        "time_portal",
+        BlockBehaviour.Properties.of()
+            .noCollision()
+            .noOcclusion()
+            .isValidSpawn(Blocks::never)
+            .noTerrainParticles()
+            .mapColor(MapColor.COLOR_CYAN)
+            .strength(-1.0f)
+            .sound(SoundType.GLASS)
+            .lightLevel{ 15 }
+            .pushReaction(PushReaction.BLOCK)
+            .randomTicks(),
+        ::TimePortalBlock,
+        null,
+    )
+    val TIME_PORTAL_ENTITY: BlockEntityType<TimePortalBlockEntity> = registerBlockEntity(
+        "time_portal",
+        ::TimePortalBlockEntity,
+        TIME_PORTAL
+    )
+
     @JvmField val BLUE_GARDEN_GNOME: Block = registerBlock("blue_garden_gnome", gardenGnomeProperties(), { GardenGnomeBlock(it, GardenGnomeColor.BLUE) })
     @JvmField val GREEN_GARDEN_GNOME: Block = registerBlock("green_garden_gnome", gardenGnomeProperties(MapColor.COLOR_GREEN), { GardenGnomeBlock(it, GardenGnomeColor.GREEN) })
     @JvmField val RED_GARDEN_GNOME: Block = registerBlock("red_garden_gnome", gardenGnomeProperties(MapColor.COLOR_RED), { GardenGnomeBlock(it, GardenGnomeColor.RED) })
@@ -122,7 +146,7 @@ object PazBlocks {
 
     @JvmField val LAWN_FLAMINGO: Block = registerBlock(
         "lawn_flamingo", gardenGnomeProperties(MapColor.COLOR_PINK),
-        { LawnFlamingo(it) },
+        { LawnFlamingoBlock(it) },
         Item.Properties()
             .component(DataComponents.WEAPON, Weapon(1))
             .attributes(

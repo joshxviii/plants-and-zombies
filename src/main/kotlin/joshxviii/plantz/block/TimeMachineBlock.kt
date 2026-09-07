@@ -2,9 +2,6 @@ package joshxviii.plantz.block
 
 import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PazBlocks
-import joshxviii.plantz.PazComponents
-import joshxviii.plantz.PazItems
-import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.block.entity.TimeMachineBlockEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -60,7 +57,7 @@ class TimeMachineBlock(properties: Properties) : BaseEntityBlock(properties), Si
 
         val STATE: EnumProperty<TimeMachineState> = EnumProperty.create<TimeMachineState>("time_machine_state", TimeMachineState::class.java)
 
-        val LIGHT_EMISSION: ToIntFunction<BlockState> = { if ( it.getValue(STATE) == TimeMachineState.ACTIVE) 10 else 0 }
+        val LIGHT_EMISSION: ToIntFunction<BlockState> = { if ( it.getValue(STATE) == TimeMachineState.ACTIVE) 1 else 0 }
     }
 
     override fun <T : BlockEntity> getTicker(
@@ -68,12 +65,13 @@ class TimeMachineBlock(properties: Properties) : BaseEntityBlock(properties), Si
         blockState: BlockState,
         type: BlockEntityType<T>
     ): BlockEntityTicker<T>? {
-        return if (type == PazBlocks.TIME_MACHINE_ENTITY) {
-            BlockEntityTicker { level, pos, state, blockEntity ->
-                TimeMachineBlockEntity.tick(level, pos, state, blockEntity as TimeMachineBlockEntity)
-            }
-        } else null
+        return if (type == PazBlocks.TIME_MACHINE_ENTITY)
+            BlockEntityTicker { level, pos, state, blockEntity -> TimeMachineBlockEntity.tick(level, pos, state, blockEntity as TimeMachineBlockEntity) }
+        else
+            null
     }
+
+    override fun newBlockEntity(worldPosition: BlockPos, blockState: BlockState): BlockEntity = TimeMachineBlockEntity(worldPosition, blockState)
 
     init {
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(STATE, TimeMachineState.INACTIVE))
@@ -145,10 +143,6 @@ class TimeMachineBlock(properties: Properties) : BaseEntityBlock(properties), Si
             .setValue(LEVEL, 0)
     }
 
-    override fun newBlockEntity(worldPosition: BlockPos, blockState: BlockState): BlockEntity {
-        return TimeMachineBlockEntity(worldPosition, blockState)
-    }
-
     override fun isPathfindable(state: BlockState, type: PathComputationType): Boolean = false
 
     override fun updateShape(
@@ -164,7 +158,8 @@ class TimeMachineBlock(properties: Properties) : BaseEntityBlock(properties), Si
         if (state.getValue(WATERLOGGED)) {
             ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level))
         }
-        return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random)
+        val resultState = super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random)
+        return resultState
     }
 
     override fun canSurvive(state: BlockState, level: LevelReader, pos: BlockPos): Boolean {
@@ -174,5 +169,5 @@ class TimeMachineBlock(properties: Properties) : BaseEntityBlock(properties), Si
     override fun hasAnalogOutputSignal(state: BlockState): Boolean = state.getValue(LEVEL) > 0
     override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos, direction: Direction): Int = if (state.getValue(STATE) == TimeMachineState.ACTIVE) state.getValue(LEVEL) else 0
 
-    override fun codec(): MapCodec<out TimeMachineBlock> { return CODEC }
+    override fun codec(): MapCodec<out TimeMachineBlock> = CODEC
 }

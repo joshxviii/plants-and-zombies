@@ -4,8 +4,10 @@ import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.TimeMachineData
 import joshxviii.plantz.block.TimeMachineBlock
+import joshxviii.plantz.block.TimeMachineBlock.Companion.FACING
 import joshxviii.plantz.block.TimeMachineBlock.Companion.STATE
 import joshxviii.plantz.block.TimeMachineState
+import joshxviii.plantz.block.TimePortalBlock
 import joshxviii.plantz.inventory.TimeMachineMenu
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider
 import net.minecraft.core.BlockPos
@@ -19,6 +21,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.ValueInput
@@ -81,16 +84,30 @@ class TimeMachineBlockEntity(
 
     fun updateTimeMachineState(newState: TimeMachineState) {
         val oldState = blockState.getValue(STATE)
-        val level = level!!
+        val level = level?: return
         if (oldState == newState) return
         if (oldState == TimeMachineState.INACTIVE && newState == TimeMachineState.BATTERY) playSound(SoundEvents.COPPER_BULB_PLACE)
-        else if (oldState == TimeMachineState.ACTIVE) playSound(SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), 1.7f)
-        else if (newState == TimeMachineState.ACTIVE) playSound(SoundEvents.BEACON_ACTIVATE, 1.9f)
         else if (oldState == TimeMachineState.BATTERY && newState == TimeMachineState.INACTIVE) playSound(SoundEvents.CRAFTER_CRAFT, 1.2f)
-
         if (newState == TimeMachineState.INACTIVE) level.setBlock(blockPos, blockState.setValue(TimeMachineBlock.LEVEL, 0), 3)
 
         level.setBlock(blockPos, blockState.setValue(STATE, newState), 3)
+        updatePortal(newState)
+    }
+
+    fun updatePortal(state: TimeMachineState = blockState.getValue(STATE)) {
+        val level = level?: return
+        val portalPos = blockPos.above().above()
+        val portalState = level.getBlockState(portalPos)
+
+        if (state == TimeMachineState.ACTIVE) {
+            if (portalState.isCollisionShapeFullBlock(level, portalPos) || portalState.`is`(PazBlocks.TIME_PORTAL)) return
+            playSound(SoundEvents.BEACON_ACTIVATE, 1.9f)
+            level.setBlockAndUpdate(portalPos, PazBlocks.TIME_PORTAL.defaultBlockState().setValue(TimePortalBlock.FACING, blockState.getValue(FACING)))
+        }
+        else if (portalState.`is`(PazBlocks.TIME_PORTAL)) {
+            playSound(SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), 1.7f)
+            level.setBlockAndUpdate(portalPos, Blocks.AIR.defaultBlockState())
+        }
     }
 
     fun playSound(event: SoundEvent, pitch: Float = 1.0f) {

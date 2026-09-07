@@ -32,6 +32,7 @@ import joshxviii.plantz.renderer.entity.SunRenderer
 import joshxviii.plantz.renderer.TimeMachineRenderSate
 import joshxviii.plantz.renderer.MailboxRenderer
 import joshxviii.plantz.renderer.TimeMachineRenderer
+import joshxviii.plantz.renderer.TimePortalRenderer
 import joshxviii.plantz.renderer.entity.GargantuarRenderer
 import joshxviii.plantz.renderer.entity.PirateCaptainRenderer
 import joshxviii.plantz.renderer.entity.PlantRenderer
@@ -252,10 +253,11 @@ object PazModels {
         EntityRenderers.register(PazEntities.THROWN_SUN_BOTTLE) { ThrownItemRenderer(it) }
         EntityRenderers.register(PazEntities.BALLOON) { BalloonRenderer(it) }
 
-        BlockEntityRenderers.register<FlagBlockEntity, FlagRenderState>(PazBlocks.FLAG_BLOCK_ENTITY) { FlagRenderer(FlagBlockModel(it.bakeLayer(FlagBlockModel.LAYER_LOCATION))) }
-        BlockEntityRenderers.register<GardenGnomeBlockEntity, GardenGnomeBlockRenderState>(PazBlocks.GARDEN_GNOME_ENTITY) { GardenGnomeBlockRenderer(GnomeModel(it.bakeLayer(GnomeModel.LAYER_LOCATION))) }
-        BlockEntityRenderers.register<SunBatteryBlockEntity, SunBatteryRenderSate>(PazBlocks.SUN_BATTERY_BLOCK_ENTITY) { SunBatteryRenderer() }
-        BlockEntityRenderers.register<TimeMachineBlockEntity, TimeMachineRenderSate>(PazBlocks.TIME_MACHINE_ENTITY) { TimeMachineRenderer() }
-        BlockEntityRenderers.register<MailboxBlockEntity, MailboxRenderState>(PazBlocks.MAILBOX_ENTITY) { MailboxRenderer() }
+        BlockEntityRenderers.register(PazBlocks.FLAG_BLOCK_ENTITY) { FlagRenderer(FlagBlockModel(it.bakeLayer(FlagBlockModel.LAYER_LOCATION))) }
+        BlockEntityRenderers.register(PazBlocks.GARDEN_GNOME_ENTITY) { GardenGnomeBlockRenderer(GnomeModel(it.bakeLayer(GnomeModel.LAYER_LOCATION))) }
+        BlockEntityRenderers.register(PazBlocks.SUN_BATTERY_BLOCK_ENTITY) { SunBatteryRenderer() }
+        BlockEntityRenderers.register(PazBlocks.TIME_MACHINE_ENTITY) { TimeMachineRenderer() }
+        BlockEntityRenderers.register(PazBlocks.TIME_PORTAL_ENTITY) { TimePortalRenderer() }
+        BlockEntityRenderers.register(PazBlocks.MAILBOX_ENTITY) { MailboxRenderer() }
     }
 }
