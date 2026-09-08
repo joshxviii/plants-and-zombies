@@ -96,7 +96,7 @@ class TimePortalBlock(properties: Properties) : BaseEntityBlock(properties), Sim
     ): TeleportTransition? {
         val source = currentLevel.getBlockEntity(portalEntryPos.below(2)) as? TimeMachineBlockEntity ?: return null
         if (source.blockState.getValue(TimeMachineBlock.STATE) != TimeMachineState.ACTIVE) return null
-        val newDimension = if (PazWorldGen.isTimeDimension(currentLevel.dimension())) Level.OVERWORLD else PazWorldGen.TIME_SPACE
+        val newDimension = if (PazWorldGen.isTimeDimension(currentLevel.dimension())) Level.OVERWORLD else PazWorldGen.GNOME_SPACE
         val newLevel = currentLevel.server.getLevel(newDimension) ?: return null
         if (!currentLevel.isAllowedToEnterPortal(newLevel) || !entity.canTeleport(currentLevel, newLevel)) return null
         if (!currentLevel.getTimeMachineManager().createDestination(source, newLevel)) return null

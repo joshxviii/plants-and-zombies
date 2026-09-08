@@ -70,6 +70,8 @@ object PazSounds {
 
     @JvmField val MUSIC_DISC_GRASSY_GROOVE = registerForHolder("music_disc.grassy_groove")
 
+    @JvmField val GNOME_SPACE_MUSIC = registerForHolder("music.gnome_space")
+
     @JvmField val RAID_MUSIC_LOW = registerForHolder("music.raid.low")
     @JvmField val RAID_MUSIC_MEDIUM = registerForHolder("music.raid.medium")
     @JvmField val RAID_MUSIC_HIGH = registerForHolder("music.raid.high")

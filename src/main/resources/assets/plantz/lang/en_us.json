@@ -349,5 +349,11 @@
   "plantz.subtitles.entity.gargantuar.hurt": "Gargantuar hurt",
 
   "plantz.subtitles.event.mob_effect.hypnotized": "Hypnotized mob",
-  "plantz.subtitles.event.mob_effect.zombie_omen": "Zombie raid omen"
+  "plantz.subtitles.event.mob_effect.zombie_omen": "Zombie raid omen",
+  "biome.plantz.graveyard": "Graveyard",
+  "biome.plantz.ancient_egypt": "Ancient Egypt",
+  "biome.plantz.jurassic_period": "Jurassic Period",
+  "biome.plantz.dark_ages": "Dark Ages",
+  "biome.plantz.far_future": "Far Future",
+  "biome.plantz.gnome_space": "Gnome Space"
 }

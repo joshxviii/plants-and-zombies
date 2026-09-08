@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:andesite",
+    "minecraft:tuff",
+    "minecraft:deepslate",
+    "minecraft:smooth_basalt"
+  ]
+}

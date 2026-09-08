@@ -26,6 +26,12 @@ object PazWorldGen: TerraBlenderApi {
     }
 
     @JvmField val GRAVEYARD = registerBiome("graveyard")
+    @JvmField val ANCIENT_EGYPT = registerBiome("ancient_egypt")
+    @JvmField val JURASSIC_PERIOD = registerBiome("jurassic_period")
+    @JvmField val DARK_AGES = registerBiome("dark_ages")
+    @JvmField val FAR_FUTURE = registerBiome("far_future")
+    @JvmField val GNOME_SPACE_BIOME = registerBiome("gnome_space")
+
 
     private fun registerBiome(name: String) : ResourceKey<Biome> {
         return ResourceKey.create(Registries.BIOME, pazResource(name) )
