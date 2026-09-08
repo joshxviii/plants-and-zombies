@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazWorldGen
 import joshxviii.plantz.block.entity.TimeMachineBlockEntity
+import joshxviii.plantz.block.entity.getTimeMachineManager
 import joshxviii.plantz.block.entity.TimePortalBlockEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -93,14 +94,16 @@ class TimePortalBlock(properties: Properties) : BaseEntityBlock(properties), Sim
         entity: Entity,
         portalEntryPos: BlockPos
     ): TeleportTransition? {
-        val newDimension: ResourceKey<Level> = if (currentLevel.dimension() === PazWorldGen.TIME_SPACE) Level.OVERWORLD else PazWorldGen.TIME_SPACE
-        val newLevel = currentLevel.server.getLevel(newDimension)
-        return if (newLevel == null) null
-        else {
-            TeleportTransition(newLevel, portalEntryPos.center, entity.deltaMovement, entity.yRot, entity.xRot) {
-
-            }
-        }
+        val source = currentLevel.getBlockEntity(portalEntryPos.below(2)) as? TimeMachineBlockEntity ?: return null
+        if (source.blockState.getValue(TimeMachineBlock.STATE) != TimeMachineState.ACTIVE) return null
+        val newDimension = if (PazWorldGen.isTimeDimension(currentLevel.dimension())) Level.OVERWORLD else PazWorldGen.TIME_SPACE
+        val newLevel = currentLevel.server.getLevel(newDimension) ?: return null
+        if (!currentLevel.isAllowedToEnterPortal(newLevel) || !entity.canTeleport(currentLevel, newLevel)) return null
+        if (!currentLevel.getTimeMachineManager().createDestination(source, newLevel)) return null
+        return TeleportTransition(
+            newLevel, entity.position(), entity.deltaMovement, entity.yRot, entity.xRot,
+            TeleportTransition.PLACE_PORTAL_TICKET
+        )
     }
 
     override fun getPortalTransitionTime(level: ServerLevel, entity: Entity): Int {
@@ -123,7 +126,10 @@ class TimePortalBlock(properties: Properties) : BaseEntityBlock(properties), Sim
         if (state.getValue(WATERLOGGED)) {
             ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level))
         }
-        (level.getBlockEntity(pos.below().below()) as? TimeMachineBlockEntity)?.updatePortal()?: return Blocks.AIR.defaultBlockState()
+        val machine = level.getBlockState(pos.below(2))
+        if (!machine.`is`(PazBlocks.TIME_MACHINE) || machine.getValue(TimeMachineBlock.STATE) != TimeMachineState.ACTIVE) {
+            return Blocks.AIR.defaultBlockState()
+        }
         return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random)
     }
 

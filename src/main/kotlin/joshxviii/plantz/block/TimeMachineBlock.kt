@@ -2,6 +2,8 @@ package joshxviii.plantz.block
 
 import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.PazWorldGen
+import net.minecraft.world.level.storage.loot.LootParams
 import joshxviii.plantz.block.entity.TimeMachineBlockEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -27,6 +29,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.EnumProperty
 import net.minecraft.world.level.block.state.properties.IntegerProperty
+import net.minecraft.world.level.dimension.DimensionType
 import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.level.pathfinder.PathComputationType
@@ -113,6 +116,12 @@ class TimeMachineBlock(properties: Properties) : BaseEntityBlock(properties), Si
             BATTERY_SHAPES[facing] as VoxelShape
     }
 
+    override fun getDestroyProgress(state: BlockState, player: Player, level: BlockGetter, pos: BlockPos): Float {
+        // cannot destroy time machine in any time dimension
+        if (PazWorldGen.isTimeDimension(player.level().dimension())) return 0f
+        return super.getDestroyProgress(state, player, level, pos)
+    }
+
     override fun neighborChanged(
         state: BlockState,
         level: Level,
@@ -169,6 +178,9 @@ class TimeMachineBlock(properties: Properties) : BaseEntityBlock(properties), Si
 
     override fun hasAnalogOutputSignal(state: BlockState): Boolean = state.getValue(LEVEL) > 0
     override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos, direction: Direction): Int = if (state.getValue(STATE) == TimeMachineState.ACTIVE) state.getValue(LEVEL) else 0
+
+    override fun getDrops(state: BlockState, params: LootParams.Builder): List<ItemStack> =
+        if (PazWorldGen.isTimeDimension(params.level.dimension())) emptyList() else super.getDrops(state, params)
 
     override fun codec(): MapCodec<out TimeMachineBlock> = CODEC
 }
