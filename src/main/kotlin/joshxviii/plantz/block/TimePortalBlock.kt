@@ -2,26 +2,23 @@ package joshxviii.plantz.block
 
 import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.PazWorldGen
 import joshxviii.plantz.block.entity.TimeMachineBlockEntity
 import joshxviii.plantz.block.entity.TimePortalBlockEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.InsideBlockEffectApplier
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.ScheduledTickAccess
-import net.minecraft.world.level.block.BaseEntityBlock
-import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.block.DirectionalBlock
-import net.minecraft.world.level.block.NetherPortalBlock
-import net.minecraft.world.level.block.Portal
-import net.minecraft.world.level.block.RenderShape
-import net.minecraft.world.level.block.SimpleWaterloggedBlock
+import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -30,12 +27,14 @@ import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.EnumProperty
+import net.minecraft.world.level.gamerules.GameRules
 import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.level.portal.TeleportTransition
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
+import kotlin.math.max
 
 class TimePortalBlock(properties: Properties) : BaseEntityBlock(properties), SimpleWaterloggedBlock, Portal {
 
@@ -85,13 +84,31 @@ class TimePortalBlock(properties: Properties) : BaseEntityBlock(properties), Sim
 
     override fun getRenderShape(state: BlockState): RenderShape = RenderShape.INVISIBLE
 
+    override fun entityInside(state: BlockState, level: Level, pos: BlockPos, entity: Entity, effectApplier: InsideBlockEffectApplier, isPrecise: Boolean) {
+        if (entity.canUsePortal(false)) entity.setAsInsidePortal(this, pos)
+    }
+
     override fun getPortalDestination(
         currentLevel: ServerLevel,
         entity: Entity,
         portalEntryPos: BlockPos
     ): TeleportTransition? {
-        return null
+        val newDimension: ResourceKey<Level> = if (currentLevel.dimension() === PazWorldGen.TIME_SPACE) Level.OVERWORLD else PazWorldGen.TIME_SPACE
+        val newLevel = currentLevel.server.getLevel(newDimension)
+        return if (newLevel == null) null
+        else {
+            TeleportTransition(newLevel, portalEntryPos.center, entity.deltaMovement, entity.yRot, entity.xRot) {
+
+            }
+        }
     }
+
+    override fun getPortalTransitionTime(level: ServerLevel, entity: Entity): Int {
+        return if (entity is Player) max(0, level.gameRules.get(GameRules.PLAYERS_NETHER_PORTAL_DEFAULT_DELAY))
+        else 0
+    }
+
+    override fun getLocalTransition(): Portal.Transition = Portal.Transition.NONE
 
     override fun updateShape(
         state: BlockState,

@@ -4,7 +4,9 @@ import com.mojang.datafixers.util.Pair
 import joshxviii.plantz.PazWorldGen.GRAVEYARD
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.Registries
+import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
+import net.minecraft.world.level.Level
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.biome.Climate.ParameterPoint
 import net.minecraft.world.level.block.Block
@@ -29,6 +31,8 @@ object PazWorldGen: TerraBlenderApi {
     private fun registerBiome(name: String) : ResourceKey<Biome> {
         return ResourceKey.create(Registries.BIOME, pazResource(name) )
     }
+
+    @JvmField val TIME_SPACE = ResourceKey.create(Registries.DIMENSION, pazResource("time_space"))
 }
 
 class OverworldRegion(

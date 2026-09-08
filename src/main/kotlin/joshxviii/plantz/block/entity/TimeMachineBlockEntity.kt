@@ -2,6 +2,7 @@ package joshxviii.plantz.block.entity
 
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazComponents
+import joshxviii.plantz.PazWorldGen
 import joshxviii.plantz.TimeMachineData
 import joshxviii.plantz.block.TimeMachineBlock
 import joshxviii.plantz.block.TimeMachineBlock.Companion.FACING
@@ -12,6 +13,7 @@ import joshxviii.plantz.inventory.TimeMachineMenu
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -27,6 +29,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.ticks.ContainerSingleItem.BlockContainerSingleItem
+import org.apache.logging.log4j.core.jmx.Server
 
 class TimeMachineBlockEntity(
     worldPosition: BlockPos,
@@ -82,6 +85,11 @@ class TimeMachineBlockEntity(
         setChanged()
     }
 
+    override fun setRemoved() {
+        super.setRemoved()
+        updatePortal(TimeMachineState.INACTIVE)
+    }
+
     fun updateTimeMachineState(newState: TimeMachineState) {
         val oldState = blockState.getValue(STATE)
         val level = level?: return
@@ -98,6 +106,8 @@ class TimeMachineBlockEntity(
         val level = level?: return
         val portalPos = blockPos.above().above()
         val portalState = level.getBlockState(portalPos)
+
+        //(level as? ServerLevel)?.server?.getLevel(if (level.dimension() == PazWorldGen.TIME_SPACE) Level.OVERWORLD else PazWorldGen.TIME_SPACE)?.setBlock(blockPos, blockState, 3)
 
         if (state == TimeMachineState.ACTIVE) {
             if (portalState.isCollisionShapeFullBlock(level, portalPos) || portalState.`is`(PazBlocks.TIME_PORTAL)) return
