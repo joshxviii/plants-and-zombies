@@ -14,6 +14,7 @@ import net.minecraft.core.Direction
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.resources.ResourceKey
+import net.minecraft.util.Mth
 import net.minecraft.world.item.ItemStack
 import net.minecraft.util.datafix.DataFixTypes
 import net.minecraft.world.level.Level
@@ -45,6 +46,7 @@ class TimeMachineManager private constructor(
         )
         val TYPE = SavedDataType(pazResource("time_machines"), ::TimeMachineManager, CODEC, DataFixTypes.LEVEL)
 
+        const val PORTAL_ROOM_SIZE = 2.5f
         const val BURN_FUEL_TICK = 38
     }
 
@@ -134,12 +136,12 @@ class TimeMachineManager private constructor(
         destination.getChunkAt(pos)
         val existing = destination.getBlockState(pos)
         val portal = destination.getBlockState(portalPos)
-        if (!existing.`is`(PazBlocks.TIME_MACHINE) && !existing.canBeReplaced()) return false
-        if (!portal.`is`(PazBlocks.TIME_PORTAL) && !portal.canBeReplaced()) return false
 
-        if (!existing.`is`(PazBlocks.TIME_MACHINE)) {
-            if (!destination.setBlockAndUpdate(pos, source.blockState)) return false
+        if (!portal.`is`(PazBlocks.TIME_PORTAL) && !portal.canBeReplaced()) {
+            carvePortalRoom(destination, portalPos, pos)
         }
+        if (!existing.`is`(PazBlocks.TIME_MACHINE) && !destination.setBlockAndUpdate(pos, source.blockState)) return false
+
         val machine = destination.getBlockEntity(pos) as? TimeMachineBlockEntity ?: return false
         register(machine)
         applyState(machine, link)
@@ -148,6 +150,18 @@ class TimeMachineManager private constructor(
         if (!sourcePortal.`is`(PazBlocks.TIME_PORTAL)) return false
         destination.setBlockAndUpdate(portalPos, sourcePortal.setValue(TimePortalBlock.FACING, link.facing))
         return destination.getBlockState(portalPos).`is`(PazBlocks.TIME_PORTAL)
+    }
+
+    private fun carvePortalRoom(level: ServerLevel, center: BlockPos, machinePos: BlockPos) {
+        val a = Mth.ceil(PORTAL_ROOM_SIZE)
+        for (x in -a..a) for (y in -a..a) for (z in -a..a) {
+            if (x * x + y * y + z * z > (Mth.square(PORTAL_ROOM_SIZE))) continue
+            val target = center.offset(x, y, z)
+            if (target == machinePos && level.getBlockState(target).`is`(PazBlocks.TIME_MACHINE)) continue
+            if (!level.getBlockState(target).isAir) {
+                level.setBlockAndUpdate(target, Blocks.AIR.defaultBlockState())
+            }
+        }
     }
 
     fun remove(machine: TimeMachineBlockEntity): ItemStack {

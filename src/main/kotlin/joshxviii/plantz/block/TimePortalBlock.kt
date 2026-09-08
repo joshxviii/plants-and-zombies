@@ -8,7 +8,6 @@ import joshxviii.plantz.block.entity.getTimeMachineManager
 import joshxviii.plantz.block.entity.TimePortalBlockEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.Entity
@@ -96,7 +95,7 @@ class TimePortalBlock(properties: Properties) : BaseEntityBlock(properties), Sim
     ): TeleportTransition? {
         val source = currentLevel.getBlockEntity(portalEntryPos.below(2)) as? TimeMachineBlockEntity ?: return null
         if (source.blockState.getValue(TimeMachineBlock.STATE) != TimeMachineState.ACTIVE) return null
-        val newDimension = if (PazWorldGen.isTimeDimension(currentLevel.dimension())) Level.OVERWORLD else PazWorldGen.GNOME_SPACE
+        val newDimension = if (PazWorldGen.isTimeDimension(currentLevel.dimension())) Level.OVERWORLD else PazWorldGen.TIME_SPACE
         val newLevel = currentLevel.server.getLevel(newDimension) ?: return null
         if (!currentLevel.isAllowedToEnterPortal(newLevel) || !entity.canTeleport(currentLevel, newLevel)) return null
         if (!currentLevel.getTimeMachineManager().createDestination(source, newLevel)) return null
@@ -107,7 +106,7 @@ class TimePortalBlock(properties: Properties) : BaseEntityBlock(properties), Sim
     }
 
     override fun getPortalTransitionTime(level: ServerLevel, entity: Entity): Int {
-        return if (entity is Player) max(0, level.gameRules.get(GameRules.PLAYERS_NETHER_PORTAL_DEFAULT_DELAY))
+        return if (entity is Player) max(0, level.gameRules.get( if (entity.hasInfiniteMaterials()) GameRules.PLAYERS_NETHER_PORTAL_CREATIVE_DELAY else GameRules.PLAYERS_NETHER_PORTAL_DEFAULT_DELAY))
         else 0
     }
 
