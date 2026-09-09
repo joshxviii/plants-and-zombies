@@ -147,6 +147,9 @@ object PazSpawnPlacements {
         addBiomeSpawn(PazTags.Biomes.HAS_ALL_STAR, PazEntities.ALL_STAR, category = MobCategory.MONSTER,
             weight = 12, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.ALL_STAR, PazZombie::checkPazZombieSpawnRules)
+        addBiomeSpawn(PazTags.Biomes.HAS_GRAVE_DIGGER, PazEntities.GRAVE_DIGGER, category = MobCategory.MONSTER,
+            weight = 15, minGroupSize = 1, maxGroupSize = 1)
+        registerSpawnPlacement(PazEntities.GRAVE_DIGGER, PazZombie::checkPazZombieSpawnRules)
         addBiomeSpawn(PazTags.Biomes.HAS_IMP, PazEntities.IMP, category = MobCategory.MONSTER,
             weight = 7, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.IMP, PazZombie::checkPazZombieSpawnRules)

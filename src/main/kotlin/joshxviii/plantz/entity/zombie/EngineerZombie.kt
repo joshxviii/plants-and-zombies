@@ -174,7 +174,6 @@ class EngineerZombie(type: EntityType<out EngineerZombie>, level: Level) : PazZo
                 val fluidState = blockState.fluidState
                 if (belowState.isFaceSturdy(level, pos.below(), Direction.UP)) {
                     if (!level.isEmptyBlock(pos)) {
-                        val blockState: BlockState = blockState
                         val shape = blockState.getCollisionShape(level, pos)
                         if (!shape.isEmpty) topOffset = shape.max(Direction.Axis.Y)
                     }

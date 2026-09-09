@@ -10,6 +10,7 @@ import joshxviii.plantz.animation.zombies.GraveDiggerAnimation;
 import joshxviii.plantz.animation.zombies.RoboZombieAnimation;
 import joshxviii.plantz.renderer.entity.PazZombieRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
+import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -62,6 +63,8 @@ public class GraveDiggerModel extends PazZombieModel {
 	public void setupAnim(@NotNull PazZombieRenderState state) {
 		super.setupAnim(state);
 		this.resetPose();
+
+		AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, false, state);
 
 		walkAnimation.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 2f, 2f);
 		actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
