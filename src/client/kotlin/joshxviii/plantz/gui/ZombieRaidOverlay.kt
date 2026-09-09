@@ -88,10 +88,7 @@ object ZombieRaidOverlay {
             in 601..1200 -> 0xFFFF55
             else -> 0xFFFFFF
         }
-        if (raidEvent.status != ZombieRaid.ZombieRaidStatus.NEXT_WAVE) graphics.outlineText(font, timer, textX, textY,
-            color = textColor,
-            outlineColor = ARGB.multiply(textColor, 0x333333),
-        )
+        if (raidEvent.status != ZombieRaid.ZombieRaidStatus.NEXT_WAVE) graphics.outlineText(font, timer, textX, textY, color = textColor)
 
         val waveText = "${raidEvent.wavesSpawned} / ${raidEvent.numWaves}"
         val waveX = screenWidth / 2 - font.width(waveText) / 2

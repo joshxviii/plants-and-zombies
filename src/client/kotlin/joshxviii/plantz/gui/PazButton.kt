@@ -20,6 +20,7 @@ open class PazButton(
     val enabledRequirement: ((button: PazButton) -> Boolean) = { true },
     val clickRequirement: ((button: PazButton) -> Boolean) = enabledRequirement,
     val text: Component = Component.empty(),
+    val color: Int = -1
 ) : Button(buttonX, buttonY, buttonWidth, buttonHeight, text, clickAction, DEFAULT_NARRATION) {
 
     override fun extractContents(
@@ -28,17 +29,21 @@ open class PazButton(
         my: Int,
         a: Float
     ) {
-        val press = !enabledRequirement.invoke(this)
+        val pressed = isPressed()
         val font = Minecraft.getInstance().font
 
         graphics.blit(
             RenderPipelines.GUI_TEXTURED,
-            if (press) disabledTexture else if (isButtonHovered(mx, my)) hoverTexture else texture,
-            buttonX, buttonY, 0.0f, 0.0f, buttonWidth, buttonHeight, buttonWidth, buttonHeight
+            if (pressed) disabledTexture else if (isButtonHovered(mx, my)) hoverTexture else texture,
+            buttonX, buttonY, 0.0f, 0.0f, buttonWidth, buttonHeight, buttonWidth, buttonHeight, color
         )
 
         val line = font.split(text, buttonWidth-8).firstOrNull()
-        if (line!=null) graphics.text(font, line, buttonX + if(press) 3 else 2, buttonY+3, -1, false)
+        if (line!=null) graphics.text(font, line, buttonX + if(pressed) 3 else 2, buttonY+3, -1, false)
+    }
+
+    fun isPressed(): Boolean {
+        return !enabledRequirement.invoke(this)
     }
 
     override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {

@@ -261,7 +261,7 @@ class MailboxBlockEntity(
     fun asMailBoxData(): MailboxData {
         return MailboxData(
             blockPos,
-            color.textColor,
+            color.mailboxColor(),
             getName(),
         )
     }

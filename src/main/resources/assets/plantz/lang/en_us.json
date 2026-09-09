@@ -310,8 +310,8 @@
   "container.plantz.send_mail": "Send Mail",
   "container.plantz.mailbox_coords": "%d, %d, %d",
   "container.plantz.address_search": "Search mailboxes...",
-  "container.plantz.no_address": "No other mailboxes found.",
-  "container.plantz.mailbox_full": "That mailbox is full!",
+  "container.plantz.no_address": "No mailboxes found.",
+  "container.plantz.mailbox_full": "This mailbox is full!",
   "container.plantz.mailbox_success": "Sent!",
   "container.plantz.time_machine.wip": "???",
 

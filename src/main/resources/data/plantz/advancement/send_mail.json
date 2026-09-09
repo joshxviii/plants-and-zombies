@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "plantz:mailbox"
+      "id": "plantz:letter"
     },
     "title": {
       "translate": "advancements.plantz.send_mail"
