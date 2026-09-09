@@ -145,9 +145,8 @@ class SpecialEffectsLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(pr
     }
 
     fun alphaFromAmplifier(rgb: Int, amplifier: Int): Int {
-        val t = amplifier.coerceIn(0, 10) / 10f
-        val strength = 0.20f + t * 0.55f
-        val a = (strength * 255f).toInt().coerceIn(50, 255)
+        val strength = amplifier.coerceIn(0, 20) / 20f
+        val a = (strength * 0xFF).toInt().coerceIn(50, 0xFF)
         return (a shl 24) or (rgb and 0x00FFFFFF)
     }
 

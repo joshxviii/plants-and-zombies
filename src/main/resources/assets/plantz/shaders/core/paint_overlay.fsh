@@ -1,7 +1,5 @@
 #version 330
 
-#moj_import <plantz:paint_info.glsl>
-
 uniform sampler2D Sampler0;
 uniform sampler2D Sampler1;
 
@@ -17,7 +15,6 @@ void main() {
     float n = texture(Sampler1, texCoord0).r;
 
     float paintAlpha = n * vertexColor.a * base.a;
-    if (paintAlpha < 0.01) discard;
 
     fragColor = vec4(vertexColor.rgb, paintAlpha);
 }
