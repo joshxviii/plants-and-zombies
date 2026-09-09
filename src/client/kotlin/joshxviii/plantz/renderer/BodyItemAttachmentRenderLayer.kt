@@ -12,6 +12,7 @@ import joshxviii.plantz.model.zombies.PazZombieModel
 import joshxviii.plantz.pazResource
 import joshxviii.plantz.renderer.entity.ProjectileRenderState
 import net.minecraft.client.Minecraft
+import net.minecraft.client.model.BabyModelTransform
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.HumanoidModel
 import net.minecraft.client.renderer.SubmitNodeCollector
@@ -192,14 +193,14 @@ abstract class BodyItemAttachmentRenderLayer<S : LivingEntityRenderState, M : En
 
         poseStack.pushPose()
 
-        if (state.isBaby) {
-            poseStack.translate(0.0, 0.8, 0.0)
-            poseStack.scale(0.55f, 0.55f, 0.55f)
-        }
-
+        humanoidModel.root().translateAndRotate(poseStack)
         humanoidModel.body.translateAndRotate(poseStack)
-
         poseStack.mulPose(Axis.ZP.rotationDegrees(180.0f))
+
+        if (state.isBaby) {
+            poseStack.scale(0.5f, 0.5f, 0.5f)
+            poseStack.translate(0.0, 0.5, 0.0)
+        }
 
         val minecraft = Minecraft.getInstance()
         itemRenderState.clear()
