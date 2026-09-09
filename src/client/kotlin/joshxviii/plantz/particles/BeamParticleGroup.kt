@@ -4,7 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import joshxviii.plantz.pazResource
 import net.minecraft.client.Camera
-import net.minecraft.client.particle.*
+import net.minecraft.client.particle.ParticleEngine
+import net.minecraft.client.particle.ParticleGroup
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.culling.Frustum
@@ -13,7 +14,6 @@ import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.client.renderer.state.level.ParticleGroupRenderState
-import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
 import net.minecraft.world.phys.Vec3
 import kotlin.math.sin

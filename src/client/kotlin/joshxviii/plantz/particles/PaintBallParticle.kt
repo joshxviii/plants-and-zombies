@@ -6,8 +6,6 @@ import net.minecraft.client.particle.ExplodeParticle
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.particle.ParticleProvider
 import net.minecraft.client.particle.SpriteSet
-import net.minecraft.core.particles.ParticleType
-import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.util.RandomSource
 
 class PaintBallParticle private constructor(

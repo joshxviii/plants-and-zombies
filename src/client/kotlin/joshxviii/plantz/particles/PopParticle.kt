@@ -5,12 +5,9 @@ import net.minecraft.client.particle.Particle
 import net.minecraft.client.particle.ParticleProvider
 import net.minecraft.client.particle.SingleQuadParticle
 import net.minecraft.client.particle.SpriteSet
-import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.util.LightCoordsUtil
-import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
-import kotlin.math.pow
 
 class PopParticle private constructor(
     level: ClientLevel, x: Double, y: Double, z: Double, xd: Double, yd: Double, zd: Double,

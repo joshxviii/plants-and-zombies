@@ -117,6 +117,13 @@
         }
       },
       {
+        "when": { "id": "plantz:winter_melon" },
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/seed_packet/winter_melon"
+        }
+      },
+      {
         "when": { "id": "plantz:bonkchoy" },
         "model": {
           "type": "minecraft:model",

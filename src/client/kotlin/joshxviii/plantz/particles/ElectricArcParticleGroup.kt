@@ -1,17 +1,11 @@
 package joshxviii.plantz.particles
 
-import com.mojang.blaze3d.pipeline.BlendFunction
-import com.mojang.blaze3d.pipeline.ColorTargetState
-import com.mojang.blaze3d.pipeline.DepthStencilState
-import com.mojang.blaze3d.pipeline.RenderPipeline
-import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
-import com.mojang.blaze3d.vertex.VertexFormat
-import joshxviii.plantz.PazRenderPipelines
 import joshxviii.plantz.pazResource
 import net.minecraft.client.Camera
-import net.minecraft.client.particle.*
+import net.minecraft.client.particle.ParticleEngine
+import net.minecraft.client.particle.ParticleGroup
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.culling.Frustum

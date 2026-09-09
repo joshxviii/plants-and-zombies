@@ -1,6 +1,5 @@
 package joshxviii.plantz.particles
 
-import com.mojang.math.Axis
 import net.minecraft.client.Camera
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.particle.Particle
@@ -12,10 +11,7 @@ import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.util.LightCoordsUtil
 import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
-import net.minecraft.world.phys.Vec3
 import org.joml.Quaternionf
-import org.joml.Vector3f
-import java.util.Vector
 
 
 class ElectrifiedParticle private constructor(

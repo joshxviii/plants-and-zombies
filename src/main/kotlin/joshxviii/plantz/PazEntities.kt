@@ -200,6 +200,17 @@ object PazEntities {
             followRange = 38.0,
         )
     )
+    @JvmField val WINTER_MELON: EntityType<WinterMelon> = registerPlant(
+        "winter_melon",
+        EntityType.Builder.of(::WinterMelon, MobCategory.CREATURE),
+        width = 0.9f,
+        height = 0.8f,
+        attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 35.0,
+            attackDamage = 2.25,
+            followRange = 38.0,
+        )
+    )
     @JvmField val BONK_CHOY: EntityType<BonkChoy> = registerPlant(
         "bonkchoy",
         EntityType.Builder.of(::BonkChoy, MobCategory.CREATURE),
@@ -605,6 +616,7 @@ object PazEntities {
     @JvmField val KERNEL: EntityType<Kernel> = registerProjectile("kernel", EntityType.Builder.of({_,l->Kernel(l)}, MobCategory.MISC), width = 0.42f, height = 0.42f)
     @JvmField val BUTTER: EntityType<Butter> = registerProjectile("butter", EntityType.Builder.of({_,l->Butter(l)}, MobCategory.MISC), width = 0.75f, height = 0.5f)
     @JvmField val MELON: EntityType<Melon> = registerProjectile("melon", EntityType.Builder.of({_,l->Melon(l)}, MobCategory.MISC), width = 1.0f, height = 0.8f)
+    @JvmField val FROZEN_MELON: EntityType<FrozenMelon> = registerProjectile("frozen_melon", EntityType.Builder.of({_,l->FrozenMelon(l)}, MobCategory.MISC), width = 1.0f, height = 0.8f)
     @JvmField val PAINT_BALL: EntityType<PaintBall> = registerProjectile("paint_ball", EntityType.Builder.of({ _, l->PaintBall(l)}, MobCategory.MISC), width = 0.42f, height = 0.42f)
     @JvmField val LASER_BULLET: EntityType<LaserBullet> = registerProjectile("laser_bullet", EntityType.Builder.of({ _, l-> LaserBullet(l)}, MobCategory.MISC), width = 0.5f, height = 0.5f)
     @JvmField val MISSILE: EntityType<Missile> = registerProjectile("missile", EntityType.Builder.of({ _, l->Missile(l)}, MobCategory.MISC), width = 0.42f, height = 0.42f)
