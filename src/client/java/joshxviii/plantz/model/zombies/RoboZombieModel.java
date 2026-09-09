@@ -89,9 +89,7 @@ public class RoboZombieModel extends PazZombieModel {
         this.head.yRot = state.yRot * (float) (Math.PI / 180.0);
 
         if (!(state instanceof RoboZombieRenderState roboState)) return;
-        float animationPos = state.walkAnimationPos;
-        float animationSpeed = state.walkAnimationSpeed;
-        walkAnimation.applyWalk(animationPos, animationSpeed, 2f, 2f);
+        walkAnimation.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 2f, 2f);
 
         if (roboState.isTankTransformation()) {
             tankIdleAnimation.apply(roboState.getIdleAnimationState(), roboState.ageInTicks);

@@ -411,6 +411,18 @@ object PazEntities {
             spawnReinforcementsChance = 1.5,
         )
     )
+    @JvmField val GRAVE_DIGGER: EntityType<GraveDigger> =  registerZombie(
+        "grave_digger",
+        EntityType.Builder.of(::GraveDigger, MobCategory.MONSTER)
+            .sized(0.63f, 1.95f)
+            .eyeHeight(1.74f)
+            .clientTrackingRange(8),
+        attributes = PazZombie.Companion.PazZombieAttributes(
+            movementSpeed = 0.24,
+            maxHealth = 35.0,
+            followRange = 32.0,
+        )
+    )
     @JvmField val SOLDIER_ZOMBIE: EntityType<SoldierZombie> = registerZombie(
         "soldier_zombie",
         EntityType.Builder.of(::SoldierZombie, MobCategory.MONSTER)
