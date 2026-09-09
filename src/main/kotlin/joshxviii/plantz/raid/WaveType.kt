@@ -5,31 +5,27 @@ import io.netty.buffer.ByteBuf
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazLootTables
-import joshxviii.plantz.entity.zombie.BrownCoat
-import joshxviii.plantz.entity.zombie.BrownCoatVariant
-import joshxviii.plantz.entity.zombie.Gargantuar
-import joshxviii.plantz.entity.zombie.GargantuarVariant
-import joshxviii.plantz.entity.zombie.Imp
-import joshxviii.plantz.entity.zombie.ImpVariant
-import joshxviii.plantz.entity.zombie.SuperBrainz
-import joshxviii.plantz.entity.zombie.SuperBrainzVariant
+import joshxviii.plantz.entity.zombie.*
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.resources.ResourceKey
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.ByIdMap
 import net.minecraft.util.StringRepresentable
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.DyedItemColor
+import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.item.enchantment.Enchantments
+import net.minecraft.world.item.enchantment.providers.VanillaEnchantmentProviders
 import net.minecraft.world.level.storage.loot.LootTable
 import java.util.function.IntFunction
-import kotlin.collections.listOf
 
 enum class WaveType(
     private val minWave: Int,
@@ -192,17 +188,14 @@ enum class WaveType(
         fun spawnBucketBrigade(zombie: Zombie) {
             zombie.setItemSlot(EquipmentSlot.HEAD, Items.BUCKET.defaultInstance)
             zombie.setDropChance(EquipmentSlot.HEAD, 0.0f)
-            if (zombie.random.nextFloat() < 0.7f) {
-                zombie.setItemSlot(EquipmentSlot.CHEST, Items.IRON_CHESTPLATE.defaultInstance)
-                zombie.setDropChance(EquipmentSlot.CHEST, 0.0f)
-            }
-            if (zombie.random.nextFloat() < 0.7f) {
-                zombie.setItemSlot(EquipmentSlot.LEGS, Items.IRON_LEGGINGS.defaultInstance)
-                zombie.setDropChance(EquipmentSlot.LEGS, 0.0f)
-            }
-            if (zombie.random.nextFloat() < 0.7f) {
-                zombie.setItemSlot(EquipmentSlot.FEET, Items.IRON_BOOTS.defaultInstance)
-                zombie.setDropChance(EquipmentSlot.FEET, 0.0f)
+            for (slot in mutableListOf(EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET)) {
+                val level = zombie.level() as? ServerLevel?: continue
+                val difficulty = level.getCurrentDifficultyAt(zombie.blockPosition())
+                if (zombie.random.nextFloat() < 0.7f) {
+                    val itemStack = Mob.getEquipmentForSlot(slot, 1)?.defaultInstance?: continue
+                    if (zombie.random.nextFloat() < 0.3f * difficulty.specialMultiplier) EnchantmentHelper.enchantItemFromProvider(itemStack, level.registryAccess(), VanillaEnchantmentProviders.MOB_SPAWN_EQUIPMENT, level.getCurrentDifficultyAt(zombie.blockPosition()), zombie.random)
+                    zombie.setItemSlot(slot, itemStack)
+                }
             }
         }
 
@@ -241,6 +234,27 @@ enum class WaveType(
                 if (zombie.random.nextFloat() < 0.4f) {
                     zombie.setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_SWORD.defaultInstance)
                     zombie.setDropChance(EquipmentSlot.MAINHAND, 0.0f)
+                }
+            }
+
+            if (zombie !is Gargantuar) {
+                for (slot in mutableListOf(EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET).apply { if (zombie is BrownCoat) addFirst(EquipmentSlot.HEAD) }) {
+                    val level = zombie.level() as? ServerLevel?: continue
+                    val difficulty = level.getCurrentDifficultyAt(zombie.blockPosition())
+                    if (slot == EquipmentSlot.HEAD && !zombie.getItemBySlot(slot).isEmpty) continue
+                    if (zombie.random.nextFloat() < 0.25f * difficulty.specialMultiplier) {
+                        val itemStack = Mob.getEquipmentForSlot(slot, 2)?.defaultInstance?: continue
+
+                        if (zombie.random.nextFloat() < 0.25f) EnchantmentHelper.enchantItemFromProvider(
+                            itemStack,
+                            level.registryAccess(),
+                            VanillaEnchantmentProviders.MOB_SPAWN_EQUIPMENT,
+                            level.getCurrentDifficultyAt(zombie.blockPosition()),
+                            zombie.random
+                        )
+
+                        zombie.setItemSlot(slot, itemStack)
+                    }
                 }
             }
         }

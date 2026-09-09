@@ -79,12 +79,9 @@ class ProjectileAttackGoal(
         target?.let {
             usingEntity.lookControl.setLookAt(it, 30.0f, 30.0f)
         }
-
-        //usingEntity.startUsingItem(ProjectileUtil.getWeaponHoldingHand(usingEntity, usingEntity.weaponItem.item))
     }
 
     override fun doAction() : Boolean {// fire projectile
-        //usingEntity.releaseUsingItem()
         val target = usingEntity.target?: return false
 
         val level = usingEntity.level() as ServerLevel
