@@ -98,7 +98,7 @@ class GnomeArmorLayer(
     renderer: RenderLayerParent<GnomeRenderState, GnomeModel<GnomeRenderState>>,
     private val armorModels: GnomeArmorSet<GnomeArmorModel<GnomeRenderState>>,
     private val equipmentRenderer: EquipmentLayerRenderer
-) : net.minecraft.client.renderer.entity.layers.RenderLayer<GnomeRenderState, GnomeModel<GnomeRenderState>>(renderer) {
+) : RenderLayer<GnomeRenderState, GnomeModel<GnomeRenderState>>(renderer) {
 
     override fun submit(
         poseStack: PoseStack, submitNodeCollector: SubmitNodeCollector, lightCoords: Int, state: GnomeRenderState, yRot: Float, xRot: Float

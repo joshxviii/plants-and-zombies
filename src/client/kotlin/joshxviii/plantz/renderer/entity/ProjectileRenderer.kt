@@ -48,7 +48,7 @@ class ProjectileRenderer<M: EntityModel<ProjectileRenderState>>(
         poseStack.mulPose(Axis.ZP.rotationDegrees(state.xRot))
         poseStack.translate(0.0, -1.5, 0.0)
         val tint = state.color?: -1
-        val texture = state.getProjectileTextureLocation(ProjectileRenderState.TEXTURE_PATH)
+        val texture = state.getProjectileTextureLocation()
         if (texture!=null) collector.submitModel(
             this.projectileModel,
             state,
@@ -96,7 +96,7 @@ class EmissiveProjectileLayer<M : EntityModel<ProjectileRenderState>>(
         yRot: Float,
         xRot: Float
     ) {
-        val textureLocation = state.getProjectileTextureLocation(ProjectileRenderState.TEXTURE_PATH, true) ?: return
+        val textureLocation = state.getProjectileTextureLocation(emissive = true) ?: return
         val renderType = RenderTypes.eyes(textureLocation)
         val tint = state.color?.let {ARGB.opaque(it) }?: -1
         submitNodeCollector.order(1).submitModel(

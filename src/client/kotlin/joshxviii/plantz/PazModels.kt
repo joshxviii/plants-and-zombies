@@ -58,6 +58,8 @@ object PazModels {
     @JvmField
     val HAS_FREEZE_KEY: RenderStateDataKey<Boolean> = RenderStateDataKey.create { "plantz:frozen" }
     @JvmField
+    val HAS_BUTTER_KEY: RenderStateDataKey<Boolean> = RenderStateDataKey.create { "plantz:buttered" }
+    @JvmField
     val PAINT_COLORS_KEY: RenderStateDataKey<Map<Int, Int>> = RenderStateDataKey.create { "plantz:painted" }
 
     private val PAINT_OVERLAY_TEXTURE_1: Identifier = pazResource("textures/gui/overlay/paint1.png")

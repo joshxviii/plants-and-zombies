@@ -16,6 +16,9 @@ public interface LivingEntityAccessor {
     @Invoker("plantz$getChillId")
     boolean plantz$getChillId();
 
+    @Invoker("plantz$getButterId")
+    boolean plantz$getButterId();
+
     @Invoker("plantz$getPaintedColors")
     Map<Integer, Integer> plantz$getPaintedColors();
 

@@ -2,6 +2,8 @@ package joshxviii.plantz.renderer
 
 import joshxviii.plantz.PazEntities.MAGIC_NAMES
 import joshxviii.plantz.pazResource
+import joshxviii.plantz.renderer.entity.ProjectileRenderState
+import joshxviii.plantz.renderer.entity.ProjectileRenderer
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState
 import net.minecraft.client.renderer.entity.state.EntityRenderState
@@ -42,9 +44,9 @@ fun BlockEntityRenderState.getTextureLocation(path: String): Identifier {
     return pazResource("${path}.png")
 }
 
-fun EntityRenderState.getProjectileTextureLocation(basePath: String, emissive: Boolean = false): Identifier? {
+fun EntityRenderState.getProjectileTextureLocation(emissive: Boolean = false): Identifier? {
     val entityName = entityType.toShortString().lowercase()
-    val path = "${basePath}/${entityName}${if (emissive) "_emissive" else ""}.png"
+    val path = "${ProjectileRenderState.TEXTURE_PATH}/${entityName}${if (emissive) "_emissive" else ""}.png"
     val texture = pazResource(path)
     val isValid = Minecraft.getInstance().resourceManager.getResource(texture).isPresent
     return if (isValid) texture else null

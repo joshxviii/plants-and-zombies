@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.vertex.PoseStack;
 import joshxviii.plantz.renderer.DuckyTubeRenderLayer;
 import joshxviii.plantz.renderer.DyeVatRenderLayer;
-import joshxviii.plantz.renderer.PaintLayer;
+import joshxviii.plantz.renderer.SpecialEffectsLayer;
 import joshxviii.plantz.mixin.LivingEntityAccessor;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -38,7 +38,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extend
     private void plantz$addDuckyTubeLayer(EntityRendererProvider.Context context, M model, float shadow, CallbackInfo ci) {
         this.addLayer(new DuckyTubeRenderLayer<>(this));
         this.addLayer(new DyeVatRenderLayer<>(this));
-        this.addLayer(new PaintLayer<>(this));
+        this.addLayer(new SpecialEffectsLayer<>(this));
     }
 
     @Inject(method = "extractRenderState*", at = @At("TAIL"))
@@ -47,6 +47,8 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extend
         state.setData(HAS_HYPNO_KEY, hasHypno);
         boolean hasFreeze = ((LivingEntityAccessor) entity).plantz$getChillId();
         state.setData(HAS_FREEZE_KEY, hasFreeze);
+        boolean hasButter = ((LivingEntityAccessor) entity).plantz$getButterId();
+        state.setData(HAS_BUTTER_KEY, hasButter);
         Map<Integer, Integer> paintColors = ((LivingEntityAccessor) entity).plantz$getPaintedColors();
         state.setData(PAINT_COLORS_KEY, paintColors);
     }
@@ -55,6 +57,8 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extend
     private static final int PLANTZ_HYPNO_TINT = ARGB.opaque(0xD036FF);
     @Unique
     private static final int PLANTZ_FREEZE_TINT = ARGB.opaque(0x0098DC);
+    @Unique
+    private static final int PLANTZ_BUTTER_TINT = ARGB.opaque(0xdbdc8c);
 
     @ModifyExpressionValue(
         method = "submit*",
@@ -68,6 +72,9 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extend
         }
         if (state.getDataOrDefault(HAS_FREEZE_KEY, false)) {
             finalColor.set(ARGB.multiply(finalColor.get(), PLANTZ_FREEZE_TINT));
+        }
+        if (state.getDataOrDefault(HAS_BUTTER_KEY, false)) {
+            finalColor.set(ARGB.multiply(finalColor.get(), PLANTZ_BUTTER_TINT));
         }
 
         // multiple colors end up just looking black. not gonna use this for now.
