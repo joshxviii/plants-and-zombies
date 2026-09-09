@@ -173,6 +173,13 @@
         }
       },
       {
+        "when": { "id": "plantz:iceshroom" },
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/seed_packet/iceshroom"
+        }
+      },
+      {
         "when": { "id": "plantz:doomshroom" },
         "model": {
           "type": "minecraft:model",

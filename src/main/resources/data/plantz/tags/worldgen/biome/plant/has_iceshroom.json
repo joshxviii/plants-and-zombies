@@ -1,0 +1,13 @@
+{
+  "values": [
+    "minecraft:snowy_taiga",
+    "minecraft:ice_spikes",
+    "minecraft:frozen_peaks",
+    "minecraft:frozen_ocean",
+    "minecraft:snowy_slopes",
+    {
+      "id": "#c:is_icy",
+      "required": false
+    }
+  ]
+}

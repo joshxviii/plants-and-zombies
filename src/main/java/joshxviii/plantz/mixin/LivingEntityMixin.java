@@ -243,6 +243,13 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
         updateEffects();
     }
 
+    @Inject(method = "canAttack", at = @At(value = "RETURN"), cancellable = true)
+    public void noAttackWhenFrozen(LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
+        if (this.hasEffect(PazEffects.FROZEN)) {
+            cir.setReturnValue(false);
+        }
+    }
+
     @Inject(method = "onEffectUpdated", at = @At("TAIL"))
     public void updateEffect(CallbackInfo ci) {
         updateEffects();

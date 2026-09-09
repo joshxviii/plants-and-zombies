@@ -785,14 +785,11 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         speed: Double = 0.0,
     ) {
         if (level is ServerLevel) {
-            val px = getRandomX(horizontalSpreadScale)
-            val py = y + height + random.nextDouble() * bbHeight * verticalSpreadScale
-            val pz = getRandomZ(horizontalSpreadScale)
             level.sendParticles(
                 particle,
-                px, py, pz,
+                x, y + height + bbHeight/2, z,
                 amount.random(),
-                0.0, 0.0, 0.0,
+                horizontalSpreadScale/4, verticalSpreadScale/2, horizontalSpreadScale/4,
                 speed
             )
         }
