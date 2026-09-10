@@ -16,14 +16,19 @@ import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class EngineerZombieModel extends PazZombieModel {
+public class EngineerZombieModel<S extends PazZombieRenderState> extends PazZombieModel<S> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("engineer"), "main");
 	private final KeyframeAnimation actionAnimation;
 
 
 	public EngineerZombieModel(final ModelPart root) {
 		super(null, root);
-		this.actionAnimation = EngineerZombieAnimation.build.bake(root.getChild("root"));
+		this.actionAnimation = EngineerZombieAnimation.build.bake(root);
+	}
+
+	@Override
+	public <T extends PazZombieRenderState> PazZombieModel<T> forArmor(ModelPart root) {
+		return new EngineerZombieModel<>(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -55,7 +60,7 @@ public class EngineerZombieModel extends PazZombieModel {
 	}
 
 	@Override
-	public void setupAnim(@NotNull PazZombieRenderState state) {
+	public void setupAnim(@NotNull S state) {
 		super.setupAnim(state);
 		actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
 	}

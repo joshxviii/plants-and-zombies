@@ -8,6 +8,7 @@ import joshxviii.plantz.model.zombies.PazZombieModel
 import joshxviii.plantz.renderer.getEmissiveTextureLocation
 import joshxviii.plantz.renderer.getTextureLocation
 import joshxviii.plantz.renderer.isMagicName
+import net.minecraft.client.Minecraft
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.ModelLayers
@@ -39,8 +40,8 @@ open class PazZombieRenderer(
     context,
     defaultModel,
     babyModel,
-    ArmorModelSet.bake(armorSet, context.modelSet) { root: ModelPart -> PazZombieModel(null, root) },
-    ArmorModelSet.bake(babyArmorSet, context.modelSet) { root: ModelPart -> PazZombieModel(null, root) }
+    ArmorModelSet.bake(armorSet, context.modelSet) { defaultModel.forArmor(it) },
+    ArmorModelSet.bake(babyArmorSet, context.modelSet) { babyModel.forArmor(it) }
 ) {
 
     init {

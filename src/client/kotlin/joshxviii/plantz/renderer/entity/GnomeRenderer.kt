@@ -35,7 +35,7 @@ import net.minecraft.world.item.component.SwingAnimation
 class GnomeRenderer(
     context: EntityRendererProvider.Context,
     defaultModel: GnomeModel<GnomeRenderState>,
-) : net.minecraft.client.renderer.entity.MobRenderer<Gnome, GnomeRenderState, GnomeModel<GnomeRenderState>>(
+) : MobRenderer<Gnome, GnomeRenderState, GnomeModel<GnomeRenderState>>(
     context,
     defaultModel,
     0.2f
@@ -45,7 +45,7 @@ class GnomeRenderer(
     }
 
     init {
-        val armorModels = GnomeArmorSet.bakeDefault(ARMOR_LAYER_LOCATION, context.modelSet)
+        val armorModels = GnomeArmorSet.bake(ARMOR_LAYER_LOCATION, context.modelSet) { defaultModel }
         addLayer(GnomeArmorLayer(this, armorModels, context.equipmentRenderer))
         addLayer(CustomHeadLayer(this, context.modelSet, context.playerSkinRenderCache, CUSTOM_HEAD_TRANSFORMS))
         addLayer(ItemInHandLayer(this))
@@ -94,11 +94,11 @@ class GnomeRenderer(
     }
 }
 
-class GnomeArmorLayer(
-    renderer: RenderLayerParent<GnomeRenderState, GnomeModel<GnomeRenderState>>,
-    private val armorModels: GnomeArmorSet<GnomeArmorModel<GnomeRenderState>>,
+class GnomeArmorLayer<S: GnomeModel<GnomeRenderState>>(
+    renderer: RenderLayerParent<GnomeRenderState, S>,
+    private val armorModels: GnomeArmorSet<S>,
     private val equipmentRenderer: EquipmentLayerRenderer
-) : RenderLayer<GnomeRenderState, GnomeModel<GnomeRenderState>>(renderer) {
+) : RenderLayer<GnomeRenderState, S>(renderer) {
 
     override fun submit(
         poseStack: PoseStack, submitNodeCollector: SubmitNodeCollector, lightCoords: Int, state: GnomeRenderState, yRot: Float, xRot: Float

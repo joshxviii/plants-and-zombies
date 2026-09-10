@@ -12,13 +12,18 @@ import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class ImpModel extends PazZombieModel {
+public class ImpModel<S extends PazZombieRenderState> extends PazZombieModel<S> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("imp"), "main");
     private final KeyframeAnimation actionAnimation;
 
     public ImpModel(final ModelPart root) {
         super(null, root);
-        this.actionAnimation = ImpAnimation.action.bake(root.getChild("root"));
+        this.actionAnimation = ImpAnimation.action.bake(root);
+    }
+
+    @Override
+    public <T extends PazZombieRenderState> PazZombieModel<T> forArmor(ModelPart root) {
+        return new ImpModel<>(root);
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -47,7 +52,7 @@ public class ImpModel extends PazZombieModel {
     }
 
     @Override
-    public void setupAnim(@NotNull PazZombieRenderState state) {
+    public void setupAnim(@NotNull S state) {
         state.isBaby = true;
         float tempAttackTime = state.attackTime;
         state.attackTime = 0;

@@ -445,6 +445,7 @@ object PazEntities {
             .eyeHeight(1.74f)
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
+            attackDamage = 2.5,
             movementSpeed = 0.24,
             maxHealth = 35.0,
             followRange = 32.0,

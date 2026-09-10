@@ -2,6 +2,7 @@ package joshxviii.plantz.gui
 
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.network.chat.Component
 import net.minecraft.util.ARGB
 
@@ -12,3 +13,5 @@ fun GuiGraphicsExtractor.outlineText(font: Font, text: Component, x: Int = 0, y:
     text(font, text, x, y-1, ARGB.opaque(outlineColor), false)
     text(font, text, x, y, ARGB.opaque(color), false)
 }
+
+fun ModelPart.getChildOrNull(name: String): ModelPart? = if (this.hasChild(name)) this.getChild(name) else null

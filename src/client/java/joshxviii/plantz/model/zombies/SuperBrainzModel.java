@@ -16,7 +16,7 @@ import org.joml.Quaternionf;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class SuperBrainzModel extends PazZombieModel {
+public class SuperBrainzModel<S extends PazZombieRenderState> extends PazZombieModel<S> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("super_brainz"), "main");
     private final KeyframeAnimation walkAnimation;
     private final KeyframeAnimation flyAnimation;
@@ -92,7 +92,7 @@ public class SuperBrainzModel extends PazZombieModel {
     }
 
     @Override
-    public void setupAnim(@NotNull PazZombieRenderState state) {
+    public void setupAnim(@NotNull S state) {
         super.setupAnim(state);
         this.resetPose();
         AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, false, state);

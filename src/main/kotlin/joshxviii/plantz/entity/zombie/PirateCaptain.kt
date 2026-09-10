@@ -116,7 +116,6 @@ class PirateCaptain(type: EntityType<out PirateCaptain>, level: Level) : PazZomb
         return result
     }
 
-    override fun canPickUpLoot(): Boolean = false
     override fun isLeftHanded(): Boolean = false
 
     override fun tick() {

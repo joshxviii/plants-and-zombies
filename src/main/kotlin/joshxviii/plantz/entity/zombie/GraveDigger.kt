@@ -1,6 +1,7 @@
 package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.applyImpulse
 import joshxviii.plantz.block.GravestoneBlock.Companion.FACING
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -18,11 +19,14 @@ import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.entity.ai.goal.Goal
+import net.minecraft.world.entity.item.FallingBlockEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.gamerules.GameRules
+import net.minecraft.world.phys.Vec3
 import kotlin.math.max
 import kotlin.math.min
 
@@ -31,7 +35,7 @@ class GraveDigger(type: EntityType<out GraveDigger>, level: Level) : PazZombie(t
 
     companion object {
         val DIG_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(GraveDigger::class.java, EntityDataSerializers.INT)
-        const val DIG_TIME = 60
+        const val DIG_TIME = 80
     }
 
     val digAnimation : AnimationState = AnimationState()
@@ -66,7 +70,7 @@ class GraveDigger(type: EntityType<out GraveDigger>, level: Level) : PazZombie(t
                 BlockParticleOption(ParticleTypes.BLOCK, level().getBlockState(BlockPos.containing(buildPos).below())), buildPos.x, buildPos.y+0.25, buildPos.z,
                 1, 0.2, 0.2, 0.2, 0.01
             )
-            if(tickCount % 8 == 0) playSound(SoundEvents.ROOTED_DIRT_BREAK, 1.0f, 0.9f)
+            if(digTime % 28 == 0 || digTime % 42 == 0) playSound(SoundEvents.ROOTED_DIRT_BREAK, 1.0f, 0.9f)
             digAnimation.startIfStopped(tickCount)
             if (digTime++>DIG_TIME) {
                 digAnimation.stop()
@@ -89,7 +93,7 @@ class GraveDigger(type: EntityType<out GraveDigger>, level: Level) : PazZombie(t
         val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
 
         setCanBreakDoors(true)
-        setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_SHOVEL.defaultInstance)
+        setItemSlot(EquipmentSlot.MAINHAND, Items.STONE_SHOVEL.defaultInstance)
         setDropChance(EquipmentSlot.MAINHAND, 0.0f)
 
         return data
@@ -99,11 +103,9 @@ class GraveDigger(type: EntityType<out GraveDigger>, level: Level) : PazZombie(t
         val gravedigger: GraveDigger,
     ) : Goal() {
         companion object {
-            const val DEFAULT_AMOUNT = 1
-            const val DIG_DISTANCE = 1
-            const val DIG_DELAY_TIME = 65
+            const val DIG_DELAY_TIME = 55
         }
-        var buildTime = gravedigger.random.nextInt(20,60)
+        var digTime = gravedigger.random.nextInt(20,60)
 
         override fun canUse(): Boolean {
             val level = gravedigger.level() as ServerLevel
@@ -115,8 +117,8 @@ class GraveDigger(type: EntityType<out GraveDigger>, level: Level) : PazZombie(t
 
         override fun tick() {
             super.tick()
-            if (--buildTime == 0) gravedigger.digTime=1
-            if (buildTime<-28) tryDigGrave()
+            if (--digTime == 0) gravedigger.digTime=1
+            if (digTime<-32) tryDigGrave()
         }
 
         override fun stop() {
@@ -124,53 +126,32 @@ class GraveDigger(type: EntityType<out GraveDigger>, level: Level) : PazZombie(t
         }
 
         private fun getGraveAmount(): Int {
-            var amount = DEFAULT_AMOUNT
-            val level = gravedigger.level() as ServerLevelAccessor
-            val multi = level.getCurrentDifficultyAt(gravedigger.blockPosition()).specialMultiplier
-            if(multi > 0.0) repeat(2) {
-                if(gravedigger.random.nextFloat() < 0.25 * multi) amount++
-            }
-            return amount
+            return 1
         }
 
         private fun tryDigGrave() {
-            buildTime = DIG_DELAY_TIME + gravedigger.random.nextInt(40)
+            digTime = DIG_DELAY_TIME + gravedigger.random.nextInt(25)
             val target = gravedigger.target?: return
-            val angleToTarget = (gravedigger.yRot + 90) * Mth.DEG_TO_RAD
-            val minY = min(target.y, gravedigger.y) - 2.0
+            val angleToTarget = (gravedigger.yRot + 90.0) * Mth.DEG_TO_RAD
             val maxY = max(target.y, gravedigger.y)
-            val amount = getGraveAmount()
-            val a = (2*Mth.PI / amount)
-            for(i in 1..amount) {
-                val b = a*i-a*(amount+1)*.5
-                val x = gravedigger.x + Mth.cos(b+angleToTarget)*DIG_DISTANCE
-                val z = gravedigger.z + Mth.sin(b+angleToTarget)*DIG_DISTANCE
-                digGrave(x, z, minY, maxY, angleToTarget)
-            }
-        }
 
-        private fun digGrave(x: Double, z: Double, minY: Double, maxY: Double, angle: Float) {
+            val xd = Mth.cos(angleToTarget)
+            val zd = Mth.sin(angleToTarget)
+            val x = gravedigger.x + xd
+            val z = gravedigger.z + zd
+
+            val gravePos = BlockPos.containing(x, maxY, z)
+
             val level = gravedigger.level() as ServerLevel
-            var pos = BlockPos.containing(x, maxY, z)
-            var success = false
-            do {// search for an empty space from minY to maxY
-                val belowState = level.getBlockState(pos.below())
-                val blockState = level.getBlockState(pos)
-                if (belowState.isFaceSturdy(level, pos.below(), Direction.UP) && !belowState.`is`(PazBlocks.GRAVESTONE) && blockState.canBeReplaced()) {
-                    success = true; break
-                }
-                pos = pos.below()
-            } while (pos.y >= Mth.floor(minY) - 1)
+            val graveStone = FallingBlockEntity.fall(level, gravePos, PazBlocks.GRAVESTONE.defaultBlockState().setValue(FACING, Direction.fromYRot(angleToTarget * Mth.RAD_TO_DEG - 90)))
+            if(!level.gameRules.get(GameRules.MOB_GRIEFING)) graveStone.disableDrop()
+            graveStone.setHurtsEntities(3f, 8)
+            gravedigger.playSound(SoundEvents.MUDDY_MANGROVE_ROOTS_BREAK, 1.4f, 0.9f)
+            graveStone.playSound(SoundEvents.TUFF_BRICKS_BREAK, 1.4f, 0.8f)
 
-            if (success) {
-                val gravePos = pos
-                level.setBlockAndUpdate(gravePos, PazBlocks.GRAVESTONE.defaultBlockState().setValue(FACING, Direction.fromYRot(angle.toDouble() * Mth.RAD_TO_DEG)))
-                level.playSound(null, gravePos, SoundEvents.TUFF_BRICKS_PLACE, SoundSource.BLOCKS, 1.0f, 0.9f)
-                level.sendParticles(
-                    BlockParticleOption(ParticleTypes.BLOCK, level.getBlockState(gravePos.below())), gravePos.x.toDouble(), gravePos.y + 0.25, gravePos.z.toDouble(),
-                    10, 0.2, 0.2, 0.2, 0.01
-                )
-            }
+            val motionDirection = Vec3(xd.toDouble(), 2.25, zd.toDouble())
+            graveStone.applyImpulse(motionDirection, 0.25f, 0.1f)
+
         }
     }
 }

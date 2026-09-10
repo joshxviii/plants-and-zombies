@@ -12,13 +12,18 @@ import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class PirateCaptainModel extends PazZombieModel {
+public class PirateCaptainModel<S extends PazZombieRenderState> extends PazZombieModel<S> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("pirate_captain"), "main");
     private final KeyframeAnimation walkAnimation;
 
     public PirateCaptainModel(final ModelPart root) {
         super(null, root);
-        this.walkAnimation = PirateCaptainAnimation.walk.bake(root.getChild("root"));
+        this.walkAnimation = PirateCaptainAnimation.walk.bake(root);
+    }
+
+    @Override
+    public <T extends PazZombieRenderState> PazZombieModel<T> forArmor(ModelPart root) {
+        return new PirateCaptainModel<>(root);
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -63,7 +68,7 @@ public class PirateCaptainModel extends PazZombieModel {
     }
 
     @Override
-    public void setupAnim(@NotNull PazZombieRenderState state) {
+    public void setupAnim(@NotNull S state) {
         super.setupAnim(state);
         this.resetPose();
         this.head.xRot = state.xRot * (float) (Math.PI / 180.0);

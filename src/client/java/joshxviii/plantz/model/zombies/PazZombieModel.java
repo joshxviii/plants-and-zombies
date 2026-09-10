@@ -26,10 +26,21 @@ public class PazZombieModel<S extends PazZombieRenderState> extends ZombieModel<
     ) {
         var mainRoot = root.hasChild("root") ? root.getChild("root") : root;
         super(mainRoot);
+
         if (initAnimation == null) this.initAnimation = PazZombieAnimations.emerge.bake(mainRoot);
         else this.initAnimation = initAnimation;
         this.floatAnimation = PazZombieAnimations.balloon_float.bake(mainRoot);
 
+    }
+
+    /**
+     * Any model that should override this must not have any animations that animate bones that aren't a part of the base PazZombieModel.
+     * @param root
+     * @return
+     * @param <T>
+     */
+    public <T extends PazZombieRenderState> PazZombieModel<T> forArmor(ModelPart root) {
+        return new PazZombieModel<>(null, root);
     }
 
     public static LayerDefinition createBodyLayer() {

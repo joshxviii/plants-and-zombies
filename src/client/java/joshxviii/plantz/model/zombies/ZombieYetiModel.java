@@ -11,13 +11,13 @@ import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class ZombieYetiModel extends PazZombieModel {
+public class ZombieYetiModel<S extends PazZombieRenderState> extends PazZombieModel<S> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("zombie_yeti"), "main");
 	private final KeyframeAnimation actionAnimation;
 
 	public ZombieYetiModel(final ModelPart root) {
 		super(null, root);
-		this.actionAnimation = ZombieYetiAnimation.action.bake(root.getChild("root"));
+		this.actionAnimation = ZombieYetiAnimation.action.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -52,7 +52,7 @@ public class ZombieYetiModel extends PazZombieModel {
 	}
 
 	@Override
-	public void setupAnim(@NotNull PazZombieRenderState state) {
+	public void setupAnim(@NotNull S state) {
 		super.setupAnim(state);
 		actionAnimation.applyWalk(state.attackTime*4, 1.0f, 1.0f, 1.0f);
 	}

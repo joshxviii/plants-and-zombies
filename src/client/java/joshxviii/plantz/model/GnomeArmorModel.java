@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class GnomeArmorModel<T extends GnomeRenderState> extends EntityModel<T> {
+public class GnomeArmorModel<T extends GnomeRenderState> extends GnomeModel<T> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("gnome_armor"), "main");
 	private ModelPart helmet = null;
 	private ModelPart chest = null;

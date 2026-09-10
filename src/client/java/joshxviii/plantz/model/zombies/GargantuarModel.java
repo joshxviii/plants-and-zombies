@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class GargantuarModel extends PazZombieModel {
+public class GargantuarModel<S extends PazZombieRenderState> extends PazZombieModel<S> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("gargantuar"), "main");
 	private final KeyframeAnimation walkAnimation;
 	private final KeyframeAnimation punchAnimation;
@@ -22,13 +22,13 @@ public class GargantuarModel extends PazZombieModel {
 
 	public GargantuarModel(final ModelPart root) {
 		super(
-			GargantuarAnimation.init.bake(root.getChild("root")),
+			GargantuarAnimation.init.bake(root),
 			root
 		);
-		this.walkAnimation = GargantuarAnimation.walk.bake(root.getChild("root"));
-		this.punchAnimation = GargantuarAnimation.action.bake(root.getChild("root"));
-		this.throwAnimation = GargantuarAnimation.toss.bake(root.getChild("root"));
-		this.smashAnimation = GargantuarAnimation.attack.bake(root.getChild("root"));
+		this.walkAnimation = GargantuarAnimation.walk.bake(root);
+		this.punchAnimation = GargantuarAnimation.action.bake(root);
+		this.throwAnimation = GargantuarAnimation.toss.bake(root);
+		this.smashAnimation = GargantuarAnimation.attack.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -86,7 +86,7 @@ public class GargantuarModel extends PazZombieModel {
 	}
 
 	@Override
-	public void setupAnim(@NotNull PazZombieRenderState state) {
+	public void setupAnim(@NotNull S state) {
 		super.setupAnim(state);
 		this.resetPose();
 		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);

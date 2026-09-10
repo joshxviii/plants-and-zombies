@@ -35,7 +35,6 @@ class BackupDancer(type: EntityType<out BackupDancer>, level: Level) : PazZombie
         return result
     }
 
-    override fun canPickUpLoot(): Boolean = false
     override fun randomizeReinforcementsChance() {}
 
     override fun tick() {

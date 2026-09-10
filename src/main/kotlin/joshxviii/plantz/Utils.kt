@@ -300,6 +300,7 @@ fun Entity.applyImpulse(xd: Double = 0.0, yd: Double = 1.0, zd: Double = 0.0, po
     this.addDeltaMovement(impulse)
 }
 
+fun Entity.applyImpulse(vec3: Vec3, pow: Float = 1f, uncertainty: Float = 0f) = applyImpulse(vec3.x, vec3.y, vec3.z, pow, uncertainty)
 
 // AI/PATHFINDING
 fun <T : LivingEntity?> ServerEntityGetter.getFurthestEntities(
