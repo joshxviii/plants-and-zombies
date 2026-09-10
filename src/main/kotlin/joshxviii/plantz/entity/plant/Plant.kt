@@ -482,13 +482,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             PlantState.INIT -> {
                 initAnimationState.startIfStopped(tickCount)
                 if (tickCount >= 19) {
-                    state = PlantState.IDLE
                     idleAnimationStartTick = 0
+                    idleAnimationState.startIfStopped(tickCount - idleAnimationStartTick)
+                    initAnimationState.stop()
+                    state = if (cooldown > 0) PlantState.COOLDOWN else PlantState.IDLE
                 }
             }
             PlantState.IDLE -> {
-                idleAnimationState.startIfStopped(tickCount - idleAnimationStartTick)
-                initAnimationState.stop()
                 actionAnimationState.stop()
                 coolDownAnimationState.stop()
                 specialAnimation.stop()

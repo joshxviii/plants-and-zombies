@@ -78,11 +78,6 @@
           "conditions": [],
           "functions": [
           ]
-        },
-        {
-          "type": "minecraft:loot_table",
-          "value": "plantz:balloons",
-          "weight": 7
         }
       ]
     }

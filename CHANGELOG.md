@@ -1,3 +1,6 @@
+# Changelog 1.6
+### Additions
+
 # Changelog 1.5
 ### Additions
 #### General:   
@@ -40,6 +43,10 @@
 - Added Grave Buster
   - Found in the Graveyard and Pale Garden biomes.
   - Can be used on Gravestones to acquire Grave Loot.
+- Added Winter Melon
+  - Acquired from Melon Pult zen-gardening while in cold biomes.
+- Added Ice Shroom
+  - Found in icy biomes.
 - Snow Peas will now apply the Freeze effect rather than Slowness and Weakness.
 - Added plant transformations
   - Some plants can be transformed into other plants under certain conditions.
@@ -66,7 +73,12 @@
     - "League of Awesome" can occur during waves 8–19. (Only after the end credits have been seen)
   - When a raid is completed, all players participating in the raid will receive the Hero of the Garden effect.
   - Special waves add unique loot to the item pool when claiming raid hero rewards.
-  - Every 10 waves completed add bonus tacos to the hero reward pool.
+  - Every 5 waves completed will add an item from the party loot table.
+    - Party Loot Includes:
+    - Tacos
+    - Balloons
+    - Lawn Flamingos
+    - Gargen Gnomes
 - Added Desert, Snow, and Pirate Variants for the Browncoat Zombie.
   - The pirate browncoat will spawn during the "Pirate Invasion" special wave.
   - The snow browncoat will spawn during the "Winter Wonderland" special wave.
@@ -80,6 +92,9 @@
 - Added Soldier Zombie
   - Spawns during the "Robo Army" special wave.
   - Uses the dye blaster.
+- Added Grave Digger
+  - Has a chance to spawn at night.
+  - Will dig up gravestone when attacking players.
 - Added Robo Zombie
   - Spawns during the "Robo Army" special wave.
 - Added Pirate Captain Zombie
