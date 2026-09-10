@@ -28,6 +28,10 @@ abstract class ActionGoal(
     var isDoingAction = false
     var actionTimer = -1
 
+    init {
+        (usingEntity as? Plant)?.cooldown = cooldownTime
+    }
+
     override fun stop() {
         isDoingAction = false
         actionTimer = -1

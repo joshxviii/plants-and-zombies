@@ -231,7 +231,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     val bounceAnimation = AnimationState()
 
     init {
-        cooldown = -1
         this.lookControl = object : LookControl(this) {
             override fun clampHeadRotationToBody() {}
             override fun tick() { if (!isAsleep) super.tick() }
@@ -252,7 +251,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
         entityData.define(PLANT_STATE, PlantState.IDLE)
-        entityData.define(COOLDOWN, 0)
+        entityData.define(COOLDOWN, -1)
         entityData.define(RECEIVED_SUN, 0)
         entityData.define(RECEIVED_WATER, 0)
         entityData.define(SEED_GROW_COOLDOWN, 0)
@@ -286,7 +285,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         receivedWater = input.getInt("plantz:ReceivedWater").getOrElse { 0 }
         seedGrowCooldown = input.getInt("plantz:SeedGrowTime").getOrElse { 0 }
         coffeeBuff = input.getInt("plantz:CoffeeBuff").getOrElse { 0 }
-        cooldown = input.getInt("plantz:Cooldown").getOrElse { -1 }
+        cooldown = input.getInt("plantz:Cooldown").getOrElse { this.entityData.get(COOLDOWN) }
         poweredUp = input.getBooleanOr("plantz:IsPoweredUp", false)
         attachedPlayerReference = Optional.ofNullable((EntityReference.read<LivingEntity>(input, "plantz:AttachedPlayer"))).getOrNull()
     }
@@ -415,10 +414,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         if (level is ServerLevel) {
             updatePlantPower(level)
 
-            if (cooldown > -1) {
-                if (cooldown == 0) cooldownFinished()
-                cooldown--
-            }
+            if (cooldown > -1 && !isAsleep) cooldown--
+            if (cooldown == 0) cooldownFinished()
             if (!onValidGround() || isOverlappingWithOther(blockPosition())) {
                 if (--nutrientSupply <= 0) {
                     if (tickCount % 20 == 0) hurtServer(level, damageSources().dryOut(), 2.0f)
@@ -497,7 +494,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 specialAnimation.stop()
                 sleepAnimationState.stop()
                 if (isAsleep) state = PlantState.SLEEP
-                if (cooldown > -1) {
+                if (cooldown > 0) {
                     state = PlantState.ACTION
                 }
             }
@@ -507,9 +504,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }
             PlantState.COOLDOWN -> {
                 idleAnimationState.startIfStopped(tickCount)
-                if (cooldown < 0) {
-                    state = PlantState.IDLE
-                }
+                if (cooldown <= 0) state = PlantState.IDLE
                 if (isAsleep) state = PlantState.SLEEP
             }
             PlantState.RECHARGE -> state = PlantState.IDLE

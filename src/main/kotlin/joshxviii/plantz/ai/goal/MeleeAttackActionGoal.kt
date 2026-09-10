@@ -39,7 +39,6 @@ open class MeleeAttackActionGoal(
 
     override fun canUse(): Boolean = (
         actionPredicate.test(usingEntity)
-            && usingEntity.tickCount>cooldownTime
             && usingEntity.target?.isAlive == true
             && !(usingEntity is Plant && (usingEntity.isAsleep || usingEntity.isGrowingSeeds))
     )

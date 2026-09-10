@@ -46,8 +46,7 @@ class ProjectileAttackGoal(
     }
 
     override fun canUse(): Boolean = (
-        usingEntity.tickCount>cooldownTime
-            && usingEntity.target?.isAlive == true
+        usingEntity.target?.isAlive == true
             && !(usingEntity is Plant && (usingEntity.isAsleep || usingEntity.isGrowingSeeds))
     )
 

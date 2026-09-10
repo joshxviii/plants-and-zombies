@@ -70,18 +70,15 @@ class IceShroom(type: EntityType<out Plant>, level: Level) : ExplosivePlant(PazE
         }
 
         for (entity in candidates) {
-            entity as LivingEntity
-            entity.addEffect(MobEffectInstance(PazEffects.FROZEN, 260, 0))
-            val direction = entity.position().subtract(position()).normalize()
-            entity.applyImpulse(direction.x, direction.y+0.2f, direction.z, 1.0f)
             val level = level() as? ServerLevel?: return
             val damage : Float = this.attributes.getValue(Attributes.ATTACK_DAMAGE).toFloat()
-            entity.hurtServer(
-                level,
-                this.damageSources().source(PazDamageTypes.PLANT_FREEZE),
-                damage
-            )
+            val success = entity.hurtServer(level, damageSources().source(PazDamageTypes.PLANT_FREEZE), damage)
+            if (success) {
+                entity as LivingEntity
+                entity.addEffect(MobEffectInstance(PazEffects.FROZEN, 260, 0))
+                val direction = entity.position().subtract(position()).normalize()
+                entity.applyImpulse(direction.x, direction.y+0.2f, direction.z, 1.0f)
+            }
         }
-
     }
 }

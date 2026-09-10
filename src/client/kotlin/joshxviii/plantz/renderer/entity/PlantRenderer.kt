@@ -8,7 +8,10 @@ import joshxviii.plantz.entity.plant.ExplodeONut
 import joshxviii.plantz.entity.plant.ExplosivePlant
 import joshxviii.plantz.entity.plant.KernelPult
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.entity.plant.SunShroom
+import joshxviii.plantz.entity.plant.Sunflower
 import joshxviii.plantz.entity.plant.WallNut
+import joshxviii.plantz.renderer.entity.PlantRenderState.Companion.TEXTURE_PATH
 import joshxviii.plantz.renderer.getEmissiveTextureLocation
 import joshxviii.plantz.renderer.getTextureLocation
 import joshxviii.plantz.renderer.isMagicName
@@ -25,6 +28,8 @@ import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
+import net.minecraft.util.ARGB
+import net.minecraft.util.LightCoordsUtil
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.phys.Vec3
@@ -42,6 +47,7 @@ class PlantRenderer(
 ) {
     init {
         addLayer(EmissivePlantLayer(this))
+        addLayer(SunGlowLayer(this))
     }
 
     override fun submit(
@@ -59,7 +65,10 @@ class PlantRenderer(
         )
 
         model = if (state.isBaby && babyModel != null) babyModel else defaultModel
-        if (state.plantState != PlantState.INIT || state.ageInTicks>1) super.submit(state, poseStack, collector, camera)
+        if (state.plantState != PlantState.INIT || state.ageInTicks>1) {
+
+            super.submit(state, poseStack, collector, camera)
+        }
     }
 
     override fun getShadowRadius(state: PlantRenderState): Float {
@@ -125,12 +134,17 @@ class PlantRenderer(
                 else -> {}
             }
         }
+        state.glowPercent = when (entity) {
+            is Sunflower, is SunShroom -> {
+                if (entity.isAsleep) 0f
+                else (1f - (state.cooldown.coerceIn(0, 100) / 100f))
+            }
+            is ExplosivePlant -> entity.getSwelling(partialTick)
+            else -> 0f
+        }
     }
 
-    override fun getTextureLocation(state: PlantRenderState): Identifier {
-        val texture = state.getTextureLocation(PlantRenderState.TEXTURE_PATH, state.getSuffixes())
-        return texture
-    }
+    override fun getTextureLocation(state: PlantRenderState): Identifier = state.texture()
 }
 
 class EmissivePlantLayer<M : EntityModel<PlantRenderState>>(
@@ -145,19 +159,39 @@ class EmissivePlantLayer<M : EntityModel<PlantRenderState>>(
         yRot: Float,
         xRot: Float
     ) {
-        val textureLocation = state.getEmissiveTextureLocation(PlantRenderState.TEXTURE_PATH, state.getSuffixes()) ?: return
-        val renderType = RenderTypes.eyes(textureLocation)
-        submitNodeCollector.order(1).submitModel(this.parentModel, state, poseStack, renderType, lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
+        val textureLocation = state.getEmissiveTextureLocation(TEXTURE_PATH, state.getSuffixes()) ?: return
+        submitNodeCollector.order(1).submitModel(this.parentModel, state, poseStack, RenderTypes.eyes(textureLocation), lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
     }
 
     override fun renderType(): RenderType = RenderTypes.lines()
 }
 
+class SunGlowLayer<M : EntityModel<PlantRenderState>>(
+    renderer: RenderLayerParent<PlantRenderState, M>,
+) : EyesLayer<PlantRenderState, M>(renderer) {
+    override fun submit(
+        poseStack: PoseStack,
+        submitNodeCollector: SubmitNodeCollector,
+        lightCoords: Int,
+        state: PlantRenderState,
+        yRot: Float,
+        xRot: Float
+    ) {
+        val alphaPercent = state.glowPercent
+        if (alphaPercent <= 0f) return
+        val color = ARGB.color(Mth.floor(alphaPercent * 0xFF), 0xFFFFFF)
+
+        val glowTexture = state.getTextureLocation(TEXTURE_PATH, state.getSuffixes().apply { add("glow") })
+        submitNodeCollector.submitModel(this.parentModel, state, poseStack, RenderTypes.eyes(glowTexture), LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, color, null, -1, null);
+    }
+    override fun renderType(): RenderType = RenderTypes.lines()
+}
 
 class PlantRenderState : LivingEntityRenderState() {
     companion object {
         const val TEXTURE_PATH = "textures/entity/plant"
     }
+
     var rotations: Quaternionf = Quaternionf()
     var swelling: Float = 0f
     var partialTick: Float = 0f
@@ -166,6 +200,7 @@ class PlantRenderState : LivingEntityRenderState() {
     var isAsleep: Boolean = false
     var customName: String = ""
     var textureExtra: List<String> = listOf()
+    var glowPercent: Float = 0f
     var plantState: PlantState = PlantState.IDLE
     var useSpecialAction: Boolean = false
     val initAnimationState: AnimationState = AnimationState()
@@ -188,4 +223,6 @@ class PlantRenderState : LivingEntityRenderState() {
         }.filter { it.isNotEmpty() }.toMutableList()
         return suffixes
     }
+
+    fun texture(): Identifier = getTextureLocation(TEXTURE_PATH, getSuffixes())
 }

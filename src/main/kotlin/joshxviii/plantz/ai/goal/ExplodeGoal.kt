@@ -29,10 +29,12 @@ class ExplodeGoal(
     private var target: LivingEntity? = null
 
     init {
+        explosiveEntity.cooldown = 20
         flags = EnumSet.of<Flag>(Flag.MOVE)
     }
 
     override fun canUse(): Boolean {
+        if (explosiveEntity.cooldown > 0) return false
         if (!actionPredicate.test(explosiveEntity)) return false
         if (explosiveEntity.swellDir>=0) return true
         if ((explosiveEntity.isAsleep || explosiveEntity.isGrowingSeeds)) return false
@@ -79,7 +81,6 @@ class ExplodeGoal(
                 sound = sound,
                 destroyBlocks = destroyBlocks,
             )
-            if (explosiveEntity.discardOnExplode()) explosiveEntity.discard()
         }
     }
 }
