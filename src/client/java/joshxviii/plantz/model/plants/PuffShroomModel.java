@@ -19,14 +19,13 @@ public class PuffShroomModel extends PlantModel {
 	private final ModelPart cap;
 
 	public PuffShroomModel(ModelPart root) {
-		super(
-			PuffShroomAnimation.init.bake(root),
-			PuffShroomAnimation.idle.bake(root),
-			PuffShroomAnimation.action.bake(root),
-			PuffShroomAnimation.sleep.bake(root),
-			null,
-			root
-		);
+		super(root);
+
+		initAnimation = PuffShroomAnimation.init.bake(root);
+		idleAnimation = PuffShroomAnimation.idle.bake(root);
+		actionAnimation = PuffShroomAnimation.action.bake(root);
+		sleepAnimation = PuffShroomAnimation.sleep.bake(root);
+
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.barrel = this.head.getChild("barrel");

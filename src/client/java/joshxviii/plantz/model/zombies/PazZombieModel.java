@@ -3,6 +3,7 @@ package joshxviii.plantz.model.zombies;
 import joshxviii.plantz.ai.ZombieState;
 import joshxviii.plantz.animation.zombies.PazZombieAnimations;
 import joshxviii.plantz.renderer.entity.PazZombieRenderState;
+import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -11,6 +12,8 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.model.monster.zombie.ZombieModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
@@ -21,14 +24,13 @@ public class PazZombieModel<S extends PazZombieRenderState> extends ZombieModel<
     final KeyframeAnimation floatAnimation;
 
     public PazZombieModel(
-            @Nullable KeyframeAnimation initAnimation,
+            @Nullable AnimationDefinition initAnimationOverride,
             final ModelPart root
     ) {
         var mainRoot = root.hasChild("root") ? root.getChild("root") : root;
         super(mainRoot);
 
-        if (initAnimation == null) this.initAnimation = PazZombieAnimations.emerge.bake(mainRoot);
-        else this.initAnimation = initAnimation;
+        this.initAnimation = Objects.requireNonNullElse(initAnimationOverride, PazZombieAnimations.emerge).bake(mainRoot);
         this.floatAnimation = PazZombieAnimations.balloon_float.bake(mainRoot);
 
     }

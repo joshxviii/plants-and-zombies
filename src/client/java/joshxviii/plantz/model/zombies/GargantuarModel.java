@@ -22,7 +22,7 @@ public class GargantuarModel<S extends PazZombieRenderState> extends PazZombieMo
 
 	public GargantuarModel(final ModelPart root) {
 		super(
-			GargantuarAnimation.init.bake(root),
+			GargantuarAnimation.init,
 			root
 		);
 		this.walkAnimation = GargantuarAnimation.walk.bake(root);

@@ -13,7 +13,7 @@
               "function": "minecraft:set_components",
               "components": {
                 "minecraft:entity_data": {
-                  "id": "plantz:hypnoshroom"
+                  "id": "plantz:grave_buster"
                 }
               }
             }
@@ -26,29 +26,10 @@
         },
         {
           "condition": "minecraft:random_chance",
-          "chance": 0.04
-        }
-      ]
-    },
-    {
-      "rolls": 1,
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "plantz:music_disc_grassy_groove",
-          "weight": 1
-        }
-      ],
-      "conditions": [
-        {
-          "condition": "minecraft:entity_properties",
-          "entity": "attacker",
-          "predicate": {
-            "type": "plantz:backup_dancer"
-          }
+          "chance": 0.1
         }
       ]
     }
   ],
-  "random_sequence": "minecraft:entities/disco_zombie"
+  "random_sequence": "minecraft:entities/grave_digger"
 }

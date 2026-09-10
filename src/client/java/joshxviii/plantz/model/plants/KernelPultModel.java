@@ -33,14 +33,13 @@ public class KernelPultModel extends PlantModel {
 	private final ModelPart leaf_tip_4;
 
 	public KernelPultModel(ModelPart root) {
-		super(
-			KernelPultAnimation.init.bake(root),
-			KernelPultAnimation.idle.bake(root),
-			KernelPultAnimation.action.bake(root),
-			KernelPultAnimation.sleep.bake(root),
-				null,
-			root
-		);
+		super(root);
+
+		initAnimation = KernelPultAnimation.init.bake(root);
+		idleAnimation = KernelPultAnimation.idle.bake(root);
+		actionAnimation = KernelPultAnimation.action.bake(root);
+		sleepAnimation = KernelPultAnimation.sleep.bake(root);
+
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.eyebrows = this.head.getChild("eyebrows");

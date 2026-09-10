@@ -30,14 +30,13 @@ public class IcePeaShooterModel extends PlantModel {
 	private final ModelPart leaf_tip_4;
 
 	public IcePeaShooterModel(ModelPart root) {
-		super(
-			IcePeaAnimation.init.bake(root),
-			IcePeaAnimation.idle.bake(root),
-			IcePeaAnimation.action.bake(root),
-			IcePeaAnimation.sleep.bake(root),
-				null,
-			root
-		);
+		super(root);
+
+		initAnimation = IcePeaAnimation.init.bake(root);
+		idleAnimation = IcePeaAnimation.idle.bake(root);
+		actionAnimation = IcePeaAnimation.action.bake(root);
+		sleepAnimation = IcePeaAnimation.sleep.bake(root);
+
 		this.body = root.getChild("body");
 		this.stem = this.body.getChild("stem");
 		this.stem_2 = this.stem.getChild("stem_2");

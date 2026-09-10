@@ -16,14 +16,13 @@ public class WallNutModel extends PlantModel {
 	private final ModelPart inner;
 
 	public WallNutModel(ModelPart root) {
-		super(
-			WallNutAnimation.init.bake(root),
-			WallNutAnimation.idle.bake(root),
-			WallNutAnimation.action.bake(root),
-			WallNutAnimation.sleep.bake(root),
-			null,
-			root
-		);
+		super(root);
+
+		initAnimation = WallNutAnimation.init.bake(root);
+		idleAnimation = WallNutAnimation.idle.bake(root);
+		actionAnimation = WallNutAnimation.action.bake(root);
+		sleepAnimation = WallNutAnimation.sleep.bake(root);
+
 		this.body = root.getChild("body");
 		this.inner = this.body.getChild("inner");
 	}

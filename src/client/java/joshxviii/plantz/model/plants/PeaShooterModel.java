@@ -30,14 +30,13 @@ public class PeaShooterModel extends PlantModel {
 	private final ModelPart leaf_tip_4;
 
 	public PeaShooterModel(ModelPart root) {
-		super(
-			PeaShooterAnimation.init.bake(root),
-			PeaShooterAnimation.idle.bake(root),
-			PeaShooterAnimation.action.bake(root),
-			PeaShooterAnimation.sleep.bake(root),
-			null,
-			root
-		);
+		super(root);
+
+		initAnimation = PeaShooterAnimation.init.bake(root);
+		idleAnimation = PeaShooterAnimation.idle.bake(root);
+		actionAnimation = PeaShooterAnimation.action.bake(root);
+		sleepAnimation = PeaShooterAnimation.sleep.bake(root);
+
 		this.body = root.getChild("body");
 		this.stem = this.body.getChild("stem");
 		this.stem_2 = this.stem.getChild("stem_2");

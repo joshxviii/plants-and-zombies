@@ -28,14 +28,13 @@ public class FirePeaShooterModel extends PlantModel {
 	private final ModelPart leaf_tip_4;
 
 	public FirePeaShooterModel(ModelPart root) {
-		super(
-			FirePeaAnimation.init.bake(root),
-			FirePeaAnimation.idle.bake(root),
-			FirePeaAnimation.action.bake(root),
-			FirePeaAnimation.sleep.bake(root),
-				null,
-			root
-		);
+		super(root);
+
+		initAnimation = FirePeaAnimation.init.bake(root);
+		idleAnimation = FirePeaAnimation.idle.bake(root);
+		actionAnimation = FirePeaAnimation.action.bake(root);
+		sleepAnimation = FirePeaAnimation.sleep.bake(root);
+
 		this.body = root.getChild("body");
 		this.stem = this.body.getChild("stem");
 		this.stem_2 = this.stem.getChild("stem_2");

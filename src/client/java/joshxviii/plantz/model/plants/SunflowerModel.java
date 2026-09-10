@@ -29,14 +29,13 @@ public class SunflowerModel extends PlantModel {
 	private final ModelPart leaf_tip_4;
 
 	public SunflowerModel(ModelPart root) {
-		super(
-			SunflowerAnimation.init.bake(root),
-			SunflowerAnimation.idle.bake(root),
-			SunflowerAnimation.action.bake(root),
-			SunflowerAnimation.sleep.bake(root),
-			null,
-			root
-		);
+		super(root);
+
+		initAnimation = SunflowerAnimation.init.bake(root);
+		idleAnimation = SunflowerAnimation.idle.bake(root);
+		actionAnimation = SunflowerAnimation.action.bake(root);
+		sleepAnimation = SunflowerAnimation.sleep.bake(root);
+
 		this.body = root.getChild("body");
 		this.stem = this.body.getChild("stem");
 		this.stem_2 = this.stem.getChild("stem_2");

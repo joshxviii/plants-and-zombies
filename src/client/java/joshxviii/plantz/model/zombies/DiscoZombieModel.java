@@ -24,7 +24,7 @@ public class DiscoZombieModel<S extends PazZombieRenderState> extends PazZombieM
 
 	public DiscoZombieModel(final ModelPart root) {
 		super(
-			DiscoZombieAnimation.init.bake(root),
+			DiscoZombieAnimation.init,
 			root
 		);
 		this.afro = GuiUtilKt.getChildOrNull(this.getHead(), "afro");;

@@ -24,14 +24,12 @@ public class CherryBombModel extends PlantModel {
 	private final ModelPart head_2;
 
 	public CherryBombModel(ModelPart root) {
-		super(
-			CherryBombAnimation.init.bake(root),
-			CherryBombAnimation.idle.bake(root),
-			null,
-			CherryBombAnimation.sleep.bake(root),
-			null,
-			root
-		);
+		super(root);
+
+		initAnimation = CherryBombAnimation.init.bake(root);
+		idleAnimation = CherryBombAnimation.idle.bake(root);
+		sleepAnimation = CherryBombAnimation.sleep.bake(root);
+
 		this.body = root.getChild("body");
 		this.stem = this.body.getChild("stem");
 		this.stem2 = this.stem.getChild("stem2");

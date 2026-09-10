@@ -37,14 +37,13 @@ public class RepeaterModel extends PlantModel {
 	private final ModelPart leaf_tip_4;
 
 	public RepeaterModel(ModelPart root) {
-		super(
-			RepeaterAnimation.init.bake(root),
-			RepeaterAnimation.idle.bake(root),
-			RepeaterAnimation.action.bake(root),
-			RepeaterAnimation.sleep.bake(root),
-			null,
-			root
-		);
+		super(root);
+
+		initAnimation = RepeaterAnimation.init.bake(root);
+		idleAnimation = RepeaterAnimation.idle.bake(root);
+		actionAnimation = RepeaterAnimation.action.bake(root);
+		sleepAnimation = RepeaterAnimation.sleep.bake(root);
+
 		this.body = root.getChild("body");
 		this.stem = this.body.getChild("stem");
 		this.stem_2 = this.stem.getChild("stem_2");

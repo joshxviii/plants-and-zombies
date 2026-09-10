@@ -32,14 +32,15 @@ public class TangleKelpModel extends PlantModel {
 	private final KeyframeAnimation idleLandAnimation;
 
 	public TangleKelpModel(ModelPart root) {
-		super(
-				TangleKelpAnimation.init.bake(root),
-				TangleKelpAnimation.idle.bake(root),
-				null,
-				TangleKelpAnimation.idle_land.bake(root),
-null,
-				root
-		);
+		super(root);
+
+		initAnimation = TangleKelpAnimation.init.bake(root);
+		idleAnimation = TangleKelpAnimation.idle.bake(root);
+		sleepAnimation = TangleKelpAnimation.idle_land.bake(root);
+
+		this.initLandAnimation = TangleKelpAnimation.init_land.bake(root);
+		this.idleLandAnimation = TangleKelpAnimation.idle_land.bake(root);
+
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.right_kelp = this.body.getChild("right_kelp");
@@ -55,8 +56,6 @@ null,
 		this.right_bottom_kelp = this.body.getChild("right_bottom_kelp");
 		this.right_bottom_kelp2 = this.right_bottom_kelp.getChild("right_bottom_kelp2");
 		this.roots = this.body.getChild("roots");
-		this.initLandAnimation = TangleKelpAnimation.init_land.bake(root);
-		this.idleLandAnimation = TangleKelpAnimation.idle_land.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {

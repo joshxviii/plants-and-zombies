@@ -20,22 +20,14 @@ public class SunShroomModel extends PlantModel {
 	private final ModelPart head;
 	private final ModelPart cap;
 
-	public SunShroomModel(KeyframeAnimation initAnimation, KeyframeAnimation idleAnimation, KeyframeAnimation actionAnimation, KeyframeAnimation sleepAnimation, KeyframeAnimation cooldownAnimation, ModelPart root) {
-		super(initAnimation, idleAnimation, actionAnimation, sleepAnimation, cooldownAnimation, root);
-		this.body = root.getChild("body");
-		this.head = this.body.getChild("head");
-		this.cap = this.head.getChild("cap");
-    }
-
 	public SunShroomModel(ModelPart root) {
-		super(
-			SunShroomAnimation.init.bake(root),
-			SunShroomAnimation.idle.bake(root),
-			SunShroomAnimation.action.bake(root),
-			SunShroomAnimation.sleep.bake(root),
-			null,
-			root
-		);
+		super(root);
+
+		initAnimation = SunShroomAnimation.init.bake(root);
+		idleAnimation = SunShroomAnimation.idle.bake(root);
+		actionAnimation = SunShroomAnimation.action.bake(root);
+		sleepAnimation = SunShroomAnimation.sleep.bake(root);
+
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.cap = this.head.getChild("cap");

@@ -71,7 +71,7 @@ class IceShroom(type: EntityType<out Plant>, level: Level) : ExplosivePlant(PazE
 
         for (entity in candidates) {
             entity as LivingEntity
-            entity.addEffect(MobEffectInstance(PazEffects.FROZEN, 300, 0))
+            entity.addEffect(MobEffectInstance(PazEffects.FROZEN, 260, 0))
             val direction = entity.position().subtract(position()).normalize()
             entity.applyImpulse(direction.x, direction.y+0.2f, direction.z, 1.0f)
             val level = level() as? ServerLevel?: return

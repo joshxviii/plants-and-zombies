@@ -17,14 +17,13 @@ public class IceShroomModel extends PlantModel {
 	private final ModelPart cap;
 
 	public IceShroomModel(ModelPart root) {
-		super(
-			HypnoShroomAnimation.init.bake(root),
-			HypnoShroomAnimation.idle.bake(root),
-			HypnoShroomAnimation.action.bake(root),
-			HypnoShroomAnimation.sleep.bake(root),
-				null,
-			root
-		);
+		super(root);
+
+		initAnimation = HypnoShroomAnimation.init.bake(root);
+		idleAnimation = HypnoShroomAnimation.idle.bake(root);
+		actionAnimation = HypnoShroomAnimation.action.bake(root);
+		sleepAnimation = HypnoShroomAnimation.sleep.bake(root);
+
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.cap = this.body.getChild("cap");
