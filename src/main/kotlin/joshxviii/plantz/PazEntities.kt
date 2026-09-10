@@ -290,7 +290,8 @@ object PazEntities {
         eyeHeight = 0.6f,
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 15.0,
-            followRange = 5.0
+            followRange = 5.0,
+            attackDamage = 2.0,
         )
     )
     @JvmField val DOOM_SHROOM: EntityType<DoomShroom> = registerPlant(

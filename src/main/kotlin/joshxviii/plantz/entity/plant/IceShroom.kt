@@ -15,6 +15,7 @@ import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.AreaEffectCloud
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.zombie.Zombie
@@ -73,6 +74,13 @@ class IceShroom(type: EntityType<out Plant>, level: Level) : ExplosivePlant(PazE
             entity.addEffect(MobEffectInstance(PazEffects.FROZEN, 300, 0))
             val direction = entity.position().subtract(position()).normalize()
             entity.applyImpulse(direction.x, direction.y+0.2f, direction.z, 1.0f)
+            val level = level() as? ServerLevel?: return
+            val damage : Float = this.attributes.getValue(Attributes.ATTACK_DAMAGE).toFloat()
+            entity.hurtServer(
+                level,
+                this.damageSources().source(PazDamageTypes.PLANT_FREEZE),
+                damage
+            )
         }
 
     }
