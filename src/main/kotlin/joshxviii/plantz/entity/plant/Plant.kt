@@ -31,6 +31,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.tags.FluidTags
 import net.minecraft.tags.ItemTags
 import net.minecraft.util.Mth
 import net.minecraft.util.ProblemReporter.ScopedCollector
@@ -59,6 +60,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.*
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.levelgen.Heightmap
 import net.minecraft.world.level.portal.TeleportTransition
 import net.minecraft.world.level.storage.TagValueOutput
 import net.minecraft.world.level.storage.ValueInput
@@ -104,6 +106,12 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             val blockAtPos = level.getBlockState(pos)
             return (level.getEntitiesOfClass(Plant::class.java, AABB(pos).inflate(38.0)) { it.tickCount > 0 }.isEmpty()
                     && blockAtPos.getCollisionShape(level, pos.above()).isEmpty) || EntitySpawnReason.isSpawner(spawnReason)
+        }
+
+        fun checkWaterSpawn(level: LevelAccessor, pos: BlockPos, spawnReason: EntitySpawnReason): Boolean {
+            val inWater = level.getFluidState(pos).`is`(FluidTags.WATER)
+            val waterHeight = level.getHeight(Heightmap.Types.WORLD_SURFACE, pos.x, pos.z)
+            return checkValidSpawn(level, pos.above(waterHeight - pos.y), spawnReason) && inWater
         }
 
         val PLANT_STATE: EntityDataAccessor<PlantState> = SynchedEntityData.defineId<PlantState>(Plant::class.java, DATA_PLANT_STATE)
@@ -535,7 +543,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return success
     }
 
+    /**
+     *TODO: I would like to make the seed mutation system data driven at some point rather than using overrides.
+     * It would have to be able to parse criteria like biome, random chance, and weather.
+     * And give any entity type as an output.
+     */
     open fun getZenGrownSeedType(): EntityType<*> = type
+
     fun awardSeedPacket(player: Player) {
         val level = level() as? ServerLevel ?: return
         receivedSun = 0
@@ -779,14 +793,11 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         speed: Double = 0.0,
     ) {
         if (level is ServerLevel) {
-            val px = getRandomX(horizontalSpreadScale)
-            val py = y + height + random.nextDouble() * bbHeight * verticalSpreadScale
-            val pz = getRandomZ(horizontalSpreadScale)
             level.sendParticles(
                 particle,
-                px, py, pz,
+                x, y + height + bbHeight/2, z,
                 amount.random(),
-                0.0, 0.0, 0.0,
+                horizontalSpreadScale/4, verticalSpreadScale/2, horizontalSpreadScale/4,
                 speed
             )
         }

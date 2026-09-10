@@ -45,6 +45,10 @@ object PazSpawnPlacements {
             weight = 2, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.HYPNOSHROOM, Plant::checkPlantSpawnRules)
 
+        addBiomeSpawn(PazTags.Biomes.HAS_ICE_SHROOM, PazEntities.ICE_SHROOM,
+            weight = 8, minGroupSize = 1, maxGroupSize = 2)
+        registerSpawnPlacement(PazEntities.ICE_SHROOM, IcePeaShooter::checkIcePeaShooterSpawnRules)
+
         addBiomeSpawn(PazTags.Biomes.HAS_DOOM_SHROOM, PazEntities.DOOM_SHROOM,
             weight = 25, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.DOOM_SHROOM, DoomShroom::checkDoomShroomSpawnRules)

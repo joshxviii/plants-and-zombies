@@ -34,6 +34,7 @@ import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.phys.Vec3
 import org.apache.commons.lang3.math.NumberUtils.toDouble
+import kotlin.math.pow
 
 class SpecialEffectsLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(private val renderer: RenderLayerParent<S, M>) : RenderLayer<S, M>(
     renderer
@@ -146,7 +147,7 @@ class SpecialEffectsLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(pr
     }
 
     fun alphaFromAmplifier(rgb: Int, amplifier: Int): Int {
-        val strength = amplifier.coerceIn(0, 20) / 20f
+        val strength = (amplifier.coerceIn(0, 20) / 20f).pow(.5f).coerceIn(0f, 1f)
         val a = (strength * 0xFF).toInt().coerceIn(50, 0xFF)
         return (a shl 24) or (rgb and 0x00FFFFFF)
     }

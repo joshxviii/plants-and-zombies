@@ -117,6 +117,7 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(CabbagePultModel.LAYER_LOCATION) { CabbagePultModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(KernelPultModel.LAYER_LOCATION) { KernelPultModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(MelonPultModel.LAYER_LOCATION) { MelonPultModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(WinterMelonModel.LAYER_LOCATION) { WinterMelonModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(BonkChoyModel.LAYER_LOCATION) { BonkChoyModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(TangleKelpModel.LAYER_LOCATION) { TangleKelpModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(PuffShroomModel.LAYER_LOCATION) { PuffShroomModel.createBodyLayer() }
@@ -125,6 +126,7 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(SunShroomModel.LAYER_LOCATION) { SunShroomModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(SunShroomBabyModel.LAYER_LOCATION) { SunShroomBabyModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(HypnoShroomModel.LAYER_LOCATION) { HypnoShroomModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(IceShroomModel.LAYER_LOCATION) { IceShroomModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(DoomShroomModel.LAYER_LOCATION) { DoomShroomModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(SeaShroomModel.LAYER_LOCATION) { SeaShroomModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(CoffeeBeanModel.LAYER_LOCATION) { CoffeeBeanModel.createBodyLayer() }
@@ -197,12 +199,14 @@ object PazModels {
         EntityRenderers.register(PazEntities.CABBAGE_PULT) { PlantRenderer(CabbagePultModel(it.bakeLayer(CabbagePultModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.KERNEL_PULT) { PlantRenderer(KernelPultModel(it.bakeLayer(KernelPultModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.MELON_PULT) { PlantRenderer(MelonPultModel(it.bakeLayer(MelonPultModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.WINTER_MELON) { PlantRenderer(WinterMelonModel(it.bakeLayer(WinterMelonModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.BONK_CHOY) { PlantRenderer(BonkChoyModel(it.bakeLayer(BonkChoyModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.TANGLE_KELP) { PlantRenderer(TangleKelpModel(it.bakeLayer(TangleKelpModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.PUFF_SHROOM) { PlantRenderer(PuffShroomModel(it.bakeLayer(PuffShroomModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.SCAREDY_SHROOM) { PlantRenderer(ScaredyShroomModel(it.bakeLayer(ScaredyShroomModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.FUME_SHROOM) { PlantRenderer(FumeShroomModel(it.bakeLayer(FumeShroomModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.HYPNOSHROOM) { PlantRenderer(HypnoShroomModel(it.bakeLayer(HypnoShroomModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.ICE_SHROOM) { PlantRenderer(IceShroomModel(it.bakeLayer(IceShroomModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.DOOM_SHROOM) { PlantRenderer(DoomShroomModel(it.bakeLayer(DoomShroomModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.SEA_SHROOM) { PlantRenderer(SeaShroomModel(it.bakeLayer(SeaShroomModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.COFFEE_BEAN) { PlantRenderer(CoffeeBeanModel(it.bakeLayer(CoffeeBeanModel.LAYER_LOCATION)), it) }
@@ -222,6 +226,7 @@ object PazModels {
         EntityRenderers.register(PazEntities.KERNEL) { ProjectileRenderer(KernelModel(it.bakeLayer(KernelModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.BUTTER) { ProjectileRenderer(ButterModel(it.bakeLayer(ButterModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.MELON) { ProjectileRenderer(MelonModel(it.bakeLayer(MelonModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.FROZEN_MELON) { ProjectileRenderer(MelonModel(it.bakeLayer(MelonModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.PAINT_BALL) { ProjectileRenderer(SmallProjectileModel(it.bakeLayer(SmallProjectileModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.LASER_BULLET) { ProjectileRenderer(LaserBulletModel(it.bakeLayer(LaserBulletModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.MISSILE) { ProjectileRenderer(MissileModel(it.bakeLayer(MissileModel.LAYER_LOCATION)), it) }
