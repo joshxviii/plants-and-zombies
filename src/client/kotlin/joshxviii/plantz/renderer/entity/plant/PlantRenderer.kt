@@ -36,7 +36,7 @@ import net.minecraft.world.phys.Vec3
 import org.joml.Quaternionf
 import kotlin.math.pow
 
-class PlantRenderer(
+open class PlantRenderer(
     private val defaultModel: EntityModel<PlantRenderState>,
     context: EntityRendererProvider.Context,
     private val babyModel: EntityModel<PlantRenderState>? = null,

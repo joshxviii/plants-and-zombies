@@ -243,7 +243,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun createBodyControl(): BodyRotationControl = object : BodyRotationControl(this) { override fun clientTick() {} }
 
     // only apply up/down movement
-    override fun getDeltaMovement(): Vec3 = Vec3(0.0, super.deltaMovement.y, 0.0)
+    override fun getDeltaMovement(): Vec3 {
+        return if (clampToGrid()) Vec3(0.0, super.deltaMovement.y, 0.0)
+        else super.getDeltaMovement()
+    }
     override fun setDeltaMovement(deltaMovement: Vec3) {
         if (!clampToGrid() || !onGround() || isInWater) return super.setDeltaMovement(deltaMovement)
     }

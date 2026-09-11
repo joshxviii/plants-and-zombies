@@ -32,12 +32,14 @@ import joshxviii.plantz.renderer.entity.SunRenderer
 import joshxviii.plantz.renderer.TimeMachineRenderSate
 import joshxviii.plantz.renderer.MailboxRenderer
 import joshxviii.plantz.renderer.TimeMachineRenderer
+import joshxviii.plantz.renderer.TimePortalRenderer
 import joshxviii.plantz.renderer.entity.zombie.GargantuarRenderer
 import joshxviii.plantz.renderer.entity.zombie.PirateCaptainRenderer
 import joshxviii.plantz.renderer.entity.plant.PlantRenderer
 import joshxviii.plantz.renderer.entity.zombie.RoboZombieRenderer
 import joshxviii.plantz.renderer.entity.zombie.SuperBrainzRenderer
 import joshxviii.plantz.renderer.entity.BlueprintMachineRenderer
+import joshxviii.plantz.renderer.entity.plant.RoyalSunflowerRenderer
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey
 import net.minecraft.client.model.geom.ModelLayerLocation
@@ -132,6 +134,8 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(CoffeeBeanModel.LAYER_LOCATION) { CoffeeBeanModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(GraveBusterModel.LAYER_LOCATION) { GraveBusterModel.createBodyLayer() }
 
+        ModelLayerRegistry.registerModelLayer(RoyalSunflowerModel.LAYER_LOCATION) { RoyalSunflowerModel.createBodyLayer() }
+
         ModelLayerRegistry.registerModelLayer(PeaModel.LAYER_LOCATION) { PeaModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(NeedleModel.LAYER_LOCATION) { NeedleModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(CabbageModel.LAYER_LOCATION) { CabbageModel.createBodyLayer() }
@@ -211,9 +215,9 @@ object PazModels {
         EntityRenderers.register(PazEntities.SEA_SHROOM) { PlantRenderer(SeaShroomModel(it.bakeLayer(SeaShroomModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.COFFEE_BEAN) { PlantRenderer(CoffeeBeanModel(it.bakeLayer(CoffeeBeanModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.GRAVE_BUSTER) { PlantRenderer(GraveBusterModel(it.bakeLayer(GraveBusterModel.LAYER_LOCATION)), it) }
-
         EntityRenderers.register(PazEntities.SUN_SHROOM) { PlantRenderer(SunShroomModel(it.bakeLayer(SunShroomModel.LAYER_LOCATION)), it, SunShroomBabyModel(it.bakeLayer(SunShroomBabyModel.LAYER_LOCATION))) }
 
+        EntityRenderers.register(PazEntities.ROYAL_SUNFLOWER) { RoyalSunflowerRenderer(it) }
 
         EntityRenderers.register(PazEntities.PEA) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.PEA_ICE) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }

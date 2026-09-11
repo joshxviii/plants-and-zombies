@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.font.FontManager
 import net.minecraft.client.input.MouseButtonEvent
+import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.network.chat.Component
@@ -58,11 +59,6 @@ object GuiUtil {
     }
 }
 
-fun GuiGraphicsExtractor.outlineText(font: Font, text: Component, x: Int = 0, y: Int = 0, color: Int = 0xFFFFFF, outlineColor: Int = 0x000000) {
-import net.minecraft.client.model.geom.ModelPart
-import net.minecraft.network.chat.Component
-import net.minecraft.util.ARGB
-
 fun GuiGraphicsExtractor.outlineText(font: Font, text: Component, x: Int = 0, y: Int = 0, color: Int = 0xFFFFFF, outlineColor: Int = ARGB.multiply(color, 0x333333)) {
     text(font, text, x+1, y, ARGB.opaque(outlineColor), false)
     text(font, text, x-1, y, ARGB.opaque(outlineColor), false)
@@ -83,6 +79,7 @@ open class PazButton(
     val enabledRequirement: ((button: PazButton) -> Boolean) = { true },
     val clickRequirement: ((button: PazButton) -> Boolean) = enabledRequirement,
     val text: Component = Component.empty(),
+    val color: Int = -1
 ) : Button(buttonX, buttonY, buttonWidth, buttonHeight, text, clickAction, DEFAULT_NARRATION) {
 
     override fun extractContents(
@@ -91,13 +88,13 @@ open class PazButton(
         my: Int,
         a: Float
     ) {
-        val press = !enabledRequirement.invoke(this)
+        val press = isPressed()
         val font = Minecraft.getInstance().font
 
         graphics.blit(
             RenderPipelines.GUI_TEXTURED,
             if (press) disabledTexture else if (isButtonHovered(mx, my)) hoverTexture else texture,
-            buttonX, buttonY, 0.0f, 0.0f, buttonWidth, buttonHeight, buttonWidth, buttonHeight
+            buttonX, buttonY, 0.0f, 0.0f, buttonWidth, buttonHeight, buttonWidth, buttonHeight, color
         )
 
         val line = font.split(text, buttonWidth-8).firstOrNull()
@@ -114,5 +111,10 @@ open class PazButton(
                 && mouseY in (buttonY..(buttonY + (buttonHeight-1)))
     }
 
+    fun isPressed(): Boolean {
+        return !enabledRequirement.invoke(this)
+    }
+
 }
+
 fun ModelPart.getChildOrNull(name: String): ModelPart? = if (this.hasChild(name)) this.getChild(name) else null
