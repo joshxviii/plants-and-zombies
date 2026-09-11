@@ -1,6 +1,6 @@
 package joshxviii.plantz.model.zombies;
 
-import joshxviii.plantz.renderer.entity.PazZombieRenderState;
+import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderState;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;

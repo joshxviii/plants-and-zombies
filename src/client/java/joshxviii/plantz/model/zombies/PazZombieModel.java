@@ -2,7 +2,7 @@ package joshxviii.plantz.model.zombies;
 
 import joshxviii.plantz.ai.ZombieState;
 import joshxviii.plantz.animation.zombies.PazZombieAnimations;
-import joshxviii.plantz.renderer.entity.PazZombieRenderState;
+import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderState;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;

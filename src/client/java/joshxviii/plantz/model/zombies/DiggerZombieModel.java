@@ -6,13 +6,12 @@
 package joshxviii.plantz.model.zombies;
 
 import joshxviii.plantz.animation.zombies.DiggerZombieAnimation;
-import joshxviii.plantz.renderer.entity.PazZombieRenderState;
+import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.world.entity.AnimationState;
 import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;

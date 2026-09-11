@@ -1,4 +1,4 @@
-package joshxviii.plantz.renderer.entity
+package joshxviii.plantz.renderer.entity.zombie
 
 import com.mojang.blaze3d.vertex.PoseStack
 import joshxviii.plantz.PazConfig
@@ -8,11 +8,9 @@ import joshxviii.plantz.model.zombies.PazZombieModel
 import joshxviii.plantz.renderer.getEmissiveTextureLocation
 import joshxviii.plantz.renderer.getTextureLocation
 import joshxviii.plantz.renderer.isMagicName
-import net.minecraft.client.Minecraft
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.ModelLayers
-import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.AbstractZombieRenderer
 import net.minecraft.client.renderer.entity.ArmorModelSet

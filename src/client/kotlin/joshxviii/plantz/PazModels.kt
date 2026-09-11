@@ -23,7 +23,7 @@ import joshxviii.plantz.renderer.GardenGnomeBlockRenderState
 import joshxviii.plantz.renderer.GardenGnomeBlockRenderer
 import joshxviii.plantz.renderer.MailboxRenderState
 import joshxviii.plantz.renderer.entity.GnomeRenderer
-import joshxviii.plantz.renderer.entity.PazZombieRenderer
+import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderer
 import joshxviii.plantz.renderer.PlantPotMinecartRenderer
 import joshxviii.plantz.renderer.entity.ProjectileRenderer
 import joshxviii.plantz.renderer.SunBatteryRenderSate
@@ -32,12 +32,11 @@ import joshxviii.plantz.renderer.entity.SunRenderer
 import joshxviii.plantz.renderer.TimeMachineRenderSate
 import joshxviii.plantz.renderer.MailboxRenderer
 import joshxviii.plantz.renderer.TimeMachineRenderer
-import joshxviii.plantz.renderer.TimePortalRenderer
-import joshxviii.plantz.renderer.entity.GargantuarRenderer
-import joshxviii.plantz.renderer.entity.PirateCaptainRenderer
-import joshxviii.plantz.renderer.entity.PlantRenderer
-import joshxviii.plantz.renderer.entity.RoboZombieRenderer
-import joshxviii.plantz.renderer.entity.SuperBrainzRenderer
+import joshxviii.plantz.renderer.entity.zombie.GargantuarRenderer
+import joshxviii.plantz.renderer.entity.zombie.PirateCaptainRenderer
+import joshxviii.plantz.renderer.entity.plant.PlantRenderer
+import joshxviii.plantz.renderer.entity.zombie.RoboZombieRenderer
+import joshxviii.plantz.renderer.entity.zombie.SuperBrainzRenderer
 import joshxviii.plantz.renderer.entity.BlueprintMachineRenderer
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey

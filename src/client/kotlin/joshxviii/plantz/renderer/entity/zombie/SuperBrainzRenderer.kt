@@ -1,4 +1,4 @@
-package joshxviii.plantz.renderer.entity
+package joshxviii.plantz.renderer.entity.zombie
 
 import com.mojang.blaze3d.vertex.PoseStack
 import joshxviii.plantz.entity.zombie.PazZombie

@@ -3,8 +3,8 @@ package joshxviii.plantz
 import com.mojang.blaze3d.pipeline.RenderPipeline
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
-import joshxviii.plantz.renderer.entity.PazZombieRenderState
-import joshxviii.plantz.renderer.entity.PazZombieRenderer
+import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderState
+import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderer
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.navigation.ScreenRectangle
