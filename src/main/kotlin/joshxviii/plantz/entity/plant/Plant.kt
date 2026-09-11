@@ -493,6 +493,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }
             PlantState.IDLE -> {
                 idleAnimationState.startIfStopped(tickCount - idleAnimationStartTick)
+                initAnimationState.stop()
                 actionAnimationState.stop()
                 coolDownAnimationState.stop()
                 specialAnimation.stop()
@@ -569,6 +570,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     fun testGrowConditions(): PlantGrowNeeds {
+        if (!canProduceSeeds()) return PlantGrowNeeds.CANNOT_GROW
         val farmBlock = getBlockBelow()
         if (!farmBlock.`is`(PazTags.BlockTags.FARMABLE) || !isTame) return PlantGrowNeeds.SOIL
         if (receivedWater <= 0) {
@@ -596,6 +598,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     open fun sleepsDuringDay(): Boolean = this.`is`(PazTags.EntityTypes.MUSHROOM)
     open fun canSurviveOn(block: BlockState) : Boolean = block.`is`(PLANTABLE)
     open fun canPlaceOn(block: BlockState) : Boolean = canSurviveOn(block)
+    open fun canProduceSeeds(): Boolean = true
     open fun clampToGrid() = true
     open fun cooldownFinished() {}
 

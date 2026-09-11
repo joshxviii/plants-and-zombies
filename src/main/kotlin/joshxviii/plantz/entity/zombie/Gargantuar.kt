@@ -42,7 +42,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
 
     companion object {
         val SMASH_DAMAGE_CALCULATOR: ExplosionDamageCalculator = SimpleExplosionDamageCalculator(false, true, Optional.of(2.5f), Optional.ofNullable(null))
-        const val SMASH_COOLDOWN_TIME = 100
+        const val SMASH_COOLDOWN_TIME = 140
 
         val DATA_VARIANT_ID: EntityDataAccessor<GargantuarVariant> = SynchedEntityData.defineId(Gargantuar::class.java, GARGANTUAR_VARIANT)
 
@@ -60,7 +60,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
     val punchAttackAnimation : AnimationState = AnimationState()
     val throwImpAnimation : AnimationState = AnimationState()
 
-    var smashCooldown = 0
+    var smashCooldown = SMASH_COOLDOWN_TIME
 
     var variant: GargantuarVariant
         get() = this.entityData.get(DATA_VARIANT_ID)
@@ -105,12 +105,24 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
         goalSelector.addGoal(1, FloatGoal(this))
         goalSelector.addGoal(3, NavigateToTargetGoal(this))
         goalSelector.addGoal(2, ThrowImpGoal(this))
+        goalSelector.addGoal(1, MeleeAttackActionGoal(// punch
+            this,
+            damageType = DamageTypes.MOB_ATTACK,
+            actionDelay = 15,
+            usePredicate = {
+                punchAttackTime<=0 && throwTime<=0 && smashCooldown>0
+            },
+            actionPredicate = {smashCooldown>0},
+            actionStartEffect = {
+                punchAttackTime=1
+            }
+        ))
         goalSelector.addGoal(2, MeleeAttackActionGoal(// smash
             this,
             damageType = DamageTypes.MOB_ATTACK,
             actionDelay = 16,
             usePredicate = {
-                smashAttackTime<=0 && throwTime<=0 && smashCooldown<=0
+                smashAttackTime<=0 && throwTime<=0 && punchAttackTime<=0 && smashCooldown<=0
             },
             actionStartEffect = {
                 smashAttackTime=1
@@ -155,17 +167,6 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
                 }
 
                 playSound(SoundEvents.MACE_SMASH_GROUND_HEAVY, 1.0f, 0.9f)
-            }
-        ))
-        goalSelector.addGoal(3, MeleeAttackActionGoal(// punch
-            this,
-            damageType = DamageTypes.MOB_ATTACK,
-            actionDelay = 15,
-            usePredicate = {
-                punchAttackTime<=0 && smashAttackTime<=0 && throwTime<=0
-            },
-            actionStartEffect = {
-                punchAttackTime=1
             }
         ))
     }

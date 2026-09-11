@@ -86,6 +86,7 @@ fun Plant.processWateringItem(player: Player, item: ItemStack, hand: Interaction
 }
 
 enum class PlantGrowNeeds {
+    CANNOT_GROW,
     SOIL,
     SUN,
     WATER,
