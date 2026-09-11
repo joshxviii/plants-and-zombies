@@ -18,14 +18,13 @@ public class CoffeeBeanModel extends PlantModel {
 	private final ModelPart head;
 
 	public CoffeeBeanModel(ModelPart root) {
-		super(
-			CoffeeBeanAnimation.init.bake(root),
-			CoffeeBeanAnimation.idle.bake(root),
-			CoffeeBeanAnimation.action.bake(root),
-			CoffeeBeanAnimation.sleep.bake(root),
-			null,
-			root
-		);
+		super(root);
+
+		initAnimation = CoffeeBeanAnimation.init.bake(root);
+		idleAnimation = CoffeeBeanAnimation.idle.bake(root);
+		actionAnimation = CoffeeBeanAnimation.action.bake(root);
+		sleepAnimation = CoffeeBeanAnimation.sleep.bake(root);
+
         this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 	}

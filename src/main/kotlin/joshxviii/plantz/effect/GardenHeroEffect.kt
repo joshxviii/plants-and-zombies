@@ -32,7 +32,7 @@ class GardenHeroEffect(
         val waveList = hero.`plantz$getWaveList`()
         if (waveList.isEmpty()) {
             val newList = mutableListOf<WaveType>()
-            for (i in 0..effectInstance.amplifier.coerceAtMost(ZombieRaid.MAXIMUM_WAVE_COUNT - 1)) {
+            for (i in 0..effectInstance.amplifier) {
                 newList.add(WaveType.DEFAULT)
             }
             hero.`plantz$setWaveList`(newList)

@@ -31,6 +31,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.tags.FluidTags
 import net.minecraft.tags.ItemTags
 import net.minecraft.util.Mth
 import net.minecraft.util.ProblemReporter.ScopedCollector
@@ -59,6 +60,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.*
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.levelgen.Heightmap
 import net.minecraft.world.level.portal.TeleportTransition
 import net.minecraft.world.level.storage.TagValueOutput
 import net.minecraft.world.level.storage.ValueInput
@@ -104,6 +106,12 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             val blockAtPos = level.getBlockState(pos)
             return (level.getEntitiesOfClass(Plant::class.java, AABB(pos).inflate(38.0)) { it.tickCount > 0 }.isEmpty()
                     && blockAtPos.getCollisionShape(level, pos.above()).isEmpty) || EntitySpawnReason.isSpawner(spawnReason)
+        }
+
+        fun checkWaterSpawn(level: LevelAccessor, pos: BlockPos, spawnReason: EntitySpawnReason): Boolean {
+            val inWater = level.getFluidState(pos).`is`(FluidTags.WATER)
+            val waterHeight = level.getHeight(Heightmap.Types.WORLD_SURFACE, pos.x, pos.z)
+            return checkValidSpawn(level, pos.above(waterHeight - pos.y), spawnReason) && inWater
         }
 
         val PLANT_STATE: EntityDataAccessor<PlantState> = SynchedEntityData.defineId<PlantState>(Plant::class.java, DATA_PLANT_STATE)
@@ -223,7 +231,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     val bounceAnimation = AnimationState()
 
     init {
-        cooldown = -1
         this.lookControl = object : LookControl(this) {
             override fun clampHeadRotationToBody() {}
             override fun tick() { if (!isAsleep) super.tick() }
@@ -244,7 +251,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
         entityData.define(PLANT_STATE, PlantState.IDLE)
-        entityData.define(COOLDOWN, 0)
+        entityData.define(COOLDOWN, -1)
         entityData.define(RECEIVED_SUN, 0)
         entityData.define(RECEIVED_WATER, 0)
         entityData.define(SEED_GROW_COOLDOWN, 0)
@@ -278,7 +285,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         receivedWater = input.getInt("plantz:ReceivedWater").getOrElse { 0 }
         seedGrowCooldown = input.getInt("plantz:SeedGrowTime").getOrElse { 0 }
         coffeeBuff = input.getInt("plantz:CoffeeBuff").getOrElse { 0 }
-        cooldown = input.getInt("plantz:Cooldown").getOrElse { -1 }
+        cooldown = input.getInt("plantz:Cooldown").getOrElse { this.entityData.get(COOLDOWN) }
         poweredUp = input.getBooleanOr("plantz:IsPoweredUp", false)
         attachedPlayerReference = Optional.ofNullable((EntityReference.read<LivingEntity>(input, "plantz:AttachedPlayer"))).getOrNull()
     }
@@ -407,10 +414,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         if (level is ServerLevel) {
             updatePlantPower(level)
 
-            if (cooldown > -1) {
-                if (cooldown == 0) cooldownFinished()
-                cooldown--
-            }
+            if (cooldown > -1 && !isAsleep) cooldown--
+            if (cooldown == 0) cooldownFinished()
             if (!onValidGround() || isOverlappingWithOther(blockPosition())) {
                 if (--nutrientSupply <= 0) {
                     if (tickCount % 20 == 0) hurtServer(level, damageSources().dryOut(), 2.0f)
@@ -477,19 +482,19 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             PlantState.INIT -> {
                 initAnimationState.startIfStopped(tickCount)
                 if (tickCount >= 19) {
-                    state = PlantState.IDLE
                     idleAnimationStartTick = 0
+                    idleAnimationState.startIfStopped(tickCount - idleAnimationStartTick)
+                    initAnimationState.stop()
+                    state = if (cooldown > 0) PlantState.COOLDOWN else PlantState.IDLE
                 }
             }
             PlantState.IDLE -> {
-                idleAnimationState.startIfStopped(tickCount - idleAnimationStartTick)
-                initAnimationState.stop()
                 actionAnimationState.stop()
                 coolDownAnimationState.stop()
                 specialAnimation.stop()
                 sleepAnimationState.stop()
                 if (isAsleep) state = PlantState.SLEEP
-                if (cooldown > -1) {
+                if (cooldown > 0) {
                     state = PlantState.ACTION
                 }
             }
@@ -499,9 +504,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }
             PlantState.COOLDOWN -> {
                 idleAnimationState.startIfStopped(tickCount)
-                if (cooldown < 0) {
-                    state = PlantState.IDLE
-                }
+                if (cooldown <= 0) state = PlantState.IDLE
                 if (isAsleep) state = PlantState.SLEEP
             }
             PlantState.RECHARGE -> state = PlantState.IDLE
@@ -535,7 +538,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return success
     }
 
+    /**
+     *TODO: I would like to make the seed mutation system data driven at some point rather than using overrides.
+     * It would have to be able to parse criteria like biome, random chance, and weather.
+     * And give any entity type as an output.
+     */
     open fun getZenGrownSeedType(): EntityType<*> = type
+
     fun awardSeedPacket(player: Player) {
         val level = level() as? ServerLevel ?: return
         receivedSun = 0
@@ -779,14 +788,11 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         speed: Double = 0.0,
     ) {
         if (level is ServerLevel) {
-            val px = getRandomX(horizontalSpreadScale)
-            val py = y + height + random.nextDouble() * bbHeight * verticalSpreadScale
-            val pz = getRandomZ(horizontalSpreadScale)
             level.sendParticles(
                 particle,
-                px, py, pz,
+                x, y + height + bbHeight/2, z,
                 amount.random(),
-                0.0, 0.0, 0.0,
+                horizontalSpreadScale/4, verticalSpreadScale/2, horizontalSpreadScale/4,
                 speed
             )
         }

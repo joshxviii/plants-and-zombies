@@ -11,10 +11,12 @@ import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.DifficultyInstance
+import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.projectile.FireworkRocketEntity
 import net.minecraft.world.entity.projectile.ProjectileUtil
 import net.minecraft.world.item.CrossbowItem
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ChargedProjectiles
@@ -27,20 +29,36 @@ class PirateCaptain(type: EntityType<out PirateCaptain>, level: Level) : PazZomb
 
     companion object {
         private fun getFirework(): ItemStack {
-            val rocket = ItemStack(Items.FIREWORK_ROCKET).apply { set(
-                DataComponents.FIREWORKS,
-                Fireworks(
-                    3,
-                    listOf(
-                        FireworkExplosion(FireworkExplosion.Shape.LARGE_BALL, IntList.of(0xFF8C00, 0xFFFD700), IntList.of(0x28232C, 0xB22222), false, false),
-                        FireworkExplosion(FireworkExplosion.Shape.SMALL_BALL, IntList.of(0xFFFFFF), IntList.of(0x777777), false, false)
-                    )
-                )
-            ) }
-            return rocket
+            val rockets = listOf(
+                ItemStack(Items.FIREWORK_ROCKET).apply {
+                    set(DataComponents.FIREWORKS, Fireworks(3, listOf(
+                        FireworkExplosion(FireworkExplosion.Shape.LARGE_BALL, IntList.of(0xFF8C00), IntList.of(0xB22222), true, false),
+                        FireworkExplosion(FireworkExplosion.Shape.SMALL_BALL, IntList.of(0xFFFFFF), IntList.of(0xEEEEEE), false, false),
+                        FireworkExplosion(FireworkExplosion.Shape.LARGE_BALL, IntList.of(0xFF8E00), IntList.of(0xB22222), false, false),
+                        FireworkExplosion(FireworkExplosion.Shape.SMALL_BALL, IntList.of(0xFF5F17), IntList.of(0xB22222), true, false)
+                    )))
+                },
+                ItemStack(Items.FIREWORK_ROCKET).apply {
+                    set(DataComponents.FIREWORKS, Fireworks(3, listOf(
+                        FireworkExplosion(FireworkExplosion.Shape.SMALL_BALL, IntList.of(0xff9adb), IntList.of(0xFFFFFF), false, false),
+                        FireworkExplosion(FireworkExplosion.Shape.STAR, IntList.of(0xff00d5, 0xff9adb), IntList.of(0xa68ab3, 0xab055a), true, false),
+                        FireworkExplosion(FireworkExplosion.Shape.SMALL_BALL, IntList.of(0xff9adb), IntList.of(0xFFFFFF), false, false),
+                        FireworkExplosion(FireworkExplosion.Shape.STAR, IntList.of(0xb228ff), IntList.of(0xff9adb), false, false),
+                    )))
+                },
+                ItemStack(Items.FIREWORK_ROCKET).apply {
+                    set(DataComponents.FIREWORKS, Fireworks(3, listOf(
+                        FireworkExplosion(FireworkExplosion.Shape.BURST, IntList.of(0x1cff68), IntList.of(0xd8ff7e), false, false),
+                        FireworkExplosion(FireworkExplosion.Shape.BURST, IntList.of(0xd8ff7e), IntList.of(0xFFFFFF), true, false),
+                        FireworkExplosion(FireworkExplosion.Shape.BURST, IntList.of(0x1cff68), IntList.of(0xd8ff7e), false, true),
+                        FireworkExplosion(FireworkExplosion.Shape.BURST, IntList.of(0xd8ff7e), IntList.of(0xFFFFFF), true, true),
+                    )))
+                },
+            )
+            return rockets.random()
         }
         val SHOT_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(PirateCaptain::class.java, EntityDataSerializers.INT)
-        const val FIREWORK_COOLDOWN = 200
+        const val FIREWORK_COOLDOWN = 180
     }
 
     init {
@@ -63,10 +81,11 @@ class PirateCaptain(type: EntityType<out PirateCaptain>, level: Level) : PazZomb
             projectileFactory =  {
                 FireworkRocketEntity(level(), getFirework(), this, x, y+eyeHeight, z, true)
             },
-            velocity = 0.5,
+            velocity = 0.6,
             actionDelay = 60,
             soundEvent = SoundEvents.CROSSBOW_SHOOT,
             usePredicate = { shootTime<=0 },
+            actionSuccessEffect = {},
             actionStartEffect = {
                 shootTime=random.nextIntBetweenInclusive(1, 40)
                 startUsingItem(ProjectileUtil.getWeaponHoldingHand(this, weaponItem.item))
@@ -97,7 +116,6 @@ class PirateCaptain(type: EntityType<out PirateCaptain>, level: Level) : PazZomb
         return result
     }
 
-    override fun canPickUpLoot(): Boolean = false
     override fun isLeftHanded(): Boolean = false
 
     override fun tick() {
@@ -130,6 +148,7 @@ class PirateCaptain(type: EntityType<out PirateCaptain>, level: Level) : PazZomb
 
         setItemSlot(EquipmentSlot.MAINHAND, Items.CROSSBOW.defaultInstance)
         setDropChance(EquipmentSlot.MAINHAND, 0.0f)
+        enchantSpawnedWeapon(level, random, difficulty)
 
         return data
     }

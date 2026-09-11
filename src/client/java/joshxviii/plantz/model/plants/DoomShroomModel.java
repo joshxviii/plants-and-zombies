@@ -19,14 +19,13 @@ public class DoomShroomModel extends PlantModel {
 	private final ModelPart eyes;
 
 	public DoomShroomModel(ModelPart root) {
-		super(
-			DoomShroomAnimation.init.bake(root),
-			DoomShroomAnimation.idle.bake(root),
-			DoomShroomAnimation.action.bake(root),
-			DoomShroomAnimation.sleep.bake(root),
-				null,
-			root
-		);
+		super(root);
+
+		initAnimation = DoomShroomAnimation.init.bake(root);
+		idleAnimation = DoomShroomAnimation.idle.bake(root);
+		actionAnimation = DoomShroomAnimation.action.bake(root);
+		sleepAnimation = DoomShroomAnimation.sleep.bake(root);
+
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.cap = this.head.getChild("cap");

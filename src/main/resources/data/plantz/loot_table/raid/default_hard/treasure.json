@@ -82,11 +82,6 @@
           ]
         },
         {
-          "type": "minecraft:loot_table",
-          "value": "plantz:balloons",
-          "weight": 4
-        },
-        {
           "type": "minecraft:item",
           "name": "plantz:watering_can",
           "weight": 3

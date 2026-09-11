@@ -26,14 +26,13 @@ public class CactusModel extends PlantModel{
 	private final ModelPart arm_L;
 
 	public CactusModel(ModelPart root) {
-		super(
-			CactusAnimation.init.bake(root),
-			CactusAnimation.idle.bake(root),
-			CactusAnimation.action.bake(root),
-			CactusAnimation.sleep.bake(root),
-			null,
-			root
-		);
+		super(root);
+
+		initAnimation = CactusAnimation.init.bake(root);
+		idleAnimation = CactusAnimation.idle.bake(root);
+		actionAnimation = CactusAnimation.action.bake(root);
+		sleepAnimation = CactusAnimation.sleep.bake(root);
+
 		this.body = root.getChild("body");
 		this.trunk = this.body.getChild("trunk");
 		this.head = this.trunk.getChild("head");

@@ -46,8 +46,7 @@ class ProjectileAttackGoal(
     }
 
     override fun canUse(): Boolean = (
-        usingEntity.tickCount>cooldownTime
-            && usingEntity.target?.isAlive == true
+        usingEntity.target?.isAlive == true
             && !(usingEntity is Plant && (usingEntity.isAsleep || usingEntity.isGrowingSeeds))
     )
 
@@ -79,12 +78,9 @@ class ProjectileAttackGoal(
         target?.let {
             usingEntity.lookControl.setLookAt(it, 30.0f, 30.0f)
         }
-
-        //usingEntity.startUsingItem(ProjectileUtil.getWeaponHoldingHand(usingEntity, usingEntity.weaponItem.item))
     }
 
     override fun doAction() : Boolean {// fire projectile
-        //usingEntity.releaseUsingItem()
         val target = usingEntity.target?: return false
 
         val level = usingEntity.level() as ServerLevel

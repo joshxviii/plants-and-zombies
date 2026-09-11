@@ -11,11 +11,16 @@ import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class SoldierZombieModel extends PazZombieModel {
+public class SoldierZombieModel<S extends PazZombieRenderState> extends PazZombieModel<S> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("soldier_zombie"), "main");
 
     public SoldierZombieModel(final ModelPart root) {
         super(null, root);
+    }
+
+    @Override
+    public <T extends PazZombieRenderState> PazZombieModel<T> forArmor(ModelPart root) {
+        return new SoldierZombieModel<>(root);
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -53,7 +58,7 @@ public class SoldierZombieModel extends PazZombieModel {
     }
 
     @Override
-    public void setupAnim(@NotNull PazZombieRenderState state) {
+    public void setupAnim(@NotNull S state) {
         float tempAttackTime = state.attackTime;
         state.attackTime = 0;
         super.setupAnim(state);

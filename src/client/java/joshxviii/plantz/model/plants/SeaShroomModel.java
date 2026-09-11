@@ -30,14 +30,17 @@ public class SeaShroomModel extends PlantModel {
 	private final KeyframeAnimation sleepLandAnimation;
 
 	public SeaShroomModel(ModelPart root) {
-		super(
-			SeaShroomAnimation.init.bake(root),
-			SeaShroomAnimation.idle.bake(root),
-			SeaShroomAnimation.action.bake(root),
-			SeaShroomAnimation.sleep.bake(root),
-			null,
-			root
-		);
+		super(root);
+
+		initAnimation = SeaShroomAnimation.init.bake(root);
+		idleAnimation = SeaShroomAnimation.idle.bake(root);
+		actionAnimation = SeaShroomAnimation.action.bake(root);
+		sleepAnimation = SeaShroomAnimation.sleep.bake(root);
+
+		this.initLandAnimation = SeaShroomAnimation.init_land.bake(root);
+		this.idleLandAnimation = SeaShroomAnimation.idle_land.bake(root);
+		this.sleepLandAnimation = SeaShroomAnimation.sleep_land.bake(root);
+
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.barrel = this.head.getChild("barrel");
@@ -49,9 +52,6 @@ public class SeaShroomModel extends PlantModel {
 		this.rootBL = this.roots.getChild("rootBL");
 		this.rootML = this.roots.getChild("rootML");
 		this.rootMR = this.roots.getChild("rootMR");
-		this.initLandAnimation = SeaShroomAnimation.init_land.bake(root);
-		this.idleLandAnimation = SeaShroomAnimation.idle_land.bake(root);
-		this.sleepLandAnimation = SeaShroomAnimation.sleep_land.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {

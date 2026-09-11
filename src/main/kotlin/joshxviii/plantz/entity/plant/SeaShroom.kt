@@ -29,11 +29,10 @@ class SeaShroom(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.S
             random: RandomSource
         ): Boolean {
             val isRaining = level.level.isRaining
-            val inWater = level.getFluidState(pos).`is`(FluidTags.WATER)
             val rainBonus = if (isRaining) 2.25f else 1f
 
-            return checkValidSpawn(level, pos, spawnReason)
-                        && inWater && random.nextFloat() < (0.25 * rainBonus) && pos.y > level.seaLevel - 3
+            return checkWaterSpawn(level, pos, spawnReason)
+                    && random.nextFloat() < (0.25 * rainBonus)
         }
     }
 

@@ -15,6 +15,7 @@ class ExplodeGoal(
     private val explosiveEntity: ExplosivePlant,
     val explosionRadius: Float = 2.5f,
     val sound: Holder.Reference<SoundEvent> = SoundEvents.GENERIC_EXPLODE,
+    val startSound: SoundEvent = SoundEvents.CREEPER_PRIMED,
     val destroyBlocks: Boolean = false,
     val activateRange: Double = 3.0,
     val actionPredicate: Predicate<PathfinderMob> = Predicate { true },
@@ -28,12 +29,14 @@ class ExplodeGoal(
     private var target: LivingEntity? = null
 
     init {
+        explosiveEntity.cooldown = 20
         flags = EnumSet.of<Flag>(Flag.MOVE)
     }
 
     override fun canUse(): Boolean {
-        if (explosiveEntity.swellDir>=0) return true
+        if (explosiveEntity.cooldown > 0) return false
         if (!actionPredicate.test(explosiveEntity)) return false
+        if (explosiveEntity.swellDir>=0) return true
         if ((explosiveEntity.isAsleep || explosiveEntity.isGrowingSeeds)) return false
         target = explosiveEntity.target
         target?.let {
@@ -67,7 +70,7 @@ class ExplodeGoal(
         }
 
         if (explosiveEntity.swellDir > 0 && explosiveEntity.swell == 0) {
-            explosiveEntity.playSound(SoundEvents.CREEPER_PRIMED, 1.0f, 1f + (1-explosiveEntity.getMaxSwellTime() / 30))
+            explosiveEntity.playSound(startSound, 1.0f, 1f + (1-explosiveEntity.getMaxSwellTime() / 30))
             explosiveEntity.gameEvent(GameEvent.PRIME_FUSE)
         }
 

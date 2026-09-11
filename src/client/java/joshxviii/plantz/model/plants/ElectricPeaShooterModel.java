@@ -31,14 +31,13 @@ public class ElectricPeaShooterModel extends PlantModel {
 	private final ModelPart leaf_tip_4;
 
 	public ElectricPeaShooterModel(ModelPart root) {
-		super(
-			ElectricPeaAnimation.init.bake(root),
-			ElectricPeaAnimation.idle.bake(root),
-			ElectricPeaAnimation.action.bake(root),
-			ElectricPeaAnimation.sleep.bake(root),
-				null,
-			root
-		);
+		super(root);
+
+		initAnimation = ElectricPeaAnimation.init.bake(root);
+		idleAnimation = ElectricPeaAnimation.idle.bake(root);
+		actionAnimation = ElectricPeaAnimation.action.bake(root);
+		sleepAnimation = ElectricPeaAnimation.sleep.bake(root);
+
 		this.body = root.getChild("body");
 		this.stem = this.body.getChild("stem");
 		this.stem_2 = this.stem.getChild("stem_2");

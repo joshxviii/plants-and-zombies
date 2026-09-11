@@ -164,6 +164,7 @@ class MailboxBlockEntity(
                 random.triangle(0.0, 0.11485000171139836) + direction.x, random.triangle(0.2, 0.11485000171139836) + direction.y, random.triangle(0.0, 0.11485000171139836) + direction.z
             )
             if (glow) entity.setGlowingTag(true)
+
             level.addFreshEntity(entity)
         }
     }
@@ -260,7 +261,7 @@ class MailboxBlockEntity(
     fun asMailBoxData(): MailboxData {
         return MailboxData(
             blockPos,
-            color.textColor,
+            color.mailboxColor(),
             getName(),
         )
     }

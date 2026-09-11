@@ -152,7 +152,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     }
 
     override fun pickUpItem(level: ServerLevel, entity: ItemEntity) {
-        val balloonItem = entity.item.item as? BalloonItem ?: return
+        val balloonItem = entity.item.item as? BalloonItem ?: return super.pickUpItem(level, entity)
 
         val balloonsMissing = (4 - balloons.size).coerceIn(0, MAX_EQUIPPABLE_BALLOONS)
         val count = entity.item.count.coerceAtMost(balloonsMissing)

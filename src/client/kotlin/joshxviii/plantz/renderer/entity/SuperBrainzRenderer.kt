@@ -3,6 +3,7 @@ package joshxviii.plantz.renderer.entity
 import com.mojang.blaze3d.vertex.PoseStack
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.entity.zombie.SuperBrainz
+import joshxviii.plantz.model.zombies.PazZombieModel
 import joshxviii.plantz.model.zombies.SuperBrainzModel
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
@@ -12,7 +13,7 @@ import net.minecraft.world.entity.AnimationState
 
 class SuperBrainzRenderer(
     context: EntityRendererProvider.Context,
-    private val model: SuperBrainzModel = SuperBrainzModel(context.bakeLayer(SuperBrainzModel.LAYER_LOCATION)),
+    private val model: PazZombieModel<PazZombieRenderState> = SuperBrainzModel(context.bakeLayer(SuperBrainzModel.LAYER_LOCATION)),
 ): PazZombieRenderer(context, model, model) {
 
     override fun submit(

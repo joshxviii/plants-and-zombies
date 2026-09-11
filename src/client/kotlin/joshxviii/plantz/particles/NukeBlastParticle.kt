@@ -6,7 +6,6 @@ import net.minecraft.client.particle.Particle
 import net.minecraft.client.particle.ParticleProvider
 import net.minecraft.client.particle.SingleQuadParticle
 import net.minecraft.client.particle.SpriteSet
-import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.util.RandomSource
 import kotlin.math.floor
 

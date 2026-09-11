@@ -19,6 +19,7 @@ import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.*
+import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.entity.ai.goal.FloatGoal
@@ -272,7 +273,9 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
     }
 
     override fun canPickUpLoot(): Boolean = false
-    override fun randomizeReinforcementsChance() {}
+    override fun randomizeReinforcementsChance() {
+        getAttribute(Attributes.SPAWN_REINFORCEMENTS_CHANCE)!!.baseValue = 0.0
+    }
 
     override fun getPassengerRidingPosition(passenger: Entity): Vec3 {
         val direction = calculateViewVector(0f, yBodyRot-180).scale(0.8)

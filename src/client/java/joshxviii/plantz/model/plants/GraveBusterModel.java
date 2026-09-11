@@ -28,14 +28,13 @@ public class GraveBusterModel extends PlantModel{
 	private final ModelPart teeth_2;
 
 	public GraveBusterModel(ModelPart root) {
-		super(
-			GraveBusterAnimation.init.bake(root),
-			GraveBusterAnimation.idle.bake(root),
-			GraveBusterAnimation.action.bake(root),
-			GraveBusterAnimation.sleep.bake(root),
-			null,
-			root
-		);
+		super(root);
+
+		initAnimation = GraveBusterAnimation.init.bake(root);
+		idleAnimation = GraveBusterAnimation.idle.bake(root);
+		actionAnimation = GraveBusterAnimation.action.bake(root);
+		sleepAnimation = GraveBusterAnimation.sleep.bake(root);
+
 		this.body = root.getChild("body");
 		this.bodyStartY = this.body.y;
 		this.head = this.body.getChild("head");

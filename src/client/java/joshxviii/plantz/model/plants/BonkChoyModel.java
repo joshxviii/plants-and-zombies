@@ -29,14 +29,14 @@ public class BonkChoyModel extends PlantModel {
 	private final KeyframeAnimation megaPunchAnimation;
 
 	public BonkChoyModel(ModelPart root) {
-		super(
-				BonkChoyAnimation.init.bake(root),
-				BonkChoyAnimation.idle.bake(root),
-				BonkChoyAnimation.action.bake(root),
-				BonkChoyAnimation.sleep.bake(root),
-null,
-				root
-		);
+		super(root);
+
+		initAnimation = BonkChoyAnimation.init.bake(root);
+		idleAnimation = BonkChoyAnimation.idle.bake(root);
+		actionAnimation = BonkChoyAnimation.action.bake(root);
+		sleepAnimation = BonkChoyAnimation.sleep.bake(root);
+		this.megaPunchAnimation = BonkChoyAnimation.uppercut.bake(root);
+
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.head_top = this.head.getChild("head_top");
@@ -50,7 +50,6 @@ null,
 		this.left_arm = this.head.getChild("left_arm");
 		this.left_arm2 = this.left_arm.getChild("left_arm2");
 		this.left_arm3 = this.left_arm2.getChild("left_arm3");
-		this.megaPunchAnimation = BonkChoyAnimation.uppercut.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {

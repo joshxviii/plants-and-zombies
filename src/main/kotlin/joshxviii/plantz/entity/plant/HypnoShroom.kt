@@ -31,7 +31,7 @@ class HypnoShroom(type: EntityType<out Plant>, level: Level) : Plant(PazEntities
         if (attacker is LivingEntity && !attacker.isInvulnerable) {
             addParticlesAroundSelf(
                 particle = PazServerParticles.HYPNO_SPORE,
-                amount = 25..30,
+                amount = 45..50,
                 horizontalSpreadScale = 0.6,
                 verticalSpreadScale = 0.6,
                 height = 0.6f
@@ -49,12 +49,13 @@ class HypnoShroom(type: EntityType<out Plant>, level: Level) : Plant(PazEntities
     }
 
     private fun spawnHypnosisCloud() {
-        val cloud = AreaEffectCloud(level(), x, y, z)
+        val cloud = AreaEffectCloud(level(), x, y+0.1, z)
         cloud.radius = 2.5f
         cloud.radiusOnUse = -0.5f
         cloud.waitTime = 10
         cloud.duration = 300
         cloud.setPotionDurationScale(0.25f)
+        cloud.setCustomParticle(PazServerParticles.HYPNO_SPORE)
         cloud.radiusPerTick = -cloud.radius / cloud.duration.toFloat()
         cloud.addEffect(MobEffectInstance(PazEffects.HYPNOTIZE, 1000, 0))
         level().addFreshEntity(cloud)

@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class RoboZombieModel extends PazZombieModel {
+public class RoboZombieModel<S extends PazZombieRenderState> extends PazZombieModel<S> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("robo_zombie"), "main");
     private final KeyframeAnimation bashAnimation;
     private final KeyframeAnimation shootAnimation;
@@ -82,16 +82,14 @@ public class RoboZombieModel extends PazZombieModel {
     }
 
     @Override
-    public void setupAnim(@NotNull PazZombieRenderState state) {
+    public void setupAnim(@NotNull S state) {
         super.setupAnim(state);
         this.resetPose();
         this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
         this.head.yRot = state.yRot * (float) (Math.PI / 180.0);
 
         if (!(state instanceof RoboZombieRenderState roboState)) return;
-        float animationPos = state.walkAnimationPos;
-        float animationSpeed = state.walkAnimationSpeed;
-        walkAnimation.applyWalk(animationPos, animationSpeed, 2f, 2f);
+        walkAnimation.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 2f, 2f);
 
         if (roboState.isTankTransformation()) {
             tankIdleAnimation.apply(roboState.getIdleAnimationState(), roboState.ageInTicks);

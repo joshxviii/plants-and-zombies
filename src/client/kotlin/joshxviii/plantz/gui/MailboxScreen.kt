@@ -59,12 +59,20 @@ class MailboxScreen(
         return txt
     }
 
+    fun mailboxColor() = menu.data.color
+
+    override fun extractLabels(graphics: GuiGraphicsExtractor, xm: Int, ym: Int) {
+        graphics.text(this.font, this.title, this.titleLabelX, this.titleLabelY, ARGB.color(0x88, 0x000000), false)
+        graphics.text(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, ARGB.color(0x88, 0x000000), false)
+    }
+
     fun initSendButton(x: Int, y: Int): Button {
         val btn = PazButton(x, y, 20, 14,
             { onSendPressed() },
             SEND_BUTTON, SEND_BUTTON_HOVER, SEND_BUTTON_PRESS,
             { menu.mailSlot.hasItem() && menu.selectedMailboxIndex != null },
-            { menu.mailSlot.hasItem() && menu.selectedMailboxIndex != null }
+            { menu.mailSlot.hasItem() && menu.selectedMailboxIndex != null },
+            color = mailboxColor()
         )
         addRenderableWidget(btn)
         return btn
@@ -95,6 +103,7 @@ class MailboxScreen(
             val mailbox = menu.getMailbox(mailboxIndex)
             if (mailbox != null) {
                 val button = AddressButton(
+                    menuData = menu.data,
                     mailboxData = mailbox,
                     buttonX = xo+52,
                     buttonY = yo+28 + i * 14,
@@ -124,9 +133,12 @@ class MailboxScreen(
                 yo - padding - height,
                 xo + width + padding,
                 yo + 15 + padding - height,
-                ARGB.multiply(-0xD0D0D0, -1)
+                ARGB.opaque(ARGB.multiply(mailboxColor(), 0x555555))
             )
-            graphics.centeredText(font, menu.responseMessage, leftPos+(88), topPos+4-height, -1)
+            val messageColor = menu.responseMessage.style.color?.value?:0xFFFFFF
+            val message = menu.responseMessage.plainCopy()
+            graphics.outlineText(font, message, leftPos+(width/2)-font.width(message) / 2, topPos+4-height, color = messageColor)
+            //graphics.centeredText(font, menu.responseMessage, leftPos+(width/2), topPos+4-height, -1)
 
         }
         //graphics.textWithWordWrap(font, Component.literal("ASDADASDASD"), 0, 0, 340, -1)
@@ -136,7 +148,7 @@ class MailboxScreen(
     override fun extractBackground(graphics: GuiGraphicsExtractor, xm: Int, ym: Int, a: Float) {
         val xo = leftPos
         val yo = topPos
-        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, xo, yo, 0f, 0f, imageWidth, imageHeight, 256, 256)
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, xo, yo, 0f, 0f, imageWidth, imageHeight, 256, 256, mailboxColor())
 
         val sy = (41.0f * scrollOffs).toInt()
         val sprite = if (isScrollBarActive()) SCROLLER else SCROLLER_DISABLED

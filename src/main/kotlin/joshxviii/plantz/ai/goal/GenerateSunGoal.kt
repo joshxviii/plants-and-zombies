@@ -20,9 +20,9 @@ class GenerateSunGoal(
     val sunAmount: Int = 1,
     val generatesAtNight : Boolean = false,
 ): ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionSuccessEffect, actionEndEffect, actionPredicate, delayedEffectDelay, delayedEffect, -10..20) {
+
     override fun canUse(): Boolean = (
-        usingEntity.tickCount>cooldownTime
-            && usingEntity.isAlive
+        usingEntity.isAlive
             && !(usingEntity is Plant && (usingEntity.isAsleep || usingEntity.isGrowingSeeds))
     )
 

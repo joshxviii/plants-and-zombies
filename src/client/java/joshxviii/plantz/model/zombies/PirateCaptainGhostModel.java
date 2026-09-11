@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class PirateCaptainGhostModel extends PazZombieModel {
+public class PirateCaptainGhostModel<S extends PazZombieRenderState> extends PazZombieModel<S> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("pirate_captain_ghost"), "main");
     private final KeyframeAnimation idleAnimation;
 
@@ -59,7 +59,7 @@ public class PirateCaptainGhostModel extends PazZombieModel {
     }
 
     @Override
-    public void setupAnim(@NotNull PazZombieRenderState state) {
+    public void setupAnim(@NotNull S state) {
         super.setupAnim(state);
         this.resetPose();
         this.head.xRot = state.xRot * (float) (Math.PI / 180.0);

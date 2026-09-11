@@ -2,13 +2,17 @@ package joshxviii.plantz.renderer
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
-import joshxviii.plantz.PaintInfoUniforms
+import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
+import joshxviii.plantz.PazModels.HAS_BUTTER_KEY
 import joshxviii.plantz.PazModels.PAINT_COLORS_KEY
 import joshxviii.plantz.PazRenderPipelines.PAINT_OVERLAY
+import joshxviii.plantz.model.projectiles.ButterModel
 import joshxviii.plantz.model.zombies.PazZombieModel
 import joshxviii.plantz.pazResource
+import joshxviii.plantz.renderer.entity.ProjectileRenderState
 import net.minecraft.client.Minecraft
+import net.minecraft.client.model.BabyModelTransform
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.HumanoidModel
 import net.minecraft.client.renderer.SubmitNodeCollector
@@ -21,14 +25,18 @@ import net.minecraft.client.renderer.item.ItemStackRenderState
 import net.minecraft.client.renderer.rendertype.LayeringTransform
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
+import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.Identifier
 import net.minecraft.util.ARGB
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.phys.Vec3
+import org.apache.commons.lang3.math.NumberUtils.toDouble
+import kotlin.math.pow
 
-class PaintLayer<S : LivingEntityRenderState, M : EntityModel<in S>>( private val renderer: RenderLayerParent<S, M>) : RenderLayer<S, M>(
+class SpecialEffectsLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(private val renderer: RenderLayerParent<S, M>) : RenderLayer<S, M>(
     renderer
 ) {
     companion object {
@@ -45,18 +53,7 @@ class PaintLayer<S : LivingEntityRenderState, M : EntityModel<in S>>( private va
                     .createRenderSetup()
             )
         }
-    }
-
-    private fun entityTexture(state: S): Identifier? {
-        val living = renderer as? LivingEntityRenderer<*, S, M> ?: return null
-        return living.getTextureLocation(state)
-    }
-
-    fun alphaFromAmplifier(rgb: Int, amplifier: Int): Int {
-        val t = amplifier.coerceIn(0, 10) / 10f
-        val strength = 0.20f + t * 0.55f
-        val a = (strength * 255f).toInt().coerceIn(50, 255)
-        return (a shl 24) or (rgb and 0x00FFFFFF)
+        val BUTTER_MODEL = ButterModel(Minecraft.getInstance().modelManager.entityModels().get().bakeLayer(ButterModel.LAYER_LOCATION))
     }
 
     override fun submit(
@@ -66,6 +63,51 @@ class PaintLayer<S : LivingEntityRenderState, M : EntityModel<in S>>( private va
         state: S,
         yRot: Float,
         xRot: Float
+    ) {
+        submitButterLayer(poseStack, collector, lightCoords, state)
+        submitPaintLayer(poseStack, collector, lightCoords, state)
+    }
+
+    fun submitButterLayer(
+        poseStack: PoseStack,
+        collector: SubmitNodeCollector,
+        lightCoords: Int,
+        state: S
+    ) {
+        val hasButterEffect = state.getDataOrDefault(HAS_BUTTER_KEY, false)
+        if (!hasButterEffect) return
+
+        val humanoidModel = parentModel as? HumanoidModel<*> ?: return
+
+        val butterState = ProjectileRenderState().apply { entityType = PazEntities.BUTTER }
+        val texture = butterState.getProjectileTextureLocation() ?: return
+
+        poseStack.pushPose()
+        humanoidModel.root().translateAndRotate(poseStack)
+        humanoidModel.head.translateAndRotate(poseStack)
+        poseStack.mulPose(Axis.YP.rotationDegrees(90f))
+        poseStack.mulPose(Axis.XP.rotationDegrees(25f))
+        poseStack.mulPose(Axis.ZP.rotationDegrees(90f))
+        poseStack.translate(-0.6,-1.4,0.2)
+
+        collector.submitModel(
+            BUTTER_MODEL,
+            butterState,
+            poseStack,
+            RenderTypes.entityCutout(texture),
+            lightCoords,
+            OverlayTexture.NO_OVERLAY,
+            0,
+            null
+        )
+        poseStack.popPose()
+    }
+
+    fun submitPaintLayer(
+        poseStack: PoseStack,
+        collector: SubmitNodeCollector,
+        lightCoords: Int,
+        state: S
     ) {
         val texture = entityTexture(state) ?: return
         val colors = state.getDataOrDefault(PAINT_COLORS_KEY, mapOf())
@@ -80,14 +122,6 @@ class PaintLayer<S : LivingEntityRenderState, M : EntityModel<in S>>( private va
             colorMix = ARGB.average(colorMix, ARGB.opaque(color))
         }
         if (amplifier == 0) return
-
-//        PaintInfoUniforms.amplifierToNoise(amplifier).let { (scale, strength) ->
-//            PaintInfoUniforms.write(scale, strength)
-//        }
-        //TODO remove dynamic uniform and make into static shader since changing the uniform is not really working with multiple instances of entities.
-        // changing the alpha, mixing the colors and keeping the noise static gives a good enough effect.
-        // [paint_overlay.fhs] and [paint_info]
-        PaintInfoUniforms.write(64f, 2.0f)
 
         if (colorMix == -1) return
         poseStack.pushPose()
@@ -105,6 +139,17 @@ class PaintLayer<S : LivingEntityRenderState, M : EntityModel<in S>>( private va
             null
         )
         poseStack.popPose()
+    }
+
+    private fun entityTexture(state: S): Identifier? {
+        val living = renderer as? LivingEntityRenderer<*, S, M> ?: return null
+        return living.getTextureLocation(state)
+    }
+
+    fun alphaFromAmplifier(rgb: Int, amplifier: Int): Int {
+        val strength = (amplifier.coerceIn(0, 20) / 20f).pow(.5f).coerceIn(0f, 1f)
+        val a = (strength * 0xFF).toInt().coerceIn(50, 0xFF)
+        return (a shl 24) or (rgb and 0x00FFFFFF)
     }
 
 }
@@ -149,15 +194,14 @@ abstract class BodyItemAttachmentRenderLayer<S : LivingEntityRenderState, M : En
 
         poseStack.pushPose()
 
-        if (state.isBaby) {
-            poseStack.translate(0.0, 0.8, 0.0)
-            poseStack.scale(0.55f, 0.55f, 0.55f)
-        }
-
-        if (humanoidModel is PazZombieModel) humanoidModel.body
-        else humanoidModel.body.translateAndRotate(poseStack)
-
+        humanoidModel.root().translateAndRotate(poseStack)
+        humanoidModel.body.translateAndRotate(poseStack)
         poseStack.mulPose(Axis.ZP.rotationDegrees(180.0f))
+
+        if (state.isBaby) {
+            poseStack.scale(0.5f, 0.5f, 0.5f)
+            poseStack.translate(0.0, 0.5, 0.0)
+        }
 
         val minecraft = Minecraft.getInstance()
         itemRenderState.clear()

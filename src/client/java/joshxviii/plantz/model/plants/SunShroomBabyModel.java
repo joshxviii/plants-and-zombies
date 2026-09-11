@@ -17,14 +17,13 @@ public class SunShroomBabyModel extends SunShroomModel {
 	private final ModelPart cap;
 
 	public SunShroomBabyModel(ModelPart root) {
-		super(
-			SunShroomBabyAnimation.init.bake(root),
-			SunShroomBabyAnimation.idle.bake(root),
-			SunShroomBabyAnimation.action.bake(root),
-			SunShroomBabyAnimation.sleep.bake(root),
-			null,
-			root
-		);
+		super(root);
+
+		initAnimation = SunShroomBabyAnimation.init.bake(root);
+		idleAnimation = SunShroomBabyAnimation.idle.bake(root);
+		actionAnimation = SunShroomBabyAnimation.action.bake(root);
+		sleepAnimation = SunShroomBabyAnimation.sleep.bake(root);
+
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.cap = this.head.getChild("cap");

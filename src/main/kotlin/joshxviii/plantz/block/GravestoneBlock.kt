@@ -3,25 +3,16 @@ package joshxviii.plantz.block
 import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.block.entity.GravestoneBlockEntity
-import joshxviii.plantz.block.entity.MailboxBlockEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.RandomSource
 import net.minecraft.util.Util
-import net.minecraft.world.entity.EntityType
-import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.ScheduledTickAccess
-import net.minecraft.world.level.Spawner
-import net.minecraft.world.level.block.BaseEntityBlock
-import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.HorizontalDirectionalBlock
-import net.minecraft.world.level.block.Rotation
-import net.minecraft.world.level.block.SimpleWaterloggedBlock
+import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -32,6 +23,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.EnumProperty
 import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.level.material.Fluids
+import net.minecraft.world.level.pathfinder.PathComputationType
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
@@ -48,6 +40,14 @@ class GravestoneBlock(properties: Properties) : BaseEntityBlock(properties), Sim
         val SHAPES: MutableMap<Direction.Axis, VoxelShape> = Shapes.rotateHorizontalAxis(SHAPE)
         val FACING: EnumProperty<Direction> = HorizontalDirectionalBlock.FACING
         val WATERLOGGED: BooleanProperty = BlockStateProperties.WATERLOGGED
+    }
+
+    override fun isPathfindable(state: BlockState, type: PathComputationType): Boolean {
+        return when (type) {
+            PathComputationType.LAND -> (false)
+            PathComputationType.WATER -> (state.getValue(TrapDoorBlock.WATERLOGGED))
+            PathComputationType.AIR -> (false)
+        }
     }
 
     init {

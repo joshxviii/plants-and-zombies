@@ -119,7 +119,7 @@ abstract class ExplosivePlant(type: EntityType<out ExplosivePlant>, level: Level
             WeightedList.of(),
             SoundEvents.ITEM_BREAK
         )
-        if (discardOnExplode) discard()
+        if (discardOnExplode()) discard()
     }
     open fun discardOnExplode(): Boolean = true
 }

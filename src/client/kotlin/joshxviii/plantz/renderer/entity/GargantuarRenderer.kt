@@ -3,12 +3,15 @@ package joshxviii.plantz.renderer.entity
 import joshxviii.plantz.entity.zombie.Gargantuar
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.model.zombies.GargantuarModel
+import joshxviii.plantz.model.zombies.PazZombieModel
+import joshxviii.plantz.model.zombies.PirateCaptainModel
+import joshxviii.plantz.model.zombies.RoboZombieModel
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.world.entity.AnimationState
 
 class GargantuarRenderer(
     context: EntityRendererProvider.Context,
-    private val model: GargantuarModel = GargantuarModel(context.bakeLayer(GargantuarModel.LAYER_LOCATION)),
+    private val model: PazZombieModel<PazZombieRenderState> = GargantuarModel(context.bakeLayer(GargantuarModel.LAYER_LOCATION)),
 ): PazZombieRenderer(context, model, model) {
 
     override fun createRenderState(): PazZombieRenderState {

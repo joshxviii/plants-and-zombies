@@ -17,6 +17,7 @@ import net.minecraft.server.level.ServerEntityGetter
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.util.ARGB
 import net.minecraft.util.Mth
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.damagesource.DamageSource
@@ -29,6 +30,7 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.Projectile
+import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
@@ -38,6 +40,7 @@ import net.minecraft.world.level.storage.loot.LootTable
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import org.joml.Vector3f
+import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -90,6 +93,71 @@ interface PlantHeadAttachment {
             return InteractionResult.PASS
         }
     }
+}
+
+data class HSV(
+    var h: Float,
+    var s: Float,
+    var v: Float
+) {
+    companion object {
+        fun fromRGB(color: Int): HSV {
+            val r = ARGB.red(color) / 255f
+            val g = ARGB.green(color) / 255f
+            val b = ARGB.blue(color) / 255f
+
+            val max = maxOf(r, g, b)
+            val min = minOf(r, g, b)
+            val delta = max - min
+
+            val h = when {
+                delta == 0f -> 0f
+                max == r    -> (60f * ((g - b) / delta) + 360f) % 360f
+                max == g    -> (60f * ((b - r) / delta) + 120f) % 360f
+                else        -> (60f * ((r - g) / delta) + 240f) % 360f
+            }
+            val s = if (max == 0f) 0f else delta / max
+            val v = max
+
+            return HSV(h, s, v)
+        }
+
+        private fun HSVtoRGB(hsv: HSV): Int {
+            val h = hsv.h
+            val s = hsv.s
+            val v = hsv.v
+
+            val c = v * s
+            val x = c * (1f - abs((h / 60f) % 2f - 1f))
+            val m = v - c
+
+            val (r1, g1, b1) = when {
+                h < 60f  -> Triple(c, x, 0f)
+                h < 120f -> Triple(x, c, 0f)
+                h < 180f -> Triple(0f, c, x)
+                h < 240f -> Triple(0f, x, c)
+                h < 300f -> Triple(x, 0f, c)
+                else     -> Triple(c, 0f, x)
+            }
+
+            val r = ((r1 + m) * 0xFF).toInt().coerceIn(0, 0xFF)
+            val g = ((g1 + m) * 0xFF).toInt().coerceIn(0, 0xFF)
+            val b = ((b1 + m) * 0xFF).toInt().coerceIn(0, 0xFF)
+
+            return ARGB.opaque(ARGB.color(0xFF, r, g, b))
+        }
+    }
+    fun toRGB(): Int {
+        return HSVtoRGB(HSV(h, s, v))
+    }
+}
+
+fun DyeColor.mailboxColor(): Int {
+    val hsv = HSV.fromRGB(textureDiffuseColor)
+    hsv.s *= 1.0f
+    hsv.v *= 1.2f
+    hsv.v = hsv.v.coerceIn(0.25f, 1f)
+    return hsv.toRGB()
 }
 
 fun Item.name(): Component = Component.translatable(this.descriptionId)
@@ -232,6 +300,7 @@ fun Entity.applyImpulse(xd: Double = 0.0, yd: Double = 1.0, zd: Double = 0.0, po
     this.addDeltaMovement(impulse)
 }
 
+fun Entity.applyImpulse(vec3: Vec3, pow: Float = 1f, uncertainty: Float = 0f) = applyImpulse(vec3.x, vec3.y, vec3.z, pow, uncertainty)
 
 // AI/PATHFINDING
 fun <T : LivingEntity?> ServerEntityGetter.getFurthestEntities(

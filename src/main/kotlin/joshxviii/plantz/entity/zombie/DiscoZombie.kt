@@ -88,7 +88,6 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
         return result
     }
 
-    override fun canPickUpLoot(): Boolean = false
     override fun randomizeReinforcementsChance() {}
 
     override fun finalizeSpawn(

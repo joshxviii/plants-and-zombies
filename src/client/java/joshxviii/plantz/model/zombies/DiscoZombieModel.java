@@ -6,6 +6,7 @@
 package joshxviii.plantz.model.zombies;
 
 import joshxviii.plantz.animation.zombies.DiscoZombieAnimation;
+import joshxviii.plantz.gui.GuiUtilKt;
 import joshxviii.plantz.renderer.entity.PazZombieRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -16,18 +17,23 @@ import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class DiscoZombieModel extends PazZombieModel {
+public class DiscoZombieModel<S extends PazZombieRenderState> extends PazZombieModel<S> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("disco_zombie"), "main");
 	private final ModelPart afro;
 	private final KeyframeAnimation actionAnimation;
 
 	public DiscoZombieModel(final ModelPart root) {
 		super(
-			DiscoZombieAnimation.init.bake(root.getChild("root")),
+			DiscoZombieAnimation.init,
 			root
 		);
-		this.afro = this.head.getChild("afro");
-		this.actionAnimation = DiscoZombieAnimation.dance.bake(root.getChild("root"));
+		this.afro = GuiUtilKt.getChildOrNull(this.getHead(), "afro");;
+		this.actionAnimation = DiscoZombieAnimation.dance.bake(root);
+	}
+
+	@Override
+	public <T extends PazZombieRenderState> PazZombieModel<T> forArmor(ModelPart root) {
+		return new DiscoZombieModel<>(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -68,9 +74,9 @@ public class DiscoZombieModel extends PazZombieModel {
 	}
 
 	@Override
-	public void setupAnim(@NotNull PazZombieRenderState state) {
+	public void setupAnim(@NotNull S state) {
 		super.setupAnim(state);
-		//afro.visible = (state.headItem.isEmpty() && state.headEquipment.isEmpty());
+		//if (afro != null) afro.visible = (state.headItem.isEmpty() && state.headEquipment.isEmpty());
 		actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
 	}
 }

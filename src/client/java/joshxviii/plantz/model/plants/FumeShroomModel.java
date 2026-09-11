@@ -23,14 +23,13 @@ public class FumeShroomModel extends PlantModel {
 	private final ModelPart barrel;
 
 	public FumeShroomModel(ModelPart root) {
-		super(
-			FumeShroomAnimation.init.bake(root),
-			FumeShroomAnimation.idle.bake(root),
-			FumeShroomAnimation.action.bake(root),
-			FumeShroomAnimation.sleep.bake(root),
-				null,
-			root
-		);
+		super(root);
+
+		initAnimation = FumeShroomAnimation.init.bake(root);
+		idleAnimation = FumeShroomAnimation.idle.bake(root);
+		actionAnimation = FumeShroomAnimation.action.bake(root);
+		sleepAnimation = FumeShroomAnimation.sleep.bake(root);
+
 		this.body = root.getChild("body");
 		this.head = this.body.getChild("head");
 		this.eyebrows = this.head.getChild("eyebrows");

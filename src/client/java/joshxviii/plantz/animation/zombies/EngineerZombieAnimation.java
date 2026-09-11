@@ -9,7 +9,7 @@ import net.minecraft.client.animation.KeyframeAnimations;
  * @author Josh
  */
 public class EngineerZombieAnimation {
-        public static final AnimationDefinition action = AnimationDefinition.Builder.withLength(0.32F)
+        public static final AnimationDefinition action = AnimationDefinition.Builder.withLength(0.32F).looping()
                 .addAnimation("body", new AnimationChannel(AnimationChannel.Targets.ROTATION,
                         new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
                         new Keyframe(0.08F, KeyframeAnimations.degreeVec(0.0F, 12.5F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
