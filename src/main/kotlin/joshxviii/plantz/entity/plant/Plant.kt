@@ -12,6 +12,7 @@ import joshxviii.plantz.PazDataSerializers.DATA_SLEEPING
 import joshxviii.plantz.PazTags.BlockTags.PLANTABLE
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.ai.goal.SleepGoal
+import joshxviii.plantz.api.SeedMutationManager
 import joshxviii.plantz.entity.Sun
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.ChatFormatting
@@ -540,13 +541,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         heal(healingAmount)
         return success
     }
-
-    /**
-     *TODO: I would like to make the seed mutation system data driven at some point rather than using overrides.
-     * It would have to be able to parse criteria like current biome, random chance, weather and time.
-     * And give any entity type as an output.
-     */
-    open fun getZenGrownSeedType(): EntityType<*> = type
+    
+    open fun getZenGrownSeedType(): EntityType<*> = SeedMutationManager.resolve(this)
 
     fun awardSeedPacket(player: Player) {
         val level = level() as? ServerLevel ?: return
