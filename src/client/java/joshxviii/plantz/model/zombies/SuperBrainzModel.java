@@ -2,8 +2,8 @@ package joshxviii.plantz.model.zombies;
 
 import joshxviii.plantz.ai.ZombieState;
 import joshxviii.plantz.animation.zombies.SuperBrainzAnimation;
-import joshxviii.plantz.renderer.entity.PazZombieRenderState;
-import joshxviii.plantz.renderer.entity.SuperBrainzRenderState;
+import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderState;
+import joshxviii.plantz.renderer.entity.zombie.SuperBrainzRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.geom.ModelLayerLocation;

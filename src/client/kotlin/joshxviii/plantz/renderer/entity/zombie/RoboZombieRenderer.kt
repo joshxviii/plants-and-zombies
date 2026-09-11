@@ -1,4 +1,4 @@
-package joshxviii.plantz.renderer.entity
+package joshxviii.plantz.renderer.entity.zombie
 
 import com.mojang.blaze3d.vertex.PoseStack
 import joshxviii.plantz.entity.zombie.PazZombie
@@ -8,7 +8,6 @@ import joshxviii.plantz.model.zombies.RoboZombieModel
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.state.level.CameraRenderState
-import net.minecraft.util.Mth
 import net.minecraft.world.entity.AnimationState
 
 class RoboZombieRenderer(

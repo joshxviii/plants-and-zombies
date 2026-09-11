@@ -1,4 +1,4 @@
-package joshxviii.plantz.renderer.entity
+package joshxviii.plantz.renderer.entity.plant
 
 import com.mojang.blaze3d.vertex.PoseStack
 import joshxviii.plantz.PazConfig
@@ -11,7 +11,7 @@ import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.plant.SunShroom
 import joshxviii.plantz.entity.plant.Sunflower
 import joshxviii.plantz.entity.plant.WallNut
-import joshxviii.plantz.renderer.entity.PlantRenderState.Companion.TEXTURE_PATH
+import joshxviii.plantz.renderer.entity.plant.PlantRenderState.Companion.TEXTURE_PATH
 import joshxviii.plantz.renderer.getEmissiveTextureLocation
 import joshxviii.plantz.renderer.getTextureLocation
 import joshxviii.plantz.renderer.isMagicName
@@ -40,7 +40,7 @@ class PlantRenderer(
     private val defaultModel: EntityModel<PlantRenderState>,
     context: EntityRendererProvider.Context,
     private val babyModel: EntityModel<PlantRenderState>? = null,
-) : MobRenderer<Plant, PlantRenderState, EntityModel<PlantRenderState>>(
+) : net.minecraft.client.renderer.entity.MobRenderer<Plant, PlantRenderState, EntityModel<PlantRenderState>>(
     context,
     defaultModel,
     0.5f
@@ -149,7 +149,7 @@ class PlantRenderer(
 
 class EmissivePlantLayer<M : EntityModel<PlantRenderState>>(
     renderer: RenderLayerParent<PlantRenderState, M>,
-) : EyesLayer<PlantRenderState, M>(renderer) {
+) : net.minecraft.client.renderer.entity.layers.EyesLayer<PlantRenderState, M>(renderer) {
 
     override fun submit(
         poseStack: PoseStack,
@@ -168,7 +168,7 @@ class EmissivePlantLayer<M : EntityModel<PlantRenderState>>(
 
 class SunGlowLayer<M : EntityModel<PlantRenderState>>(
     renderer: RenderLayerParent<PlantRenderState, M>,
-) : EyesLayer<PlantRenderState, M>(renderer) {
+) : net.minecraft.client.renderer.entity.layers.EyesLayer<PlantRenderState, M>(renderer) {
     override fun submit(
         poseStack: PoseStack,
         submitNodeCollector: SubmitNodeCollector,
@@ -187,7 +187,7 @@ class SunGlowLayer<M : EntityModel<PlantRenderState>>(
     override fun renderType(): RenderType = RenderTypes.lines()
 }
 
-class PlantRenderState : LivingEntityRenderState() {
+class PlantRenderState : net.minecraft.client.renderer.entity.state.LivingEntityRenderState() {
     companion object {
         const val TEXTURE_PATH = "textures/entity/plant"
     }
