@@ -33,6 +33,4 @@ class WinterMelon(type: EntityType<out Plant>, level: Level) : Plant(PazEntities
                     || (target is Enemy && isTame))
         })
     }
-
-    override fun getZenGrownSeedType(): EntityType<*> = if (random.nextFloat() < if (level().getBiome(blockPosition()).`is`(PazTags.Biomes.HAS_WINTER_MELON)) 0.3f else 0.75f) PazEntities.MELON_PULT else super.getZenGrownSeedType()
 }
