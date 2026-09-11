@@ -33,8 +33,6 @@ class WallNut(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.WAL
 
     override fun attackGoals() {}
 
-    override fun getZenGrownSeedType(): EntityType<*> = if (random.nextFloat() < 0.05f) PazEntities.EXPLODE_O_NUT else super.getZenGrownSeedType()
-
     override fun canBeCollidedWith(other: Entity?): Boolean = wallNutCollision(this, other)
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {

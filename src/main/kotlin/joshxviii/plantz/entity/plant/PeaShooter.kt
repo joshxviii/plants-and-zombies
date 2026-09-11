@@ -31,8 +31,6 @@ class PeaShooter(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.
         })
     }
 
-    override fun getZenGrownSeedType(): EntityType<*> = if (random.nextFloat() < 0.1f) PazEntities.REPEATER else super.getZenGrownSeedType()
-
     override fun actuallyHurt(level: ServerLevel, source: DamageSource, damage: Float) {
         super.actuallyHurt(level, source, damage)
         if (source.`is`(DamageTypes.LIGHTNING_BOLT)) {

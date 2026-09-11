@@ -12,6 +12,7 @@ import joshxviii.plantz.PazDataSerializers.DATA_SLEEPING
 import joshxviii.plantz.PazTags.BlockTags.PLANTABLE
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.ai.goal.SleepGoal
+import joshxviii.plantz.api.SeedMutationManager
 import joshxviii.plantz.entity.Sun
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.ChatFormatting
@@ -497,6 +498,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }
             PlantState.IDLE -> {
                 idleAnimationState.startIfStopped(tickCount - idleAnimationStartTick)
+                initAnimationState.stop()
                 actionAnimationState.stop()
                 coolDownAnimationState.stop()
                 specialAnimation.stop()
@@ -546,18 +548,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return success
     }
 
-    /**
-     *TODO: I would like to make the seed mutation system data driven at some point rather than using overrides.
-     * It would have to be able to parse criteria like biome, random chance, and weather.
-     * And give any entity type as an output.
-     */
-    open fun getZenGrownSeedType(): EntityType<*> = type
-
     fun awardSeedPacket(player: Player) {
         val level = level() as? ServerLevel ?: return
         receivedSun = 0
         receivedWater = 0
-        val stack = SeedPacketItem.stackFor(getZenGrownSeedType())
+        val stack = SeedPacketItem.stackFor(
+            SeedMutationManager.resolve(this)
+        )
         val itemEntity = ItemEntity(level, x, y + 0.5, z, stack)
         level.addFreshEntity(itemEntity)
         playSound(SoundEvents.ROOTED_DIRT_BREAK)
@@ -578,6 +575,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     fun testGrowConditions(): PlantGrowNeeds {
+        if (!canProduceSeeds()) return PlantGrowNeeds.CANNOT_GROW
         val farmBlock = getBlockBelow()
         if (!farmBlock.`is`(PazTags.BlockTags.FARMABLE) || !isTame) return PlantGrowNeeds.SOIL
         if (receivedWater <= 0) {
@@ -605,6 +603,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     open fun sleepsDuringDay(): Boolean = this.`is`(PazTags.EntityTypes.MUSHROOM)
     open fun canSurviveOn(block: BlockState) : Boolean = block.`is`(PLANTABLE)
     open fun canPlaceOn(block: BlockState) : Boolean = canSurviveOn(block)
+    open fun canProduceSeeds(): Boolean = true
     open fun clampToGrid() = true
     open fun cooldownFinished() {}
 

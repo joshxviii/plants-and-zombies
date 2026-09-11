@@ -6,7 +6,7 @@
 package joshxviii.plantz.model.zombies;
 
 import joshxviii.plantz.animation.zombies.GraveDiggerAnimation;
-import joshxviii.plantz.gui.GuiUtilKt;
+import joshxviii.plantz.renderer.RenderingUtilsKt;
 import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.AnimationUtils;
@@ -31,7 +31,7 @@ public class GraveDiggerModel<S extends PazZombieRenderState> extends PazZombieM
 		this.idleAnimation = GraveDiggerAnimation.idle.bake(root);
 		this.walkAnimation = GraveDiggerAnimation.walk.bake(root);
 		this.actionAnimation = GraveDiggerAnimation.action.bake(root);
-		this.big_hat = GuiUtilKt.getChildOrNull(this.getHead(), "big_hat");
+		this.big_hat = RenderingUtilsKt.getChildOrNull(this.getHead(), "big_hat");
 	}
 
 	@Override

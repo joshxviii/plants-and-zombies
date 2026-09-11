@@ -113,7 +113,7 @@ class SunRenderer(context: EntityRendererProvider.Context) :
     }
 }
 
-class SunRenderState : net.minecraft.client.renderer.entity.state.EntityRenderState() {
+class SunRenderState : EntityRenderState() {
     var value: Int = 0
     var lifeTime: Int = 0
     var icon: Int = 0

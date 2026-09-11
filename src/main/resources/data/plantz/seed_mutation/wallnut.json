@@ -1,0 +1,8 @@
+{
+  "mutations": [
+    {
+      "chance": 0.05,
+      "result": "plantz:explode_o_nut"
+    }
+  ]
+}

@@ -1,23 +1,20 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.api.SeedMutationManager
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.block.entity.MailboxManager
 import joshxviii.plantz.block.entity.getMailboxMailQueue
 import joshxviii.plantz.block.entity.getTimeMachineManager
 import joshxviii.plantz.block.entity.TimeMachineBlockEntity
 import joshxviii.plantz.networking.ServerConfigResponsePayload
-import joshxviii.plantz.raid.getZombieRaids
-import net.fabricmc.api.EnvType
-import net.fabricmc.api.Environment
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
-import net.fabricmc.fabric.impl.menu.Networking
-import net.minecraft.util.profiling.jfr.event.NetworkSummaryEvent
+import net.minecraft.server.ReloadableServerResources
+import net.minecraft.server.packs.PackType
+import net.minecraft.server.packs.resources.ReloadableResourceManager
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
@@ -25,10 +22,12 @@ import org.apache.logging.log4j.Logger
 object PazMain : ModInitializer {
 	const val MODID = "plantz"
 	@JvmField
-	val LOGGER: Logger = LogManager.getLogger()
+	val LOGGER: Logger = LogManager.getLogger("Plants & Zombies")
 
 	override fun onInitialize() {
+		PazRegistries.initialize()
 		PazConfig.load()
+
 		ServerLifecycleEvents.SERVER_STARTING.register {
 			PazNetwork.ZombieRaidClientCache.clear()
 			PazConfig.load()

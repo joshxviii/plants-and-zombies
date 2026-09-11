@@ -1,14 +1,11 @@
 package joshxviii.plantz.gui
 
 import joshxviii.plantz.MailboxData
-import joshxviii.plantz.PazBlocks
-import joshxviii.plantz.block.entity.MailboxBlockEntity
-import joshxviii.plantz.inventory.MailboxMenu
 import joshxviii.plantz.pazResource
+import joshxviii.plantz.renderer.outlineText
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Tooltip
-import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier

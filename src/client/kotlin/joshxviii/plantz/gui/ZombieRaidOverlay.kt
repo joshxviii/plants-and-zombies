@@ -5,6 +5,7 @@ import joshxviii.plantz.PazConfig
 import joshxviii.plantz.block.entity.FlagBlockEntity
 import joshxviii.plantz.pazResource
 import joshxviii.plantz.raid.ZombieRaid
+import joshxviii.plantz.renderer.outlineText
 import joshxviii.plantz.tickTimeFormat
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
@@ -13,7 +14,6 @@ import net.minecraft.client.gui.components.LerpingBossEvent
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
-import net.minecraft.util.ARGB
 import net.minecraft.util.Mth
 
 object ZombieRaidOverlay {

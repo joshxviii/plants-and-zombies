@@ -1,0 +1,8 @@
+{
+  "mutations": [
+    {
+      "chance": 0.95,
+      "result": "plantz:peashooter"
+    }
+  ]
+}

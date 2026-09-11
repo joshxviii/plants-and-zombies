@@ -19,6 +19,7 @@ public class PlantModel extends EntityModel<@NotNull PlantRenderState> {
     KeyframeAnimation actionAnimation;
     KeyframeAnimation sleepAnimation;
     KeyframeAnimation cooldownAnimation;
+    KeyframeAnimation walkAnimation;
     final KeyframeAnimation bounceAnimation;
 
     protected PlantModel(ModelPart root) {
@@ -38,7 +39,9 @@ public class PlantModel extends EntityModel<@NotNull PlantRenderState> {
         return this.sleepAnimation;
     };
 
-    public KeyframeAnimation getProcessedAction(PlantRenderState state) { return this.actionAnimation; }
+    public KeyframeAnimation getProcessedAction(PlantRenderState state) {
+        return this.actionAnimation;
+    }
 
     @Override
     public void setupAnim(@NotNull PlantRenderState state) {
@@ -49,5 +52,7 @@ public class PlantModel extends EntityModel<@NotNull PlantRenderState> {
         if (sleepAnimation!=null)    getProcessedSleep(state).apply(state.getSleepAnimationState(), state.ageInTicks);
         if (cooldownAnimation!=null && !state.getInitAnimationState().isStarted()) this.cooldownAnimation.apply(state.getCoolDownAnimationState(), state.ageInTicks);
         this.bounceAnimation.apply(state.getBounceAnimationState(), state.ageInTicks);
+
+        if (walkAnimation!=null) walkAnimation.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 1f, 1f);
     }
 }

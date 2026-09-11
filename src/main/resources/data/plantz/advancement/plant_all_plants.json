@@ -210,11 +210,11 @@
         }
       }
     },
-    "plantz:ice_shroom": {
+    "plantz:iceshroom": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
         "entity": {
-          "type": "plantz:ice_shroom"
+          "type": "plantz:iceshroom"
         }
       }
     },

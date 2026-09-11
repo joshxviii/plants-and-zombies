@@ -1,6 +1,7 @@
 package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.PazTags
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.entity.projectile.FrozenMelon
 import joshxviii.plantz.entity.projectile.Melon
@@ -32,6 +33,4 @@ class WinterMelon(type: EntityType<out Plant>, level: Level) : Plant(PazEntities
                     || (target is Enemy && isTame))
         })
     }
-
-    override fun getZenGrownSeedType(): EntityType<*> = if (random.nextFloat() < 0.65f) PazEntities.MELON_PULT else super.getZenGrownSeedType()
 }

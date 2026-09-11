@@ -31,8 +31,6 @@ class ElectricPeaShooter(type: EntityType<out Plant>, level: Level) : Plant(PazE
         })
     }
 
-    override fun getZenGrownSeedType(): EntityType<*> = if (random.nextFloat() < 0.95f) PazEntities.PEA_SHOOTER else super.getZenGrownSeedType()
-
     override fun tick() {
         super.tick()
 
