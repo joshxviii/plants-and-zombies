@@ -278,6 +278,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         output.putInt("plantz:SeedGrowTime", seedGrowCooldown)
         output.putInt("plantz:CoffeeBuff", coffeeBuff)
         output.putInt("plantz:Cooldown", cooldown)
+        output.putInt("plantz:State", state.ordinal)
         output.putBoolean("plantz:IsPoweredUp", poweredUp)
         attachedPlayerReference.let { EntityReference.store(it, output, "plantz:AttachedPlayer") }
     }
@@ -289,6 +290,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         seedGrowCooldown = input.getInt("plantz:SeedGrowTime").getOrElse { 0 }
         coffeeBuff = input.getInt("plantz:CoffeeBuff").getOrElse { 0 }
         cooldown = input.getInt("plantz:Cooldown").getOrElse { this.entityData.get(COOLDOWN) }
+        state = PlantState.entries[input.getInt("plantz:State").getOrElse { 1 }]
         poweredUp = input.getBooleanOr("plantz:IsPoweredUp", false)
         attachedPlayerReference = Optional.ofNullable((EntityReference.read<LivingEntity>(input, "plantz:AttachedPlayer"))).getOrNull()
     }
@@ -486,12 +488,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 initAnimationState.startIfStopped(tickCount)
                 if (tickCount >= 19) {
                     idleAnimationStartTick = 0
-                    idleAnimationState.startIfStopped(tickCount - idleAnimationStartTick)
                     initAnimationState.stop()
+                    idleAnimationState.startIfStopped(tickCount - idleAnimationStartTick)
                     state = if (cooldown > 0) PlantState.COOLDOWN else PlantState.IDLE
                 }
             }
             PlantState.IDLE -> {
+                idleAnimationState.startIfStopped(tickCount - idleAnimationStartTick)
                 actionAnimationState.stop()
                 coolDownAnimationState.stop()
                 specialAnimation.stop()
