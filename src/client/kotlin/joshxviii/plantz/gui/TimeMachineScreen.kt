@@ -2,6 +2,7 @@ package joshxviii.plantz.gui
 
 import joshxviii.plantz.inventory.TimeMachineMenu
 import joshxviii.plantz.pazResource
+import joshxviii.plantz.renderer.outlineText
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen

@@ -33,5 +33,5 @@ class MelonPult(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.M
         })
     }
 
-    override fun getZenGrownSeedType(): EntityType<*> = if (level().getBiome(blockPosition()).`is`(PazTags.Biomes.HAS_WINTER_MELON) && random.nextFloat() < 0.15f) PazEntities.WINTER_MELON else super.getZenGrownSeedType()
+    override fun getZenGrownSeedType(): EntityType<*> = if (level().getBiome(blockPosition()).`is`(PazTags.Biomes.HAS_WINTER_MELON) && random.nextFloat() < 0.2f) PazEntities.WINTER_MELON else super.getZenGrownSeedType()
 }

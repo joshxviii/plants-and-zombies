@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.cursor.CursorTypes
 import joshxviii.plantz.inventory.MailboxMenu
 import joshxviii.plantz.networking.SendMailRequestPayload
 import joshxviii.plantz.pazResource
+import joshxviii.plantz.renderer.outlineText
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button

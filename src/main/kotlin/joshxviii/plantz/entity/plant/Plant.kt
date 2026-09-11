@@ -543,7 +543,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     /**
      *TODO: I would like to make the seed mutation system data driven at some point rather than using overrides.
-     * It would have to be able to parse criteria like biome, random chance, and weather.
+     * It would have to be able to parse criteria like current biome, random chance, weather and time.
      * And give any entity type as an output.
      */
     open fun getZenGrownSeedType(): EntityType<*> = type

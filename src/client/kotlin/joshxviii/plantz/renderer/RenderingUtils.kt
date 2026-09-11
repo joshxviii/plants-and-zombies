@@ -5,17 +5,30 @@ import joshxviii.plantz.pazResource
 import joshxviii.plantz.renderer.entity.ProjectileRenderState
 import joshxviii.plantz.renderer.entity.ProjectileRenderer
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.Font
+import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState
 import net.minecraft.client.renderer.entity.state.EntityRenderState
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import net.minecraft.server.packs.resources.ResourceManager
+import net.minecraft.util.ARGB
 import kotlin.collections.component1
 import kotlin.collections.component2
 
-
+fun GuiGraphicsExtractor.outlineText(font: Font, text: Component, x: Int = 0, y: Int = 0, color: Int = 0xFFFFFF, outlineColor: Int = ARGB.multiply(color, 0x333333)) {
+    text(font, text, x+1, y, ARGB.opaque(outlineColor), false)
+    text(font, text, x-1, y, ARGB.opaque(outlineColor), false)
+    text(font, text, x, y+1, ARGB.opaque(outlineColor), false)
+    text(font, text, x, y-1, ARGB.opaque(outlineColor), false)
+    text(font, text, x, y, ARGB.opaque(color), false)
+}
 
 // MODEL RENDERING
+fun ModelPart.getChildOrNull(name: String): ModelPart? = if (this.hasChild(name)) this.getChild(name) else null
+
 fun List<String>.permutationsDescending(): List<String> = buildList {
     add(this@permutationsDescending.joinToString("_"))
     for (i in size - 1 downTo 1) {
