@@ -92,8 +92,7 @@ data class SeedMutationRule(
         val CODEC: Codec<SeedMutationRule> = RecordCodecBuilder.create { inst ->
             inst.group(
                 Codec.FLOAT.optionalFieldOf("chance", 1f).forGetter { it.chance },
-                RegistryCodecs.homogeneousList(Registries.BIOME)
-                    .optionalFieldOf("biomes").forGetter { it.biomes },
+                RegistryCodecs.homogeneousList(Registries.BIOME).optionalFieldOf("biome").forGetter { it.biomes },
                 WeatherPredicate.CODEC.optionalFieldOf("weather").forGetter { it.weather },
                 TimePredicate.CODEC.optionalFieldOf("time").forGetter { it.time },
                 BuiltInRegistries.ENTITY_TYPE.holderByNameCodec().fieldOf("result").forGetter { it.result },

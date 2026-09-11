@@ -107,7 +107,33 @@
 - Added configuration options.
   - `alloyCost` – A list of entity ids paired with an integer.
   - `showHiddenItemsInCreativeTab` – Enables some W.I.P items in the creative tab.
-
+- Added `seed_mutation` data directory.
+  - The path for editing Seed Mutations is: `data/<namespace>/seed_mutation/<entity_name>.json`
+  - Entry Format:
+    - `mutations` - A list of mutation objects.
+      - `biome` - A biome or biome tag list.
+      - `weather` - `"clear"`, `"rain"`, `"thunder"`.
+      - `time` - `"day"`, `"night"`, or a ranged value: `{ "min": 0, "max": 12000 }`
+      - `chance` - value between 0-1. (defaults to 1.0)
+      - `result` - An entity id. (Required)
+  - Mutation objects are evaluated from top to bottom, the first mutation that matches the conditions will be accepted.
+  ### Example file: 
+  ```
+  {
+    "mutations": [
+      {
+        "biomes": "#plantz:plant/has_winter_melon",
+        "chance": 0.75,
+        "result": "plantz:winter_melon"
+      },
+      {
+        "chance": 0.6,
+        "result": "plantz:melonpult"
+      }
+    ]
+  }
+  ```
+  - Datapacks or other mods can add or replace these files to change mutation rates and conditions.
 
 # Changelog 1.4.2
 ### Hotfix

@@ -6,7 +6,7 @@
       "result": "plantz:electric_peashooter"
     },
     {
-      "biomes": "#plantz:plant/has_fire_peashooter",
+      "biome": "#plantz:plant/has_fire_peashooter",
       "chance": 0.5,
       "result": "plantz:fire_peashooter"
     },
