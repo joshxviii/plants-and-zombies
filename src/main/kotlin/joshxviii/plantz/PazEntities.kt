@@ -335,7 +335,9 @@ object PazEntities {
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 450.0,
             followRange = 48.0,
-            attackDamage = 10.0
+            movementSpeed = 0.17,
+            attackDamage = 10.0,
+            knockbackResistance = 0.9
         )
     )
     // endregion

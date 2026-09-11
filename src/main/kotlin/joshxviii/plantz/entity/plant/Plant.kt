@@ -132,6 +132,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             val maxHealth: Double = 20.0,
             val attackDamage: Double = PLANT_DAMAGE,
             val attackKnockback: Double = 0.001,
+            val knockbackResistance: Double = 0.0,
             val attackRange: Double = 2.5,
             val movementSpeed: Double = 0.0,
             val followRange: Double = 14.0,
@@ -144,6 +145,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                     .add(Attributes.FOLLOW_RANGE, followRange)
                     .add(Attributes.ATTACK_DAMAGE, attackDamage)
                     .add(Attributes.ATTACK_KNOCKBACK, attackKnockback)
+                    .add(Attributes.KNOCKBACK_RESISTANCE, knockbackResistance)
                     .add(Attributes.ENTITY_INTERACTION_RANGE, attackRange)
                     .add(Attributes.MOVEMENT_SPEED, movementSpeed)
                     .add(Attributes.ARMOR, armor)

@@ -295,6 +295,6 @@ public class RoyalSunflowerModel extends PlantModel {
 		this.stem.yRot = state.yRot * Mth.DEG_TO_RAD;
 		this.roots.yRot = state.bodyRot * Mth.DEG_TO_RAD;
 
-		walkAnimation.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 2.5f,2.5f);
+		walkAnimation.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 3.5f,3.5f);
 	}
 }
