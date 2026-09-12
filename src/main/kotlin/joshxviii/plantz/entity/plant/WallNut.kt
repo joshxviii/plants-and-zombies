@@ -2,11 +2,13 @@ package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazTags.EntityTypes.WALLNUT_DEFLECTABLE
+import joshxviii.plantz.applyImpulse
 import joshxviii.plantz.entity.Sun
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.util.Mth
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
@@ -18,6 +20,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.material.PushReaction
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
+import net.minecraft.world.phys.Vec3
 
 open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
@@ -43,13 +46,46 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
         val ROLLING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(WallNut::class.java, EntityDataSerializers.BOOLEAN)
     }
 
+    override fun clampToGrid(): Boolean = !isRolling
+
+    override fun limitPistonMovement(vec: Vec3): Vec3 {
+        val result = super.limitPistonMovement(vec)
+        if (result.length() > 0.25) {
+            isRolling = true
+            applyImpulse(result, pow = 1.0f)
+        }
+        return result
+    }
+
+    override fun shouldDiscardFriction(): Boolean {
+        return isRolling || super.shouldDiscardFriction()
+    }
+
+    override fun setDiscardFriction(discardFriction: Boolean) {
+        super.setDiscardFriction(discardFriction)
+    }
+
     override fun getPistonPushReaction(): PushReaction {
-        return super.getPistonPushReaction()
+        val result = super.getPistonPushReaction()
+        return result
     }
 
     var isRolling: Boolean
         get() = this.entityData.get(ROLLING)
         set(value) { this.entityData.set(ROLLING, value) }
+
+    var stopTick = 0
+
+    override fun tick() {
+        super.tick()
+        if (deltaMovement.horizontalDistance() > 0.075) stopTick = 4
+        if (isRolling && --stopTick <= 0) {
+            isRolling = false
+            deltaMovement = Vec3.ZERO
+            applyGridClamp()
+        }
+
+    }
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
@@ -68,7 +104,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
 
     override fun attackGoals() {}
 
-    override fun canBeCollidedWith(other: Entity?): Boolean = wallNutCollision(this, other)
+    override fun canBeCollidedWith(other: Entity?): Boolean = if(isRolling) super.canBeCollidedWith(other) else wallNutCollision(this, other)
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean{
         source.directEntity?.let {

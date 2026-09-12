@@ -49,6 +49,7 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal
 import net.minecraft.world.entity.ai.village.poi.PoiManager
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.monster.Enemy
+import net.minecraft.world.entity.monster.Shulker
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
@@ -126,6 +127,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             val maxHealth: Double = 20.0,
             val attackDamage: Double = PLANT_DAMAGE,
             val attackKnockback: Double = 0.001,
+            val knockbackResistance: Double = 0.0,
             val attackRange: Double = 2.5,
             val movementSpeed: Double = 0.0,
             val followRange: Double = 14.0,
@@ -138,6 +140,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                     .add(Attributes.FOLLOW_RANGE, followRange)
                     .add(Attributes.ATTACK_DAMAGE, attackDamage)
                     .add(Attributes.ATTACK_KNOCKBACK, attackKnockback)
+                    .add(Attributes.KNOCKBACK_RESISTANCE, knockbackResistance)
                     .add(Attributes.ENTITY_INTERACTION_RANGE, attackRange)
                     .add(Attributes.MOVEMENT_SPEED, movementSpeed)
                     .add(Attributes.ARMOR, armor)
@@ -146,6 +149,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
     }
 
+    var clientOldAttachPosition: BlockPos? = null
     private var nutrientSupply = NUTRIENT_SUPPLY_MAX
 
     val isGrowingSeeds: Boolean
@@ -235,12 +239,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     // disables body control
     protected val noLookControl = object : LookControl(this) {}
     override fun createBodyControl(): BodyRotationControl = object : BodyRotationControl(this) { override fun clientTick() {} }
-
-    // only apply up/down movement
-    override fun getDeltaMovement(): Vec3 = Vec3(0.0, super.deltaMovement.y, 0.0)
-    override fun setDeltaMovement(deltaMovement: Vec3) {
-        if (!clampToGrid() || !onGround() || isInWater) return super.setDeltaMovement(deltaMovement)
-    }
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
@@ -377,9 +375,29 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     fun hasPlantPotProtection(): Boolean= getBlockBelow().`is`(PazTags.BlockTags.PLANT_POT) || isAttached()
 
+    // only apply up/down movement
+    override fun getDeltaMovement(): Vec3 {
+        return if (clampToGrid()) Vec3(0.0, super.deltaMovement.y, 0.0)
+        else super.getDeltaMovement()
+    }
+    override fun setDeltaMovement(deltaMovement: Vec3) {
+        val m = if (clampToGrid() && onGround() && !isInWater) Vec3(0.0, deltaMovement.y, 0.0)
+        else deltaMovement
+        super.setDeltaMovement(m)
+    }
+
     override fun setPos(x: Double, y: Double, z: Double) {
-        if (!clampToGrid() || this.isPassenger || isAttached() || !onGround()) super.setPos(x, y, z)
-        else super.setPos(Mth.floor(x) + 0.5, y, Mth.floor(z) + 0.5)
+        if (clampToGrid() && !isPassenger && !isAttached() && onGround()) {
+            super.setPos(Mth.floor(x) + 0.5, y, Mth.floor(z) + 0.5)
+        } else super.setPos(x, y, z)
+    }
+
+    fun applyGridClamp() {
+        val gx = Mth.floor(x) + 0.5
+        val gz = Mth.floor(z) + 0.5
+        if (x != gx && z != gz) {
+            snapTo(gx, y, gz)
+        }
     }
 
     override fun teleport(transition: TeleportTransition): Entity? {
