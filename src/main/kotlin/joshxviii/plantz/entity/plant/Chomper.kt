@@ -20,7 +20,7 @@ import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 
-class Chomper(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CHOMPER, level) {
+class Chomper(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
     companion object {
         private val CHOMP_ATTACK_MODIFIER = AttributeModifier(

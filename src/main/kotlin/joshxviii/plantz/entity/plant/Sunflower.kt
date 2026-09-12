@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level
 class Sunflower(
     type: EntityType<out Plant>,
     level: Level,
-) : Plant(PazEntities.SUNFLOWER, level) {
+) : Plant(type, level) {
     override fun attackGoals() {}
 
     override fun sleepsDuringNight(): Boolean = true

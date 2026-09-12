@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.phys.Vec3
 
-class LightningReed(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.LIGHTNING_REED, level) {
+class LightningReed(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
     companion object {
         fun checkLightningReedSpawnRules(
             type: EntityType<out Plant>,

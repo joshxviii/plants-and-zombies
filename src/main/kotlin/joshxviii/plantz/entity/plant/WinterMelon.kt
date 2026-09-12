@@ -14,7 +14,7 @@ import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec2
 
-class WinterMelon(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.WINTER_MELON, level) {
+class WinterMelon(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
     override fun registerGoals() {
         super.registerGoals()

@@ -3,6 +3,9 @@ package joshxviii.plantz.entity.plant
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazTags.EntityTypes.WALLNUT_DEFLECTABLE
 import joshxviii.plantz.entity.Sun
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
@@ -12,10 +15,17 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.material.PushReaction
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 
-class WallNut(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.WALL_NUT, level) {
+open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
     companion object {
+        fun wallNutReducedDamage(entity: Entity?, damage: Float): Float {
+            return if (entity is Zombie) damage*0.666f else damage
+        }
+
         fun wallNutCollision(wallnut: Plant, other: Entity?): Boolean {
             if (other is Zombie && other.swingTime == 0) {// when colliding with a zombie, the zombie will attack the wallnut
                 val level = other.level() as? ServerLevel
@@ -29,13 +39,38 @@ class WallNut(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.WAL
             if (other is Sun) return false
             return wallnut.isAlive && other != wallnut.attachedEntity
         }
+
+        val ROLLING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(WallNut::class.java, EntityDataSerializers.BOOLEAN)
+    }
+
+    override fun getPistonPushReaction(): PushReaction {
+        return super.getPistonPushReaction()
+    }
+
+    var isRolling: Boolean
+        get() = this.entityData.get(ROLLING)
+        set(value) { this.entityData.set(ROLLING, value) }
+
+    override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
+        super.defineSynchedData(entityData)
+        entityData.define(ROLLING, false)
+    }
+
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+        output.putBoolean("plantz:IsRolling", isRolling)
+    }
+
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+        isRolling = input.getBooleanOr("plantz:IsRolling", false)
     }
 
     override fun attackGoals() {}
 
     override fun canBeCollidedWith(other: Entity?): Boolean = wallNutCollision(this, other)
 
-    override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
+    override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean{
         source.directEntity?.let {
             if (it.`is`(WALLNUT_DEFLECTABLE)) return false
         }
@@ -43,8 +78,9 @@ class WallNut(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.WAL
     }
 
     override fun actuallyHurt(level: ServerLevel, source: DamageSource, damage: Float) {
-        val reducedDamage = if (source.entity is Zombie) damage*0.666f else damage
-        super.actuallyHurt(level, source, reducedDamage)
+        super.actuallyHurt(level, source,
+            wallNutReducedDamage(source.entity, damage)
+        )
     }
 
     override fun canSurviveOn(block: BlockState): Boolean {

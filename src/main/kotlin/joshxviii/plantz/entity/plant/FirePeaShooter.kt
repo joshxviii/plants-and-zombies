@@ -13,7 +13,7 @@ import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 
-class FirePeaShooter(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.FIRE_PEA_SHOOTER, level) {
+class FirePeaShooter(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
     override fun registerGoals() {
         super.registerGoals()
 

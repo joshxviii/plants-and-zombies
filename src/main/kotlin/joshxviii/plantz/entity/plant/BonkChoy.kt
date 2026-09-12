@@ -20,7 +20,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 
-class BonkChoy(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.BONK_CHOY, level) {
+class BonkChoy(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
     companion object {
         val USE_UPPERCUT: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(BonkChoy::class.java, EntityDataSerializers.BOOLEAN)

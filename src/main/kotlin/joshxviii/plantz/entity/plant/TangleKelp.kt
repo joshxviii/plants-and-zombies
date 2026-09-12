@@ -29,7 +29,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.Vec3
 import kotlin.math.sqrt
 
-class TangleKelp(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.TANGLE_KELP, level) {
+class TangleKelp(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
     companion object {
         fun checkTangleKelpSpawnRules(

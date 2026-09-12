@@ -13,7 +13,7 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.Level
 
-class HypnoShroom(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.HYPNOSHROOM, level) {
+class HypnoShroom(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
     override fun registerGoals() {
         super.registerGoals()
 

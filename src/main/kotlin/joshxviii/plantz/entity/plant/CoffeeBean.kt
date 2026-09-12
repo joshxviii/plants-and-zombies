@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.block.state.BlockState
 
-class CoffeeBean(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.COFFEE_BEAN, level) {
+class CoffeeBean(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
     companion object {
         fun checkCoffeeBeanSpawnRules(

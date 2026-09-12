@@ -16,7 +16,7 @@ import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec2
 
-class KernelPult(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.KERNEL_PULT, level) {
+class KernelPult(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
     companion object {
         val HAS_BUTTER: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(KernelPult::class.java, EntityDataSerializers.BOOLEAN)

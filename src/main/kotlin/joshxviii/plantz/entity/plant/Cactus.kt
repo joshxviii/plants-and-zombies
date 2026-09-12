@@ -19,7 +19,7 @@ import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
 
-class Cactus(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.CACTUS, level) {
+class Cactus(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
     companion object {
         fun checkCactusSpawnRules(

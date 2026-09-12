@@ -2,13 +2,13 @@ package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazDamageTypes
-import joshxviii.plantz.PazDataSerializers.DATA_SWELL_DIR
 import joshxviii.plantz.PazSounds
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Holder
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
@@ -32,7 +32,7 @@ abstract class ExplosivePlant(type: EntityType<out ExplosivePlant>, level: Level
         val EXPLOSION_CALCULATOR: ExplosionDamageCalculator = SimpleExplosionDamageCalculator(false, true, Optional.of<Float>(1f), Optional.ofNullable(null))
         val DESTRUCTIVE_EXPLOSION_CALCULATOR: ExplosionDamageCalculator = SimpleExplosionDamageCalculator(true, false, Optional.of<Float>(1.5f), Optional.ofNullable(null))
 
-        val SWELL_DIR: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(ExplosivePlant::class.java, DATA_SWELL_DIR)
+        val SWELL_DIR: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(ExplosivePlant::class.java, EntityDataSerializers.INT)
     }
 
     var swellDir: Int

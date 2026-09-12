@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.state.BlockState
 
-class SeaShroom(type: EntityType<out Plant>, level: Level) : Plant(PazEntities.SEA_SHROOM, level) {
+class SeaShroom(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
     companion object {
         fun checkSeaShroomSpawnRules(

@@ -22,7 +22,7 @@ import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 
-class IceShroom(type: EntityType<out Plant>, level: Level) : ExplosivePlant(PazEntities.ICE_SHROOM, level) {
+class IceShroom(type: EntityType<out ExplosivePlant>, level: Level) : ExplosivePlant(type, level) {
     override fun registerGoals() {
         super.registerGoals()
         this.goalSelector.addGoal(1, ExplodeGoal(

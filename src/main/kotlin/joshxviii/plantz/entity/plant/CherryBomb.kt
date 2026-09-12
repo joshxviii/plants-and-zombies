@@ -22,7 +22,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.block.state.BlockState
 
-class CherryBomb(type: EntityType<out ExplosivePlant>, level: Level) : ExplosivePlant(PazEntities.CHERRY_BOMB, level) {
+class CherryBomb(type: EntityType<out ExplosivePlant>, level: Level) : ExplosivePlant(type, level) {
 
     companion object {
         fun checkCherryBombSpawnRules(
