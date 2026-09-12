@@ -36,11 +36,11 @@ import net.minecraft.world.phys.Vec3
 import org.joml.Quaternionf
 import kotlin.math.pow
 
-class PlantRenderer(
+open class PlantRenderer(
     private val defaultModel: EntityModel<PlantRenderState>,
     context: EntityRendererProvider.Context,
     private val babyModel: EntityModel<PlantRenderState>? = null,
-) : net.minecraft.client.renderer.entity.MobRenderer<Plant, PlantRenderState, EntityModel<PlantRenderState>>(
+) : MobRenderer<Plant, PlantRenderState, EntityModel<PlantRenderState>>(
     context,
     defaultModel,
     0.5f
@@ -149,7 +149,7 @@ class PlantRenderer(
 
 class EmissivePlantLayer<M : EntityModel<PlantRenderState>>(
     renderer: RenderLayerParent<PlantRenderState, M>,
-) : net.minecraft.client.renderer.entity.layers.EyesLayer<PlantRenderState, M>(renderer) {
+) : EyesLayer<PlantRenderState, M>(renderer) {
 
     override fun submit(
         poseStack: PoseStack,
@@ -168,7 +168,7 @@ class EmissivePlantLayer<M : EntityModel<PlantRenderState>>(
 
 class SunGlowLayer<M : EntityModel<PlantRenderState>>(
     renderer: RenderLayerParent<PlantRenderState, M>,
-) : net.minecraft.client.renderer.entity.layers.EyesLayer<PlantRenderState, M>(renderer) {
+) : EyesLayer<PlantRenderState, M>(renderer) {
     override fun submit(
         poseStack: PoseStack,
         submitNodeCollector: SubmitNodeCollector,
@@ -187,7 +187,7 @@ class SunGlowLayer<M : EntityModel<PlantRenderState>>(
     override fun renderType(): RenderType = RenderTypes.lines()
 }
 
-class PlantRenderState : net.minecraft.client.renderer.entity.state.LivingEntityRenderState() {
+open class PlantRenderState : LivingEntityRenderState() {
     companion object {
         const val TEXTURE_PATH = "textures/entity/plant"
     }

@@ -38,6 +38,7 @@ import joshxviii.plantz.renderer.entity.plant.PlantRenderer
 import joshxviii.plantz.renderer.entity.zombie.RoboZombieRenderer
 import joshxviii.plantz.renderer.entity.zombie.SuperBrainzRenderer
 import joshxviii.plantz.renderer.entity.BlueprintMachineRenderer
+import joshxviii.plantz.renderer.entity.plant.WallNutRenderer
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey
 import net.minecraft.client.model.geom.ModelLayerLocation
@@ -175,20 +176,10 @@ object PazModels {
         // REGISTER ENTITY RENDERERS
         EntityRenderers.register(PazEntities.PEA_SHOOTER) { PlantRenderer(PeaShooterModel(it.bakeLayer(PeaShooterModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.SUNFLOWER) { PlantRenderer(SunflowerModel(it.bakeLayer(SunflowerModel.LAYER_LOCATION)), it) }
-        EntityRenderers.register(PazEntities.WALL_NUT) { PlantRenderer(WallNutModel(it.bakeLayer(WallNutModel.LAYER_LOCATION)), it) }
-        EntityRenderers.register(PazEntities.EXPLODE_O_NUT) { PlantRenderer(WallNutModel(it.bakeLayer(WallNutModel.LAYER_LOCATION)), it) }
-        EntityRenderers.register(PazEntities.CHOMPER) {
-            PlantRenderer(
-                ChomperModel(it.bakeLayer(ChomperModel.LAYER_LOCATION)),
-                it
-            )
-        }
-        EntityRenderers.register(PazEntities.CHERRY_BOMB) {
-            PlantRenderer(
-                CherryBombModel(it.bakeLayer(CherryBombModel.LAYER_LOCATION)),
-                it
-            )
-        }
+        EntityRenderers.register(PazEntities.WALL_NUT) { WallNutRenderer(it) }
+        EntityRenderers.register(PazEntities.EXPLODE_O_NUT) { WallNutRenderer(it) }
+        EntityRenderers.register(PazEntities.CHOMPER) { PlantRenderer(ChomperModel(it.bakeLayer(ChomperModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.CHERRY_BOMB) { PlantRenderer(CherryBombModel(it.bakeLayer(CherryBombModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.POTATO_MINE) { PlantRenderer(PotatoMineModel(it.bakeLayer(PotatoMineModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.REPEATER) { PlantRenderer(RepeaterModel(it.bakeLayer(RepeaterModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.ICE_PEA_SHOOTER) { PlantRenderer(IcePeaShooterModel(it.bakeLayer(IcePeaShooterModel.LAYER_LOCATION)), it) }

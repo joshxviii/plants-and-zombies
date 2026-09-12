@@ -21,6 +21,7 @@ import net.minecraft.world.level.material.PushReaction
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
+import org.joml.Quaternionf
 
 open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
@@ -75,6 +76,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
         set(value) { this.entityData.set(ROLLING, value) }
 
     var stopTick = 0
+    var rollRotation: Quaternionf = Quaternionf()
 
     override fun tick() {
         super.tick()
