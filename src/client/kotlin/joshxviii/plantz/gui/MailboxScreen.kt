@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.cursor.CursorTypes
 import joshxviii.plantz.inventory.MailboxMenu
 import joshxviii.plantz.networking.SendMailRequestPayload
 import joshxviii.plantz.pazResource
+import joshxviii.plantz.renderer.PazButton
 import joshxviii.plantz.renderer.outlineText
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.gui.GuiGraphicsExtractor
@@ -68,7 +69,8 @@ class MailboxScreen(
     }
 
     fun initSendButton(x: Int, y: Int): Button {
-        val btn = PazButton(x, y, 20, 14,
+        val btn = PazButton(
+            x, y, 20, 14,
             { onSendPressed() },
             SEND_BUTTON, SEND_BUTTON_HOVER, SEND_BUTTON_PRESS,
             { menu.mailSlot.hasItem() && menu.selectedMailboxIndex != null },

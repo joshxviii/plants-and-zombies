@@ -1,9 +1,10 @@
 package joshxviii.plantz.gui
 
 import joshxviii.plantz.PazComponents
-import joshxviii.plantz.gui.Fonts.withFont
 import joshxviii.plantz.inventory.TimeMachineMenu
 import joshxviii.plantz.pazResource
+import joshxviii.plantz.renderer.Fonts
+import joshxviii.plantz.renderer.Fonts.withFont
 import joshxviii.plantz.renderer.outlineText
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphicsExtractor

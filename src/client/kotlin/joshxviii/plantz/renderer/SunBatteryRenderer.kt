@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
 import joshxviii.plantz.block.SunBatteryBlock
 import joshxviii.plantz.block.entity.SunBatteryBlockEntity
-import joshxviii.plantz.gui.GuiUtil
 import joshxviii.plantz.pazResource
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.SubmitNodeCollector

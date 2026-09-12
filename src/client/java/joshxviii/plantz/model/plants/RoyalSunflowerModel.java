@@ -62,7 +62,6 @@ public class RoyalSunflowerModel extends PlantModel {
 	private final ModelPart leaf_mid_4;
 	private final ModelPart leaf_tip_4;
 
-	final KeyframeAnimation walkAnimation;
 	final KeyframeAnimation chargeAnimation;
 
 	public RoyalSunflowerModel(ModelPart root) {
@@ -71,8 +70,8 @@ public class RoyalSunflowerModel extends PlantModel {
 		idleAnimation = RoyalSunflowerAnimation.idle.bake(root);
 		sleepAnimation = RoyalSunflowerAnimation.sleep.bake(root);
 		actionAnimation = RoyalSunflowerAnimation.action.bake(root);
+		walkAnimation = RoyalSunflowerAnimation.walk.bake(root);
 
-		this.walkAnimation = RoyalSunflowerAnimation.walk.bake(root);
 		this.chargeAnimation = RoyalSunflowerAnimation.charge.bake(root);
 
 		this.body = root.getChild("body");
@@ -294,7 +293,5 @@ public class RoyalSunflowerModel extends PlantModel {
 		this.head.xRot = state.xRot * Mth.DEG_TO_RAD;
 		this.stem.yRot = state.yRot * Mth.DEG_TO_RAD;
 		this.roots.yRot = state.bodyRot * Mth.DEG_TO_RAD;
-
-		walkAnimation.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 3.5f,3.5f);
 	}
 }

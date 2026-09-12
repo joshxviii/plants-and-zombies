@@ -5,7 +5,6 @@ import com.mojang.math.Axis
 import joshxviii.plantz.PazRenderPipelines
 import joshxviii.plantz.block.TimeMachineBlock
 import joshxviii.plantz.block.entity.TimeMachineBlockEntity
-import joshxviii.plantz.gui.GuiUtil
 import joshxviii.plantz.pazResource
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
