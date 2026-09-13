@@ -5,22 +5,20 @@ import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazTags.EntityTypes.WALLNUT_DEFLECTABLE
 import joshxviii.plantz.applyImpulse
 import joshxviii.plantz.entity.Sun
+import net.minecraft.core.Direction
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.InteractionResult
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.monster.zombie.Zombie
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.level.material.PushReaction
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
@@ -52,36 +50,28 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
         private const val ROLL_FRICTION = 0.99
     }
 
+    var isRolling: Boolean
+        get() = this.entityData.get(ROLLING)
+        private set(value) { this.entityData.set(ROLLING, value) }
+
+    var stopTick = 0
+    var rollRotation: Quaternionf = Quaternionf()
+
+    fun roll(direction: Vec3 = Direction.fromYRot(yRot.toDouble()).unitVec3, power: Float = 0.51f) {
+        isRolling = true
+        applyImpulse(direction.normalize(), pow = power, uncertainty = 0.1f)
+    }
+
     override fun clampToGrid(): Boolean = !isRolling
 
     override fun limitPistonMovement(vec: Vec3): Vec3 {
         val result = super.limitPistonMovement(vec)
-        if (result.length() > 0.25) {
-            isRolling = true
-            applyImpulse(result, pow = 1.0f)
-        }
+        if (result.length() > 0.25) roll(result)
         return result
     }
 
     override fun shouldDiscardFriction(): Boolean {
         return isRolling || super.shouldDiscardFriction()
-    }
-
-    override fun getPistonPushReaction(): PushReaction {
-        val result = super.getPistonPushReaction()
-        return result
-    }
-
-    var isRolling: Boolean
-        get() = this.entityData.get(ROLLING)
-        set(value) { this.entityData.set(ROLLING, value) }
-
-    var stopTick = 0
-    var rollRotation: Quaternionf = Quaternionf()
-
-    override fun mobInteract(player: Player, hand: InteractionHand): InteractionResult {
-        return super.mobInteract(player, hand)
-
     }
 
     override fun tick() {

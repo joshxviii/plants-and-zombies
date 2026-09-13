@@ -28,7 +28,7 @@ class ExplodeONut(type: EntityType<out Plant>, level: Level) : WallNut(type, lev
 
     override fun doPush(entity: Entity) {
         super.doPush(entity)
-        if (isRolling) explode()
+        if (isRolling && entity !is Plant) explode()
     }
 
     fun explode(

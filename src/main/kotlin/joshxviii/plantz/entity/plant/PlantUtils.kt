@@ -2,9 +2,16 @@ package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazConfig
+import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
+import joshxviii.plantz.getTotalSun
+import joshxviii.plantz.item.SeedPacketItem
+import joshxviii.plantz.removeSunFromStorageAndInventory
+import net.minecraft.ChatFormatting
 import net.minecraft.core.component.DataComponents
+import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.InteractionHand
@@ -13,6 +20,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ItemUtils
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.alchemy.Potions
+import net.minecraft.world.level.block.state.BlockState
 
 object PlantUtils {
 }
@@ -83,6 +91,71 @@ fun Plant.processWateringItem(player: Player, item: ItemStack, hand: Interaction
         return true
     }
     return false
+}
+
+//
+fun Plant.processGloveItem(player: Player, item: ItemStack, hand: InteractionHand): Boolean {
+    if (!item.`is`(PazItems.GARDENING_GLOVE)) return false
+    when (true) {
+        // roll wallnut
+        (this is WallNut && !isGrowingSeeds && !player.isShiftKeyDown) -> {
+            this.funnyBounce()
+            val direction = position().subtract(player.position())
+            this.roll(direction, power = 0.45f)
+            item.hurtAndBreak(1, player, hand)
+        }
+        // pet
+        else -> {
+            this.funnyBounce()
+            addParticlesAroundSelf(
+                level(),
+                ParticleTypes.HEART,
+                amount = 0..0,
+                height = eyeHeight
+            )
+        }
+    }
+    return true
+}
+
+// seed packet interaction
+fun Plant.processSeedPacketInteraction(player: Player, itemStack: ItemStack, blockState: BlockState? = null): PacketInteractionResult {
+    val type = itemStack.get(DataComponents.ENTITY_DATA)?.type()
+    val availableSun = player.getTotalSun()
+    val sunCost = itemStack.get(PazComponents.SUN_COST)?.getSunCost(type)?: 0
+    val cantAfford = sunCost > availableSun && !player.hasInfiniteMaterials()
+
+    val result = when (type) {
+        PazEntities.COFFEE_BEAN -> {
+            when {
+                isGrowingSeeds -> {
+                    player.sendOverlayMessage(Component.translatable("message.plantz.growing", name.copy().withStyle(ChatFormatting.RED)).withStyle(ChatFormatting.DARK_RED))
+                    PacketInteractionResult.FAIL
+                }
+                cantAfford -> PacketInteractionResult.CANT_AFFORD
+                coffeeBuff>0 -> PacketInteractionResult.FAIL
+                else -> {
+                    applyCoffeeBuff()
+                    PacketInteractionResult.SUCCESS
+                }
+            }
+        }
+        else -> PacketInteractionResult.NO_INTERACTION
+    }
+    // show message
+    if (result == PacketInteractionResult.CANT_AFFORD) player.sendOverlayMessage(Component.translatable("message.plantz.not_enough_sun", availableSun, sunCost).withStyle(ChatFormatting.RED))
+    // remove used sun
+    if (result == PacketInteractionResult.SUCCESS && !player.hasInfiniteMaterials()) {
+        player.removeSunFromStorageAndInventory(sunCost)
+        SeedPacketItem.applyCooldown(itemStack, player)
+    }
+    return result
+}
+enum class PacketInteractionResult {
+    SUCCESS,
+    FAIL,
+    CANT_AFFORD,
+    NO_INTERACTION
 }
 
 enum class PlantGrowNeeds {

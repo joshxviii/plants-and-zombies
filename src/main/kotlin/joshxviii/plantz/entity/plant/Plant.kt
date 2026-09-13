@@ -719,6 +719,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 }
             }
         }
+        // glove interaction
+        if (processGloveItem(player, itemStack, hand)) return InteractionResult.SUCCESS_SERVER
+
         return super.mobInteract(player, hand)
     }
 
