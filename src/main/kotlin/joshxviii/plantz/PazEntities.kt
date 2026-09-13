@@ -72,7 +72,7 @@ object PazEntities {
         "wallnut",
         EntityType.Builder.of(::WallNut, MobCategory.CREATURE),
         width = 1.0f,
-        height = 1.15f,
+        height = 1.125f,
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 60.0,
         )
@@ -81,7 +81,7 @@ object PazEntities {
         "explode_o_nut",
         EntityType.Builder.of(::ExplodeONut, MobCategory.CREATURE),
         width = 1.0f,
-        height = 1.15f,
+        height = 1.125f,
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 60.0,
         )

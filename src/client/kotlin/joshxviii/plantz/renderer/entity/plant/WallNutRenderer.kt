@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.state.level.CameraRenderState
 import org.joml.Quaternionf
+import kotlin.math.sqrt
 
 class WallNutRenderer(
     context: EntityRendererProvider.Context,
@@ -27,9 +28,10 @@ class WallNutRenderer(
     ) {
         state as WallNutRenderState
         poseStack.pushPose()
-        poseStack.translate(0.0, 0.5625, 0.0)
+        val rollCenter = state.boundingBoxHeight * .5
+        poseStack.translate(0.0, rollCenter, 0.0)
         if (state.isRolling) poseStack.mulPose(state.rollRotation)
-        poseStack.translate(0.0, -0.5625, 0.0)
+        poseStack.translate(0.0, -rollCenter, 0.0)
         super.submit(state, poseStack, collector, camera)
         poseStack.popPose()
     }
@@ -58,7 +60,7 @@ class WallNutRenderer(
         val distance = kotlin.math.sqrt(dx * dx + dz * dz)
         if (distance < 1e-4f) return
 
-        val radius = 3.5f
+        val radius = sqrt(16.0f * entity.scale)
         val angle = distance / radius
         val axisX = dz
         val axisZ = -dx

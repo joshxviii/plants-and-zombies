@@ -1,6 +1,7 @@
 package joshxviii.plantz.entity.plant
 
-import joshxviii.plantz.PazEntities
+import joshxviii.plantz.PazConfig
+import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazTags.EntityTypes.WALLNUT_DEFLECTABLE
 import joshxviii.plantz.applyImpulse
 import joshxviii.plantz.entity.Sun
@@ -8,13 +9,15 @@ import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.util.Mth
 import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResult
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.monster.zombie.Zombie
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.material.PushReaction
@@ -45,6 +48,8 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
         }
 
         val ROLLING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(WallNut::class.java, EntityDataSerializers.BOOLEAN)
+
+        private const val ROLL_FRICTION = 0.99
     }
 
     override fun clampToGrid(): Boolean = !isRolling
@@ -62,10 +67,6 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
         return isRolling || super.shouldDiscardFriction()
     }
 
-    override fun setDiscardFriction(discardFriction: Boolean) {
-        super.setDiscardFriction(discardFriction)
-    }
-
     override fun getPistonPushReaction(): PushReaction {
         val result = super.getPistonPushReaction()
         return result
@@ -78,15 +79,46 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
     var stopTick = 0
     var rollRotation: Quaternionf = Quaternionf()
 
+    override fun mobInteract(player: Player, hand: InteractionHand): InteractionResult {
+        return super.mobInteract(player, hand)
+
+    }
+
     override fun tick() {
         super.tick()
         if (deltaMovement.horizontalDistance() > 0.075) stopTick = 4
+
+        val motion = deltaMovement
+        if (motion.horizontalDistance() > 1.0e-4) {
+            setDeltaMovement(
+                motion.x * ROLL_FRICTION,
+                motion.y,
+                motion.z * ROLL_FRICTION
+            )
+        }
+
         if (isRolling && --stopTick <= 0) {
             isRolling = false
             deltaMovement = Vec3.ZERO
             applyGridClamp()
         }
 
+    }
+
+    override fun isInvulnerable(): Boolean {
+        return isRolling || super.isInvulnerable()
+    }
+
+    override fun doPush(entity: Entity) {
+        super.doPush(entity)
+        if (isRolling && entity is LivingEntity && entity !is Plant) {
+            val level = level() as? ServerLevel?: return
+            val source = this.damageSources().source(PazDamageTypes.PLANT, this, if (PazConfig.PLAYER_CREDIT_FOR_PLANT_KILLS) this.rootOwner else this)
+            val damage = deltaMovement.horizontalDistance().toFloat() * 4.5f
+            entity.hurtServer(level, source, damage)
+            val vector = entity.position().subtract(position()).normalize()
+            entity.applyImpulse(vector, pow = 1.25f, uncertainty = 0.3f)
+        }
     }
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {

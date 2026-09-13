@@ -15,6 +15,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.util.random.WeightedList
 import net.minecraft.world.damagesource.DamageType
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.level.Level
 
@@ -23,6 +24,11 @@ class ExplodeONut(type: EntityType<out Plant>, level: Level) : WallNut(type, lev
     override fun tickDeath() {
         if (lastDamageSource?.directEntity != null && deathTime == 0) explode()
         else super.tickDeath()
+    }
+
+    override fun doPush(entity: Entity) {
+        super.doPush(entity)
+        if (isRolling) explode()
     }
 
     fun explode(
