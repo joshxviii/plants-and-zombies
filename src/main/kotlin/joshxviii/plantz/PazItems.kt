@@ -94,7 +94,7 @@ object PazItems {
             .stacksTo(1)
             .rarity(Rarity.UNCOMMON)
             .repairable(Items.LEATHER)
-            .durability(120)
+            .durability(185)
             .component(DataComponents.TOOL, Tool(listOf(), 1.0F, 1, false))
             .attributes(
                 ItemAttributeModifiers.builder()

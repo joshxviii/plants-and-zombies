@@ -1,46 +1,29 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.block.entity.FlagBlockEntity
-import joshxviii.plantz.block.entity.GardenGnomeBlockEntity
-import joshxviii.plantz.block.entity.MailboxBlockEntity
-import joshxviii.plantz.block.entity.SunBatteryBlockEntity
-import joshxviii.plantz.block.entity.TimeMachineBlockEntity
+import joshxviii.plantz.block.entity.*
 import joshxviii.plantz.model.BalloonModel
 import joshxviii.plantz.model.FlagBlockModel
 import joshxviii.plantz.model.GnomeArmorModel
 import joshxviii.plantz.model.GnomeModel
-import joshxviii.plantz.model.blueprint_machines.ZombieDroneModel
 import joshxviii.plantz.model.blueprint_machines.ElectroTurretModel
 import joshxviii.plantz.model.blueprint_machines.LawnMowerModel
+import joshxviii.plantz.model.blueprint_machines.ZombieDroneModel
 import joshxviii.plantz.model.blueprint_machines.ZombieTurretModel
 import joshxviii.plantz.model.plants.*
 import joshxviii.plantz.model.projectiles.*
 import joshxviii.plantz.model.zombies.*
-import joshxviii.plantz.renderer.entity.BalloonRenderer
-import joshxviii.plantz.renderer.FlagRenderState
-import joshxviii.plantz.renderer.FlagRenderer
-import joshxviii.plantz.renderer.GardenGnomeBlockRenderState
-import joshxviii.plantz.renderer.GardenGnomeBlockRenderer
-import joshxviii.plantz.renderer.MailboxRenderState
-import joshxviii.plantz.renderer.entity.GnomeRenderer
-import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderer
-import joshxviii.plantz.renderer.PlantPotMinecartRenderer
-import joshxviii.plantz.renderer.entity.ProjectileRenderer
-import joshxviii.plantz.renderer.SunBatteryRenderSate
-import joshxviii.plantz.renderer.SunBatteryRenderer
-import joshxviii.plantz.renderer.entity.SunRenderer
-import joshxviii.plantz.renderer.TimeMachineRenderSate
-import joshxviii.plantz.renderer.MailboxRenderer
-import joshxviii.plantz.renderer.TimeMachineRenderer
-import joshxviii.plantz.renderer.entity.zombie.GargantuarRenderer
-import joshxviii.plantz.renderer.entity.zombie.PirateCaptainRenderer
+import joshxviii.plantz.renderer.*
+import joshxviii.plantz.renderer.entity.*
 import joshxviii.plantz.renderer.entity.plant.PlantRenderer
-import joshxviii.plantz.renderer.entity.zombie.RoboZombieRenderer
-import joshxviii.plantz.renderer.entity.zombie.SuperBrainzRenderer
-import joshxviii.plantz.renderer.entity.BlueprintMachineRenderer
 import joshxviii.plantz.renderer.entity.plant.WallNutRenderer
+import joshxviii.plantz.renderer.entity.zombie.*
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey
+import net.minecraft.client.Minecraft
+import net.minecraft.client.data.models.ItemModelGenerators
+import net.minecraft.client.data.models.model.ItemModelUtils
+import net.minecraft.client.data.models.model.ModelTemplates
+import net.minecraft.client.data.models.model.TextureMapping
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.ModelLayers
 import net.minecraft.client.model.geom.builders.LayerDefinition
@@ -49,7 +32,16 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers
 import net.minecraft.client.renderer.entity.ArmorModelSet
 import net.minecraft.client.renderer.entity.EntityRenderers
 import net.minecraft.client.renderer.entity.ThrownItemRenderer
+import net.minecraft.client.renderer.item.BundleSelectedItemSpecialRenderer
+import net.minecraft.client.renderer.item.ItemModelResolver
+import net.minecraft.client.renderer.item.ItemModels
+import net.minecraft.client.renderer.item.properties.conditional.BundleHasSelectedItem
+import net.minecraft.client.renderer.item.properties.select.DisplayContext
+import net.minecraft.client.resources.model.sprite.Material
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemDisplayContext
 
 object PazModels {
 
@@ -99,8 +91,9 @@ object PazModels {
     )
 
     fun registerAll() {
-        ModelLayerRegistry.registerModelLayer(EMPTY_LAYER) { LayerDefinition.create(MeshDefinition(), 0, 0) }
+        ItemModels.ID_MAPPER.put(pazResource("seed_packet"), SeedPacketItemModel.Unbaked.MAP_CODEC)
 
+        ModelLayerRegistry.registerModelLayer(EMPTY_LAYER) { LayerDefinition.create(MeshDefinition(), 0, 0) }
 
         // REGISTER MODELS
         ModelLayerRegistry.registerModelLayer(PeaShooterModel.LAYER_LOCATION) { PeaShooterModel.createBodyLayer() }
