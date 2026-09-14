@@ -22,9 +22,11 @@ import joshxviii.plantz.item.component.BlocksProjectileDamage
 import joshxviii.plantz.item.component.StoredSun
 import joshxviii.plantz.item.component.StoredWater
 import joshxviii.plantz.item.component.SunCost
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
 import net.fabricmc.fabric.api.registry.FuelValueEvents
 import net.fabricmc.fabric.impl.item.ItemComponentTooltipProviderRegistryImpl
+import net.minecraft.ChatFormatting
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponents
@@ -33,6 +35,7 @@ import net.minecraft.core.dispenser.DefaultDispenseItemBehavior
 import net.minecraft.core.dispenser.MinecartDispenseItemBehavior
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.EntityType
@@ -86,13 +89,12 @@ object PazItems {
     )
     @JvmField
     val GARDENING_GLOVE: Item = registerItem(
-        "gardening_glove",
+        "gardening_glove", ::GardeningGloveItem,
         properties = Item.Properties()
             .stacksTo(1)
             .rarity(Rarity.UNCOMMON)
             .repairable(Items.LEATHER)
             .durability(120)
-            //.component(DataComponents.WEAPON, Weapon(1))
             .component(DataComponents.TOOL, Tool(listOf(), 1.0F, 1, false))
             .attributes(
                 ItemAttributeModifiers.builder()
@@ -314,6 +316,9 @@ object PazItems {
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BRAINZ_ALLOY_COST)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BLOCKS_PROJECTILE_DAMAGE)
+        ItemTooltipCallback.EVENT.register { stack, context, type, lines ->
+            if (stack.`is`(GARDENING_GLOVE)) GardeningGloveItem.addToTooltip(context, lines, type, stack)
+        }
 
         DefaultItemComponentEvents.MODIFY.register {
             it.modify(Items.BUCKET) { builder ->

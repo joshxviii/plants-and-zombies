@@ -48,6 +48,7 @@
   "message.plantz.entity_limit": "You've planted too many %s's nearby!",
   "message.plantz.growing": "%s is growing seeds!",
   "message.plantz.sleeping": "%s is asleep!",
+  "message.plantz.glove_full": "Your hands are full!",
 
   "death.attack.zombie_eat": "%1$s was eaten by %2$s",
   "death.attack.zombie_smash": "%1$s was smashed by %2$s",
@@ -131,6 +132,7 @@
   "item.plantz.time_machine": "Time Machine",
   "item.plantz.watering_can": "Watering Can",
   "item.plantz.gardening_glove": "Gardening Glove",
+  "item.plantz.gardening_glove.entity": "Holding: %s",
   "item.plantz.cone": "Cone",
   "item.plantz.football_helmet": "Football Helmet",
   "item.plantz.ducky_tube": "Ducky Tube",

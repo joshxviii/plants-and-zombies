@@ -9,6 +9,8 @@ import joshxviii.plantz.PazTags.EntityTypes.WALLNUT_DEFLECTABLE
 import joshxviii.plantz.applyImpulse
 import joshxviii.plantz.entity.Sun
 import joshxviii.plantz.hasSameRootOwner
+import joshxviii.plantz.item.GardeningGloveItem
+import joshxviii.plantz.item.GardeningGloveItem.Companion.hurtAndDropPlant
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup.level
 import net.minecraft.core.Direction
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -99,7 +101,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
         funnyBounce()
         val direction = player.lookAngle.horizontal()
         roll(direction, power = 0.35f)
-        item.hurtAndBreak(1, player, hand)
+        GardeningGloveItem.hurtAndDropPlant(item, player, hand)
     }
 
     override fun doPush(entity: Entity) {

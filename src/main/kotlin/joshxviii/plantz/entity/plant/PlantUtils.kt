@@ -1,27 +1,29 @@
 package joshxviii.plantz.entity.plant
 
-import joshxviii.plantz.PazComponents
-import joshxviii.plantz.PazConfig
-import joshxviii.plantz.PazEntities
-import joshxviii.plantz.PazItems
-import joshxviii.plantz.PazSounds
-import joshxviii.plantz.getTotalSun
+import com.mojang.logging.LogUtils
+import joshxviii.plantz.*
+import joshxviii.plantz.item.GardeningGloveItem
 import joshxviii.plantz.item.SeedPacketItem
-import joshxviii.plantz.removeSunFromStorageAndInventory
 import net.minecraft.ChatFormatting
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.util.ProblemReporter.ScopedCollector
 import net.minecraft.world.InteractionHand
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ItemUtils
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.alchemy.Potions
+import net.minecraft.world.item.component.TypedEntityData
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.storage.TagValueOutput
 import net.minecraft.world.phys.Vec3
+
 
 object PlantUtils {
 }
@@ -105,11 +107,21 @@ fun Plant.processGloveItem(player: Player, item: ItemStack, hand: InteractionHan
         (this is WallNut && this.isRolling) -> {
             deltaMovement = Vec3.ZERO
         }
+        // hold plant
         (player.isShiftKeyDown) -> {
-            //TODO: pick up and move the plants
-            // probably gonna save the entity data onto the glove. and do some funny item rendering to display what plant is held
+            if (item.has(DataComponents.ENTITY_DATA)) {
+                player.sendOverlayMessage(Component.translatable("message.plantz.glove_full").withStyle(ChatFormatting.RED))
+                return true
+            }
+
+            val data = this.saveAsCompoundTag()
+            item.set(
+                DataComponents.ENTITY_DATA,
+                TypedEntityData.of(this.type, data)
+            )
+
             playSound(SoundEvents.ARMOR_EQUIP_LEATHER.value())
-            item.hurtAndBreak(1, player, hand)
+            this.discard()
             return true
         }
         // pet :)
@@ -124,6 +136,17 @@ fun Plant.processGloveItem(player: Player, item: ItemStack, hand: InteractionHan
         }
     }
     return true
+}
+
+fun Entity.saveAsCompoundTag(): CompoundTag {
+    ScopedCollector(problemPath(), LogUtils.getLogger()).use { reporter ->
+        val output = TagValueOutput.createWithContext(reporter, registryAccess())
+        saveWithoutId(output)
+        return output.buildResult().apply {
+            remove("UUID")
+            remove("Pos")
+        }
+    }
 }
 
 // seed packet interaction

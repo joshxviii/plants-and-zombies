@@ -40,8 +40,8 @@ import kotlin.jvm.optionals.getOrNull
 class SeedPacketItem(properties: Properties) : Item(properties) {
 
     override fun getName(itemStack: ItemStack): Component {
-        val component = itemStack.get(DataComponents.ENTITY_DATA) ?: return super.getName(itemStack)
-        val entityId = BuiltInRegistries.ENTITY_TYPE.getKey(component.type())
+        val entityData = itemStack.get(DataComponents.ENTITY_DATA) ?: return super.getName(itemStack)
+        val entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entityData.type())
 
         val entityName = Component.translatable("entity.${entityId.namespace}.${entityId.path}")
         return Component.translatable("item.plantz.seed_packet.entity", entityName)
@@ -132,7 +132,8 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             face: Direction,
             horizontalDir: Direction,
             checkWater: Boolean = false,
-            ignoreSunRequirement: Boolean = false
+            ignoreSunRequirement: Boolean = false,
+            consumeItem: Boolean = true
         ): InteractionResult {
             if (level !is ServerLevel || player == null) return InteractionResult.PASS
 
@@ -214,7 +215,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
                 return InteractionResult.FAIL
             }
 
-            itemStack.consume(1, player)
+            if (consumeItem) itemStack.consume(1, player)
             if (!player.hasInfiniteMaterials() && !ignoreSunRequirement) {
                 player.removeSunFromStorageAndInventory(sunCost)
             }

@@ -37,8 +37,8 @@ class BlueprintItem(
 ) : Item(properties) {
 
     override fun getName(itemStack: ItemStack): Component {
-        val component = itemStack.get(DataComponents.ENTITY_DATA) ?: return super.getName(itemStack)
-        val entityId = BuiltInRegistries.ENTITY_TYPE.getKey(component.type())
+        val entityData = itemStack.get(DataComponents.ENTITY_DATA) ?: return super.getName(itemStack)
+        val entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entityData.type())
 
         val entityName = Component.translatable("entity.${entityId.namespace}.${entityId.path}")
         return Component.translatable("item.plantz.blueprint.entity", entityName)
