@@ -43,21 +43,7 @@ class CherryBomb(type: EntityType<out ExplosivePlant>, level: Level) : Explosive
         this.goalSelector.addGoal(1, ExplodeGoal(
             explosiveEntity = this,
             actionEndEffect = {
-                addParticlesAroundSelf(
-                    particle = ParticleTypes.LARGE_SMOKE,
-                    amount = 20..24,
-                    speed = 0.02,
-                )
-                val level = level() as? ServerLevel ?: return@ExplodeGoal
-                level.sendParticles(NukeWaveParticleOptions(color = 0xD0370D, scale = 2f),
-                    x, y, z, 1, 0.0, 0.0, 0.0, 0.0
-                )
-                level.sendParticles(NukeBlastParticleOptions(color = 0xFFE88D, scale = 1f),
-                    x, y, z, 1, 0.0, 0.0, 0.0, 0.0
-                )
-                level.sendParticles(NukeSmokeParticleOptions(color = 0xB87878, scale = 0.7f),
-                    x, y+1, z, 16, 0.0, 0.5, 0.0, 0.0
-                )
+                scaledExplosion()
             }
         ))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, LivingEntity::class.java, 5, true, false) { target, level ->

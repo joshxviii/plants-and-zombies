@@ -52,21 +52,26 @@ class DoomShroom(type: EntityType<out ExplosivePlant>, level: Level) : Explosive
                 //TODO custom sounds
                 playSound(SoundEvents.DRAGON_FIREBALL_EXPLODE, 2f, 0.0f)
                 playSound(SoundEvents.ENDER_DRAGON_SHOOT, 2f, 0.0f)
-                addParticlesAroundSelf(
-                    particle = ParticleTypes.LARGE_SMOKE,
-                    amount = 58..60,
-                    speed = 0.15,
+                scaledExplosion(
+                    0xCAACF6,
+                    0xC093FF,
+                    0x7425A3
                 )
-                val level = level() as? ServerLevel ?: return@ExplodeGoal
-                level.sendParticles(NukeWaveParticleOptions(color = 0xCAACF6, scale = 4f),
-                    x, y, z, 1, 0.0, 0.0, 0.0, 0.0
-                )
-                level.sendParticles(NukeBlastParticleOptions(color = 0xC093FF, scale = 2.5f),
-                    x, y, z, 1, 0.0, 0.0, 0.0, 0.0
-                )
-                level.sendParticles(NukeSmokeParticleOptions(color = 0x7425A3, scale = 0.85f),
-                    x, y+2.5, z, 17, 0.0, 1.0, 0.0, 0.0
-                )
+//                addParticlesAroundSelf(
+//                    particle = ParticleTypes.LARGE_SMOKE,
+//                    amount = 58..60,
+//                    speed = 0.15,
+//                )
+//                val level = level() as? ServerLevel ?: return@ExplodeGoal
+//                level.sendParticles(NukeWaveParticleOptions(color = 0xCAACF6, scale = 4f),
+//                    x, y, z, 1, 0.0, 0.0, 0.0, 0.0
+//                )
+//                level.sendParticles(NukeBlastParticleOptions(color = 0xC093FF, scale = 2.5f),
+//                    x, y, z, 1, 0.0, 0.0, 0.0, 0.0
+//                )
+//                level.sendParticles(NukeSmokeParticleOptions(color = 0x7425A3, scale = 0.85f),
+//                    x, y+2.5, z, 17, 0.0, 1.0, 0.0, 0.0
+//                )
             }
         ))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, LivingEntity::class.java, 5, true, false) { target, level ->

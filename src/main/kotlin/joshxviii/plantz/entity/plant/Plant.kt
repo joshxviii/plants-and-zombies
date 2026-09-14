@@ -130,6 +130,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             val knockbackResistance: Double = 0.0,
             val attackRange: Double = 2.5,
             val movementSpeed: Double = 0.0,
+            val stepHeight: Double = 0.6,
             val followRange: Double = 14.0,
             val armor: Double = 0.0,
             val scale: Double = 1.0,
@@ -143,6 +144,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                     .add(Attributes.KNOCKBACK_RESISTANCE, knockbackResistance)
                     .add(Attributes.ENTITY_INTERACTION_RANGE, attackRange)
                     .add(Attributes.MOVEMENT_SPEED, movementSpeed)
+                    .add(Attributes.STEP_HEIGHT, stepHeight)
                     .add(Attributes.ARMOR, armor)
                     .add(Attributes.SCALE, scale)
             }
@@ -381,7 +383,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         else super.getDeltaMovement()
     }
     override fun setDeltaMovement(deltaMovement: Vec3) {
-        val m = if (clampToGrid() && onGround() && !isInWater) Vec3(0.0, deltaMovement.y, 0.0)
+        val m = if (clampToGrid() && !isInWater) {
+            if (onGround()) Vec3(0.0, 0.0, 0.0)
+            else Vec3(0.0, deltaMovement.y, 0.0)
+        }
         else deltaMovement
         super.setDeltaMovement(m)
     }
@@ -675,7 +680,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val level = level()
         val growNeeds = testGrowConditions()
 
-        if (level is ServerLevel) {
+        if (true) {
             // shovel interaction
             if (itemStack.`is`(ItemTags.SHOVELS)) {
                 if (!verifyOwner(player)) return InteractionResult.FAIL
@@ -685,7 +690,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                     itemStack.hurtAndBreak(4, player, hand.asEquipmentSlot())
                     playSound(if (getBlockBelow().fluidState.isFull) SoundEvents.BUCKET_FILL
                     else SoundEvents.ROOTED_DIRT_BREAK)
-                    level.sendParticles(BlockParticleOption(
+                    (level as? ServerLevel)?.sendParticles(BlockParticleOption(
                         ParticleTypes.BLOCK, getBlockBelow()),
                         x, y+0.05, z, 16, 0.25,0.0,0.25, 0.4)
                 }
@@ -698,6 +703,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
             // water interaction
             if (processWateringItem(player, itemStack, hand, growNeeds)) return InteractionResult.SUCCESS_SERVER
+
+            // glove interaction
+            if (processGloveItem(player, itemStack, hand)) return InteractionResult.SUCCESS_SERVER
 
             //pot helmet interaction
             if (
@@ -714,6 +722,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 }
             }
         }
+
         return super.mobInteract(player, hand)
     }
 

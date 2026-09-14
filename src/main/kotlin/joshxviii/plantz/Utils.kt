@@ -289,7 +289,6 @@ fun extractRootOwner(entity: Entity): Entity? = when (entity) {
 }
 
 fun Entity.applyImpulse(xd: Double = 0.0, yd: Double = 1.0, zd: Double = 0.0, pow: Float = 1f, uncertainty: Float = 0f) {
-    this.needsSync = true
     val impulse = Vec3(xd, yd, zd)
         .add(
             this.random.triangle(0.0, 0.0172275 * uncertainty),
@@ -298,6 +297,7 @@ fun Entity.applyImpulse(xd: Double = 0.0, yd: Double = 1.0, zd: Double = 0.0, po
         )
         .scale(pow.toDouble())
     this.addDeltaMovement(impulse)
+    this.needsSync = true
 }
 
 fun Entity.applyImpulse(vec3: Vec3, pow: Float = 1f, uncertainty: Float = 0f) = applyImpulse(vec3.x, vec3.y, vec3.z, pow, uncertainty)

@@ -80,6 +80,15 @@ object PazItems {
             .component(PazComponents.STORED_WATER, StoredWater())
     )
     @JvmField
+    val GARDENING_GLOVE: Item = registerItem(
+        "gardening_glove",
+        properties = Item.Properties()
+            .stacksTo(1)
+            .rarity(Rarity.UNCOMMON)
+            .repairable(Items.LEATHER)
+            .durability(120)
+    )
+    @JvmField
     val BRAINZIUM: Item = registerItem(
         "brainzium",
         properties = Item.Properties()
