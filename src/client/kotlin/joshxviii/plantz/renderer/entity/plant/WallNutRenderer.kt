@@ -9,6 +9,7 @@ import net.minecraft.client.model.EntityModel
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.state.level.CameraRenderState
+import net.minecraft.util.Mth
 import org.joml.Quaternionf
 import kotlin.math.sqrt
 
@@ -28,13 +29,7 @@ class WallNutRenderer(
         camera: CameraRenderState
     ) {
         state as WallNutRenderState
-        poseStack.pushPose()
-        val rollCenter = state.boundingBoxHeight * .5
-        poseStack.translate(0.0, rollCenter, 0.0)
-        if (state.isRolling) poseStack.mulPose(state.rollRotation)
-        poseStack.translate(0.0, -rollCenter, 0.0)
         super.submit(state, poseStack, collector, camera)
-        poseStack.popPose()
     }
 
     override fun createRenderState(): PlantRenderState {
@@ -52,9 +47,10 @@ class WallNutRenderer(
 
     private fun updateClientRoll(entity: WallNut) {
         if (Minecraft.getInstance().isPaused) return
-        val tickScale = (entity.level().tickRateManager().tickrate() / 20f)
+        val tickScale = entity.level().tickRateManager().tickrate() / 20f
+
         if (!entity.isRolling) {
-            entity.rollRotation = Quaternionf()
+            entity.rollRotation.identity()
             return
         }
 
@@ -63,18 +59,24 @@ class WallNutRenderer(
         val distance = sqrt(dx * dx + dz * dz) * tickScale
         if (distance < 1e-4f) return
 
+        val yawRad = entity.yRot.toDouble() * Mth.DEG_TO_RAD
+        val cos = Mth.cos(yawRad)
+        val sin = Mth.sin(yawRad)
+
+        val localDx = dx * cos + -dz * sin
+        val localDz = -dx * sin + dz * cos
+
         val radius = sqrt(16.0f * entity.scale)
         val angle = distance / radius
-        val axisX = dz
-        val axisZ = -dx
+
+        var axisX = localDz
+        var axisZ = -localDx
         val axisLen = sqrt(axisX * axisX + axisZ * axisZ)
         if (axisLen < 1e-4f) return
+        axisX /= axisLen
+        axisZ /= axisLen
 
-        val inv = 1f / axisLen
-        val delta = Quaternionf().fromAxisAngleRad(
-            axisX * inv, 0f, axisZ * inv, angle
-        )
-
+        val delta = Quaternionf().fromAxisAngleRad(axisX, 0f, axisZ, angle)
         delta.mul(entity.rollRotation, entity.rollRotation)
         entity.rollRotation.normalize()
     }

@@ -53,7 +53,6 @@ public class WallNutAnimation {
 			))
 			.build();
 
-
 	public static final AnimationDefinition sleep = AnimationDefinition.Builder.withLength(5.0F).looping()
 			.addAnimation("body", new AnimationChannel(AnimationChannel.Targets.ROTATION,
 					new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
