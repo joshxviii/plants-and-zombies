@@ -21,6 +21,7 @@ import net.minecraft.world.item.ItemUtils
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.alchemy.Potions
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.phys.Vec3
 
 object PlantUtils {
 }
@@ -60,6 +61,7 @@ fun Plant.processSunItem(player: Player, item: ItemStack, hand: InteractionHand,
     }
     return success
 }
+
 // watering interaction
 fun Plant.processWateringItem(player: Player, item: ItemStack, hand: InteractionHand, growNeeds: PlantGrowNeeds): Boolean {
     if (growNeeds != PlantGrowNeeds.WATER) return false
@@ -93,19 +95,17 @@ fun Plant.processWateringItem(player: Player, item: ItemStack, hand: Interaction
     return false
 }
 
-//
+// glove interaction
 fun Plant.processGloveItem(player: Player, item: ItemStack, hand: InteractionHand): Boolean {
     if (!item.`is`(PazItems.GARDENING_GLOVE)) return false
     when (true) {
-        !isTame -> return false
+        // owner check
+        !verifyOwner(player) -> return false
         // roll wallnut
-        (this is WallNut && !isGrowingSeeds && !player.isShiftKeyDown) -> {
-            this.funnyBounce()
-            val direction = player.lookAngle
-            this.roll(direction, power = 0.45f)
-            item.hurtAndBreak(1, player, hand)
+        (this is WallNut && this.isRolling) -> {
+            deltaMovement = Vec3.ZERO
         }
-        // pet
+        // pet :)
         else -> {
             this.funnyBounce()
             addParticlesAroundSelf(
@@ -152,6 +152,7 @@ fun Plant.processSeedPacketInteraction(player: Player, itemStack: ItemStack, blo
     }
     return result
 }
+
 enum class PacketInteractionResult {
     SUCCESS,
     FAIL,

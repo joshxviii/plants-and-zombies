@@ -2,15 +2,19 @@ package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazDamageTypes
+import joshxviii.plantz.PazItems
+import joshxviii.plantz.PazSounds
 import joshxviii.plantz.PazTags.EntityTypes.WALLNUT_DEFLECTABLE
 import joshxviii.plantz.applyImpulse
 import joshxviii.plantz.entity.Sun
+import joshxviii.plantz.hasSameRootOwner
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup.level
 import net.minecraft.core.Direction
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
@@ -18,6 +22,8 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.monster.zombie.Zombie
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.ValueInput
@@ -46,6 +52,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
     fun roll(direction: Vec3 = Direction.fromYRot(yRot.toDouble()).unitVec3, power: Float = 0.51f) {
         isRolling = true
         applyImpulse(direction.normalize(), pow = power, uncertainty = 0.1f)
+        funnyBounce()
     }
 
     override fun clampToGrid(): Boolean = !isRolling
@@ -82,8 +89,10 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
 
     }
 
-    override fun isInvulnerable(): Boolean {
-        return isRolling || super.isInvulnerable()
+    override fun attackedWithGlove(player: Player, item: ItemStack, hand: InteractionHand) {
+        val direction = player.lookAngle
+        roll(direction, power = 0.35f)
+        item.hurtAndBreak(1, player, hand)
     }
 
     override fun doPush(entity: Entity) {
@@ -91,7 +100,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
         if (isRolling && entity is LivingEntity && entity !is Plant) {
             val level = level() as? ServerLevel?: return
             val source = this.damageSources().source(PazDamageTypes.PLANT, this, if (PazConfig.PLAYER_CREDIT_FOR_PLANT_KILLS) this.rootOwner else this)
-            val damage = deltaMovement.horizontalDistance().toFloat() * 4.5f
+            val damage = knownSpeed.length().toFloat() * 10.0f
             entity.hurtServer(level, source, damage)
             val vector = entity.position().subtract(position()).normalize()
             entity.applyImpulse(vector, pow = 1.25f, uncertainty = 0.3f)

@@ -42,9 +42,14 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.food.FoodProperties
 import net.minecraft.world.item.*
+import net.minecraft.world.item.Item.BASE_ATTACK_DAMAGE_ID
+import net.minecraft.world.item.Item.BASE_ATTACK_SPEED_ID
 import net.minecraft.world.item.Items.GLASS_BOTTLE
 import net.minecraft.world.item.component.ItemAttributeModifiers
+import net.minecraft.world.item.component.SwingAnimation
+import net.minecraft.world.item.component.Tool
 import net.minecraft.world.item.component.UseCooldown
+import net.minecraft.world.item.component.Weapon
 import net.minecraft.world.item.equipment.ArmorMaterials
 import net.minecraft.world.item.equipment.ArmorType
 import net.minecraft.world.item.equipment.EquipmentAssets
@@ -87,6 +92,14 @@ object PazItems {
             .rarity(Rarity.UNCOMMON)
             .repairable(Items.LEATHER)
             .durability(120)
+            //.component(DataComponents.WEAPON, Weapon(1))
+            .component(DataComponents.TOOL, Tool(listOf(), 1.0F, 1, false))
+            .attributes(
+                ItemAttributeModifiers.builder()
+                    .add(Attributes.ENTITY_INTERACTION_RANGE, AttributeModifier(BASE_ATTACK_DAMAGE_ID, 0.5, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.ANY)
+                    .add(Attributes.ATTACK_SPEED, AttributeModifier(BASE_ATTACK_SPEED_ID, -0.1, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.ANY)
+                    .build()
+            )
     )
     @JvmField
     val BRAINZIUM: Item = registerItem(

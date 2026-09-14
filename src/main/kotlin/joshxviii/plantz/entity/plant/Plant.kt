@@ -675,6 +675,18 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         super.checkDespawn()
     }
 
+    override fun skipAttackInteraction(source: Entity): Boolean {
+        val item = source.weaponItem ?: ItemStack.EMPTY
+        if (source is Player && this.hasSameRootOwner(source) && item.`is`(PazItems.GARDENING_GLOVE)) {
+            source.playSound(SoundEvents.PLAYER_ATTACK_NODAMAGE)
+            attackedWithGlove(source, item, source.usedItemHand)
+            return true
+        }
+        return super.skipAttackInteraction(source)
+    }
+
+    open fun attackedWithGlove(player: Player, item: ItemStack, hand: InteractionHand) {}
+
     override fun mobInteract(player: Player, hand: InteractionHand): InteractionResult {
         val itemStack = player.getItemInHand(hand)
         val level = level()
@@ -699,13 +711,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }
 
             // sun iteration
-            if (processSunItem(player, itemStack, hand, growNeeds)) return InteractionResult.SUCCESS_SERVER
+            if (processSunItem(player, itemStack, hand, growNeeds)) return InteractionResult.SUCCESS
 
             // water interaction
-            if (processWateringItem(player, itemStack, hand, growNeeds)) return InteractionResult.SUCCESS_SERVER
+            if (processWateringItem(player, itemStack, hand, growNeeds)) return InteractionResult.SUCCESS
 
             // glove interaction
-            if (processGloveItem(player, itemStack, hand)) return InteractionResult.SUCCESS_SERVER
+            if (processGloveItem(player, itemStack, hand)) return InteractionResult.SUCCESS
 
             //pot helmet interaction
             if (
