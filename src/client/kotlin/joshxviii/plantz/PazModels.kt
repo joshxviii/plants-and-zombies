@@ -19,11 +19,6 @@ import joshxviii.plantz.renderer.entity.plant.WallNutRenderer
 import joshxviii.plantz.renderer.entity.zombie.*
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey
-import net.minecraft.client.Minecraft
-import net.minecraft.client.data.models.ItemModelGenerators
-import net.minecraft.client.data.models.model.ItemModelUtils
-import net.minecraft.client.data.models.model.ModelTemplates
-import net.minecraft.client.data.models.model.TextureMapping
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.ModelLayers
 import net.minecraft.client.model.geom.builders.LayerDefinition
@@ -32,16 +27,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers
 import net.minecraft.client.renderer.entity.ArmorModelSet
 import net.minecraft.client.renderer.entity.EntityRenderers
 import net.minecraft.client.renderer.entity.ThrownItemRenderer
-import net.minecraft.client.renderer.item.BundleSelectedItemSpecialRenderer
-import net.minecraft.client.renderer.item.ItemModelResolver
 import net.minecraft.client.renderer.item.ItemModels
-import net.minecraft.client.renderer.item.properties.conditional.BundleHasSelectedItem
-import net.minecraft.client.renderer.item.properties.select.DisplayContext
-import net.minecraft.client.resources.model.sprite.Material
-import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
-import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemDisplayContext
 
 object PazModels {
 
@@ -91,7 +78,7 @@ object PazModels {
     )
 
     fun registerAll() {
-        ItemModels.ID_MAPPER.put(pazResource("seed_packet"), SeedPacketItemModel.Unbaked.MAP_CODEC)
+        ItemModels.ID_MAPPER.put(pazResource("plant_icon"), PlantIconItemModel.Unbaked.MAP_CODEC)
 
         ModelLayerRegistry.registerModelLayer(EMPTY_LAYER) { LayerDefinition.create(MeshDefinition(), 0, 0) }
 

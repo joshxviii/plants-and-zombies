@@ -10,13 +10,35 @@
         ],
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:item/gardening_glove_arm"
+          "model": "plantz:item/gardening_glove/thirdperson"
         }
       }
     ],
     "fallback": {
-      "type": "minecraft:model",
-      "model": "plantz:item/gardening_glove"
+      "type": "minecraft:condition",
+      "property": "minecraft:has_component",
+      "component": "minecraft:entity_data",
+      "ignore_default": true,
+      "on_true": {
+        "type": "minecraft:composite",
+        "models": [
+          {
+            "type": "minecraft:model",
+            "model": "plantz:item/gardening_glove/grab"
+          },
+          {
+            "type": "plantz:plant_icon"
+          },
+          {
+            "type": "minecraft:model",
+            "model": "plantz:item/gardening_glove/grab_overlay"
+          }
+        ]
+      },
+      "on_false": {
+        "type": "minecraft:model",
+        "model": "plantz:item/gardening_glove/open"
+      }
     }
   }
 }

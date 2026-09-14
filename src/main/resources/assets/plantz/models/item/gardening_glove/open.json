@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "plantz:item/gardening_glove"
+    "layer0": "plantz:item/gardening_glove/open"
   },
   "display": {
     "thirdperson_righthand": {
