@@ -702,9 +702,15 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                     itemStack.hurtAndBreak(4, player, hand.asEquipmentSlot())
                     playSound(if (getBlockBelow().fluidState.isFull) SoundEvents.BUCKET_FILL
                     else SoundEvents.ROOTED_DIRT_BREAK)
-                    (level as? ServerLevel)?.sendParticles(BlockParticleOption(
-                        ParticleTypes.BLOCK, getBlockBelow()),
-                        x, y+0.05, z, 16, 0.25,0.0,0.25, 0.4)
+                    (level as? ServerLevel)?.let {
+                        addParticlesAroundSelf(
+                            it, ParticleTypes.DUST_PLUME, verticalSpreadScale = 0.5, height = 0f
+                        )
+                        it.sendParticles(BlockParticleOption(
+                            ParticleTypes.BLOCK, getBlockBelow()),
+                            x, y+0.05, z, 16, 0.25,0.0,0.25, 0.4)
+                    }
+
                 }
                 if (player is ServerPlayer) PazCriteria.RELOCATION.trigger(player, success)
                 return InteractionResult.SUCCESS_SERVER

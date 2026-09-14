@@ -98,12 +98,19 @@ fun Plant.processWateringItem(player: Player, item: ItemStack, hand: Interaction
 // glove interaction
 fun Plant.processGloveItem(player: Player, item: ItemStack, hand: InteractionHand): Boolean {
     if (!item.`is`(PazItems.GARDENING_GLOVE)) return false
-    when (true) {
+    when {
         // owner check
         !verifyOwner(player) -> return false
         // roll wallnut
         (this is WallNut && this.isRolling) -> {
             deltaMovement = Vec3.ZERO
+        }
+        (player.isShiftKeyDown) -> {
+            //TODO: pick up and move the plants
+            // probably gonna save the entity data onto the glove. and do some funny item rendering to display what plant is held
+            playSound(SoundEvents.ARMOR_EQUIP_LEATHER.value())
+            item.hurtAndBreak(1, player, hand)
+            return true
         }
         // pet :)
         else -> {

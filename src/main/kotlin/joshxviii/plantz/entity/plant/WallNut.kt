@@ -4,6 +4,7 @@ import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
+import joshxviii.plantz.PazTags
 import joshxviii.plantz.PazTags.EntityTypes.WALLNUT_DEFLECTABLE
 import joshxviii.plantz.applyImpulse
 import joshxviii.plantz.entity.Sun
@@ -17,6 +18,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
@@ -51,15 +53,14 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
 
     fun roll(direction: Vec3 = Direction.fromYRot(yRot.toDouble()).unitVec3, power: Float = 0.51f) {
         isRolling = true
-        applyImpulse(direction.normalize(), pow = power, uncertainty = 0.1f)
-        funnyBounce()
+        applyImpulse(direction, pow = power, uncertainty = 0.1f)
     }
 
     override fun clampToGrid(): Boolean = !isRolling
 
     override fun limitPistonMovement(vec: Vec3): Vec3 {
         val result = super.limitPistonMovement(vec)
-        if (result.length() > 0.25) roll(result)
+        if (result.length() > 0.25) roll(result.normalize())
         return result
     }
 
@@ -89,8 +90,14 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
 
     }
 
+    override fun isInvulnerableTo(level: ServerLevel, source: DamageSource): Boolean {
+        if (isRolling && source.`is`(PazTags.DamageTypes.IGNORED_BY_ROLLING_NUT)) return true
+        return super.isInvulnerableTo(level, source)
+    }
+
     override fun attackedWithGlove(player: Player, item: ItemStack, hand: InteractionHand) {
-        val direction = player.lookAngle
+        funnyBounce()
+        val direction = player.lookAngle.horizontal()
         roll(direction, power = 0.35f)
         item.hurtAndBreak(1, player, hand)
     }
