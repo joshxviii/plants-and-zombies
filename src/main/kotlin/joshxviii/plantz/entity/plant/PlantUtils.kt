@@ -97,10 +97,11 @@ fun Plant.processWateringItem(player: Player, item: ItemStack, hand: Interaction
 fun Plant.processGloveItem(player: Player, item: ItemStack, hand: InteractionHand): Boolean {
     if (!item.`is`(PazItems.GARDENING_GLOVE)) return false
     when (true) {
+        !isTame -> return false
         // roll wallnut
         (this is WallNut && !isGrowingSeeds && !player.isShiftKeyDown) -> {
             this.funnyBounce()
-            val direction = position().subtract(player.position())
+            val direction = player.lookAngle
             this.roll(direction, power = 0.45f)
             item.hurtAndBreak(1, player, hand)
         }

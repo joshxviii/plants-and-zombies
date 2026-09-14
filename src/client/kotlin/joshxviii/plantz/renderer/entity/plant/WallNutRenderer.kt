@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.plant.WallNut
 import joshxviii.plantz.model.plants.WallNutModel
+import net.minecraft.client.Minecraft
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
@@ -50,6 +51,8 @@ class WallNutRenderer(
     }
 
     private fun updateClientRoll(entity: WallNut) {
+        if (Minecraft.getInstance().isPaused) return
+        val tickScale = (entity.level().tickRateManager().tickrate() / 20f)
         if (!entity.isRolling) {
             entity.rollRotation = Quaternionf()
             return
@@ -57,14 +60,14 @@ class WallNutRenderer(
 
         val dx = (entity.x - entity.xo).toFloat()
         val dz = (entity.z - entity.zo).toFloat()
-        val distance = kotlin.math.sqrt(dx * dx + dz * dz)
+        val distance = sqrt(dx * dx + dz * dz) * tickScale
         if (distance < 1e-4f) return
 
         val radius = sqrt(16.0f * entity.scale)
         val angle = distance / radius
         val axisX = dz
         val axisZ = -dx
-        val axisLen = kotlin.math.sqrt(axisX * axisX + axisZ * axisZ)
+        val axisLen = sqrt(axisX * axisX + axisZ * axisZ)
         if (axisLen < 1e-4f) return
 
         val inv = 1f / axisLen

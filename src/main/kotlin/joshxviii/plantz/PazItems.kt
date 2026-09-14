@@ -84,8 +84,9 @@ object PazItems {
         "gardening_glove",
         properties = Item.Properties()
             .stacksTo(1)
+            .rarity(Rarity.UNCOMMON)
             .repairable(Items.LEATHER)
-            .durability(250)
+            .durability(120)
     )
     @JvmField
     val BRAINZIUM: Item = registerItem(

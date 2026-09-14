@@ -8,16 +8,19 @@ import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.entity.plant.ExplosivePlant.Companion.EXPLOSION_CALCULATOR
+import joshxviii.plantz.entity.plant.ExplosivePlant.Companion.scaledExplosion
 import net.minecraft.core.Holder
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.util.random.WeightedList
+import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.level.Level
+import kotlin.math.sqrt
 
 class ExplodeONut(type: EntityType<out Plant>, level: Level) : WallNut(type, level) {
 
@@ -31,11 +34,18 @@ class ExplodeONut(type: EntityType<out Plant>, level: Level) : WallNut(type, lev
         if (isRolling && entity !is Plant) explode()
     }
 
+    override fun causeFallDamage(fallDistance: Double, damageModifier: Float, damageSource: DamageSource): Boolean {
+        val result = super.causeFallDamage(fallDistance, damageModifier, damageSource)
+        if (isRolling && fallDistance > 12.0) explode()
+        return result
+    }
+
     fun explode(
         radius: Float = 4.0f,
         sound: Holder.Reference<SoundEvent> = PazSounds.PLANT_EXPLODE,
         damageType: ResourceKey<DamageType> = PazDamageTypes.PLANT_EXPLODE
     ) {
+        if (level() !is ServerLevel) return
         val source = this.damageSources().source(damageType, this,
             if (PazConfig.PLAYER_CREDIT_FOR_PLANT_KILLS) this.rootOwner else this)
         level().explode(
@@ -43,7 +53,7 @@ class ExplodeONut(type: EntityType<out Plant>, level: Level) : WallNut(type, lev
             source,
             EXPLOSION_CALCULATOR,
             x, y, z,
-            radius,
+            radius * sqrt(scale),
             false,
             Level.ExplosionInteraction.MOB,
             ParticleTypes.SMOKE,
@@ -52,16 +62,7 @@ class ExplodeONut(type: EntityType<out Plant>, level: Level) : WallNut(type, lev
             sound
         )
 
-        val level = level() as? ServerLevel ?: return
-        level.sendParticles(NukeWaveParticleOptions(color = 0xD0370D, scale = 2f),
-            x, y, z, 1, 0.0, 0.0, 0.0, 0.0
-        )
-        level.sendParticles(NukeBlastParticleOptions(color = 0xFFE88D, scale = 1.5f),
-            x, y, z, 1, 0.0, 0.0, 0.0, 0.0
-        )
-        level.sendParticles(NukeSmokeParticleOptions(color = 0xB87878, scale = 0.6f),
-            x, y+1, z, 15, 0.0, 0.5, 0.0, 0.0
-        )
+        scaledExplosion()
         discard()
     }
 }

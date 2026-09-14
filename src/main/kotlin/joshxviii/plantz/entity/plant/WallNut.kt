@@ -5,6 +5,7 @@ import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazTags.EntityTypes.WALLNUT_DEFLECTABLE
 import joshxviii.plantz.applyImpulse
 import joshxviii.plantz.entity.Sun
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup.level
 import net.minecraft.core.Direction
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -31,20 +32,6 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
             return if (entity is Zombie) damage*0.666f else damage
         }
 
-        fun wallNutCollision(wallnut: Plant, other: Entity?): Boolean {
-            if (other is Zombie && other.swingTime == 0) {// when colliding with a zombie, the zombie will attack the wallnut
-                val level = other.level() as? ServerLevel
-                if (level != null && other.isAlive) {
-                    val damage = other.getAttribute(Attributes.ATTACK_DAMAGE)?.value?.toFloat() ?: 1f
-                    if (wallnut.hurtServer(level, other.damageSources().mobAttack(other), damage)) {
-                        other.swing(InteractionHand.MAIN_HAND)
-                    }
-                }
-            }
-            if (other is Sun) return false
-            return wallnut.isAlive && other != wallnut.attachedEntity
-        }
-
         val ROLLING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(WallNut::class.java, EntityDataSerializers.BOOLEAN)
 
         private const val ROLL_FRICTION = 0.99
@@ -54,7 +41,6 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
         get() = this.entityData.get(ROLLING)
         private set(value) { this.entityData.set(ROLLING, value) }
 
-    var stopTick = 0
     var rollRotation: Quaternionf = Quaternionf()
 
     fun roll(direction: Vec3 = Direction.fromYRot(yRot.toDouble()).unitVec3, power: Float = 0.51f) {
@@ -76,7 +62,8 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
 
     override fun tick() {
         super.tick()
-        if (deltaMovement.horizontalDistance() > 0.075) stopTick = 4
+        if (!isRolling) return
+        if (level() !is ServerLevel) return
 
         val motion = deltaMovement
         if (motion.horizontalDistance() > 1.0e-4) {
@@ -87,7 +74,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
             )
         }
 
-        if (isRolling && --stopTick <= 0) {
+        if (deltaMovement.horizontalDistance() < 0.085) {
             isRolling = false
             deltaMovement = Vec3.ZERO
             applyGridClamp()
@@ -128,7 +115,21 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
 
     override fun attackGoals() {}
 
-    override fun canBeCollidedWith(other: Entity?): Boolean = if(isRolling) super.canBeCollidedWith(other) else wallNutCollision(this, other)
+    override fun canBeCollidedWith(other: Entity?): Boolean {
+        if (isRolling) return super.canBeCollidedWith(other)
+
+        if (other is Zombie && other.swingTime == 0) {// when colliding with a zombie, the zombie will attack the wallnut
+            val level = other.level() as? ServerLevel
+            if (level != null && other.isAlive) {
+                val damage = other.getAttribute(Attributes.ATTACK_DAMAGE)?.value?.toFloat() ?: 1f
+                if (hurtServer(level, other.damageSources().mobAttack(other), damage)) {
+                    other.swing(InteractionHand.MAIN_HAND)
+                }
+            }
+        }
+        if (other is Sun) return false
+        return isAlive && other != attachedEntity
+    }
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean{
         source.directEntity?.let {
@@ -144,6 +145,6 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
     }
 
     override fun canSurviveOn(block: BlockState): Boolean {
-        return super.canSurviveOn(block) || !block.getCollisionShape(level(), blockPosition().below()).isEmpty
+        return true //super.canSurviveOn(block) || !block.getCollisionShape(level(), blockPosition().below()).isEmpty
     }
 }
