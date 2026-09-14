@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "plantz:item/seed_packet/fire_peashooter"
+    "layer0": "plantz:item/plant_icon/fire_peashooter"
   }
 }

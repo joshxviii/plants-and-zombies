@@ -1,6 +1,19 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "plantz:item/gardening_glove/grab"
-  }
+	"format_version": "1.21.11",
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "plantz:item/gardening_glove/grab"
+	},
+	"display": {
+		"firstperson_righthand": {
+			"rotation": [0, -90, 25],
+			"translation": [1.13, 3.2, 1.13],
+			"scale": [0.68, 0.68, 0.68]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 90, -25],
+			"translation": [1.135, 3.2, 1.13],
+			"scale": [0.68, 0.68, 0.68]
+		}
+	}
 }

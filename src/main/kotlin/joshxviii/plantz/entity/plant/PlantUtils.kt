@@ -107,8 +107,6 @@ fun Plant.processGloveItem(player: Player, item: ItemStack, hand: InteractionHan
         (this is WallNut && this.isRolling) -> {
             deltaMovement = Vec3.ZERO
         }
-        // exit early when holding plant
-        (item.has(DataComponents.ENTITY_DATA)) -> return false
         // hold plant
         (player.isShiftKeyDown) -> {
             if (item.has(DataComponents.ENTITY_DATA)) {
@@ -126,6 +124,8 @@ fun Plant.processGloveItem(player: Player, item: ItemStack, hand: InteractionHan
             this.discard()
             return true
         }
+        // exit early when holding plant
+        (item.has(DataComponents.ENTITY_DATA)) -> return false
         // pet :)
         else -> {
             this.funnyBounce()

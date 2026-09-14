@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "plantz:item/seed_packet/winter_melon"
+    "layer0": "plantz:item/plant_icon/winter_melon"
   }
 }
