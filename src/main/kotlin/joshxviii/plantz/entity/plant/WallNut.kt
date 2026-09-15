@@ -11,13 +11,16 @@ import joshxviii.plantz.entity.Sun
 import joshxviii.plantz.hasSameRootOwner
 import joshxviii.plantz.item.GardeningGloveItem
 import joshxviii.plantz.item.GardeningGloveItem.Companion.hurtAndDropPlant
+import joshxviii.plantz.toAngle
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup.level
+import net.minecraft.commands.arguments.EntityAnchorArgument
 import net.minecraft.core.Direction
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.util.Mth
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
@@ -25,6 +28,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
@@ -34,6 +38,8 @@ import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
 import org.joml.Quaternionf
+import kotlin.math.cos
+import kotlin.math.sin
 
 open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
@@ -77,6 +83,8 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
 
         val motion = deltaMovement
         if (motion.horizontalDistance() > 1.0e-4) {
+
+            yBodyRot = deltaMovement.normalize().toAngle() - 90
             setDeltaMovement(
                 motion.x * ROLL_FRICTION,
                 motion.y,
@@ -86,11 +94,14 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
 
         if (deltaMovement.horizontalDistance() < 0.085) {
             isRolling = false
+            yBodyRot = Direction.getApproximateNearest(Vec3(cos(yBodyRot.toDouble() * Mth.DEG_TO_RAD), 0.0, sin(yBodyRot.toDouble() * Mth.DEG_TO_RAD))).unitVec3.toAngle()
             deltaMovement = Vec3.ZERO
             applyGridClamp()
         }
 
     }
+
+    override fun getLookControl(): LookControl = noLookControl
 
     override fun isInvulnerableTo(level: ServerLevel, source: DamageSource): Boolean {
         if (isRolling && source.`is`(PazTags.DamageTypes.IGNORED_BY_ROLLING_NUT)) return true

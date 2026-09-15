@@ -41,6 +41,7 @@ import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import org.joml.Vector3f
 import kotlin.math.abs
+import kotlin.math.atan2
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -158,6 +159,10 @@ fun DyeColor.mailboxColor(): Int {
     hsv.v *= 1.2f
     hsv.v = hsv.v.coerceIn(0.25f, 1f)
     return hsv.toRGB()
+}
+
+fun Vec3.toAngle(): Float {
+    return (atan2(z, x) * Mth.RAD_TO_DEG).toFloat()
 }
 
 fun Item.name(): Component = Component.translatable(this.descriptionId)

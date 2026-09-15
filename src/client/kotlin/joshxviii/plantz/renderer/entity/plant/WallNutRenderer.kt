@@ -41,6 +41,7 @@ class WallNutRenderer(
         (entity as WallNut)
         super.extractRenderState(entity, state, partialTick)
         updateClientRoll(entity)
+
         state.isRolling = entity.isRolling
         state.rollRotation.set(entity.rollRotation)
     }
@@ -59,12 +60,12 @@ class WallNutRenderer(
         val distance = sqrt(dx * dx + dz * dz) * tickScale
         if (distance < 1e-4f) return
 
-        val yawRad = entity.yRot.toDouble() * Mth.DEG_TO_RAD
+        val yawRad = Mth.DEG_TO_RAD * (180.0f - entity.yRot).toDouble()
         val cos = Mth.cos(yawRad)
-        val sin = Mth.sin(yawRad)
+        val sin = Mth.sin(-yawRad)
 
-        val localDx = dx * cos + -dz * sin
-        val localDz = -dx * sin + dz * cos
+        val localDx = dx * cos + dz * sin
+        val localDz = dx * sin + -dz * cos
 
         val radius = sqrt(16.0f * entity.scale)
         val angle = distance / radius

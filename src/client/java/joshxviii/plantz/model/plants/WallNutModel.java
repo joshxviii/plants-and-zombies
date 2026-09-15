@@ -54,14 +54,15 @@ public class WallNutModel extends PlantModel {
 	public void setupAnim(@NotNull PlantRenderState state) {
 		if (!(state instanceof WallNutRenderState wallNutState)) return;
 		super.setupAnim(state);
+
 		roll.xRot = 0.0F;
 		roll.yRot = 0.0F;
 		roll.zRot = 0.0F;
 
 		Quaternionf q = wallNutState.getRollRotation();
 
-		if (wallNutState.isRolling()) {
-			roll.rotateBy(q);
-		}
+		if (wallNutState.isRolling()) roll.rotateBy(q);
+
+		body.yRot = wallNutState.yRot * Mth.DEG_TO_RAD;
 	}
 }
