@@ -1,29 +1,21 @@
 package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazConfig
+import joshxviii.plantz.PazCriteria
 import joshxviii.plantz.PazDamageTypes
-import joshxviii.plantz.PazItems
-import joshxviii.plantz.PazSounds
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.PazTags.EntityTypes.WALLNUT_DEFLECTABLE
 import joshxviii.plantz.applyImpulse
 import joshxviii.plantz.entity.Sun
-import joshxviii.plantz.hasSameRootOwner
 import joshxviii.plantz.item.GardeningGloveItem
-import joshxviii.plantz.item.GardeningGloveItem.Companion.hurtAndDropPlant
-import joshxviii.plantz.toAngle
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup.level
-import net.minecraft.commands.arguments.EntityAnchorArgument
 import net.minecraft.core.Direction
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.sounds.SoundEvents
-import net.minecraft.util.Mth
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
@@ -38,8 +30,6 @@ import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
 import org.joml.Quaternionf
-import kotlin.math.cos
-import kotlin.math.sin
 
 open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
@@ -53,6 +43,8 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
         private const val ROLL_FRICTION = 0.99
     }
 
+    private var rolledOverEntities: MutableSet<Int> = mutableSetOf()
+
     var isRolling: Boolean
         get() = this.entityData.get(ROLLING)
         private set(value) { this.entityData.set(ROLLING, value) }
@@ -62,6 +54,10 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
     fun roll(direction: Vec3 = Direction.fromYRot(yRot.toDouble()).unitVec3, power: Float = 0.51f) {
         isRolling = true
         applyImpulse(direction, pow = power, uncertainty = 0.1f)
+    }
+
+    fun resetRolledOverEntities() {
+        rolledOverEntities.clear()
     }
 
     override fun clampToGrid(): Boolean = !isRolling
@@ -96,6 +92,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
             //yBodyRot = Direction.getApproximateNearest(Vec3(cos(yBodyRot.toDouble() * Mth.DEG_TO_RAD), 0.0, sin(yBodyRot.toDouble() * Mth.DEG_TO_RAD))).unitVec3.toAngle()
             deltaMovement = Vec3.ZERO
             applyGridClamp()
+            resetRolledOverEntities()
         }
 
     }
@@ -120,9 +117,15 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
             val level = level() as? ServerLevel?: return
             val source = this.damageSources().source(PazDamageTypes.PLANT, this, if (PazConfig.PLAYER_CREDIT_FOR_PLANT_KILLS) this.rootOwner else this)
             val damage = knownSpeed.length().toFloat() * 10.0f
-            entity.hurtServer(level, source, damage)
-            val vector = entity.position().subtract(position()).normalize()
-            entity.applyImpulse(vector, pow = 1.25f, uncertainty = 0.3f)
+            if (entity.hurtServer(level, source, damage)) {
+                val vector = entity.position().subtract(position()).normalize()
+                entity.applyImpulse(vector, pow = 1.25f, uncertainty = 0.3f)
+                rolledOverEntities.add(entity.id)
+
+                (owner as? ServerPlayer)?.let {
+                    PazCriteria.BOWLING_TRIGGER.trigger(it, rolledOverEntities.size)
+                }
+            }
         }
     }
 

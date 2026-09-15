@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:gardening_glove"
+    },
+    "title": {
+      "translate": "advancements.plantz.wallnut_bowling"
+    },
+    "description": {
+      "translate": "advancements.plantz.wallnut_bowling.description"
+    }
+  },
+  "parent": "plantz:plant_pot_minecart",
+  "criteria": {
+    "bowl": {
+      "conditions": {
+        "hit_count": 10
+      },
+      "trigger": "plantz:wallnut_bowling"
+    }
+  },
+  "requirements": [
+    ["bowl"]
+  ],
+  "sends_telemetry_event": true
+}

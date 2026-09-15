@@ -144,6 +144,7 @@ fun Entity.saveAsCompoundTag(): CompoundTag {
     ScopedCollector(problemPath(), LogUtils.getLogger()).use { reporter ->
         val output = TagValueOutput.createWithContext(reporter, registryAccess())
         saveWithoutId(output)
+        if (this is Plant) plantSaveData(output)
         return output.buildResult().apply {
             remove("UUID")
             remove("Pos")

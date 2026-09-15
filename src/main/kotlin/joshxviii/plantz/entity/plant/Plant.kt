@@ -262,16 +262,22 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
     }
 
+
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
+        plantSaveData(output)
+        output.putBoolean("plantz:IsPoweredUp", poweredUp)
+        attachedPlayerReference.let { EntityReference.store(it, output, "plantz:AttachedPlayer") }
+    }
+
+    fun plantSaveData(output: ValueOutput) {
         output.putInt("plantz:ReceivedSun", receivedSun)
         output.putInt("plantz:ReceivedWater", receivedWater)
         output.putInt("plantz:SeedGrowTime", seedGrowCooldown)
         output.putInt("plantz:CoffeeBuff", coffeeBuff)
         output.putInt("plantz:Cooldown", cooldown)
         output.putInt("plantz:State", state.ordinal)
-        output.putBoolean("plantz:IsPoweredUp", poweredUp)
-        attachedPlayerReference.let { EntityReference.store(it, output, "plantz:AttachedPlayer") }
+        output.putBoolean("plantz:isAsleep", isAsleep)
     }
 
     override fun readAdditionalSaveData(input: ValueInput) {
@@ -282,6 +288,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         coffeeBuff = input.getInt("plantz:CoffeeBuff").getOrElse { 0 }
         cooldown = input.getInt("plantz:Cooldown").getOrElse { this.entityData.get(COOLDOWN) }
         state = PlantState.entries[input.getInt("plantz:State").getOrElse { 1 }]
+        isAsleep = input.getBooleanOr("plantz:isAsleep", false)
         poweredUp = input.getBooleanOr("plantz:IsPoweredUp", false)
         attachedPlayerReference = Optional.ofNullable((EntityReference.read<LivingEntity>(input, "plantz:AttachedPlayer"))).getOrNull()
     }
@@ -526,6 +533,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }
             PlantState.COOLDOWN -> {
                 idleAnimationState.startIfStopped(tickCount)
+                sleepAnimationState.stop()
                 if (cooldown <= 0) state = PlantState.IDLE
                 if (isAsleep) state = PlantState.SLEEP
             }
@@ -537,7 +545,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 actionAnimationState.stop()
                 coolDownAnimationState.stop()
                 specialAnimation.stop()
-                if (!isAsleep) state = PlantState.IDLE
+                if (!isAsleep) state = PlantState.COOLDOWN
             }
             PlantState.GROWING -> {}
         }
