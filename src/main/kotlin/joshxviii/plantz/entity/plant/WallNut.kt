@@ -8,10 +8,12 @@ import joshxviii.plantz.PazTags.EntityTypes.WALLNUT_DEFLECTABLE
 import joshxviii.plantz.applyImpulse
 import joshxviii.plantz.entity.Sun
 import joshxviii.plantz.item.GardeningGloveItem
+import joshxviii.plantz.pazResource
 import net.minecraft.core.Direction
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
@@ -19,6 +21,7 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.monster.zombie.Zombie
@@ -35,11 +38,11 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
 
     companion object {
         fun wallNutReducedDamage(entity: Entity?, damage: Float): Float {
-            return if (entity is Zombie) damage*0.666f else damage
+            return if (entity is Zombie) damage*0.75f else damage
         }
 
         val ROLLING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(WallNut::class.java, EntityDataSerializers.BOOLEAN)
-
+        val ROLLING_ID: Identifier = pazResource("rolling")
         private const val ROLL_FRICTION = 0.99
     }
 
@@ -53,7 +56,22 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
 
     fun roll(direction: Vec3 = Direction.fromYRot(yRot.toDouble()).unitVec3, power: Float = 0.51f) {
         isRolling = true
-        applyImpulse(direction, pow = power, uncertainty = 0.1f)
+        applyImpulse(direction, pow = power, uncertainty = 0.1f, ignoreResistance = true)
+        getAttribute(Attributes.KNOCKBACK_RESISTANCE)!!.let {
+            if (!it.hasModifier(ROLLING_ID)) it.addTransientModifier(AttributeModifier(ROLLING_ID, 99.0, AttributeModifier.Operation.ADD_VALUE))
+        }
+    }
+
+    fun stopRoll() {
+        isRolling = false
+        //yBodyRot = Direction.getApproximateNearest(Vec3(cos(yBodyRot.toDouble() * Mth.DEG_TO_RAD), 0.0, sin(yBodyRot.toDouble() * Mth.DEG_TO_RAD))).unitVec3.toAngle()
+        deltaMovement = Vec3.ZERO
+        applyGridClamp()
+        resetRolledOverEntities()
+
+        getAttribute(Attributes.KNOCKBACK_RESISTANCE)!!.let {
+            if (it.hasModifier(ROLLING_ID)) it.removeModifier(ROLLING_ID)
+        }
     }
 
     fun resetRolledOverEntities() {
@@ -87,14 +105,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
             )
         }
 
-        if (deltaMovement.horizontalDistance() < 0.085) {
-            isRolling = false
-            //yBodyRot = Direction.getApproximateNearest(Vec3(cos(yBodyRot.toDouble() * Mth.DEG_TO_RAD), 0.0, sin(yBodyRot.toDouble() * Mth.DEG_TO_RAD))).unitVec3.toAngle()
-            deltaMovement = Vec3.ZERO
-            applyGridClamp()
-            resetRolledOverEntities()
-        }
-
+        if (deltaMovement.horizontalDistance() < 0.085) stopRoll()
     }
 
     override fun getLookControl(): LookControl = noLookControl
@@ -116,7 +127,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
         if (isRolling && entity is LivingEntity && entity !is Plant) {
             val level = level() as? ServerLevel?: return
             val source = this.damageSources().source(PazDamageTypes.PLANT, this, if (PazConfig.PLAYER_CREDIT_FOR_PLANT_KILLS) this.rootOwner else this)
-            val damage = knownSpeed.length().toFloat() * 8.0f
+            val damage = knownSpeed.length().toFloat() * 4f * PLANT_DAMAGE.toFloat()
             if (entity.hurtServer(level, source, damage)) {
                 val vector = entity.position().subtract(position()).normalize()
                 entity.applyImpulse(vector, pow = 1.25f, uncertainty = 0.3f)

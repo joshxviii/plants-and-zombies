@@ -297,19 +297,20 @@ fun extractRootOwner(entity: Entity): Entity? = when (entity) {
     else -> null
 }
 
-fun Entity.applyImpulse(xd: Double = 0.0, yd: Double = 1.0, zd: Double = 0.0, pow: Float = 1f, uncertainty: Float = 0f) {
+fun Entity.applyImpulse(xd: Double = 0.0, yd: Double = 1.0, zd: Double = 0.0, pow: Float = 1f, uncertainty: Float = 0f, ignoreResistance: Boolean = false) {
+    val knockbackResistance = if (!ignoreResistance && this is LivingEntity) this.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE).toFloat() else 0f
     val impulse = Vec3(xd, yd, zd)
         .add(
             this.random.triangle(0.0, 0.0172275 * uncertainty),
             this.random.triangle(0.0, 0.0172275 * uncertainty),
             this.random.triangle(0.0, 0.0172275 * uncertainty)
         )
-        .scale(pow.toDouble())
+        .scale(pow.toDouble() * (1f - knockbackResistance))
     this.addDeltaMovement(impulse)
     this.needsSync = true
 }
 
-fun Entity.applyImpulse(vec3: Vec3, pow: Float = 1f, uncertainty: Float = 0f) = applyImpulse(vec3.x, vec3.y, vec3.z, pow, uncertainty)
+fun Entity.applyImpulse(vec3: Vec3, pow: Float = 1f, uncertainty: Float = 0f, ignoreResistance: Boolean = false) = applyImpulse(vec3.x, vec3.y, vec3.z, pow, uncertainty, ignoreResistance)
 
 // AI/PATHFINDING
 fun <T : LivingEntity?> ServerEntityGetter.getFurthestEntities(

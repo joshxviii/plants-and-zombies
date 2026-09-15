@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "plantz:zombie_eat",
-    "minecraft:mob_attack"
+
   ]
 }

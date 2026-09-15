@@ -119,12 +119,12 @@
   "effect.plantz.painted.magenta": "Painted Magenta",
   "effect.plantz.painted.pink": "Painted Pink",
 
-  "component.stored_sun.desc": "Stores and uses collected Sun",
+  "component.stored_sun.description": "Stores and uses collected Sun",
   "component.stored_sun": "%s / %s",
-  "component.stored_water.desc": "Can be used to hydrate plants",
+  "component.stored_water.description": "Used to hydrate plants",
   "component.stored_water": "Water: %s / %s",
   "component.item_cost": "%s Cost: %s",
-  "component.blocks_damage.desc": "Blocks Projectiles:",
+  "component.blocks_damage.description": "Blocks Projectiles:",
   "component.blocks_damage": "Break Chance: %s%%",
   "item.plantz.zombie_banner": "Brainz Banner",
 

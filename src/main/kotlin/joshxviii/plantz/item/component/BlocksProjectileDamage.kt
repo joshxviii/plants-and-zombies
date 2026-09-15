@@ -26,7 +26,7 @@ class BlocksProjectileDamage(
         flag: TooltipFlag,
         components: DataComponentGetter
     ) {
-        consumer.accept(Component.translatable("component.blocks_damage.desc").withStyle(ChatFormatting.GRAY))
+        consumer.accept(Component.translatable("component.blocks_damage.description").withStyle(ChatFormatting.GRAY))
         consumer.accept(Component.translatable("component.blocks_damage", (breakChance * 100).toInt()).withStyle(ChatFormatting.BLUE))
     }
 

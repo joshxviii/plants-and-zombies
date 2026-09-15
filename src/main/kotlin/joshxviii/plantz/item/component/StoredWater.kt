@@ -30,7 +30,7 @@ data class StoredWater(
         flag: TooltipFlag,
         components: DataComponentGetter
     ) {
-        consumer.accept(Component.translatable("component.stored_water.desc").withStyle(ChatFormatting.GRAY))
+        consumer.accept(Component.translatable("component.stored_water.description").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC))
         //consumer.accept(Component.translatable("component.stored_water", storedWater, maxCapacity).withStyle(ChatFormatting.AQUA))
     }
 
