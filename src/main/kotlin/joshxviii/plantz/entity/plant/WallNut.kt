@@ -83,8 +83,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
 
         val motion = deltaMovement
         if (motion.horizontalDistance() > 1.0e-4) {
-
-            yBodyRot = deltaMovement.normalize().toAngle() - 90
+            //yBodyRot = deltaMovement.normalize().toAngle() - 90
             setDeltaMovement(
                 motion.x * ROLL_FRICTION,
                 motion.y,
@@ -94,7 +93,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
 
         if (deltaMovement.horizontalDistance() < 0.085) {
             isRolling = false
-            yBodyRot = Direction.getApproximateNearest(Vec3(cos(yBodyRot.toDouble() * Mth.DEG_TO_RAD), 0.0, sin(yBodyRot.toDouble() * Mth.DEG_TO_RAD))).unitVec3.toAngle()
+            //yBodyRot = Direction.getApproximateNearest(Vec3(cos(yBodyRot.toDouble() * Mth.DEG_TO_RAD), 0.0, sin(yBodyRot.toDouble() * Mth.DEG_TO_RAD))).unitVec3.toAngle()
             deltaMovement = Vec3.ZERO
             applyGridClamp()
         }

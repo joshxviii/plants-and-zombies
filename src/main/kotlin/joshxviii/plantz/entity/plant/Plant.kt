@@ -403,6 +403,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         if (x != gx && z != gz) {
             snapTo(gx, y, gz)
         }
+        needsSync = true
     }
 
     override fun teleport(transition: TeleportTransition): Entity? {
@@ -679,7 +680,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val item = source.weaponItem ?: ItemStack.EMPTY
         if (source is Player && this.hasSameRootOwner(source) && item.`is`(PazItems.GARDENING_GLOVE)) {
             source.playSound(SoundEvents.PLAYER_ATTACK_NODAMAGE)
-            attackedWithGlove(source, item, source.usedItemHand)
+            if (!isAttached()) attackedWithGlove(source, item, source.usedItemHand)
             return true
         }
         return super.skipAttackInteraction(source)
@@ -692,7 +693,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val level = level()
         val growNeeds = testGrowConditions()
 
-        if (true) {
+        if (!isAttached()) {
             // shovel interaction
             if (itemStack.`is`(ItemTags.SHOVELS)) {
                 if (!verifyOwner(player)) return InteractionResult.FAIL
@@ -740,7 +741,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 }
             }
         }
-
         return super.mobInteract(player, hand)
     }
 
