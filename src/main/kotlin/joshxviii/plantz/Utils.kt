@@ -33,6 +33,7 @@ import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.pathfinder.Path
@@ -248,7 +249,8 @@ fun Player.getTotalSun(): Int {
 
 fun Player.getItemCount(itemType: Item): Int = inventory.countItem(itemType)
 
-fun Player.removeItemFromInventory(itemType: Item, amount: Int = 1): Int {
+fun Player.removeItemFromInventory(itemType: Item?, amount: Int = 1): Int {
+    if(itemType == null || itemType == Items.AIR) return 0
     return inventory.clearOrCountMatchingItems({ it.`is`(itemType) }, amount, inventoryMenu.getCraftSlots())
 }
 

@@ -50,6 +50,9 @@ class Balloon(
 
         }
     }
+
+    var clientTiltZ: Float = 0f
+    var clientTiltX: Float = 0f
     private val interpolation = InterpolationHandler(this)
 
     private var balloonLeashData: LeashData? = null

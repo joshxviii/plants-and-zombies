@@ -136,7 +136,8 @@ object PazItems {
     val DUCKY_TUBE: Item = registerItem(
         "ducky_tube", ::DuckyTubeItem,
         properties = Item.Properties()
-            .durability(225)
+            .durability(200)
+            .repairable(Items.LEATHER)
             .attributes(
                 ItemAttributeModifiers.builder()
                     .add(

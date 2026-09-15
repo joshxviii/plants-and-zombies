@@ -5,6 +5,7 @@ import com.mojang.math.Axis
 import joshxviii.plantz.entity.Balloon
 import joshxviii.plantz.model.BalloonModel
 import joshxviii.plantz.pazResource
+import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
@@ -27,9 +28,13 @@ class BalloonRenderer(
         camera: CameraRenderState
     ) {
         poseStack.pushPose()
-        poseStack.mulPose(Axis.YP.rotationDegrees(180.0f - state.yRot))
-        poseStack.mulPose(Axis.XP.rotationDegrees(state.xRot))
-        poseStack.scale(-1f,-1f,1f)
+
+        poseStack.mulPose(Axis.YP.rotationDegrees(180.0f))
+
+        poseStack.mulPose(Axis.XP.rotationDegrees(-state.tiltX))
+        poseStack.mulPose(Axis.ZP.rotationDegrees(-state.tiltZ))
+
+        poseStack.scale(-1f, -1f, 1f)
         poseStack.translate(0.0f, -1.501f, 0.0f)
         collector.submitModel(
             model,
@@ -50,8 +55,35 @@ class BalloonRenderer(
     override fun extractRenderState(entity: Balloon, state: BalloonRenderState, partialTicks: Float) {
         super.extractRenderState(entity, state, partialTicks)
         state.color = entity.dyeColor
-        state.yRot = Mth.rotLerp(partialTicks, entity.yRotO, entity.yRot);
-        state.xRot = Mth.rotLerp(partialTicks, entity.xRotO, entity.xRot);
+        updateBalloonMotion(entity)
+
+        state.tiltX = entity.clientTiltX
+        state.tiltZ = entity.clientTiltZ
+    }
+
+    private fun updateBalloonMotion(entity: Balloon) {
+        if (Minecraft.getInstance().isPaused) return
+
+        val vx = entity.deltaMovement.x.toFloat()
+        val vz = entity.deltaMovement.z.toFloat()
+        val speed = kotlin.math.sqrt(vx * vx + vz * vz)
+
+        val maxTilt = 86f
+        val tiltStrength = (speed * 150f).coerceIn(0f, maxTilt)
+
+        var targetTiltX: Float
+        var targetTiltZ: Float
+        if (speed > 1e-4f) {
+            val inv = 1f / speed
+            targetTiltX = -vz * inv * tiltStrength
+            targetTiltZ =  vx * inv * tiltStrength
+        } else {
+            targetTiltX = 0f
+            targetTiltZ = 0f
+        }
+
+        entity.clientTiltX = Mth.lerp(0.9f, targetTiltX, entity.clientTiltX)
+        entity.clientTiltZ = Mth.lerp(0.9f, targetTiltZ, entity.clientTiltZ)
     }
 
     fun getTextureLocation(state: BalloonRenderState): Identifier {
@@ -61,7 +93,6 @@ class BalloonRenderer(
 
 class BalloonRenderState : EntityRenderState() {
     var color: DyeColor = DyeColor.WHITE
-    @JvmField
-    var yRot: Float = 0f
-    var xRot: Float = 0f
+    var tiltX: Float = 0f
+    var tiltZ: Float = 0f
 }

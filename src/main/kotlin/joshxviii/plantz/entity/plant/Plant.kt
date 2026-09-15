@@ -740,7 +740,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 && itemStack.isEmpty
                 && player is ServerPlayer
                 && player.canWearPlant()
-                && player.isShiftKeyDown
+                && player.isSecondaryUseActive
             ) {
                 if (!verifyOwner(player)) return InteractionResult.FAIL
                 if (attachToEntity(player)) {

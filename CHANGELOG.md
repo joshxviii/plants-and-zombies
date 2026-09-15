@@ -17,6 +17,7 @@
 - Added Gardening Gloves.
   - Can be obtained from a level 4 farmer or from raid rewards.
   - Allows players pet plants with right click or pick up and hold one plant by shift clicking.
+  - Can harvest and auto replant crops when the player has the right seeds/crops in their inventory with right click.
   - Can also be used to roll Wall Nuts by punching them.
 - Added Dye Blaster
   - Has a 40% chance to consume dye as ammo.

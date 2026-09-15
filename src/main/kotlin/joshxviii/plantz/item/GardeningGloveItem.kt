@@ -1,5 +1,6 @@
 package joshxviii.plantz.item
 
+import joshxviii.plantz.removeItemFromInventory
 import net.minecraft.ChatFormatting
 import net.minecraft.core.component.DataComponentGetter
 import net.minecraft.core.component.DataComponents
@@ -13,7 +14,11 @@ import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ItemUseAnimation
+import net.minecraft.world.item.Items
 import net.minecraft.world.item.context.UseOnContext
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.CropBlock
+import net.minecraft.world.level.block.LevelEvent
 
 class GardeningGloveItem(properties: Properties) : Item(properties) {
 
@@ -55,9 +60,30 @@ class GardeningGloveItem(properties: Properties) : Item(properties) {
 
     override fun useOn(context: UseOnContext): InteractionResult {
         val stack = context.itemInHand
-        if (!stack.has(DataComponents.ENTITY_DATA)) return InteractionResult.PASS
-
         val level = context.level
+        val player = context.player
+        val isHolding = stack.has(DataComponents.ENTITY_DATA)
+
+        val blockState = context.level.getBlockState(context.clickedPos)
+        val cropAge = blockState.getValueOrElse(CropBlock.AGE, 0)
+        if (cropAge >= 7) {
+            if (isHolding) {
+                player?.sendOverlayMessage(Component.translatable("message.plantz.glove_full").withStyle(ChatFormatting.RED))
+                return InteractionResult.PASS
+            }
+            val blockPos = context.clickedPos
+            val blockState = context.level.getBlockState(blockPos)
+            if (!level.isClientSide) {
+                if(context.level.destroyBlock(blockPos, true)) player?.let {
+                    val seedItem = blockState.getCloneItemStack(level, context.clickedPos, false).item
+                    GardeningGloveItem.hurtAndDropPlant(stack, player, context.hand)
+                    if (it.removeItemFromInventory(seedItem) > 0) context.level.setBlockAndUpdate(blockPos, blockState.setValue(CropBlock.AGE, 0))
+                }
+            }
+            return InteractionResult.SUCCESS
+        }
+        if (!isHolding) return InteractionResult.PASS
+
         if (level !is ServerLevel) return InteractionResult.SUCCESS
 
         val result = SeedPacketItem.tryPlant(
@@ -73,7 +99,7 @@ class GardeningGloveItem(properties: Properties) : Item(properties) {
 
         if (result == InteractionResult.SUCCESS) {
             stack.remove(DataComponents.ENTITY_DATA)
-            context.player?.let {
+            player?.let {
                 GardeningGloveItem.hurtAndDropPlant(stack, it, context.hand)
             }
         }

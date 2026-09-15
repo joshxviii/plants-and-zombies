@@ -108,7 +108,7 @@ fun Plant.processGloveItem(player: Player, item: ItemStack, hand: InteractionHan
             deltaMovement = Vec3.ZERO
         }
         // hold plant
-        (player.isShiftKeyDown) -> {
+        (player.isSecondaryUseActive) -> {
             if (item.has(DataComponents.ENTITY_DATA)) {
                 player.sendOverlayMessage(Component.translatable("message.plantz.glove_full").withStyle(ChatFormatting.RED))
                 return true

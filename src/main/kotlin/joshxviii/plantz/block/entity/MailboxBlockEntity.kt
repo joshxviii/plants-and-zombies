@@ -80,7 +80,7 @@ class MailboxBlockEntity(
                         blockEntity.getHeroMail(it).forEach { item -> blockEntity.ejectItem(item) }
 
                         if ((blockEntity.heroMailIndex+1) % BONUS_REWARD_INTERVAL==0) {// Add bonus reward every 5 waves
-                            blockEntity.getHeroMail(PazLootTables.MAIL_REWARDS_BONUS).forEach { item -> blockEntity.ejectItem(item, glow = true) }
+                            blockEntity.getHeroMail(PazLootTables.MAIL_REWARDS_BONUS).forEach { item -> blockEntity.ejectItem(item) }
                             blockEntity.confetti()
                         }
 
