@@ -14,6 +14,10 @@
   - Blocks include: Brainz Alloy Block, Stairs, Slab, Treaded Brainz Alloy Block, Reinforced Brainz Alloy Block, and Brainz Alloy Fences.
 - Added Time Machine.
   - ***Currently not obtainable outside of Creative mode.***
+- Added Gardening Gloves.
+  - Can be obtained from a level 4 farmer or from raid rewards.
+  - Allows players pet plants with right click or pick up and hold one plant by shift clicking.
+  - Can also be used to roll Wall Nuts by punching them.
 - Added Dye Blaster
   - Has a 40% chance to consume dye as ammo.
   - Players and mobs shot with the blaster will be given the "painted" mob effect.
@@ -58,6 +62,7 @@
     - Peashooter has a 10% chance to produce Repeater seeds.
     - Repeater has a 60% chance to produce Peashooter seeds.
 - Repeaters no longer spawn naturally.
+- Wall Nuts can now be rolled around by either using Gardening Gloves or by being pushed with a piston.
 #### Zombies:
 - Added the Hero of the Garden effect.
   - While the effect is active, interacting with a mailbox will grant hero rewards based on the effect's level.

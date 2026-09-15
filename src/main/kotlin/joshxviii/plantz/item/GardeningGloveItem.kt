@@ -2,36 +2,32 @@ package joshxviii.plantz.item
 
 import net.minecraft.ChatFormatting
 import net.minecraft.core.component.DataComponentGetter
-import net.minecraft.core.component.DataComponentMap
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.item.ItemEntity
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ItemUseAnimation
-import net.minecraft.world.item.TooltipFlag
-import net.minecraft.world.item.component.TooltipProvider
 import net.minecraft.world.item.context.UseOnContext
-import java.util.function.Consumer
 
 class GardeningGloveItem(properties: Properties) : Item(properties) {
 
     companion object {
 
-        fun addToTooltip(
-            context: TooltipContext,
-            consumer: MutableList<Component>,
-            flag: TooltipFlag,
-            components: DataComponentGetter
-        ) {
-            val data = components.get(DataComponents.ENTITY_DATA) ?: return
+        fun addToTooltip(consumer: MutableList<Component>, components: DataComponentGetter, shiftKey: Component) {
+            val data = components.get(DataComponents.ENTITY_DATA)
+
+            if (data == null) {
+                consumer.add(1, Component.translatable("item.plantz.gardening_glove.description", shiftKey)
+                    .withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC))
+                return
+            }
+
             val id = BuiltInRegistries.ENTITY_TYPE.getKey(data.type())
             val entityName = Component.translatable("entity.${id.namespace}.${id.path}")
                 .withStyle(ChatFormatting.DARK_GREEN)

@@ -1,9 +1,10 @@
 package joshxviii.plantz.item
 
-import joshxviii.plantz.PazSounds
 import joshxviii.plantz.entity.zombie.AllStar.Companion.CHARGE_BOOST_ID
+import net.minecraft.ChatFormatting
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
@@ -20,6 +21,11 @@ import kotlin.math.sqrt
 
 class FootballHelmetItem(properties: Properties) : Item(properties) {
     companion object {
+        fun addToTooltip(consumer: MutableList<Component>, sprintKey: Component) {
+            consumer.add(1, Component.translatable("item.plantz.football_helmet.description", sprintKey)
+                .withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC))
+        }
+
         private const val DAMAGE_INTERVAL = 35
         private const val KNOCKBACK_STRENGTH = 0.8
     }

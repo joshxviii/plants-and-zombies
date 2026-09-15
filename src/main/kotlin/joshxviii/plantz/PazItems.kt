@@ -316,9 +316,6 @@ object PazItems {
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BRAINZ_ALLOY_COST)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BLOCKS_PROJECTILE_DAMAGE)
-        ItemTooltipCallback.EVENT.register { stack, context, type, lines ->
-            if (stack.`is`(GARDENING_GLOVE)) GardeningGloveItem.addToTooltip(context, lines, type, stack)
-        }
 
         DefaultItemComponentEvents.MODIFY.register {
             it.modify(Items.BUCKET) { builder ->

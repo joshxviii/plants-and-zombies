@@ -18,7 +18,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:experience_bottle",
-          "weight": 8,
+          "weight": 9,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -32,7 +32,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:potion",
-          "weight": 8,
+          "weight": 6,
           "functions": [
             {
               "function": "minecraft:set_potion",
@@ -43,7 +43,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:potion",
-          "weight": 8,
+          "weight": 6,
           "functions": [
             {
               "function": "minecraft:set_potion",
@@ -70,7 +70,7 @@
         {
           "type": "minecraft:item",
           "name": "plantz:sun_bottle",
-          "weight": 12,
+          "weight": 13,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -84,12 +84,17 @@
         {
           "type": "minecraft:item",
           "name": "plantz:watering_can",
-          "weight": 3
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:gardening_glove",
+          "weight": 5
         },
         {
           "type": "minecraft:item",
           "name": "plantz:plant_pot_helmet",
-          "weight": 2
+          "weight": 3
         }
       ]
     }

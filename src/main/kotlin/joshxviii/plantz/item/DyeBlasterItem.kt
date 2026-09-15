@@ -1,7 +1,12 @@
 package joshxviii.plantz.item
 
 import joshxviii.plantz.entity.projectile.PaintBall
+import joshxviii.plantz.percentFormat
+import net.minecraft.ChatFormatting
+import net.minecraft.core.component.DataComponentGetter
 import net.minecraft.core.component.DataComponents
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
@@ -15,6 +20,7 @@ import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ItemUseAnimation
 import net.minecraft.world.item.ProjectileWeaponItem
+import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec2
@@ -24,7 +30,13 @@ import java.util.function.Predicate
 class DyeBlasterItem(properties: Properties) : ProjectileWeaponItem(properties) {
 
     companion object {
+        fun addToTooltip(consumer: MutableList<Component>) {
+            consumer.add(1, Component.translatable("item.plantz.dye_blaster.description", AMMO_CHANCE.percentFormat())
+                .withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC))
+        }
+
         val DYES: Predicate<ItemStack> = Predicate { itemStack: ItemStack -> itemStack.`is`(ItemTags.DYES) }
+        const val AMMO_CHANCE: Float = 0.4f
     }
 
     override fun onUseTick(level: Level, livingEntity: LivingEntity, itemStack: ItemStack, ticksRemaining: Int) {
@@ -43,7 +55,7 @@ class DyeBlasterItem(properties: Properties) : ProjectileWeaponItem(properties) 
             1.0f / (level.getRandom().nextFloat() * 0.4f + 1.2f) + 4.5f
         )
         itemStack.hurtAndBreak(1, livingEntity, livingEntity.usedItemHand)
-        if (level.random.nextFloat() < 0.4f) draw(itemStack, ammo, livingEntity)
+        if (level.random.nextFloat() < AMMO_CHANCE) draw(itemStack, ammo, livingEntity)
         if (level is ServerLevel) shoot(level, livingEntity, livingEntity.usedItemHand, itemStack, listOf(ammo), 1.2f, 8.0f, false, null)
     }
 

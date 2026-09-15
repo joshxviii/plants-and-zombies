@@ -252,6 +252,8 @@ fun Player.removeItemFromInventory(itemType: Item, amount: Int = 1): Int {
     return inventory.clearOrCountMatchingItems({ it.`is`(itemType) }, amount, inventoryMenu.getCraftSlots())
 }
 
+fun Float.percentFormat(): String = "%.0f%%".format(this * 100)
+
 fun Int.tickTimeFormat(): String = "%02d:%02d".format(
     (this / 20 / 60) % 60,
     (this / 20) % 60,
