@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundSource
 import net.minecraft.tags.BlockTags
+import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.level.block.Block
@@ -55,7 +56,8 @@ class MineBlocksToTargetGoal(
         if (breakTime > 0) return true
         if (--breakCooldownTime > 0) return false
         if (miner.isDeadOrDying || !miner.isAggressive) return false
-        if (level.gameRules.get(GameRules.MOB_GRIEFING)==false) return false
+        if (!level.gameRules.get(GameRules.MOB_GRIEFING)) return false
+        if (!miner.mainHandItem.`is`(ItemTags.PICKAXES)) return false
         val targetPos = miner.target?.blockPosition()?: miner.navigation.path.getEndPos() ?:  return false
 
         breakTargetPos?.let {

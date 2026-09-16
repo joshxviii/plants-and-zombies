@@ -77,12 +77,13 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
         return result
     }
 
-    override fun canPickUpLoot(): Boolean = true
+    override fun isLeftHanded(): Boolean = false
     override fun getPreferredWeaponType(): TagKey<Item> = PazTags.ItemTags.DIGGER_PREFERRED_WEAPONS
     override fun wantsToPickUp(level: ServerLevel, itemStack: ItemStack): Boolean {
         if(itemStack.`is`(ItemTags.ARMOR_ENCHANTABLE)) return false
         return super.wantsToPickUp(level, itemStack)
     }
+
 
     override fun finalizeSpawn(
         level: ServerLevelAccessor,
@@ -92,7 +93,6 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
     ): SpawnGroupData? {
         val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
 
-        isLeftHanded = false
         setCanBreakDoors(true)
         setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_PICKAXE.defaultInstance)
         setDropChance(EquipmentSlot.MAINHAND, 0.0f)

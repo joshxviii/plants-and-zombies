@@ -29,7 +29,7 @@ abstract class ActionGoal(
     var actionTimer = -1
 
     init {
-        (usingEntity as? Plant)?.cooldown = cooldownTime
+        if (startOnCooldown()) (usingEntity as? Plant)?.cooldown = cooldownTime
     }
 
     override fun stop() {
@@ -65,6 +65,7 @@ abstract class ActionGoal(
         }
     }
 
+    open fun startOnCooldown(): Boolean = true
     abstract fun canDoAction() : Boolean
     abstract fun doAction() : Boolean
 }

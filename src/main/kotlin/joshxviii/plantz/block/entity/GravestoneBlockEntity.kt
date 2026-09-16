@@ -31,15 +31,14 @@ class GravestoneBlockEntity(
     PazBlocks.GRAVESTONE_BLOCK_ENTITY, worldPosition, blockState
 ) {
     companion object {
-        private const val PLAYER_RANGE = 16
+        private const val PLAYER_RANGE = 18
         private const val SPAWN_DELAY_MIN = 400
         private const val SPAWN_DELAY_MAX = 600
         private const val MAX_ZOMBIES = 4
 
         val SPAWN_TABLE_WEIGHTS = mapOf(
             BROWN_COAT          to 20,
-            NEWSPAPER_ZOMBIE    to 8,
-            IMP                 to 2,
+            NEWSPAPER_ZOMBIE    to 7,
             DIGGER_ZOMBIE       to 1,
             DISCO_ZOMBIE        to 1,
             ALL_STAR            to 1,

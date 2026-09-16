@@ -53,15 +53,15 @@
               ]
             }
           ]
-        },
-        {
-          "type": "minecraft:empty",
-          "weight": 80
         }
       ],
       "conditions": [
         {
           "condition": "minecraft:killed_by_player"
+        },
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.02
         }
       ]
     }

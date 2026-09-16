@@ -115,12 +115,10 @@ fun Plant.processGloveItem(player: Player, item: ItemStack, hand: InteractionHan
             }
 
             val data = this.saveAsCompoundTag()
-            item.set(
-                DataComponents.ENTITY_DATA,
-                TypedEntityData.of(this.type, data)
-            )
+            item.set(DataComponents.ENTITY_DATA, TypedEntityData.of(this.type, data))
 
             playSound(SoundEvents.ARMOR_EQUIP_LEATHER.value())
+            addParticlesAroundSelf(level(), ParticleTypes.DUST_PLUME, verticalSpreadScale = 0.5, height = 0f)
             this.discard()
             return true
         }
@@ -129,12 +127,7 @@ fun Plant.processGloveItem(player: Player, item: ItemStack, hand: InteractionHan
         // pet :)
         else -> {
             this.funnyBounce()
-            addParticlesAroundSelf(
-                level(),
-                ParticleTypes.HEART,
-                amount = 0..0,
-                height = eyeHeight
-            )
+            addParticlesAroundSelf(level(), ParticleTypes.HEART, amount = 0..0, height = eyeHeight)
         }
     }
     return true

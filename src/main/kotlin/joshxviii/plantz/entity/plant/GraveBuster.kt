@@ -51,10 +51,10 @@ class GraveBuster(type: EntityType<out Plant>, level: Level) : Plant(type, level
     ) : ActionGoal(
         graveBuster, cooldownTime = 20, actionDelay = 37,
     ) {
+        override fun startOnCooldown(): Boolean = false
 
         override fun canUse(): Boolean {
-            return (usingEntity.tickCount > cooldownTime
-                    && usingEntity.isAlive
+            return (usingEntity.isAlive
                     && graveBuster.isTame
                     && !(usingEntity is Plant && (usingEntity.isAsleep || usingEntity.isGrowingSeeds)))
         }

@@ -71,6 +71,8 @@ open class PlantRenderer(
         }
     }
 
+    override fun getFlipDegrees(): Float = 0f
+
     override fun getShadowRadius(state: PlantRenderState): Float {
         return if (state.rotations == Quaternionf()) super.getShadowRadius(state) * (0.9f) else 0f
     }

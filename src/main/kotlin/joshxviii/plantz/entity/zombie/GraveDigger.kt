@@ -13,6 +13,7 @@ import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
+import net.minecraft.tags.ItemTags
 import net.minecraft.util.Mth
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.entity.*
@@ -84,6 +85,8 @@ class GraveDigger(type: EntityType<out GraveDigger>, level: Level) : PazZombie(t
         return result
     }
 
+    override fun isLeftHanded(): Boolean = false
+
     override fun finalizeSpawn(
         level: ServerLevelAccessor,
         difficulty: DifficultyInstance,
@@ -110,6 +113,7 @@ class GraveDigger(type: EntityType<out GraveDigger>, level: Level) : PazZombie(t
         override fun canUse(): Boolean {
             val level = gravedigger.level() as ServerLevel
             if (!level.gameRules.get(GameRules.MOB_GRIEFING)) return false
+            if (!gravedigger.mainHandItem.`is`(ItemTags.SHOVELS)) return false
             if (gravedigger.digTime>0) return true
             val nearbyGraves: Int = level.getBlockStates(gravedigger.boundingBox.inflate(16.0)).filter { it.`is`(PazBlocks.GRAVESTONE) }.count().toInt()
             return gravedigger.target is Player && !gravedigger.isDeadOrDying && (gravedigger.target?.isAlive == true) && nearbyGraves < 5

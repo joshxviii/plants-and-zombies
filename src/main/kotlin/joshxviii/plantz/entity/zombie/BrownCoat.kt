@@ -65,7 +65,6 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
         val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
         val random = level.random
         val difficultyModifier = difficulty.specialMultiplier
-        setCanPickUpLoot(true)
         setCanBreakDoors(true)
         val structureManager = (level as ServerLevel).structureManager()
         val isShipwreckSpawn = structureManager.getStructureWithPieceAt(blockPosition(), StructureTags.SHIPWRECK).isValid
