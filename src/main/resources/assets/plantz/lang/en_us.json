@@ -326,6 +326,7 @@
 
   "container.plantz.send_mail": "Send Mail",
   "container.plantz.mailbox_coords": "%d, %d, %d",
+  "container.plantz.mailbox_coords_mini": "%s (%s)",
   "container.plantz.address_search": "Search mailboxes...",
   "container.plantz.no_address": "No mailboxes found.",
   "container.plantz.mailbox_full": "This mailbox is full!",

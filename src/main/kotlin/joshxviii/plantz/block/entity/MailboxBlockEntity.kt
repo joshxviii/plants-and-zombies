@@ -2,9 +2,11 @@ package joshxviii.plantz.block.entity
 
 import com.mojang.serialization.Codec
 import joshxviii.plantz.*
+import joshxviii.plantz.block.CollectionBoxState
 import joshxviii.plantz.block.MailboxBlock.Companion.FACING
 import joshxviii.plantz.block.MailboxBlock.Companion.STATE
 import joshxviii.plantz.block.MailboxState
+import joshxviii.plantz.inventory.MailCollectionBoxMenu
 import joshxviii.plantz.inventory.MailboxMenu
 import joshxviii.plantz.raid.ZombieRaid.Companion.BONUS_REWARD_INTERVAL
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider
@@ -29,6 +31,7 @@ import net.minecraft.util.RandomSource
 import net.minecraft.world.Container
 import net.minecraft.world.ContainerHelper
 import net.minecraft.world.SimpleContainer
+import net.minecraft.world.entity.ContainerUser
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
@@ -37,6 +40,7 @@ import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity
+import net.minecraft.world.level.block.entity.ContainerOpenersCounter
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
@@ -106,10 +110,37 @@ class MailboxBlockEntity(
                 (level as? ServerLevel)?.getMailboxMailQueue()?.deliverTo(blockEntity)
             }
         }
+        const val INVENTORY_SIZE = 5
     }
 
-    private val inventory = SimpleContainer(5)
-    override fun getContainerSize(): Int = 5
+    private val inventory = SimpleContainer(INVENTORY_SIZE)
+    private val openersCounter: ContainerOpenersCounter = object : ContainerOpenersCounter() {
+        override fun onOpen(level: Level, pos: BlockPos, blockState: BlockState) {
+            playSound(SoundEvents.COPPER_CHEST_OPEN, 0.3f, 1.5f)
+        }
+        override fun onClose(level: Level, pos: BlockPos, blockState: BlockState) {
+            playSound(SoundEvents.COPPER_CHEST_CLOSE, 0.3f, 1.5f)
+        }
+        override fun openerCountChanged(level: Level, pos: BlockPos, blockState: BlockState, previous: Int, current: Int) {}
+        override fun isOwnContainer(player: Player): Boolean {
+            return player.containerMenu is MailboxMenu && (player.containerMenu as MailboxMenu).inventory == this
+        }
+    }
+
+    override fun getContainerSize(): Int = INVENTORY_SIZE
+    override fun startOpen(containerUser: ContainerUser) {
+        if (!remove && !containerUser.livingEntity.isSpectator) {
+            openersCounter.incrementOpeners(containerUser.livingEntity, getLevel()!!, blockPos, blockState, containerUser.containerInteractionRange)
+        }
+    }
+    override fun stopOpen(containerUser: ContainerUser) {
+        if (!remove && !containerUser.livingEntity.isSpectator) {
+            openersCounter.decrementOpeners(containerUser.livingEntity, getLevel()!!, blockPos, blockState)
+        }
+    }
+    override fun getEntitiesWithContainerOpen(): MutableList<ContainerUser> {
+        return openersCounter.getEntitiesWithContainerOpen(getLevel()!!, blockPos)
+    }
 
     override fun createMenu(containerId: Int, inventory: Inventory): AbstractContainerMenu = MailboxMenu(containerId, inventory, asMailBoxData())
     override fun getScreenOpeningData(player: ServerPlayer): MailboxData = asMailBoxData()

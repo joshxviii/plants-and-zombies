@@ -74,9 +74,7 @@ class MailCollectionBoxBlock(
         if (!level.isClientSide) {
             (level.getBlockEntity(pos) as? MailCollectionBoxEntity).let { currentMailbox ->
                 val mailboxes = MailboxManager.getMailboxesInLevel(level).sortedBy { it.blockPos.distSqr(pos) }
-
                 player.openMenu(currentMailbox)
-                currentMailbox?.playSound(SoundEvents.COPPER_CHEST_OPEN, 0.3f, 1.5f)
                 (player.containerMenu as? MailCollectionBoxMenu)?.availableMailboxes = mailboxes
                 ServerPlayNetworking.send(player as ServerPlayer, MailboxListResponsePayload(level.dimension(), mailboxes))
             }
@@ -139,11 +137,13 @@ class MailCollectionBoxBlock(
             if (powered && !it.wasPowered) it.trySendMail()
             it.wasPowered = powered
         }
-
     }
 
     override fun hasAnalogOutputSignal(state: BlockState): Boolean = true
     override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos, direction: Direction): Int {
-        return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(level.getBlockEntity(pos))
+        val blockEntity = level.getBlockEntity(pos) as? MailCollectionBoxEntity ?: return 0
+        val hasSelected = blockEntity.selectedMailbox != null
+        if (!hasSelected) return 0
+        return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(blockEntity)
     }
 }

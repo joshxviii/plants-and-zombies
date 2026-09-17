@@ -25,7 +25,6 @@ class MailCollectionBoxScreen(
     title: Component,
 ) : AbstractContainerScreen<MailCollectionBoxMenu>(menu, inventory, title, 176, 180) {
     private lateinit var addressSearch: EditBox
-    private lateinit var sendButton: Button
     private val miniButtons = mutableListOf<MiniAddressButton>()
     private var scrollOffs = 0f
     private var scrolling = false
@@ -49,12 +48,13 @@ class MailCollectionBoxScreen(
 
     fun initSearchBar(x: Int, y: Int): EditBox {
         val txt = EditBox(font, x, y, 94, 12, Component.translatable("container.plantz.address_search"));
-        txt.setCanLoseFocus(false)
+        txt.setCanLoseFocus(true)
         txt.setTextColor(-1)
         txt.setTextColorUneditable(-1)
+        txt.setTextShadow(false)
         txt.setInvertHighlightedTextColor(false)
         txt.setBordered(false)
-        txt.setMaxLength(50)
+        txt.setMaxLength(40)
         txt.setResponder(this::onSearchUpdated)
         txt.setEditable(true)
         addRenderableWidget(txt)
@@ -65,7 +65,7 @@ class MailCollectionBoxScreen(
         super.init()
         val xo = (width - imageWidth) / 2
         val yo = (height - imageHeight) / 2
-        addressSearch = initSearchBar(xo+27, yo+59)
+        addressSearch = initSearchBar(xo+28, yo+59)
         menu.slotUpdateListener = { containerChanged() }
         menu.mailboxListUpdateListener = { containerChanged() }
         scrollToIndex()
@@ -73,6 +73,8 @@ class MailCollectionBoxScreen(
     }
 
     private fun rebuildAddressButtons() {
+        val suggestName = if (addressSearch.value.isEmpty()) menu.filteredMailboxes.find { it.blockPos == menu.selectedMailboxPos }?.name?.string else null
+        addressSearch.setSuggestion(suggestName)
         menu.updateFilteredMailboxes()
         miniButtons.forEach { removeWidget(it) }
         miniButtons.clear()
@@ -123,10 +125,13 @@ class MailCollectionBoxScreen(
         }
 
         menu.availableMailboxes.find { it.blockPos == menu.selectedMailboxPos }?.let { mailbox ->
-            val text = mailbox.name
+            val color = ARGB.addRgb(mailbox.color, 0x333333)
+            val darker = ARGB.multiply(color, 0x999999)
+            val posText = mailbox.blockPos.let { Component.translatable("container.plantz.mailbox_coords", it.x, it.y, it.z) }.withColor(darker)
+            val text = Component.translatable("chat.square_brackets", posText).withColor(darker)
             val line = font.split(text, 97).firstOrNull()
-            graphics.blit(RenderPipelines.GUI_TEXTURED, MAILBOX_SELECTED, xo+26, yo+70, 0f, 0f, 97, 14, 97, 14, -1)
-            if (line!=null) graphics.centeredText(font, line, xo+74, yo+73, -1)
+            graphics.blit(RenderPipelines.GUI_TEXTURED, MAILBOX_SELECTED, xo+26, yo+70, 0f, 0f, 97, 14, 97, 14, color)
+            if (line!=null) graphics.text(font, line, xo+75 - font.width(line)/2, yo+73, -1, false)
         }
     }
 
@@ -136,16 +141,15 @@ class MailCollectionBoxScreen(
 
     override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {
         val xo = leftPos + 152
-        val yo = topPos + 28
-        if (event.x() >= xo && event.x() < xo + 12 && event.y() >= yo && event.y() < yo + 54) scrolling = true
-
+        val yo = topPos + 18
+        if (event.x() >= xo && event.x() < xo + 12 && event.y() >= yo && event.y() < yo + 64) scrolling = true
         return super.mouseClicked(event, doubleClick)
     }
 
     override fun mouseDragged(event: MouseButtonEvent, dx: Double, dy: Double): Boolean {
         if (scrolling && isScrollBarActive()) {
-            val yscr = topPos + 29
-            val yscr2 = yscr + 54
+            val yscr = topPos + 19
+            val yscr2 = yscr + 64
             scrollOffs = (event.y().toFloat() - yscr - 7.5f) / (yscr2 - yscr - 15.0f)
             scrollOffs = Mth.clamp(scrollOffs, 0.0f, 1.0f)
             startIndex = (scrollOffs * getOffscreenRows() + 0.5).toInt()
@@ -179,7 +183,9 @@ class MailCollectionBoxScreen(
     }
 
     fun onSelectedMailbox() {
+        addressSearch.value = ""
         ClientPlayNetworking.send(UpdateCollectionBoxPayload(menu.data.blockPos, menu.selectedMailboxPos))
+        scrollToIndex()
     }
 
     fun scrollToIndex() {
@@ -208,7 +214,7 @@ class MailCollectionBoxScreen(
         addressSearch.setValue(oldEditAddress)
     }
 
-    private fun isScrollBarActive(): Boolean = true
+    private fun isScrollBarActive(): Boolean = menu.filteredMailboxes.size > MAX_VISIBLE_ROWS
 
     private fun getOffscreenRows(): Int = (menu.filteredMailboxes.size - 1).coerceAtLeast(0)
 

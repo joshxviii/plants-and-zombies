@@ -48,12 +48,13 @@ class MailboxScreen(
 
     fun initSearchBar(x: Int, y: Int): EditBox {
         val txt = EditBox(font, x, y, 94, 12, Component.translatable("container.plantz.address_search"));
-        txt.setCanLoseFocus(false)
+        txt.setCanLoseFocus(true)
         txt.setTextColor(-1)
         txt.setTextColorUneditable(-1)
+        txt.setTextShadow(false)
         txt.setInvertHighlightedTextColor(false)
         txt.setBordered(false)
-        txt.setMaxLength(50)
+        txt.setMaxLength(40)
         txt.setResponder(this::onSearchUpdated)
         txt.setEditable(true)
         addRenderableWidget(txt)
@@ -83,7 +84,7 @@ class MailboxScreen(
         super.init()
         val xo = (width - imageWidth) / 2
         val yo = (height - imageHeight) / 2
-        addressSearch = initSearchBar(xo+53, yo+17)
+        addressSearch = initSearchBar(xo+54, yo+17)
         sendButton = initSendButton(xo+18, yo+55)
         menu.slotUpdateListener = { containerChanged() }
         menu.mailboxListUpdateListener = { containerChanged() }
