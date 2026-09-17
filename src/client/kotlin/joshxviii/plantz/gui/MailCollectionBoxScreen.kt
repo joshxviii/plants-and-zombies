@@ -1,8 +1,12 @@
 package joshxviii.plantz.gui
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes
+import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.block.entity.MailCollectionBoxEntity
+import joshxviii.plantz.inventory.MailCollectionBoxMenu
 import joshxviii.plantz.inventory.MailboxMenu
 import joshxviii.plantz.networking.SendMailRequestPayload
+import joshxviii.plantz.networking.UpdateCollectionBoxPayload
 import joshxviii.plantz.pazResource
 import joshxviii.plantz.renderer.outlineText
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
@@ -13,17 +17,19 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.input.KeyEvent
 import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.client.renderer.RenderPipelines
+import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import net.minecraft.util.ARGB
 import net.minecraft.util.Mth
+import net.minecraft.util.datafix.ExtraDataFixUtils.blockState
 import net.minecraft.world.entity.player.Inventory
 
-class MailboxScreen(
-    val menu: MailboxMenu,
+class MailCollectionBoxScreen(
+    val menu: MailCollectionBoxMenu,
     val inventory: Inventory,
-    val mailboxTitle: Component = Component.empty(),
-) : AbstractContainerScreen<MailboxMenu>(menu, inventory, mailboxTitle, 176, 180) {
+    title: Component,
+) : AbstractContainerScreen<MailCollectionBoxMenu>(menu, inventory, title, 176, 180) {
     private lateinit var addressSearch: EditBox
     private lateinit var sendButton: Button
     private val addressButtons = mutableListOf<AddressButton>()
@@ -38,16 +44,16 @@ class MailboxScreen(
         }
 
     companion object {
-        val BACKGROUND: Identifier = pazResource("textures/gui/mailbox/background.png")
-        val SEND_BUTTON: Identifier = pazResource("textures/gui/mailbox/send_button.png")
-        val SEND_BUTTON_HOVER: Identifier = pazResource("textures/gui/mailbox/send_button_hover.png")
-        val SEND_BUTTON_PRESS: Identifier = pazResource("textures/gui/mailbox/send_button_press.png")
+        val BACKGROUND: Identifier = pazResource("textures/gui/mail_collection_box/background.png")
+        val MAILBOX_SELECTED: Identifier = pazResource("textures/gui/mail_collection_box/selected.png")
+        val MAILBOX_UNSELECTED: Identifier = pazResource("textures/gui/mail_collection_box/unselected.png")
         val SCROLLER: Identifier = pazResource("textures/gui/mailbox/scroller.png")
         val SCROLLER_DISABLED: Identifier = pazResource("textures/gui/mailbox/scroller_disabled.png")
     }
 
     fun initSearchBar(x: Int, y: Int): EditBox {
         val txt = EditBox(font, x, y, 94, 12, Component.translatable("container.plantz.address_search"));
+        val l =
         txt.setCanLoseFocus(false)
         txt.setTextColor(-1)
         txt.setTextColorUneditable(-1)
@@ -60,31 +66,12 @@ class MailboxScreen(
         return txt
     }
 
-    fun mailboxColor() = menu.data.color
-
-    override fun extractLabels(graphics: GuiGraphicsExtractor, xm: Int, ym: Int) {
-        graphics.text(this.font, this.title, this.titleLabelX, this.titleLabelY, ARGB.color(0x88, 0x000000), false)
-        graphics.text(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, ARGB.color(0x88, 0x000000), false)
-    }
-
-    fun initSendButton(x: Int, y: Int): Button {
-        val btn = PazButton(x, y, 20, 14,
-            { onSendPressed() },
-            SEND_BUTTON, SEND_BUTTON_HOVER, SEND_BUTTON_PRESS,
-            { menu.mailSlot.hasItem() && menu.selectedMailboxIndex != null },
-            { menu.mailSlot.hasItem() && menu.selectedMailboxIndex != null },
-            color = mailboxColor()
-        )
-        addRenderableWidget(btn)
-        return btn
-    }
-
     override fun init() {
+        menu.selectedMailboxIndex?.let { startIndex = it }
         super.init()
         val xo = (width - imageWidth) / 2
         val yo = (height - imageHeight) / 2
-        addressSearch = initSearchBar(xo+53, yo+17)
-        sendButton = initSendButton(xo+18, yo+55)
+        addressSearch = initSearchBar(xo+40, yo+59)
         menu.slotUpdateListener = { containerChanged() }
         menu.mailboxListUpdateListener = { containerChanged() }
         rebuildAddressButtons()
@@ -98,18 +85,18 @@ class MailboxScreen(
         val xo = leftPos
         val yo = topPos
 
-        val visibleCount = menu.filteredMailboxes.size.coerceAtMost(4)
+        val visibleCount = menu.filteredMailboxes.size.coerceAtMost(1)
         for (i in 0 until visibleCount) {
             val mailboxIndex = startIndex + i
             menu.getMailbox(mailboxIndex)?.let { mailbox ->
                 val button = AddressButton(
-                    menuData = menu.data,
                     mailboxData = mailbox,
-                    buttonX = xo+52,
-                    buttonY = yo+28 + i * 14,
+                    buttonX = xo+39,
+                    buttonY = yo+70 + i * 14,
                     clickAction = {
                         if (menu.selectedMailboxIndex == mailboxIndex) menu.selectedMailboxIndex = null else menu.selectedMailboxIndex = mailboxIndex
                         rebuildAddressButtons()
+                        ClientPlayNetworking.send(UpdateCollectionBoxPayload(menu.data.blockPos, mailbox.blockPos))
                     },
                     enabledRequirement = { menu.selectedMailboxIndex != mailboxIndex },
                     clickRequirement = { true }
@@ -124,31 +111,12 @@ class MailboxScreen(
         super.extractRenderState(graphics, mouseX, mouseY, a)
         val xo = leftPos
         val yo = topPos
-        if (menu.responseTimeout>0) {
-            val padding = 1
-            val width = 176
-            val height = 16
-            graphics.fill(
-                xo - padding,
-                yo - padding - height,
-                xo + width + padding,
-                yo + 15 + padding - height,
-                ARGB.opaque(ARGB.multiply(mailboxColor(), 0x555555))
-            )
-            val messageColor = menu.responseMessage.style.color?.value?:0xFFFFFF
-            val message = menu.responseMessage.plainCopy()
-            graphics.outlineText(font, message, leftPos+(width/2)-font.width(message) / 2, topPos+4-height, color = messageColor)
-            //graphics.centeredText(font, menu.responseMessage, leftPos+(width/2), topPos+4-height, -1)
-
-        }
-        //graphics.textWithWordWrap(font, Component.literal("ASDADASDASD"), 0, 0, 340, -1)
-        //raphics.centeredText(font, "asdasdwqcaw", leftPos, topPos, -1)
     }
 
     override fun extractBackground(graphics: GuiGraphicsExtractor, xm: Int, ym: Int, a: Float) {
         val xo = leftPos
         val yo = topPos
-        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, xo, yo, 0f, 0f, imageWidth, imageHeight, 256, 256, mailboxColor())
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, xo, yo, 0f, 0f, imageWidth, imageHeight, 256, 256, -1)
 
         val sy = (41.0f * scrollOffs).toInt()
         val sprite = if (isScrollBarActive()) SCROLLER else SCROLLER_DISABLED
@@ -158,13 +126,18 @@ class MailboxScreen(
         if (xm >= scrollerX && xm < scrollerX + 12 && ym >= scrollerY && ym < scrollerY + 15) {
             graphics.requestCursor(if (scrolling) CursorTypes.RESIZE_NS else CursorTypes.POINTING_HAND)
         }
+
+//        graphics.blit(RenderPipelines.GUI_TEXTURED,
+//            if (menu.selectedMailboxIndex != null) MAILBOX_SELECTED else MAILBOX_UNSELECTED,
+//            xo+39, yo+70, 0f, 0f, 97, 14, 97, 14, -1)
+
+
         // show message when no addresses are available
-        if (addressButtons.isEmpty()) graphics.textWithWordWrap(font, Component.translatable("container.plantz.no_address"), xo+52, yo+28, 96, -1)
+        //if (addressButtons.isEmpty()) graphics.textWithWordWrap(font, Component.translatable("container.plantz.no_address"), xo+52, yo+28, 96, -1)
     }
 
     override fun containerTick() {
         super.containerTick()
-        if (menu.responseTimeout > 0) --menu.responseTimeout
     }
 
     override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {
@@ -202,11 +175,6 @@ class MailboxScreen(
             }
             return true
         }
-    }
-
-    fun onSendPressed() {
-        val targetMailbox = menu.getMailbox(menu.selectedMailboxIndex) ?: return
-        ClientPlayNetworking.send(SendMailRequestPayload(targetMailbox.blockPos))
     }
 
     fun onSearchUpdated(searchString: String) {

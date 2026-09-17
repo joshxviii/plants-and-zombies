@@ -130,6 +130,14 @@ object PazBlocks {
             )
     )
 
+    @JvmField val MAIL_COLLECTION_BOX: Block = registerBlock("mail_collection_box", mailboxProperties(MapColor.COLOR_BLUE), ::MailCollectionBoxBlock)
+    val MAIL_COLLECTION_BOX_ENTITY: BlockEntityType<MailCollectionBoxEntity> = registerBlockEntity(
+        "mail_collection_box",
+        ::MailCollectionBoxEntity,
+        MAIL_COLLECTION_BOX
+    )
+
+
     @JvmField val MAILBOX: Block = registerBlock("mailbox", mailboxProperties(), ::MailboxBlock)
     @JvmField val LIGHT_GRAY_MAILBOX: Block = registerBlock("light_gray_mailbox", mailboxProperties(MapColor.COLOR_LIGHT_GRAY), {MailboxBlock(it, DyeColor.LIGHT_GRAY)})
     @JvmField val GRAY_MAILBOX: Block = registerBlock("gray_mailbox", mailboxProperties(MapColor.COLOR_GRAY), {MailboxBlock(it, DyeColor.GRAY)})

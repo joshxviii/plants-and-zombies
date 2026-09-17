@@ -7,7 +7,12 @@ enum class MailboxState(val stateName: String) : StringRepresentable {
     HAS_MAIL("has_mail"),
     EJECTING("ejecting");
 
-    override fun getSerializedName(): String {
-        return this.stateName
-    }
+    override fun getSerializedName(): String = this.stateName
+}
+
+enum class CollectionBoxState(val stateName: String) : StringRepresentable {
+    OPEN("open"),
+    CLOSED("closed");
+
+    override fun getSerializedName(): String = this.stateName
 }

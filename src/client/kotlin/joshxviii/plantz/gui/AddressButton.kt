@@ -15,14 +15,14 @@ import net.minecraft.util.ARGB
  * Address button used to populate list in mailbox gui
  */
 class AddressButton(
-    val menuData: MailboxData,
+    val menuData: MailboxData? = null,
     val mailboxData: MailboxData,
     buttonX: Int,
     buttonY: Int,
     clickAction: OnPress,
     enabledRequirement: ((button: PazButton) -> Boolean) = { true },
     clickRequirement: ((button: PazButton) -> Boolean) = enabledRequirement,
-) : PazButton(buttonX, buttonY, 97, 14, clickAction, ADDRESS, ADDRESS_HIGHLIGHTED, ADDRESS_SELECTED, enabledRequirement, clickRequirement, mailboxData.name, ARGB.addRgb(menuData.color, 0x333333)) {
+) : PazButton(buttonX, buttonY, 97, 14, clickAction, ADDRESS, ADDRESS_HIGHLIGHTED, ADDRESS_SELECTED, enabledRequirement, clickRequirement, mailboxData.name, menuData?.let { ARGB.addRgb(it.color, 0x333333) }?: -1) {
     val posText: MutableComponent =
         Component.translatable("container.plantz.mailbox_coords", mailboxData.blockPos.x, mailboxData.blockPos.y, mailboxData.blockPos.z).withColor(0xFFFFFFF)
 

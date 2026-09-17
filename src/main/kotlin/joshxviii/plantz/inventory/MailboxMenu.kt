@@ -3,14 +3,12 @@ package joshxviii.plantz.inventory
 import joshxviii.plantz.MailboxData
 import joshxviii.plantz.PazMenus
 import joshxviii.plantz.PazTags
-import joshxviii.plantz.block.entity.MailboxManager
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.world.Container
 import net.minecraft.world.SimpleContainer
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.ContainerLevelAccess
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
@@ -23,27 +21,9 @@ class MailboxMenu(
     val inventory: Inventory,
     val data: MailboxData,
     private val access: ContainerLevelAccess = ContainerLevelAccess.NULL
-) : AbstractContainerMenu(PazMenus.MAILBOX_MENU, containerId) {
+) : AbstractMailboxMenu(PazMenus.MAILBOX_MENU, containerId) {
 
-    var slotUpdateListener = Runnable {}
-    var mailboxListUpdateListener = Runnable {}
-    var selectedMailboxIndex: Int? = null
     val mailSlot: Slot
-    var responseMessage: Component = Component.empty()
-    var responseTimeout: Int = 0
-    var availableMailboxes: List<MailboxData> = emptyList()
-        set(value) {
-            field = value
-            updateFilteredMailboxes()
-            mailboxListUpdateListener.run()
-        }
-    var filteredMailboxes: List<MailboxData> = emptyList()
-    var searchFilter: String = ""
-        set(value) {
-            field = value
-            updateFilteredMailboxes()
-            slotUpdateListener.run()
-        }
 
     private val inputContainer: Container = object : SimpleContainer(1) {
         init { Objects.requireNonNull<MailboxMenu>(this@MailboxMenu) }
@@ -62,12 +42,6 @@ class MailboxMenu(
         addStandardInventorySlots(inventory, 8, 98)
     }
 
-    fun getMailbox(index: Int?): MailboxData? {
-        if (index == null ) return null
-        if (index < 0 || index >= filteredMailboxes.size) return null
-        return filteredMailboxes[index]
-    }
-
     override fun stillValid(player: Player): Boolean {
         return access.evaluate( { level: Level, pos: BlockPos ->
             if (!isValidBlock(level.getBlockState(pos))) false
@@ -75,10 +49,6 @@ class MailboxMenu(
         }, true)
     }
     fun isValidBlock(state: BlockState): Boolean = state.`is`(PazTags.BlockTags.MAILBOX)
-
-    fun updateFilteredMailboxes() {
-        filteredMailboxes = MailboxManager.searchMailboxes(availableMailboxes, searchFilter)
-    }
 
     override fun slotsChanged(container: Container) {
         val mailStack = this.mailSlot.item
