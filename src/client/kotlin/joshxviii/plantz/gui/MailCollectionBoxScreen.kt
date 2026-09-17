@@ -6,6 +6,7 @@ import joshxviii.plantz.networking.UpdateCollectionBoxPayload
 import joshxviii.plantz.pazResource
 import joshxviii.plantz.renderer.outlineText
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
+import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
@@ -129,8 +130,14 @@ class MailCollectionBoxScreen(
             val darker = ARGB.multiply(color, 0x999999)
             val posText = mailbox.blockPos.let { Component.translatable("container.plantz.mailbox_coords", it.x, it.y, it.z) }.withColor(darker)
             val text = Component.translatable("chat.square_brackets", posText).withColor(darker)
-            val line = font.split(text, 97).firstOrNull()
-            graphics.blit(RenderPipelines.GUI_TEXTURED, MAILBOX_SELECTED, xo+26, yo+70, 0f, 0f, 97, 14, 97, 14, color)
+            val line = font.split(text, 101).firstOrNull()
+            graphics.blit(RenderPipelines.GUI_TEXTURED, MAILBOX_SELECTED, xo+24, yo+70, 0f, 0f, 101, 14, 101, 14, color)
+            if (line!=null) graphics.text(font, line, xo+75 - font.width(line)/2, yo+73, -1, false)
+        }
+
+        if (miniButtons.isEmpty()) {
+            val text = Component.translatable("container.plantz.no_address").withColor(0x777777)
+            val line = font.split(text, 101).firstOrNull()
             if (line!=null) graphics.text(font, line, xo+75 - font.width(line)/2, yo+73, -1, false)
         }
     }

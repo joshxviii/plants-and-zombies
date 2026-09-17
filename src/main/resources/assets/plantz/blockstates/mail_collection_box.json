@@ -1,13 +1,13 @@
 {
   "variants": {
-    "collection_box_state=open,facing=north": { "model": "plantz:block/mail_collection_box/open" },
-    "collection_box_state=open,facing=south": { "model": "plantz:block/mail_collection_box/open", "y": 180 },
-    "collection_box_state=open,facing=east":  { "model": "plantz:block/mail_collection_box/open", "y": 90 },
-    "collection_box_state=open,facing=west":  { "model": "plantz:block/mail_collection_box/open", "y": 270 },
+    "state=open,facing=north": { "model": "plantz:block/mail_collection_box/open" },
+    "state=open,facing=south": { "model": "plantz:block/mail_collection_box/open", "y": 180 },
+    "state=open,facing=east":  { "model": "plantz:block/mail_collection_box/open", "y": 90 },
+    "state=open,facing=west":  { "model": "plantz:block/mail_collection_box/open", "y": 270 },
 
-    "collection_state=closed,facing=north": { "model": "plantz:block/mail_collection_box/closed" },
-    "collection_state=closed,facing=south": { "model": "plantz:block/mail_collection_box/closed", "y": 180 },
-    "collection_state=closed,facing=east":  { "model": "plantz:block/mail_collection_box/closed", "y": 90 },
-    "collection_state=closed,facing=west":  { "model": "plantz:block/mail_collection_box/closed", "y": 270 }
+    "state=closed,facing=north": { "model": "plantz:block/mail_collection_box/closed" },
+    "state=closed,facing=south": { "model": "plantz:block/mail_collection_box/closed", "y": 180 },
+    "state=closed,facing=east":  { "model": "plantz:block/mail_collection_box/closed", "y": 90 },
+    "state=closed,facing=west":  { "model": "plantz:block/mail_collection_box/closed", "y": 270 }
   }
 }

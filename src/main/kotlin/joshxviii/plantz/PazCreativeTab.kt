@@ -116,6 +116,7 @@ object PazCreativeTab {
 
                 // mailboxes
                 PazBlocks.mailboxByColor.forEach { output.accept(it.value) }
+                output.accept(PazBlocks.MAIL_COLLECTION_BOX)
 
                 // blocks
                 output.accept(PazBlocks.BRAINZ_ALLOY_BLOCK)

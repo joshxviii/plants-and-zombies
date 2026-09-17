@@ -40,7 +40,7 @@ class MailCollectionBoxBlock(
     companion object {
         val CODEC: MapCodec<MailCollectionBoxBlock> = RecordCodecBuilder.mapCodec { it.group(propertiesCodec()).apply(it) { properties -> MailCollectionBoxBlock(properties) } }
 
-        val STATE: EnumProperty<CollectionBoxState> = EnumProperty.create("collection_state", CollectionBoxState::class.java)
+        val STATE: EnumProperty<CollectionBoxState> = EnumProperty.create("state", CollectionBoxState::class.java)
         val FACING: EnumProperty<Direction> = HorizontalDirectionalBlock.FACING
         val WATERLOGGED: BooleanProperty = BlockStateProperties.WATERLOGGED
 
@@ -98,7 +98,7 @@ class MailCollectionBoxBlock(
     override fun getStateForPlacement(context: BlockPlaceContext): BlockState {
         val replacedFluidState = context.level.getFluidState(context.clickedPos)
         return defaultBlockState()
-            .setValue(FACING, context.horizontalDirection)
+            .setValue(FACING, context.horizontalDirection.opposite)
             .setValue(WATERLOGGED, replacedFluidState.`is`(Fluids.WATER))
     }
 
@@ -143,7 +143,6 @@ class MailCollectionBoxBlock(
     override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos, direction: Direction): Int {
         val blockEntity = level.getBlockEntity(pos) as? MailCollectionBoxEntity ?: return 0
         val hasSelected = blockEntity.selectedMailbox != null
-        if (!hasSelected) return 0
         return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(blockEntity)
     }
 }

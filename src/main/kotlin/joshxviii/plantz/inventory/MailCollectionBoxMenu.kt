@@ -26,9 +26,10 @@ class MailCollectionBoxMenu(
     init {
         val size = collectionBox.containerSize
         val rows = 2
+        val columns = size / rows
         for (i in 0 until rows) {
-            for (j in 0 until size/rows) {
-                addSlot(Slot(collectionBox, j*2+i, 31 + j * 18, 17 + i * 18))
+            for (j in 0 until columns) {
+                addSlot(Slot(collectionBox, j+i*columns, 31 + j * 18, 17 + i * 18))
             }
         }
 
