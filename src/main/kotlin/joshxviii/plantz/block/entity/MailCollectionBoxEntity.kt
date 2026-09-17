@@ -3,7 +3,10 @@ package joshxviii.plantz.block.entity
 import joshxviii.plantz.MailCollectionBoxData
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.block.MailboxBlock
+import joshxviii.plantz.block.MailboxState
 import joshxviii.plantz.inventory.MailCollectionBoxMenu
+import joshxviii.plantz.networking.MailboxSendResult
+import joshxviii.plantz.networking.SendMailRequestPayload.Companion.trySendStack
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
@@ -11,8 +14,10 @@ import net.minecraft.core.NonNullList
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.ContainerHelper
 import net.minecraft.world.SimpleContainer
@@ -37,13 +42,12 @@ class MailCollectionBoxEntity(
 
         }
 
-        val DEFAULT_NAME = Component.translatable("item.plantz.collection_box");
-
         const val INVENTORY_SIZE = 10
     }
 
     private val inventory = SimpleContainer(INVENTORY_SIZE)
     var selectedMailbox: BlockPos? = null
+    var wasPowered: Boolean = false
 
     override fun getContainerSize(): Int = INVENTORY_SIZE
 
@@ -55,12 +59,41 @@ class MailCollectionBoxEntity(
         return saveWithFullMetadata(registries)
     }
 
-    fun syncToClient() {
-        level?.let { lvl ->
-            if (!lvl.isClientSide) {
-                lvl.sendBlockUpdated(worldPosition, blockState, blockState, 3)
+    fun trySendMail() {
+        val level = level as? ServerLevel ?: return
+        val targetPos = selectedMailbox ?: return
+
+        var slotIndex = -1
+        var stack = ItemStack.EMPTY
+        for (i in 0 until containerSize) {
+            val candidate = getItem(i)
+            if (!candidate.isEmpty) {
+                slotIndex = i
+                stack = candidate
+                break
             }
         }
+        if (slotIndex == -1 || stack.isEmpty) return
+
+        val targetBE = level.getBlockEntity(targetPos) as? MailboxBlockEntity
+        val result = trySendStack(level, stack, targetPos)
+
+        when (result) {
+            MailboxSendResult.SUCCESS -> {
+                setItem(slotIndex, ItemStack.EMPTY)
+                setChanged()
+                targetBE?.setChanged()
+                targetBE?.updateMailboxState(MailboxState.HAS_MAIL)
+                playSound(SoundEvents.UI_LOOM_SELECT_PATTERN, 0.3f, 1.2f)
+            }
+            MailboxSendResult.DISCARDED -> {
+                selectedMailbox = null
+                setChanged()
+            }
+            else -> {}
+        }
+
+        if (result != MailboxSendResult.SUCCESS) playSound(SoundEvents.BARREL_CLOSE, 0.3f, 1.2f)
     }
 
     override fun saveAdditional(output: ValueOutput) {
@@ -75,7 +108,7 @@ class MailCollectionBoxEntity(
         ContainerHelper.loadAllItems(input, inventory.items)
     }
 
-    override fun getDefaultName(): Component = DEFAULT_NAME
+    override fun getDefaultName(): Component = PazBlocks.MAIL_COLLECTION_BOX.name
 
     override fun getItems(): NonNullList<ItemStack> = inventory.items
     override fun setItems(items: NonNullList<ItemStack>) {}

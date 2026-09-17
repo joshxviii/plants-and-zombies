@@ -12,7 +12,7 @@ abstract class AbstractMailboxMenu(
     menu: ExtendedMenuType<*, *>,
     containerId: Int,
 ): AbstractContainerMenu(menu, containerId) {
-    var selectedMailboxIndex: Int? = null
+    var selectedMailboxPos: BlockPos? = null
     var slotUpdateListener = Runnable {}
     var mailboxListUpdateListener = Runnable {}
     var availableMailboxes: List<MailboxData> = emptyList()
@@ -40,9 +40,5 @@ abstract class AbstractMailboxMenu(
         if (index == null ) return null
         if (index < 0 || index >= filteredMailboxes.size) return null
         return filteredMailboxes[index]
-    }
-
-    fun getIndexFromPos(targetPos: BlockPos): Int {
-        return availableMailboxes.map { it.blockPos }.filter { it == targetPos }.indexOf(targetPos)
     }
 }

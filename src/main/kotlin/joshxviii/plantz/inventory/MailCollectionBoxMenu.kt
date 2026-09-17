@@ -28,15 +28,11 @@ class MailCollectionBoxMenu(
         val rows = 2
         for (i in 0 until rows) {
             for (j in 0 until size/rows) {
-                addSlot(Slot(collectionBox, j*2+i, 44 + j * 18, 16 + i * 18))
+                addSlot(Slot(collectionBox, j*2+i, 31 + j * 18, 17 + i * 18))
             }
         }
 
         addStandardInventorySlots(inventory, 8, 98)
-
-        data.selectedMailbox?.let {
-            selectedMailboxIndex = getIndexFromPos(it)
-        }
     }
 
     override fun quickMoveStack(player: Player, slotIndex: Int): ItemStack {

@@ -1,11 +1,7 @@
 package joshxviii.plantz.gui
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes
-import joshxviii.plantz.PazBlocks
-import joshxviii.plantz.block.entity.MailCollectionBoxEntity
 import joshxviii.plantz.inventory.MailCollectionBoxMenu
-import joshxviii.plantz.inventory.MailboxMenu
-import joshxviii.plantz.networking.SendMailRequestPayload
 import joshxviii.plantz.networking.UpdateCollectionBoxPayload
 import joshxviii.plantz.pazResource
 import joshxviii.plantz.renderer.outlineText
@@ -17,12 +13,10 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.input.KeyEvent
 import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.client.renderer.RenderPipelines
-import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import net.minecraft.util.ARGB
 import net.minecraft.util.Mth
-import net.minecraft.util.datafix.ExtraDataFixUtils.blockState
 import net.minecraft.world.entity.player.Inventory
 
 class MailCollectionBoxScreen(
@@ -32,7 +26,7 @@ class MailCollectionBoxScreen(
 ) : AbstractContainerScreen<MailCollectionBoxMenu>(menu, inventory, title, 176, 180) {
     private lateinit var addressSearch: EditBox
     private lateinit var sendButton: Button
-    private val addressButtons = mutableListOf<AddressButton>()
+    private val miniButtons = mutableListOf<MiniAddressButton>()
     private var scrollOffs = 0f
     private var scrolling = false
     private var startIndex = 0
@@ -45,15 +39,16 @@ class MailCollectionBoxScreen(
 
     companion object {
         val BACKGROUND: Identifier = pazResource("textures/gui/mail_collection_box/background.png")
-        val MAILBOX_SELECTED: Identifier = pazResource("textures/gui/mail_collection_box/selected.png")
-        val MAILBOX_UNSELECTED: Identifier = pazResource("textures/gui/mail_collection_box/unselected.png")
+        val MAILBOX_SELECTED: Identifier = pazResource("textures/gui/mail_collection_box/title_selected.png")
+        val MAILBOX_UNSELECTED: Identifier = pazResource("textures/gui/mail_collection_box/title_unselected.png")
         val SCROLLER: Identifier = pazResource("textures/gui/mailbox/scroller.png")
         val SCROLLER_DISABLED: Identifier = pazResource("textures/gui/mailbox/scroller_disabled.png")
+
+        const val MAX_VISIBLE_ROWS = 8
     }
 
     fun initSearchBar(x: Int, y: Int): EditBox {
         val txt = EditBox(font, x, y, 94, 12, Component.translatable("container.plantz.address_search"));
-        val l =
         txt.setCanLoseFocus(false)
         txt.setTextColor(-1)
         txt.setTextColorUneditable(-1)
@@ -67,42 +62,42 @@ class MailCollectionBoxScreen(
     }
 
     override fun init() {
-        menu.selectedMailboxIndex?.let { startIndex = it }
         super.init()
         val xo = (width - imageWidth) / 2
         val yo = (height - imageHeight) / 2
-        addressSearch = initSearchBar(xo+40, yo+59)
+        addressSearch = initSearchBar(xo+27, yo+59)
         menu.slotUpdateListener = { containerChanged() }
         menu.mailboxListUpdateListener = { containerChanged() }
+        scrollToIndex()
         rebuildAddressButtons()
     }
 
     private fun rebuildAddressButtons() {
         menu.updateFilteredMailboxes()
-        addressButtons.forEach { removeWidget(it) }
-        addressButtons.clear()
+        miniButtons.forEach { removeWidget(it) }
+        miniButtons.clear()
 
         val xo = leftPos
         val yo = topPos
 
-        val visibleCount = menu.filteredMailboxes.size.coerceAtMost(1)
+        val visibleCount = menu.filteredMailboxes.size.coerceAtMost(MAX_VISIBLE_ROWS)
         for (i in 0 until visibleCount) {
-            val mailboxIndex = startIndex + i
-            menu.getMailbox(mailboxIndex)?.let { mailbox ->
-                val button = AddressButton(
+            val index = startIndex + i
+            menu.getMailbox(index)?.let { mailbox ->
+                val miniButton = MiniAddressButton(
                     mailboxData = mailbox,
-                    buttonX = xo+39,
-                    buttonY = yo+70 + i * 14,
+                    buttonX = xo+140,
+                    buttonY = yo+19+i*8,
                     clickAction = {
-                        if (menu.selectedMailboxIndex == mailboxIndex) menu.selectedMailboxIndex = null else menu.selectedMailboxIndex = mailboxIndex
+                        if (menu.selectedMailboxPos == mailbox.blockPos) menu.selectedMailboxPos = null else menu.selectedMailboxPos = mailbox.blockPos
+                        onSelectedMailbox()
                         rebuildAddressButtons()
-                        ClientPlayNetworking.send(UpdateCollectionBoxPayload(menu.data.blockPos, mailbox.blockPos))
                     },
-                    enabledRequirement = { menu.selectedMailboxIndex != mailboxIndex },
+                    enabledRequirement = { menu.selectedMailboxPos != mailbox.blockPos },
                     clickRequirement = { true }
                 )
-                addressButtons.add(button)
-                addRenderableWidget(button)
+                miniButtons.add(miniButton)
+                addRenderableWidget(miniButton)
             }
         }
     }
@@ -118,22 +113,21 @@ class MailCollectionBoxScreen(
         val yo = topPos
         graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, xo, yo, 0f, 0f, imageWidth, imageHeight, 256, 256, -1)
 
-        val sy = (41.0f * scrollOffs).toInt()
+        val sy = (52.0f * scrollOffs).toInt()
         val sprite = if (isScrollBarActive()) SCROLLER else SCROLLER_DISABLED
         val scrollerX = xo+152
-        val scrollerY = yo+28 + sy
+        val scrollerY = yo+17 + sy
         graphics.blit(RenderPipelines.GUI_TEXTURED, sprite, scrollerX, scrollerY, 0f, 0f, 12, 15, 12, 15)
         if (xm >= scrollerX && xm < scrollerX + 12 && ym >= scrollerY && ym < scrollerY + 15) {
             graphics.requestCursor(if (scrolling) CursorTypes.RESIZE_NS else CursorTypes.POINTING_HAND)
         }
 
-//        graphics.blit(RenderPipelines.GUI_TEXTURED,
-//            if (menu.selectedMailboxIndex != null) MAILBOX_SELECTED else MAILBOX_UNSELECTED,
-//            xo+39, yo+70, 0f, 0f, 97, 14, 97, 14, -1)
-
-
-        // show message when no addresses are available
-        //if (addressButtons.isEmpty()) graphics.textWithWordWrap(font, Component.translatable("container.plantz.no_address"), xo+52, yo+28, 96, -1)
+        menu.availableMailboxes.find { it.blockPos == menu.selectedMailboxPos }?.let { mailbox ->
+            val text = mailbox.name
+            val line = font.split(text, 97).firstOrNull()
+            graphics.blit(RenderPipelines.GUI_TEXTURED, MAILBOX_SELECTED, xo+26, yo+70, 0f, 0f, 97, 14, 97, 14, -1)
+            if (line!=null) graphics.centeredText(font, line, xo+74, yo+73, -1)
+        }
     }
 
     override fun containerTick() {
@@ -184,6 +178,23 @@ class MailCollectionBoxScreen(
         rebuildAddressButtons()
     }
 
+    fun onSelectedMailbox() {
+        ClientPlayNetworking.send(UpdateCollectionBoxPayload(menu.data.blockPos, menu.selectedMailboxPos))
+    }
+
+    fun scrollToIndex() {
+        val index = menu.filteredMailboxes.indexOfFirst { it.blockPos == menu.selectedMailboxPos }
+        if (index == -1) return
+        val size = menu.filteredMailboxes.size
+        if (size == 0) return
+
+        val maxStart = (size - MAX_VISIBLE_ROWS).coerceAtLeast(0)
+        startIndex = index.coerceIn(0, maxStart)
+
+        val offscreen = getOffscreenRows()
+        scrollOffs = if (offscreen > 0) startIndex.toFloat() / offscreen else 0f
+    }
+
     override fun keyPressed(event: KeyEvent): Boolean {
         if (event.isEscape) {
             this.minecraft.player!!.closeContainer()
@@ -197,11 +208,12 @@ class MailCollectionBoxScreen(
         addressSearch.setValue(oldEditAddress)
     }
 
-    private fun isScrollBarActive(): Boolean = menu.filteredMailboxes.size > 4
+    private fun isScrollBarActive(): Boolean = true
 
     private fun getOffscreenRows(): Int = (menu.filteredMailboxes.size - 1).coerceAtLeast(0)
 
     private fun containerChanged() {
+        scrollToIndex()
         rebuildAddressButtons()
     }
 

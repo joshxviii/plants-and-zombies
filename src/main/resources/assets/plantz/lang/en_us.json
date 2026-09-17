@@ -177,6 +177,7 @@
   "item.plantz.magenta_balloon": "Magenta Balloon",
   "item.plantz.pink_balloon": "Pink Balloon",
 
+  "item.plantz.mail_collection_box": "Collection Box",
   "item.plantz.mailbox": "Mailbox",
   "item.plantz.light_gray_mailbox": "Light Gray Mailbox",
   "item.plantz.gray_mailbox": "Gray Mailbox",
@@ -246,6 +247,8 @@
   "block.plantz.green_garden_gnome": "Green Garden Gnome",
   "block.plantz.red_garden_gnome": "Red Garden Gnome",
   "block.plantz.yellow_garden_gnome": "Yellow Garden Gnome",
+
+  "block.plantz.mail_collection_box": "Collection Box",
   "block.plantz.mailbox": "Mailbox",
   "block.plantz.light_gray_mailbox": "Light Gray Mailbox",
   "block.plantz.gray_mailbox": "Gray Mailbox",

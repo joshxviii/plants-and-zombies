@@ -71,8 +71,8 @@ class MailboxScreen(
         val btn = PazButton(x, y, 20, 14,
             { onSendPressed() },
             SEND_BUTTON, SEND_BUTTON_HOVER, SEND_BUTTON_PRESS,
-            { menu.mailSlot.hasItem() && menu.selectedMailboxIndex != null },
-            { menu.mailSlot.hasItem() && menu.selectedMailboxIndex != null },
+            { menu.mailSlot.hasItem() && menu.selectedMailboxPos != null },
+            { menu.mailSlot.hasItem() && menu.selectedMailboxPos != null },
             color = mailboxColor()
         )
         addRenderableWidget(btn)
@@ -108,10 +108,10 @@ class MailboxScreen(
                     buttonX = xo+52,
                     buttonY = yo+28 + i * 14,
                     clickAction = {
-                        if (menu.selectedMailboxIndex == mailboxIndex) menu.selectedMailboxIndex = null else menu.selectedMailboxIndex = mailboxIndex
+                        if (menu.selectedMailboxPos == mailbox.blockPos) menu.selectedMailboxPos = null else menu.selectedMailboxPos = mailbox.blockPos
                         rebuildAddressButtons()
                     },
-                    enabledRequirement = { menu.selectedMailboxIndex != mailboxIndex },
+                    enabledRequirement = { menu.selectedMailboxPos != mailbox.blockPos },
                     clickRequirement = { true }
                 )
                 addressButtons.add(button)
@@ -205,8 +205,8 @@ class MailboxScreen(
     }
 
     fun onSendPressed() {
-        val targetMailbox = menu.getMailbox(menu.selectedMailboxIndex) ?: return
-        ClientPlayNetworking.send(SendMailRequestPayload(targetMailbox.blockPos))
+        val targetPos = menu.selectedMailboxPos ?: return
+        ClientPlayNetworking.send(SendMailRequestPayload(targetPos))
     }
 
     fun onSearchUpdated(searchString: String) {

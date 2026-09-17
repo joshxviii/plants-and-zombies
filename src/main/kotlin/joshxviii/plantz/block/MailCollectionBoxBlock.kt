@@ -3,7 +3,6 @@ package joshxviii.plantz.block
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import joshxviii.plantz.PazBlocks
-import joshxviii.plantz.block.TimeMachineBlock.Companion.LEVEL
 import joshxviii.plantz.block.entity.MailCollectionBoxEntity
 import joshxviii.plantz.block.entity.MailboxManager
 import joshxviii.plantz.inventory.MailCollectionBoxMenu
@@ -16,12 +15,9 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.RandomSource
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.context.BlockPlaceContext
-import net.minecraft.world.level.BlockGetter
-import net.minecraft.world.level.Level
-import net.minecraft.world.level.LevelAccessor
-import net.minecraft.world.level.LevelReader
-import net.minecraft.world.level.ScheduledTickAccess
+import net.minecraft.world.level.*
 import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityTicker
@@ -33,6 +29,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.EnumProperty
 import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.level.material.Fluids
+import net.minecraft.world.level.redstone.Orientation
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
@@ -60,7 +57,7 @@ class MailCollectionBoxBlock(
     }
 
     override fun <T : BlockEntity> getTicker(level: Level, blockState: BlockState, type: BlockEntityType<T>): BlockEntityTicker<T>? {
-        return if (type == PazBlocks.MAILBOX_ENTITY) {
+        return if (type == PazBlocks.MAIL_COLLECTION_BOX_ENTITY) {
             BlockEntityTicker { level, pos, state, blockEntity ->
                 MailCollectionBoxEntity.tick(level, pos, state, blockEntity as MailCollectionBoxEntity)
             }
@@ -128,10 +125,25 @@ class MailCollectionBoxBlock(
         return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random)
     }
 
-    override fun hasAnalogOutputSignal(state: BlockState): Boolean {
-        return false
+    override fun neighborChanged(
+        state: BlockState,
+        level: Level,
+        pos: BlockPos,
+        block: Block,
+        orientation: Orientation?,
+        movedByPiston: Boolean
+    ) {
+        if (level.isClientSide) return
+        val powered = level.hasNeighborSignal(pos)
+        (level.getBlockEntity(pos) as? MailCollectionBoxEntity)?.let {
+            if (powered && !it.wasPowered) it.trySendMail()
+            it.wasPowered = powered
+        }
+
     }
+
+    override fun hasAnalogOutputSignal(state: BlockState): Boolean = true
     override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos, direction: Direction): Int {
-        return 0
+        return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(level.getBlockEntity(pos))
     }
 }

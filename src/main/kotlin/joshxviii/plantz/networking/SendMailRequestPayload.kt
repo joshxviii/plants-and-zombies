@@ -14,10 +14,12 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.block.entity.BlockEntity
 
 data class SendMailRequestPayload(val targetPos: BlockPos) : CustomPacketPayload {
 
@@ -41,22 +43,10 @@ data class SendMailRequestPayload(val targetPos: BlockPos) : CustomPacketPayload
             val senderBE = level.getBlockEntity(menu.data.blockPos) as? MailboxBlockEntity ?: return
             if (menu.availableMailboxes.none { it.blockPos == targetPos }) return
 
-            val stack = menu.mailSlot.item.copy()
-            if (stack.isEmpty) return
-
             val targetBE = level.getBlockEntity(targetPos) as? MailboxBlockEntity
-            val success = if (targetBE != null) {
-                MailboxMailQueue.tryInsertIntoMailbox(targetBE, stack)
-            } else if (level.isLoaded(targetPos)) {
-                level.getMailboxMailQueue().discardFor(targetPos)
-                MailboxManager.unregisterMailbox(level, targetPos)
-                false
-            } else {
-                level.getMailboxMailQueue().queue(targetPos, stack)
-                true
-            }
+            val result = trySendStack(level, menu.mailSlot.item.copy(), targetPos)
 
-            if (success) {
+            if (result == MailboxSendResult.SUCCESS) {
                 menu.mailSlot.set(ItemStack.EMPTY)
                 menu.broadcastChanges()
                 senderBE.setChanged()
@@ -73,9 +63,37 @@ data class SendMailRequestPayload(val targetPos: BlockPos) : CustomPacketPayload
                     Component.translatable("container.plantz.mailbox_full", targetBE?.name ?: Component.translatable("item.plantz.mailbox")).withColor(0xFF0000)
                 ))
             }
-            PazCriteria.SEND_MAIL.trigger(player, success)
+            PazCriteria.SEND_MAIL.trigger(player, result == MailboxSendResult.SUCCESS)
+        }
+
+        fun trySendStack(level: ServerLevel, stack: ItemStack, targetPos: BlockPos): MailboxSendResult {
+            if (stack.isEmpty) return MailboxSendResult.FAIL
+            val targetBE = level.getBlockEntity(targetPos) as? MailboxBlockEntity
+
+            return when {
+                targetBE != null -> {// the mailbox is present, try to insert mail
+                    if (MailboxMailQueue.tryInsertIntoMailbox(targetBE, stack)) MailboxSendResult.SUCCESS else MailboxSendResult.FULL
+                }
+                level.isLoaded(targetPos) -> {// the chunk is loaded, but the mailbox is missing. discard
+                    level.getMailboxMailQueue().discardFor(targetPos)
+                    MailboxManager.unregisterMailbox(level, targetPos)
+                    MailboxSendResult.DISCARDED
+                }
+                else -> {// otherwise queue the mail
+                    level.getMailboxMailQueue().queue(targetPos, stack)
+                    MailboxSendResult.QUEUED
+                }
+            }
         }
     }
 
     override fun type(): CustomPacketPayload.Type<out CustomPacketPayload> = ID
+}
+
+enum class MailboxSendResult {
+    SUCCESS,
+    FAIL,
+    FULL,
+    QUEUED,
+    DISCARDED
 }

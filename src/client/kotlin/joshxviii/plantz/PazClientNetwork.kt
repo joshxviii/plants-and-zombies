@@ -2,6 +2,7 @@ package joshxviii.plantz
 
 import joshxviii.plantz.PazNetwork.ZombieRaidClientCache
 import joshxviii.plantz.inventory.AbstractMailboxMenu
+import joshxviii.plantz.inventory.MailCollectionBoxMenu
 import joshxviii.plantz.inventory.MailboxMenu
 import joshxviii.plantz.networking.MailboxListResponsePayload
 import joshxviii.plantz.networking.SendMailResponsePayload
@@ -42,6 +43,9 @@ object PazClientNetwork {
                 val player = context.player()
                 val menu = player.containerMenu as? AbstractMailboxMenu ?: return@execute
 
+                if (menu is MailCollectionBoxMenu) {
+                    menu.selectedMailboxPos = menu.data.selectedMailbox
+                }
                 // Rebuild list from positions
                 menu.availableMailboxes = payload.mailboxes
                 menu.updateFilteredMailboxes()
