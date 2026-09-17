@@ -3,6 +3,8 @@ package joshxviii.plantz.inventory
 import joshxviii.plantz.MailboxData
 import joshxviii.plantz.PazMenus
 import joshxviii.plantz.PazTags
+import joshxviii.plantz.block.entity.MailCollectionBoxEntity
+import joshxviii.plantz.block.entity.MailboxBlockEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.world.Container
@@ -15,25 +17,24 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import java.util.*
+import kotlin.run
 
 class MailboxMenu(
     containerId: Int,
     val inventory: Inventory,
     val data: MailboxData,
-    private val access: ContainerLevelAccess = ContainerLevelAccess.NULL
-) : AbstractMailboxMenu(PazMenus.MAILBOX_MENU, containerId) {
+    private val mailbox: Container = SimpleContainer(MailboxBlockEntity.INVENTORY_SIZE),
+) : AbstractMailboxMenu(PazMenus.MAILBOX_MENU, inventory, containerId, mailbox) {
 
     val mailSlot: Slot
-
-    private val inputContainer: Container = object : SimpleContainer(1) {
-        init { Objects.requireNonNull<MailboxMenu>(this@MailboxMenu) }
+    val inputContainer = object : SimpleContainer(1) {
+        init { Objects.requireNonNull(this@MailboxMenu) }
         override fun setChanged() {
             super.setChanged()
             this@MailboxMenu.slotsChanged(this)
             this@MailboxMenu.slotUpdateListener.run()
         }
     }
-
     init {
         mailSlot = addSlot(object : Slot(inputContainer, 0, 20, 32) {
             init { Objects.requireNonNull(this@MailboxMenu) }
@@ -43,7 +44,7 @@ class MailboxMenu(
     }
 
     override fun stillValid(player: Player): Boolean {
-        return access.evaluate( { level: Level, pos: BlockPos ->
+        return ContainerLevelAccess.NULL.evaluate( { level: Level, pos: BlockPos ->
             if (!isValidBlock(level.getBlockState(pos))) false
             else player.isWithinBlockInteractionRange(pos, 4.0)
         }, true)

@@ -1,6 +1,6 @@
 {
-	"parent": "plantz:block/mailbox/mailbox",
+	"parent": "plantz:block/mail_collection_box/closed",
 	"textures": {
-		"0": "plantz:block/mailbox/mailbox_open"
+		"0": "plantz:block/mail_collection_box/open"
 	}
 }

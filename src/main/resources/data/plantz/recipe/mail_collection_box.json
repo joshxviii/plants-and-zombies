@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "@": "#plantz:mailboxes",
+    "#": [
+      "plantz:brainz_alloy"
+    ],
+    "+": [
+      "plantz:newspaper"
+    ],
+    "*": [
+      "minecraft:redstone"
+    ]
+  },
+  "pattern": [
+    "###",
+    "#+#",
+    "*@*"
+  ],
+  "result": {
+    "count": 1,
+    "id": "plantz:mail_collection_box"
+  }
+}

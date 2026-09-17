@@ -21,7 +21,7 @@ class MailCollectionBoxMenu(
     val inventory: Inventory,
     val data: MailCollectionBoxData,
     private val collectionBox: Container = SimpleContainer(MailCollectionBoxEntity.INVENTORY_SIZE),
-) : AbstractMailboxMenu(PazMenus.MAIL_COLLECTION_BOX_MENU, containerId) {
+) : AbstractMailboxMenu(PazMenus.MAIL_COLLECTION_BOX_MENU, inventory, containerId, collectionBox) {
 
     init {
         val size = collectionBox.containerSize

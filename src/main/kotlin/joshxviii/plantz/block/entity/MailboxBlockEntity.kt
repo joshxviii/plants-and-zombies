@@ -77,7 +77,7 @@ class MailboxBlockEntity(
                 return
             }
 
-            if (state.getValue(STATE) == MailboxState.EJECTING) {
+            if (blockEntity.ejectTimer > 0) {
                 val buffer = blockEntity.heroMailBuffer
                 if (buffer.isNotEmpty()) {// Hero Mail Rewards
                     if (blockEntity.ejectTimer % Mth.floor((HERO_MAIL_EJECT_DELAY+buffer.size)/buffer.size.toFloat()) == 0) buffer.getOrNull(blockEntity.heroMailIndex)?.let {
@@ -96,9 +96,8 @@ class MailboxBlockEntity(
                         }
                     }
                 }
-                if (blockEntity.ejectTimer > 0) {
-                    blockEntity.ejectTimer--
-                } else {
+                blockEntity.ejectTimer--
+                if (blockEntity.ejectTimer == 0) {
                     blockEntity.updateMailboxState(MailboxState.INACTIVE)
                     blockEntity.ejectTimer = 0
                     blockEntity.setChanged()
@@ -117,9 +116,11 @@ class MailboxBlockEntity(
     private val openersCounter: ContainerOpenersCounter = object : ContainerOpenersCounter() {
         override fun onOpen(level: Level, pos: BlockPos, blockState: BlockState) {
             playSound(SoundEvents.COPPER_CHEST_OPEN, 0.3f, 1.5f)
+            updateMailboxState(MailboxState.EJECTING)
         }
         override fun onClose(level: Level, pos: BlockPos, blockState: BlockState) {
             playSound(SoundEvents.COPPER_CHEST_CLOSE, 0.3f, 1.5f)
+            if (ejectTimer <= 0) updateMailboxState(MailboxState.INACTIVE)
         }
         override fun openerCountChanged(level: Level, pos: BlockPos, blockState: BlockState, previous: Int, current: Int) {}
         override fun isOwnContainer(player: Player): Boolean {
@@ -142,7 +143,7 @@ class MailboxBlockEntity(
         return openersCounter.getEntitiesWithContainerOpen(getLevel()!!, blockPos)
     }
 
-    override fun createMenu(containerId: Int, inventory: Inventory): AbstractContainerMenu = MailboxMenu(containerId, inventory, asMailBoxData())
+    override fun createMenu(containerId: Int, inventory: Inventory): AbstractContainerMenu = MailboxMenu(containerId, inventory, asMailBoxData(), this)
     override fun getScreenOpeningData(player: ServerPlayer): MailboxData = asMailBoxData()
 
     fun tryToGetMail(player: Player): Boolean {

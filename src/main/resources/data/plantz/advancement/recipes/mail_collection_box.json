@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "plantz:mail_collection_box"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_mailbox": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "plantz:mailbox"
+          }
+        ]
+      }
+    },
+    "has_brainz_alloy": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "plantz:brainz_alloy"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_mailbox",
+      "has_brainz_alloy"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "plantz:mail_collection_box"
+    ]
+  }
+}
