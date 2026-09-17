@@ -1,6 +1,11 @@
 {
   "mutations": [
     {
+      "weather": "thunder",
+      "chance": 1.0,
+      "result": "plantz:electric_peashooter"
+    },
+    {
       "chance": 0.95,
       "result": "plantz:peashooter"
     }

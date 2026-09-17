@@ -66,6 +66,21 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 	}
 }
 
+tasks.register("devBuild") {
+	group = "build"
+	description = "Builds a development jar (e.g. plants-and-zombies-1.5-dev.42.jar)"
+
+	doFirst {
+		def buildNum = getNextDevBuildNumber()
+		def devVersion = "${project.mod_version}-dev.${buildNum}"
+
+		project.version = devVersion
+		println ">>> Building DEV version: ${devVersion}"
+	}
+
+	finalizedBy("build")
+}
+
 java {
 	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
 	// if it is present.
@@ -100,4 +115,18 @@ publishing {
 		// The repositories here will be used for publishing your artifact, not for
 		// retrieving dependencies.
 	}
+}
+
+def getNextDevBuildNumber() {
+	def numberFile = file("dev_build.number")
+
+	def current = 0
+	if (numberFile.exists()) {
+		current = numberFile.text.trim().toInteger()
+	}
+
+	def next = current + 1
+	numberFile.text = next.toString() + "\n"
+
+	return next
 }
