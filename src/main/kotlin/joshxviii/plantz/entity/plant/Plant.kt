@@ -89,24 +89,24 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             random: RandomSource
         ): Boolean {
             val blockBelow = level.getBlockState(pos.below())
-            val isValid = checkValidSpawn(level, pos, spawnReason) && blockBelow.`is`(PLANTABLE) && pos.y > level.seaLevel - 8
+            val isValid = checkValidSpawn(level, pos, spawnReason, random) && blockBelow.`is`(PLANTABLE) && pos.y > level.seaLevel - 8
             return isValid
         }
 
         /**
          * General Plant spawn rules. Should use this is for other plants custom spawn rules.
-         * Ensure plant groups are spread out and not clumped too close together.
+         * Ensure plant groups are spread out and not clumped too close together. And then roll a 60% chance.
          */
-        fun checkValidSpawn(level: LevelAccessor, pos: BlockPos, spawnReason: EntitySpawnReason): Boolean {
+        fun checkValidSpawn(level: LevelAccessor, pos: BlockPos, spawnReason: EntitySpawnReason, random: RandomSource): Boolean {
             val blockAtPos = level.getBlockState(pos)
-            return (level.getEntitiesOfClass(Plant::class.java, AABB(pos).inflate(38.0)) { it.tickCount > 0 }.isEmpty()
-                    && blockAtPos.getCollisionShape(level, pos.above()).isEmpty) || EntitySpawnReason.isSpawner(spawnReason)
+            return (level.getEntitiesOfClass(Plant::class.java, AABB(pos).inflate(42.0)) { it.tickCount > 0 }.isEmpty()
+                    && blockAtPos.getCollisionShape(level, pos.above()).isEmpty) || EntitySpawnReason.isSpawner(spawnReason) && random.nextFloat() < 0.6f
         }
 
-        fun checkWaterSpawn(level: LevelAccessor, pos: BlockPos, spawnReason: EntitySpawnReason): Boolean {
+        fun checkWaterSpawn(level: LevelAccessor, pos: BlockPos, spawnReason: EntitySpawnReason, random: RandomSource): Boolean {
             val inWater = level.getFluidState(pos).`is`(FluidTags.WATER)
             val waterHeight = level.getHeight(Heightmap.Types.WORLD_SURFACE, pos.x, pos.z)
-            return checkValidSpawn(level, pos.above(waterHeight - pos.y), spawnReason) && inWater
+            return checkValidSpawn(level, pos.above(waterHeight - pos.y), spawnReason, random) && inWater
         }
 
         val PLANT_STATE: EntityDataAccessor<PlantState> = SynchedEntityData.defineId<PlantState>(Plant::class.java, DATA_PLANT_STATE)

@@ -42,7 +42,7 @@ class TangleKelp(type: EntityType<out Plant>, level: Level) : Plant(type, level)
             val isRaining = level.level.isRaining
             val rainBonus = if (isRaining) 2.25f else 1f
 
-            return checkWaterSpawn(level, pos, spawnReason)
+            return checkWaterSpawn(level, pos, spawnReason, random)
                     && random.nextFloat() < (0.1 * rainBonus)
         }
         val TANGLE_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(TangleKelp::class.java, EntityDataSerializers.INT)

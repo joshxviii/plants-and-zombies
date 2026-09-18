@@ -116,7 +116,7 @@ class ZombieRaid(
         }
         val ZOMBIE_RAID_BAR_START: Component = Component.translatable("event.plantz.zombie_raid.start").withStyle(ChatFormatting.GOLD)
         val ZOMBIE_RAID_BAR_START_CREDITS: Component = Component.translatable("event.plantz.zombie_raid.start.after_credits").withStyle(ChatFormatting.GOLD)
-        val ZOMBIE_RAID_VICTORY: Component = Component.translatable("event.plantz.zombie_raid.victory").withStyle(ChatFormatting.YELLOW)
+        val ZOMBIE_RAID_VICTORY: Component = Component.translatable("event.plantz.zombie_raid.victory").withStyle(ChatFormatting.GOLD)
         val ZOMBIE_RAID_VICTORY_TITLE: Component = Component.translatable("event.plantz.zombie_raid.victory_title").withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD)
         val ZOMBIE_RAID_DEFEAT: Component = Component.translatable("event.plantz.zombie_raid.defeat").withStyle(ChatFormatting.RED)
         val ZOMBIE_RAID_DEFEAT_TITLE: Component = Component.translatable("event.plantz.zombie_raid.defeat_title").withStyle(ChatFormatting.DARK_RED).withStyle(ChatFormatting.BOLD)
@@ -245,6 +245,7 @@ class ZombieRaid(
                 player.sendSystemMessage(ZOMBIE_RAID_DEFEAT)
                 showTitleMessage(ZOMBIE_RAID_DEFEAT_TITLE)
             }
+            vanishAllZombies(level)
             return
         }
 
@@ -377,6 +378,19 @@ class ZombieRaid(
             }
         }
     }
+
+    fun vanishAllZombies(level: ServerLevel) {
+        level.playLocalSound(center, SoundEvents.WITHER_DEATH, SoundSource.UI, 1f, 0.4f, false)
+        waveZombieMap.values.forEach { zombies ->
+            zombies.forEach { zombie ->
+                zombie.discard()
+                level.sendParticles(ParticleTypes.LARGE_SMOKE, zombie.x, zombie.y, zombie.z, 10, 0.5, 0.5, 0.5, 0.02)
+            }
+        }
+        totalZombieHealth = 0f
+        setDirty(level)
+    }
+
     private fun setDirty(level: ServerLevel) { level.getZombieRaids().setDirty() }
 
     fun setLeader(wave: Int, zombie: Zombie) {

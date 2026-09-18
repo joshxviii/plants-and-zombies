@@ -75,6 +75,7 @@
 - Updated the Zombie Raid event.
   - The amount of waves a raid has is now determined by: (zombie omen level * 2) + (the game's difficulty) + (2 if the end credits have been seen).
   - After the end credits have been seen, waves during a raid will be more difficult.
+  - After losing a raid, all the zombies in the raid will vanish and no rewards will be given.
   - Added Special wave types:
     - "Bucket Brigade" can occur during waves 1–3.
     - "Half-time Showdown" can occur during waves 2–5.

@@ -29,7 +29,7 @@ class LightningReed(type: EntityType<out Plant>, level: Level) : Plant(type, lev
         ): Boolean {
             val isThundering = level.level.isThundering
 
-            return checkValidSpawn(level, pos, spawnReason)
+            return checkValidSpawn(level, pos, spawnReason, random)
                     && isThundering && pos.y > level.seaLevel - 8
         }
     }

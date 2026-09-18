@@ -32,12 +32,7 @@ class PeaElectric(
 
     override fun afterHitEntityEffect(target: LivingEntity) {
         super.afterHitEntityEffect(target)
-    }
-
-    override fun onHitEntity(hitResult: EntityHitResult) {
-        val target = hitResult.entity
-        (target as? LivingEntity)?.addEffect(MobEffectInstance(PazEffects.ELECTRIFIED, 50, 0))
-        super.onHitEntity(hitResult)
+        target.addEffect(MobEffectInstance(PazEffects.ELECTRIFIED, 50, 0))
     }
 
     override fun onHit(hitResult: HitResult) {

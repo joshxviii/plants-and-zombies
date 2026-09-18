@@ -34,8 +34,8 @@ class DoomShroom(type: EntityType<out ExplosivePlant>, level: Level) : Explosive
             random: RandomSource
         ): Boolean {
             val blockBelow = level.getBlockState(pos.below())
-            return checkValidSpawn(level, pos, spawnReason)
-                    && (blockBelow.`is`(PLANTABLE) || blockBelow.`is`(Blocks.GRAVEL) || blockBelow.`is`(Blocks.BASALT))
+            return checkValidSpawn(level, pos, spawnReason, random)
+                    && (blockBelow.`is`(PLANTABLE) || blockBelow.`is`(Blocks.GRAVEL) || blockBelow.`is`(Blocks.BASALT)) || blockBelow.`is`(Blocks.NETHERRACK)
         }
     }
 
