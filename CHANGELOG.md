@@ -4,7 +4,7 @@
 # Changelog 1.5
 ### Additions
 #### General:   
-- Plantz Flag now reduces the cooldown of nearby plants by 20%. This effect does not stack.
+- Plantz Flag will now power-up nearby plants, reducing their cooldown by 20%. This effect does not stack.
 - When placing plants in plant pots, their initial rotation will be orientated the same as the pot.
 - While a plant is equipped using the Plant Pot Helmet, you can place them back in plant pots by shift clicking.
 - Added Brainz Alloy.
@@ -117,8 +117,11 @@
 ### Technical Changes
 - Added BrainzAlloyCost item component.
 - Added configuration options.
-  - `alloyCost` – A list of entity ids paired with an integer.
-  - `showHiddenItemsInCreativeTab` – Enables some W.I.P items in the creative tab.
+  - `paz-server.json`:
+    - `poweredUpCooldownReduction` – This value will reduce the cooldown for powered up plants. (default is a 20% reduction)
+    - `alloyCost` – A list of entity ids paired with an integer.
+  - `paz-client.json`:
+    - `showHiddenItemsInCreativeTab` – Enables some W.I.P items in the creative tab.
 - Added `seed_mutation` data directory.
   - The path for editing Seed Mutations is: `data/<namespace>/seed_mutation/<entity_name>.json`
   - Entry Format:
@@ -228,7 +231,7 @@
     - `sunCost` – A list of entity ids paired with an integer amount.
 	- `seedGrowTime` – The base time for growing seeds.
     - `extraGrowTimePerSun` – Extra time per sunCost that is added to the base time.
-    - `zenPotTimeReduction` – This value is multiplied by the final growth time when plants are zen potted. _(1.0 = 100% reduction in sleep needed, aka no sleep.)_
+    - `zenPotTimeReduction` – This value will reduce the final growth time when plants are zen potted. _(1.0 = 100% reduction in sleep needed, aka no sleep.)_
     - `hydrationSunReduction` – When the plant has received water from a watering can or water bucket, this value will reduce the amount of sun needed to receive seeds when a plant wakes up. _(1.0 = 100% reduction in sun needed (minimum of 1))_
     - `plantPotDamageReduction` – Amount of enemy damage that is reduced when planted in any plant pot. _(1.0 = negate 100% of enemy damage.)_
     - `plantCooldownEnabled` – Toggle for cooldown when plaing plants.

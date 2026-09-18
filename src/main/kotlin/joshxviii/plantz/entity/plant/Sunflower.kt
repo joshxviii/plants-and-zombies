@@ -16,6 +16,7 @@ class Sunflower(
     override fun registerGoals() {
         super.registerGoals()
         this.goalSelector.addGoal(1, GenerateSunGoal(
+            cooldownTime = 900,
             usingEntity = this,
             actionDelay = 10,
             generatesAtNight = true

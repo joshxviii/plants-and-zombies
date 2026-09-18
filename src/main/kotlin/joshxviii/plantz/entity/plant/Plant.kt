@@ -221,7 +221,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     var idleAnimationStartTick: Int = 0
-    var cooldownO: Int = 0
     val initAnimationState = AnimationState()
     val idleAnimationState = AnimationState()
     val actionAnimationState = AnimationState()
@@ -245,7 +244,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
         entityData.define(PLANT_STATE, PlantState.IDLE)
-        entityData.define(COOLDOWN, -1)
+        entityData.define(COOLDOWN, 0)
         entityData.define(RECEIVED_SUN, 0)
         entityData.define(RECEIVED_WATER, 0)
         entityData.define(SEED_GROW_COOLDOWN, 0)
@@ -431,7 +430,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun tick() {
         super.tick()
-        cooldownO = cooldown
         attachedEntity?.positionPlant(this)
         if (attachedEntity?.canWearPlant() == false) {
             if(dropAsSeedPacketItem(force = true)) playSound(SoundEvents.ROOTED_DIRT_BREAK)
@@ -441,7 +439,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         if (level is ServerLevel) {
             updatePlantPower(level)
 
-            if (cooldown > -1 && !isAsleep) cooldown--
+            if (cooldown > 0 && !isAsleep) cooldown--
             if (cooldown == 0) cooldownFinished()
             if (!onValidGround() || isOverlappingWithOther(blockPosition())) {
                 if (--nutrientSupply <= 0) {
@@ -523,18 +521,18 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 specialAnimation.stop()
                 sleepAnimationState.stop()
                 if (isAsleep) state = PlantState.SLEEP
-                if (cooldown > 0) {
+                if (cooldown < 0) {
                     state = PlantState.ACTION
                 }
             }
             PlantState.ACTION -> {
                 actionAnimationState.startIfStopped(tickCount)
-                state = PlantState.COOLDOWN
+                if (cooldown > 0) state = PlantState.COOLDOWN
             }
             PlantState.COOLDOWN -> {
                 idleAnimationState.startIfStopped(tickCount)
                 sleepAnimationState.stop()
-                if (cooldown <= 0) state = PlantState.IDLE
+                if (cooldown == 0) state = PlantState.IDLE
                 if (isAsleep) state = PlantState.SLEEP
             }
             PlantState.RECHARGE -> state = PlantState.IDLE

@@ -1,5 +1,7 @@
 package joshxviii.plantz.ai.goal
 
+import joshxviii.plantz.PazConfig.POWERED_UP_COOLDOWN_REDUCTION
+import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.PathfinderMob
@@ -43,22 +45,27 @@ abstract class ActionGoal(
     override fun tick() {
         if (
             canDoAction()
-            && !(usingEntity is Plant && usingEntity.cooldown > -1)
+            && !(usingEntity is Plant && usingEntity.cooldown > 0)
             && actionTimer == -1
         ) {
-            (usingEntity as? Plant)?.cooldown = Mth.floor(
-                (cooldownTime+cooldownVariationRange.random()) *
-                        if (usingEntity.poweredUp) 0.8 else 1.0
-            ).coerceAtLeast(actionDelay)
             actionTimer = actionDelay.coerceAtLeast(0)
             actionStartEffect()
             isDoingAction = true
         }
 
-        if (actionTimer > 0) --actionTimer
+        if (actionTimer > 0) {
+            (usingEntity as? Plant)?.cooldown = -1 // set -1 for action animation state
+            --actionTimer
+        }
         if (actionTimer == delayedEffectDelay) delayedEffect()
         if (actionTimer == 0) {// do action
             if (actionPredicate.test(usingEntity)) if (doAction()) actionSuccessEffect()
+
+            (usingEntity as? Plant)?.cooldown = Mth.floor(
+                (cooldownTime+cooldownVariationRange.random()) *
+                        if (usingEntity.poweredUp) POWERED_UP_COOLDOWN_REDUCTION else 1.0
+            ).coerceAtLeast(actionDelay)
+
             isDoingAction = false
             actionTimer = -1
             actionEndEffect()

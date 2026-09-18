@@ -21,6 +21,7 @@ data class ServerConfig(
     var zenPotTimeReduction: Double = 0.25,
     var hydrationSunReduction: Double = 0.5,
     var plantPotDamageReduction: Double = 0.5,
+    var poweredUpCooldownReduction: Double = 0.2,
     var coffeeBuffDuration: Int = 48_000,
     var sunCostTamingThreshold: Int = 30,
     var plantCooldownEnabled: Boolean = false,
@@ -151,6 +152,9 @@ object PazConfig {
 
     val PLANT_POT_DAMAGE_REDUCTION: Double
         get() = 1f - server.plantPotDamageReduction.coerceIn(0.0, 1.0)
+
+    val POWERED_UP_COOLDOWN_REDUCTION: Double
+        get() = 1f - server.poweredUpCooldownReduction.coerceIn(0.0, 1.0)
 
     val PLANT_COOLDOWN_ENABLED: Boolean
         get() = server.plantCooldownEnabled

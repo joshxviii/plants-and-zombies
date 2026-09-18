@@ -98,7 +98,7 @@ public class GraveBusterModel extends PlantModel{
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
-		if (state.getCooldown() > -1) {
+		if (state.getCooldown() > 0) {
 			float progress = Mth.lerp(
 				state.getPartialTick(),
 				Mth.clamp((BODY_DROP_DURATION - state.getCooldown()) / (float) BODY_DROP_DURATION, 0.0F, 1.0F),

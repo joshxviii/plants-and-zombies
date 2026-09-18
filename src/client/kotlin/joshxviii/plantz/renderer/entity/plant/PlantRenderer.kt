@@ -56,7 +56,6 @@ open class PlantRenderer(
         collector: SubmitNodeCollector,
         camera: CameraRenderState
     ) {
-
         // debug info text
         if (PazConfig.SHOW_DEBUG_INFO) collector.submitNameTag(
             poseStack, Vec3(0.0,state.eyeHeight.toDouble(),0.0), -20,
@@ -66,7 +65,6 @@ open class PlantRenderer(
 
         model = if (state.isBaby && babyModel != null) babyModel else defaultModel
         if (state.plantState != PlantState.INIT || state.ageInTicks>1) {
-
             super.submit(state, poseStack, collector, camera)
         }
     }
@@ -97,15 +95,13 @@ open class PlantRenderer(
     override fun extractRenderState(entity: Plant, state: PlantRenderState, partialTick: Float) {
         super.extractRenderState(entity, state, partialTick)
         val attached = entity.attachedEntity
-        state.rotations = if (attached != null) {
+        state.rotations = if (attached != null) {// plant pot helmet (unused rn)
             val pitch = -Mth.lerp(partialTick, attached.xRotO, attached.xRot)
             val yaw = Mth.lerp(partialTick, attached.yRotO, attached.yRot)
             Quaternionf()
                 .rotateY(Mth.DEG_TO_RAD * (180.0f - yaw))
                 .rotateX(Mth.DEG_TO_RAD * pitch)
-        } else {
-            Quaternionf()
-        }
+        } else Quaternionf()
         state.plantState = entity.state
         if (entity is ExplosivePlant) state.swelling = entity.getSwelling(partialTick)
         state.cooldown = entity.cooldown
@@ -126,20 +122,19 @@ open class PlantRenderer(
             }
         state.textureExtra = mutableListOf<String>().apply {
             when (entity) {
-                is WallNut, is ExplodeONut -> add(when {
+                is WallNut -> add(when {
                     state.damagedAmount >= 0.75f -> "damage_medium"
                     state.damagedAmount >= 0.5f -> "damage_low"
                     else -> ""
                 })
-
                 is KernelPult -> if (entity.hasButterShot) add("butter")
                 else -> {}
             }
         }
         state.glowPercent = when (entity) {
             is Sunflower, is SunShroom -> {
-                if (entity.isAsleep || entity.isGrowingSeeds) 0f
-                else (1f - (state.cooldown.coerceIn(0, 100) / 100f))
+                val effectiveCooldown = (state.cooldown).coerceAtLeast(0)
+                1f - (effectiveCooldown.coerceIn(0, 100) / 100f)
             }
             is ExplosivePlant -> entity.getSwelling(partialTick)
             else -> 0f
