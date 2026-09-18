@@ -5,10 +5,12 @@ import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.block.entity.MailboxManager
 import joshxviii.plantz.block.entity.getMailboxMailQueue
 import joshxviii.plantz.networking.ServerConfigResponsePayload
+import joshxviii.plantz.raid.getZombieRaids
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.server.ReloadableServerResources
 import net.minecraft.server.packs.PackType
@@ -25,11 +27,12 @@ object PazMain : ModInitializer {
 	override fun onInitialize() {
 		PazRegistries.initialize()
 		PazConfig.load()
-
+		// clear client raid cache + load config
 		ServerLifecycleEvents.SERVER_STARTING.register {
 			PazNetwork.ZombieRaidClientCache.clear()
 			PazConfig.load()
 		}
+		// config sync
 		ServerPlayerEvents.JOIN.register { player ->
 			val json = PazConfig.let { it.GSON.toJson(it.server) }
 			val payload = ServerConfigResponsePayload(json)
@@ -37,6 +40,8 @@ object PazMain : ModInitializer {
 
 			LOGGER.info("Sent server config to ${player.name.string}")
 		}
+		// raid ticking
+		ServerTickEvents.END_LEVEL_TICK.register { it.getZombieRaids().tick(it) }
 
 		// mailbox managing
 		ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register { blockEntity, level ->
@@ -45,11 +50,7 @@ object PazMain : ModInitializer {
 				level.getMailboxMailQueue().deliverTo(it)
 			}
 		}
-		ServerBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register { blockEntity, level ->
-			(blockEntity as? MailboxBlockEntity)?.let {
-				//MailboxManager.unregisterMailbox(level, blockEntity.blockPos)
-			}
-		}
+		ServerBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register { blockEntity, level -> }
 
 		PazServerParticles.initialize()
 		PazBlocks.initialize()

@@ -2,6 +2,7 @@ package joshxviii.plantz
 
 import joshxviii.plantz.PazMain.MODID
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.entity.plant.saveAsCompoundTag
 import joshxviii.plantz.networking.ZombieRaidClientData
 import joshxviii.plantz.raid.WaveType
 import joshxviii.plantz.raid.ZombieRaid
@@ -28,12 +29,14 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
+import net.minecraft.world.entity.item.FallingBlockEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.component.TypedEntityData
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.pathfinder.Path
@@ -152,6 +155,16 @@ data class HSV(
     fun toRGB(): Int {
         return HSVtoRGB(HSV(h, s, v))
     }
+}
+
+fun createFallingBlock(level: Level, pos: Vec3, blockState: BlockState): FallingBlockEntity? {
+    val block = EntityType.FALLING_BLOCK.create(level, EntitySpawnReason.SPAWN_ITEM_USE)?: return null
+    val tag = block.saveAsCompoundTag()
+    tag.store("BlockState", BlockState.CODEC, blockState);
+    TypedEntityData.of(block.type, tag).loadInto(block)
+    block.setPos(pos)
+    level.addFreshEntity(block)
+    return block
 }
 
 fun DyeColor.mailboxColor(): Int {

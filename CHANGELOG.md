@@ -15,10 +15,15 @@
 - Added Time Machine.
   - ***Currently not obtainable outside of Creative mode.***
 - Added Gardening Gloves.
-  - Can be obtained from a level 4 farmer or from raid rewards.
+  - Can be obtained from a level 3 farmer or from raid rewards.
   - Lets players pet plants with right-click or pick up and hold one plant by shift-clicking.
   - Can harvest and auto replant crops when the player has the right seeds/crops in their inventory with right-click.
   - Can also be used to roll Wall Nuts by punching them.
+- Farmer Villagers trades have been added or changed.
+  - Level 1: An emerald for 32 Sun.
+  - Level 2: Watering Can and Potatomine seeds.
+  - Level 3: Gardening Gloves.
+  - Level 4: Plant Pot Helmet.
 - Added Dye Blaster
   - Has a 40% chance to consume dye as ammo.
   - Players and mobs shot with the blaster will be given the "painted" mob effect.

@@ -120,7 +120,7 @@ class MailboxBlockEntity(
         }
         override fun onClose(level: Level, pos: BlockPos, blockState: BlockState) {
             playSound(SoundEvents.COPPER_CHEST_CLOSE, 0.3f, 1.5f)
-            if (ejectTimer <= 0) updateMailboxState(MailboxState.INACTIVE)
+            if (ejectTimer <= 0 && inventory.isEmpty) updateMailboxState(MailboxState.INACTIVE)
         }
         override fun openerCountChanged(level: Level, pos: BlockPos, blockState: BlockState, previous: Int, current: Int) {}
         override fun isOwnContainer(player: Player): Boolean {
@@ -223,7 +223,11 @@ class MailboxBlockEntity(
     }
 
     fun updateMailboxState(newState: MailboxState) {
-        level!!.setBlock(blockPos, blockState.setValue(STATE, newState), 3)
+        val canUpdate = when (newState) {
+            MailboxState.INACTIVE -> { ejectTimer <= 0 && inventory.isEmpty }
+            else -> true
+        }
+        if (canUpdate) level!!.setBlock(blockPos, blockState.setValue(STATE, newState), 3)
     }
 
     override fun saveAdditional(output: ValueOutput) {

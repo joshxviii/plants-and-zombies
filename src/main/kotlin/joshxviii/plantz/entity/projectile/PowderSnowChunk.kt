@@ -1,6 +1,7 @@
 package joshxviii.plantz.entity.projectile
 
 import joshxviii.plantz.PazSounds
+import joshxviii.plantz.createFallingBlock
 import net.minecraft.core.particles.ExplosionParticleInfo
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
@@ -29,20 +30,20 @@ class PowderSnowChunk(
         val EXPLOSION_DAMAGE_CALCULATOR: ExplosionDamageCalculator = SimpleExplosionDamageCalculator(false, true, Optional.ofNullable(null), Optional.ofNullable(null))
     }
 
-    private val block : FallingBlockEntity = FallingBlockEntity.fall(this.level(), this.blockPosition().above(), Blocks.POWDER_SNOW.defaultBlockState())
+    private val block : FallingBlockEntity? = createFallingBlock(this.level(), this.blockPosition().above().center, Blocks.POWDER_SNOW.defaultBlockState())
 
     init {
-        block.dropItem = false
+        block?.dropItem = false
         this.setOwner(block)
-        if((level as ServerLevel).gameRules.get(GameRules.MOB_GRIEFING)==false) block.disableDrop()
+        if((level as ServerLevel).gameRules.get(GameRules.MOB_GRIEFING)==false) block?.disableDrop()
     }
 
     override fun baseTick() {
         super.baseTick()
         if(tickCount<=1) {
-            block.deltaMovement = deltaMovement
-            block.needsSync = true
-            block.startRiding(this)
+            block?.deltaMovement = deltaMovement
+            block?.needsSync = true
+            block?.startRiding(this)
         }
     }
 
@@ -51,7 +52,7 @@ class PowderSnowChunk(
         super.tick()
         if(tickCount % 2 == 0)
         if (level is ServerLevel) {
-            level.sendParticles(
+            if (block!=null) level.sendParticles(
                 ParticleTypes.SNOWFLAKE,
                 block.x, block.y+0.5, block.z,
                 3,
@@ -59,7 +60,7 @@ class PowderSnowChunk(
                 0.02
             )
         }
-        if (block.isRemoved || !block.isAlive) {
+        if (block !=null && (block.isRemoved || !block.isAlive)) {
             explode()
         }
     }
@@ -83,7 +84,7 @@ class PowderSnowChunk(
 
     private fun explode() {
         if (level is ServerLevel) {
-            level.sendParticles(
+            if (block!=null) level.sendParticles(
                 ParticleTypes.SNOWFLAKE,
                 block.x, block.y, block.z,
                 80,

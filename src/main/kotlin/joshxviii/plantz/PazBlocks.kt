@@ -306,7 +306,7 @@ object PazBlocks {
         "gravestone",
         BlockBehaviour.Properties.of()
             .sound(SoundType.TUFF_BRICKS)
-            .strength(18.0F)
+            .strength(19.5F)
             .pushReaction(PushReaction.BLOCK)
             .requiresCorrectToolForDrops(),
         ::GravestoneBlock,

@@ -26,9 +26,8 @@ import kotlin.jvm.optionals.getOrNull
  */
 object SeedMutationManager {
     fun get(level: ServerLevel, type: EntityType<*>): SeedMutationData? {
-        val entityId = BuiltInRegistries.ENTITY_TYPE.getKey(type) ?: return null
+        val entityId = BuiltInRegistries.ENTITY_TYPE.getKey(type)
         val key = ResourceKey.create(PazRegistries.SEED_MUTATION, entityId)
-        val k = DynamicRegistries.getWorldRegistries()
         val t = level.registryAccess().lookupOrThrow(PazRegistries.SEED_MUTATION)
         val p = t.getValue(key)
 
