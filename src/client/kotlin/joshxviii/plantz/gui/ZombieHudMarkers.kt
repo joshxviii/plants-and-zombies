@@ -1,8 +1,13 @@
-package joshxviii.plantz
+package joshxviii.plantz.gui
 
 import com.mojang.blaze3d.pipeline.RenderPipeline
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
+import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.PazConfig
+import joshxviii.plantz.PazNetwork
+import joshxviii.plantz.PazRenderPipelines
+import joshxviii.plantz.ZombieRaider
 import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderState
 import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderer
 import net.minecraft.client.Minecraft

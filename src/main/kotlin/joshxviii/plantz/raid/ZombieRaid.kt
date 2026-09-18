@@ -120,7 +120,8 @@ class ZombieRaid(
         val ZOMBIE_RAID_VICTORY_TITLE: Component = Component.translatable("event.plantz.zombie_raid.victory_title").withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD)
         val ZOMBIE_RAID_DEFEAT: Component = Component.translatable("event.plantz.zombie_raid.defeat").withStyle(ChatFormatting.RED)
         val ZOMBIE_RAID_DEFEAT_TITLE: Component = Component.translatable("event.plantz.zombie_raid.defeat_title").withStyle(ChatFormatting.DARK_RED).withStyle(ChatFormatting.BOLD)
-        const val WAVE_DURATION_TICKS: Int = 3000 // 2.5 minutes
+        const val WAVE_DURATION: Int = 3000 // 2.5 minutes
+        const val FINAL_WAVE_DURATION: Int = WAVE_DURATION * 2 // 5 minutes
         const val PRE_RAID_TICKS: Int = 100
         const val POST_RAID_TICKS: Int = 80
         const val SPAWN_DISTANCE: Int = 96
@@ -312,7 +313,7 @@ class ZombieRaid(
     }
 
     private fun spawnNextWave(level: ServerLevel, pos: BlockPos) {
-        waveTimer = WAVE_DURATION_TICKS
+        waveTimer = if (isFinalWave()) FINAL_WAVE_DURATION else WAVE_DURATION
         var leaderSet = false
         totalZombieHealth = 0.0f
         val creditsUnlocked = hasRaidStarterSeenCredits(level)

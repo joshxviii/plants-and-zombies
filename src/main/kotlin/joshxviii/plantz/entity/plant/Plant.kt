@@ -261,7 +261,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
     }
 
-
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
         plantSaveData(output)
@@ -285,8 +284,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         receivedWater = input.getInt("plantz:ReceivedWater").getOrElse { 0 }
         seedGrowCooldown = input.getInt("plantz:SeedGrowTime").getOrElse { 0 }
         coffeeBuff = input.getInt("plantz:CoffeeBuff").getOrElse { 0 }
-        cooldown = input.getInt("plantz:Cooldown").getOrElse { this.entityData.get(COOLDOWN) }
-        state = PlantState.entries[input.getInt("plantz:State").getOrElse { 1 }]
+        cooldown = input.getInt("plantz:Cooldown").getOrElse { this.entityData.get(COOLDOWN) }.coerceAtLeast(0)
+        state = PlantState.entries[input.getInt("plantz:State").getOrElse { 1 }].takeIf { it != PlantState.ACTION }?: PlantState.IDLE
         isAsleep = input.getBooleanOr("plantz:isAsleep", false)
         poweredUp = input.getBooleanOr("plantz:IsPoweredUp", false)
         attachedPlayerReference = Optional.ofNullable((EntityReference.read<LivingEntity>(input, "plantz:AttachedPlayer"))).getOrNull()
@@ -527,7 +526,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }
             PlantState.ACTION -> {
                 actionAnimationState.startIfStopped(tickCount)
-                if (cooldown > 0) state = PlantState.COOLDOWN
+                if (cooldown >= 0) state = PlantState.COOLDOWN
             }
             PlantState.COOLDOWN -> {
                 idleAnimationState.startIfStopped(tickCount)
@@ -736,7 +735,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             if (
                 hand == InteractionHand.MAIN_HAND
                 && itemStack.isEmpty
-                && player is ServerPlayer
                 && player.canWearPlant()
                 && player.isSecondaryUseActive
             ) {
@@ -745,6 +743,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                     playSound(SoundEvents.ARMOR_EQUIP_TURTLE.value())// TODO custom sounds
                     return InteractionResult.SUCCESS_SERVER
                 }
+                return InteractionResult.CONSUME
             }
         }
         return super.mobInteract(player, hand)
@@ -761,6 +760,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     fun attachToEntity(entity: LivingEntity): Boolean {
+        if (level().isClientSide) return false
         ScopedCollector(this.problemPath(), LOGGER).use { reporter ->
             val output = TagValueOutput.createWithContext(reporter, this.registryAccess())
             this.saveWithoutId(output)

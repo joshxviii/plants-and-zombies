@@ -28,7 +28,7 @@ data class ServerConfig(
     var plantCooldownTime: Double = 4.0,
     var plantCooldownTimePerSun: Double = 2.5,
     var solarBatteryMax: Int = 512,
-    var defaultPlantEntityLimit: Int = 30,
+    var defaultPlantEntityLimit: Int = 25,
     var customPlantEntityLimits: MutableMap<String, Int> = mutableMapOf(
         "plantz:melonpult"              to 15,
         "plantz:winter_melon"           to 15,

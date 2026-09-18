@@ -58,12 +58,16 @@ public class GraveBusterAnimation {
 			))
 			.build();
 
-	public static final AnimationDefinition action = AnimationDefinition.Builder.withLength(1.68F).looping()
+	public static final AnimationDefinition action = AnimationDefinition.Builder.withLength(2.24F).looping()
 			.addAnimation("body", new AnimationChannel(AnimationChannel.Targets.ROTATION,
 					new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(0.56F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 5.0F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(1.12F, KeyframeAnimations.degreeVec(0.0F, 0.0F, -5.0F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(1.68F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
+			))
+			.addAnimation("body", new AnimationChannel(AnimationChannel.Targets.POSITION,
+					new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+					new Keyframe(1.68F, KeyframeAnimations.posVec(0.0F, -12.25F, 0.0F), AnimationChannel.Interpolations.LINEAR)
 			))
 			.addAnimation("body", new AnimationChannel(AnimationChannel.Targets.SCALE,
 					new Keyframe(0.0F, KeyframeAnimations.scaleVec(1.05F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM),
@@ -72,7 +76,9 @@ public class GraveBusterAnimation {
 					new Keyframe(0.84F, KeyframeAnimations.scaleVec(1.1F, 0.9F, 1.05F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(1.12F, KeyframeAnimations.scaleVec(1.05F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(1.4F, KeyframeAnimations.scaleVec(1.1F, 0.9F, 1.05F), AnimationChannel.Interpolations.CATMULLROM),
-					new Keyframe(1.68F, KeyframeAnimations.scaleVec(1.05F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM)
+					new Keyframe(1.68F, KeyframeAnimations.scaleVec(1.05F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(1.96F, KeyframeAnimations.scaleVec(1.1F, 0.9F, 1.05F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(2.24F, KeyframeAnimations.scaleVec(1.05F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM)
 			))
 			.addAnimation("teeth_1", new AnimationChannel(AnimationChannel.Targets.POSITION,
 					new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, 2.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
@@ -81,7 +87,9 @@ public class GraveBusterAnimation {
 					new Keyframe(0.84F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(1.12F, KeyframeAnimations.posVec(0.0F, 2.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(1.4F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
-					new Keyframe(1.68F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
+					new Keyframe(1.68F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(1.96F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(2.24F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
 			))
 			.addAnimation("teeth_2", new AnimationChannel(AnimationChannel.Targets.POSITION,
 					new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
@@ -90,7 +98,9 @@ public class GraveBusterAnimation {
 					new Keyframe(0.84F, KeyframeAnimations.posVec(0.0F, 2.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(1.12F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(1.4F, KeyframeAnimations.posVec(0.0F, 2.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
-					new Keyframe(1.68F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
+					new Keyframe(1.68F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(1.96F, KeyframeAnimations.posVec(0.0F, 2.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(2.24F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
 			))
 			.build();
 

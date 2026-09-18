@@ -4,6 +4,7 @@ import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.applyImpulse
 import joshxviii.plantz.block.GravestoneBlock.Companion.FACING
 import joshxviii.plantz.createFallingBlock
+import joshxviii.plantz.toAngle
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.particles.BlockParticleOption
@@ -13,7 +14,6 @@ import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.sounds.SoundSource
 import net.minecraft.tags.ItemTags
 import net.minecraft.util.Mth
 import net.minecraft.world.DifficultyInstance
@@ -21,17 +21,12 @@ import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.entity.ai.goal.Goal
-import net.minecraft.world.entity.item.FallingBlockEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
-import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.gamerules.GameRules
 import net.minecraft.world.phys.Vec3
-import kotlin.math.max
-import kotlin.math.min
-
 
 class GraveDigger(type: EntityType<out GraveDigger>, level: Level) : PazZombie(type, level) {
 
@@ -107,7 +102,7 @@ class GraveDigger(type: EntityType<out GraveDigger>, level: Level) : PazZombie(t
         val gravedigger: GraveDigger,
     ) : Goal() {
         companion object {
-            const val DIG_DELAY_TIME = 50
+            const val DIG_DELAY_TIME = 78
         }
         var digTime = gravedigger.random.nextInt(20,60)
 
@@ -117,14 +112,15 @@ class GraveDigger(type: EntityType<out GraveDigger>, level: Level) : PazZombie(t
             if (!gravedigger.mainHandItem.`is`(ItemTags.SHOVELS)) return false
             if (gravedigger.digTime>0) return true
             val nearbyGraves: Int = level.getBlockStates(gravedigger.boundingBox.inflate(16.0)).filter { it.`is`(PazBlocks.GRAVESTONE) }.count().toInt()
-            return (gravedigger.target as? Player)?.let { gravedigger.distanceToSqr(it) < 100 } == true && !gravedigger.isDeadOrDying && (gravedigger.target?.isAlive == true) && nearbyGraves < 5
+            return (gravedigger.target as? Player)?.let { gravedigger.distanceToSqr(it) < 196 } == true && !gravedigger.isDeadOrDying && (gravedigger.target?.isAlive == true) && nearbyGraves < 5
         }
 
         override fun tick() {
             super.tick()
             if (--digTime == 0) gravedigger.digTime=1
             if (digTime<-32) {
-                val angleToTarget = (gravedigger.yRot + 90.0) * Mth.DEG_TO_RAD
+                val target = gravedigger.target?.position() ?: gravedigger.lookAngle
+                val angleToTarget = (gravedigger.position().subtract(target).normalize().toAngle().toDouble()) * Mth.DEG_TO_RAD
 
                 val xd = Mth.cos(angleToTarget)
                 val zd = Mth.sin(angleToTarget)

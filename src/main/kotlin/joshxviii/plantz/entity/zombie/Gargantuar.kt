@@ -42,7 +42,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
 
     companion object {
         val SMASH_DAMAGE_CALCULATOR: ExplosionDamageCalculator = SimpleExplosionDamageCalculator(false, true, Optional.of(2.5f), Optional.ofNullable(null))
-        const val SMASH_COOLDOWN_TIME = 140
+        const val SMASH_COOLDOWN_TIME = 190
 
         val DATA_VARIANT_ID: EntityDataAccessor<GargantuarVariant> = SynchedEntityData.defineId(Gargantuar::class.java, GARGANTUAR_VARIANT)
 
@@ -142,7 +142,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
                     this,
                     damageSources().source(PazDamageTypes.ZOMBIE_SMASH, this),
                     SMASH_DAMAGE_CALCULATOR, pos.x, pos.y, pos.z,
-                    3.5f,
+                    3.0f,
                     false,
                     Level.ExplosionInteraction.MOB,
                     ParticleTypes.LARGE_SMOKE,

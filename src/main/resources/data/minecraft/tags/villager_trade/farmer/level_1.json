@@ -1,6 +1,6 @@
 {
   "replace": false,
   "values": [
-    "plantz:farmer/sun"
+    "#plantz:farmer/level_1"
   ]
 }

@@ -3,11 +3,14 @@ package joshxviii.plantz.entity.plant
 import joshxviii.plantz.*
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.AreaEffectCloud
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.zombie.Zombie
@@ -16,12 +19,19 @@ import net.minecraft.world.level.Level
 class HypnoShroom(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
     override fun registerGoals() {
         super.registerGoals()
+    }
 
-        this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, LivingEntity::class.java, 5, true, false) { target, level ->
-            target !is Plant
-                    && (target is Zombie
-                    || (target is Enemy && isTame))
-        })
+    override fun attackGoals() {}
+
+    override fun canBeCollidedWith(other: Entity?): Boolean {
+        if (other is Zombie && other.swingTime == 0) {// when colliding with a zombie, the zombie will attack
+            val level = other.level() as? ServerLevel
+            if (level != null && other.isAlive) {
+                val damage = other.getAttribute(Attributes.ATTACK_DAMAGE)?.value?.toFloat() ?: 1f
+                if (hurtServer(level, other.damageSources().mobAttack(other), damage)) other.swing(InteractionHand.MAIN_HAND)
+            }
+        }
+        return super.canBeCollidedWith(other)
     }
 
     override fun actuallyHurt(level: ServerLevel, source: DamageSource, damage: Float) {

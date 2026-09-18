@@ -127,7 +127,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
         if (isRolling && entity is LivingEntity && entity !is Plant) {
             val level = level() as? ServerLevel?: return
             val source = this.damageSources().source(PazDamageTypes.PLANT, this, if (PazConfig.PLAYER_CREDIT_FOR_PLANT_KILLS) this.rootOwner else this)
-            val damage = knownSpeed.length().toFloat() * 4f * PLANT_DAMAGE.toFloat()
+            val damage = knownSpeed.length().toFloat() * 7f * PLANT_DAMAGE.toFloat()
             if (entity.hurtServer(level, source, damage)) {
                 val vector = entity.position().subtract(position()).normalize()
                 entity.applyImpulse(vector, pow = 1.25f, uncertainty = 0.3f)

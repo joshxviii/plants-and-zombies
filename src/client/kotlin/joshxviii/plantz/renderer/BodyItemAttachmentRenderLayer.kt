@@ -8,11 +8,9 @@ import joshxviii.plantz.PazModels.HAS_BUTTER_KEY
 import joshxviii.plantz.PazModels.PAINT_COLORS_KEY
 import joshxviii.plantz.PazRenderPipelines.PAINT_OVERLAY
 import joshxviii.plantz.model.projectiles.ButterModel
-import joshxviii.plantz.model.zombies.PazZombieModel
 import joshxviii.plantz.pazResource
 import joshxviii.plantz.renderer.entity.ProjectileRenderState
 import net.minecraft.client.Minecraft
-import net.minecraft.client.model.BabyModelTransform
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.HumanoidModel
 import net.minecraft.client.renderer.SubmitNodeCollector
@@ -32,8 +30,6 @@ import net.minecraft.util.ARGB
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.phys.Vec3
-import org.apache.commons.lang3.math.NumberUtils.toDouble
 import kotlin.math.pow
 
 class SpecialEffectsLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(private val renderer: RenderLayerParent<S, M>) : RenderLayer<S, M>(

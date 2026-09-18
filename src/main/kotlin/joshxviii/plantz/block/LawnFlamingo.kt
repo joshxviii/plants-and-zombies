@@ -54,8 +54,7 @@ class LawnFlamingo(properties: Properties) : HorizontalDirectionalBlock(properti
         player: Player,
         hitResult: BlockHitResult
     ): InteractionResult {
-        val result = PlantHeadAttachment.potBlockInteraction(state, level, pos, player)
-        return if (result == InteractionResult.PASS) super.useWithoutItem(state, level, pos, player, hitResult) else result
+        return super.useWithoutItem(state, level, pos, player, hitResult)
     }
 
     override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {

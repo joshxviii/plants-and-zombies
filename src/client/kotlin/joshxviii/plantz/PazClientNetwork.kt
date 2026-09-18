@@ -3,16 +3,12 @@ package joshxviii.plantz
 import joshxviii.plantz.PazNetwork.ZombieRaidClientCache
 import joshxviii.plantz.inventory.AbstractMailboxMenu
 import joshxviii.plantz.inventory.MailCollectionBoxMenu
-import joshxviii.plantz.inventory.MailboxMenu
 import joshxviii.plantz.networking.MailboxListResponsePayload
 import joshxviii.plantz.networking.SendMailResponsePayload
 import joshxviii.plantz.networking.ServerConfigResponsePayload
-import joshxviii.plantz.networking.UpdateCollectionBoxPayload
 import joshxviii.plantz.networking.ZombieRaidResponsePayload
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
-import net.minecraft.client.Minecraft
-
 
 object PazClientNetwork {
     fun initialize() {

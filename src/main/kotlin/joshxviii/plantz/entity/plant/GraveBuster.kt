@@ -36,7 +36,7 @@ class GraveBuster(type: EntityType<out Plant>, level: Level) : Plant(type, level
     override fun tick() {
         super.tick()
 
-        if (cooldown > 0) {
+        if (cooldown == -1) {
             val level = level() as? ServerLevel ?: return
             if (tickCount % 9 == 0) playSound(SoundEvents.TUFF_BRICKS_HIT)
             if (tickCount % 2 == 0) level.sendParticles(
@@ -51,7 +51,7 @@ class GraveBuster(type: EntityType<out Plant>, level: Level) : Plant(type, level
     ) : ActionGoal(
         graveBuster, cooldownTime = 20, actionDelay = 37,
     ) {
-        override fun startOnCooldown(): Boolean = false
+        override fun startOnCooldown(): Boolean = true
 
         override fun canUse(): Boolean {
             return (usingEntity.isAlive

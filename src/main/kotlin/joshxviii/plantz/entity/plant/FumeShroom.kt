@@ -56,7 +56,7 @@ class FumeShroom(type: EntityType<out Plant>, level: Level) : Plant(type, level)
     override fun tick() {
         super.tick()
 
-        if(sprayTime>=0 || state == PlantState.ACTION) sprayTime++
+        if(sprayTime>=0 || cooldown == -1) sprayTime++
         if (sprayTime in 7..19 && this.isAlive ) {
             val eyeHeight = eyeHeight.toDouble()
 

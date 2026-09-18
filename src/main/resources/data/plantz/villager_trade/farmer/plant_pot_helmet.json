@@ -2,19 +2,19 @@
   "additional_wants": {
     "id": "plantz:sun",
     "count": {
-      "min": 13,
-      "max": 20
+      "min": 26,
+      "max": 38
     }
   },
   "gives": {
     "id": "plantz:plant_pot_helmet"
   },
   "max_uses": 1,
-  "reputation_discount": 0.2,
+  "reputation_discount": 0.1,
   "wants": {
     "count": {
-      "min": 6,
-      "max": 8
+      "min": 20,
+      "max": 32
     },
     "id": "minecraft:emerald"
   },

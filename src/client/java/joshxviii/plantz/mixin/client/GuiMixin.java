@@ -2,7 +2,7 @@ package joshxviii.plantz.mixin.client;
 
 import joshxviii.plantz.PazEffects;
 import joshxviii.plantz.PazModels;
-import joshxviii.plantz.ZombieHudMarkers;
+import joshxviii.plantz.gui.ZombieHudMarkers;
 import joshxviii.plantz.effect.PaintedMobEffect;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;

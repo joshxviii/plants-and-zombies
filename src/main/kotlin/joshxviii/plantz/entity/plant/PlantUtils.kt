@@ -100,6 +100,7 @@ fun Plant.processWateringItem(player: Player, item: ItemStack, hand: Interaction
 // glove interaction
 fun Plant.processGloveItem(player: Player, item: ItemStack, hand: InteractionHand): Boolean {
     if (!item.`is`(PazItems.GARDENING_GLOVE)) return false
+    if (isAttached()) return false
     when {
         // owner check
         !verifyOwner(player) -> return false

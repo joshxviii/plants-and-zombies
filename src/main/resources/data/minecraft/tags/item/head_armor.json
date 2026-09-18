@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "plantz:football_helmet",
+    "plantz:plant_pot_helmet",
+    "plantz:cone",
+    "minecraft:bucket"
+  ]
+}

@@ -10,7 +10,6 @@ import joshxviii.plantz.item.GardeningGloveItem
 import joshxviii.plantz.item.PlantPotHelmetItem
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
-import net.minecraft.ChatFormatting
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component

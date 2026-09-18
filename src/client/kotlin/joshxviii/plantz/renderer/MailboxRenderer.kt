@@ -1,13 +1,8 @@
 package joshxviii.plantz.renderer
 
-import com.mojang.authlib.minecraft.client.MinecraftClient
 import com.mojang.blaze3d.vertex.PoseStack
-import com.mojang.math.Axis
 import joshxviii.plantz.PazEffects
-import joshxviii.plantz.block.TimeMachineBlock
-import joshxviii.plantz.block.TimeMachineState
 import joshxviii.plantz.block.entity.MailboxBlockEntity
-import joshxviii.plantz.block.entity.TimeMachineBlockEntity
 import joshxviii.plantz.effect.GardenHeroEffect
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.SubmitNodeCollector
@@ -15,13 +10,10 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer
 import net.minecraft.client.renderer.state.level.CameraRenderState
-import net.minecraft.core.Direction
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.particles.SpellParticleOption
-import net.minecraft.util.Mth
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
-import kotlin.math.pow
 
 class MailboxRenderer() : BlockEntityRenderer<MailboxBlockEntity, MailboxRenderState> {
     override fun createRenderState(): MailboxRenderState {

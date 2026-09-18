@@ -16,6 +16,14 @@
             {
               "count": 1,
               "function": "minecraft:set_count"
+            },
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.2,
+                "max": 0.9
+              },
+              "add": false
             }
           ],
           "name": "plantz:football_helmet"

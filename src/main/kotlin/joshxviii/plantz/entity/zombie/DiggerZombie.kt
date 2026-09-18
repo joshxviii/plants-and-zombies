@@ -16,6 +16,7 @@ import net.minecraft.world.Difficulty
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
+import net.minecraft.world.entity.ai.goal.FloatGoal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
@@ -46,6 +47,7 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
 
     override fun registerGoals() {
         super.registerGoals()
+        goalSelector.addGoal(1, FloatGoal(this))
         goalSelector.addGoal(2, MineBlocksToTargetGoal(this))
     }
 
@@ -77,6 +79,7 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
         return result
     }
 
+    override fun canEquipDuckyInWater() = false
     override fun isLeftHanded(): Boolean = false
     override fun getPreferredWeaponType(): TagKey<Item> = PazTags.ItemTags.DIGGER_PREFERRED_WEAPONS
     override fun wantsToPickUp(level: ServerLevel, itemStack: ItemStack): Boolean {

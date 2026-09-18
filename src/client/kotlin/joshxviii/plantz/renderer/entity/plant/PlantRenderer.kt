@@ -133,8 +133,8 @@ open class PlantRenderer(
         }
         state.glowPercent = when (entity) {
             is Sunflower, is SunShroom -> {
-                val effectiveCooldown = (state.cooldown).coerceAtLeast(0)
-                1f - (effectiveCooldown.coerceIn(0, 100) / 100f)
+                if (entity.isAsleep || entity.isGrowingSeeds) 0f
+                else 1f - ((state.cooldown).coerceIn(0, 100) / 100f)
             }
             is ExplosivePlant -> entity.getSwelling(partialTick)
             else -> 0f

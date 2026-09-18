@@ -31,11 +31,12 @@ abstract class ActionGoal(
     var actionTimer = -1
 
     init {
-        if (startOnCooldown()) (usingEntity as? Plant)?.cooldown = cooldownTime
+        (usingEntity as? Plant)?.cooldown = if (startOnCooldown()) cooldownTime else 0
     }
 
     override fun stop() {
         isDoingAction = false
+        (usingEntity as? Plant)?.cooldown = 0 // set 0 to go back to idle in case action is canceled mid-animation
         actionTimer = -1
     }
 

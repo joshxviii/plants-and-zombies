@@ -3,6 +3,7 @@ package joshxviii.plantz.entity.zombie
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.PazTags
+import joshxviii.plantz.entity.plant.WallNut.Companion.ROLLING_ID
 import joshxviii.plantz.pazResource
 import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
@@ -38,69 +39,50 @@ class NewspaperZombie(type: EntityType<out NewspaperZombie>, level: Level) : Paz
         return SoundEvents.ZOMBIE_STEP
     }
 
-    override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
-        val result = super.doHurtTarget(level, target)
-        return result
-    }
-
     fun isAngry() : Boolean {
         return !mainHandItem.`is`(PazItems.NEWSPAPER)
     }
 
-    override fun tick() {
-        super.tick()
-    }
-
-    override fun onEquipItem(slot: EquipmentSlot, oldStack: ItemStack, stack: ItemStack) {
-        super.onEquipItem(slot, oldStack, stack)
-    }
-
     override fun equipmentHasChanged(previous: ItemStack, current: ItemStack): Boolean {
         val hasChanged = super.equipmentHasChanged(previous, current)
+        updateNewspaper()
+        return hasChanged
+    }
+
+    fun updateNewspaper() {
         if(mainHandItem.`is`(PazItems.NEWSPAPER)) {
             this.startUsingItem(usedItemHand)
             this.setLivingEntityFlag(LIVING_ENTITY_FLAG_IS_USING, true)
+            removeAngerBoost()
         }
         else {
             this.setLivingEntityFlag(LIVING_ENTITY_FLAG_IS_USING, false)
+            applyAngerBoost()
         }
-        if (!hasChanged) return false
-        if(previous.`is`(PazItems.NEWSPAPER)) applyAngerBoost()
-        if(current.`is`(PazItems.NEWSPAPER)) removeAngerBoost()
-        return true
     }
 
     fun removeAngerBoost() {
-        getAttribute(Attributes.MOVEMENT_SPEED)!!.removeModifier(ANGRY_BONUS_ID)
-        getAttribute(Attributes.ATTACK_DAMAGE)!!.removeModifier(ANGRY_BONUS_ID)
+        getAttribute(Attributes.MOVEMENT_SPEED)!!.let {
+            if (it.hasModifier(ANGRY_BONUS_ID)) it.removeModifier(ANGRY_BONUS_ID)
+        }
+        getAttribute(Attributes.ATTACK_DAMAGE)!!.let {
+            if (it.hasModifier(ANGRY_BONUS_ID)) it.removeModifier(ANGRY_BONUS_ID)
+        }
+        setCanBreakDoors(false)
     }
 
     fun applyAngerBoost() {
-        getAttribute(Attributes.MOVEMENT_SPEED)!!
-            .addTransientModifier(
-                AttributeModifier(
-                    ANGRY_BONUS_ID,
-                    0.1,
-                    AttributeModifier.Operation.ADD_VALUE
-                )
-            )
-        getAttribute(Attributes.ATTACK_DAMAGE)!!
-            .addTransientModifier(
-                AttributeModifier(
-                    ANGRY_BONUS_ID,
-                    1.5,
-                    AttributeModifier.Operation.ADD_VALUE
-                )
-            )
+        getAttribute(Attributes.MOVEMENT_SPEED)!!.let {
+            if (!it.hasModifier(ANGRY_BONUS_ID)) it.addTransientModifier(AttributeModifier(ANGRY_BONUS_ID, 0.11, AttributeModifier.Operation.ADD_VALUE))
+        }
+        getAttribute(Attributes.ATTACK_DAMAGE)!!.let {
+            if (!it.hasModifier(ANGRY_BONUS_ID)) it.addTransientModifier(AttributeModifier(ANGRY_BONUS_ID, 2.0, AttributeModifier.Operation.ADD_VALUE))
+        }
         setCanBreakDoors(true)
     }
 
     override fun getPreferredWeaponType(): TagKey<Item> = PazTags.ItemTags.NEWSPAPER_ZOMBIE_PREFERRED_WEAPONS
     override fun canPickUpLoot(): Boolean = true
-
-    override fun dropEquipment(level: ServerLevel) {
-        super.dropEquipment(level)
-    }
 
     override fun finalizeSpawn(
         level: ServerLevelAccessor,

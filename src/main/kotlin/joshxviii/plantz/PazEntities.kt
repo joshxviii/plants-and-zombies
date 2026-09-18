@@ -547,8 +547,8 @@ object PazEntities {
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
             armor = 6.0,
-            attackDamage = 8.0,
-            maxHealth = 600.0,
+            attackDamage = 7.0,
+            maxHealth = 550.0,
             movementSpeed = 0.21,
             knockbackResistance = 1.4,
             explosionKnockbackResistance = 0.7,

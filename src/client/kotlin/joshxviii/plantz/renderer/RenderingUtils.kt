@@ -3,7 +3,6 @@ package joshxviii.plantz.renderer
 import joshxviii.plantz.PazEntities.MAGIC_NAMES
 import joshxviii.plantz.pazResource
 import joshxviii.plantz.renderer.entity.ProjectileRenderState
-import joshxviii.plantz.renderer.entity.ProjectileRenderer
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphicsExtractor

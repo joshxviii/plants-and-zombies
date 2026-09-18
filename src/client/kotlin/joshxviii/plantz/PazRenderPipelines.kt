@@ -5,7 +5,6 @@ import com.mojang.blaze3d.pipeline.ColorTargetState
 import com.mojang.blaze3d.pipeline.DepthStencilState
 import com.mojang.blaze3d.pipeline.RenderPipeline
 import com.mojang.blaze3d.shaders.UniformType
-import com.mojang.blaze3d.systems.RenderPass
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
 import net.fabricmc.loader.api.FabricLoader

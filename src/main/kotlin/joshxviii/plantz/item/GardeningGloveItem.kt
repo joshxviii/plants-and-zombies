@@ -2,11 +2,14 @@ package joshxviii.plantz.item
 
 import joshxviii.plantz.removeItemFromInventory
 import net.minecraft.ChatFormatting
+import net.minecraft.core.Holder
+import net.minecraft.core.HolderSet
 import net.minecraft.core.component.DataComponentGetter
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.tags.BlockTags
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.LivingEntity
@@ -14,15 +17,23 @@ import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ItemUseAnimation
-import net.minecraft.world.item.Items
+import net.minecraft.world.item.component.Tool
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.CropBlock
-import net.minecraft.world.level.block.LevelEvent
+import java.util.List
 
 class GardeningGloveItem(properties: Properties) : Item(properties) {
 
     companion object {
+
+        fun createToolProperties(): Tool {
+            val registrationLookup = BuiltInRegistries.acquireBootstrapRegistrationLookup(BuiltInRegistries.BLOCK)
+            return Tool(
+                listOf(Tool.Rule.overrideSpeed(registrationLookup.getOrThrow(BlockTags.CROPS), 15.0f)), 1.0f, 1, false
+            )
+        }
 
         fun addToTooltip(consumer: MutableList<Component>, components: DataComponentGetter, shiftKey: Component) {
             val data = components.get(DataComponents.ENTITY_DATA)
@@ -64,7 +75,7 @@ class GardeningGloveItem(properties: Properties) : Item(properties) {
         val player = context.player
         val isHolding = stack.has(DataComponents.ENTITY_DATA)
 
-        val blockState = context.level.getBlockState(context.clickedPos)
+        val blockState = level.getBlockState(context.clickedPos)
         val cropAge = blockState.getValueOrElse(CropBlock.AGE, 0)
         if (cropAge >= 7) {
             if (isHolding) {
@@ -72,17 +83,17 @@ class GardeningGloveItem(properties: Properties) : Item(properties) {
                 return InteractionResult.PASS
             }
             val blockPos = context.clickedPos
-            val blockState = context.level.getBlockState(blockPos)
+            val blockState = level.getBlockState(blockPos)
             if (!level.isClientSide) {
-                if(context.level.destroyBlock(blockPos, true)) player?.let {
+                if(level.destroyBlock(blockPos, true, player)) player?.let {
                     val seedItem = blockState.getCloneItemStack(level, context.clickedPos, false).item
                     GardeningGloveItem.hurtAndDropPlant(stack, player, context.hand)
-                    if (it.removeItemFromInventory(seedItem) > 0) context.level.setBlockAndUpdate(blockPos, blockState.setValue(CropBlock.AGE, 0))
+                    if (it.removeItemFromInventory(seedItem) > 0) level.setBlockAndUpdate(blockPos, blockState.setValue(CropBlock.AGE, 0))
                 }
             }
             return InteractionResult.SUCCESS
         }
-        if (!isHolding) return InteractionResult.PASS
+        if (!isHolding) return InteractionResult.TRY_WITH_EMPTY_HAND
 
         if (level !is ServerLevel) return InteractionResult.SUCCESS
 

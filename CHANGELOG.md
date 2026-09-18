@@ -23,7 +23,6 @@
   - Level 1: An emerald for 32 Sun.
   - Level 2: Watering Can and Potatomine seeds.
   - Level 3: Gardening Gloves.
-  - Level 4: Plant Pot Helmet.
 - Added Dye Blaster
   - Has a 40% chance to consume dye as ammo.
   - Players and mobs shot with the blaster will be given the "painted" mob effect.

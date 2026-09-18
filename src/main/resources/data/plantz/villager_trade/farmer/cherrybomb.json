@@ -1,0 +1,20 @@
+{
+  "gives": {
+    "id": "plantz:seed_packet",
+    "components": {
+      "minecraft:entity_data": {
+        "id": "plantz:cherrybomb"
+      }
+    }
+  },
+  "max_uses": 10,
+  "reputation_discount": 0.2,
+  "wants": {
+    "count": {
+      "min": 8,
+      "max": 16
+    },
+    "id": "minecraft:emerald"
+  },
+  "xp": 8
+}

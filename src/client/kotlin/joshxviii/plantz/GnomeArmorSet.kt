@@ -1,6 +1,5 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.model.GnomeArmorModel
 import joshxviii.plantz.model.GnomeModel
 import joshxviii.plantz.renderer.entity.GnomeRenderState
 import net.minecraft.client.model.geom.EntityModelSet
