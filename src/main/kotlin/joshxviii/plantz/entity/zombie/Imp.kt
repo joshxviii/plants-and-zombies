@@ -117,7 +117,6 @@ class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie
         hasBarrel = false
     }
 
-    override fun isBaby(): Boolean = false
     override fun canPickUpLoot(): Boolean = false
 
     override fun canFreeze(): Boolean {
@@ -166,7 +165,7 @@ class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
+        val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
         val random = level.random
         if (spawnReason != EntitySpawnReason.CONVERSION) {
             setCanPickUpLoot(false)

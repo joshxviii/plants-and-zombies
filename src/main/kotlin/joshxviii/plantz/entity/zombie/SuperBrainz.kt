@@ -262,7 +262,7 @@ class SuperBrainz(type: EntityType<out SuperBrainz>, level: Level) : PazZombie(t
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
+        val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
 
         beamCooldown = BEAM_COOLDOWN
 

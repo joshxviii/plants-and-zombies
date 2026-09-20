@@ -90,7 +90,7 @@ class NewspaperZombie(type: EntityType<out NewspaperZombie>, level: Level) : Paz
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
+        val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
 
         setItemSlot(EquipmentSlot.MAINHAND, PazItems.NEWSPAPER.defaultInstance)
         setDropChance(EquipmentSlot.MAINHAND, 0.0f)

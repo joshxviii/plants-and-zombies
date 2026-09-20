@@ -129,7 +129,7 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
+        val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
         val random = level.random
         val difficultyModifier = difficulty.specialMultiplier
         setCanBreakDoors(true)

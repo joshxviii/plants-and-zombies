@@ -47,7 +47,7 @@ class BackupDancer(type: EntityType<out BackupDancer>, level: Level) : PazZombie
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
+        val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
         setCanBreakDoors(false)
 
         return data

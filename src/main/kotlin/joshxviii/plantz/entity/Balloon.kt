@@ -7,6 +7,7 @@ import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.entity.zombie.BrownCoatVariant
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.item.BalloonItem
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup.level
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
@@ -50,6 +51,7 @@ class Balloon(
         private const val HOLDER_PULL_STIFFNESS = 0.0075
         private const val MAX_HOLDER_PULL_FORCE = 0.16
         private const val MAX_HOLDER_UPWARD_VELOCITY = 0.3
+        private const val POPPING_HEIGHT = 96
     }
 
     var clientTiltZ: Float = 0f
@@ -60,6 +62,25 @@ class Balloon(
     var dyeColor: DyeColor
         get() = this.entityData.get(DYE_COLOR)
         set(value) = this.entityData.set(DYE_COLOR, value)
+
+    fun pop() {
+        val level = level() as? ServerLevel ?: return
+        playSound(SoundEvents.LAVA_POP) // TODO custom sounds
+        level.sendParticles(
+            PazServerParticles.POP,
+            x, y + boundingBox.ysize * 0.5, z,
+            1,
+            0.0, 0.0, 0.0, 0.0
+        )
+        discard()
+    }
+
+    private fun checkPoppingHeight() {
+        if (tickCount > 200) {
+            val floorHeight = y - level().getHeight(Heightmap.Types.WORLD_SURFACE, blockPosition()).toDouble()
+            if (floorHeight > POPPING_HEIGHT) pop()
+        }
+    }
 
     override fun getInterpolation(): InterpolationHandler = interpolation
 
@@ -91,6 +112,7 @@ class Balloon(
 
     override fun tick() {
         super.tick()
+        checkPoppingHeight()
         while (yRot - yRotO < -180.0f) yRotO -= 360.0f
         while (yRot - yRotO >= 180.0f) yRotO += 360.0f
 
@@ -215,17 +237,9 @@ class Balloon(
         source: DamageSource,
         damage: Float
     ): Boolean {
-        return if (isRemoved) true
-        else if (this.isInvulnerableToBase(source)) false
+        return isRemoved || if (this.isInvulnerableToBase(source)) false
         else {
-            playSound(SoundEvents.LAVA_POP) // TODO custom sounds
-            level.sendParticles(
-                PazServerParticles.POP,
-                x, y + boundingBox.ysize * 0.5, z,
-                1,
-                0.0, 0.0, 0.0, 0.0
-            )
-            discard()
+            pop()
             true
         }
     }

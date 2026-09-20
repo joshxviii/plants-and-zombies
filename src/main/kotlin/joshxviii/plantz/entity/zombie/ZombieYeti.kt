@@ -108,7 +108,7 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : PazZombie(typ
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
+        val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
         val random = level.random
         if (spawnReason != EntitySpawnReason.CONVERSION) {
 

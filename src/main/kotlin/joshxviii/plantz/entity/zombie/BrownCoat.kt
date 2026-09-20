@@ -88,17 +88,7 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
             }
         }
 
-        val spawnBalloons = (
-                if (spawnReason == EntitySpawnReason.EVENT
-                    && random.nextFloat() < 0.08)
-                    true
-                else if (spawnReason != EntitySpawnReason.EVENT && spawnReason != EntitySpawnReason.REINFORCEMENT
-                    && random.nextFloat() < 0.02)
-                    true
-                else
-                    false
-                )
-
+        val spawnBalloons = (spawnReason != EntitySpawnReason.EVENT && spawnReason != EntitySpawnReason.REINFORCEMENT && random.nextFloat() < 0.02)
         if (spawnBalloons) {
             if (!isBaby) Balloon.browncoatBallons[variant]?.let{
                 spawnBalloons(random.nextIntBetweenInclusive(2,3), it)

@@ -296,7 +296,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         state = ZombieState.EMERGING
-        val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
+        val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
 
         return data
     }

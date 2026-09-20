@@ -182,7 +182,7 @@ class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(typ
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         reassessNavigation()
-        val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
+        val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
 
         if (spawnReason != EntitySpawnReason.CONVERSION) {
             setCanBreakDoors(true)

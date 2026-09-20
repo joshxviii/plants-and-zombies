@@ -84,7 +84,7 @@ class PirateCaptainGhost(type: EntityType<out PirateCaptainGhost>, level: Level)
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
+        val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
 
         setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_SWORD.defaultInstance)
         setDropChance(EquipmentSlot.MAINHAND, 0.0f)

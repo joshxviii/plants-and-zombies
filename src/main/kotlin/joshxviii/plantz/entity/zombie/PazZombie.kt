@@ -6,11 +6,12 @@ import joshxviii.plantz.ai.ZombieState
 import joshxviii.plantz.ai.goal.FlyingPathfindingGoal
 import joshxviii.plantz.entity.Balloon
 import joshxviii.plantz.item.BalloonItem
+import joshxviii.plantz.raid.ZombieRaid.Companion.SPAWN_DISTANCE
+import joshxviii.plantz.raid.getZombieRaids
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
-import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
@@ -106,7 +107,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             val knockbackResistance: Double = 0.2,
             val stepHeight: Double = 0.6,
             val scale: Double = 1.0,
-            val waterMovementEfficiency: Double = 0.0
+            val waterMovementEfficiency: Double = 0.1
         ) {
             fun apply(builder: AttributeSupplier.Builder): AttributeSupplier.Builder {
                 return builder
@@ -145,8 +146,14 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     }
 
     override fun onEquipItem(slot: EquipmentSlot, oldStack: ItemStack, stack: ItemStack) {
-        if (stack.`is`(PazItems.DUCKY_TUBE) && slot == EquipmentSlot.LEGS) this.getNavigation().setCanFloat(true);
-        else if (oldStack.`is`(PazItems.DUCKY_TUBE) && slot == EquipmentSlot.LEGS) this.getNavigation().setCanFloat(false);
+        if (stack.`is`(PazItems.DUCKY_TUBE) && slot == EquipmentSlot.LEGS) {
+            this.getNavigation().setCanFloat(true)
+            this.getNavigation().recomputePath()
+        };
+        else if (oldStack.`is`(PazItems.DUCKY_TUBE) && slot == EquipmentSlot.LEGS) {
+            this.getNavigation().setCanFloat(false)
+            this.getNavigation().recomputePath()
+        };
 
         super.onEquipItem(slot, oldStack, stack)
     }
@@ -330,6 +337,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     fun randomEquip(random: RandomSource, difficulty: DifficultyInstance) {
         super.populateDefaultEquipmentSlots(random, difficulty)
     }
+    fun isRaider() = (this as? ZombieRaider)?.`plantz$getIsFromRaid`()?: false
 
     override fun finalizeSpawn(
         level: ServerLevelAccessor,
@@ -337,7 +345,18 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
+        val newData = PazZombieGroupData(
+            isRaider = (groupData as? PazZombieGroupData)?.isRaider?: false,
+            isBaby = isBaby && (groupData as? ZombieGroupData)?.isBaby?: false
+        )
+        val level = level() as ServerLevel
+        if (newData.isRaider) {
+            val raid = level.getZombieRaids().getNearbyRaid(blockPosition(), (SPAWN_DISTANCE * SPAWN_DISTANCE * 2))
+            raid?.joinRaid(level, this)
+        }
+
+        val data = super.finalizeSpawn(level, difficulty, spawnReason, newData)
+
         if (spawnReason == EntitySpawnReason.REINFORCEMENT) state = ZombieState.EMERGING
 
         if (canEquipDuckyInWater() && level.getBlockState(blockPosition()).fluidState.type == Fluids.WATER) {
@@ -349,3 +368,11 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         return data
     }
 }
+
+class PazZombieGroupData(
+    val isRaider: Boolean = false,
+    isBaby: Boolean = false
+) : Zombie.ZombieGroupData(
+    isBaby,
+    false
+)

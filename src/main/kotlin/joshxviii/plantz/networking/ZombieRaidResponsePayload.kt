@@ -11,8 +11,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import java.util.UUID
 
 class ZombieRaidResponsePayload(
-    val data: ZombieRaidClientData,
-    val terminate: Boolean = false
+    val data: ZombieRaidClientData
 ): CustomPacketPayload {
     companion object {
         val ID: CustomPacketPayload.Type<ZombieRaidResponsePayload> = CustomPacketPayload.Type(pazResource("zombie_raid_response"))
@@ -30,16 +29,14 @@ class ZombieRaidResponsePayload(
                 ByteBufCodecs.FLOAT,   { it.data.zombieHealthMax },
                 ByteBufCodecs.FLOAT,   { it.data.flagHealth },
                 ByteBufCodecs.BOOL,    { it.data.seenCredits },
-                ByteBufCodecs.BOOL,    { it.terminate },
-                { id, status, waveType, waves, num, timer, activeTime, zombieH, zombieMax, flagH, credits, terminate ->
+                { id, status, waveType, waves, num, timer, activeTime, zombieH, zombieMax, flagH, credits ->
                     ZombieRaidResponsePayload(
                         ZombieRaidClientData(
                             id,
                             ZombieRaid.ZombieRaidStatus.entries[status],
                             WaveType.entries[waveType],
                             waves, num, timer, activeTime, zombieH, zombieMax, flagH, credits
-                        ),
-                        terminate
+                        )
                     )
                 }
             )

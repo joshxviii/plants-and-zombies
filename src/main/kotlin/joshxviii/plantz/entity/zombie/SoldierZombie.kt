@@ -74,7 +74,7 @@ class SoldierZombie(type: EntityType<out SoldierZombie>, level: Level) : PazZomb
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        val data = super.finalizeSpawn(level, difficulty, spawnReason, ZombieGroupData(false, false))
+        val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
 
         setItemSlot(EquipmentSlot.MAINHAND, PazItems.DYE_BLASTER.defaultInstance)
         dyeColor = DyeColor.VALUES.filter { it != DyeColor.WHITE && it != DyeColor.BLACK }.random()
