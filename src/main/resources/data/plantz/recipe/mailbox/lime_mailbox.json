@@ -3,7 +3,7 @@
   "group": "mailbox_dye",
   "category": "misc",
   "input": "#plantz:mailboxes",
-  "material": "minecraft:red_dye",
+  "material": "minecraft:lime_dye",
   "result": {
     "count": 1,
     "id": "plantz:red_mailbox"

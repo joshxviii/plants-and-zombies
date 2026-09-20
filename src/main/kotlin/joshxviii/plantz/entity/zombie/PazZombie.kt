@@ -152,6 +152,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     }
 
     override fun pickUpItem(level: ServerLevel, entity: ItemEntity) {
+        if (isBaby) return super.pickUpItem(level, entity)
         val balloonItem = entity.item.item as? BalloonItem ?: return super.pickUpItem(level, entity)
 
         val balloonsMissing = (4 - balloons.size).coerceIn(0, MAX_EQUIPPABLE_BALLOONS)
@@ -254,10 +255,14 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     }
 
     fun spawnBalloons(count: Int = 2, color: DyeColor = DyeColor.RED) {
+        spawnBalloons(count, listOf(color))
+    }
+
+    fun spawnBalloons(count: Int, color: List<DyeColor>) {
         val level = level() as? ServerLevel ?: return
         for (i in 0 until count) {
             val balloon = PazEntities.BALLOON.create(level, EntitySpawnReason.TRIGGERED) ?: return
-            balloon.dyeColor = color
+            balloon.dyeColor = color.random()
             val randomX = (random.nextDouble() - 0.5) * 2 + x
             val randomZ = (random.nextDouble() - 0.5) * 2 + z
             balloon.snapTo(randomX, eyeY + 1.0, randomZ)

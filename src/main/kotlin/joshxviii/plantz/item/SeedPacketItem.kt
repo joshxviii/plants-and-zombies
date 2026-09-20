@@ -1,6 +1,7 @@
 package joshxviii.plantz.item
 
 import joshxviii.plantz.*
+import joshxviii.plantz.block.entity.SunBatteryBlockEntity
 import joshxviii.plantz.entity.plant.GraveBuster
 import joshxviii.plantz.entity.plant.PacketInteractionResult
 import joshxviii.plantz.entity.plant.Plant
@@ -35,6 +36,7 @@ import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.HitResult
 import java.util.*
+import kotlin.compareTo
 import kotlin.jvm.optionals.getOrNull
 
 class SeedPacketItem(properties: Properties) : Item(properties) {
@@ -224,6 +226,58 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             level.gameEvent(player, GameEvent.ENTITY_PLACE, spawnPos)
 
             return InteractionResult.SUCCESS
+        }
+
+        fun tryPlantFromDispenser(
+            level: ServerLevel,
+            itemStack: ItemStack,
+            dispenserPos: BlockPos,
+            pos: BlockPos,
+            face: Direction,
+            horizontalDir: Direction,
+        ): Boolean {
+            val entityData = itemStack.get(DataComponents.ENTITY_DATA) ?: return false
+            val entityType = entityData.type()
+
+            val sunCost = itemStack.get(PazComponents.SUN_COST)?.getSunCost(entityType) ?: 0
+            val battery = SunBatteryBlockEntity.findAttachedSunBattery(level, dispenserPos, sunCost)?: return false
+
+            val spawnPos = if (level.getBlockState(pos).getCollisionShape(level, pos).isEmpty) pos else pos
+
+            val entity = entityType.create(
+                level,
+                EntityType.createDefaultStackConfig(level, itemStack, null),
+                spawnPos,
+                EntitySpawnReason.DISPENSER,
+                true,
+                face == Direction.UP
+            ) ?: return false
+
+            entityData.loadInto(entity)
+
+            if (entity is Plant) {
+                val blockBelow = level.getBlockState(spawnPos.below())
+                if (!entity.canPlaceOn(blockBelow)) return false
+
+                if (level.getEntitiesOfClass(Plant::class.java, AABB(spawnPos)).isNotEmpty()) return false
+                val yaw = horizontalDir.toYRot()
+                entity.yRot = yaw
+                entity.yBodyRot = yaw
+                entity.yHeadRot = yaw
+            }
+
+            if (!level.addFreshEntity(entity)) {
+                entity.discard()
+                return false
+            }
+
+            entity.playSound(SoundEvents.BIG_DRIPLEAF_PLACE)
+            level.gameEvent(null, GameEvent.ENTITY_PLACE, spawnPos)
+            if (sunCost > 0) battery.removeSun(sunCost)
+            level.getNearestPlayer(entity, 64.0)?.let {
+                if (entity is TamableAnimal) entity.tame(it)
+            }
+            return true
         }
 
         fun applyCooldown(itemStack: ItemStack, player: Player) {

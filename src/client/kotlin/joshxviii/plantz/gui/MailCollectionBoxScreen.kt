@@ -127,7 +127,7 @@ class MailCollectionBoxScreen(
 
         menu.availableMailboxes.find { it.blockPos == menu.selectedMailboxPos }?.let { mailbox ->
             val color = ARGB.addRgb(mailbox.color, 0x333333)
-            val darker = ARGB.multiply(color, 0x999999)
+            val darker = ARGB.multiply(color, 0x777777)
             val posText = mailbox.blockPos.let { Component.translatable("container.plantz.mailbox_coords", it.x, it.y, it.z) }.withColor(darker)
             val text = Component.translatable("chat.square_brackets", posText).withColor(darker)
             val line = font.split(text, 101).firstOrNull()

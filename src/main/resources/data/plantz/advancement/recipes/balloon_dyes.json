@@ -1,0 +1,47 @@
+{
+  "parent": "plantz:recipes/balloon",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "plantz:balloon/balloon"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_balloon": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#plantz:balloons"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_balloon"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "plantz:balloon/white_balloon",
+      "plantz:balloon/light_gray_balloon",
+      "plantz:balloon/gray_balloon",
+      "plantz:balloon/black_balloon",
+      "plantz:balloon/brown_balloon",
+      "plantz:balloon/red_balloon",
+      "plantz:balloon/orange_balloon",
+      "plantz:balloon/yellow_balloon",
+      "plantz:balloon/lime_balloon",
+      "plantz:balloon/green_balloon",
+      "plantz:balloon/cyan_balloon",
+      "plantz:balloon/light_blue_balloon",
+      "plantz:balloon/blue_balloon",
+      "plantz:balloon/purple_balloon",
+      "plantz:balloon/magenta_balloon",
+      "plantz:balloon/pink_balloon"
+    ]
+  }
+}

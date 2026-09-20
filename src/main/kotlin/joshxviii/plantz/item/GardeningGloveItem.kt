@@ -1,5 +1,6 @@
 package joshxviii.plantz.item
 
+import joshxviii.plantz.getItemCount
 import joshxviii.plantz.removeItemFromInventory
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Holder
@@ -77,7 +78,8 @@ class GardeningGloveItem(properties: Properties) : Item(properties) {
 
         val blockState = level.getBlockState(context.clickedPos)
         val cropAge = blockState.getValueOrElse(CropBlock.AGE, 0)
-        if (cropAge >= 7) {
+        val seedItem = blockState.getCloneItemStack(level, context.clickedPos, false).item
+        if (cropAge >= 7 && (player?.hasInfiniteMaterials() ?: false || (player?.getItemCount(seedItem) ?: 0) > 0)) {
             if (isHolding) {
                 player?.sendOverlayMessage(Component.translatable("message.plantz.glove_full").withStyle(ChatFormatting.RED))
                 return InteractionResult.PASS
@@ -86,9 +88,8 @@ class GardeningGloveItem(properties: Properties) : Item(properties) {
             val blockState = level.getBlockState(blockPos)
             if (!level.isClientSide) {
                 if(level.destroyBlock(blockPos, true, player)) player?.let {
-                    val seedItem = blockState.getCloneItemStack(level, context.clickedPos, false).item
                     GardeningGloveItem.hurtAndDropPlant(stack, player, context.hand)
-                    if (it.removeItemFromInventory(seedItem) > 0) level.setBlockAndUpdate(blockPos, blockState.setValue(CropBlock.AGE, 0))
+                    if (player.hasInfiniteMaterials() || it.removeItemFromInventory(seedItem) > 0) level.setBlockAndUpdate(blockPos, blockState.setValue(CropBlock.AGE, 0))
                 }
             }
             return InteractionResult.SUCCESS

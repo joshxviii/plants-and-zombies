@@ -6,11 +6,13 @@ import joshxviii.plantz.PazItems
 import joshxviii.plantz.block.SunBatteryBlock
 import joshxviii.plantz.item.component.StoredSun
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.core.component.DataComponentGetter
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.Container
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.ValueInput
@@ -23,6 +25,26 @@ class SunBatteryBlockEntity(
 ) : BlockEntity(
     PazBlocks.SUN_BATTERY_BLOCK_ENTITY, worldPosition, blockState
 ), BlockContainerSingleItem {
+
+    companion object {
+        fun findAttachedSunBattery(level: Level, targetPos: BlockPos, hasSunAmount: Int = 0): SunBatteryBlockEntity? {
+            for (dir in Direction.entries) {
+                val batteryPos = targetPos.relative(dir)
+                val be = level.getBlockEntity(batteryPos) as? SunBatteryBlockEntity ?: continue
+                val state = be.blockState
+                if (!state.`is`(PazBlocks.SUN_BATTERY_BLOCK)) continue
+
+                val supportDir = (state.block as SunBatteryBlock).getConnectedDirection(state).opposite
+                val supportPos = batteryPos.relative(supportDir)
+
+                if (hasSunAmount > 0 && !be.hasSun(hasSunAmount)) continue
+
+                if (supportPos == targetPos) return be
+            }
+            return null
+        }
+    }
+
     private var batteryItem: ItemStack = PazItems.SUN_BATTERY.defaultInstance
 
     fun getStoredSunPercent(): Float {
@@ -38,9 +60,14 @@ class SunBatteryBlockEntity(
         updateLevel(newStoredSun.getLevel())
     }
 
-    fun isFull(): Boolean {
-        return batteryItem.get(PazComponents.STORED_SUN)?.isFull() ?: false
+    fun removeSun(amount: Int) {
+        val newStoredSun = batteryItem.get(PazComponents.STORED_SUN)?.removeSun(amount) ?: StoredSun()
+        batteryItem.set(PazComponents.STORED_SUN, newStoredSun)
+        updateLevel(newStoredSun.getLevel())
     }
+
+    fun hasSun(amount: Int): Boolean = batteryItem.get(PazComponents.STORED_SUN)?.hasSun(amount) ?: false
+    fun isFull(): Boolean = batteryItem.get(PazComponents.STORED_SUN)?.isFull() ?: false
 
     fun updateLevel(sunLevel: Int) {
         level?.setBlock(blockPos, blockState.setValue(SunBatteryBlock.LEVEL, sunLevel), 3)

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "balloon_dye",
+  "category": "misc",
+  "ingredients": [
+    "#plantz:balloons",
+    "#plantz:balloons",
+    "#plantz:balloons",
+    "#plantz:balloons",
+    "minecraft:magenta_dye",
+    "#plantz:balloons",
+    "#plantz:balloons",
+    "#plantz:balloons",
+    "#plantz:balloons"
+  ],
+  "result": {
+    "count": 8,
+    "id": "plantz:magenta_balloon"
+  }
+}

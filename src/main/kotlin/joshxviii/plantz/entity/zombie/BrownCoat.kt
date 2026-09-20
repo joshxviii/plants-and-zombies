@@ -3,6 +3,7 @@ package joshxviii.plantz.entity.zombie
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazDataSerializers.BROWN_COAT_VARIANT
 import joshxviii.plantz.PazTags
+import joshxviii.plantz.entity.Balloon
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
@@ -10,6 +11,7 @@ import net.minecraft.tags.StructureTags
 import net.minecraft.util.RandomSource
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.entity.*
+import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
@@ -83,6 +85,23 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
             }
             else if (random.nextFloat() < 0.1 && getItemBySlot(EquipmentSlot.HEAD).isEmpty) {
                 setItemSlot(EquipmentSlot.HEAD, Items.BUCKET.defaultInstance)
+            }
+        }
+
+        val spawnBalloons = (
+                if (spawnReason == EntitySpawnReason.EVENT
+                    && random.nextFloat() < 0.08)
+                    true
+                else if (spawnReason != EntitySpawnReason.EVENT && spawnReason != EntitySpawnReason.REINFORCEMENT
+                    && random.nextFloat() < 0.02)
+                    true
+                else
+                    false
+                )
+
+        if (spawnBalloons) {
+            if (!isBaby) Balloon.browncoatBallons[variant]?.let{
+                spawnBalloons(random.nextIntBetweenInclusive(2,3), it)
             }
         }
 

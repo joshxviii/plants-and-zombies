@@ -41,16 +41,11 @@ class TimeMachineRenderer() : BlockEntityRenderer<TimeMachineBlockEntity, TimeMa
         collector: SubmitNodeCollector,
         camera: CameraRenderState
     ) {
-        val s = (state.sunPercent).pow(0.5f) * 0.9f
+        val scale = (state.sunPercent).pow(0.5f) * 0.9f
         val d = .25f
         poseStack.translate(state.facing.stepX.toFloat()*d+0.5f, 0.45f, state.facing.stepZ.toFloat()*d+0.5f)
-        poseStack.scale(s, s, s)
-        poseStack.mulPose(camera.orientation)
-        poseStack.mulPose(Axis.YP.rotation(state.time*0.04f))
 
-        SunBatteryRenderer.submitSunShine(state, poseStack, collector)
-        poseStack.mulPose(Axis.YP.rotation(Mth.PI*0.5f))
-        SunBatteryRenderer.submitSunShine(state, poseStack, collector)
+        SunBatteryRenderer.submitSun(state, poseStack, collector, camera, scale, state.time)
     }
 }
 

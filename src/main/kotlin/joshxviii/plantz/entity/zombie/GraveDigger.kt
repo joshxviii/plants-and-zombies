@@ -120,7 +120,7 @@ class GraveDigger(type: EntityType<out GraveDigger>, level: Level) : PazZombie(t
             if (--digTime == 0) gravedigger.digTime=1
             if (digTime<-32) {
                 val target = gravedigger.target?.position() ?: gravedigger.lookAngle
-                val angleToTarget = (gravedigger.position().subtract(target).normalize().toAngle().toDouble()) * Mth.DEG_TO_RAD
+                val angleToTarget = (target.subtract(gravedigger.position()).normalize().toAngle().toDouble()) * Mth.DEG_TO_RAD
 
                 val xd = Mth.cos(angleToTarget)
                 val zd = Mth.sin(angleToTarget)
@@ -128,7 +128,7 @@ class GraveDigger(type: EntityType<out GraveDigger>, level: Level) : PazZombie(t
                 val z = gravedigger.z + zd
 
                 val gravePos = BlockPos.containing(x, gravedigger.y, z)
-                tryDigGrave(gravePos)
+                tryDigGrave(gravePos, angleToTarget)
             }
         }
 
@@ -136,7 +136,7 @@ class GraveDigger(type: EntityType<out GraveDigger>, level: Level) : PazZombie(t
             super.stop()
         }
 
-        private fun tryDigGrave(gravePos: BlockPos, angleToTarget: Double = 0.0) {
+        private fun tryDigGrave(gravePos: BlockPos, angleToTarget: Double) {
             digTime = DIG_DELAY_TIME + gravedigger.random.nextInt(20)
             val level = gravedigger.level() as ServerLevel
             val graveStone = createFallingBlock(level, gravePos.center, PazBlocks.GRAVESTONE.defaultBlockState().setValue(FACING, Direction.fromYRot(angleToTarget * Mth.RAD_TO_DEG - 90)))?: return

@@ -1,5 +1,6 @@
 package joshxviii.plantz.block
 
+import com.mojang.math.OctahedralGroup
 import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazComponents
@@ -25,6 +26,7 @@ import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
+import net.minecraft.world.level.block.state.properties.AttachFace
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.EnumProperty
@@ -41,19 +43,18 @@ import java.util.function.ToIntFunction
 class SunBatteryBlock(properties: Properties) : BaseEntityBlock(properties), SimpleWaterloggedBlock  {
     companion object {
         val CODEC: MapCodec<SunBatteryBlock> = simpleCodec(::SunBatteryBlock)
-        val SHAPE: VoxelShape = Util.make {
-            Shapes.or(
-                column(8.0, 0.0, 11.0),
-            )
-        }
+        val FACE: EnumProperty<AttachFace> = BlockStateProperties.ATTACH_FACE
         val FACING: EnumProperty<Direction> = HorizontalDirectionalBlock.FACING
         val WATERLOGGED: BooleanProperty = BlockStateProperties.WATERLOGGED
         val LEVEL: IntegerProperty = BlockStateProperties.LEVEL
         val LIGHT_EMISSION: ToIntFunction<BlockState> = { it.getValue(LightBlock.LEVEL) }
+
+        val SHAPE: VoxelShape = Shapes.rotate(column(8.0, 0.0, 11.0), OctahedralGroup.ROT_90_REF_X_NEG)
+        var SHAPES: Map<AttachFace, Map<Direction, VoxelShape>> = Shapes.rotateAttachFace(SHAPE)
     }
 
     init {
-        registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(LEVEL, 0))
+        registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(FACE, AttachFace.FLOOR).setValue(WATERLOGGED, false).setValue(LEVEL, 0))
     }
 
     override fun useItemOn(
@@ -78,29 +79,50 @@ class SunBatteryBlock(properties: Properties) : BaseEntityBlock(properties), Sim
     }
 
     override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
-        return SHAPE
+        return SHAPES[state.getValue(FACE)]!![state.getValue(FACING)]!!
     }
 
     override fun rotate(state: BlockState, rotation: Rotation): BlockState {
         return state.setValue(FACING, rotation.rotate(state.getValue(FACING)))
     }
 
+    override fun mirror(state: BlockState, mirror: Mirror): BlockState {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)))
+    }
+
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
-        builder.add(FACING, WATERLOGGED, LEVEL)
+        builder.add(FACING, FACE, WATERLOGGED, LEVEL)
     }
 
     override fun getFluidState(state: BlockState): FluidState {
         return if (state.getValue(WATERLOGGED)) Fluids.WATER.getSource(false) else super.getFluidState(state)
     }
 
-    override fun getStateForPlacement(context: BlockPlaceContext): BlockState {
-        val replacedFluidState = context.level.getFluidState(context.clickedPos)
-        val itemStack = context.itemInHand
-        val level = itemStack.get(PazComponents.STORED_SUN)?.getLevel() ?: 0
-        return defaultBlockState()
-            .setValue(FACING, context.horizontalDirection.opposite)
-            .setValue(WATERLOGGED, replacedFluidState.`is`(Fluids.WATER))
-            .setValue(LEVEL, level)
+    override fun getStateForPlacement(context: BlockPlaceContext): BlockState? {
+        val level = context.level
+        val clicked = context.clickedFace
+        val pos = context.clickedPos
+        val fluid = level.getFluidState(pos)
+        val sunLevel = context.itemInHand.get(PazComponents.STORED_SUN)?.getLevel() ?: 0
+
+        for (dir in context.nearestLookingDirections) {
+            val state = if (dir.axis === Direction.Axis.Y) {
+                defaultBlockState()
+                    .setValue(FACE, if (dir == Direction.UP) AttachFace.CEILING else AttachFace.FLOOR)
+                    .setValue(FACING, context.horizontalDirection)
+            } else {
+                defaultBlockState()
+                    .setValue(FACE, AttachFace.WALL)
+                    .setValue(FACING, dir.opposite)
+            }
+                .setValue(WATERLOGGED, fluid.`is`(Fluids.WATER))
+                .setValue(LEVEL, sunLevel)
+
+            if (state.canSurvive(level, pos)) {
+                return state
+            }
+        }
+        return null
     }
 
     override fun newBlockEntity(worldPosition: BlockPos, blockState: BlockState): BlockEntity {
@@ -127,16 +149,28 @@ class SunBatteryBlock(properties: Properties) : BaseEntityBlock(properties), Sim
         neighbourState: BlockState,
         random: RandomSource
     ): BlockState {
-        if (state.getValue(WATERLOGGED)) {
-            ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level))
-        }
-
-        return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random)
+        if (state.getValue(WATERLOGGED)) ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level))
+        return if (getConnectedDirection(state).opposite == directionToNeighbour && !state.canSurvive(level, pos)) {
+            Blocks.AIR.defaultBlockState()
+        } else
+            super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random)
     }
 
     override fun canSurvive(state: BlockState, level: LevelReader, pos: BlockPos): Boolean {
-        val direction = Direction.DOWN
-        return canSupportCenter(level, pos.relative(direction), direction.opposite)
+        return canAttach(level, pos, getConnectedDirection(state).opposite)
+    }
+
+    fun getConnectedDirection(state: BlockState): Direction {
+        return when (state.getValue(FACE)) {
+            AttachFace.CEILING -> Direction.DOWN
+            AttachFace.FLOOR -> Direction.UP
+            else -> state.getValue(FACING)
+        }
+    }
+
+    private fun canAttach(level: LevelReader, pos: BlockPos, supportDir: Direction): Boolean {
+        val supportPos = pos.relative(supportDir)
+        return canSupportCenter(level, supportPos, supportDir.opposite)
     }
 
     override fun hasAnalogOutputSignal(state: BlockState): Boolean = state.getValue(LEVEL) > 0

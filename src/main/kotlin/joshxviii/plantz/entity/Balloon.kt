@@ -4,6 +4,7 @@ import LeashableEntity
 import joshxviii.plantz.PazDataSerializers.DATA_DYE_COLOR
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazServerParticles
+import joshxviii.plantz.entity.zombie.BrownCoatVariant
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.item.BalloonItem
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -33,6 +34,13 @@ class Balloon(
     companion object {
         val DYE_COLOR: EntityDataAccessor<DyeColor> = SynchedEntityData.defineId(Balloon::class.java, DATA_DYE_COLOR)
 
+        val browncoatBallons = mapOf(
+            BrownCoatVariant.BROWN to listOf(DyeColor.RED, DyeColor.YELLOW, DyeColor.BLUE),
+            BrownCoatVariant.DESERT to listOf(DyeColor.ORANGE, DyeColor.BROWN),
+            BrownCoatVariant.SNOW to listOf(DyeColor.LIGHT_BLUE, DyeColor.WHITE),
+            BrownCoatVariant.BUCCANEER to listOf(DyeColor.BLACK, DyeColor.RED)
+        )
+
         private const val MAX_PULL_PITCH = 25.0f
         private const val PITCH_SPEED_MULTIPLIER = 180.0f
         private const val PITCH_LERP_SPEED = 0.25f
@@ -41,14 +49,7 @@ class Balloon(
         private const val HOLDER_GRAVITY_LIFT_MULTIPLIER = 0.4
         private const val HOLDER_PULL_STIFFNESS = 0.0075
         private const val MAX_HOLDER_PULL_FORCE = 0.16
-        private const val MAX_HOLDER_UPWARD_VELOCITY = 0.5
-
-        fun spawnAndEquip(level: Level, pos: Vec3, dyeColor: DyeColor, entity: LivingEntity) {
-            val balloon = Balloon(PazEntities.BALLOON, level)
-            balloon.setPos(pos.x, pos.y, pos.z)
-            balloon.dyeColor = dyeColor
-
-        }
+        private const val MAX_HOLDER_UPWARD_VELOCITY = 0.3
     }
 
     var clientTiltZ: Float = 0f
@@ -121,13 +122,13 @@ class Balloon(
         val holder = leashHolder as? LivingEntity ?: return
         if ((holder as? Player)?.abilities?.flying == true) return
         if (y < holder.y) return
-        val verticalStretch = y - holder.y - leashElasticDistance()
+        val verticalStretch = y - holder.y - 2.0
         if (verticalStretch <= 0.0) return
 
         val floorHeight = y - level().getHeight(Heightmap.Types.WORLD_SURFACE, blockPosition()).toDouble()
         val heightLimitForce = (floorHeight / 64).coerceIn(0.0, 1.0)
 
-        val crouchMultiplier = if (holder.isCrouching) 0.5 else 1.0
+        val crouchMultiplier = if (holder.isCrouching) 0.55 else 1.0
         val gravityLift = holder.getAttributeValue(Attributes.GRAVITY) * HOLDER_GRAVITY_LIFT_MULTIPLIER
         val springLift = verticalStretch * HOLDER_PULL_STIFFNESS
         val totalLift = ((gravityLift + springLift) * (crouchMultiplier - heightLimitForce))
@@ -146,7 +147,7 @@ class Balloon(
     }
 
     override fun dropLeash() {
-        super.dropLeash()
+        removeLeash()
     }
 
     private fun pushCollidingEntities() {

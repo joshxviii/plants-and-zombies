@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "plantz:mailbox"
+        "recipe": "plantz:mailbox/mailbox"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
@@ -20,27 +20,27 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_mailbox"
     ]
   ],
   "rewards": {
     "recipes": [
-      "plantz:light_gray_mailbox",
-      "plantz:gray_mailbox",
-      "plantz:black_mailbox",
-      "plantz:brown_mailbox",
-      "plantz:red_mailbox",
-      "plantz:orange_mailbox",
-      "plantz:yellow_mailbox",
-      "plantz:lime_mailbox",
-      "plantz:green_mailbox",
-      "plantz:cyan_mailbox",
-      "plantz:light_blue_mailbox",
-      "plantz:blue_mailbox",
-      "plantz:purple_mailbox",
-      "plantz:magenta_mailbox",
-      "plantz:pink_mailbox"
+      "plantz:mailbox/white_mailbox",
+      "plantz:mailbox/light_gray_mailbox",
+      "plantz:mailbox/gray_mailbox",
+      "plantz:mailbox/black_mailbox",
+      "plantz:mailbox/brown_mailbox",
+      "plantz:mailbox/red_mailbox",
+      "plantz:mailbox/orange_mailbox",
+      "plantz:mailbox/yellow_mailbox",
+      "plantz:mailbox/lime_mailbox",
+      "plantz:mailbox/green_mailbox",
+      "plantz:mailbox/cyan_mailbox",
+      "plantz:mailbox/light_blue_mailbox",
+      "plantz:mailbox/blue_mailbox",
+      "plantz:mailbox/purple_mailbox",
+      "plantz:mailbox/magenta_mailbox",
+      "plantz:mailbox/pink_mailbox"
     ]
   }
 }

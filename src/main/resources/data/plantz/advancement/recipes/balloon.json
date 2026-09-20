@@ -3,16 +3,16 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "plantz:mailbox/mailbox"
+        "recipe": "plantz:balloon/balloon"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
-    "has_newspaper": {
+    "has_wind_charge": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "items": "plantz:newspaper"
+            "items": "minecraft:wind_charge"
           }
         ]
       }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_newspaper"
+      "has_wind_charge"
     ]
   ],
   "rewards": {
     "recipes": [
-      "plantz:mailbox/mailbox"
+      "plantz:balloon/balloon"
     ]
   }
 }

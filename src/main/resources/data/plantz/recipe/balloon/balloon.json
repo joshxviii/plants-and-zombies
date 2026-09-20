@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "/": [
+      "minecraft:string"
+    ],
+    "@": [
+      "minecraft:wind_charge"
+    ],
+    "#": [
+      "minecraft:phantom_membrane"
+    ]
+  },
+  "pattern": [
+    " # ",
+    " @ ",
+    " / "
+  ],
+  "result": {
+    "count": 8,
+    "id": "plantz:white_balloon"
+  }
+}
