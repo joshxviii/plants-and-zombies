@@ -7,6 +7,7 @@ import joshxviii.plantz.networking.MailboxListResponsePayload
 import joshxviii.plantz.networking.SendMailResponsePayload
 import joshxviii.plantz.networking.ServerConfigResponsePayload
 import joshxviii.plantz.networking.ZombieRaidResponsePayload
+import joshxviii.plantz.raid.ZombieRaid
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 
@@ -21,7 +22,7 @@ object PazClientNetwork {
         ClientPlayNetworking.registerGlobalReceiver(ZombieRaidResponsePayload.ID) { payload, context ->
             if (ZombieRaidClientCache.get(payload.data.id) == null) RaidMusicManager.start()
             ZombieRaidClientCache.put(payload.data)
-            if (payload.terminate) ZombieRaidClientCache.remove(payload.data.id)
+            if (payload.data.status == ZombieRaid.ZombieRaidStatus.TERMINATE) ZombieRaidClientCache.remove(payload.data.id)
         }
 
         ClientPlayNetworking.registerGlobalReceiver(SendMailResponsePayload.ID) { payload, context ->

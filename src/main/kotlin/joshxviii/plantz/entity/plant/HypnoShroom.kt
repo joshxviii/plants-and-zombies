@@ -11,8 +11,6 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
-import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.Level
 
@@ -23,15 +21,17 @@ class HypnoShroom(type: EntityType<out Plant>, level: Level) : Plant(type, level
 
     override fun attackGoals() {}
 
-    override fun canBeCollidedWith(other: Entity?): Boolean {
-        if (other is Zombie && other.swingTime == 0) {// when colliding with a zombie, the zombie will attack
-            val level = other.level() as? ServerLevel
-            if (level != null && other.isAlive) {
-                val damage = other.getAttribute(Attributes.ATTACK_DAMAGE)?.value?.toFloat() ?: 1f
-                if (hurtServer(level, other.damageSources().mobAttack(other), damage)) other.swing(InteractionHand.MAIN_HAND)
+    override fun doPush(entity: Entity) {
+        super.doPush(entity)
+        if (entity is Zombie && entity.swingTime == 0) {// when colliding with a zombie, the zombie will attack
+            val level = entity.level() as? ServerLevel
+            if (level != null && entity.isAlive) {
+                val damage = entity.getAttribute(Attributes.ATTACK_DAMAGE)?.value?.toFloat() ?: 1f
+                if (hurtServer(level, entity.damageSources().mobAttack(entity), damage)) {
+                    entity.swing(InteractionHand.MAIN_HAND)
+                }
             }
         }
-        return super.canBeCollidedWith(other)
     }
 
     override fun actuallyHurt(level: ServerLevel, source: DamageSource, damage: Float) {
@@ -55,7 +55,7 @@ class HypnoShroom(type: EntityType<out Plant>, level: Level) : Plant(type, level
 
     override fun die(source: DamageSource) {
         super.die(source)
-        spawnHypnosisCloud()
+        if (!isAsleep) spawnHypnosisCloud()
     }
 
     private fun spawnHypnosisCloud() {

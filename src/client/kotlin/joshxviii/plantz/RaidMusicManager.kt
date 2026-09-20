@@ -18,37 +18,42 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance
 import net.minecraft.client.resources.sounds.SoundInstance
 import net.minecraft.client.resources.sounds.SoundInstance.Attenuation
+import net.minecraft.core.Holder
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundSource
 import net.minecraft.util.RandomSource
 import kotlin.collections.set
+
+enum class RaidMusic(
+    val music: Holder.Reference<SoundEvent>,
+    val layerIndex: Int
+) {
+    LOW(RAID_MUSIC_LOW, 0),
+    MEDIUM(RAID_MUSIC_MEDIUM, 1),
+    HIGH(RAID_MUSIC_HIGH, 2),
+    BUCKET(RAID_MUSIC_BUCKET, 3),
+    HALFTIME(RAID_MUSIC_HALFTIME, 4),
+    WINTER(RAID_MUSIC_WINTER, 5),
+    PIRATE(RAID_MUSIC_PIRATE, 6),
+    ARMY(RAID_MUSIC_ARMY, 7),
+    LEAGUE(RAID_MUSIC_LEAGUE, 8),
+    ZOMBOSS(RAID_MUSIC_ZOMBOSS, 9);
+}
 
 object RaidMusicManager {
     const val FADE_IN_TIME = 60
 
     private val random = RandomSource.create()
     val minecraft = Minecraft.getInstance()
-    var activeLayers: MutableMap<Int, RaidMusicSoundInstance> = mutableMapOf()
-    val raidMusicLayer = arrayOf(
-        RAID_MUSIC_LOW,
-        RAID_MUSIC_MEDIUM,
-        RAID_MUSIC_HIGH,
-        RAID_MUSIC_BUCKET,
-        RAID_MUSIC_HALFTIME,
-        RAID_MUSIC_WINTER,
-        RAID_MUSIC_PIRATE,
-        RAID_MUSIC_ARMY,
-        RAID_MUSIC_LEAGUE,
-        RAID_MUSIC_ZOMBOSS
-    )
-    var targetIndex: Int = -1
+    var activeLayers: MutableMap<RaidMusic, RaidMusicSoundInstance> = mutableMapOf()
+    var targetMusic: RaidMusic? = null
     var raidEvent: ZombieRaidClientData? = null
 
     fun tick() {
         raidEvent = ZombieRaidClientCache.get().also { event ->
             if (event == null && activeLayers.isNotEmpty()) {// fade out when leaving raid
                activeLayers.values.forEach { it.volume -= 1f / (FADE_IN_TIME*2).coerceAtLeast(1) }
-               activeLayers[targetIndex]?.let { if (it.volume <= 0.0f) stop() }
+               activeLayers[targetMusic]?.let { if (it.volume <= 0.0f) stop() }
             }
         }
         val event = raidEvent?: return
@@ -62,9 +67,9 @@ object RaidMusicManager {
         // transition between song layers
         minecraft.musicManager.stopPlaying()
         if (shouldUpdateMusic()) {
-            targetIndex = getLayerIndex(event.currentWaveType, event.wavesSpawned)
+            targetMusic = getMusicFromRaidContext(event)
             activeLayers.forEach { (index, layer) ->
-                if (index == targetIndex) layer.volume += 1f / FADE_IN_TIME.coerceAtLeast(1)
+                if (index == targetMusic) layer.volume += 1f / FADE_IN_TIME.coerceAtLeast(1)
                 else layer.volume -= 1f / FADE_IN_TIME.coerceAtLeast(1)
             }
         }
@@ -72,10 +77,10 @@ object RaidMusicManager {
 
     fun start() {
         stop()
-        raidMusicLayer.forEachIndexed { index, layer ->
-            val layer = RaidMusicSoundInstance(layer.value())
+        RaidMusic.entries.forEach {
+            val layer = RaidMusicSoundInstance(it.music.value())
             layer.volume = 0.0f
-            activeLayers[index] = layer
+            activeLayers[it] = layer
             minecraft.soundManager.play(layer)
         }
     }
@@ -85,34 +90,43 @@ object RaidMusicManager {
             layer.stopLayer()
         }
         activeLayers.clear()
-        targetIndex = -1
+        targetMusic = null
     }
 
-    fun shouldUpdateMusic(): Boolean {
-        if (activeLayers.isEmpty() || activeLayers[targetIndex]?.isStopped == true) start()
+    fun getMusicFromRaidContext(raidEvent: ZombieRaidClientData): RaidMusic {
+        val totalWaves = raidEvent.numWaves
+        val currentWave = raidEvent.wavesSpawned
+        val waveType = raidEvent.currentWaveType
 
-        raidEvent?.let {
-            if (getLayerIndex(it.currentWaveType, it.wavesSpawned) != targetIndex) return true
+        return when (waveType) {
+            WaveType.DEFAULT -> when {
+                (currentWave == totalWaves || currentWave in 12..ZombieRaid.MAXIMUM_WAVE_COUNT) ->
+                    RaidMusic.HIGH
+                currentWave in 6..11 ->
+                    RaidMusic.MEDIUM
+                else ->
+                    RaidMusic.LOW
+            }
+            WaveType.BUCKET_BRIGADE -> RaidMusic.BUCKET
+            WaveType.HALFTIME_SHOWDOWN -> RaidMusic.HALFTIME
+            WaveType.WINTER_WONDERLAND -> RaidMusic.WINTER
+            WaveType.PIRATE_INVASION -> RaidMusic.PIRATE
+            WaveType.ROBO_ARMY -> RaidMusic.ARMY
+            WaveType.LEAGUE_OF_AWESOME -> RaidMusic.LEAGUE
+            WaveType.ZOMBOSS -> RaidMusic.ZOMBOSS
         }
-        activeLayers[targetIndex]?.let {
+    }
+
+    private fun shouldUpdateMusic(): Boolean {
+        if (activeLayers.isEmpty() || activeLayers[targetMusic]?.isStopped == true) start()
+        raidEvent?.let {
+            if (getMusicFromRaidContext(it) != targetMusic) return true
+        }
+        activeLayers[targetMusic]?.let {
             if (it.volume < 1.0f) return true
         }
         return false
     }
-
-    private fun getLayerIndex(type: WaveType, waveNum: Int = 0): Int = when (type) {
-        WaveType.DEFAULT -> when (waveNum) {
-            in 11..Int.MAX_VALUE -> 2
-            in 6..10             -> 1
-            else                       -> 0
-        }
-        WaveType.BUCKET_BRIGADE -> 3
-        WaveType.HALFTIME_SHOWDOWN -> 4
-        WaveType.WINTER_WONDERLAND -> 5
-        WaveType.PIRATE_INVASION -> 6
-        WaveType.ROBO_ARMY -> 7
-        WaveType.LEAGUE_OF_AWESOME -> 8
-    }.coerceIn(0, raidMusicLayer.size - 1)
 }
 
 class RaidMusicSoundInstance(

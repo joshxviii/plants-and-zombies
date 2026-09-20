@@ -43,8 +43,8 @@
 
   "entity.potatomine.explode": {
     "sounds": [
-      { "name": "plantz:entity/potatomine/explode1", "volume": 2.5, "pitch": 1.2 },
-      { "name": "plantz:entity/potatomine/explode2", "volume": 2.5, "pitch": 1.2 }
+      { "name": "plantz:entity/potatomine/explode1", "volume": 1.0, "pitch": 1.2 },
+      { "name": "plantz:entity/potatomine/explode2", "volume": 1.0, "pitch": 1.2 }
     ], "subtitle": "plantz.subtitles.entity.potatomine.explode"
   },
 

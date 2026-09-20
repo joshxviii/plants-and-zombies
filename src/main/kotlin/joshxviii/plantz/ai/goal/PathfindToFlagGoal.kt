@@ -4,6 +4,7 @@ import joshxviii.plantz.PazBlocks.PLANTZ_FLAG
 import joshxviii.plantz.PazEffects
 import joshxviii.plantz.lookAtBlockPos
 import joshxviii.plantz.moveToBlockPos
+import joshxviii.plantz.raid.ZombieRaid
 import joshxviii.plantz.raid.getZombieRaids
 import joshxviii.plantz.withinAttackRange
 import net.minecraft.core.BlockPos
@@ -16,7 +17,8 @@ import kotlin.math.max
 
 class PathfindToFlagGoal(
     val mob: PathfinderMob,
-    var targetFlagPos: BlockPos? = null
+    var targetFlagPos: BlockPos? = null,
+    var minimumDistance: Double = 4.0
 ) : Goal(){
     companion object {
         const val SEARCH_COOLDOWN = 20
@@ -36,7 +38,7 @@ class PathfindToFlagGoal(
             if (navCooldown <= 0) {
                 navCooldown = SEARCH_COOLDOWN
                 val level = mob.level() as ServerLevel
-                val zombieRaid = level.getZombieRaids().getNearbyRaid(mob.blockPosition(), 99999)
+                val zombieRaid = level.getZombieRaids().getNearbyRaid(mob.blockPosition(), ZombieRaid.SPAWN_DISTANCE * ZombieRaid.SPAWN_DISTANCE * 2)
                 //if (zombieRaid != null && mob is Zombie) zombieRaid.joinRaid(level, mob)
                 targetFlagPos = zombieRaid?.center
             }
@@ -44,7 +46,7 @@ class PathfindToFlagGoal(
         val targetPos = targetFlagPos ?: return false
         path = mob.getNavigation().createPath(targetPos, 0)
         val isValid = mob.level().getBlockState(targetPos).`is`(PLANTZ_FLAG)
-        return targetPos.distSqr(mob.blockPosition()) > 96 && isValid && !mob.isAggressive && path != null && !mob.hasEffect(PazEffects.HYPNOTIZE)
+        return targetPos.distSqr(mob.blockPosition()) > minimumDistance * minimumDistance && isValid && !mob.isAggressive && path != null && !mob.hasEffect(PazEffects.HYPNOTIZE)
     }
 
     override fun stop() {

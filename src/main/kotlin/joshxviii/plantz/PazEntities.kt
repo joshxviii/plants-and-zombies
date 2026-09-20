@@ -17,6 +17,7 @@ import joshxviii.plantz.entity.plant.*
 import joshxviii.plantz.entity.projectile.*
 import joshxviii.plantz.entity.zombie.*
 import joshxviii.plantz.mixin.MobAccessor
+import joshxviii.plantz.raid.ZombieRaid
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.fabricmc.fabric.mixin.networking.client.accessor.MinecraftAccessor
@@ -46,6 +47,7 @@ object PazEntities {
             if (entity is Zombie) (entity as MobAccessor).targetSelector.addGoal(4, NearestAttackableTargetGoal(entity, Gnome::class.java, 5, true, false, null))
 
             if (entity is PathfinderMob && entity.`is`(ZOMBIE_RAIDERS)) {
+                (entity as MobAccessor).goalSelector.addGoal(0, PathfindToFlagGoal(entity, minimumDistance = ZombieRaid.SPAWN_DISTANCE * 1.5))
                 (entity as MobAccessor).goalSelector.addGoal(2, DestroyFlagGoal(entity))
                 (entity as MobAccessor).goalSelector.addGoal(3, PathfindToFlagGoal(entity))
             }
