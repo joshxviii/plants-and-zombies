@@ -13,15 +13,18 @@ import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.FluidTags
+import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
 import net.minecraft.world.Difficulty
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
+import net.minecraft.world.entity.ai.attributes.AttributeInstance
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.control.FlyingMoveControl
@@ -50,6 +53,7 @@ import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
+import java.util.*
 import kotlin.math.max
 
 abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie(type, level) {
@@ -89,8 +93,75 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             return checkMobSpawnRules(type, level, spawnReason, pos, random)
         }
 
+        fun spawnZombieGroup(leader: Zombie, minAmount: Int = 3) {
+            val level = leader.level() as? ServerLevel?: return
+            var amount = minAmount
+            val multi = level.getCurrentDifficultyAt(leader.blockPosition()).specialMultiplier
+            if(multi > 0.0) repeat(3) {
+                if(leader.random.nextFloat() < 0.3 * multi) amount++
+            }
+
+            for (i in 0..amount) {
+                val spawnPos = findSpawnPosition(level, leader.blockPosition()) ?: return
+                val type = rollZombieType(level.random) ?: return
+
+                val zombie = type.create(
+                    level,
+                    null,
+                    spawnPos,
+                    EntitySpawnReason.REINFORCEMENT,
+                    true,
+                    false
+                ) ?: return
+                zombie.setPersistenceRequired()
+
+                level.addFreshEntity(zombie)
+            }
+        }
+
+        fun findSpawnPosition(level: ServerLevel, pos: BlockPos): BlockPos? {
+            val random = level.random
+            for (i in 0..7) {
+                val x = pos.x + Mth.randomBetweenInclusive(random, -3, 3)
+                val z = pos.z + Mth.randomBetweenInclusive(random, -3, 3)
+                val pos = BlockPos(x, pos.y, z)
+
+                var spawnY = pos.y
+                while (spawnY > level.minY && level.isEmptyBlock(pos.atY(spawnY - 1))) spawnY--
+                while (spawnY < level.maxY && !level.isEmptyBlock(pos.atY(spawnY))) spawnY++
+
+                val finalPos = BlockPos(x, spawnY, z)
+
+                if (level.isEmptyBlock(finalPos) && level.isEmptyBlock(finalPos.above())) return finalPos
+            }
+            return null
+        }
+
+        fun rollZombieType(random: RandomSource): EntityType<out Zombie>? {
+            var roll = random.nextInt(SPAWN_TABLE_WEIGHTS.values.sum())
+            for ((type, weight) in SPAWN_TABLE_WEIGHTS) {
+                if (roll < weight) return type
+                roll -= weight
+            }
+            return null
+        }
+
+        fun isBornLeader(zombie: Zombie): Boolean {
+            return Objects.requireNonNull<AttributeInstance>(zombie.getAttribute(Attributes.MAX_HEALTH)).hasModifier(Identifier.withDefaultNamespace(LEADER_MODIFIER_ID))
+        }
+
+        // for group spawning and gravestone spawning
+        val SPAWN_TABLE_WEIGHTS = mapOf(
+            PazEntities.BROWN_COAT          to 20,
+            PazEntities.NEWSPAPER_ZOMBIE    to 7,
+            PazEntities.DIGGER_ZOMBIE       to 1,
+            PazEntities.DISCO_ZOMBIE        to 1,
+            PazEntities.ALL_STAR            to 1,
+        )
+
         const val ZOMBIE_SPEED = 0.23
         const val MAX_EQUIPPABLE_BALLOONS = 4
+        const val LEADER_MODIFIER_ID: String = "leader_zombie_bonus"
 
         data class PazZombieAttributes(
             val maxHealth: Double = 20.0,

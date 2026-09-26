@@ -5,6 +5,7 @@ import joshxviii.plantz.PazDamageTypes;
 import joshxviii.plantz.PazEffects;
 import joshxviii.plantz.ZombieRaider;
 import joshxviii.plantz.entity.zombie.Gargantuar;
+import joshxviii.plantz.entity.zombie.PazZombie;
 import joshxviii.plantz.entity.zombie.ZombieYeti;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -33,6 +34,8 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.Objects;
 
+import static joshxviii.plantz.entity.zombie.PazZombie.LEADER_MODIFIER_ID;
+
 /**
  * @author Josh
  */
@@ -40,10 +43,7 @@ import java.util.Objects;
 public class ZombieMixin implements ZombieRaider {
 
     @Unique
-    static private final String LEADER_MODIFIER_ID = "leader_zombie_bonus";
-    @Unique
     static private final EntityDataAccessor<Boolean> IS_FROM_RAID  = SynchedEntityData.defineId(Zombie.class, EntityDataSerializers.BOOLEAN);
-
 
     @Override
     public boolean plantz$getIsFromRaid() {
@@ -89,11 +89,13 @@ public class ZombieMixin implements ZombieRaider {
     @Inject( method = "finalizeSpawn", at = @At("RETURN"))
     public void checkForLeader(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnReason, SpawnGroupData groupData, CallbackInfoReturnable<SpawnGroupData> cir) {
         Zombie entity = (Zombie) (Object) this;
-        var isLeader = Objects.requireNonNull(entity.getAttribute(Attributes.MAX_HEALTH)).hasModifier(Identifier.withDefaultNamespace(LEADER_MODIFIER_ID));
+        var isLeader = PazZombie.Companion.isBornLeader(entity);
 
-        boolean shouldAddEasyModeFlag = difficulty.getEffectiveDifficulty() < 1.2 && level.getRandom().nextFloat()<0.0125;
+        boolean bonusChance = level.getRandom().nextFloat()<0.0015;
 
-        if((isLeader || shouldAddEasyModeFlag) && !(spawnReason.equals(EntitySpawnReason.REINFORCEMENT))) {
+        if((isLeader || bonusChance) && !(spawnReason.equals(EntitySpawnReason.REINFORCEMENT) || spawnReason.equals(EntitySpawnReason.EVENT))) {
+            PazZombie.Companion.spawnZombieGroup(entity, 3);
+
             var dropChance = spawnReason.equals(EntitySpawnReason.EVENT) ? 0.0F : 1.0F;
             if (entity instanceof Gargantuar) {}
             else if (entity instanceof ZombieYeti) {

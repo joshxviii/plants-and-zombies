@@ -103,7 +103,7 @@ class Chomper(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
         override fun doAction() : Boolean {
             val target = usingEntity.target?: return false
-            if(!target.`is`(CANNOT_CHOMP)) {
+            if(!target.`is`(CANNOT_CHOMP) || target.maxHealth < 100) {
                 //Add modifier to increase damage for insta kills
                 usingEntity.getAttribute(Attributes.ATTACK_DAMAGE)?.addOrUpdateTransientModifier(CHOMP_ATTACK_MODIFIER)
             }

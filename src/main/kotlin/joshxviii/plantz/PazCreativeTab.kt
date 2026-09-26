@@ -89,7 +89,7 @@ object PazCreativeTab {
                 output.accept(PazItems.SUN)
                 output.accept(PazItems.SUN_BOTTLE)
                 output.accept(PazItems.WATERING_CAN)
-                if (PazConfig.SHOW_HIDDEN_ITEMS) output.accept(PazItems.GARDENING_GLOVE)
+                output.accept(PazItems.GARDENING_GLOVE)
                 output.accept(PazBlocks.PLANT_POT)
                 output.accept(PazBlocks.ZEN_PLANT_POT)
                 output.accept(PazItems.PLANT_POT_MINECART)

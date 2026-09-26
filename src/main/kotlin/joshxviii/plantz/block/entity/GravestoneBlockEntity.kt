@@ -10,6 +10,9 @@ import joshxviii.plantz.PazEntities.NEWSPAPER_ZOMBIE
 import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.PazTags
+import joshxviii.plantz.entity.zombie.PazZombie.Companion.SPAWN_TABLE_WEIGHTS
+import joshxviii.plantz.entity.zombie.PazZombie.Companion.findSpawnPosition
+import joshxviii.plantz.entity.zombie.PazZombie.Companion.rollZombieType
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundSource
@@ -36,38 +39,14 @@ class GravestoneBlockEntity(
         private const val SPAWN_DELAY_MAX = 600
         private const val MAX_ZOMBIES = 4
 
-        val SPAWN_TABLE_WEIGHTS = mapOf(
-            BROWN_COAT          to 20,
-            NEWSPAPER_ZOMBIE    to 7,
-            DIGGER_ZOMBIE       to 1,
-            DISCO_ZOMBIE        to 1,
-            ALL_STAR            to 1,
-        )
-
         fun tick(level: Level, pos: BlockPos, state: BlockState, blockEntity: GravestoneBlockEntity) {
             if (level.isClientSide || level !is ServerLevel) return
-
-            blockEntity.ticksSinceLastSpawn++
-
-            if (blockEntity.ticksSinceLastSpawn >= blockEntity.spawnDelay) {
-                blockEntity.trySpawnZombie(level, pos)
-            }
+            if (blockEntity.ticksSinceLastSpawn++ >= blockEntity.spawnDelay) blockEntity.trySpawnZombie(level, pos)
         }
     }
 
     private var spawnDelay = SPAWN_DELAY_MIN
     private var ticksSinceLastSpawn = 0
-
-    fun rollZombieType(random: RandomSource): EntityType<out Zombie>? {
-        val totalWeight = SPAWN_TABLE_WEIGHTS.values.sum()
-        var roll = random.nextInt(totalWeight)
-
-        for ((type, weight) in SPAWN_TABLE_WEIGHTS) {
-            if (roll < weight) return type
-            roll -= weight
-        }
-        return null
-    }
 
     private fun isDarkEnough(level: ServerLevel): Boolean {
         return !(level.isBrightOutside && level.getBrightness(LightLayer.SKY, blockPos) >= 7)
@@ -107,7 +86,6 @@ class GravestoneBlockEntity(
             true,
             false
         ) ?: return
-
         zombie.setPersistenceRequired()
 
         level.addFreshEntity(zombie)
@@ -129,25 +107,5 @@ class GravestoneBlockEntity(
             3, 0.15, 0.0, 0.15, 0.0
         )
         level.playSound(null, pos, PazSounds.APPLY_ZOMBIE_OMEN, SoundSource.BLOCKS, 0.75f, 2.0f)
-    }
-
-    private fun findSpawnPosition(level: ServerLevel, pos: BlockPos): BlockPos? {
-        val random = level.random
-        for (i in 0..7) {
-            val x = pos.x + Mth.randomBetweenInclusive(random, -3, 3)
-            val z = pos.z + Mth.randomBetweenInclusive(random, -3, 3)
-            val pos = BlockPos(x, pos.y, z)
-
-            var spawnY = pos.y
-            while (spawnY > level.minY && level.isEmptyBlock(pos.atY(spawnY - 1))) spawnY--
-            while (spawnY < level.maxY && !level.isEmptyBlock(pos.atY(spawnY))) spawnY++
-
-            val finalPos = BlockPos(x, spawnY, z)
-
-            if (level.isEmptyBlock(finalPos) && level.isEmptyBlock(finalPos.above())) {
-                return finalPos
-            }
-        }
-        return null
     }
 }
