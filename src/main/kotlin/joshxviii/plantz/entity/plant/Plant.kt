@@ -650,6 +650,19 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return blockBelow
     }
 
+    fun isOverEntityLimit(): Boolean {
+        val level = level() as? ServerLevel?: return false
+        val entityLimit = PazConfig.getEntityLimit(type)
+        if (entityLimit > -1) {
+            val nearbySameTypePlants = level.allEntities.filter {
+                it is Plant && it.type == type && it.isAlive && (PazConfig.COOP_PLANTING || it.owner == this.owner) && this.blockPosition()
+                    .distToCenterSqr(it.position()) < 32.0 * 32.0
+            }.size
+            return nearbySameTypePlants >= entityLimit
+        }
+        return false
+    }
+
     // whether another plant is overlapping with this one
     private fun isOverlappingWithOther(pos: BlockPos): Boolean {
         val otherPlantsAtPos = level().getEntitiesOfClass(Plant::class.java, AABB(pos)) { it != this }

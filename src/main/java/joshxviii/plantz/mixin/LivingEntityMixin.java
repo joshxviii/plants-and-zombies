@@ -226,6 +226,7 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     @Unique
     public void updateEffects() {
         var self = (LivingEntity) (Object) this;
+
         self.getEntityData().set(DATA_HYPNO_ID, this.hasEffect(PazEffects.HYPNOTIZE));
         self.getEntityData().set(DATA_CHILL_ID, this.hasEffect(PazEffects.CHILLED) || this.hasEffect(PazEffects.FROZEN));
         self.getEntityData().set(DATA_BUTTER_ID, this.hasEffect(PazEffects.BUTTERED));

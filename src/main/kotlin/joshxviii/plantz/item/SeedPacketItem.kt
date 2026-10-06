@@ -154,19 +154,6 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
                 return InteractionResult.FAIL
             }
 
-            val entityLimit = PazConfig.getEntityLimit(entityType)
-            if (entityLimit > -1 && !player.hasInfiniteMaterials()) {
-                val nearbySameTypePlants = level.allEntities.filter {
-                    it is Plant && it.type == entityType && it.isAlive && (PazConfig.COOP_PLANTING || it.owner == player) && spawnPos.distToCenterSqr(it.position()) < 32.0 * 32.0
-                }.size
-                if (nearbySameTypePlants >= entityLimit) {
-                    if (entityType!=null) player.sendOverlayMessage(
-                        Component.translatable("message.plantz.entity_limit", entityType.description.copy().withStyle(ChatFormatting.RED)).withStyle(ChatFormatting.DARK_RED)
-                    )
-                    return InteractionResult.FAIL
-                }
-            }
-
             val entity = entityType?.create(
                 level,
                 EntityType.createDefaultStackConfig(level, itemStack, player),
@@ -178,6 +165,17 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             entityData.loadInto(entity)
 
             if (entity is Plant) {
+
+                val entityLimit = PazConfig.getEntityLimit(entityType)
+                if (entityLimit > -1 && !player.hasInfiniteMaterials()) {
+                    if (entity.isOverEntityLimit()) {
+                        player.sendOverlayMessage(
+                            Component.translatable("message.plantz.entity_limit", entityType.description.copy().withStyle(ChatFormatting.RED)).withStyle(ChatFormatting.DARK_RED)
+                        )
+                        return InteractionResult.FAIL
+                    }
+                }
+
                 val spawnBlockCollisionShape = level.getBlockState(spawnPos).getCollisionShape(level, spawnPos).let { if (it.isEmpty.not()) it.bounds() else null }
                 val entityBox = entity.boundingBox.move(spawnPos.multiply(-1))
                 val blockBelow = level.getBlockState(spawnPos.below())
