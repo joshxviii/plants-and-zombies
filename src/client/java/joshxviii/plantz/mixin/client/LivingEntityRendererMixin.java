@@ -51,7 +51,32 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extend
         state.setData(HAS_BUTTER_KEY, hasButter);
         Map<Integer, Integer> paintColors = ((LivingEntityAccessor) entity).plantz$getPaintedColors();
         state.setData(PAINT_COLORS_KEY, paintColors);
+
+        if (hasFreeze && plantz$hasPreviousState) {
+            state.ageInTicks = plantz$ageInTicks;
+            state.walkAnimationPos = plantz$walkAnimationPos;
+            state.walkAnimationSpeed = plantz$walkAnimationSpeed;
+            state.bodyRot = plantz$bodyRot;
+            state.yRot = plantz$yRot;
+            state.xRot = plantz$xRot;
+        } else {
+            plantz$ageInTicks = state.ageInTicks;
+            plantz$walkAnimationPos = state.walkAnimationPos;
+            plantz$walkAnimationSpeed = state.walkAnimationSpeed;
+            plantz$bodyRot = state.bodyRot;
+            plantz$yRot = state.yRot;
+            plantz$xRot = state.xRot;
+        }
+        plantz$hasPreviousState = true;
     }
+
+    @Unique private boolean plantz$hasPreviousState;
+    @Unique private float plantz$ageInTicks;
+    @Unique private float plantz$walkAnimationPos;
+    @Unique private float plantz$walkAnimationSpeed;
+    @Unique private float plantz$bodyRot;
+    @Unique private float plantz$yRot;
+    @Unique private float plantz$xRot;
 
     @Unique
     private static final int PLANTZ_HYPNO_TINT = ARGB.opaque(0xD036FF);

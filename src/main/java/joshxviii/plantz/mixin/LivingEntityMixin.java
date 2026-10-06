@@ -152,6 +152,7 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     private void plantz$applyDuckyTubeBuoyancy(CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
 
+        //Duck tube floating
         var item = entity.getItemBySlot(EquipmentSlot.LEGS);
         if (!item.is(PazItems.DUCKY_TUBE) && !entity.is(PazTags.EntityTypes.PLANTABLE_ON_WATER)) return;
         if (entity instanceof Player player && player.getAbilities().flying) return;

@@ -22,7 +22,7 @@ class ZombieTurret(type: EntityType<out ZombieTurret>, level: Level) : ZombieRob
 
         if (actionTime>0) {
             actionAnimation.startIfStopped(tickCount)
-            if (actionTime++>10) {
+            if (actionTime++>14) {
                 actionAnimation.stop()
                 actionTime=0
             }

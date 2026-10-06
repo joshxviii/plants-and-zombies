@@ -135,7 +135,7 @@ class MailCollectionBoxScreen(
             if (line!=null) graphics.text(font, line, xo+75 - font.width(line)/2, yo+73, -1, false)
         }
 
-        if (miniButtons.isEmpty()) {
+        if (miniButtons.isEmpty() && menu.selectedMailboxPos == null) {
             val text = Component.translatable("container.plantz.no_address").withColor(0x777777)
             val line = font.split(text, 101).firstOrNull()
             if (line!=null) graphics.text(font, line, xo+75 - font.width(line)/2, yo+73, -1, false)
