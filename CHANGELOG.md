@@ -64,8 +64,10 @@
     - Wall Nut has a 5% chance to produce Explode-O-Nut seeds.
     - Explode-O-Nut has an 80% chance to produce Wall Nut seeds.
     - Electric Peashooter has a 95% chance to produce Peashooter seeds.
-    - Peashooter has a 10% chance to produce Repeater seeds.
+    - Peashooter has a 10% chance to produce Repeater seeds. 33% for Fire Peashooter in hot biomes. 40% for Electric Peashooter while thundering.
     - Repeater has a 60% chance to produce Peashooter seeds.
+    - Melonpult has a 20% chance to produce Winter Melon seeds in cold biomes.
+    - Winter Melon has a 75% chance to produce Melonpult seeds.
 - Repeaters no longer spawn naturally.
 - Wall Nuts can now be rolled around by either using Gardening Gloves or by being pushed with a piston.
 #### Zombies:
