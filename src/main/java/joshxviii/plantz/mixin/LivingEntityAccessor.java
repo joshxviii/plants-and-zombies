@@ -16,6 +16,9 @@ public interface LivingEntityAccessor {
     @Invoker("plantz$getChillId")
     boolean plantz$getChillId();
 
+    @Invoker("plantz$getFrozenId")
+    boolean plantz$getFrozenId();
+
     @Invoker("plantz$getButterId")
     boolean plantz$getButterId();
 

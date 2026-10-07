@@ -35,7 +35,9 @@ object PazModels {
     @JvmField
     val HAS_HYPNO_KEY: RenderStateDataKey<Boolean> = RenderStateDataKey.create { "plantz:hypnotized" }
     @JvmField
-    val HAS_FREEZE_KEY: RenderStateDataKey<Boolean> = RenderStateDataKey.create { "plantz:frozen" }
+    val HAS_CHILL_KEY: RenderStateDataKey<Boolean> = RenderStateDataKey.create { "plantz:chill" }
+    @JvmField
+    val HAS_FROZEN_KEY: RenderStateDataKey<Boolean> = RenderStateDataKey.create { "plantz:frozen" }
     @JvmField
     val HAS_BUTTER_KEY: RenderStateDataKey<Boolean> = RenderStateDataKey.create { "plantz:buttered" }
     @JvmField

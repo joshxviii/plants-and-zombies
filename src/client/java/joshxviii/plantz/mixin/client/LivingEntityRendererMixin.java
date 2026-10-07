@@ -2,6 +2,7 @@ package joshxviii.plantz.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.vertex.PoseStack;
+import joshxviii.plantz.PazEffects;
 import joshxviii.plantz.renderer.DuckyTubeRenderLayer;
 import joshxviii.plantz.renderer.DyeVatRenderLayer;
 import joshxviii.plantz.renderer.SpecialEffectsLayer;
@@ -45,14 +46,16 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extend
     private void checkForHypnoEffect(T entity, S state, float partialTicks, CallbackInfo ci) {
         boolean hasHypno = ((LivingEntityAccessor) entity).plantz$getHypnoId();
         state.setData(HAS_HYPNO_KEY, hasHypno);
-        boolean hasFreeze = ((LivingEntityAccessor) entity).plantz$getChillId();
-        state.setData(HAS_FREEZE_KEY, hasFreeze);
+        boolean hasChill = ((LivingEntityAccessor) entity).plantz$getChillId();
+        state.setData(HAS_CHILL_KEY, hasChill);
+        boolean hasFrozen = ((LivingEntityAccessor) entity).plantz$getFrozenId();
+        state.setData(HAS_FROZEN_KEY, hasFrozen);
         boolean hasButter = ((LivingEntityAccessor) entity).plantz$getButterId();
         state.setData(HAS_BUTTER_KEY, hasButter);
         Map<Integer, Integer> paintColors = ((LivingEntityAccessor) entity).plantz$getPaintedColors();
         state.setData(PAINT_COLORS_KEY, paintColors);
 
-        if (hasFreeze && plantz$hasPreviousState) {
+        if (hasFrozen && plantz$hasPreviousState) {
             state.ageInTicks = plantz$ageInTicks;
             state.walkAnimationPos = plantz$walkAnimationPos;
             state.walkAnimationSpeed = plantz$walkAnimationSpeed;
@@ -95,7 +98,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extend
         if (state.getDataOrDefault(HAS_HYPNO_KEY, false)) {
             finalColor.set(ARGB.multiply(finalColor.get(), PLANTZ_HYPNO_TINT));
         }
-        if (state.getDataOrDefault(HAS_FREEZE_KEY, false)) {
+        if (state.getDataOrDefault(HAS_CHILL_KEY, false) || state.getDataOrDefault(HAS_FROZEN_KEY, false)) {
             finalColor.set(ARGB.multiply(finalColor.get(), PLANTZ_FREEZE_TINT));
         }
         if (state.getDataOrDefault(HAS_BUTTER_KEY, false)) {
