@@ -2,17 +2,13 @@ package joshxviii.plantz.model;
 
 import joshxviii.plantz.renderer.entity.GnomeRenderState;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
-import static joshxviii.plantz.UtilsKt.pazResource;
-
-public class GnomeArmorModel<T extends GnomeRenderState> extends GnomeModel<T> {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("gnome_armor"), "main");
+public class GnomeArmorModel<T extends GnomeRenderState> extends EntityModel<T> {
 	private ModelPart helmet = null;
 	private ModelPart chest = null;
 	private ModelPart chest_torso = null;
@@ -27,22 +23,33 @@ public class GnomeArmorModel<T extends GnomeRenderState> extends GnomeModel<T> {
 	private ModelPart boot_R = null;
 	private ModelPart boot_L = null;
 
-	//This is so buns, but it works...
 	public GnomeArmorModel(ModelPart root) {
 		super(root);
-		try {this.helmet = root.getChild("helmet"); } catch (Exception ignored) {}
-		try {this.chest = root.getChild("chest"); } catch (Exception ignored) {}
-		try {this.chest_torso = this.chest.getChild("chest_torso"); } catch (Exception ignored) {}
-		try {this.chest_arms = this.chest_torso.getChild("chest_arms"); } catch (Exception ignored) {}
-		try {this.chest_arm_L = this.chest_arms.getChild("chest_arm_L"); } catch (Exception ignored) {}
-		try {this.chest_arm_R = this.chest_arms.getChild("chest_arm_R"); } catch (Exception ignored) {}
-		try {this.leggings = root.getChild("leggings"); } catch (Exception ignored) {}
-		try {this.leggings_legs = this.leggings.getChild("leggings_legs"); } catch (Exception ignored) {}
-		try {this.leggings_leg_L2 = this.leggings_legs.getChild("leggings_leg_L2"); } catch (Exception ignored) {}
-		try {this.leggings_leg_R2 = this.leggings_legs.getChild("leggings_leg_R2"); } catch (Exception ignored) {}
-		try {this.boots = root.getChild("boots"); } catch (Exception ignored) {}
-		try {this.boot_R = this.boots.getChild("boot_R"); } catch (Exception ignored) {}
-		try {this.boot_L = this.boots.getChild("boot_L"); } catch (Exception ignored) {}
+		if (root.hasChild("helmet")) this.helmet = root.getChild("helmet");
+		if (root.hasChild("chest")) {
+			this.chest = root.getChild("chest");
+			if (this.chest.hasChild("chest_torso")) {
+				this.chest_torso = this.chest.getChild("chest_torso");
+				if (this.chest_torso.hasChild("chest_arms")) {
+					this.chest_arms = this.chest_torso.getChild("chest_arms");
+					if (this.chest_arms.hasChild("chest_arm_L")) this.chest_arm_L = this.chest_arms.getChild("chest_arm_L");
+					if (this.chest_arms.hasChild("chest_arm_R")) this.chest_arm_R = this.chest_arms.getChild("chest_arm_R");
+				}
+			}
+		}
+		if (root.hasChild("leggings")) {
+			this.leggings = root.getChild("leggings");
+			if (this.leggings.hasChild("leggings_legs")) {
+				this.leggings_legs = this.leggings.getChild("leggings_legs");
+				if (this.leggings_legs.hasChild("leggings_leg_L2")) this.leggings_leg_L2 = this.leggings_legs.getChild("leggings_leg_L2");
+				if (this.leggings_legs.hasChild("leggings_leg_R2")) this.leggings_leg_R2 = this.leggings_legs.getChild("leggings_leg_R2");
+			}
+		}
+		if (root.hasChild("boots")) {
+			this.boots = root.getChild("boots");
+			if (this.boots.hasChild("boot_R")) this.boot_R = this.boots.getChild("boot_R");
+			if (this.boots.hasChild("boot_L")) this.boot_L = this.boots.getChild("boot_L");
+		}
 	}
 
 	public static LayerDefinition createHeadLayer() {

@@ -129,14 +129,8 @@ class Gnome(type: EntityType<out Gnome>, level: Level) :Monster(type, level) {
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
-        entityData.define(
-            DATA_VARIANT_ID,
-            GnomeVariant.pickRandomVariant()
-        )
-        entityData.define(
-            DATA_SOUND_VARIANT_ID,
-            GnomeSoundVariant.pickRandomVariant()
-        )
+        entityData.define(DATA_VARIANT_ID, GnomeVariant.BLUE)
+        entityData.define(DATA_SOUND_VARIANT_ID, GnomeSoundVariant.VOICE_1)
     }
 
     override fun addAdditionalSaveData(output: ValueOutput) {
@@ -146,8 +140,8 @@ class Gnome(type: EntityType<out Gnome>, level: Level) :Monster(type, level) {
     }
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
-        variant = input.read<GnomeVariant>("color_variant", GnomeVariant.CODEC).getOrDefault(GnomeVariant.pickRandomVariant())
-        soundVariant = input.read<GnomeSoundVariant>("sound_variant", GnomeSoundVariant.CODEC).getOrDefault(GnomeSoundVariant.pickRandomVariant())
+        variant = input.read<GnomeVariant>("color_variant", GnomeVariant.CODEC).getOrDefault(entityData.get(DATA_VARIANT_ID))
+        soundVariant = input.read<GnomeSoundVariant>("sound_variant", GnomeSoundVariant.CODEC).getOrDefault(entityData.get(DATA_SOUND_VARIANT_ID))
         this.reassessWeaponGoal()
     }
 
@@ -159,6 +153,9 @@ class Gnome(type: EntityType<out Gnome>, level: Level) :Monster(type, level) {
     ): SpawnGroupData? {
         setCanPickUpLoot(true)
         populateDefaultEquipmentSlots(random, difficulty)
+
+        variant = GnomeVariant.pickRandomVariant()
+        soundVariant = GnomeSoundVariant.pickRandomVariant()
 
         this.reassessWeaponGoal()
         return groupData
@@ -205,7 +202,6 @@ class Gnome(type: EntityType<out Gnome>, level: Level) :Monster(type, level) {
     private fun maybeWearArmor(slot: EquipmentSlot, itemStack: ItemStack, random: RandomSource) {
         if (random.nextFloat() < 0.25f) this.setItemSlot(slot, itemStack)
     }
-
 
     public override fun customServerAiStep(level: ServerLevel) {
         if (jumpDelayTicks > 0) jumpDelayTicks--

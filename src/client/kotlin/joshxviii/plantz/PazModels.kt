@@ -226,7 +226,7 @@ object PazModels {
         EntityRenderers.register(PazEntities.ZOMBIE_DRONE) { BlueprintMachineRenderer(it, ZombieDroneModel(it.bakeLayer(ZombieDroneModel.LAYER_LOCATION))) }
         EntityRenderers.register(PazEntities.LAWN_MOWER) { BlueprintMachineRenderer(it, LawnMowerModel(it.bakeLayer(LawnMowerModel.LAYER_LOCATION))) }
 
-        EntityRenderers.register(PazEntities.GNOME) { GnomeRenderer(it, GnomeModel(it.bakeLayer(GnomeModel.LAYER_LOCATION))) }
+        EntityRenderers.register(PazEntities.GNOME) { GnomeRenderer(it) }
 
         EntityRenderers.register(PazEntities.PLANT_POT_MINECART) { PlantPotMinecartRenderer(it, ModelLayers.MINECART) }
         EntityRenderers.register(PazEntities.SUN) { SunRenderer(it) }

@@ -1,6 +1,7 @@
 package joshxviii.plantz
 
 import com.mojang.serialization.MapCodec
+import net.minecraft.client.Minecraft
 import net.minecraft.client.data.models.model.ItemModelUtils
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.renderer.item.ItemModel
@@ -23,11 +24,11 @@ class PlantIconItemModel(
 
         fun plantEntityTypes(): Iterable<EntityType<*>> {
             val reg = BuiltInRegistries.ENTITY_TYPE
+            val resourceManager = Minecraft.getInstance().resourceManager
             return reg.mapNotNull { type ->
-                return@mapNotNull type
-                // for plantz namespace only:
-//                val id = BuiltInRegistries.ENTITY_TYPE.getKey(type) ?: return@mapNotNull null
-//                if (id.namespace == PazMain.MODID) type else null
+                val overlayId = overlayIdFor(type)
+                val modelLocation = Identifier.fromNamespaceAndPath(overlayId.namespace, "models/${overlayId.path}.json")
+                if (resourceManager.getResource(modelLocation).isPresent) type else null
             }
         }
 

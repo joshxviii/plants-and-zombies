@@ -8,6 +8,7 @@ import joshxviii.plantz.entity.gnome.Gnome
 import joshxviii.plantz.entity.gnome.GnomeVariant
 import joshxviii.plantz.model.GnomeArmorModel
 import joshxviii.plantz.model.GnomeModel
+import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.HumanoidModel.ArmPose
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
@@ -18,6 +19,7 @@ import net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer
 import net.minecraft.client.renderer.entity.layers.RenderLayer
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState
+import net.minecraft.client.renderer.entity.state.EntityRenderState
 import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.client.resources.model.EquipmentClientInfo.LayerType
 import net.minecraft.core.component.DataComponents
@@ -34,18 +36,18 @@ import net.minecraft.world.item.component.SwingAnimation
 
 class GnomeRenderer(
     context: EntityRendererProvider.Context,
-    defaultModel: GnomeModel<GnomeRenderState>,
+    defaultModel: GnomeModel<GnomeRenderState> = GnomeModel(context.bakeLayer(GnomeModel.LAYER_LOCATION)),
+    armorModels: GnomeArmorSet<GnomeArmorModel<GnomeRenderState>> = GnomeArmorSet.bake(ARMOR_LAYER_LOCATION, context.modelSet) { GnomeArmorModel(it) }
 ) : MobRenderer<Gnome, GnomeRenderState, GnomeModel<GnomeRenderState>>(
     context,
     defaultModel,
     0.2f
 ) {
     companion object {
-        val CUSTOM_HEAD_TRANSFORMS: CustomHeadLayer.Transforms = CustomHeadLayer.Transforms(-0.1171875F, -0.07421875F, 1.0F);
+        val CUSTOM_HEAD_TRANSFORMS: CustomHeadLayer.Transforms = CustomHeadLayer.Transforms(-0.1171875F, -0.07421875F, 1.0F)
     }
 
     init {
-        val armorModels = GnomeArmorSet.bake(ARMOR_LAYER_LOCATION, context.modelSet) { defaultModel }
         addLayer(GnomeArmorLayer(this, armorModels, context.equipmentRenderer))
         addLayer(CustomHeadLayer(this, context.modelSet, context.playerSkinRenderCache, CUSTOM_HEAD_TRANSFORMS))
         addLayer(ItemInHandLayer(this))
@@ -96,7 +98,7 @@ class GnomeRenderer(
 
 class GnomeArmorLayer<S: GnomeModel<GnomeRenderState>>(
     renderer: RenderLayerParent<GnomeRenderState, S>,
-    private val armorModels: GnomeArmorSet<S>,
+    private val armorModels: GnomeArmorSet<GnomeArmorModel<GnomeRenderState>>,
     private val equipmentRenderer: EquipmentLayerRenderer
 ) : RenderLayer<GnomeRenderState, S>(renderer) {
 

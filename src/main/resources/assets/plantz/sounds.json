@@ -3,8 +3,7 @@
   "item.watering_can": {
     "sounds": [
       { "name": "item/bottle/empty1", "volume": 1.0, "pitch": 0.75},
-      { "name": "item/bottle/empty2", "volume": 1.0, "pitch": 0.75},
-      { "name": "item/bottle/empty3", "volume": 1.0, "pitch": 0.75}
+      { "name": "item/bottle/empty2", "volume": 1.0, "pitch": 0.75}
     ], "subtitle": "plantz.subtitles.item.watering_can"
   },
 
@@ -122,7 +121,7 @@
     ], "subtitle": "plantz.subtitles.entity.browncoat.hurt"
   },
   "entity.newspaper_zombie.death": {
-    "sounds": [{ "name": "plantz:entity/newspaper_zombie/death", "volume": 0.8 }], "subtitle": "plantz.subtitles.entity.newspaper_zombie.death"
+    "sounds": [{ "name": "plantz:entity/browncoat/death", "volume": 0.8 }], "subtitle": "plantz.subtitles.entity.newspaper_zombie.death"
   },
 
   "entity.digger_zombie.ambient": {

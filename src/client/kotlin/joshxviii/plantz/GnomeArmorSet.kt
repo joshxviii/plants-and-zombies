@@ -1,6 +1,6 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.model.GnomeModel
+import joshxviii.plantz.model.GnomeArmorModel
 import joshxviii.plantz.renderer.entity.GnomeRenderState
 import net.minecraft.client.model.geom.EntityModelSet
 import net.minecraft.client.model.geom.ModelLayerLocation
@@ -28,7 +28,7 @@ data class GnomeArmorSet<T>(val head: T, val chest: T, val legs: T, val feet: T)
          * @param modelSet The EntityModelSet from the render context
          * @param factory Function that creates a GnomeModel from a baked ModelPart
          */
-        fun <S: GnomeModel<GnomeRenderState>> bake(
+        fun <S: GnomeArmorModel<GnomeRenderState>> bake(
             locations: GnomeArmorSet<ModelLayerLocation>, modelSet: EntityModelSet, factory: (ModelPart) -> S
         ): GnomeArmorSet<S> = locations.map { loc ->
             factory(modelSet.bakeLayer(loc))
