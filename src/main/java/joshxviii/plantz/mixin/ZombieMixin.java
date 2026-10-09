@@ -1,9 +1,6 @@
 package joshxviii.plantz.mixin;
 
-import joshxviii.plantz.PazBlocks;
-import joshxviii.plantz.PazDamageTypes;
-import joshxviii.plantz.PazEffects;
-import joshxviii.plantz.ZombieRaider;
+import joshxviii.plantz.*;
 import joshxviii.plantz.entity.zombie.Gargantuar;
 import joshxviii.plantz.entity.zombie.PazZombie;
 import joshxviii.plantz.entity.zombie.ZombieYeti;
@@ -86,26 +83,30 @@ public class ZombieMixin implements ZombieRaider {
         }
     }
 
+
+    @Unique
+    private static final float BONUS_LEADER_CHANCE = 0.0015F;
+    @Unique
+    private static final int LEADER_GROUP_SIZE = 3;
+
     @Inject( method = "finalizeSpawn", at = @At("RETURN"))
     public void checkForLeader(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnReason, SpawnGroupData groupData, CallbackInfoReturnable<SpawnGroupData> cir) {
+        if (spawnReason == EntitySpawnReason.REINFORCEMENT || spawnReason == EntitySpawnReason.EVENT) return;
+
         Zombie entity = (Zombie) (Object) this;
-        var isLeader = PazZombie.Companion.isBornLeader(entity);
+        if (!entity.is(PazTags.EntityTypes.CAN_BE_LEADER)) return;
 
-        boolean bonusChance = level.getRandom().nextFloat()<0.0015;
+        boolean isBornLeader = PazZombie.Companion.isBornLeader(entity);
+        boolean bonusPromotionChance = level.getRandom().nextFloat() < BONUS_LEADER_CHANCE;
 
-        if((isLeader || bonusChance) && !(spawnReason.equals(EntitySpawnReason.REINFORCEMENT) || spawnReason.equals(EntitySpawnReason.EVENT))) {
-            PazZombie.Companion.spawnZombieGroup(entity, 3);
+        if (isBornLeader || bonusPromotionChance) promoteToLeader(entity, spawnReason);
+    }
 
-            var dropChance = spawnReason.equals(EntitySpawnReason.EVENT) ? 0.0F : 1.0F;
-            if (entity instanceof Gargantuar) {}
-            else if (entity instanceof ZombieYeti) {
-                entity.setItemSlot(EquipmentSlot.HEAD, PazBlocks.BRAINZ_FLAG.asItem().getDefaultInstance());
-                entity.setDropChance(EquipmentSlot.HEAD, dropChance);
-            }
-            else {
-                entity.setItemSlot(EquipmentSlot.OFFHAND, PazBlocks.BRAINZ_FLAG.asItem().getDefaultInstance());
-                entity.setDropChance(EquipmentSlot.OFFHAND, dropChance);
-            }
-        }
+    @Unique
+    private void promoteToLeader(Zombie entity, EntitySpawnReason spawnReason) {
+        entity.setItemSlot(EquipmentSlot.OFFHAND, PazBlocks.BRAINZ_FLAG.asItem().getDefaultInstance());
+        entity.setDropChance(EquipmentSlot.OFFHAND, 1.0F);
+
+        if (spawnReason == EntitySpawnReason.NATURAL) PazZombie.Companion.spawnZombieGroup(entity, LEADER_GROUP_SIZE);
     }
 }

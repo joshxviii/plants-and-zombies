@@ -108,7 +108,7 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
             const val DEFAULT_AMOUNT = 3
             const val SUMMON_DISTANCE = 2
             const val SUMMON_DELAY_TIME = 75
-            val backupTargeting: TargetingConditions = TargetingConditions.forNonCombat().range(16.0).ignoreLineOfSight().ignoreInvisibilityTesting()
+            val backupTargeting: TargetingConditions = TargetingConditions.forNonCombat().range(16.0).ignoreInvisibilityTesting()
         }
         var summonTime = summoner.random.nextInt(20,60)
 
