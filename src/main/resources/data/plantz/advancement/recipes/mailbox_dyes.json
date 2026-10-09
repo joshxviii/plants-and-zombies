@@ -12,7 +12,7 @@
       "conditions": {
         "items": [
           {
-            "items": "plantz:mailbox"
+            "items": "#plantz:mailboxes"
           }
         ]
       }
@@ -20,6 +20,7 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_mailbox"
     ]
   ],

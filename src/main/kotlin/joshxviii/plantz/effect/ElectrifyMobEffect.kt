@@ -68,7 +68,7 @@ class ElectrifyMobEffect(
     }
 
     private fun zap(level: ServerLevel, target: LivingEntity, damage: Float = ZAP_DAMAGE, causeEntity: Entity? = null) {
-        val source = target.damageSources().source(PazDamageTypes.ZAP,null,causeEntity)
+        val source = target.damageSources().source(PazDamageTypes.ZAP,causeEntity,null)
         target.hurtServer(level, source, damage)
         level.sendParticles(
             PazServerParticles.ELECTRIFIED,

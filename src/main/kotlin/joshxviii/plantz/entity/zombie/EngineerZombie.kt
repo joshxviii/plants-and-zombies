@@ -63,7 +63,7 @@ class EngineerZombie(type: EntityType<out EngineerZombie>, level: Level) : PazZo
 
     override fun registerGoals() {
         super.registerGoals()
-        goalSelector.addGoal(1, AvoidEntityGoal(this, LivingEntity::class.java, 28f, 1.0, 1.2) { target -> target is Player || target is Plant })
+        goalSelector.addGoal(1, AvoidEntityGoal(this, LivingEntity::class.java, 20f, 0.8, 1.0) { target -> target is Player || target is Plant })
         goalSelector.addGoal(2, BuildBotGoal(this))
     }
 
@@ -189,7 +189,7 @@ class EngineerZombie(type: EntityType<out EngineerZombie>, level: Level) : PazZo
             if (success) {
                 val bot : ZombieRobot = ZOMBIE_BOTS.random().create(level, EntitySpawnReason.MOB_SUMMONED)?: return
                 bot.snapTo(BlockPos(Vec3i(x.toInt(),(pos.y+topOffset).toInt(),z.toInt())), angle * Mth.RAD_TO_DEG, 0.0f)
-                bot.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.REINFORCEMENT, PazZombieGroupData(isRaider = engineerZombie.isRaider()))
+                bot.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.REINFORCEMENT, PazZombieGroupData(isRaider = false))
                 bot.owner = engineerZombie
                 level.addFreshEntity(bot)
                 level.gameEvent(GameEvent.ENTITY_PLACE, Vec3(x, pos.y+topOffset, z), GameEvent.Context.of(engineerZombie))

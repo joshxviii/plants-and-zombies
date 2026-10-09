@@ -130,6 +130,7 @@ abstract class ZombieRobot(type: EntityType<out ZombieRobot>, level: Level) : Pa
         // attack owner's target goal
         this.targetSelector.addGoal(2, NearestAttackableTargetGoal(this, LivingEntity::class.java, true
         ) { entity, level ->
+            return@NearestAttackableTargetGoal entity is Player || entity is Plant
             if (this.owner is Player) (
                 entity !is Plant &&
                 entity !is Creeper &&

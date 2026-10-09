@@ -17,7 +17,6 @@ class ZombieOmenMobEffect(
     category: MobEffectCategory,
     color: Int,
     particleOptions: ParticleOptions,
-    var targetFlagPos: BlockPos? = null
 ) : MobEffect(category, color, particleOptions) {
 
     companion object {
@@ -31,7 +30,7 @@ class ZombieOmenMobEffect(
     override fun applyEffectTick(level: ServerLevel, mob: LivingEntity, amplification: Int): Boolean {
         if (mob !is ServerPlayer || mob.isSpectator) return false
 
-        val zombieRaidPos = targetFlagPos ?: level.poiManager.findClosest(
+        val zombieRaidPos = level.poiManager.findClosest(
             { p: Holder<PoiType> -> p.value() == PLANTZ_FLAG_POI },
             mob.blockPosition(),
             MAX_FLAG_DISTANCE,

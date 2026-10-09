@@ -2,8 +2,6 @@ package joshxviii.plantz.block.entity
 
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazEffects
-import joshxviii.plantz.effect.GardenHeroEffect
-import joshxviii.plantz.effect.ZombieOmenMobEffect
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
@@ -81,7 +79,6 @@ class FlagBlockEntity(
             val amplification = player.getEffect(MobEffects.BAD_OMEN)?.amplifier ?: 0
             player.removeEffect(MobEffects.BAD_OMEN)
             val effectInstance = MobEffectInstance(PazEffects.ZOMBIE_OMEN, 600, amplification)
-            (effectInstance.effect.value() as? ZombieOmenMobEffect)?.targetFlagPos = blockPos
             player.addEffect(effectInstance)
         }
     }

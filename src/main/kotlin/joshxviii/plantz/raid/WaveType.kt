@@ -84,7 +84,7 @@ enum class WaveType(
                 ),
                 WaveSpawnEntry(
                     PazEntities.ENGINEER_ZOMBIE,
-                    if (wave > 9) scaled(1f + (wave - 9) * 0.4f, omen, true) else 0
+                    if (wave > 6) scaled(1f + (wave - 6) * 0.4f, omen, true) else 0
                 ),
                 WaveSpawnEntry(
                     PazEntities.SOLDIER_ZOMBIE,
@@ -312,7 +312,7 @@ enum class WaveType(
                 val level = zombie.level() as? ServerLevel ?: continue
                 val difficulty = level.getCurrentDifficultyAt(zombie.blockPosition())
                 if (zombie.random.nextFloat() < 0.7f) {
-                    val itemStack = Mob.getEquipmentForSlot(slot, 2)?.defaultInstance ?: continue
+                    val itemStack = Mob.getEquipmentForSlot(slot, 4)?.defaultInstance ?: continue
                     if (zombie.random.nextFloat() < 0.3f * difficulty.specialMultiplier) EnchantmentHelper.enchantItemFromProvider(
                         itemStack,
                         level.registryAccess(),
@@ -373,7 +373,7 @@ enum class WaveType(
                     val difficulty = level.getCurrentDifficultyAt(zombie.blockPosition())
                     if (slot == EquipmentSlot.HEAD && !zombie.getItemBySlot(slot).isEmpty) continue
                     if (zombie.random.nextFloat() < 0.25f * difficulty.specialMultiplier) {
-                        val itemStack = Mob.getEquipmentForSlot(slot, 3)?.defaultInstance ?: continue
+                        val itemStack = Mob.getEquipmentForSlot(slot, 2)?.defaultInstance ?: continue
 
                         if (zombie.random.nextFloat() < 0.25f) EnchantmentHelper.enchantItemFromProvider(
                             itemStack,

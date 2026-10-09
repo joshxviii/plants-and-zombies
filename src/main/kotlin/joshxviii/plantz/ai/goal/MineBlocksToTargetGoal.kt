@@ -182,7 +182,7 @@ class MineBlocksToTargetGoal(
     private fun isBlockMineable(pos: BlockPos?) : Boolean {
         if (pos == null) return false
         val blockState = miner.level().getBlockState(pos)
-        return blockState.`is`(PazTags.BlockTags.DIGGER_BREAKABLE) || (blockState.`is`(BlockTags.MINEABLE_WITH_PICKAXE) && !blockState.`is`(BlockTags.INCORRECT_FOR_IRON_TOOL))
+        return !blockState.getCollisionShape(miner.level(), pos).isEmpty && (blockState.`is`(PazTags.BlockTags.DIGGER_BREAKABLE) || (blockState.`is`(BlockTags.MINEABLE_WITH_PICKAXE) && !blockState.`is`(BlockTags.INCORRECT_FOR_IRON_TOOL)))
     }
 
 }

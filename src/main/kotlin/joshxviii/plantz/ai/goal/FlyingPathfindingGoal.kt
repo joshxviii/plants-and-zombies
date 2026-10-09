@@ -33,7 +33,7 @@ open class FlyingPathfindingGoal (
             if (distanceAboveGround < hoverGroundHeight) return true
         }
         val target = entity.target?: return false
-        return !(target.distanceTo(entity) < 1 || !entity.hasLineOfSight(target)) && (!entity.onGround() && entity !is PazZombie)
+        return (target.distanceTo(entity) > 1 && entity.hasLineOfSight(target)) && !(entity.onGround() && entity is PazZombie)
     }
 
     override fun canContinueToUse(): Boolean {
