@@ -83,6 +83,9 @@ open class PlantRenderer(
         val s = (1.0f + g.pow(6) * 0.4f) * wobble
         val hs = (1.0f + g.pow(6) * 0.1f) / wobble
         poseStack.scale(s, hs, s)
+
+        val deathScale = (1f - state.deathTime / 20f).pow(0.3f)
+        poseStack.scale(deathScale, deathScale, deathScale)
     }
 
     override fun getWhiteOverlayProgress(state: PlantRenderState): Float {
@@ -216,7 +219,7 @@ open class PlantRenderState : LivingEntityRenderState() {
             if (magicName.isNotEmpty())         add(magicName)
             else {
                 if (isBaby)                     add("baby")
-                if (isAsleep)    add("sleep")
+                if (isAsleep || deathTime > 0)  add("sleep")
             }
         }.filter { it.isNotEmpty() }.toMutableList()
         return suffixes
