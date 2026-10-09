@@ -2,6 +2,7 @@ package joshxviii.plantz.model.plants;
 
 import joshxviii.plantz.animation.plants.ChomperAnimation;
 import joshxviii.plantz.renderer.entity.plant.PlantRenderState;
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -37,6 +38,7 @@ public class ChomperModel extends PlantModel {
 	private final ModelPart leaf_4;
 	private final ModelPart leaf_mid_4;
 	private final ModelPart leaf_tip_4;
+	private final KeyframeAnimation chewAnimation;
 
 	public ChomperModel(ModelPart root) {
 		super(root);
@@ -45,7 +47,7 @@ public class ChomperModel extends PlantModel {
 		idleAnimation = ChomperAnimation.idle.bake(root);
 		actionAnimation = ChomperAnimation.action.bake(root);
 		sleepAnimation = ChomperAnimation.sleep.bake(root);
-		cooldownAnimation = ChomperAnimation.cooldown.bake(root);
+		this.chewAnimation = ChomperAnimation.chew.bake(root);
 
 		this.body = root.getChild("body");
 		this.stem = this.body.getChild("stem");
@@ -156,6 +158,11 @@ public class ChomperModel extends PlantModel {
 		PartDefinition leaf_tip_4 = leaf_mid_4.addOrReplaceChild("leaf_tip_4", CubeListBuilder.create().texOffs(49, 53).addBox(-3.0F, 0.0F, -3.0F, 6.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -8.0F));
 
 		return LayerDefinition.create(meshdefinition, 64, 64);
+	}
+
+	@Override
+	public KeyframeAnimation getProcessedIdle(PlantRenderState state) {
+		return state.getUseSpecialAction() ? this.chewAnimation : super.getProcessedIdle(state);
 	}
 
 	@Override

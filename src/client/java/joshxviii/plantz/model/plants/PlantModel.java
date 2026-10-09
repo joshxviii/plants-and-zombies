@@ -18,7 +18,6 @@ public class PlantModel extends EntityModel<@NotNull PlantRenderState> {
     KeyframeAnimation idleAnimation;
     KeyframeAnimation actionAnimation;
     KeyframeAnimation sleepAnimation;
-    KeyframeAnimation cooldownAnimation;
     KeyframeAnimation walkAnimation;
     final KeyframeAnimation bounceAnimation;
 
@@ -46,11 +45,10 @@ public class PlantModel extends EntityModel<@NotNull PlantRenderState> {
     @Override
     public void setupAnim(@NotNull PlantRenderState state) {
         super.setupAnim(state);
-        if (initAnimation!=null)     getProcessedInit(state).apply(state.getInitAnimationState(), state.ageInTicks);
-        if (idleAnimation!=null && !state.getCoolDownAnimationState().isStarted()) getProcessedIdle(state).apply(state.getIdleAnimationState(), state.ageInTicks);
+        if (initAnimation!=null) getProcessedInit(state).apply(state.getInitAnimationState(), state.ageInTicks);
+        if (idleAnimation!=null) getProcessedIdle(state).apply(state.getIdleAnimationState(), state.ageInTicks);
         if (actionAnimation!=null && state.getPlantState() != PlantState.IDLE) getProcessedAction(state).apply(state.getActionAnimationState(), state.ageInTicks);
-        if (sleepAnimation!=null)    getProcessedSleep(state).apply(state.getSleepAnimationState(), state.ageInTicks);
-        if (cooldownAnimation!=null && !state.getInitAnimationState().isStarted()) this.cooldownAnimation.apply(state.getCoolDownAnimationState(), state.ageInTicks);
+        if (sleepAnimation!=null) getProcessedSleep(state).apply(state.getSleepAnimationState(), state.ageInTicks);
         this.bounceAnimation.apply(state.getBounceAnimationState(), state.ageInTicks);
 
         if (walkAnimation!=null) walkAnimation.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 1f, 1f);

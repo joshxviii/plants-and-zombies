@@ -1,7 +1,9 @@
 package joshxviii.plantz.model.plants;
 
+import joshxviii.plantz.animation.plants.ChomperAnimation;
 import joshxviii.plantz.animation.plants.PotatoMineAnimation;
 import joshxviii.plantz.renderer.entity.plant.PlantRenderState;
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -18,6 +20,7 @@ public class PotatoMineModel extends PlantModel {
 	private final ModelPart head;
 	private final ModelPart potato;
 	private final ModelPart blinker;
+	private final KeyframeAnimation hideAnimation;
 
 	public PotatoMineModel(ModelPart root) {
 		super(root);
@@ -25,7 +28,7 @@ public class PotatoMineModel extends PlantModel {
 		initAnimation = PotatoMineAnimation.init.bake(root);
 		idleAnimation = PotatoMineAnimation.idle.bake(root);
 		sleepAnimation = PotatoMineAnimation.sleep.bake(root);
-		cooldownAnimation = PotatoMineAnimation.cooldown.bake(root);
+		this.hideAnimation = PotatoMineAnimation.hide.bake(root);
 
 		this.body = root.getChild("body");
 		this.tiny_dirt = this.body.getChild("tiny_dirt");
@@ -56,6 +59,12 @@ public class PotatoMineModel extends PlantModel {
 
 		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
+
+	@Override
+	public KeyframeAnimation getProcessedIdle(PlantRenderState state) {
+		return state.getCooldown() > 0 ? this.hideAnimation : super.getProcessedIdle(state);
+	}
+
 
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {

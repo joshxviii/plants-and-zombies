@@ -69,7 +69,7 @@ public class PotatoMineAnimation {
 			))
 			.build();
 
-	public static final AnimationDefinition cooldown = AnimationDefinition.Builder.withLength(2.1217F).looping()
+	public static final AnimationDefinition hide = AnimationDefinition.Builder.withLength(2.1217F).looping()
 			.addAnimation("dirt", new AnimationChannel(AnimationChannel.Targets.SCALE,
 					new Keyframe(0.0F, KeyframeAnimations.scaleVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
 			))

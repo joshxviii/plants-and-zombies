@@ -34,14 +34,15 @@ abstract class ActionGoal(
         (usingEntity as? Plant)?.cooldown = if (startOnCooldown()) cooldownTime else 0
     }
 
+    override fun start() {}
+
     override fun stop() {
         isDoingAction = false
-        (usingEntity as? Plant)?.cooldown = 0 // set 0 to go back to idle in case action is canceled mid-animation
         actionTimer = -1
     }
 
     final override fun requiresUpdateEveryTick(): Boolean = true
-    final override fun canContinueToUse(): Boolean = canUse()
+    final override fun canContinueToUse(): Boolean = actionTimer > 0 || canUse()
 
     override fun tick() {
         if (

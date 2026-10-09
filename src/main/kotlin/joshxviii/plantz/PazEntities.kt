@@ -165,6 +165,7 @@ object PazEntities {
         height = 1.0f,
         eyeHeight = 0.7f,
         attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 18.0,
             attackDamage = 1.5,
             attackRange = 7.25,
             followRange = 6.5,

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack
 import joshxviii.plantz.PazConfig
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.entity.plant.BonkChoy
-import joshxviii.plantz.entity.plant.ExplodeONut
+import joshxviii.plantz.entity.plant.Chomper
 import joshxviii.plantz.entity.plant.ExplosivePlant
 import joshxviii.plantz.entity.plant.KernelPult
 import joshxviii.plantz.entity.plant.Plant
@@ -118,6 +118,7 @@ open class PlantRenderer(
         state.useSpecialAction =
             when (entity) {
                 is BonkChoy -> entity.useUppercut
+                is Chomper -> entity.isChewing
                 else -> false
             }
         state.textureExtra = mutableListOf<String>().apply {
@@ -215,7 +216,7 @@ open class PlantRenderState : LivingEntityRenderState() {
             if (magicName.isNotEmpty())         add(magicName)
             else {
                 if (isBaby)                     add("baby")
-                if (isAsleep)                   add("sleep")
+                if (isAsleep)    add("sleep")
             }
         }.filter { it.isNotEmpty() }.toMutableList()
         return suffixes

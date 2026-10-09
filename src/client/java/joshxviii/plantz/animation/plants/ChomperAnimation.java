@@ -174,7 +174,7 @@ public class ChomperAnimation {
 			))
 			.build();
 
-	public static final AnimationDefinition cooldown = AnimationDefinition.Builder.withLength(4.0F).looping()
+	public static final AnimationDefinition chew = AnimationDefinition.Builder.withLength(4.0F).looping()
 			.addAnimation("head", new AnimationChannel(AnimationChannel.Targets.SCALE,
 					new Keyframe(0.0F, KeyframeAnimations.scaleVec(0.9F, 1.05F, 1.0F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(0.32F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM),

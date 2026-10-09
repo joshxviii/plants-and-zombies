@@ -19,6 +19,8 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 
 class Chomper(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
@@ -26,16 +28,26 @@ class Chomper(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
         private val CHOMP_ATTACK_MODIFIER = AttributeModifier(
             pazResource("chomp_attack"), 100.0, AttributeModifier.Operation.ADD_MULTIPLIED_BASE
         )
-        val CHEW_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Chomper::class.java, EntityDataSerializers.INT)
+        val CHEW_TIME_ID: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Chomper::class.java, EntityDataSerializers.BOOLEAN)
     }
 
-    var chewTime: Int
+    var isChewing: Boolean
         get() = this.entityData.get(CHEW_TIME_ID)
         set(value) = this.entityData.set(CHEW_TIME_ID, value)
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
-        entityData.define(CHEW_TIME_ID, 0)
+        entityData.define(CHEW_TIME_ID, false)
+    }
+
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+        output.putBoolean("plantz:isChewing", isChewing)
+    }
+
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+        isChewing = input.getBooleanOr("plantz:isChewing", false)
     }
 
     override fun registerGoals() {
@@ -53,10 +65,7 @@ class Chomper(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
     override fun tick() {
         super.tick()
-        if (chewTime > 0) {
-            chewTime--
-            cooldown = chewTime
-            coolDownAnimationState.startIfStopped(tickCount - idleAnimationStartTick)
+        if (isChewing) {
             if (tickCount % 24 == 0) playSound(SoundEvents.CAMEL_EAT, 0.15f, 0.9f) // TODO Custom Sound
             if (random.nextInt(12) == 0) {
                 val eyeHeight = eyeHeight.toDouble()
@@ -82,6 +91,7 @@ class Chomper(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
                     )
                 }
             }
+            if (cooldown <= 0) isChewing = false
         }
     }
 
@@ -95,7 +105,8 @@ class Chomper(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
         actionStartEffect = {
             chomperEntity.playSound(PazSounds.CHOMPER_ATTACK)
         },
-        actionPredicate = { chomperEntity.chewTime <= 0 }
+        actionPredicate = { !chomperEntity.isChewing },
+        actionEndEffect = { if (chomperEntity.isChewing) chomperEntity.cooldown = CHEW_TIME }
     ) {
         companion object {
             const val CHEW_TIME = 700
@@ -120,7 +131,7 @@ class Chomper(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
                     0.32
                 )
                 target.remove(RemovalReason.KILLED)
-                chomperEntity.chewTime = CHEW_TIME
+                chomperEntity.isChewing = true
             }
             return true
         }
