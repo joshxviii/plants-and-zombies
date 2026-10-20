@@ -4,7 +4,22 @@
 # against bad commits.
 
 name: build
-on: [pull_request, push]
+on:
+  pull_request:
+    paths:
+      - 'src/main/resources/fabric.mod.json'
+      - 'src/main/java/**'
+      - 'src/main/kotlin/**'
+      - 'src/client/java/**'
+      - 'src/client/kotlin/**'
+  push:
+    paths:
+      - 'src/main/resources/fabric.mod.json'
+      - 'src/main/java/**'
+      - 'src/main/kotlin/**'
+      - 'src/client/java/**'
+      - 'src/client/kotlin/**'
+  workflow_dispatch:
 
 jobs:
   build:
