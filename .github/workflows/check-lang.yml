@@ -16,34 +16,52 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 2
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
-      - name: Get changed translation files
-        id: changed
+      - name: Check language files
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+          CURRENT_SHA: ${{ github.sha }}
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            git fetch origin ${{ github.base_ref }} --depth=1
-            FILES=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD -- 'src/main/resources/assets/plantz/lang/*.json' | grep -v en_us.json || true)
+          set -euo pipefail
+
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            LEFT_SHA="$PR_BASE_SHA"
+          elif [ "$EVENT_NAME" = "workflow_dispatch" ] || [[ "$PUSH_BEFORE_SHA" =~ ^0+$ ]]; then
+            LEFT_SHA="$(git rev-parse "$CURRENT_SHA^" 2>/dev/null || true)"
+            if [ -z "$LEFT_SHA" ]; then
+              python .github/scripts/check_lang.py
+              exit 0
+            fi
           else
-            FILES=$(git diff --name-only --diff-filter=AM HEAD~1 HEAD -- 'src/main/resources/assets/plantz/lang/*.json' | grep -v en_us.json || true)
+            LEFT_SHA="$PUSH_BEFORE_SHA"
           fi
 
-          echo "files<<EOF" >> $GITHUB_OUTPUT
-          echo "$FILES" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          git fetch --no-tags --depth=1 origin "$LEFT_SHA"
+          git diff --name-only -z --diff-filter=AM "$LEFT_SHA" "$CURRENT_SHA" -- \
+            'src/main/resources/assets/plantz/lang/*.json' > "$RUNNER_TEMP/changed-lang-files"
 
-          echo "Files to check:"
-          echo "$FILES"
+          mapfile -d '' -t changed_paths < "$RUNNER_TEMP/changed-lang-files"
+          files=()
+          for path in "${changed_paths[@]}"; do
+            filename="${path##*/}"
+            if [ "$filename" != "en_us.json" ]; then
+              files+=("$filename")
+            fi
+          done
 
-      - name: Check language files
-        run: |
-          if [ -z "${{ steps.changed.outputs.files }}" ]; then
+          if [ "${#files[@]}" -eq 0 ]; then
             echo "No translation files changed – skipping."
             exit 0
           fi
-          python .github/scripts/check_lang.py ${{ steps.changed.outputs.files }}
+
+          echo "Files to check:"
+          printf '  %s\n' "${files[@]}"
+          python .github/scripts/check_lang.py "${files[@]}"
