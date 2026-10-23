@@ -22,14 +22,10 @@ import joshxviii.plantz.raid.isNearRaid
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
-import net.fabricmc.fabric.mixin.networking.client.accessor.MinecraftAccessor
-import net.minecraft.commands.arguments.TeamArgument
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
-import net.minecraft.server.commands.TeamCommand
-import net.minecraft.server.jsonrpc.internalapi.MinecraftApi
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.Mob.createMobAttributes
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
@@ -38,7 +34,6 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.monster.zombie.ZombifiedPiglin
 import net.minecraft.world.entity.projectile.Projectile
-import net.minecraft.world.scores.Team
 
 object PazEntities {
 
@@ -334,6 +329,19 @@ object PazEntities {
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 6.0,
             followRange = 1.0
+        )
+    )
+    @JvmField val ROYAL_SUNFLOWER: EntityType<RoyalSunflower> = registerPlant(
+        "royal_sunflower", EntityType.Builder.of(::RoyalSunflower, MobCategory.CREATURE),
+        width = 2.25f,
+        height = 4.3f,
+        eyeHeight = 3.5f,
+        attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 450.0,
+            followRange = 48.0,
+            movementSpeed = 0.17,
+            attackDamage = 10.0,
+            knockbackResistance = 0.9
         )
     )
     // endregion

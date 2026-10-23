@@ -418,6 +418,10 @@
     "sounds": [{ "name": "plantz:event/taco_reward", "volume": 1.0, "pitch": 1.0  }], "subtitle": "plantz.subtitles.event.raid.taco_reward"
   },
 
+  "music.gnome_space": {
+    "sounds": [{ "name": "plantz:music/raid/low", "volume": 1.0, "pitch": 1.0 }], "subtitle": "plantz.subtitles.music.gnome_space"
+  },
+
   "music.raid.low": {
     "sounds": [{ "name": "plantz:music/raid/loon_griefers_low", "volume": 1.0, "pitch": 1.0 }], "subtitle": "plantz.subtitles.music.raid.low"
   },

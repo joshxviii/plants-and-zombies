@@ -4,6 +4,8 @@ import joshxviii.plantz.api.SeedMutationManager
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.block.entity.MailboxManager
 import joshxviii.plantz.block.entity.getMailboxMailQueue
+import joshxviii.plantz.block.entity.getTimeMachineManager
+import joshxviii.plantz.block.entity.TimeMachineBlockEntity
 import joshxviii.plantz.networking.ServerConfigResponsePayload
 import joshxviii.plantz.raid.ZombieRaids
 import joshxviii.plantz.raid.getZombieRaids
@@ -44,9 +46,11 @@ object PazMain : ModInitializer {
 		}
 		// raid ticking
 		ServerTickEvents.END_LEVEL_TICK.register { it.getZombieRaids().tick(it) }
+		ServerTickEvents.END_SERVER_TICK.register { it.overworld().getTimeMachineManager().tick(it) }
 
 		// mailbox managing
 		ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register { blockEntity, level ->
+			(blockEntity as? TimeMachineBlockEntity)?.let { level.getTimeMachineManager().register(it) }
 			(blockEntity as? MailboxBlockEntity)?.let {
 				MailboxManager.registerMailbox(level, it)
 				level.getMailboxMailQueue().deliverTo(it)

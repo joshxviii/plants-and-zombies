@@ -32,6 +32,21 @@ object PazRenderPipelines {
             .build())
 
     @JvmField
+    val TIME_PORTAL: RenderPipeline = RenderPipelines.register(RenderPipeline.builder(*arrayOf(
+            RenderPipelines.MATRICES_PROJECTION_SNIPPET,
+            RenderPipelines.FOG_SNIPPET,
+            RenderPipelines.GLOBALS_SNIPPET))
+        .withLocation(pazResource("pipeline/time_portal"))
+        .withVertexShader(pazResource("core/time_portal"))
+        .withFragmentShader(pazResource("core/time_portal"))
+        .withSampler("Sampler0").withSampler("Sampler1")
+        .withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
+        .withDepthStencilState(DepthStencilState.DEFAULT)
+        .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
+        .build()
+    )
+
+    @JvmField
     val PAINT_OVERLAY: RenderPipeline = RenderPipelines.register(
         RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
             .withUniform("PaintInfo", UniformType.UNIFORM_BUFFER)
@@ -86,6 +101,10 @@ object PazRenderPipelines {
                 it.assignPipeline(
                     PAINT_OVERLAY,
                     IrisProgram.ENTITIES
+                )
+                it.assignPipeline(
+                    TIME_PORTAL,
+                    IrisProgram.PARTICLES_TRANSLUCENT
                 )
             }
 

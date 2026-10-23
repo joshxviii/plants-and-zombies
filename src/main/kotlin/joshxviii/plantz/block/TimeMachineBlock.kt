@@ -2,12 +2,12 @@ package joshxviii.plantz.block
 
 import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PazBlocks
-import joshxviii.plantz.PazComponents
-import joshxviii.plantz.PazItems
-import joshxviii.plantz.block.entity.MailboxBlockEntity
+import joshxviii.plantz.PazWorldGen
+import net.minecraft.world.level.storage.loot.LootParams
 import joshxviii.plantz.block.entity.TimeMachineBlockEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.RandomSource
 import net.minecraft.util.Util
 import net.minecraft.world.InteractionHand
@@ -29,6 +29,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.EnumProperty
 import net.minecraft.world.level.block.state.properties.IntegerProperty
+import net.minecraft.world.level.dimension.DimensionType
 import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.level.pathfinder.PathComputationType
@@ -60,7 +61,7 @@ class TimeMachineBlock(properties: Properties) : BaseEntityBlock(properties), Si
 
         val STATE: EnumProperty<TimeMachineState> = EnumProperty.create<TimeMachineState>("time_machine_state", TimeMachineState::class.java)
 
-        val LIGHT_EMISSION: ToIntFunction<BlockState> = { if ( it.getValue(STATE) == TimeMachineState.ACTIVE) 10 else 0 }
+        val LIGHT_EMISSION: ToIntFunction<BlockState> = { if ( it.getValue(STATE) == TimeMachineState.ACTIVE) 1 else 0 }
     }
 
     override fun <T : BlockEntity> getTicker(
@@ -68,12 +69,13 @@ class TimeMachineBlock(properties: Properties) : BaseEntityBlock(properties), Si
         blockState: BlockState,
         type: BlockEntityType<T>
     ): BlockEntityTicker<T>? {
-        return if (type == PazBlocks.TIME_MACHINE_ENTITY) {
-            BlockEntityTicker { level, pos, state, blockEntity ->
-                TimeMachineBlockEntity.tick(level, pos, state, blockEntity as TimeMachineBlockEntity)
-            }
-        } else null
+        return if (type == PazBlocks.TIME_MACHINE_ENTITY)
+            BlockEntityTicker { level, pos, state, blockEntity -> TimeMachineBlockEntity.tick(level, pos, state, blockEntity as TimeMachineBlockEntity) }
+        else
+            null
     }
+
+    override fun newBlockEntity(worldPosition: BlockPos, blockState: BlockState): BlockEntity = TimeMachineBlockEntity(worldPosition, blockState)
 
     init {
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(STATE, TimeMachineState.INACTIVE))
@@ -114,6 +116,12 @@ class TimeMachineBlock(properties: Properties) : BaseEntityBlock(properties), Si
             BATTERY_SHAPES[facing] as VoxelShape
     }
 
+    override fun getDestroyProgress(state: BlockState, player: Player, level: BlockGetter, pos: BlockPos): Float {
+        // cannot destroy time machine in any time dimension
+        if (PazWorldGen.isTimeDimension(player.level().dimension())) return 0f
+        return super.getDestroyProgress(state, player, level, pos)
+    }
+
     override fun neighborChanged(
         state: BlockState,
         level: Level,
@@ -145,10 +153,6 @@ class TimeMachineBlock(properties: Properties) : BaseEntityBlock(properties), Si
             .setValue(LEVEL, 0)
     }
 
-    override fun newBlockEntity(worldPosition: BlockPos, blockState: BlockState): BlockEntity {
-        return TimeMachineBlockEntity(worldPosition, blockState)
-    }
-
     override fun isPathfindable(state: BlockState, type: PathComputationType): Boolean = false
 
     override fun updateShape(
@@ -164,12 +168,19 @@ class TimeMachineBlock(properties: Properties) : BaseEntityBlock(properties), Si
         if (state.getValue(WATERLOGGED)) {
             ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level))
         }
-        return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random)
+        val resultState = super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random)
+        return resultState
     }
 
     override fun canSurvive(state: BlockState, level: LevelReader, pos: BlockPos): Boolean {
         return super.canSurvive(state, level, pos)
     }
 
-    override fun codec(): MapCodec<out TimeMachineBlock> { return CODEC }
+    override fun hasAnalogOutputSignal(state: BlockState): Boolean = state.getValue(LEVEL) > 0
+    override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos, direction: Direction): Int = if (state.getValue(STATE) == TimeMachineState.ACTIVE) state.getValue(LEVEL) else 0
+
+    override fun getDrops(state: BlockState, params: LootParams.Builder): List<ItemStack> =
+        if (PazWorldGen.isTimeDimension(params.level.dimension())) emptyList() else super.getDrops(state, params)
+
+    override fun codec(): MapCodec<out TimeMachineBlock> = CODEC
 }

@@ -1,5 +1,6 @@
 package joshxviii.plantz.inventory
 
+import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazMenus
 import net.minecraft.core.BlockPos
 import net.minecraft.world.Container
@@ -7,9 +8,10 @@ import net.minecraft.world.SimpleContainer
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
+import net.minecraft.world.inventory.AbstractFurnaceMenu
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
-import java.util.*
+import net.minecraft.world.item.Items
 
 class TimeMachineMenu(
     containerId: Int,
@@ -18,10 +20,10 @@ class TimeMachineMenu(
     private val timeMachine: Container = SimpleContainer(1),
 ) : AbstractContainerMenu(PazMenus.TIME_MACHINE_MENU, containerId) {
 
-    val batterySlot: Slot = addSlot(Slot(timeMachine, 0, 80, 39))
+    val batterySlot: Slot = addSlot(BatterySlot(timeMachine, 0, 42, 42))
 
     init {
-        addStandardInventorySlots(inventory, 8, 98)
+        addStandardInventorySlots(inventory, 24, 101)
     }
 
     override fun quickMoveStack(player: Player, slotIndex: Int): ItemStack {
@@ -45,4 +47,11 @@ class TimeMachineMenu(
     }
 
     override fun stillValid(player: Player): Boolean = timeMachine.stillValid(player)
+}
+
+class BatterySlot(container: Container, slot: Int, x: Int, y: Int) :
+    Slot(container, slot, x, y) {
+    override fun mayPlace(itemStack: ItemStack): Boolean {
+        return itemStack.`is`(PazItems.SUN_BATTERY)
+    }
 }

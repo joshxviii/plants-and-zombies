@@ -3,7 +3,6 @@ package joshxviii.plantz.renderer
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
 import joshxviii.plantz.block.TimeMachineBlock
-import joshxviii.plantz.block.TimeMachineState
 import joshxviii.plantz.block.entity.TimeMachineBlockEntity
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
@@ -30,8 +29,7 @@ class TimeMachineRenderer() : BlockEntityRenderer<TimeMachineBlockEntity, TimeMa
         state.time = blockEntity.getLevel()!!.gameTime.toFloat()
         state.sunPercent = blockEntity.blockState.getValue(TimeMachineBlock.LEVEL).toFloat() / 15.0f
         state.facing = blockEntity.blockState.getValue(TimeMachineBlock.FACING)
-        if (blockEntity.blockState.getValue(TimeMachineBlock.STATE) == TimeMachineState.ACTIVE) state.activePortalTime++
-        else state.activePortalTime = 0
+        state.activePortalTime = blockEntity.activeTime
         super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress)
     }
 

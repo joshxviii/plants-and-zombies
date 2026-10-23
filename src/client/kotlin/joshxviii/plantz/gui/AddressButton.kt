@@ -1,10 +1,12 @@
 package joshxviii.plantz.gui
 
+import com.sun.jna.platform.KeyboardUtils.isPressed
 import joshxviii.plantz.MailboxData
 import joshxviii.plantz.pazResource
 import joshxviii.plantz.renderer.outlineText
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
@@ -12,14 +14,14 @@ import net.minecraft.resources.Identifier
 import net.minecraft.util.ARGB
 
 /**
- * Address button used to populate list in mailbox gui
+ * Address button used to populate mailbox list gui
  */
 class AddressButton(
     val menuData: MailboxData? = null,
     val mailboxData: MailboxData,
     buttonX: Int,
     buttonY: Int,
-    clickAction: OnPress,
+    clickAction: Button.OnPress,
     enabledRequirement: ((button: PazButton) -> Boolean) = { true },
     clickRequirement: ((button: PazButton) -> Boolean) = enabledRequirement,
 ) : PazButton(buttonX, buttonY, 97, 14, clickAction, ADDRESS, ADDRESS_HIGHLIGHTED, ADDRESS_SELECTED, enabledRequirement, clickRequirement, mailboxData.name, menuData?.let { ARGB.addRgb(it.color, 0x333333) }?: -1) {
