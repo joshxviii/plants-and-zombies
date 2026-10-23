@@ -1,8 +1,8 @@
 package joshxviii.plantz.gui
 
-import com.sun.jna.platform.KeyboardUtils.isPressed
 import joshxviii.plantz.MailboxData
 import joshxviii.plantz.pazResource
+import joshxviii.plantz.renderer.PazButton
 import joshxviii.plantz.renderer.outlineText
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor

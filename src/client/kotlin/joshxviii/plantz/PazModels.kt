@@ -256,7 +256,7 @@ object PazModels {
 
         BlockEntityRenderers.register(PazBlocks.FLAG_BLOCK_ENTITY) { FlagRenderer(FlagBlockModel(it.bakeLayer(FlagBlockModel.LAYER_LOCATION))) }
         BlockEntityRenderers.register(PazBlocks.GARDEN_GNOME_ENTITY) { GardenGnomeBlockRenderer(GnomeModel(it.bakeLayer(GnomeModel.LAYER_LOCATION))) }
-        BlockEntityRenderers.register<SunBatteryBlockEntity, SunBatteryRenderer.SunBatteryRenderSate>(PazBlocks.SUN_BATTERY_BLOCK_ENTITY) { SunBatteryRenderer() }
+        BlockEntityRenderers.register(PazBlocks.SUN_BATTERY_BLOCK_ENTITY) { SunBatteryRenderer() }
         BlockEntityRenderers.register(PazBlocks.TIME_MACHINE_ENTITY) { TimeMachineRenderer() }
         BlockEntityRenderers.register(PazBlocks.TIME_PORTAL_ENTITY) { TimePortalRenderer() }
         BlockEntityRenderers.register(PazBlocks.MAILBOX_ENTITY) { MailboxRenderer() }
