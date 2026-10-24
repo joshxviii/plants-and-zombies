@@ -16,11 +16,15 @@
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "player": {
-          "equipment": {
-            "head": {
-              "items": [
-                "plantz:cone"
-              ]
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:equipment": {
+              "head": {
+                "items": [
+                  "plantz:cone"
+                ]
+              }
             }
           }
         }

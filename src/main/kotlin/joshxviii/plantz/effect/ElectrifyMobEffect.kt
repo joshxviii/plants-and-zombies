@@ -40,7 +40,7 @@ class ElectrifyMobEffect(
             val isRootSource = rootCauseEntity?.let { entity.hasSameRootOwner(it) || it.`is`(entity) } ?: false
             val onSameTeam = (entity is Enemy && mob is Enemy) || (entity !is Enemy && mob !is Enemy)
             val canHurt = (rootCauseEntity as? LivingEntity)?.canAttack(entity) ?: true
-            !entity.`is`(mob) && !entity.hurtMarked && !isRootSource && canHurt && onSameTeam
+            !entity.`is`(mob) && !entity.syncVelocity && !isRootSource && canHurt && onSameTeam
         }
         val nearbyTargets = level.getNearbyEntities(LivingEntity::class.java, targetConditions, mob, mob.boundingBox.inflate(ZAP_RANGE))
         nearbyTargets.randomOrNull()?.let {

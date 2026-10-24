@@ -17,9 +17,9 @@
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
               "weight": 8,
-              "functions": [
+              "modifier": [
                 {
-                  "function": "minecraft:set_components",
+                  "type": "minecraft:set_components",
                   "components": {
                     "minecraft:entity_data": {
                       "id": "plantz:potatomine"
@@ -32,9 +32,9 @@
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
               "weight": 6,
-              "functions": [
+              "modifier": [
                 {
-                  "function": "minecraft:set_components",
+                  "type": "minecraft:set_components",
                   "components": {
                     "minecraft:entity_data": {
                       "id": "plantz:cabbagepult"
@@ -47,9 +47,9 @@
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
               "weight": 5,
-              "functions": [
+              "modifier": [
                 {
-                  "function": "minecraft:set_components",
+                  "type": "minecraft:set_components",
                   "components": {
                     "minecraft:entity_data": {
                       "id": "plantz:kernelpult"
@@ -62,9 +62,9 @@
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
               "weight": 4,
-              "functions": [
+              "modifier": [
                 {
-                  "function": "minecraft:set_components",
+                  "type": "minecraft:set_components",
                   "components": {
                     "minecraft:entity_data": {
                       "id": "plantz:cherrybomb"
@@ -76,12 +76,10 @@
           ]
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:random_chance",
-          "chance": 0.4
-        }
-      ]
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.4
+      }
     }
   ]
 }

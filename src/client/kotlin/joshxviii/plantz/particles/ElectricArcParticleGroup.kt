@@ -9,7 +9,6 @@ import net.minecraft.client.particle.ParticleGroup
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.culling.Frustum
-import net.minecraft.client.renderer.rendertype.OutputTarget
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.state.level.CameraRenderState
@@ -24,7 +23,7 @@ class ElectricArcParticleGroup(engine: ParticleEngine) : ParticleGroup<ElectricA
             "electric_arc",
             RenderSetup.builder(RenderPipelines.BEACON_BEAM_TRANSLUCENT)
                 .withTexture("Sampler0", pazResource("textures/particle/electric_arc.png"))
-                .setOutputTarget(OutputTarget.MAIN_TARGET)
+
                 .createRenderSetup()
         )
     }

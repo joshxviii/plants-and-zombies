@@ -8,7 +8,7 @@ import net.fabricmc.fabric.api.event.registry.DynamicRegistries
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.HolderSet
-import net.minecraft.core.RegistryCodecs
+import net.minecraft.core.registries.codec.RegistryCodecs
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
@@ -91,7 +91,7 @@ data class SeedMutationRule(
         val CODEC: Codec<SeedMutationRule> = RecordCodecBuilder.create { inst ->
             inst.group(
                 Codec.FLOAT.optionalFieldOf("chance", 1f).forGetter { it.chance },
-                RegistryCodecs.homogeneousList(Registries.BIOME).optionalFieldOf("biome").forGetter { it.biomes },
+                Biome.LIST_CODEC.optionalFieldOf("biome").forGetter { it.biomes },
                 WeatherPredicate.CODEC.optionalFieldOf("weather").forGetter { it.weather },
                 TimePredicate.CODEC.optionalFieldOf("time").forGetter { it.time },
                 BuiltInRegistries.ENTITY_TYPE.holderByNameCodec().fieldOf("result").forGetter { it.result },

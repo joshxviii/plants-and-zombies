@@ -9,9 +9,9 @@
           "type": "minecraft:item",
           "name": "plantz:seed_packet",
           "weight": 1,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_components",
+              "type": "minecraft:set_components",
               "components": {
                 "minecraft:entity_data": {
                   "id": "plantz:ice_peashooter"
@@ -21,26 +21,29 @@
           ]
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:entity_properties",
-          "entity": "attacker",
-          "predicate": {
-            "type": "#plantz:drop_loot_when_killed_by"
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "minecraft:entity_properties",
+            "entity": "attacker",
+            "predicate": {
+              "minecraft:entity_type": "#plantz:drop_loot_when_killed_by"
+            }
+          },
+          {
+            "type": "minecraft:random_chance",
+            "chance": 0.06
           }
-        },
-        {
-          "condition": "minecraft:random_chance",
-          "chance": 0.06
-        }
-      ]
+        ]
+      }
     },
     {
       "bonus_rolls": 0,
       "entries": [
         {
           "type": "minecraft:item",
-          "functions": [
+          "modifier": [
             {
               "add": false,
               "count": {
@@ -48,7 +51,7 @@
                 "max": 1,
                 "min": 0
               },
-              "function": "minecraft:set_count"
+              "type": "minecraft:set_count"
             },
             {
               "count": {
@@ -57,33 +60,36 @@
                 "min": 1
               },
               "enchantment": "minecraft:looting",
-              "function": "minecraft:enchanted_count_increase"
+              "type": "minecraft:enchanted_count_increase"
             }
           ],
           "name": "minecraft:diamond"
         }
       ],
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:entity_properties",
-          "entity": "attacker",
-          "predicate": {
-            "type": "#plantz:drop_loot_when_killed_by"
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "minecraft:entity_properties",
+            "entity": "attacker",
+            "predicate": {
+              "minecraft:entity_type": "#plantz:drop_loot_when_killed_by"
+            }
+          },
+          {
+            "type": "minecraft:random_chance",
+            "chance": 0.2
           }
-        },
-        {
-          "condition": "minecraft:random_chance",
-          "chance": 0.2
-        }
-      ]
+        ]
+      }
     },
     {
       "rolls": 1,
       "entries": [
         {
           "type": "minecraft:item",
-          "functions": [
+          "modifier": [
             {
               "add": false,
               "count": {
@@ -91,7 +97,7 @@
                 "max": 2,
                 "min": 0
               },
-              "function": "minecraft:set_count"
+              "type": "minecraft:set_count"
             },
             {
               "count": {
@@ -100,7 +106,7 @@
                 "min": 0
               },
               "enchantment": "minecraft:looting",
-              "function": "minecraft:enchanted_count_increase"
+              "type": "minecraft:enchanted_count_increase"
             }
           ],
           "name": "minecraft:snowball"

@@ -185,7 +185,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
     }
 
     override fun getLookControl(): LookControl =  if (smashAttackTime>0) noLookControl else super.getLookControl()
-    override fun getMoveControl(): MoveControl = if (smashAttackTime>0) noMoveControl else super.getMoveControl()
+    override fun getMoveControl(): MoveControl<*> = if (smashAttackTime>0) noMoveControl else super.getMoveControl()
     override fun isWithinMeleeAttackRange(target: LivingEntity): Boolean = if (smashAttackTime>0) false else super.isWithinMeleeAttackRange(target)
 
     override fun tick() {
@@ -224,7 +224,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
             }
         }
 
-        if (punchAttackTime>0 || swinging) {
+        if (punchAttackTime>0 || isSwinging) {
             punchAttackAnimation.startIfStopped(tickCount)
             if (punchAttackTime++>30) {
                 punchAttackAnimation.stop()
@@ -254,8 +254,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
                 val level = level() as? ServerLevel?: return
                 entity.hurtServer(level, this.damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 2.5f)
                 entity.knockback(
-                    0.2, position().x - entity.position().x, position().z - entity.position().z
-                )
+                    0.2, position().x - entity.position().x, position().z - entity.position().z, damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 2.5f)
             }
         }
     }
@@ -331,14 +330,14 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
             gargantuar.hasImp = false
             val level = gargantuar.level() as ServerLevel
 
-            val spawnDirection = gargantuar.calculateViewVector(0f, gargantuar.yBodyRot+35).scale(2.4)
+            val spawnDirection = Entity.calculateViewVector(0f, gargantuar.yBodyRot+35).scale(2.4)
             val spawnPos = Vec3(
                 spawnDirection.x + gargantuar.x,
                 spawnDirection.y + gargantuar.y+2.5f,
                 spawnDirection.z + gargantuar.z
             )
            PazEntities.IMP.create(level, EntitySpawnReason.MOB_SUMMONED)?.let { imp ->
-                val lookDirection = gargantuar.calculateViewVector(0f, gargantuar.yRot)
+                val lookDirection = Entity.calculateViewVector(0f, gargantuar.yRot)
                 imp.snapTo(spawnPos, gargantuar.yRot, 0.0f)
                 imp.applyImpulse(lookDirection.x, lookDirection.y, lookDirection.z, 1.0f, 0f)
                 if (gargantuar.variant == GargantuarVariant.PIRATE) imp.variant = ImpVariant.PIRATE

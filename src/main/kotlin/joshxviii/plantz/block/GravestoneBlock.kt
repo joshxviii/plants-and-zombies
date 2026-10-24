@@ -1,6 +1,5 @@
 package joshxviii.plantz.block
 
-import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.block.entity.GravestoneBlockEntity
 import net.minecraft.core.BlockPos
@@ -30,7 +29,7 @@ import net.minecraft.world.phys.shapes.VoxelShape
 
 class GravestoneBlock(properties: Properties) : BaseEntityBlock(properties), SimpleWaterloggedBlock {
     companion object {
-        val CODEC: MapCodec<GravestoneBlock> = simpleCodec(::GravestoneBlock)
+
         val SHAPE: VoxelShape = Util.make {
             Shapes.or(
                 column(16.0, 6.0, 0.0, 2.0),
@@ -104,5 +103,4 @@ class GravestoneBlock(properties: Properties) : BaseEntityBlock(properties), Sim
         return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random)
     }
 
-    override fun codec(): MapCodec<out GravestoneBlock> { return CODEC }
 }

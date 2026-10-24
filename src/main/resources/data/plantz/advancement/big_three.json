@@ -18,7 +18,11 @@
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {
-          "type": "plantz:all_star"
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "plantz:all_star"
+          }
         }
       }
     },
@@ -26,7 +30,11 @@
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {
-          "type": "plantz:disco_zombie"
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "plantz:disco_zombie"
+          }
         }
       }
     },
@@ -34,7 +42,11 @@
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {
-          "type": "plantz:zombie_yeti"
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "plantz:zombie_yeti"
+          }
         }
       }
     }

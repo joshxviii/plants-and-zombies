@@ -1,6 +1,6 @@
 package joshxviii.plantz.gui
 
-import com.mojang.blaze3d.pipeline.RenderPipeline
+import com.mojang.renderpearl.api.pipeline.RenderPipeline
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
@@ -37,7 +37,7 @@ class HeadHudMarker(
         pose.pushPose()
         pose.translate(cx, cy, if (outlinePad>0f) 149.0 else 150.0)
         pose.translate(0.0, (ICON_SIZE + outlinePad)*0.5, 0.0)
-        pose.mulPose(Axis.YP.rotationDegrees(180.0f))
+        pose.rotate(Axis.YP.rotationDegrees(180.0f))
         pose.scale(scale, scale, scale)
         if (outlinePad>0f) pose.scale(outlinePad, outlinePad, outlinePad)
         model.head.setPos(0f, 0f, 0f)

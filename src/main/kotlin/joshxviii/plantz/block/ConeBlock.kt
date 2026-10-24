@@ -1,6 +1,5 @@
 package joshxviii.plantz.block
 
-import com.mojang.serialization.MapCodec
 import net.minecraft.core.BlockPos
 import net.minecraft.util.Util
 import net.minecraft.world.level.BlockGetter
@@ -12,7 +11,7 @@ import net.minecraft.world.phys.shapes.VoxelShape
 
 class ConeBlock(properties: Properties) : Block(properties) {
     companion object {
-        val CODEC: MapCodec<ConeBlock> = simpleCodec(::ConeBlock)
+
         val SHAPE: VoxelShape = Util.make {
             Shapes.or(
                 column(12.0, 0.0, 2.0),
@@ -26,5 +25,4 @@ class ConeBlock(properties: Properties) : Block(properties) {
         return SHAPE
     }
 
-    override fun codec(): MapCodec<out ConeBlock> { return CODEC }
 }

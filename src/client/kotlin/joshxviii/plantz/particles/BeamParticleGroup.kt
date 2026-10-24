@@ -9,7 +9,6 @@ import net.minecraft.client.particle.ParticleGroup
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.culling.Frustum
-import net.minecraft.client.renderer.rendertype.OutputTarget
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.state.level.CameraRenderState
@@ -24,14 +23,14 @@ class BeamParticleGroup(engine: ParticleEngine) : ParticleGroup<BeamParticle>(en
             "outer_beam",
             RenderSetup.builder(RenderPipelines.BEACON_BEAM_TRANSLUCENT)
                 .withTexture("Sampler0", pazResource("textures/particle/beam_outer.png"))
-                .setOutputTarget(OutputTarget.MAIN_TARGET)
+
                 .createRenderSetup()
         )
         val INNER_BEAM = RenderType.create(
             "beam",
             RenderSetup.builder(RenderPipelines.BEACON_BEAM_TRANSLUCENT)
                 .withTexture("Sampler0", pazResource("textures/particle/beam.png"))
-                .setOutputTarget(OutputTarget.MAIN_TARGET)
+
                 .createRenderSetup()
         )
     }

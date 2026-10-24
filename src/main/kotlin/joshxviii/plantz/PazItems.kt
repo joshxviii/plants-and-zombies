@@ -20,7 +20,6 @@ import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.item.*
 import joshxviii.plantz.item.component.*
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
-import net.fabricmc.fabric.api.registry.FuelValueEvents
 import net.fabricmc.fabric.impl.item.ItemComponentTooltipProviderRegistryImpl
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -43,6 +42,11 @@ import net.minecraft.world.item.*
 import net.minecraft.world.item.Item.BASE_ATTACK_DAMAGE_ID
 import net.minecraft.world.item.Item.BASE_ATTACK_SPEED_ID
 import net.minecraft.world.item.Items.GLASS_BOTTLE
+import net.minecraft.world.item.component.Compostable
+import net.minecraft.world.item.component.CookingFuel
+import net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt
+import net.minecraft.world.level.storage.loot.providers.number.floats.ResolvableFloat
+import net.minecraft.world.level.storage.loot.providers.number.floats.ContextFloatProviders
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.item.component.UseCooldown
 import net.minecraft.world.item.equipment.ArmorMaterials
@@ -298,19 +302,24 @@ object PazItems {
 
     fun initialize() {
 
-        FuelValueEvents.BUILD.register { builder, context ->
-            builder.add(SUN, (context.baseSmeltTime()*0.5).toInt())
-            builder.add(NEWSPAPER, context.baseSmeltTime())
+        DefaultItemComponentEvents.MODIFY.register { context ->
+            context.modify(SUN) { builder ->
+                builder.set(DataComponents.COOKING_FUEL, CookingFuel(ResolvableInt.Constant(100), ResolvableFloat.fromKey(ContextFloatProviders.COOKING_DEFAULT_SPEED_MULTIPLIER)))
+            }
+            context.modify(NEWSPAPER) { builder ->
+                builder.set(DataComponents.COOKING_FUEL, CookingFuel(ResolvableInt.Constant(200), ResolvableFloat.fromKey(ContextFloatProviders.COOKING_DEFAULT_SPEED_MULTIPLIER)))
+            }
+            context.modify(SEED_PACKET) { builder ->
+                builder.set(DataComponents.COMPOSTABLE, Compostable(net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders.COMPOSTABLE_ALWAYS_ADD_ONE))
+            }
         }
 
-        ComposterBlock.COMPOSTABLES.put(SEED_PACKET.asItem(), 1.0f)
-
         // Modify components
-        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_WATER)
-        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_SUN)
-        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
-        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BRAINZ_ALLOY_COST)
-        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BLOCKS_PROJECTILE_DAMAGE)
+        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_WATER) { it }
+        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_SUN) { it }
+        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST) { it }
+        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BRAINZ_ALLOY_COST) { it }
+        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BLOCKS_PROJECTILE_DAMAGE) { it }
 
         DefaultItemComponentEvents.MODIFY.register {
             it.modify(Items.BUCKET) { builder ->
@@ -376,7 +385,7 @@ object PazItems {
                         val balloonItem = dispensed.item as? BalloonItem ?: return super.execute(source, dispensed)
                         val balloonEntity = PazEntities.BALLOON.create(level, EntitySpawnReason.DISPENSER)?: return dispensed
                         balloonEntity.dyeColor = balloonItem.color
-                        balloonEntity.snapTo(balloonPos.center)
+                        balloonEntity.snapTo(net.minecraft.world.phys.Vec3.atCenterOf(balloonPos))
                         balloonEntity.applyImpulse(facing.unitVec3, pow = 0.15f, uncertainty = 20.0f)
 
                         if (level.addFreshEntity(balloonEntity)) {

@@ -50,7 +50,7 @@ object PazBlocks {
             .sound(SoundType.STONE)
             .strength(0.2F)
             .noOcclusion()
-            .pushReaction(PushReaction.NORMAL),
+            .pushReaction(PushReaction.PUSH_PULL),
         ::PlantPotBlock
     )
     @JvmField val ZEN_PLANT_POT: Block = registerBlock(
@@ -59,7 +59,7 @@ object PazBlocks {
             .sound(SoundType.WOOD)
             .strength(0.2F)
             .noOcclusion()
-            .pushReaction(PushReaction.NORMAL),
+            .pushReaction(PushReaction.PUSH_PULL),
         ::ZenPlantPotBlock
     )
     @JvmField val WATERING_CAN_BLOCK: Block = registerBlock(
@@ -68,7 +68,7 @@ object PazBlocks {
             .sound(SoundType.LANTERN)
             .strength(0.18F)
             .noOcclusion()
-            .pushReaction(PushReaction.DESTROY),
+            .pushReaction(PushReaction.POPPED),
         ::WateringCanBlock,
         null
     )
@@ -78,7 +78,7 @@ object PazBlocks {
             .sound(SoundType.COPPER_BULB)
             .strength(0.25F)
             .noOcclusion()
-            .pushReaction(PushReaction.BLOCK)
+            .pushReaction(PushReaction.IMMOVEABLE)
             .lightLevel(SunBatteryBlock.LIGHT_EMISSION),
         ::SunBatteryBlock,
         null
@@ -95,7 +95,7 @@ object PazBlocks {
             .sound(SoundType.COPPER_GRATE)
             .strength(0.7F)
             .noOcclusion()
-            .pushReaction(PushReaction.BLOCK)
+            .pushReaction(PushReaction.IMMOVEABLE)
             .lightLevel(TimeMachineBlock.LIGHT_EMISSION),
         ::TimeMachineBlock,
         Item.Properties()
@@ -184,7 +184,7 @@ object PazBlocks {
             .sound(SoundType.CANDLE)
             .instabreak()
             .noOcclusion()
-            .pushReaction(PushReaction.DESTROY),
+            .pushReaction(PushReaction.POPPED),
         ::ConeBlock,
         Item.Properties()
             .component(PazComponents.BLOCKS_PROJECTILE_DAMAGE, BlocksProjectileDamage(breakChance = 0.12f))
@@ -251,7 +251,7 @@ object PazBlocks {
             .sound(SoundType.WOOD)
             .instabreak()
             .noCollision()
-            .pushReaction(PushReaction.DESTROY),
+            .pushReaction(PushReaction.POPPED),
         ::FlagBlock,
         Item.Properties()
             .stacksTo(16)
@@ -276,7 +276,7 @@ object PazBlocks {
             .sound(SoundType.WOOD)
             .instabreak()
             .noCollision()
-            .pushReaction(PushReaction.DESTROY),
+            .pushReaction(PushReaction.POPPED),
         ::FlagBlock,
         Item.Properties()
             .stacksTo(16)
@@ -307,7 +307,7 @@ object PazBlocks {
         BlockBehaviour.Properties.of()
             .sound(SoundType.TUFF_BRICKS)
             .strength(19.5F)
-            .pushReaction(PushReaction.BLOCK)
+            .pushReaction(PushReaction.IMMOVEABLE)
             .requiresCorrectToolForDrops(),
         ::GravestoneBlock,
     )
@@ -359,7 +359,7 @@ object PazBlocks {
             .sound(SoundType.DECORATED_POT)
             .strength(1.8F)
             .noOcclusion()
-            .pushReaction(PushReaction.DESTROY)
+            .pushReaction(PushReaction.POPPED)
     }
 
     private fun mailboxProperties(mapColor: MapColor = MapColor.SNOW): BlockBehaviour.Properties {
@@ -368,7 +368,7 @@ object PazBlocks {
             .sound(SoundType.LANTERN)
             .strength(1.3F)
             .noOcclusion()
-            .pushReaction(PushReaction.BLOCK)
+            .pushReaction(PushReaction.IMMOVEABLE)
     }
 
     fun initialize() {

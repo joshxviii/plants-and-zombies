@@ -10,9 +10,9 @@ import net.minecraft.client.particle.SplashParticle
 
 object PazParticles {
     @JvmField
-    val ELECTRIC_ARC = ParticleRenderType(pazResource("electric_arc").toString())
+    val ELECTRIC_ARC = ParticleRenderType(pazResource("electric_arc").toString(), "plantz_electric_arc")
     @JvmField
-    val BEAM = ParticleRenderType(pazResource("beam").toString())
+    val BEAM = ParticleRenderType(pazResource("beam").toString(), "plantz_beam")
 
     fun registerAll() {
         // particle groups

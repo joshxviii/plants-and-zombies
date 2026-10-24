@@ -65,13 +65,13 @@ class FlagRenderer(
         if (PazConfig.SHOW_DEBUG_INFO) submitNodeCollector.submitNameTag(
             poseStack, Vec3(0.5,1.0,0.5), -20,
             Component.literal("${state.health} / ${state.maxHealth}").withColor(0xFFFFFFF),
-            true, -1, 20.0, camera
+            true, -1, camera
         )
 
         val material = state.sprite?: return
         val renderType = material.renderType { RenderTypes.entityCutout(it) }
         poseStack.translate(0.5f, 0.0f, 0.5f)
-        poseStack.mulPose(Axis.YP.rotationDegrees(state.angle+90f))
+        poseStack.rotate(Axis.YP.rotationDegrees(state.angle+90f))
         submitNodeCollector.submitModel(
             flagModel,
             state,
@@ -79,9 +79,11 @@ class FlagRenderer(
             renderType,
             state.lightCoords,
             OverlayTexture.NO_OVERLAY,
-            0,
-            state.breakProgress
+            0
         )
+        state.breakProgress?.let { overlay ->
+            submitNodeCollector.submitCrumblingOverlay(flagModel, state, poseStack, renderType, state.lightCoords, OverlayTexture.NO_OVERLAY, -1, overlay)
+        }
     }
 }
 

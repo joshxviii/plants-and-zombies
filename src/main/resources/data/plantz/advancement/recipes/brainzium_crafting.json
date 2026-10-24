@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "plantz:brainzium"
+        "recipes": "plantz:brainz_alloy"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

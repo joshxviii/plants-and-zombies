@@ -19,6 +19,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class AvatarRendererMixin {
     @Inject(at = @At("HEAD"), method = "getArmPose(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/client/model/HumanoidModel$ArmPose;", cancellable = true)
     private static void p(Avatar avatar, ItemStack itemInHand, InteractionHand hand, CallbackInfoReturnable<HumanoidModel.ArmPose> cir) {
-        if (!avatar.swinging && itemInHand.is(PazItems.DYE_BLASTER) && avatar.isUsingItem()) cir.setReturnValue(HumanoidModel.ArmPose.CROSSBOW_HOLD);
+        if (!avatar.isSwinging() && itemInHand.is(PazItems.DYE_BLASTER) && avatar.isUsingItem()) cir.setReturnValue(HumanoidModel.ArmPose.CROSSBOW_HOLD);
     }
 }

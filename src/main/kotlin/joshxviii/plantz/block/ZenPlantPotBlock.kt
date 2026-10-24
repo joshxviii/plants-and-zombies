@@ -1,6 +1,5 @@
 package joshxviii.plantz.block
 
-import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PlantHeadAttachment
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -33,7 +32,7 @@ import net.minecraft.world.phys.shapes.VoxelShape
 
 class ZenPlantPotBlock(properties: Properties) : HorizontalDirectionalBlock(properties), SimpleWaterloggedBlock {
     companion object {
-        val CODEC: MapCodec<ZenPlantPotBlock> = simpleCodec(::ZenPlantPotBlock)
+
         val SHAPE_INSIDE = column(12.0, 7.0, 9.0)
         val SHAPE: VoxelShape = Util.make {
             Shapes.or(
@@ -108,5 +107,4 @@ class ZenPlantPotBlock(properties: Properties) : HorizontalDirectionalBlock(prop
         return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random)
     }
 
-    override fun codec(): MapCodec<out ZenPlantPotBlock> { return CODEC }
 }

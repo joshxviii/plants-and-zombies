@@ -9,13 +9,14 @@
           "type": "minecraft:item",
           "name": "minecraft:enchanted_book",
           "weight": 10,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_enchantments",
+              "type": "minecraft:set_enchantments",
               "enchantments": {
                 "minecraft:protection": {
                   "min": 1,
-                  "max": 3
+                  "max": 3,
+                  "type": "minecraft:uniform"
                 }
               }
             }
@@ -25,13 +26,14 @@
           "type": "minecraft:item",
           "name": "minecraft:enchanted_book",
           "weight": 10,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_enchantments",
+              "type": "minecraft:set_enchantments",
               "enchantments": {
                 "minecraft:looting": {
                   "min": 1,
-                  "max": 3
+                  "max": 3,
+                  "type": "minecraft:uniform"
                 }
               }
             }
@@ -41,13 +43,14 @@
           "type": "minecraft:item",
           "name": "minecraft:enchanted_book",
           "weight": 10,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_enchantments",
+              "type": "minecraft:set_enchantments",
               "enchantments": {
                 "minecraft:fortune": {
                   "min": 1,
-                  "max": 3
+                  "max": 3,
+                  "type": "minecraft:uniform"
                 }
               }
             }
@@ -56,15 +59,16 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:map",
-          "functions": [
+          "modifier": [
             {
               "decoration": "minecraft:red_x",
-              "function": "minecraft:exploration_map",
+              "type": "minecraft:exploration_map",
               "skip_existing_chunks": false,
-              "zoom": 1
+              "zoom": 1,
+              "destination": "#minecraft:on_treasure_maps"
             },
             {
-              "function": "minecraft:set_name",
+              "type": "minecraft:set_name",
               "name": {
                 "translate": "filled_map.buried_treasure"
               },
@@ -76,15 +80,13 @@
           "type": "minecraft:item",
           "name": "minecraft:trident",
           "weight": 5,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:enchant_randomly",
-              "conditions": [
-                {
-                  "condition": "minecraft:random_chance",
-                  "chance": 0.4
-                }
-              ]
+              "type": "minecraft:enchant_randomly",
+              "condition": {
+                "type": "minecraft:random_chance",
+                "chance": 0.4
+              }
             }
           ]
         },
@@ -92,15 +94,13 @@
           "type": "minecraft:item",
           "name": "minecraft:crossbow",
           "weight": 6,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:enchant_randomly",
-              "conditions": [
-                {
-                  "condition": "minecraft:random_chance",
-                  "chance": 0.4
-                }
-              ]
+              "type": "minecraft:enchant_randomly",
+              "condition": {
+                "type": "minecraft:random_chance",
+                "chance": 0.4
+              }
             }
           ]
         },
@@ -113,10 +113,11 @@
           "type": "minecraft:item",
           "name": "minecraft:diamond",
           "weight": 6,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
+                "type": "minecraft:uniform",
                 "min": 2,
                 "max": 5
               }

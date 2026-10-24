@@ -21,7 +21,24 @@
       "modifier": "override",
       "argument": false
     },
-    "minecraft:visual/sky_light_factor": 0.7
+    "minecraft:visual/sky_light_factor": 0.7,
+    "minecraft:gameplay/natural_mob_spawns": {
+      "modifier": "override",
+      "argument": {
+        "spawn_costs": {},
+        "spawns_by_category": {
+          "ambient": [
+            {
+              "type": "minecraft:bat",
+              "weight": 10,
+              "count": 8
+            }
+          ],
+          "monster": [],
+          "creature": []
+        }
+      }
+    }
   },
   "carvers": [
     "minecraft:cave",
@@ -96,18 +113,5 @@
     ]
   ],
   "has_precipitation": true,
-  "spawn_costs": {},
-  "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "maxCount": 8,
-        "minCount": 8,
-        "weight": 10
-      }
-    ],
-    "monster": [],
-    "creature": []
-  },
   "temperature": 2
 }

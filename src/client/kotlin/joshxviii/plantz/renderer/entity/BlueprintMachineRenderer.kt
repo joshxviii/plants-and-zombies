@@ -81,7 +81,7 @@ class EmissiveBlueprintMachineLayer<M : EntityModel<BlueprintMachineRenderState>
     ) {
         val textureLocation = state.getEmissiveTextureLocation(BlueprintMachineRenderState.TEXTURE_PATH) ?: return
         val renderType = RenderTypes.eyes(textureLocation)
-        submitNodeCollector.order(1).submitModel(this.parentModel, state, poseStack, renderType, lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
+        submitNodeCollector.order(1).submitModel(this.parentModel, state, poseStack, renderType, lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor);
     }
 
     override fun renderType(): RenderType = RenderTypes.lines()

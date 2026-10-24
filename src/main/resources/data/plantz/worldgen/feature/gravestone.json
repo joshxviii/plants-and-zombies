@@ -1,0 +1,44 @@
+{
+  "type": "minecraft:simple_block",
+  "to_place": {
+    "type": "minecraft:weighted",
+    "entries": [
+      {
+        "weight": 1,
+        "data": {
+          "id": "plantz:gravestone",
+          "properties": {
+            "facing": "north"
+          }
+        }
+      },
+      {
+        "weight": 1,
+        "data": {
+          "id": "plantz:gravestone",
+          "properties": {
+            "facing": "south"
+          }
+        }
+      },
+      {
+        "weight": 1,
+        "data": {
+          "id": "plantz:gravestone",
+          "properties": {
+            "facing": "west"
+          }
+        }
+      },
+      {
+        "weight": 1,
+        "data": {
+          "id": "plantz:gravestone",
+          "properties": {
+            "facing": "east"
+          }
+        }
+      }
+    ]
+  }
+}

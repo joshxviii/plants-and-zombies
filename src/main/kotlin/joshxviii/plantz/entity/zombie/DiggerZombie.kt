@@ -64,8 +64,8 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
         return SoundEvents.ZOMBIE_STEP
     }
 
-    override fun getAttackAnim(a: Float): Float {
-        return super.getAttackAnim(a)
+    override fun getSwingAnimation(a: Float): Float {
+        return super.getSwingAnimation(a)
     }
 
     override fun hasLineOfSight(target: Entity): Boolean = true

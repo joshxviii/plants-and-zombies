@@ -9,7 +9,7 @@ import net.minecraft.world.level.storage.loot.BuiltInLootTables
 import net.minecraft.world.level.storage.loot.LootPool
 import net.minecraft.world.level.storage.loot.LootTable
 import net.minecraft.world.level.storage.loot.entries.NestedLootTable
-import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator
+import net.minecraft.world.level.storage.loot.providers.number.floats.ContextFloatProviders
 
 object PazLootTables {
     // seed packets
@@ -45,7 +45,7 @@ object PazLootTables {
 
     fun initialize() {
         LootTableEvents.MODIFY.register { key, builder, source, provider ->
-            LootInjector.attemptInjection(key.identifier(), builder::withPool)
+            LootInjector.attemptInjection(key.identifier(), builder::withPool, provider)
         }
     }
 
@@ -71,13 +71,13 @@ object LootInjector {
     private val injectionIds = injections.map {it.identifier()}.toSet()
     private val villageInjectionIds = villageHouseBuiltInLootTables.map { it.identifier() }.toSet()
 
-    fun attemptInjection(key: Identifier, provider: (LootPool.Builder) -> Unit): Boolean {
+    fun attemptInjection(key: Identifier, provider: (LootPool.Builder) -> Unit, registries: net.minecraft.core.HolderLookup.Provider): Boolean {
         if (!this.injectionIds.contains(key)) {
             return false
         }
         val resulting = convertToPotentialInjected(key)
         PazMain.LOGGER.debug("{}: Injected {} to {}", this::class.simpleName, resulting, key)
-        provider(this.injectLootPool(resulting))
+        provider(this.injectLootPool(resulting, registries))
         return true
     }
 
@@ -88,13 +88,13 @@ object LootInjector {
             pazResource("${PREFIX}${key.path}")
     }
 
-    private fun injectLootPool(resulting: Identifier): LootPool.Builder {
+    private fun injectLootPool(resulting: Identifier, registries: net.minecraft.core.HolderLookup.Provider): LootPool.Builder {
         return LootPool.lootPool()
             .add(
                 NestedLootTable
-                    .lootTableReference(ResourceKey.create(Registries.LOOT_TABLE, resulting))
+                    .lootTableReference(registries.lookupOrThrow(Registries.LOOT_TABLE).getOrThrow(ResourceKey.create(Registries.LOOT_TABLE, resulting)))
                     .setWeight(1)
             )
-            .setBonusRolls(UniformGenerator.between(0F, 1F))
+            .setBonusRolls(ContextFloatProviders.between(0F, 1F))
     }
 }

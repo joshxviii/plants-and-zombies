@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "plantz:sun_bottle"
+        "recipes": "plantz:sun_bottle"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

@@ -1,3 +1,11 @@
+# Minecraft 26.3 (Fabric)
+### Compatibility
+- Port gameplay, rendering, world generation, registries, and data formats to Minecraft 26.3.
+- Build against Fabric Loader 0.19.5 and Fabric API 0.162.0+26.3; update TerraBlender and optional Iris compatibility.
+- Include TerraBlender as an unmodified nested dependency.
+- Validate resource schemas, required tags, and local data references during the build.
+- See `PORTING-26.3.md` for requirements and validation coverage.
+
 # Changelog 1.6
 ### Additions
 #### General:

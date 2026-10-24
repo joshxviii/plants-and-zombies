@@ -59,19 +59,19 @@ public class SoldierZombieModel<S extends PazZombieRenderState> extends PazZombi
 
     @Override
     public void setupAnim(@NotNull S state) {
-        float tempAttackTime = state.attackTime;
-        state.attackTime = 0;
+        float tempAttackTime = state.swingAnimation;
+        state.swingAnimation = 0;
         super.setupAnim(state);
 
         float animationPos = state.walkAnimationPos;
         float animationSpeed = state.walkAnimationSpeed;
-        if (state.attackTime<=0) this.rightArm.xRot = Mth.cos(animationPos * 0.6662F + Mth.PI) * 0.6F * animationSpeed * 0.5F / state.speedValue;
-        if (state.attackTime<=0) this.leftArm.xRot = Mth.cos(animationPos * 0.6662F) * 0.6F * animationSpeed * 0.5F / state.speedValue;
+        if (state.swingAnimation<=0) this.rightArm.xRot = Mth.cos(animationPos * 0.6662F + Mth.PI) * 0.6F * animationSpeed * 0.5F / state.speedValue;
+        if (state.swingAnimation<=0) this.leftArm.xRot = Mth.cos(animationPos * 0.6662F) * 0.6F * animationSpeed * 0.5F / state.speedValue;
         var armRot = state.xRot * (Mth.PI / 180f) - Mth.HALF_PI;
         if (state.isAggressive) {
             if (state.mainArm == HumanoidArm.RIGHT) this.rightArm.xRot = armRot;
             else this.leftArm.xRot = armRot;
         }
-        state.attackTime = tempAttackTime;
+        state.swingAnimation = tempAttackTime;
     }
 }

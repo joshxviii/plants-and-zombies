@@ -2,6 +2,7 @@
   "additional_wants": {
     "id": "plantz:sun",
     "count": {
+      "type": "minecraft:uniform",
       "min": 10,
       "max": 16
     }
@@ -13,6 +14,7 @@
   "reputation_discount": 0.3,
   "wants": {
     "count": {
+      "type": "minecraft:uniform",
       "min": 10,
       "max": 15
     },

@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "plantz:plantz_flag"
+        "recipes": "plantz:plantz_flag"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

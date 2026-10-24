@@ -15,7 +15,7 @@
     "craft_flag": {
       "trigger": "minecraft:recipe_crafted",
       "conditions": {
-        "recipe_id": "plantz:plantz_flag"
+        "recipes": "plantz:plantz_flag"
       }
     }
   },

@@ -26,7 +26,7 @@ class ZombieDrone(type: EntityType<out ZombieDrone>, level: Level) : ZombieRobot
     override fun tick() {
         super.tick()
 
-        if (actionTime>0 || swinging) {
+        if (actionTime>0 || isSwinging) {
             actionAnimation.startIfStopped(tickCount)
             if (actionTime++>20) {
                 actionAnimation.stop()

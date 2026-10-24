@@ -62,7 +62,7 @@ class DestroyFlagGoal(
 
     override fun start() {
         mob.isAggressive = true
-        targetFlagPos?.center?.let {
+        targetFlagPos?.let(net.minecraft.world.phys.Vec3::atCenterOf)?.let {
             mob.moveControl.setWantedPosition(it.x, it.y, it.z, 1.0)
         }
         mob.navigation.moveTo(path, 1.0)
@@ -87,12 +87,12 @@ class DestroyFlagGoal(
         }
 
         val reach = mob.attackRange()
-        if (flagPos.distSqr(mob.blockPosition()) > reach) flagPos.center.let { mob.moveControl.setWantedPosition(it.x, it.y, it.z, 1.0) }
+        if (flagPos.distSqr(mob.blockPosition()) > reach) net.minecraft.world.phys.Vec3.atCenterOf(flagPos).let { mob.moveControl.setWantedPosition(it.x, it.y, it.z, 1.0) }
         val canReach = mob.navigation.path?.canReachTarget(flagPos) == true
         if (flagPos.distSqr(mob.blockPosition()) < if (canReach) reach else reach*reach) {
-            if (!mob.swinging) {
+            if (!mob.isSwinging) {
                 damageFlag(flagPos)
-                mob.swing(mob.usedItemHand)
+                mob.swing(mob.usedItemHand, net.minecraft.world.item.component.SwingAnimation.DEFAULT)
             }
         }
     }
@@ -118,7 +118,7 @@ class DestroyFlagGoal(
 
     fun canSeeFlag(): Boolean {
         targetFlagPos?.let {
-            return mob.level().clip(ClipContext(mob.eyePosition, it.above().center, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, mob)).type == HitResult.Type.MISS
+            return mob.level().clip(ClipContext(mob.eyePosition, net.minecraft.world.phys.Vec3.atCenterOf(it.above()), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, mob)).type == HitResult.Type.MISS
         }
         return false
     }

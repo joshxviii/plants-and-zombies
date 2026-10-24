@@ -56,15 +56,15 @@ class GravestoneBlockEntity(
         if ( !isDarkEnough(level) && !level.getBiome(pos).`is`(PazTags.Biomes.GRAVESTONE_IGNORE_BRIGHTNESS) ) return false
 
         val nearbyPlayer = level.getNearestPlayer(
-            pos.center.x,
-            pos.center.y,
-            pos.center.z,
+            net.minecraft.world.phys.Vec3.atCenterOf(pos).x,
+            net.minecraft.world.phys.Vec3.atCenterOf(pos).y,
+            net.minecraft.world.phys.Vec3.atCenterOf(pos).z,
             PLAYER_RANGE.toDouble(),
             true
         )
         if (nearbyPlayer == null) return false
 
-        val aabb = AABB.ofSize(pos.center, 32.0, 16.0, 32.0)
+        val aabb = AABB.ofSize(net.minecraft.world.phys.Vec3.atCenterOf(pos), 32.0, 16.0, 32.0)
         val nearbyZombies = level.getEntitiesOfClass(Zombie::class.java, aabb) { zombie ->
             true
         }
@@ -94,16 +94,16 @@ class GravestoneBlockEntity(
         ticksSinceLastSpawn = 0
         level.sendParticles(
             PazServerParticles.ZOMBIE_OMEN,
-            pos.center.x,
-            pos.center.y,
-            pos.center.z,
+            net.minecraft.world.phys.Vec3.atCenterOf(pos).x,
+            net.minecraft.world.phys.Vec3.atCenterOf(pos).y,
+            net.minecraft.world.phys.Vec3.atCenterOf(pos).z,
             4, 0.25, 0.125, 0.25, 0.0
         )
         level.sendParticles(
             PazServerParticles.ZOMBIE_OMEN,
-            spawnPos.center.x,
-            spawnPos.center.y,
-            spawnPos.center.z,
+            net.minecraft.world.phys.Vec3.atCenterOf(spawnPos).x,
+            net.minecraft.world.phys.Vec3.atCenterOf(spawnPos).y,
+            net.minecraft.world.phys.Vec3.atCenterOf(spawnPos).z,
             3, 0.15, 0.0, 0.15, 0.0
         )
         level.playSound(null, pos, PazSounds.APPLY_ZOMBIE_OMEN, SoundSource.BLOCKS, 0.75f, 2.0f)

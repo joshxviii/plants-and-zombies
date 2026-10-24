@@ -14,11 +14,11 @@
           "type": "minecraft:item",
           "name": "minecraft:experience_bottle",
           "weight": 10,
-          "conditions": [],
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
+                "type": "minecraft:uniform",
                 "min": 2,
                 "max": 4
               }
@@ -29,9 +29,9 @@
           "type": "minecraft:item",
           "name": "minecraft:potion",
           "weight": 10,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_potion",
+              "type": "minecraft:set_potion",
               "id": "minecraft:strong_healing"
             }
           ]
@@ -40,11 +40,11 @@
           "type": "minecraft:item",
           "name": "plantz:brainz_alloy",
           "weight": 12,
-          "conditions": [],
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
+                "type": "minecraft:uniform",
                 "min": 2,
                 "max": 7
               }
@@ -55,11 +55,11 @@
           "type": "minecraft:item",
           "name": "plantz:cone",
           "weight": 3,
-          "conditions": [],
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
+                "type": "minecraft:uniform",
                 "min": 1,
                 "max": 3
               }
@@ -69,10 +69,7 @@
         {
           "type": "minecraft:item",
           "name": "plantz:ducky_tube",
-          "weight": 3,
-          "conditions": [],
-          "functions": [
-          ]
+          "weight": 3
         },
         {
           "type": "minecraft:loot_table",

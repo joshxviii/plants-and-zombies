@@ -61,8 +61,6 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     @Shadow
     public abstract boolean hasEffect(Holder<MobEffect> effect);
 
-    @Shadow
-    public int swingTime;
 
     @Shadow
     public abstract @org.jspecify.annotations.Nullable MobEffectInstance getEffect(Holder<MobEffect> effect);

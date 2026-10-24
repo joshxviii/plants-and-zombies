@@ -85,14 +85,12 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
         super.doPush(entity)
         if (chargingTime>=0 && this.isAlive) {
             if (entity is Zombie) entity.knockback(
-                0.7, position().x - entity.position().x, position().z - entity.position().z
-            )
+                0.7, position().x - entity.position().x, position().z - entity.position().z, damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 0f)
             else if (entity is LivingEntity) {
                 val level = level() as? ServerLevel?: return
                 entity.hurtServer(level, this.damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 1.5f)
                 entity.knockback(
-                    2.0, position().x - entity.position().x, position().z - entity.position().z
-                )
+                    2.0, position().x - entity.position().x, position().z - entity.position().z, damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 1.5f)
             }
         }
     }

@@ -6,20 +6,19 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "condition": "minecraft:random_chance",
-              "chance": 0.015
-            }
-          ],
-          "functions": [
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.015
+          },
+          "modifier": [
             {
               "count": 1,
-              "function": "minecraft:set_count"
+              "type": "minecraft:set_count"
             },
             {
-              "function": "minecraft:set_damage",
+              "type": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.2,
                 "max": 0.9
               },
@@ -30,15 +29,13 @@
         }
       ],
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:entity_properties",
-          "entity": "attacker",
-          "predicate": {
-            "type": "#plantz:drop_loot_when_killed_by"
-          }
+      "condition": {
+        "type": "minecraft:entity_properties",
+        "entity": "attacker",
+        "predicate": {
+          "minecraft:entity_type": "#plantz:drop_loot_when_killed_by"
         }
-      ]
+      }
     }
   ],
   "random_sequence": "minecraft:entities/all_star"

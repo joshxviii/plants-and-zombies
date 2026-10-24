@@ -1,5 +1,6 @@
 package joshxviii.plantz.entity.projectile
 
+import net.minecraft.world.entity.EntityTypes
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.createFallingBlock
 import net.minecraft.core.particles.ExplosionParticleInfo
@@ -24,13 +25,13 @@ import java.util.*
 class PowderSnowChunk(
     val level: Level,
     val mob: Mob
-) : ThrowableItemProjectile(EntityType.SNOWBALL, mob, level, Items.AIR.defaultInstance) {
+) : ThrowableItemProjectile(EntityTypes.SNOWBALL, mob, level, Items.AIR.defaultInstance) {
 
     companion object {
         val EXPLOSION_DAMAGE_CALCULATOR: ExplosionDamageCalculator = SimpleExplosionDamageCalculator(false, true, Optional.ofNullable(null), Optional.ofNullable(null))
     }
 
-    private val block : FallingBlockEntity? = createFallingBlock(this.level(), this.blockPosition().above().center, Blocks.POWDER_SNOW.defaultBlockState())
+    private val block : FallingBlockEntity? = createFallingBlock(this.level(), net.minecraft.world.phys.Vec3.atCenterOf(this.blockPosition().above()), Blocks.POWDER_SNOW.defaultBlockState())
 
     init {
         block?.dropItem = false

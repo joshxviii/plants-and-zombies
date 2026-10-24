@@ -60,7 +60,7 @@ open class PlantRenderer(
         if (PazConfig.SHOW_DEBUG_INFO) collector.submitNameTag(
             poseStack, Vec3(0.0,state.eyeHeight.toDouble(),0.0), -20,
             Component.literal("${state.plantState.name}, ${state.cooldown}").withColor(0xFFFFFFF),
-            true, -1, 20.0, camera
+            true, -1, camera
         )
 
         model = if (state.isBaby && babyModel != null) babyModel else defaultModel
@@ -161,7 +161,7 @@ class EmissivePlantLayer<M : EntityModel<PlantRenderState>>(
         xRot: Float
     ) {
         val textureLocation = state.getEmissiveTextureLocation(TEXTURE_PATH, state.getSuffixes()) ?: return
-        submitNodeCollector.order(1).submitModel(this.parentModel, state, poseStack, RenderTypes.eyes(textureLocation), lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
+        submitNodeCollector.order(1).submitModel(this.parentModel, state, poseStack, RenderTypes.eyes(textureLocation), lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor);
     }
 
     override fun renderType(): RenderType = RenderTypes.lines()
@@ -183,7 +183,7 @@ class SunGlowLayer<M : EntityModel<PlantRenderState>>(
         val color = ARGB.color(Mth.floor(alphaPercent * 0xFF), 0xFFFFFF)
 
         val glowTexture = state.getTextureLocation(TEXTURE_PATH, state.getSuffixes().apply { add("glow") })
-        submitNodeCollector.submitModel(this.parentModel, state, poseStack, RenderTypes.eyes(glowTexture), LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, color, null, -1, null);
+        submitNodeCollector.submitModel(this.parentModel, state, poseStack, RenderTypes.eyes(glowTexture), LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, color, null, -1);
     }
     override fun renderType(): RenderType = RenderTypes.lines()
 }

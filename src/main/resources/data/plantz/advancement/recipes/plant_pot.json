@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "plantz:plant_pot"
+        "recipes": "plantz:plant_pot"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

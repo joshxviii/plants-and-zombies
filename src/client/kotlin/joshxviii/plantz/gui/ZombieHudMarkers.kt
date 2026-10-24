@@ -126,7 +126,7 @@ object ZombieHudMarkers {
 
     fun collect(client: Minecraft): List<Marker> {
         val level = client.level ?: return emptyList()
-        val cam = client.gameRenderer.mainCamera.position()
+        val cam = client.gameRenderer.mainCamera().position()
 
         return buildList {
             for (entity in level.entitiesForRendering()) {
@@ -151,7 +151,7 @@ object ZombieHudMarkers {
 
     fun project(worldPos: Vec3): Vec2? {
         val mc = Minecraft.getInstance()
-        val cam = mc.gameRenderer.mainCamera
+        val cam = mc.gameRenderer.mainCamera()
         val w = mc.window.guiScaledWidth.toDouble()
         val h = mc.window.guiScaledHeight.toDouble()
 

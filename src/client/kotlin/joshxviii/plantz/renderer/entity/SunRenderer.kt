@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.state.EntityRenderState
-import net.minecraft.client.renderer.rendertype.OutputTarget
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.state.level.CameraRenderState
@@ -45,7 +44,7 @@ class SunRenderer(context: EntityRendererProvider.Context) :
         val gc = 0xFFFF77
         val bc = ((Mth.sin(rr + 10.0) + r) * xo * br).toInt()
         poseStack.translate(0.0f, 0.1f, 0.0f)
-        poseStack.mulPose(camera.orientation)
+        poseStack.rotate(camera.orientation)
         val s = 1.2f-(8.0f/(state.value.coerceAtLeast(1)+8f))
         poseStack.scale(s, s, s)
         val timeLeft = floor(state.lifeTime - state.ageInTicks).toInt()
@@ -82,7 +81,6 @@ class SunRenderer(context: EntityRendererProvider.Context) :
                 "sun",
                 RenderSetup.builder(RenderPipelines.ENERGY_SWIRL)
                     .withTexture("Sampler0", SUN_LOCATION)
-                    .setOutputTarget(OutputTarget.ITEM_ENTITY_TARGET)
                     .useLightmap()
                     .useOverlay()
                     .affectsCrumbling()

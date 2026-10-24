@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "plantz:mail_collection_box"
+        "recipes": "plantz:mail_collection_box"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

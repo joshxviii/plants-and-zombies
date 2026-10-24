@@ -29,10 +29,10 @@ class BalloonRenderer(
     ) {
         poseStack.pushPose()
 
-        poseStack.mulPose(Axis.YP.rotationDegrees(180.0f))
+        poseStack.rotate(Axis.YP.rotationDegrees(180.0f))
 
-        poseStack.mulPose(Axis.XP.rotationDegrees(-state.tiltX))
-        poseStack.mulPose(Axis.ZP.rotationDegrees(-state.tiltZ))
+        poseStack.rotate(Axis.XP.rotationDegrees(-state.tiltX))
+        poseStack.rotate(Axis.ZP.rotationDegrees(-state.tiltZ))
 
         poseStack.scale(-1f, -1f, 1f)
         poseStack.translate(0.0f, -1.501f, 0.0f)
@@ -43,9 +43,7 @@ class BalloonRenderer(
             getTextureLocation(state),
             state.lightCoords,
             OverlayTexture.NO_OVERLAY,
-            state.outlineColor,
-            null
-        )
+            state.outlineColor)
         poseStack.popPose()
         super.submit(state, poseStack, collector, camera)
     }

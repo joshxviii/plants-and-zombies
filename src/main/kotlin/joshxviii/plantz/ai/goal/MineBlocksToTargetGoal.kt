@@ -99,7 +99,7 @@ class MineBlocksToTargetGoal(
 
         miner.target?.let {// finally just check for blocks in the direction the miner is facing
             if (it.distanceToSqr(miner.position())<2 || it.y > miner.y-2) return false
-            val direction = miner.calculateViewVector(0f,miner.yRot).scale(1.0)
+            val direction = net.minecraft.world.entity.Entity.calculateViewVector(0f,miner.yRot).scale(1.0)
             for (i in listOf(1,0)) {
                 val testBlock = BlockPos.containing(
                     Vec3(
@@ -127,10 +127,10 @@ class MineBlocksToTargetGoal(
         if (breakTime>=0) {
             miner.navigation.setSpeedModifier(0.0)
             //level.levelEvent(LevelEvent.PARTICLES_ELECTRIC_SPARK, targetBlock, 15)
-            if (!miner.swinging) {
+            if (!miner.isSwinging) {
                 level.playSound(null, targetBlock, targetBlockState.soundType.hitSound, SoundSource.BLOCKS, 0.3f,
                     level.random.nextFloat() * 0.2f + 0.5f)
-                miner.swing(miner.usedItemHand)
+                miner.swing(miner.usedItemHand, net.minecraft.world.item.component.SwingAnimation.DEFAULT)
             }
         }
         breakTime++

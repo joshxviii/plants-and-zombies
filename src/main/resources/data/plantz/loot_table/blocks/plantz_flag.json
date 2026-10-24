@@ -3,34 +3,29 @@
   "pools": [
     {
       "bonus_rolls": 0,
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ],
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      },
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "plantz:plantz_flag",
-          "conditions": []
+          "name": "plantz:plantz_flag"
         }
       ],
       "rolls": 1
     }
   ],
-  "functions": [
+  "modifier": [
     {
-      "function": "minecraft:set_item",
+      "type": "minecraft:set_item",
       "item": "plantz:brainz_flag",
-      "conditions": [
-        {
-          "condition": "minecraft:entity_properties",
-          "entity": "attacker",
-          "predicate": {
-            "type": "#minecraft:zombies"
-          }
+      "condition": {
+        "type": "minecraft:entity_properties",
+        "entity": "attacker",
+        "predicate": {
+          "minecraft:entity_type": "#minecraft:zombies"
         }
-      ]
+      }
     }
   ],
   "random_sequence": "plantz:blocks/plantz_flag"

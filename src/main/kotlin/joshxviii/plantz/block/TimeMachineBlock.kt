@@ -1,6 +1,5 @@
 package joshxviii.plantz.block
 
-import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazItems
@@ -41,7 +40,7 @@ import java.util.function.ToIntFunction
 
 class TimeMachineBlock(properties: Properties) : BaseEntityBlock(properties), SimpleWaterloggedBlock  {
     companion object {
-        val CODEC: MapCodec<TimeMachineBlock> = simpleCodec(::TimeMachineBlock)
+
         val SHAPE: VoxelShape = Util.make {
             Shapes.or(column(16.0, 0.0, 6.0))
         }
@@ -171,5 +170,4 @@ class TimeMachineBlock(properties: Properties) : BaseEntityBlock(properties), Si
         return super.canSurvive(state, level, pos)
     }
 
-    override fun codec(): MapCodec<out TimeMachineBlock> { return CODEC }
 }

@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "plantz:balloon/balloon"
+        "recipes": "plantz:balloon/balloon"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

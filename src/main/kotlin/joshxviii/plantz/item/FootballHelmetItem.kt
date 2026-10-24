@@ -96,8 +96,7 @@ class FootballHelmetItem(properties: Properties) : Item(properties) {
             target.knockback(
                 KNOCKBACK_STRENGTH,
                 -awayX / length,
-                -awayZ / length
-            )
+                -awayZ / length, owner.damageSources().mobAttack(owner), 0f)
         }
     }
 }

@@ -8,9 +8,9 @@
           "type": "minecraft:item",
           "name": "plantz:seed_packet",
           "weight": 1,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_components",
+              "type": "minecraft:set_components",
               "components": {
                 "minecraft:entity_data": {
                   "id": "plantz:hypnoshroom"
@@ -20,19 +20,22 @@
           ]
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:entity_properties",
-          "entity": "attacker",
-          "predicate": {
-            "type": "#plantz:drop_loot_when_killed_by"
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "minecraft:entity_properties",
+            "entity": "attacker",
+            "predicate": {
+              "minecraft:entity_type": "#plantz:drop_loot_when_killed_by"
+            }
+          },
+          {
+            "type": "minecraft:random_chance",
+            "chance": 0.04
           }
-        },
-        {
-          "condition": "minecraft:random_chance",
-          "chance": 0.04
-        }
-      ]
+        ]
+      }
     },
     {
       "rolls": 1,
@@ -43,15 +46,13 @@
           "weight": 1
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:entity_properties",
-          "entity": "attacker",
-          "predicate": {
-            "type": "plantz:backup_dancer"
-          }
+      "condition": {
+        "type": "minecraft:entity_properties",
+        "entity": "attacker",
+        "predicate": {
+          "minecraft:entity_type": "plantz:backup_dancer"
         }
-      ]
+      }
     }
   ],
   "random_sequence": "minecraft:entities/disco_zombie"

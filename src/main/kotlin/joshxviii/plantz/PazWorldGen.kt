@@ -9,8 +9,9 @@ import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.biome.Climate.ParameterPoint
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.levelgen.SurfaceRules
-import net.minecraft.world.level.levelgen.SurfaceRules.RuleSource
+import net.minecraft.world.level.levelgen.material.MaterialRules
+import net.minecraft.world.level.levelgen.material.rule.MaterialRule
+import net.minecraft.core.HolderGetter
 import net.minecraft.world.level.levelgen.placement.CaveSurface
 import terrablender.api.*
 import terrablender.api.ParameterUtils.*
@@ -21,7 +22,9 @@ object PazWorldGen: TerraBlenderApi {
 
     override fun onTerraBlenderInitialized() {
         Regions.register(OverworldRegion("graveyard"))
-        SurfaceRuleManager.addSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD, PazMain.MODID, SurfaceRuleData.makeRules())
+        MaterialRuleManager.addRules(MaterialRuleManager.RuleCategory.OVERWORLD, PazMain.MODID) { registries ->
+            SurfaceRuleData.makeRules(registries.lookupOrThrow(Registries.BIOME))
+        }
     }
 
     @JvmField val GRAVEYARD = registerBiome("graveyard")
@@ -60,33 +63,33 @@ object SurfaceRuleData {
     private val MYCELIUM_BLOCK = makeStateRule(Blocks.MYCELIUM)
     private val STONE = makeStateRule(Blocks.STONE)
 
-    internal fun makeRules(): RuleSource {
-        val isAtOrAboveWaterLevel = SurfaceRules.waterBlockCheck(-1, 0)
+    internal fun makeRules(biomes: HolderGetter<Biome>): MaterialRule {
+        val isAtOrAboveWaterLevel = MaterialRules.waterBlockCheck(-1, 0)
 
-        val myceliumSurface = SurfaceRules.sequence(
-            SurfaceRules.ifTrue(
-                SurfaceRules.ON_FLOOR,
+        val myceliumSurface = MaterialRules.sequence(
+            MaterialRules.ifTrue(
+                MaterialRules.stoneDepthCheck(0, false, CaveSurface.FLOOR),
                 MYCELIUM_BLOCK
             ),
-            SurfaceRules.ifTrue(
-                SurfaceRules.UNDER_FLOOR,
+            MaterialRules.ifTrue(
+                MaterialRules.stoneDepthCheck(0, true, CaveSurface.FLOOR),
                 DIRT
             ),
-            SurfaceRules.ifTrue(
-                SurfaceRules.stoneDepthCheck(2, true, 0, CaveSurface.FLOOR),
+            MaterialRules.ifTrue(
+                MaterialRules.stoneDepthCheck(2, true, 0, CaveSurface.FLOOR),
                 STONE
             )
         )
 
-        val undergroundStone = SurfaceRules.ifTrue(
-            SurfaceRules.stoneDepthCheck(3, true, 0, CaveSurface.FLOOR),
+        val undergroundStone = MaterialRules.ifTrue(
+            MaterialRules.stoneDepthCheck(3, true, 0, CaveSurface.FLOOR),
             STONE
         )
 
-        return SurfaceRules.sequence(
-            SurfaceRules.ifTrue(
-                SurfaceRules.isBiome(GRAVEYARD),
-                SurfaceRules.sequence(
+        return MaterialRules.sequence(
+            MaterialRules.ifTrue(
+                MaterialRules.isBiome(biomes, GRAVEYARD),
+                MaterialRules.sequence(
                     myceliumSurface,
                     undergroundStone
                 )
@@ -94,7 +97,7 @@ object SurfaceRuleData {
         )
     }
 
-    private fun makeStateRule(block: Block): RuleSource {
-        return SurfaceRules.state(block.defaultBlockState())
+    private fun makeStateRule(block: Block): MaterialRule {
+        return MaterialRules.state(block.defaultBlockState())
     }
 }

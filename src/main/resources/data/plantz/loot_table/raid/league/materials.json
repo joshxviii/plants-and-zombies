@@ -3,6 +3,7 @@
   "pools": [
     {
       "rolls": {
+        "type": "minecraft:uniform",
         "min": 2,
         "max": 3
       },
@@ -11,10 +12,11 @@
           "type": "minecraft:item",
           "name": "minecraft:enchanted_golden_apple",
           "weight": 7,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
+                "type": "minecraft:uniform",
                 "min": 2,
                 "max": 5
               }
@@ -25,10 +27,11 @@
           "type": "minecraft:item",
           "name": "minecraft:diamond",
           "weight": 14,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
+                "type": "minecraft:uniform",
                 "min": 6,
                 "max": 10
               }
@@ -39,10 +42,11 @@
           "type": "minecraft:item",
           "name": "minecraft:emerald",
           "weight": 13,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
+                "type": "minecraft:uniform",
                 "min": 10,
                 "max": 15
               }
@@ -53,20 +57,19 @@
           "type": "minecraft:item",
           "name": "minecraft:gold_block",
           "weight": 5,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
+                "type": "minecraft:uniform",
                 "min": 1,
                 "max": 2
               }
             }
           ]
         }
-      ],
-      "functions": []
+      ]
     }
   ],
-  "functions": [],
   "random_sequence": "plantz:raid/default_mail_rewards"
 }

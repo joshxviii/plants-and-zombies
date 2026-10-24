@@ -176,14 +176,14 @@ class MailboxBlockEntity(
     fun getHeroMail(lootTable: ResourceKey<LootTable>): List<ItemStack> {
         val level = level as? ServerLevel ?: return emptyList()
         val params: LootParams = LootParams.Builder(level)
-            .withParameter(LootContextParams.ORIGIN, blockPos.center)
+            .withParameter(LootContextParams.ORIGIN, net.minecraft.world.phys.Vec3.atCenterOf(blockPos))
             .create(LootContextParamSets.CHEST)
         val lootTable: LootTable = level.server.reloadableRegistries().getLootTable(lootTable)
         val items = lootTable.getRandomItems(params)
         return items
     }
 
-    private fun getDropPos(): Vec3 = blockState.getValue(FACING).unitVec3.scale(0.6).add(blockPos.center)
+    private fun getDropPos(): Vec3 = blockState.getValue(FACING).unitVec3.scale(0.6).add(net.minecraft.world.phys.Vec3.atCenterOf(blockPos))
     private fun ejectItem(item: ItemStack, glow: Boolean = false) {
         val level = level as? ServerLevel ?: return
         val random = level.getRandom()

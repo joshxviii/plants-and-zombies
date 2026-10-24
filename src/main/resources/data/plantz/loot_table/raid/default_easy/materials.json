@@ -8,10 +8,11 @@
           "type": "minecraft:item",
           "name": "minecraft:baked_potato",
           "weight": 20,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
+                "type": "minecraft:uniform",
                 "min": 3,
                 "max": 8
               }
@@ -22,10 +23,11 @@
           "type": "minecraft:item",
           "name": "minecraft:golden_carrot",
           "weight": 9,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
+                "type": "minecraft:uniform",
                 "min": 2,
                 "max": 4
               }
@@ -36,10 +38,11 @@
           "type": "minecraft:item",
           "name": "minecraft:iron_ingot",
           "weight": 16,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
+                "type": "minecraft:uniform",
                 "min": 1,
                 "max": 5
               }
@@ -50,10 +53,11 @@
           "type": "minecraft:item",
           "name": "minecraft:gold_ingot",
           "weight": 12,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
+                "type": "minecraft:uniform",
                 "min": 1,
                 "max": 3
               }
@@ -64,20 +68,19 @@
           "type": "minecraft:item",
           "name": "minecraft:emerald",
           "weight": 10,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
+                "type": "minecraft:uniform",
                 "min": 2,
                 "max": 3
               }
             }
           ]
         }
-      ],
-      "functions": []
+      ]
     }
   ],
-  "functions": [],
   "random_sequence": "plantz:raid/default_mail_rewards"
 }

@@ -1,6 +1,5 @@
 package joshxviii.plantz.block
 
-import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazItems
@@ -31,7 +30,7 @@ import net.minecraft.world.phys.shapes.VoxelShape
 
 class WateringCanBlock(properties: Properties) : HorizontalDirectionalBlock(properties), SimpleWaterloggedBlock  {
     companion object {
-        val CODEC: MapCodec<WateringCanBlock> = simpleCodec(::WateringCanBlock)
+
         val SHAPE: VoxelShape = Util.make {
             Shapes.or(
                 column(6.0, 0.0, 6.0),
@@ -105,5 +104,4 @@ class WateringCanBlock(properties: Properties) : HorizontalDirectionalBlock(prop
         return canSupportCenter(level, pos.relative(direction), direction.opposite)
     }
 
-    override fun codec(): MapCodec<out WateringCanBlock> { return CODEC }
 }

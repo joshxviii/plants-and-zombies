@@ -3,10 +3,8 @@
   "pools": [
     {
       "rolls": 1,
-      "entries": [
-      ]
+      "entries": []
     }
   ],
-  "functions": [],
   "random_sequence": "plantz:raid/default_mail_rewards"
 }

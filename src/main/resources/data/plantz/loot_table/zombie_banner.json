@@ -7,10 +7,9 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:red_banner",
-          "conditions": [],
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_components",
+              "type": "minecraft:set_components",
               "components": {
                 "minecraft:banner_patterns": [
                   {

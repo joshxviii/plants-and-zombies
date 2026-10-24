@@ -21,12 +21,10 @@
           ]
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:random_chance",
-          "chance": 0.3
-        }
-      ]
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.3
+      }
     }
   ]
 }

@@ -44,6 +44,7 @@ dependencies {
 	implementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
 	implementation "com.github.glitchfiend:TerraBlender-fabric:${project.terrablender_version}"
+	include "com.github.glitchfiend:TerraBlender-fabric:${project.terrablender_version}"
 
 	compileOnly "maven.modrinth:iris:${project.iris_version}"
 }
@@ -90,6 +91,24 @@ java {
 	sourceCompatibility = JavaVersion.VERSION_25
 	targetCompatibility = JavaVersion.VERSION_25
 }
+
+sourceSets {
+	portValidation {
+		compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+		runtimeClasspath += sourceSets.main.runtimeClasspath
+	}
+}
+
+tasks.register("validatePortResources", JavaExec) {
+	group = "verification"
+	description = "Decodes mod data with Minecraft 26.3 codecs without starting the game."
+	dependsOn portValidationClasses
+	classpath = sourceSets.portValidation.runtimeClasspath
+	mainClass = "joshxviii.plantz.PortResourceValidation"
+	args file("src/main/resources/data").absolutePath
+}
+
+check.dependsOn tasks.named("validatePortResources")
 
 jar {
 	inputs.property "archivesName", project.base.archivesName

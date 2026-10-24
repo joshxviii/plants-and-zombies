@@ -192,7 +192,7 @@ abstract class PazProjectile(
         return ProjectileUtil.getManyEntityHitResult(
             this.level(), this, from, to,
             this.boundingBox.expandTowards(this.deltaMovement),
-            canHitPredicate, false
+            canHitPredicate, false, false
         )
     }
 
@@ -219,7 +219,7 @@ abstract class PazProjectile(
         if(target.hurtServer(serverLevel, source, damage)) {
             if (target is LivingEntity) {
                 val knockbackDirection = calculateHorizontalHurtKnockbackDirection(target, source)
-                target.knockback(knockback, -knockbackDirection.leftDouble(), -knockbackDirection.rightDouble())
+                target.knockback(knockback, -knockbackDirection.leftDouble(), -knockbackDirection.rightDouble(), source, damage)
                 playSound(getHitSound(), 0.3f, 1.8f)
                 afterHitEntityEffect(target)
             }
@@ -299,7 +299,7 @@ abstract class PazProjectile(
                 val source = this.damageSources().source(damageType, this, getOwner())
                 if(nearby.hurtServer(serverLevel, source, (damage/direction.length()*distance).toFloat())) {
                     val knockbackDirection = calculateHorizontalHurtKnockbackDirection(nearby, source)
-                    nearby.knockback(knockback, -knockbackDirection.leftDouble(), -knockbackDirection.rightDouble())
+                    nearby.knockback(knockback, -knockbackDirection.leftDouble(), -knockbackDirection.rightDouble(), source, (damage / direction.length() * distance).toFloat())
                     if (nearby is ServerPlayer) nearby.connection.send(ClientboundSetEntityMotionPacket(nearby))
                 }
             }

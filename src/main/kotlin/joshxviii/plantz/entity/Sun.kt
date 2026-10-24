@@ -36,7 +36,6 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
     private var followingEntity: LivingEntity? = null
     private var batteryPos: Vec3? = null
     private var batteryState: BlockState? = null
-    private val interpolation = InterpolationHandler(this)
 
     companion object {
         val DATA_VALUE: EntityDataAccessor<Int> =
@@ -149,7 +148,6 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
     override fun getDefaultGravity(): Double = 0.015
 
     override fun tick() {
-        interpolation.interpolate()
         if (firstTick && level().isClientSide) firstTick = false
         else {
             super.tick()
@@ -359,5 +357,5 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
 
     override fun getSoundSource(): SoundSource = SoundSource.AMBIENT
 
-    override fun getInterpolation(): InterpolationHandler = interpolation
+    override fun createInterpolationHandler(): InterpolationHandler = net.minecraft.world.entity.LinearInterpolationHandler.create(this)
 }

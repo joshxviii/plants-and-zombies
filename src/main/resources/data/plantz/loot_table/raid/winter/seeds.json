@@ -8,10 +8,11 @@
           "type": "minecraft:item",
           "name": "plantz:sun_bottle",
           "weight": 20,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
+                "type": "minecraft:uniform",
                 "min": 2,
                 "max": 10
               }
@@ -22,9 +23,9 @@
           "type": "minecraft:item",
           "name": "plantz:seed_packet",
           "weight": 10,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_components",
+              "type": "minecraft:set_components",
               "components": {
                 "minecraft:entity_data": {
                   "id": "plantz:coffeebean"
@@ -32,8 +33,9 @@
               }
             },
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
+                "type": "minecraft:uniform",
                 "min": 1,
                 "max": 3
               }
@@ -44,9 +46,9 @@
           "type": "minecraft:item",
           "name": "plantz:seed_packet",
           "weight": 4,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_components",
+              "type": "minecraft:set_components",
               "components": {
                 "minecraft:entity_data": {
                   "id": "plantz:ice_peashooter"
@@ -54,8 +56,9 @@
               }
             },
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
+                "type": "minecraft:uniform",
                 "min": 1,
                 "max": 2
               }
@@ -66,9 +69,9 @@
           "type": "minecraft:item",
           "name": "plantz:seed_packet",
           "weight": 3,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_components",
+              "type": "minecraft:set_components",
               "components": {
                 "minecraft:entity_data": {
                   "id": "plantz:winter_melon"
@@ -76,15 +79,13 @@
               }
             },
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": 1
             }
           ]
         }
-      ],
-      "functions": []
+      ]
     }
   ],
-  "functions": [],
   "random_sequence": "plantz:raid/default_mail_rewards"
 }

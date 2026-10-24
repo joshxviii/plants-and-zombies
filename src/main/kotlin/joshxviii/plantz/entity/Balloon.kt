@@ -60,7 +60,6 @@ class Balloon(
 
     var clientTiltZ: Float = 0f
     var clientTiltX: Float = 0f
-    private val interpolation = InterpolationHandler(this)
 
     private var balloonLeashData: LeashData? = null
     var dyeColor: DyeColor
@@ -86,7 +85,7 @@ class Balloon(
         }
     }
 
-    override fun getInterpolation(): InterpolationHandler = interpolation
+    override fun createInterpolationHandler(): InterpolationHandler = net.minecraft.world.entity.LinearInterpolationHandler.create(this)
 
     override fun load(input: ValueInput) {
         super.load(input)

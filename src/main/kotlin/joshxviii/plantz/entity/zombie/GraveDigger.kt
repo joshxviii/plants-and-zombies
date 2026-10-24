@@ -72,7 +72,7 @@ class GraveDigger(type: EntityType<out GraveDigger>, level: Level) : PazZombie(t
         output.putInt("dug_graves", dugGraves)
     }
 
-    override fun getMoveControl(): MoveControl = if (digTime>0) noMoveControl else super.getMoveControl()
+    override fun getMoveControl(): MoveControl<*> = if (digTime>0) noMoveControl else super.getMoveControl()
     override fun getLookControl(): LookControl = if (digTime>0) noLookControl else super.getLookControl()
     override fun isWithinMeleeAttackRange(target: LivingEntity): Boolean = if (digTime>0) false else super.isWithinMeleeAttackRange(target)
 
@@ -177,7 +177,7 @@ class GraveDigger(type: EntityType<out GraveDigger>, level: Level) : PazZombie(t
             gravedigger.dugGraves++
             digTime = DIG_DELAY_TIME + gravedigger.random.nextInt(20)
             val level = gravedigger.level() as ServerLevel
-            val graveStone = createFallingBlock(level, gravePos.center, PazBlocks.GRAVESTONE.defaultBlockState().setValue(FACING, Direction.fromYRot(angleToTarget * Mth.RAD_TO_DEG - 90)))?: return
+            val graveStone = createFallingBlock(level, net.minecraft.world.phys.Vec3.atCenterOf(gravePos), PazBlocks.GRAVESTONE.defaultBlockState().setValue(FACING, Direction.fromYRot(angleToTarget * Mth.RAD_TO_DEG - 90)))?: return
             graveStone.setHurtsEntities(2.5f, 10)
             graveStone.dropItem = true
             gravedigger.playSound(SoundEvents.MUDDY_MANGROVE_ROOTS_BREAK, 1.4f, 0.9f)

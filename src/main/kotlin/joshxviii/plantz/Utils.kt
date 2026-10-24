@@ -180,7 +180,7 @@ data class HSV(
 }
 
 fun createFallingBlock(level: Level, pos: Vec3, blockState: BlockState): FallingBlockEntity? {
-    val block = EntityType.FALLING_BLOCK.create(level, EntitySpawnReason.SPAWN_ITEM_USE)?: return null
+    val block = EntityTypes.FALLING_BLOCK.create(level, EntitySpawnReason.SPAWN_ITEM_USE)?: return null
     val tag = block.saveAsCompoundTag()
     tag.store("BlockState", BlockState.CODEC, blockState);
     TypedEntityData.of(block.type, tag).loadInto(block)
@@ -290,7 +290,7 @@ fun Player.getItemCount(itemType: Item): Int = inventory.countItem(itemType)
 
 fun Player.removeItemFromInventory(itemType: Item?, amount: Int = 1): Int {
     if(itemType == null || itemType == Items.AIR) return 0
-    return inventory.clearOrCountMatchingItems({ it.`is`(itemType) }, amount, inventoryMenu.getCraftSlots())
+    return inventory.clearOrCountMatchingItems({ it.`is`(itemType) }, false, amount, inventoryMenu.getCraftSlots())
 }
 
 fun Float.percentFormat(): String = "%.0f%%".format(this * 100)

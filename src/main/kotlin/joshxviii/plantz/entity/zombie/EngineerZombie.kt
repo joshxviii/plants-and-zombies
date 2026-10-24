@@ -58,7 +58,7 @@ class EngineerZombie(type: EntityType<out EngineerZombie>, level: Level) : PazZo
         entityData.define(BUILD_TIME_ID, 0)
     }
 
-    override fun getMoveControl(): MoveControl = if (buildingTime>0) noMoveControl else super.getMoveControl()
+    override fun getMoveControl(): MoveControl<*> = if (buildingTime>0) noMoveControl else super.getMoveControl()
     override fun getLookControl(): LookControl = if (buildingTime>0) noLookControl else super.getLookControl()
     override fun isWithinMeleeAttackRange(target: LivingEntity): Boolean = if (buildingTime>0) false else super.isWithinMeleeAttackRange(target)
 
@@ -178,7 +178,7 @@ class EngineerZombie(type: EntityType<out EngineerZombie>, level: Level) : PazZo
                 bot.finalizeSpawn(level, level.getCurrentDifficultyAt(buildPos), EntitySpawnReason.REINFORCEMENT, PazZombieGroupData(isRaider = true, isCountedTowardRaidHealth = false))
                 bot.owner = engineerZombie
                 level.addFreshEntity(bot)
-                level.gameEvent(GameEvent.ENTITY_PLACE, buildPos.center, GameEvent.Context.of(engineerZombie))
+                level.gameEvent(GameEvent.ENTITY_PLACE, net.minecraft.world.phys.Vec3.atCenterOf(buildPos), GameEvent.Context.of(engineerZombie))
             }
         }
     }

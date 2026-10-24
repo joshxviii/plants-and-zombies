@@ -44,8 +44,8 @@ class ProjectileRenderer<M: EntityModel<ProjectileRenderState>>(
         camera: CameraRenderState
     ) {
         poseStack.pushPose()
-        poseStack.mulPose(Axis.YP.rotationDegrees(state.yRot - 90.0f))
-        poseStack.mulPose(Axis.ZP.rotationDegrees(state.xRot))
+        poseStack.rotate(Axis.YP.rotationDegrees(state.yRot - 90.0f))
+        poseStack.rotate(Axis.ZP.rotationDegrees(state.xRot))
         poseStack.translate(0.0, -1.5, 0.0)
         val tint = state.color?: -1
         val texture = state.getProjectileTextureLocation()
@@ -58,9 +58,7 @@ class ProjectileRenderer<M: EntityModel<ProjectileRenderState>>(
             OverlayTexture.NO_OVERLAY,
             tint,
             null,
-            state.outlineColor,
-            null
-        )
+            state.outlineColor)
         model.setupAnim(state)
         for (layer in renderLayers) {
             layer.submit(poseStack, collector, state.lightCoords, state, state.yRot, state.xRot)
@@ -108,9 +106,7 @@ class EmissiveProjectileLayer<M : EntityModel<ProjectileRenderState>>(
             OverlayTexture.NO_OVERLAY,
             tint,
             null,
-            state.outlineColor,
-            null
-        );
+            state.outlineColor);
     }
 
     override fun renderType(): RenderType = RenderTypes.lines()

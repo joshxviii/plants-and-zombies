@@ -44,7 +44,7 @@ class SpecialEffectsLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(pr
                     .withTexture("Sampler0", entityTexture)
                     .withTexture("Sampler1", NOISE_TEXTURE)
                     .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
-                    .useOverlay()
+                    .useLightmap()
                     .sortOnUpload()
                     .createRenderSetup()
             )
@@ -81,9 +81,9 @@ class SpecialEffectsLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(pr
         poseStack.pushPose()
         humanoidModel.root().translateAndRotate(poseStack)
         humanoidModel.head.translateAndRotate(poseStack)
-        poseStack.mulPose(Axis.YP.rotationDegrees(90f))
-        poseStack.mulPose(Axis.XP.rotationDegrees(25f))
-        poseStack.mulPose(Axis.ZP.rotationDegrees(90f))
+        poseStack.rotate(Axis.YP.rotationDegrees(90f))
+        poseStack.rotate(Axis.XP.rotationDegrees(25f))
+        poseStack.rotate(Axis.ZP.rotationDegrees(90f))
         poseStack.translate(-0.6,-1.4,0.2)
 
         collector.submitModel(
@@ -93,9 +93,7 @@ class SpecialEffectsLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(pr
             RenderTypes.entityCutout(texture),
             lightCoords,
             OverlayTexture.NO_OVERLAY,
-            0,
-            null
-        )
+            0)
         poseStack.popPose()
     }
 
@@ -131,9 +129,7 @@ class SpecialEffectsLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(pr
             OverlayTexture.NO_OVERLAY,
             alphaFromAmplifier(colorMix, amplifier),
             null,
-            state.outlineColor,
-            null
-        )
+            state.outlineColor)
         poseStack.popPose()
     }
 
@@ -192,7 +188,7 @@ abstract class BodyItemAttachmentRenderLayer<S : LivingEntityRenderState, M : En
 
         humanoidModel.root().translateAndRotate(poseStack)
         humanoidModel.body.translateAndRotate(poseStack)
-        poseStack.mulPose(Axis.ZP.rotationDegrees(180.0f))
+        poseStack.rotate(Axis.ZP.rotationDegrees(180.0f))
 
         if (state.isBaby) {
             poseStack.scale(0.5f, 0.5f, 0.5f)

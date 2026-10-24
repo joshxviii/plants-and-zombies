@@ -1,6 +1,5 @@
 package joshxviii.plantz.block
 
-import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PlantHeadAttachment
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -33,7 +32,7 @@ import net.minecraft.world.phys.shapes.VoxelShape
 
 class LawnFlamingo(properties: Properties) : HorizontalDirectionalBlock(properties), SimpleWaterloggedBlock {
     companion object {
-        val CODEC: MapCodec<LawnFlamingo> = simpleCodec(::LawnFlamingo)
+
         val SHAPE: VoxelShape = Util.make {
             Shapes.or(
                 column(6.0, 0.0, 14.0),
@@ -102,5 +101,4 @@ class LawnFlamingo(properties: Properties) : HorizontalDirectionalBlock(properti
         return canSupportCenter(level, pos.relative(direction), direction.opposite)
     }
 
-    override fun codec(): MapCodec<out LawnFlamingo> { return CODEC }
 }

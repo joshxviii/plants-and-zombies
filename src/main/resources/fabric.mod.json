@@ -42,10 +42,11 @@
 		}
 	],
 	"depends": {
-		"fabricloader": ">=0.18.4",
-		"minecraft": "~26.1-",
+		"fabricloader": ">=0.19.5",
+		"minecraft": ">=26.3 <26.4-",
 		"java": ">=25",
-		"fabric-api": "*",
-		"fabric-language-kotlin": "*"
+		"fabric-api": ">=0.162.0",
+		"fabric-language-kotlin": ">=1.13.8",
+		"terrablender": ">=26.3.0.0.9"
 	}
 }

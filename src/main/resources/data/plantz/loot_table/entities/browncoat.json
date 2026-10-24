@@ -11,9 +11,9 @@
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
               "weight": 3,
-              "functions": [
+              "modifier": [
                 {
-                  "function": "minecraft:set_components",
+                  "type": "minecraft:set_components",
                   "components": {
                     "minecraft:entity_data": {
                       "id": "plantz:sunflower"
@@ -26,9 +26,9 @@
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
               "weight": 3,
-              "functions": [
+              "modifier": [
                 {
-                  "function": "minecraft:set_components",
+                  "type": "minecraft:set_components",
                   "components": {
                     "minecraft:entity_data": {
                       "id": "plantz:peashooter"
@@ -41,9 +41,9 @@
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
               "weight": 2,
-              "functions": [
+              "modifier": [
                 {
-                  "function": "minecraft:set_components",
+                  "type": "minecraft:set_components",
                   "components": {
                     "minecraft:entity_data": {
                       "id": "plantz:wallnut"
@@ -55,22 +55,26 @@
           ]
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:entity_properties",
-          "entity": "attacker",
-          "predicate": {
-            "type": "#plantz:drop_loot_when_killed_by"
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "minecraft:entity_properties",
+            "entity": "attacker",
+            "predicate": {
+              "minecraft:entity_type": "#plantz:drop_loot_when_killed_by"
+            }
+          },
+          {
+            "type": "minecraft:random_chance",
+            "chance": 0.02
           }
-        },
-        {
-          "condition": "minecraft:random_chance",
-          "chance": 0.02
-        }
-      ]
+        ]
+      }
     },
     {
       "rolls": {
+        "type": "minecraft:uniform",
         "min": 1,
         "max": 2
       },
@@ -78,30 +82,31 @@
         {
           "type": "minecraft:loot_table",
           "value": "plantz:balloons",
-          "conditions": [
-            {
-              "condition": "minecraft:entity_properties",
-              "entity": "this",
-              "predicate": {
-                "nbt": "{\"variant\":\"balloon\"}"
-              }
+          "condition": {
+            "type": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "minecraft:nbt": "{\"variant\":\"balloon\"}"
             }
-          ]
+          }
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:entity_properties",
-          "entity": "attacker",
-          "predicate": {
-            "type": "#plantz:drop_loot_when_killed_by"
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "minecraft:entity_properties",
+            "entity": "attacker",
+            "predicate": {
+              "minecraft:entity_type": "#plantz:drop_loot_when_killed_by"
+            }
+          },
+          {
+            "type": "minecraft:random_chance",
+            "chance": 0.4
           }
-        },
-        {
-          "condition": "minecraft:random_chance",
-          "chance": 0.4
-        }
-      ]
+        ]
+      }
     }
   ],
   "random_sequence": "minecraft:entities/browncoat"

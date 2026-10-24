@@ -56,7 +56,7 @@ open class PazZombieRenderer(
         if (PazConfig.SHOW_DEBUG_INFO) collector.submitNameTag(
             poseStack, Vec3(0.0,state.eyeHeight.toDouble(),0.0), -20,
             Component.literal("${state.zombieState.name}").withColor(0xFFFFFFF),
-            true, -1, 20.0, camera
+            true, -1, camera
         )
         if (state.zombieState != ZombieState.EMERGING || state.ageInTicks>1) super.submit(state, poseStack, collector, camera)
     }
@@ -126,7 +126,7 @@ class EmissiveZombieLayer<M : EntityModel<PazZombieRenderState>>(
     ) {
         val textureLocation = state.getEmissiveTextureLocation(PazZombieRenderState.TEXTURE_PATH, state.getSuffixes()) ?: return
         val renderType = RenderTypes.eyes(textureLocation)
-        submitNodeCollector.order(1).submitModel(this.parentModel, state, poseStack, renderType, lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
+        submitNodeCollector.order(1).submitModel(this.parentModel, state, poseStack, renderType, lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor);
     }
 
     override fun renderType(): RenderType = RenderTypes.lines()

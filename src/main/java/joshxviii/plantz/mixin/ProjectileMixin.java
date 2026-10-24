@@ -69,7 +69,7 @@ public class ProjectileMixin {
 
                         projectile.playSound(hitSound);
                         var deflection = ProjectileDeflection.REVERSE;
-                        deflection.deflect(projectile, entity, projectile.getRandom());
+                        deflection.deflect(projectile, entity, projectile.getRandom(), new net.minecraft.world.phys.Vec3(1.0, 1.0, 1.0));
                         cir.setReturnValue(deflection);
                     }
                 }

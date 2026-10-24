@@ -9,10 +9,11 @@
           "type": "minecraft:item",
           "name": "minecraft:experience_bottle",
           "weight": 8,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
+                "type": "minecraft:uniform",
                 "min": 3,
                 "max": 6
               }
@@ -23,9 +24,9 @@
           "type": "minecraft:item",
           "name": "minecraft:potion",
           "weight": 8,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_potion",
+              "type": "minecraft:set_potion",
               "id": "minecraft:strength"
             }
           ]
@@ -34,13 +35,14 @@
           "type": "minecraft:item",
           "name": "minecraft:enchanted_book",
           "weight": 10,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_enchantments",
+              "type": "minecraft:set_enchantments",
               "enchantments": {
                 "minecraft:smite": {
                   "min": 1,
-                  "max": 4
+                  "max": 4,
+                  "type": "minecraft:uniform"
                 }
               }
             }
@@ -50,10 +52,11 @@
           "type": "minecraft:item",
           "name": "plantz:sun_bottle",
           "weight": 12,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
+                "type": "minecraft:uniform",
                 "min": 9,
                 "max": 22
               }

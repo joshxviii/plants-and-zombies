@@ -274,9 +274,9 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         nav
     }
 
-    protected val groundMoveControl: MoveControl by lazy { PazMoveControl(this) }
-    protected val flyingMoveControl: FlyingMoveControl by lazy { PazFlyingMoveControl(this, 20, true) }
-    protected val noMoveControl = object : MoveControl(this) { override fun getSpeedModifier(): Double = 0.0 }
+    protected val groundMoveControl: MoveControl<*> by lazy { PazMoveControl(this) }
+    protected val flyingMoveControl: FlyingMoveControl<*> by lazy { PazFlyingMoveControl(this, 20, true) }
+    protected val noMoveControl = object : MoveControl<PazZombie>(this) { override fun getSpeedModifier(): Double = 0.0 }
     protected val noLookControl = object : LookControl(this) {}
 
     fun updateNavigation() {
@@ -308,7 +308,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         return PazGroundPathNavigation(this, level)
     }
 
-    override fun getMoveControl(): MoveControl {
+    override fun getMoveControl(): MoveControl<*> {
         if (isImmobile) return noMoveControl
         if (isFlying) return flyingMoveControl
         return super.getMoveControl()
