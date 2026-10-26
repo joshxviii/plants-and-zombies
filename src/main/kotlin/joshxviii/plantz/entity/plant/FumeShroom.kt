@@ -4,6 +4,7 @@ import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazServerParticles
+import joshxviii.plantz.PazTags
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.ai.goal.BeamAttackGoal
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.state.BlockState
 
 class FumeShroom(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
     companion object {
@@ -84,4 +86,10 @@ class FumeShroom(type: EntityType<out Plant>, level: Level) : Plant(type, level)
         }
         else if (sprayTime > 20) sprayTime = -1
     }
+
+    override fun canSurviveOn(block: BlockState): Boolean {
+        return super.canSurviveOn(block) || block.`is`(PazTags.BlockTags.CAVE_SPAWNABLE_ON)
+    }
+
+    override fun canPlaceOn(block: BlockState): Boolean = super.canSurviveOn(block)
 }

@@ -35,6 +35,8 @@
   "advancements.plantz.craft_plant_flag.description": "Craft a Plantz Flag from a Brainz Flag",
   "advancements.plantz.taco_time": "Taco Time 2x!",
   "advancements.plantz.taco_time.description": "Get to wave 10! You'll receive 2x bonus rewards if you win!",
+  "advancements.plantz.all_gnomes": "I'm a Gnome, I'm a Garden Gnome",
+  "advancements.plantz.all_gnomes.description": "Collect each type of Garden Gnome",
   "advancements.plantz.win_zombie_raid": "Home Lawn Security",
   "advancements.plantz.win_zombie_raid.description": "Defeat the Zombie Raid!",
   "advancements.plantz.win_hardest_raid": "Zomboss's Army",
@@ -83,10 +85,12 @@
   "event.plantz.zombie_raid.huge_wave": "A huge wave of Zombies is approaching!",
   "event.plantz.zombie_raid.special_wave": "Special Wave:",
   "event.plantz.zombie_raid.boss_wave": "Boss Wave:",
-  "event.plantz.zombie_raid.boss_title": "%s",
+  "event.plantz.zombie_raid.boss": "%s",
+  "event.plantz.zombie_raid.boss.spawn": "A boss has spawned: %s",
   "event.plantz.zombie_raid.special_wave.bucket_brigade": "Bucket Brigade!",
   "event.plantz.zombie_raid.special_wave.halftime_showdown": "Half-Time Showdown!",
   "event.plantz.zombie_raid.special_wave.winter_wonderland": "Winter Wonderland!",
+  "event.plantz.zombie_raid.special_wave.zomboween": "Zomboween!",
   "event.plantz.zombie_raid.special_wave.pirate_invasion": "Pirate Invasion!",
   "event.plantz.zombie_raid.special_wave.league_of_awesome": "League of Awesome!",
   "event.plantz.zombie_raid.special_wave.robo_army": "Robo Army!",
@@ -201,6 +205,7 @@
   "item.plantz.green_garden_gnome": "Green Garden Gnome",
   "item.plantz.red_garden_gnome": "Red Garden Gnome",
   "item.plantz.yellow_garden_gnome": "Yellow Garden Gnome",
+  "item.plantz.golden_garden_gnome": "Golden Garden Gnome",
 
   "item.plantz.lawn_flamingo": "Lawn Flamingo",
 
@@ -309,6 +314,7 @@
   "entity.plantz.seashroom": "Sea Shroom",
   "entity.plantz.coffeebean": "Coffee Bean",
   "entity.plantz.grave_buster": "Grave Buster",
+  "entity.plantz.pumpkin": "Pumpkin",
 
   "entity.plantz.browncoat": "Browncoat",
   "entity.plantz.newspaper_zombie": "Newspaper Zombie",

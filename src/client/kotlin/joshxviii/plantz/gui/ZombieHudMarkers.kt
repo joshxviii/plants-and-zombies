@@ -3,7 +3,7 @@ package joshxviii.plantz.gui
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazNetwork
-import joshxviii.plantz.ZombieRaider
+import joshxviii.plantz.entity.isActiveInRaid
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.getHeldBalloons
 import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderState
@@ -133,8 +133,7 @@ object ZombieHudMarkers {
                 if (entity !is Zombie) continue
 
                 if (!PazConfig.ALWAYS_SHOW_HEAD_MARKERS) {
-                    val isFromRaid = (entity as? ZombieRaider)?.`plantz$getIsFromRaid`()?: false
-                    if (!isFromRaid) continue
+                    if (!entity.isActiveInRaid()) continue
                 }
                 if (!isViewObscured(cam, entity)) continue
 

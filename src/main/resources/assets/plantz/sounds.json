@@ -440,6 +440,9 @@
   "music.raid.winter": {
     "sounds": [{ "name": "plantz:music/raid/loon_griefers_high", "volume": 1.0, "pitch": 1.0 }], "subtitle": "plantz.subtitles.music.raid.winter"
   },
+  "music.raid.zomboween": {
+    "sounds": [{ "name": "plantz:music/raid/loon_griefers_high", "volume": 1.0, "pitch": 1.0 }], "subtitle": "plantz.subtitles.music.raid.zomboween"
+  },
   "music.raid.pirate": {
     "sounds": [{ "name": "plantz:music/raid/loon_griefers_high", "volume": 1.0, "pitch": 1.0 }], "subtitle": "plantz.subtitles.music.raid.pirate"
   },

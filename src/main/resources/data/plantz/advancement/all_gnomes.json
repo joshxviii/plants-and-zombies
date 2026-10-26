@@ -1,0 +1,31 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:golden_garden_gnome"
+    },
+    "title": {
+      "translate": "advancements.plantz.all_gnomes"
+    },
+    "description": {
+      "translate": "advancements.plantz.all_gnomes.description"
+    },
+    "frame": "challenge",
+    "hidden": true
+  },
+  "parent": "plantz:taco_time",
+  "criteria": {
+    "has_time_machine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": "plantz:blue_garden_gnome" },
+          { "items": "plantz:green_garden_gnome" },
+          { "items": "plantz:red_garden_gnome" },
+          { "items": "plantz:yellow_garden_gnome" },
+          { "items": "plantz:golden_garden_gnome" }
+        ]
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

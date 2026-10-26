@@ -6,19 +6,28 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "plantz:blue_garden_gnome"
+          "name": "plantz:blue_garden_gnome",
+          "weight": 12
         },
         {
           "type": "minecraft:item",
-          "name": "plantz:red_garden_gnome"
+          "name": "plantz:green_garden_gnome",
+          "weight": 12
         },
         {
           "type": "minecraft:item",
-          "name": "plantz:green_garden_gnome"
+          "name": "plantz:red_garden_gnome",
+          "weight": 12
         },
         {
           "type": "minecraft:item",
-          "name": "plantz:yellow_garden_gnome"
+          "name": "plantz:yellow_garden_gnome",
+          "weight": 12
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:golden_garden_gnome",
+          "weight": 1
         }
       ]
     }

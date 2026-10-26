@@ -9,6 +9,8 @@ import joshxviii.plantz.ai.goal.FlyingPathfindingGoal
 import joshxviii.plantz.ai.pathfinding.PazFlyingPathNavigation
 import joshxviii.plantz.ai.pathfinding.PazGroundPathNavigation
 import joshxviii.plantz.entity.Balloon
+import joshxviii.plantz.entity.ZombieRaider
+import joshxviii.plantz.entity.setCountHealth
 import joshxviii.plantz.item.BalloonItem
 import joshxviii.plantz.raid.ZombieRaid.Companion.RAID_DISTANCE
 import joshxviii.plantz.raid.getZombieRaids
@@ -240,14 +242,6 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     }
 
     override fun pickUpItem(level: ServerLevel, entity: ItemEntity) {
-        if (isBaby) return super.pickUpItem(level, entity)
-        val balloonItem = entity.item.item as? BalloonItem ?: return super.pickUpItem(level, entity)
-
-        val balloonsMissing = (MAX_EQUIPPABLE_BALLOONS - getHeldBalloons().size).coerceIn(0, MAX_EQUIPPABLE_BALLOONS)
-        val count = entity.item.count.coerceAtMost(balloonsMissing)
-        spawnBalloons(count, balloonItem.color)
-        entity.item.shrink(count)
-
         super.pickUpItem(level, entity)
     }
 
@@ -311,6 +305,11 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         if (isImmobile) return noMoveControl
         if (isFlying) return flyingMoveControl
         return super.getMoveControl()
+    }
+
+    override fun getLookControl(): LookControl {
+        if (isImmobile) return noLookControl
+        return super.getLookControl()
     }
 
     override fun registerGoals() {
@@ -419,9 +418,8 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         }
     }
 
-    override fun isImmobile(): Boolean {
-        return if (state==ZombieState.EMERGING || state==ZombieState.RETREATING) true else super.isImmobile()
-    }
+    override fun isImmobile(): Boolean = state==ZombieState.EMERGING || state==ZombieState.RETREATING || super.isImmobile()
+    override fun isWithinMeleeAttackRange(target: LivingEntity): Boolean = !isImmobile && super.isWithinMeleeAttackRange(target)
 
     override fun travel(travelVector: Vec3) {
         if (isFlying && this.isEffectiveAi) {
@@ -517,11 +515,13 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     ): SpawnGroupData? {
         val newData = PazZombieGroupData(
             isRaider = (groupData as? PazZombieGroupData)?.isRaider?: false,
+            isCountedTowardRaidHealth = (groupData as? PazZombieGroupData)?.isCountedTowardRaidHealth?: false,
             isBaby = isBaby && (groupData as? ZombieGroupData)?.isBaby?: false
         )
         val level = level() as ServerLevel
         if (newData.isRaider) {
             val raid = level.getZombieRaids().getNearbyRaid(blockPosition(), RAID_DISTANCE)
+            this.setCountHealth(newData.isCountedTowardRaidHealth)
             raid?.joinRaid(level, this)
         }
 
@@ -541,6 +541,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
 
 class PazZombieGroupData(
     val isRaider: Boolean = false,
+    val isCountedTowardRaidHealth: Boolean = true,
     isBaby: Boolean = false
 ) : Zombie.ZombieGroupData(
     isBaby,

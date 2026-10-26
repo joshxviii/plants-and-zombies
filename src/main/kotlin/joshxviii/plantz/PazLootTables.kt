@@ -25,6 +25,7 @@ object PazLootTables {
     @JvmField val MAIL_REWARD_BUCKET = registerLootTable("raid/mail_reward_bucket")
     @JvmField val MAIL_REWARD_HALFTIME = registerLootTable("raid/mail_reward_halftime")
     @JvmField val MAIL_REWARD_WINTER = registerLootTable("raid/mail_reward_winter")
+    @JvmField val MAIL_REWARD_ZOMBOWEEN = registerLootTable("raid/mail_reward_zomboween")
     @JvmField val MAIL_REWARD_PIRATE = registerLootTable("raid/mail_reward_pirate")
     @JvmField val MAIL_REWARD_ARMY = registerLootTable("raid/mail_reward_army")
     @JvmField val MAIL_REWARD_LEAGUE = registerLootTable("raid/mail_reward_league")
@@ -61,6 +62,7 @@ object LootInjector {
         BuiltInLootTables.VILLAGE_TAIGA_HOUSE,
     )
     private val injections = hashSetOf(
+        BuiltInLootTables.CARVE_PUMPKIN,
         BuiltInLootTables.FISHING_FISH,
         BuiltInLootTables.FISHING_TREASURE,
         BuiltInLootTables.BASTION_TREASURE,

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#plantz:plantable",
+    {
+      "id": "#c:stones",
+      "required": false
+    }
+  ]
+}

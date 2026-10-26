@@ -1,8 +1,10 @@
 package joshxviii.plantz.api
 
 import com.mojang.serialization.Codec
+import com.mojang.serialization.DataResult
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import joshxviii.plantz.PazRegistries
+import joshxviii.plantz.item.SeedPacketItem
 import joshxviii.plantz.pazResource
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries
 import net.minecraft.core.BlockPos
@@ -16,6 +18,8 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.biome.Biome
 import java.util.Optional
@@ -34,18 +38,23 @@ object SeedMutationManager {
         return p
     }
 
-    fun resolve(entity: Entity): EntityType<*> {
-        val level = entity.level() as? ServerLevel ?: return entity.type
-        val data = get(level, entity.type) ?: return entity.type
+    fun resolve(entity: Entity): ItemStack {
+        val default = SeedPacketItem.stackFor(entity.type)
+        val level = entity.level() as? ServerLevel ?: return default
+        val data = get(level, entity.type) ?: return default
         val pos = entity.blockPosition()
         val random = entity.random
 
         for (rule in data.mutations) {
             if (rule.matches(level, pos, random)) {
-                return rule.result.value()
+                return when (val result = rule.result) {
+                    is SeedMutationResult.EntityTypeResult -> SeedPacketItem.stackFor(result.entityType.value())
+                    is SeedMutationResult.ItemStackResult ->
+                        ItemStack(result.item.value(), result.count.roll(random))
+                }
             }
         }
-        return entity.type
+        return default
     }
 }
 
@@ -66,7 +75,7 @@ data class SeedMutationRule(
     val biomes: Optional<HolderSet<Biome>> = Optional.empty(),
     val weather: Optional<WeatherPredicate> = Optional.empty(),
     val time: Optional<TimePredicate> = Optional.empty(),
-    val result: Holder<EntityType<*>>,
+    val result: SeedMutationResult,
 ) {
     fun matches(level: ServerLevel, pos: BlockPos, random: RandomSource): Boolean {
         if (random.nextFloat() >= chance) return false
@@ -94,9 +103,71 @@ data class SeedMutationRule(
                 RegistryCodecs.homogeneousList(Registries.BIOME).optionalFieldOf("biome").forGetter { it.biomes },
                 WeatherPredicate.CODEC.optionalFieldOf("weather").forGetter { it.weather },
                 TimePredicate.CODEC.optionalFieldOf("time").forGetter { it.time },
-                BuiltInRegistries.ENTITY_TYPE.holderByNameCodec().fieldOf("result").forGetter { it.result },
+                SeedMutationResult.CODEC.fieldOf("result").forGetter { it.result },
             ).apply(inst, ::SeedMutationRule)
         }
+    }
+}
+
+sealed interface SeedMutationResult {
+    data class EntityTypeResult(val entityType: Holder<EntityType<*>>) : SeedMutationResult
+    data class ItemStackResult(val item: Holder<Item>, val count: CountRange) : SeedMutationResult {
+        companion object {
+            val CODEC: Codec<ItemStackResult> = RecordCodecBuilder.create { inst ->
+                inst.group(
+                    BuiltInRegistries.ITEM.holderByNameCodec().fieldOf("item").forGetter(ItemStackResult::item),
+                    CountRange.CODEC.optionalFieldOf("count", CountRange(1, 1)).forGetter(ItemStackResult::count),
+                ).apply(inst, ::ItemStackResult)
+            }
+        }
+    }
+
+    companion object {
+        val CODEC: Codec<SeedMutationResult> = Codec.either(
+            BuiltInRegistries.ENTITY_TYPE.holderByNameCodec(),
+            ItemStackResult.CODEC,
+        ).xmap(
+            { result ->
+                result.map({ EntityTypeResult(it) }, { it })
+            },
+            { result ->
+                when (result) {
+                    is EntityTypeResult -> com.mojang.datafixers.util.Either.left(result.entityType)
+                    is ItemStackResult -> com.mojang.datafixers.util.Either.right(result)
+                }
+            }
+        )
+    }
+}
+
+@JvmRecord
+data class CountRange(val min: Int, val max: Int) {
+    fun roll(random: RandomSource): Int = random.nextIntBetweenInclusive(min, max)
+
+    companion object {
+        private val RANGE_CODEC: Codec<CountRange> = RecordCodecBuilder.create { inst ->
+            inst.group(
+                Codec.intRange(1, Int.MAX_VALUE).fieldOf("min").forGetter(CountRange::min),
+                Codec.intRange(1, Int.MAX_VALUE).fieldOf("max").forGetter(CountRange::max),
+            ).apply(inst, ::CountRange)
+        }.flatXmap(
+            { range ->
+                if (range.min <= range.max) DataResult.success(range)
+                else DataResult.error { "Count range minimum must not exceed maximum" }
+            },
+            { DataResult.success(it) },
+        )
+
+        val CODEC: Codec<CountRange> = Codec.either(
+            Codec.intRange(1, Int.MAX_VALUE),
+            RANGE_CODEC,
+        ).xmap(
+            { count -> count.map({ CountRange(it, it) }, { it }) },
+            { count ->
+                if (count.min == count.max) com.mojang.datafixers.util.Either.left(count.min)
+                else com.mojang.datafixers.util.Either.right(count)
+            },
+        )
     }
 }
 

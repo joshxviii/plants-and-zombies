@@ -11,6 +11,7 @@ import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.item.BalloonItem
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup.level
 import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
@@ -39,12 +40,7 @@ class Balloon(
 ) : LeashableEntity(type, level) {
     companion object {
         val DYE_COLOR: EntityDataAccessor<DyeColor> = SynchedEntityData.defineId(Balloon::class.java, DATA_DYE_COLOR)
-
-        val impBallons = mapOf(
-            ImpVariant.IMP to listOf(DyeColor.RED, DyeColor.YELLOW, DyeColor.BLUE),
-            ImpVariant.YETI to listOf(DyeColor.LIGHT_BLUE, DyeColor.WHITE),
-            ImpVariant.PIRATE to listOf(DyeColor.BLACK, DyeColor.RED)
-        )
+        val TIME_UNLEASHED: EntityDataAccessor<Int> = SynchedEntityData.defineId(Balloon::class.java, EntityDataSerializers.INT)
 
         private const val MAX_PULL_PITCH = 25.0f
         private const val PITCH_SPEED_MULTIPLIER = 180.0f
@@ -67,6 +63,10 @@ class Balloon(
         get() = this.entityData.get(DYE_COLOR)
         set(value) = this.entityData.set(DYE_COLOR, value)
 
+    var timeUnleashed: Int
+        get() = this.entityData.get(TIME_UNLEASHED)
+        set(value) = this.entityData.set(TIME_UNLEASHED, value)
+
     fun pop() {
         val level = level() as? ServerLevel ?: return
         playSound(PazSounds.BALLOON_POP)
@@ -84,13 +84,19 @@ class Balloon(
             val floorHeight = y - level().getHeight(Heightmap.Types.WORLD_SURFACE, blockPosition()).toDouble()
             if (floorHeight > POPPING_HEIGHT * if (isLeashed) 1f else 0.5f) pop()
         }
+        if (timeUnleashed > 2400) pop()
     }
 
     override fun getInterpolation(): InterpolationHandler = interpolation
 
+    override fun save(output: ValueOutput): Boolean {
+        output.putInt("unleash_time", timeUnleashed)
+        return super.save(output)
+    }
+
     override fun load(input: ValueInput) {
         super.load(input)
-        val holder = leashHolder
+        timeUnleashed = input.getIntOr("unleash_time", 0)
     }
 
     override fun getLeashHolder(): Entity? {
@@ -100,6 +106,7 @@ class Balloon(
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         entityData.define(DYE_COLOR, DyeColor.WHITE)
+        entityData.define(TIME_UNLEASHED, 0)
     }
 
     override fun baseTick() {
@@ -111,6 +118,8 @@ class Balloon(
     override fun tick() {
         super.tick()
         checkPoppingHeight()
+        if (leashHolder == null) timeUnleashed++
+        else timeUnleashed = 0
         while (yRot - yRotO < -180.0f) yRotO -= 360.0f
         while (yRot - yRotO >= 180.0f) yRotO += 360.0f
 
@@ -139,7 +148,7 @@ class Balloon(
             deltaMovement = deltaMovement.scale(0.98)
         }
 
-        val holder = leashHolder as? LivingEntity ?: return
+        val holder = leashHolder as? LivingEntity?: return
         if ((holder as? Player)?.abilities?.flying == true) return
         if (y < holder.y) return
         val isFlyingMob = (holder is Mob && holder.navigation is FlyingPathNavigation)

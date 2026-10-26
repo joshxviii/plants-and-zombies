@@ -6,8 +6,10 @@
 package joshxviii.plantz.model.zombies;
 
 import joshxviii.plantz.animation.zombies.DiggerZombieAnimation;
+import joshxviii.plantz.renderer.entity.zombie.DiggerZombieRenderState;
 import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
+import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -18,12 +20,19 @@ import static joshxviii.plantz.UtilsKt.pazResource;
 
 public class DiggerZombieModel<S extends PazZombieRenderState> extends PazZombieModel<S> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("digger"), "main");
-	private final KeyframeAnimation actionAnimation;
-
+	private final KeyframeAnimation mineBlockAnimation;
+	private final KeyframeAnimation walkAnimation;
+	private final KeyframeAnimation tunnelDownAnimation;
+	private final KeyframeAnimation tunnelUpAnimation;
 
 	public DiggerZombieModel(final ModelPart root) {
 		super(null, root);
-		this.actionAnimation = DiggerZombieAnimation.action.bake(root);
+		//TODO: figure out how to properly determine the root for custom Paz Zombies :,)
+		var mainRoot = root.hasChild("root") ? root.getChild("root") : root;
+		this.mineBlockAnimation = DiggerZombieAnimation.action.bake(mainRoot);
+		this.walkAnimation = DiggerZombieAnimation.walk.bake(mainRoot);
+		this.tunnelDownAnimation = DiggerZombieAnimation.tunnel_down.bake(mainRoot);
+		this.tunnelUpAnimation = DiggerZombieAnimation.tunnel_up.bake(mainRoot);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -58,11 +67,18 @@ public class DiggerZombieModel<S extends PazZombieRenderState> extends PazZombie
 	//TODO fix swing animation
 	@Override
 	public void setupAnim(@NotNull S state) {
-		float tempAttackTime = state.attackTime;
-		state.attackTime = 0;
 		super.setupAnim(state);
-		state.attackTime = tempAttackTime;
-		actionAnimation.applyWalk(state.attackTime*6f, 1.0f, 1.0f, 1.0f);
+		this.resetPose();
+		AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, state.isAggressive, state);
 
+		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
+		this.head.yRot = state.yRot * (float) (Math.PI / 180.0);
+
+		if (!(state instanceof DiggerZombieRenderState diggerState)) return;
+		walkAnimation.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 2f, 2f);
+		mineBlockAnimation.apply(diggerState.getActionAnimationState(), state.ageInTicks);
+
+		var tunnelUp = diggerState.isTunnelingUp();
+		(tunnelUp ? tunnelUpAnimation : tunnelDownAnimation).apply(diggerState.getTunnelAnimationState(), state.ageInTicks);
 	}
 }

@@ -1,26 +1,23 @@
 package joshxviii.plantz.renderer.entity.plant
 
 import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.math.Axis
 import joshxviii.plantz.PazConfig
 import joshxviii.plantz.ai.PlantState
-import joshxviii.plantz.entity.plant.BonkChoy
-import joshxviii.plantz.entity.plant.Chomper
-import joshxviii.plantz.entity.plant.ExplosivePlant
-import joshxviii.plantz.entity.plant.KernelPult
-import joshxviii.plantz.entity.plant.Plant
-import joshxviii.plantz.entity.plant.SunShroom
-import joshxviii.plantz.entity.plant.Sunflower
-import joshxviii.plantz.entity.plant.WallNut
+import joshxviii.plantz.entity.plant.*
 import joshxviii.plantz.renderer.entity.plant.PlantRenderState.Companion.TEXTURE_PATH
 import joshxviii.plantz.renderer.getEmissiveTextureLocation
 import joshxviii.plantz.renderer.getTextureLocation
 import joshxviii.plantz.renderer.validMagicName
 import net.minecraft.client.model.EntityModel
+import net.minecraft.client.model.Model
+import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.client.renderer.entity.RenderLayerParent
 import net.minecraft.client.renderer.entity.layers.EyesLayer
+import net.minecraft.client.renderer.entity.layers.RenderLayer
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.rendertype.RenderTypes
@@ -34,11 +31,12 @@ import net.minecraft.util.Mth
 import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.phys.Vec3
 import org.joml.Quaternionf
+import kotlin.collections.listOf
 import kotlin.math.pow
 
 open class PlantRenderer(
     private val defaultModel: EntityModel<PlantRenderState>,
-    context: EntityRendererProvider.Context,
+    val context: EntityRendererProvider.Context,
     private val babyModel: EntityModel<PlantRenderState>? = null,
 ) : MobRenderer<Plant, PlantRenderState, EntityModel<PlantRenderState>>(
     context,
@@ -48,6 +46,7 @@ open class PlantRenderer(
     init {
         addLayer(EmissivePlantLayer(this))
         addLayer(SunGlowLayer(this))
+        if (this !is PumpkinRenderer) addLayer(PumpkinArmorLayer(context, this))
     }
 
     override fun submit(
@@ -64,9 +63,7 @@ open class PlantRenderer(
         )
 
         model = if (state.isBaby && babyModel != null) babyModel else defaultModel
-        if (state.plantState != PlantState.INIT || state.ageInTicks>1) {
-            super.submit(state, poseStack, collector, camera)
-        }
+        super.submit(state, poseStack, collector, camera)
     }
 
     override fun getFlipDegrees(): Float = 0f
@@ -109,6 +106,7 @@ open class PlantRenderer(
         if (entity is ExplosivePlant) state.swelling = entity.getSwelling(partialTick)
         state.cooldown = entity.cooldown
         state.isAsleep = entity.isAsleep
+        state.pumpkinArmor = entity.pumpkinArmor
         state.damagedAmount = entity.damagedPercent
         state.initAnimationState.copyFrom(entity.initAnimationState)
         state.idleAnimationState.copyFrom(entity.idleAnimationState)
@@ -188,11 +186,44 @@ class SunGlowLayer<M : EntityModel<PlantRenderState>>(
     override fun renderType(): RenderType = RenderTypes.lines()
 }
 
+class PumpkinArmorLayer<M : EntityModel<PlantRenderState>>(
+    val context: EntityRendererProvider.Context,
+    val renderer: RenderLayerParent<PlantRenderState, M>,
+    val pumpkinArmorRenderer: PumpkinRenderer = PumpkinRenderer(context)
+): RenderLayer<PlantRenderState, M>(renderer) {
+    override fun submit(
+        poseStack: PoseStack,
+        submitNodeCollector: SubmitNodeCollector,
+        lightCoords: Int,
+        state: PlantRenderState,
+        yRot: Float,
+        xRot: Float
+    ) {
+        if (state.pumpkinArmor <= 0) return
+
+        poseStack.pushPose()
+        poseStack.scale(-1.0f, -1.0f, 1.0f)
+        poseStack.mulPose(Axis.YP.rotationDegrees(-180f))
+        poseStack.translate(0.0f, -1.505f, 0.0f)
+
+        val pumpkinState = PumpkinRenderState()
+        pumpkinState.lightCoords = state.lightCoords
+        pumpkinState.ageInTicks = state.ageInTicks
+        pumpkinState.isAsleep = state.isAsleep
+        pumpkinState.sleepAnimationState.copyFrom(state.sleepAnimationState)
+        pumpkinState.idleAnimationState.copyFrom(state.idleAnimationState)
+
+        pumpkinArmorRenderer.submit(pumpkinState, poseStack, submitNodeCollector, CameraRenderState())
+        poseStack.popPose()
+    }
+}
+
 open class PlantRenderState : LivingEntityRenderState() {
     companion object {
         const val TEXTURE_PATH = "textures/entity/plant"
     }
 
+    var pumpkinArmor: Float = 0f
     var rotations: Quaternionf = Quaternionf()
     var swelling: Float = 0f
     var partialTick: Float = 0f
@@ -216,11 +247,9 @@ open class PlantRenderState : LivingEntityRenderState() {
         val magicName = this.validMagicName(customName)
         val suffixes = mutableListOf<String>().apply {
             textureExtra.forEach                { add(it) }
+            if (isBaby)                         add("baby")
+            if (isAsleep || deathTime > 0)      add("sleep")
             if (magicName!=null)                add(magicName)
-            else {
-                if (isBaby)                     add("baby")
-                if (isAsleep || deathTime > 0)  add("sleep")
-            }
         }.filter { it.isNotEmpty() }.toMutableList()
         return suffixes
     }

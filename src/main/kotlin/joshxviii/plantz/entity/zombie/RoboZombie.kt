@@ -158,15 +158,15 @@ class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(typ
         goalSelector.addGoal(4, ProjectileAttackGoal(
             usingEntity = this,
             projectileFactory =  { Missile(level(), this) },
-            velocity = 1.0,
+            velocity = 0.9,
+            attackRadius = 30f,
             leadShots = false,
             actionDelay = 19,
-            soundEvent = null,
+            soundEvent = PazSounds.ROBO_ZOMBIE_SHOOT,
             usePredicate = {
                 missileTime<=0 && missileCooldown<=0
             },
             actionStartEffect = {
-                playSound(PazSounds.ROBO_ZOMBIE_SHOOT)
                 missileTime=1
             },
             actionSuccessEffect = {

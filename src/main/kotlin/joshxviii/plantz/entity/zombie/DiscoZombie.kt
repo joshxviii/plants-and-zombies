@@ -3,6 +3,7 @@ package joshxviii.plantz.entity.zombie
 import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazSounds
+import joshxviii.plantz.entity.isActiveInRaid
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.Vec3i
@@ -49,7 +50,6 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
     }
 
     override fun getMoveControl(): MoveControl = if (summoningTime>0) noMoveControl else super.getMoveControl()
-    override fun isWithinMeleeAttackRange(target: LivingEntity): Boolean = if (summoningTime>0) false else super.isWithinMeleeAttackRange(target)
 
     override fun tick() {
         super.tick()
@@ -179,7 +179,7 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
                 val backup = PazEntities.BACKUP_DANCER.create(level, EntitySpawnReason.MOB_SUMMONED)?: return
                 // apply hypnotize-effect if present
                 backup.snapTo(BlockPos(Vec3i(x.toInt(),(pos.y+topOffset).toInt(),z.toInt())), angle * (180.0f / Math.PI.toFloat()), 0.0f)
-                backup.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.REINFORCEMENT, PazZombieGroupData(isRaider = summoner.isRaider()))
+                backup.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.REINFORCEMENT, PazZombieGroupData(isRaider = summoner.isActiveInRaid()))
                 val effect = summoner.activeEffects.find { it.effect.`is`(PazEffects.HYPNOTIZE.unwrapKey().get()) }
                 if (effect!=null) backup.addEffect(effect)
                 level.addFreshEntity(backup)

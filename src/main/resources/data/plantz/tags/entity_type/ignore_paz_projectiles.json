@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:armor_stand",
+    "minecraft:item_frame",
+    "#minecraft:boat",
+    {
+      "id": "#c:minecarts",
+      "required": false
+    },
+    {
+      "id": "#c:item_frames",
+      "required": false
+    }
+  ]
+}

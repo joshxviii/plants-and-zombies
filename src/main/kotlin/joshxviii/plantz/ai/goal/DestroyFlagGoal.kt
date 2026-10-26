@@ -22,7 +22,7 @@ class DestroyFlagGoal(
     val searchRange: Int = 64
 ) : Goal(){
     companion object {
-        const val SEARCH_COOLDOWN = 20
+        const val SEARCH_COOLDOWN = 40
     }
 
     var path: Path? = null

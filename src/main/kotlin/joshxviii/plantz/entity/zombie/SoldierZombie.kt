@@ -53,7 +53,7 @@ class SoldierZombie(type: EntityType<out SoldierZombie>, level: Level) : PazZomb
             usingEntity = this,
             projectileFactory =  { PaintBall(level(), this, color = dyeColor, damage = 1f) },
             velocity = 1.1,
-            actionDelay = 22,
+            actionDelay = 40,
             soundEvent = PazSounds.DYE_BLASTER,
             actionEndEffect = {
 

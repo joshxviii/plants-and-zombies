@@ -100,6 +100,6 @@ public class RoboZombieModel<S extends PazZombieRenderState> extends PazZombieMo
         (isTransformed ? tankIdleAnimation : idleAnimation).apply(roboState.getIdleAnimationState(), roboState.ageInTicks);
         (isTransformed ? transformTankAnimation : transformIdleAnimation).apply(transformTransition, roboState.ageInTicks);
         shootAnimation.apply(roboState.getShootAnimationState(), roboState.ageInTicks);
-        bashAnimation.apply(roboState.getBashAnimationState(), roboState.ageInTicks);
+        bashAnimation.apply(roboState.getActionAnimationState(), roboState.ageInTicks);
     }
 }

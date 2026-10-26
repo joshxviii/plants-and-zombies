@@ -5,6 +5,7 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.ai.goal.NavigateToTargetGoal
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
+import joshxviii.plantz.entity.isActiveInRaid
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup.level
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -148,7 +149,7 @@ class PirateCaptain(type: EntityType<out PirateCaptain>, level: Level) : PazZomb
             convertTo(PazEntities.PIRATE_CAPTAIN_GHOST, ConversionParams.single(this, true, true)) {
                 it.playSound(SoundEvents.ZOMBIE_VILLAGER_CONVERTED)
                 (level() as? ServerLevel)?.let { level ->
-                    it.finalizeSpawn(level, level.getCurrentDifficultyAt(blockPosition()), EntitySpawnReason.CONVERSION, PazZombieGroupData(isRaider = isRaider()))
+                    it.finalizeSpawn(level, level.getCurrentDifficultyAt(blockPosition()), EntitySpawnReason.CONVERSION, PazZombieGroupData(isRaider = this.isActiveInRaid()))
                 }
             }
         }

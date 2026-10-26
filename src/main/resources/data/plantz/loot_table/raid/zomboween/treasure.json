@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:generic",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+      ]
+    }
+  ],
+  "random_sequence": "minecraft:raid/default_mail_rewards"
+}

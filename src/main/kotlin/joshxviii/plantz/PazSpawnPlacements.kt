@@ -39,7 +39,7 @@ object PazSpawnPlacements {
 
         addBiomeSpawn(PazTags.Biomes.HAS_FUMESHROOM, PazEntities.FUME_SHROOM,
             weight = 8, minGroupSize = 1, maxGroupSize = 1)
-        registerSpawnPlacement(PazEntities.FUME_SHROOM, Plant::checkPlantSpawnRules)
+        registerSpawnPlacement(PazEntities.FUME_SHROOM, Plant::checkMushroomSpawnRules)
 
         addBiomeSpawn(PazTags.Biomes.HAS_HYPNOSHROOM, PazEntities.HYPNOSHROOM,
             weight = 2, minGroupSize = 1, maxGroupSize = 1)

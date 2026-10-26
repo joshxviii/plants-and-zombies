@@ -5,7 +5,7 @@ import io.netty.buffer.ByteBuf
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazLootTables
-import joshxviii.plantz.entity.Balloon
+import joshxviii.plantz.SeasonalEvents
 import joshxviii.plantz.entity.zombie.*
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
@@ -60,7 +60,7 @@ enum class WaveType(
                 ),
                 WaveSpawnEntry(
                     PazEntities.DIGGER_ZOMBIE,
-                    if (wave > 3) scaled(1f + wave * 0.4f, omen, credits) else 0
+                    if (wave > 3) scaled(0.7f + wave * 0.4f, omen, credits) else 0
                 ),
                 WaveSpawnEntry(
                     PazEntities.IMP,
@@ -77,8 +77,7 @@ enum class WaveType(
                 ),
                 WaveSpawnEntry(
                     PazEntities.GARGANTUAR,
-                    if (wave == 10) 1 // always spawn at wave 10
-                    else if (wave > 11) scaled(1f + (wave - 13) * 0.3f, omen, credits, min = 0) else 0
+                    if (wave > 11) scaled(0.5f + (wave - 13) * 0.3f, omen, credits, max = 3) else 0
                 ),
                 WaveSpawnEntry(
                     PazEntities.ENGINEER_ZOMBIE,
@@ -86,9 +85,19 @@ enum class WaveType(
                 ),
                 WaveSpawnEntry(
                     PazEntities.SOLDIER_ZOMBIE,
-                    if (credits && wave > 8) scaled(1f + (wave - 8) * 0.5f, omen, true) else 0
+                    if (credits && wave > 10) scaled(1f + (wave - 10) * 0.5f, omen, true) else 0
                 ),
-                graveDiggerEntry(wave),
+                if (raid.random.nextFloat() < 0.4f) WaveSpawnEntry(
+                    PazEntities.SUPER_BRAINZ,
+                    if (wave > 15) scaled(0.4f + (wave - 15) * 0.3f, omen, credits, max = 3) else 0,
+                    { configureZomboween(it, raid) }
+                )
+                else WaveSpawnEntry(
+                    PazEntities.ROBO_ZOMBIE,
+                    if (wave > 16) scaled(0.4f + (wave - 16) * 0.3f, omen, credits, max = 3) else 0,
+                    { configureZomboween(it, raid) }
+                ),
+                graveDiggerEntry(raid),
             )
         },
         lootTableFn = { waveNum, _ -> if (waveNum > 7) PazLootTables.MAIL_REWARD_DEFAULT_HARD else PazLootTables.MAIL_REWARD_DEFAULT_EASY }
@@ -134,9 +143,9 @@ enum class WaveType(
             listOf(
                 WaveSpawnEntry(
                     PazEntities.BROWN_COAT,
-                    scaled(4f + wave * 0.9f, omen, credits, min = 3), {
-                        configureDefaultBalloonChance(it, raid)
-                    }),
+                    scaled(4f + wave * 0.9f, omen, credits, min = 3),
+                    ::configureHalftimeShowdown
+                ),
                 WaveSpawnEntry(
                     PazEntities.ALL_STAR,
                     scaled(2.5f + wave * 0.9f, omen, credits, min = 2, max = 12)
@@ -148,7 +157,7 @@ enum class WaveType(
                         configureDefaultBalloonChance(it, raid)
                     }
                 ),
-                graveDiggerEntry(wave),
+                graveDiggerEntry(raid),
             )
         },
         lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_HALFTIME }
@@ -182,10 +191,50 @@ enum class WaveType(
                     PazEntities.ZOMBIE_YETI,
                     scaled(1.2f + wave * 0.35f, omen, credits, min = 1)
                 ),
-                graveDiggerEntry(wave),
+                graveDiggerEntry(raid),
             )
         },
         lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_WINTER }
+    ),
+    ZOMBOWEEN(
+        minWave = 4,
+        maxWave = 11,
+        creditsRequired = false,
+        weightFn = { raid, credits ->
+            if (SeasonalEvents.isHalloween()) 1f else 0f
+        },
+        spawnFn = { raid, credits ->
+            val wave = raid.currentWaveNumber()
+            val omen = raid.zombieRaidOmenLevel
+
+            listOf(
+                WaveSpawnEntry(
+                    PazEntities.BROWN_COAT,
+                    scaled(6.25f + wave * 0.9f, omen, credits, min = 5),
+                    { configureZomboween(it, raid) }
+                ),
+                WaveSpawnEntry(
+                    PazEntities.IMP,
+                    scaled(2f + wave * 0.7f, omen, credits, min = 2),
+                    { configureZomboween(it, raid) }
+                ),
+                WaveSpawnEntry(
+                    PazEntities.GRAVE_DIGGER,
+                    scaled(0.5f + wave * 0.35f, omen, credits, min = 1)
+                ),
+                if (raid.random.nextFloat() < 0.4f) WaveSpawnEntry(
+                    PazEntities.SUPER_BRAINZ,
+                    if (wave > 7) scaled(0.4f + (wave - 7) * 0.3f, omen, credits, max = 2) else 0,
+                    { configureZomboween(it, raid) }
+                )
+                else WaveSpawnEntry(
+                    PazEntities.PIRATE_CAPTAIN_GHOST,
+                    if (wave > 6) scaled(0.55f + (wave - 6) * 0.4f, omen, credits, max = 6) else 0,
+                    { configureZomboween(it, raid) }
+                )
+            )
+        },
+        lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_ZOMBOWEEN }
     ),
     PIRATE_INVASION(
         minWave = 9,
@@ -217,11 +266,10 @@ enum class WaveType(
                 ),
                 WaveSpawnEntry(
                     PazEntities.GARGANTUAR,
-                    if (wave == 10) 1 else
-                    if (wave > 10) scaled(0.6f + wave * 0.1f, omen, credits, min = 0) else 0,
+                    if (wave > 10) scaled(0.3f + wave * 0.1f, omen, credits, max = 3) else 0,
                     ::configurePirateInvasion
                 ),
-                graveDiggerEntry(wave),
+                graveDiggerEntry(raid),
             )
         },
         lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_PIRATE }
@@ -240,19 +288,19 @@ enum class WaveType(
             listOf(
                 WaveSpawnEntry(
                     PazEntities.ROBO_ZOMBIE,
-                    scaled(1.0f + wave * 0.35f, omen, credits, min = 1)
+                    scaled(0.5f + wave * 0.35f, omen, credits, min = 1, max = 4)
                 ),
                 WaveSpawnEntry(
                     PazEntities.ENGINEER_ZOMBIE,
-                    scaled(2.0f + wave * 0.45f, omen, credits, min = 2)
+                    scaled(1.5f + wave * 0.45f, omen, credits, min = 2)
                 ),
                 WaveSpawnEntry(
                     PazEntities.SOLDIER_ZOMBIE,
-                    scaled(4f + wave * 0.7f, omen, credits, min = 2)
+                    scaled(3f + wave * 0.7f, omen, credits, min = 1)
                 ),
                 WaveSpawnEntry(
                     PazEntities.ZOMBIE_DRONE,
-                    scaled(5f + wave * 0.9f, omen, credits, min = 3)
+                    scaled(4f + wave * 0.9f, omen, credits, min = 2, max = 10)
                 )
             )
         },
@@ -302,7 +350,21 @@ enum class WaveType(
             ByIdMap.continuous(WaveType::ordinal, WaveType.entries.toTypedArray(), ByIdMap.OutOfBoundsStrategy.ZERO);
         val STREAM_CODEC: StreamCodec<ByteBuf, WaveType> = ByteBufCodecs.idMapper<WaveType>(BY_ID, WaveType::ordinal)
 
-        fun omenScale(omen: Float): Float = 1f+(omen-1f) * 0.08f
+        fun pickWaveType(raid: ZombieRaid, creditsUnlocked: Boolean): WaveType {
+            val eligible = WaveType.entries.filter { it.isAvailable(raid, creditsUnlocked) }
+            val totalWeight = eligible.sumOf { it.weight(raid, creditsUnlocked).toDouble() }.toFloat()
+            if (totalWeight <= 0f) return DEFAULT
+
+            val roll = raid.random.nextFloat() * totalWeight
+            var runningWeight = 0f
+            for (wave in eligible) {
+                runningWeight += wave.weight(raid, creditsUnlocked)
+                if (roll < runningWeight) return wave
+            }
+            return DEFAULT
+        }
+
+        fun omenScale(omen: Float): Float = 1f+(omen-1f) * 0.05f
         fun creditsBonus(credits: Boolean): Float = if (credits) 1.2f else 1f // credits bonus
 
         fun scaled(base: Float, omen: Float, credits: Boolean, min: Int = 0, max: Int = Int.MAX_VALUE): Int {
@@ -345,8 +407,11 @@ enum class WaveType(
         }
 
         fun configureHalftimeShowdown(zombie: Zombie) {
-            zombie.setItemSlot(EquipmentSlot.HEAD, PazItems.FOOTBALL_HELMET.defaultInstance)
-            zombie.setDropChance(EquipmentSlot.HEAD, 0.0f)
+            if (zombie is Imp) {
+                zombie.setItemSlot(EquipmentSlot.HEAD, PazItems.FOOTBALL_HELMET.defaultInstance)
+                zombie.setDropChance(EquipmentSlot.HEAD, 0.0f)
+            }
+            if (zombie is BrownCoat && zombie.random.nextFloat() < 0.6f) zombie.spawnWithBalloons()
         }
 
         fun configureWinterWonderland(zombie: Zombie) {
@@ -365,6 +430,29 @@ enum class WaveType(
                     zombie.setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_SHOVEL.defaultInstance)
                     zombie.setDropChance(EquipmentSlot.MAINHAND, 0.0f)
                 }
+            }
+        }
+
+        fun configureZomboween(zombie: Zombie, raid: ZombieRaid) {
+            val wave = raid.currentWaveNumber()
+            val random = raid.random
+            if (zombie is SuperBrainz) zombie.variant = SuperBrainzVariant.TOXIC
+
+            val pumpkinChance = random.nextFloat() < 0.65f || zombie is PirateCaptainGhost
+            if (zombie !is SuperBrainz && pumpkinChance) {
+                if (random.nextFloat() < 0.4f) zombie.setItemSlot(EquipmentSlot.HEAD, Items.JACK_O_LANTERN.defaultInstance)
+                else zombie.setItemSlot(EquipmentSlot.HEAD, Items.CARVED_PUMPKIN.defaultInstance)
+                zombie.setDropChance(EquipmentSlot.HEAD, 0.0f)
+            }
+
+            val balloonCount = when (zombie) {
+                is BrownCoat -> random.nextIntBetweenInclusive(2,3)
+                is Imp -> 1
+                else -> 0
+            }
+            if (balloonCount > 0) {
+                val balloonChance = 0.4 * ((wave.toDouble() / ZombieRaid.MAXIMUM_WAVE_COUNT).pow(.5)).coerceIn(0.0, 1.0).toFloat()
+                if (random.nextFloat() < balloonChance && zombie is PazZombie) zombie.spawnBalloons(balloonCount, listOf(DyeColor.ORANGE, DyeColor.BLACK, DyeColor.PURPLE))
             }
         }
 
@@ -421,9 +509,8 @@ enum class WaveType(
             }
         }
 
-        fun graveDiggerEntry(wave: Int): WaveSpawnEntry = WaveSpawnEntry(
-            PazEntities.GRAVE_DIGGER,
-            if (wave > 4 && Math.random() > 0.15) 1 else 0
+        fun graveDiggerEntry(raid: ZombieRaid): WaveSpawnEntry = WaveSpawnEntry(
+            PazEntities.GRAVE_DIGGER, if (raid.currentWaveNumber() > 4 && raid.random.nextFloat() < 0.175f) 1 else 0
         )
     }
 

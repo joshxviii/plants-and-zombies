@@ -32,7 +32,6 @@ object PazMain : ModInitializer {
 		PazConfig.load()
 		// clear client raid cache + load config
 		ServerLifecycleEvents.SERVER_STARTING.register {
-			PazNetwork.ZombieRaidClientCache.clear()
 			ZombieRaids.clearActiveRaidCenters()
 			PazConfig.load()
 		}

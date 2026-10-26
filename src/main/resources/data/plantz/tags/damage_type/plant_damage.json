@@ -1,0 +1,11 @@
+{
+  "values": [
+    "plantz:plant",
+    "plantz:plant_freeze",
+    "plantz:plant_fire",
+    "plantz:plant_chomp",
+    "plantz:plant_explode",
+    "plantz:plant_fume",
+    "plantz:plant_electric"
+  ]
+}

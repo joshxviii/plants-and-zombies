@@ -4,6 +4,7 @@ import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazCriteria
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazTags
+import joshxviii.plantz.PazTags.EntityTypes.IGNORE_WALLNUT_COLLISION
 import joshxviii.plantz.PazTags.EntityTypes.WALLNUT_DEFLECTABLE
 import joshxviii.plantz.applyImpulse
 import joshxviii.plantz.entity.Sun
@@ -84,6 +85,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
         rolledOverEntities.clear()
     }
 
+    override fun canLookAround(): Boolean = false
     override fun clampToGrid(): Boolean = !isRolling && super.clampToGrid()
 
     override fun limitPistonMovement(vec: Vec3): Vec3 {
@@ -122,6 +124,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
     }
 
     override fun attackedWithGlove(player: Player, item: ItemStack, hand: InteractionHand) {
+        if (hasPumpkinArmor()) return
         funnyBounce()
         val direction = player.lookAngle.horizontal()
         roll(direction, power = 0.35f)
@@ -168,7 +171,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
 
         hurtOnCollide(other)
 
-        if (other is Sun) return false
+        if (other?.`is`(IGNORE_WALLNUT_COLLISION) == true) return false
         return isAlive && other != attachedEntity
     }
 

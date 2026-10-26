@@ -23,6 +23,7 @@ data class ServerConfig(
     var plantPotDamageReduction: Double = 0.5,
     var poweredUpCooldownReduction: Double = 0.2,
     var coffeeBuffDuration: Int = 48_000,
+    var pumpkinArmorAmount: Int = 35,
     var sunCostTamingThreshold: Int = 30,
     var plantCooldownEnabled: Boolean = false,
     var plantCooldownTime: Double = 4.0,
@@ -65,20 +66,22 @@ data class ServerConfig(
         "plantz:puffshroom"             to 0,
         "plantz:scaredyshroom"          to 3,
         "plantz:fumeshroom"             to 6,
-        "plantz:sunshroom"              to 4,
+        "plantz:sunshroom"              to 6,
         "plantz:hypnoshroom"            to 7,
         "plantz:iceshroom"              to 5,
         "plantz:doomshroom"             to 14,
         "plantz:seashroom"              to 0,
         "plantz:coffeebean"             to 2,
         "plantz:grave_buster"           to 3,
+        "plantz:pumpkin"                to 6,
     ),
+    var graveStoneActivationRange: Double = 24.0
 )
 data class ClientConfig(
     var showDebugInfo: Boolean = false,
     var alwaysShowHeadMarkers: Boolean = false,
     var showHiddenItemsInCreativeTab: Boolean = false,
-    var hideRaidUi: Boolean = false
+    var hideRaidUi: Boolean = false,
 )
 
 object PazConfig {
@@ -139,8 +142,13 @@ object PazConfig {
     val HIDE_RAID_UI: Boolean
         get() = client.hideRaidUi
 
+
+
     val COFFEE_BUFF_DURATION: Int
         get() = server.coffeeBuffDuration.coerceAtLeast(0)
+
+    val PUMPKIN_ARMOR_AMOUNT: Int
+        get() = server.pumpkinArmorAmount.coerceAtLeast(0)
 
     val SUN_BATTERY_MAX: Int
         get() = server.solarBatteryMax.coerceAtLeast(0)
@@ -162,6 +170,9 @@ object PazConfig {
 
     val PLANT_COOLDOWN_ENABLED: Boolean
         get() = server.plantCooldownEnabled
+
+    val GRAVESTONE_ACTIVATION_RANGE: Double
+        get() = server.graveStoneActivationRange
 
     fun getGrowTime(sunCost: Int, zenBuff: Boolean): Int {
         val time = server.seedGrowTime.coerceAtLeast(0) + (sunCost * server.extraGrowTimePerSun.coerceAtLeast(0))

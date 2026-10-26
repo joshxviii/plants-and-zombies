@@ -42,15 +42,13 @@ object PazEntities {
             if (entity is Zombie) (entity as MobAccessor).targetSelector.addGoal(4, NearestAttackableTargetGoal(entity, Gnome::class.java, 5, true, false, null))
 
             if (entity is PathfinderMob && entity.`is`(ZOMBIE_RAIDERS)) {
-                (entity as MobAccessor).goalSelector.addGoal(0, PathfindToFlagGoal(entity, minimumDistance = ZombieRaid.RAID_DISTANCE * 1.0))
+                (entity as MobAccessor).goalSelector.addGoal(0, PathfindToFlagGoal(entity))
                 (entity as MobAccessor).goalSelector.addGoal(2, DestroyFlagGoal(entity))
-                (entity as MobAccessor).goalSelector.addGoal(3, PathfindToFlagGoal(entity))
             }
 
             if (entity is Mob && entity.`is`(ATTACKS_PLANTS) && entity !is ZombifiedPiglin) {
                 (entity as MobAccessor).targetSelector.addGoal(2, NearestAttackableTargetGoal(entity, WallNut::class.java, 6, true, true) { target, level -> ((target as? WallNut)?.let { it.distanceToSqr(entity) < 3.5 } ?: false)})
-                (entity as MobAccessor).targetSelector.addGoal(3, NearestAttackableTargetGoal(entity, Plant::class.java, 5, true, false) { target, level ->
-                    target !is WallNut && !target.`is`(IGNORED_BY_PLANT_ATTACKERS) })
+                (entity as MobAccessor).targetSelector.addGoal(3, NearestAttackableTargetGoal(entity, Plant::class.java, 5, true, false) { target, level -> !target.`is`(IGNORED_BY_PLANT_ATTACKERS) })
             }
         }
     }
@@ -329,6 +327,14 @@ object PazEntities {
         attributes = Plant.Companion.PlantAttributes(
             maxHealth = 6.0,
             followRange = 1.0
+        )
+    )
+    @JvmField val PUMPKIN: EntityType<Pumpkin> = registerPlant(
+        "pumpkin", EntityType.Builder.of(::Pumpkin, MobCategory.CREATURE),
+        width = 0.85f,
+        height = 0.5f,
+        attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 30.0,
         )
     )
     @JvmField val ROYAL_SUNFLOWER: EntityType<RoyalSunflower> = registerPlant(
@@ -738,8 +744,10 @@ object PazEntities {
     }
 
     val MAGIC_NAMES = mapOf<EntityType<*>, List<String>>(
-        CHOMPER      to listOf("chester"),
-        DISCO_ZOMBIE to listOf("mj"),
-        BROWN_COAT   to listOf("tugboat", "mustache")
+        SUNFLOWER           to listOf("vampire"),
+        CHOMPER             to listOf("chester"),
+        FIRE_PEA_SHOOTER    to listOf("blaze"),
+        DISCO_ZOMBIE        to listOf("mj"),
+        BROWN_COAT          to listOf("tugboat", "mustache")
     )
 }

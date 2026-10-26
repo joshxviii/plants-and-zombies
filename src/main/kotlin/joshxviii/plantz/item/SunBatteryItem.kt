@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.state.BlockState
 
 class SunBatteryItem(properties: Properties) : BlockItem(PazBlocks.SUN_BATTERY_BLOCK, properties) {
 
-
     override fun useOn(context: UseOnContext): InteractionResult {
         val player = context.player
         val blockState = context.level.getBlockState(context.clickedPos)

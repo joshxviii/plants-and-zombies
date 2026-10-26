@@ -1,6 +1,8 @@
 package joshxviii.plantz.entity.projectile
 
 import joshxviii.plantz.*
+import joshxviii.plantz.PazTags.EntityTypes.IGNORE_PAZ_PROJECTILES
+import joshxviii.plantz.entity.Balloon
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
@@ -371,8 +373,10 @@ abstract class PazProjectile(
 
     override fun canHitEntity(entity: Entity): Boolean {
         if (entity is Projectile) return false
+        if (entity.`is`(IGNORE_PAZ_PROJECTILES)) return false
         if (piercingIgnoreEntityIds.contains(entity.id)) return false
         val owner = entityOwner ?: return super.canHitEntity(entity)
+        if (entity is Balloon && ((owner is Plant && entity.getLeashHolder() is Plant) || (owner is Enemy && entity.getLeashHolder() is Enemy))) return false
         if ((entity is Plant && owner is Plant && entity.owner !is Enemy) || (entity is Enemy && owner is Enemy && !owner.isHypnotized() && extractRootOwner(owner) !is Player)) return false
         if (owner.hasSameRootOwner(entity)) return false
         return super.canHitEntity(entity)

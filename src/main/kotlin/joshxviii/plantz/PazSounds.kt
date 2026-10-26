@@ -95,6 +95,7 @@ object PazSounds {
     @JvmField val RAID_MUSIC_BUCKET = registerForHolder("music.raid.bucket")
     @JvmField val RAID_MUSIC_HALFTIME = registerForHolder("music.raid.halftime")
     @JvmField val RAID_MUSIC_WINTER = registerForHolder("music.raid.winter")
+    @JvmField val RAID_MUSIC_ZOMBOWEEN = registerForHolder("music.raid.zomboween")
     @JvmField val RAID_MUSIC_PIRATE = registerForHolder("music.raid.pirate")
     @JvmField val RAID_MUSIC_ARMY = registerForHolder("music.raid.army")
     @JvmField val RAID_MUSIC_LEAGUE = registerForHolder("music.raid.league")

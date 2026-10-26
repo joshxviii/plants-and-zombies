@@ -1,0 +1,9 @@
+{
+  "values": [
+    "minecraft:bucket",
+    {
+      "id": "farmersdelight:skillet",
+      "required": false
+    }
+  ]
+}

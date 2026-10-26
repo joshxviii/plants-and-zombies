@@ -33,6 +33,7 @@ import joshxviii.plantz.renderer.entity.zombie.PirateCaptainRenderer
 import joshxviii.plantz.renderer.*
 import joshxviii.plantz.renderer.entity.*
 import joshxviii.plantz.renderer.entity.plant.PlantRenderer
+import joshxviii.plantz.renderer.entity.plant.PumpkinRenderer
 import joshxviii.plantz.renderer.entity.plant.RoyalSunflowerRenderer
 import joshxviii.plantz.renderer.entity.plant.WallNutRenderer
 import joshxviii.plantz.renderer.entity.zombie.*
@@ -133,6 +134,7 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(SeaShroomModel.LAYER_LOCATION) { SeaShroomModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(CoffeeBeanModel.LAYER_LOCATION) { CoffeeBeanModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(GraveBusterModel.LAYER_LOCATION) { GraveBusterModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(PumpkinModel.LAYER_LOCATION) { PumpkinModel.createBodyLayer() }
 
         ModelLayerRegistry.registerModelLayer(RoyalSunflowerModel.LAYER_LOCATION) { RoyalSunflowerModel.createBodyLayer() }
 
@@ -205,6 +207,8 @@ object PazModels {
         EntityRenderers.register(PazEntities.SEA_SHROOM) { PlantRenderer(SeaShroomModel(it.bakeLayer(SeaShroomModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.COFFEE_BEAN) { PlantRenderer(CoffeeBeanModel(it.bakeLayer(CoffeeBeanModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.GRAVE_BUSTER) { PlantRenderer(GraveBusterModel(it.bakeLayer(GraveBusterModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.PUMPKIN) { PumpkinRenderer(it) }
+
         EntityRenderers.register(PazEntities.SUN_SHROOM) { PlantRenderer(SunShroomModel(it.bakeLayer(SunShroomModel.LAYER_LOCATION)), it, SunShroomBabyModel(it.bakeLayer(SunShroomBabyModel.LAYER_LOCATION))) }
 
         EntityRenderers.register(PazEntities.ROYAL_SUNFLOWER) { RoyalSunflowerRenderer(it) }
@@ -227,7 +231,7 @@ object PazModels {
 
         EntityRenderers.register(PazEntities.BROWN_COAT) { PazZombieRenderer(it) }
         EntityRenderers.register(PazEntities.NEWSPAPER_ZOMBIE) { PazZombieRenderer(it) }
-        EntityRenderers.register(PazEntities.DIGGER_ZOMBIE) { PazZombieRenderer(it, DiggerZombieModel(it.bakeLayer(DiggerZombieModel.LAYER_LOCATION))) }
+        EntityRenderers.register(PazEntities.DIGGER_ZOMBIE) { DiggerZombieRenderer(it) }
         EntityRenderers.register(PazEntities.ENGINEER_ZOMBIE) { PazZombieRenderer(it, EngineerZombieModel(it.bakeLayer(EngineerZombieModel.LAYER_LOCATION))) }
         EntityRenderers.register(PazEntities.ZOMBIE_YETI) { ZombieYetiRenderer(it) }
         EntityRenderers.register(PazEntities.BACKUP_DANCER) { PazZombieRenderer(it, DiscoZombieModel(it.bakeLayer(DiscoZombieModel.LAYER_LOCATION))) }

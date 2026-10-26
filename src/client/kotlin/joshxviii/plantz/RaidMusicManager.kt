@@ -11,6 +11,7 @@ import joshxviii.plantz.PazSounds.RAID_MUSIC_MEDIUM
 import joshxviii.plantz.PazSounds.RAID_MUSIC_PIRATE
 import joshxviii.plantz.PazSounds.RAID_MUSIC_WINTER
 import joshxviii.plantz.PazSounds.RAID_MUSIC_ZOMBOSS
+import joshxviii.plantz.PazSounds.RAID_MUSIC_ZOMBOWEEN
 import joshxviii.plantz.networking.ZombieRaidClientData
 import joshxviii.plantz.raid.WaveType
 import joshxviii.plantz.raid.ZombieRaid
@@ -37,6 +38,7 @@ enum class RaidMusicLayer(
     BUCKET(RAID_MUSIC_BUCKET, 3, "bucket"),
     HALFTIME(RAID_MUSIC_HALFTIME, 4, "halftime"),
     WINTER(RAID_MUSIC_WINTER, 5, "winter"),
+    ZOMBOWEEN(RAID_MUSIC_ZOMBOWEEN, 6, "zomboween"),
     PIRATE(RAID_MUSIC_PIRATE, 6, "pirate"),
     ARMY(RAID_MUSIC_ARMY, 7, "army"),
     LEAGUE(RAID_MUSIC_LEAGUE, 8, "league"),
@@ -153,6 +155,7 @@ object RaidMusicManager {
             WaveType.BUCKET_BRIGADE -> RaidMusicLayer.BUCKET
             WaveType.HALFTIME_SHOWDOWN -> RaidMusicLayer.HALFTIME
             WaveType.WINTER_WONDERLAND -> RaidMusicLayer.WINTER
+            WaveType.ZOMBOWEEN -> RaidMusicLayer.ZOMBOWEEN
             WaveType.PIRATE_INVASION -> RaidMusicLayer.PIRATE
             WaveType.ROBO_ARMY -> RaidMusicLayer.ARMY
             WaveType.LEAGUE_OF_AWESOME -> RaidMusicLayer.LEAGUE
@@ -174,13 +177,13 @@ object RaidMusicManager {
 
     private fun shouldChangePitch(): Boolean {
         raidEvent?.let {
-            if (it.isFinalWave()) {
+            if (it.isFinalWave() || it.bossIsAlive()) {
                 targetPitch = when (it.waveTimer) {
                     in -1..600 -> 1.26f
                     in 601..1200 -> 1.12f
                     else -> 1.0f
                 }
-            }
+            } else targetPitch = 1.0f
         }
         return targetPitch != pitch
     }

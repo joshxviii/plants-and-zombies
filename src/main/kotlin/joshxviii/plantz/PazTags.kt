@@ -16,6 +16,7 @@ object PazTags {
         @JvmField val PLANT_POT = tag("gives_plant_pot_protection")
         @JvmField val YETI_SPAWNABLE_ON = tag("yeti_spawnable_on")
         @JvmField val DIGGER_BREAKABLE = tag("digger_breakable")
+        @JvmField val INVALID_RAID_SPAWN = tag("invalid_raid_spawn")
 
         //TODO add "can survive on" block tags for all plants.
         @JvmField val POTATOMINE_SPAWNABLE_ON = tag("can_survive_on/potatomine")
@@ -27,6 +28,7 @@ object PazTags {
         @JvmField val GNOME_PREFERRED_WEAPONS = tag("gnome_preferred_weapons")
         @JvmField val DIGGER_PREFERRED_WEAPONS = tag("digger_preferred_weapons")
         @JvmField val NEWSPAPER_ZOMBIE_PREFERRED_WEAPONS = tag("newspaper_zombie_preferred_weapons")
+        @JvmField val BUCKET_WEARABLE = tag("bucket_wearable")
         private fun tag(name: String): TagKey<Item> = TagKey.create(Registries.ITEM, pazResource(name))
     }
 
@@ -35,8 +37,11 @@ object PazTags {
         @JvmField val MUSHROOM = tag("mushroom")
         @JvmField val PLANTABLE_ON_WATER = tag("plantable_on_water")
         @JvmField val PLANT_PROJECTILE = tag("plant_projectile")
+        @JvmField val IGNORE_PAZ_PROJECTILES = tag("ignore_paz_projectiles")
+        @JvmField val IGNORE_WALLNUT_COLLISION = tag("ignore_wallnut_collision")
         @JvmField val IMMUNE_TO_ELECTRICITY = tag("immune_to_electricity")
         @JvmField val CANNOT_CHOMP = tag("cannot_be_chomped")
+        @JvmField val CANNOT_PUMPKIN = tag("cannot_pumpkin")
         @JvmField val CANNOT_HYPNOTIZE = tag("cannot_be_hypnotized")
         @JvmField val ZOMBIE_RAIDERS = tag("zombie_raider")
         @JvmField val CAN_BE_LEADER = tag("can_be_leader")
@@ -48,11 +53,12 @@ object PazTags {
     }
 
     object DamageTypes {
-        @JvmField val PLANT_PROJECTILE = tag("plant_projectile")
+        @JvmField val PLANT_DAMAGE = tag("plant_damage")
         @JvmField val IS_ELECTRIC = tag("is_electric")
         @JvmField val IGNORED_BY_ZOMBIES = tag("ignored_by_zombies")
         @JvmField val IGNORED_BY_PLANTS = tag("ignored_by_plants")
         @JvmField val IGNORED_BY_ROLLING_NUT = tag("ignored_by_rolling_nut")
+        @JvmField val BYPASSES_PUMPKIN_ARMOR = tag("bypasses_pumpkin_armor")
         private fun tag(name: String): TagKey<DamageType> = TagKey.create(Registries.DAMAGE_TYPE, pazResource(name))
     }
 

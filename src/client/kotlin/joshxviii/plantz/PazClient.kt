@@ -26,13 +26,13 @@ object PazClient : ClientModInitializer {
 		PazClientNetwork.initialize()
 		PazRenderPipelines.initialize()
 
+		ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(
+			pazResource("server_data_reload"),
+			ResourceManagerReloadListener({ PazNetwork.ZombieRaidClientCache.clear() })
+		)
 		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(
 			pazResource("client_reload"),
-			ResourceManagerReloadListener({
-				if (PazNetwork.ZombieRaidClientCache.isActive()) {
-					RaidMusicManager.restart()
-				}
-			})
+			ResourceManagerReloadListener({ if (PazNetwork.ZombieRaidClientCache.isActive()) { RaidMusicManager.restart() } })
 		)
 
 		// custom tooltips

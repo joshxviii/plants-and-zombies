@@ -16,6 +16,7 @@ import joshxviii.plantz.PazEntities.ROBO_ZOMBIE
 import joshxviii.plantz.PazEntities.SOLDIER_ZOMBIE
 import joshxviii.plantz.PazEntities.SUPER_BRAINZ
 import joshxviii.plantz.PazEntities.ZOMBIE_YETI
+import joshxviii.plantz.PazTags.ItemTags.BUCKET_WEARABLE
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.item.*
 import joshxviii.plantz.item.component.*
@@ -25,6 +26,7 @@ import net.fabricmc.fabric.impl.item.ItemComponentTooltipProviderRegistryImpl
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.Registry
+import net.minecraft.core.component.DataComponentMap
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.dispenser.BlockSource
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior
@@ -296,6 +298,23 @@ object PazItems {
         )
     }
 
+    fun bucketHeadItem(builder: DataComponentMap.Builder, item: Item) {
+        builder.set(PazComponents.BLOCKS_PROJECTILE_DAMAGE, BlocksProjectileDamage(breakChance = .05f))
+        builder.set(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
+            .setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)
+            .build()
+        )
+        builder.getOrCreate(DataComponents.ATTRIBUTE_MODIFIERS) { ItemAttributeModifiers.builder().build() }.withModifierAdded(
+            Attributes.ARMOR,
+            AttributeModifier(pazResource("bucket_armor"), 1.0, AttributeModifier.Operation.ADD_VALUE),
+            EquipmentSlotGroup.HEAD
+        ).withModifierAdded(
+            Attributes.KNOCKBACK_RESISTANCE,
+            AttributeModifier(pazResource("bucket_knockback_resistance"), 0.05, AttributeModifier.Operation.ADD_VALUE),
+            EquipmentSlotGroup.HEAD
+        )
+    }
+
     fun initialize() {
 
         FuelValueEvents.BUILD.register { builder, context ->
@@ -312,27 +331,8 @@ object PazItems {
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BRAINZ_ALLOY_COST)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BLOCKS_PROJECTILE_DAMAGE)
 
-        DefaultItemComponentEvents.MODIFY.register {
-            it.modify(Items.BUCKET) { builder ->
-                builder.set(PazComponents.BLOCKS_PROJECTILE_DAMAGE, BlocksProjectileDamage(breakChance = .05f))
-                builder.set(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
-                    .setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)
-                    .build()
-                )
-
-                val armorModifier = ItemAttributeModifiers.builder()
-                    .add(
-                        Attributes.ARMOR,
-                        AttributeModifier(pazResource("bucket_armor"), 1.0, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.HEAD
-                    ).add(
-                        Attributes.KNOCKBACK_RESISTANCE,
-                        AttributeModifier(pazResource("bucket_knockback_resistance"), 0.05, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.HEAD
-                    ).build()
-
-                builder.set(DataComponents.ATTRIBUTE_MODIFIERS, armorModifier)
-            }
+        DefaultItemComponentEvents.MODIFY.register { ctx ->
+            ctx.modify({ it.defaultInstance.`is`(BUCKET_WEARABLE)}, ::bucketHeadItem)
         }
 
         // Dispenser behavior

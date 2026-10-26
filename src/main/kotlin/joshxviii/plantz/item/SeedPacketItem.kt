@@ -79,7 +79,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
                 if (result == PacketInteractionResult.SUCCESS) {
                     itemStack.consume(1, player)
                     applyCooldown(itemStack, player)
-                    return InteractionResult.SUCCESS_SERVER
+                    return InteractionResult.SUCCESS
                 }
                 if (result == PacketInteractionResult.FAIL) return InteractionResult.CONSUME
             }

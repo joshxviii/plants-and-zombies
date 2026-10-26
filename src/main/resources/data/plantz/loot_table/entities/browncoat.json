@@ -65,7 +65,41 @@
         },
         {
           "condition": "minecraft:random_chance",
-          "chance": 0.02
+          "chance": 0.01
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "min": 1,
+        "max": 2
+      },
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "value": "plantz:balloons",
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "nbt": "{\"variant\":\"balloon\"}"
+              }
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:entity_properties",
+          "entity": "attacker",
+          "predicate": {
+            "type": "#plantz:drop_loot_when_killed_by"
+          }
+        },
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.4
         }
       ]
     }
