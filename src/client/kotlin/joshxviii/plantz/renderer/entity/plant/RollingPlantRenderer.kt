@@ -2,6 +2,7 @@ package joshxviii.plantz.renderer.entity.plant
 
 import com.mojang.blaze3d.vertex.PoseStack
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.entity.plant.RollingPlant
 import joshxviii.plantz.entity.plant.WallNut
 import joshxviii.plantz.model.plants.WallNutModel
 import net.minecraft.client.Minecraft
@@ -13,9 +14,9 @@ import net.minecraft.util.Mth
 import org.joml.Quaternionf
 import kotlin.math.sqrt
 
-class WallNutRenderer(
+class RollingPlantRenderer(
+    private val defaultModel: EntityModel<PlantRenderState>,
     context: EntityRendererProvider.Context,
-    private val defaultModel: EntityModel<PlantRenderState> = WallNutModel(context.bakeLayer(WallNutModel.LAYER_LOCATION))
 ): PlantRenderer(
     defaultModel,
     context,
@@ -28,17 +29,17 @@ class WallNutRenderer(
         collector: SubmitNodeCollector,
         camera: CameraRenderState
     ) {
-        state as WallNutRenderState
+        state as RollingPLantRenderState
         super.submit(state, poseStack, collector, camera)
     }
 
     override fun createRenderState(): PlantRenderState {
-        return WallNutRenderState()
+        return RollingPLantRenderState()
     }
 
     override fun extractRenderState(entity: Plant, state: PlantRenderState, partialTick: Float) {
-        (state as WallNutRenderState)
-        (entity as WallNut)
+        (state as RollingPLantRenderState)
+        (entity as RollingPlant)
         super.extractRenderState(entity, state, partialTick)
         updateClientRoll(entity)
 
@@ -46,7 +47,8 @@ class WallNutRenderer(
         state.rollRotation.set(entity.rollRotation)
     }
 
-    private fun updateClientRoll(entity: WallNut) {
+    private fun updateClientRoll(entity: Plant) {
+        (entity as RollingPlant)
         if (Minecraft.getInstance().isPaused) return
         val tickScale = entity.level().tickRateManager().tickrate() / 20f
 
@@ -83,7 +85,7 @@ class WallNutRenderer(
     }
 }
 
-class WallNutRenderState : PlantRenderState() {
+class RollingPLantRenderState : PlantRenderState() {
     var isRolling: Boolean = false
     var rollRotation: Quaternionf = Quaternionf()
 }

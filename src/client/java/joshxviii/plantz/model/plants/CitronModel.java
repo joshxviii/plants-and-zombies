@@ -3,6 +3,7 @@ package joshxviii.plantz.model.plants;
 import joshxviii.plantz.animation.plants.CitronAnimation;
 import joshxviii.plantz.animation.plants.RoyalSunflowerAnimation;
 import joshxviii.plantz.renderer.entity.plant.PlantRenderState;
+import joshxviii.plantz.renderer.entity.plant.RollingPLantRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -10,6 +11,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Quaternionf;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
@@ -143,5 +145,17 @@ public class CitronModel extends PlantModel {
 		this.body.yRot = state.bodyRot * Mth.DEG_TO_RAD;
 		this.head.xRot = state.xRot * Mth.DEG_TO_RAD;
 		this.head.yRot = state.yRot * Mth.DEG_TO_RAD;
+
+		if (!(state instanceof RollingPLantRenderState rollingState)) return;
+
+		ball.xRot = 0.0F;
+		ball.yRot = 0.0F;
+		ball.zRot = 0.0F;
+
+		Quaternionf q = rollingState.getRollRotation();
+
+		if (rollingState.isRolling()) ball.rotateBy(q);
+
+		body.yRot = rollingState.yRot * Mth.DEG_TO_RAD;
 	}
 }

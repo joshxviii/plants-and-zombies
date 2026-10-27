@@ -7,13 +7,10 @@ import joshxviii.plantz.PazTags
 import joshxviii.plantz.PazTags.EntityTypes.IGNORE_WALLNUT_COLLISION
 import joshxviii.plantz.PazTags.EntityTypes.WALLNUT_DEFLECTABLE
 import joshxviii.plantz.applyImpulse
-import joshxviii.plantz.entity.Sun
-import joshxviii.plantz.isHypnotized
+import joshxviii.plantz.entity.plant.RollingPlant.Companion.ROLLING
 import joshxviii.plantz.item.GardeningGloveItem
 import joshxviii.plantz.pazResource
 import net.minecraft.core.Direction
-import net.minecraft.network.syncher.EntityDataAccessor
-import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
@@ -30,21 +27,19 @@ import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.Rotation
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
 import org.joml.Quaternionf
 
-open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
+open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, level), RollingPlant {
 
     companion object {
         fun wallNutReducedDamage(entity: Entity?, damage: Float): Float {
             return if (entity is Zombie) damage*0.75f else damage
         }
 
-        val ROLLING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(WallNut::class.java, EntityDataSerializers.BOOLEAN)
         val ROLLING_ID: Identifier = pazResource("rolling")
         private const val ROLL_FRICTION = 0.99
         private val KNOCK_BACK_MODIFIER = AttributeModifier(ROLLING_ID, 99.0, AttributeModifier.Operation.ADD_VALUE)
@@ -53,21 +48,23 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
 
     private var rolledOverEntities: MutableSet<Int> = mutableSetOf()
 
-    var isRolling: Boolean
+    var rolling: Boolean
         get() = this.entityData.get(ROLLING)
-        private set(value) { this.entityData.set(ROLLING, value) }
+        set(value) { this.entityData.set(ROLLING, value) }
 
-    var rollRotation: Quaternionf = Quaternionf()
+    override var rollRotation: Quaternionf = Quaternionf()
+
+    override fun isRolling(): Boolean = rolling
 
     fun roll(direction: Vec3 = Direction.fromYRot(yRot.toDouble()).unitVec3, power: Float = 0.51f) {
-        isRolling = true
+        rolling = true
         applyImpulse(direction, pow = power, uncertainty = 0.1f, ignoreResistance = true)
         getAttribute(Attributes.KNOCKBACK_RESISTANCE)!!.let { if (!it.hasModifier(ROLLING_ID)) it.addTransientModifier(KNOCK_BACK_MODIFIER) }
         getAttribute(Attributes.STEP_HEIGHT)!!.let { if (!it.hasModifier(ROLLING_ID)) it.addTransientModifier(STEP_HEIGHT_MODIFIER) }
     }
 
     fun stopRoll() {
-        isRolling = false
+        rolling = false
         //yBodyRot = Direction.getApproximateNearest(Vec3(cos(yBodyRot.toDouble() * Mth.DEG_TO_RAD), 0.0, sin(yBodyRot.toDouble() * Mth.DEG_TO_RAD))).unitVec3.toAngle()
         deltaMovement = Vec3.ZERO
         applyGridClamp()
@@ -86,7 +83,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
     }
 
     override fun canLookAround(): Boolean = false
-    override fun clampToGrid(): Boolean = !isRolling && super.clampToGrid()
+    override fun clampToGrid(): Boolean = !rolling && super.clampToGrid()
 
     override fun limitPistonMovement(vec: Vec3): Vec3 {
         val result = super.limitPistonMovement(vec)
@@ -95,12 +92,12 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
     }
 
     override fun shouldDiscardFriction(): Boolean {
-        return isRolling || super.shouldDiscardFriction()
+        return rolling || super.shouldDiscardFriction()
     }
 
     override fun tick() {
         super.tick()
-        if (!isRolling) return
+        if (!rolling) return
         if (level() !is ServerLevel) return
 
         val motion = deltaMovement
@@ -119,7 +116,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
     override fun getLookControl(): LookControl = noLookControl
 
     override fun isInvulnerableTo(level: ServerLevel, source: DamageSource): Boolean {
-        if (isRolling && source.`is`(PazTags.DamageTypes.IGNORED_BY_ROLLING_NUT)) return true
+        if (rolling && source.`is`(PazTags.DamageTypes.IGNORED_BY_ROLLING_NUT)) return true
         return super.isInvulnerableTo(level, source)
     }
 
@@ -133,7 +130,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
 
     override fun doPush(entity: Entity) {
         super.doPush(entity)
-        if (isRolling && entity is LivingEntity && entity !is Plant) {
+        if (rolling && entity is LivingEntity && entity !is Plant) {
             val level = level() as? ServerLevel?: return
             val source = this.damageSources().source(PazDamageTypes.PLANT, this, if (PazConfig.PLAYER_CREDIT_FOR_PLANT_KILLS) this.rootOwner else this)
             val damage = knownSpeed.length().toFloat() * 7f * PLANT_DAMAGE.toFloat()
@@ -156,18 +153,18 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
 
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
-        output.putBoolean("plantz:IsRolling", isRolling)
+        output.putBoolean("plantz:IsRolling", rolling)
     }
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
-        isRolling = input.getBooleanOr("plantz:IsRolling", false)
+        rolling = input.getBooleanOr("plantz:IsRolling", false)
     }
 
     override fun attackGoals() {}
 
     override fun canBeCollidedWith(other: Entity?): Boolean {
-        if (isRolling) return super.canBeCollidedWith(other)
+        if (rolling) return super.canBeCollidedWith(other)
 
         hurtOnCollide(other)
 

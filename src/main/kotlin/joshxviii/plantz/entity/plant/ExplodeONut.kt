@@ -1,11 +1,7 @@
 package joshxviii.plantz.entity.plant
 
-import joshxviii.plantz.NukeBlastParticleOptions
-import joshxviii.plantz.NukeSmokeParticleOptions
-import joshxviii.plantz.NukeWaveParticleOptions
 import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazDamageTypes
-import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.entity.plant.ExplosivePlant.Companion.EXPLOSION_CALCULATOR
 import joshxviii.plantz.entity.plant.ExplosivePlant.Companion.scaledExplosion
@@ -31,12 +27,12 @@ class ExplodeONut(type: EntityType<out Plant>, level: Level) : WallNut(type, lev
 
     override fun doPush(entity: Entity) {
         super.doPush(entity)
-        if (isRolling && entity !is Plant) explode()
+        if (rolling && entity !is Plant) explode()
     }
 
     override fun causeFallDamage(fallDistance: Double, damageModifier: Float, damageSource: DamageSource): Boolean {
         val result = super.causeFallDamage(fallDistance, damageModifier, damageSource)
-        if (isRolling && fallDistance > 12.0) explode()
+        if (rolling && fallDistance > 12.0) explode()
         return result
     }
 
