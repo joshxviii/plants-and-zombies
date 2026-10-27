@@ -397,7 +397,7 @@ object PazEntities {
             attackDamage = 2.0,
             movementSpeed = 0.225,
             maxHealth = 35.0,
-            followRange = 26.0,
+            followRange = 36.0,
         )
     )
     @JvmField val ENGINEER_ZOMBIE: EntityType<EngineerZombie> =  registerZombie(

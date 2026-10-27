@@ -256,8 +256,11 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     }
 
     @Inject(method = "canAttack", at = @At(value = "RETURN"), cancellable = true)
-    public void noAttackWhenFrozen(LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
-        if (this.hasEffect(PazEffects.FROZEN)) {
+    public void noStopAttackingEffects(LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
+        if (this.hasEffect(PazEffects.FROZEN) || this.hasEffect(PazEffects.BUTTERED)) {
+            cir.setReturnValue(false);
+        }
+        if (this.hasEffect(PazEffects.HYPNOTIZE) && (target instanceof Plant || target instanceof Player || target.hasEffect(PazEffects.HYPNOTIZE))) {
             cir.setReturnValue(false);
         }
     }
@@ -265,13 +268,6 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     @Inject(method = "onEffectUpdated", at = @At("TAIL"))
     public void updateEffect(CallbackInfo ci) {
         updateEffects();
-    }
-
-    @Inject(method = "canAttack", at = @At(value = "RETURN"), cancellable = true)
-    public void stopTargetingFriendlies(LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
-        if (this.hasEffect(PazEffects.HYPNOTIZE) && (target instanceof Plant || target instanceof Player || target.hasEffect(PazEffects.HYPNOTIZE))) {
-            cir.setReturnValue(false);
-        }
     }
 
     @Inject(method = "hurtServer", at = @At("HEAD"), cancellable = true)

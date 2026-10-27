@@ -2,7 +2,7 @@
   "mutations": [
     {
       "biome": "#plantz:plant/has_winter_melon",
-      "chance": 0.2,
+      "chance": 0.333,
       "result": "plantz:winter_melon"
     }
   ]

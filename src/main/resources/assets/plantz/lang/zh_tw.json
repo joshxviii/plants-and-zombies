@@ -35,6 +35,8 @@
   "advancements.plantz.craft_plant_flag.description": "使用腦袋旗幟合成一面植物旗幟",
   "advancements.plantz.taco_time": "2倍塔可時間！",
   "advancements.plantz.taco_time.description": "抵達第 10 波！獲勝後可取得雙倍獎勵！",
+  "advancements.plantz.all_gnomes": "我是地精，我是花園地精",
+  "advancements.plantz.all_gnomes.description": "集齊所有種類的花園地精",
   "advancements.plantz.win_zombie_raid": "庭院無憂",
   "advancements.plantz.win_zombie_raid.description": "擊退殭屍襲擊！",
   "advancements.plantz.win_hardest_raid": "殭霸博士的軍團",
@@ -203,6 +205,7 @@
   "item.plantz.green_garden_gnome": "綠色花園地精",
   "item.plantz.red_garden_gnome": "紅色花園地精",
   "item.plantz.yellow_garden_gnome": "黃色花園地精",
+  "item.plantz.golden_garden_gnome": "黃金花園地精",
 
   "item.plantz.lawn_flamingo": "草坪紅鶴",
 

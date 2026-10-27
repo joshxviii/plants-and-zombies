@@ -204,7 +204,7 @@ class PumpkinArmorLayer<M : EntityModel<PlantRenderState>>(
         poseStack.pushPose()
         poseStack.scale(-1.0f, -1.0f, 1.0f)
         poseStack.mulPose(Axis.YP.rotationDegrees(-180f))
-        poseStack.translate(0.0f, -1.505f, 0.0f)
+        poseStack.translate(0.0f, -1.503f, 0.0f)
 
         val pumpkinState = PumpkinRenderState()
         pumpkinState.lightCoords = state.lightCoords

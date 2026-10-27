@@ -35,6 +35,8 @@
   "advancements.plantz.craft_plant_flag.description": "Faça uma Bandeira de Plantaz a partir de uma Bandeira de Mioloz",
   "advancements.plantz.taco_time": "Hora Extra do Taco!",
   "advancements.plantz.taco_time.description": "Chegue até a Horda 10! Você irá receber um bônus de duas vezes mais recompensas se vencer!",
+  "advancements.plantz.all_gnomes": "Sou um Gnomo, Sou um Gnomo de Jardim",
+  "advancements.plantz.all_gnomes.description": "Colete cada tipo de Gnomo de Jardim",
   "advancements.plantz.win_zombie_raid": "Gramado Protegido",
   "advancements.plantz.win_zombie_raid.description": "Derrote a Invasão Zumbi!",
   "advancements.plantz.win_hardest_raid": "Exército do Zumbão",
@@ -203,6 +205,7 @@
   "item.plantz.green_garden_gnome": "Gnomo de Jardim Verde",
   "item.plantz.red_garden_gnome": "Gnomo de Jardim Vermelho",
   "item.plantz.yellow_garden_gnome": "Gnomo de Jardim Amarelo",
+  "item.plantz.golden_garden_gnome": "Gnomo de Jardim Dourado",
 
   "item.plantz.lawn_flamingo": "Flamingo de Jardim",
 

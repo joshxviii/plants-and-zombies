@@ -2,16 +2,16 @@
   "mutations": [
     {
       "weather": "thunder",
-      "chance": 0.4,
+      "chance": 0.5,
       "result": "plantz:electric_peashooter"
     },
     {
       "biome": "#plantz:plant/has_fire_peashooter",
-      "chance": 0.33,
+      "chance": 0.5,
       "result": "plantz:fire_peashooter"
     },
     {
-      "chance": 0.12,
+      "chance": 0.1,
       "result": "plantz:repeater"
     }
   ]

@@ -23,7 +23,6 @@ import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.goal.Goal
-import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -124,7 +123,7 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
         if (tunnelTime>0) {
             val serverLevel = level() as? ServerLevel
             tunnelAnimation.startIfStopped(tickCount)
-            if(tickCount%5==0) playSound(SoundEvents.ROOTED_DIRT_HIT, 1.0f, 0.2f)
+            if(tickCount%6==0) playSound(SoundEvents.ROOTED_DIRT_HIT, 0.7f, 0.2f)
             if(tickCount%3==0) serverLevel?.sendParticles(
                 BlockParticleOption(ParticleTypes.BLOCK, serverLevel.getBlockState(blockPosition().below())),
                 x, y + 0.05, z, 8, 0.25, 0.0, 0.25, 0.4
@@ -144,10 +143,6 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
         } else {
             tunnelAnimation.stop()
         }
-    }
-
-    override fun createNavigation(level: Level): PathNavigation {
-        return super.createNavigation(level) // MinerNavigation(this, level)
     }
 
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
@@ -185,8 +180,8 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
     ) : Goal() {
 
         companion object {
-            const val MIN_DIST = 10.0
-            const val MAX_DIST = 30.0
+            const val MIN_DIST = 16.0
+            const val MAX_DIST = 40.0
         }
 
         private var exitPos: BlockPos? = null
@@ -194,6 +189,7 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
         override fun canUse(): Boolean {
             if (digger.tunnelTime > 0) return false
             if (digger.tunnelCooldown > 0) return false
+            if (digger.isInWater) return false
 
             val targetPos = digger.target?.takeIf { it.isAlive }?.blockPosition()
                 ?: (digger.level() as? ServerLevel)
@@ -226,8 +222,8 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
             val from = digger.blockPosition()
             val random = digger.random
 
-            for (attempt in 0 until 16) {
-                val t = 0.8 + random.nextDouble() * 0.15
+            for (attempt in 0 until 10) {
+                val t = 0.78 + random.nextDouble() * 0.15
                 val baseX = from.x + (targetPos.x - from.x) * t
                 val baseZ = from.z + (targetPos.z - from.z) * t
                 val baseY = from.y + (targetPos.y - from.y) * t
