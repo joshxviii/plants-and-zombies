@@ -6,6 +6,7 @@ import joshxviii.plantz.PazSounds.GNOME_JUMP
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.isHypnotized
 import net.minecraft.core.BlockPos
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
@@ -101,12 +102,12 @@ class Gnome(type: EntityType<out Gnome>, level: Level) :Monster(type, level) {
         this.goalSelector.addGoal(3, WaterAvoidingRandomStrollGoal(this, 0.6))
         this.goalSelector.addGoal(4, FindAndRideAnimalGoal(this))
         //this.goalSelector.addGoal(7, FollowMobGoal(this, 1.0, 3.0f, 7.0f))
-        this.targetSelector.addGoal(1, HurtByTargetGoal(this, Gnome::class.java).setAlertOthers())
+        this.targetSelector.addGoal(1, HurtByTargetGoal(this).setAlertOthers())
         this.targetSelector.addGoal(2, NearestAttackableTargetGoal(this, LivingEntity::class.java, true) { target, level ->
-            target !is Gnome
-                    && target is Plant
+            !(target is Gnome && !target.isHypnotized())
+                    && (target is Plant
                     || target is Zombie
-                    || target is Player
+                    || target is Player)
         })
     }
 

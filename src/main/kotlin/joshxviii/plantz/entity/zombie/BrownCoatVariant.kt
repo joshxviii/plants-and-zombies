@@ -2,6 +2,7 @@ package joshxviii.plantz.entity.zombie
 
 import com.mojang.serialization.Codec
 import io.netty.buffer.ByteBuf
+import joshxviii.plantz.SeasonalEvents.isHalloween
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.util.ByIdMap
@@ -14,7 +15,8 @@ enum class BrownCoatVariant(val suffix: String, val id: Int) : StringRepresentab
     BALLOON("balloon", 1),
     SNOW("snow", 2),
     DESERT("desert", 3),
-    BUCCANEER("buccaneer", 4);
+    BUCCANEER("buccaneer", 4),
+    VAMPIRE("vampire", 5);
 
     override fun getSerializedName(): String = suffix
 
@@ -29,6 +31,7 @@ enum class BrownCoatVariant(val suffix: String, val id: Int) : StringRepresentab
                 isSnowy -> if (random.nextFloat() < 0.75f) SNOW else BROWN
                 isDesert -> if (random.nextFloat() < 0.75f) DESERT else BROWN
                 isBeach -> if (random.nextFloat() < 0.6f) BUCCANEER else BROWN
+                isHalloween() -> if (random.nextFloat() < 0.08f) VAMPIRE else BROWN
                 else -> BROWN
             }
         }

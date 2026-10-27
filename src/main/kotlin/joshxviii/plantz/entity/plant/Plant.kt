@@ -56,8 +56,8 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.component.TypedEntityData
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.component.TypedEntityData
 import net.minecraft.world.level.*
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
@@ -265,6 +265,32 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
     protected val noLookControl = object : LookControl(this) {}
     override fun createBodyControl(): BodyRotationControl = if (canWalk()) super.createBodyControl() else object : BodyRotationControl(this) { override fun clientTick() {} }
+
+    override fun setYBodyRot(yBodyRot: Float) {
+        if (canWalk()) super.setYBodyRot(yBodyRot)
+        else {
+            this.yRotO = yHeadRot
+            this.yBodyRotO = yRotO
+            this.yHeadRot = yHeadRot
+            this.yHeadRotO = yHeadRot
+        }
+    }
+    override fun setYHeadRot(yHeadRot: Float) {
+        if (canWalk()) super.setYHeadRot(yHeadRot)
+        else {
+            this.yRotO = yHeadRot
+            this.yBodyRotO = this.yRotO
+            this.yHeadRot = yHeadRot
+            this.yHeadRotO = this.yHeadRot
+        }
+    }
+    override fun tickHeadTurn(yBodyRotT: Float) {
+        if (canWalk()) super.tickHeadTurn(yBodyRotT)
+        else {
+            this.yBodyRotO = this.yRotO
+            this.yBodyRot = this.yRot
+        }
+    }
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
@@ -670,6 +696,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             pumpkin.getAttribute(Attributes.MAX_HEALTH)?.baseValue = maxOf(pumpkin.maxHealth, armor).toDouble()
             pumpkin.state = PlantState.IDLE
             pumpkin.health = armor
+            (this.owner as? Player)?.let { pumpkin.tame(it) }
         }
         if (level.addFreshEntity(pumpkin)) {
             pumpkinArmor = 0f

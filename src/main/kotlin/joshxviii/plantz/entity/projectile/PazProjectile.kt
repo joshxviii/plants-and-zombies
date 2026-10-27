@@ -377,7 +377,7 @@ abstract class PazProjectile(
         if (piercingIgnoreEntityIds.contains(entity.id)) return false
         val owner = entityOwner ?: return super.canHitEntity(entity)
         if (entity is Balloon && ((owner is Plant && entity.getLeashHolder() is Plant) || (owner is Enemy && entity.getLeashHolder() is Enemy))) return false
-        if ((entity is Plant && owner is Plant && entity.owner !is Enemy) || (entity is Enemy && owner is Enemy && !owner.isHypnotized() && extractRootOwner(owner) !is Player)) return false
+        if ((entity is Plant && owner is Plant && entity.owner !is Enemy) || (entity.`is`(PazTags.EntityTypes.ZOMBIE_RAIDERS) && owner.`is`(PazTags.EntityTypes.ZOMBIE_RAIDERS) && !owner.isHypnotized() && extractRootOwner(owner) !is Player)) return false
         if (owner.hasSameRootOwner(entity)) return false
         return super.canHitEntity(entity)
     }

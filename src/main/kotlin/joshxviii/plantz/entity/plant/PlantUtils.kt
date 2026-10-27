@@ -141,6 +141,7 @@ fun Plant.processGloveItem(player: Player, item: ItemStack, hand: InteractionHan
 
 // seed packet interaction
 fun Plant.processSeedPacketInteraction(player: Player, itemStack: ItemStack, blockState: BlockState? = null): PacketInteractionResult {
+    if (!verifyOwner(player)) return PacketInteractionResult.FAIL
     val type = itemStack.get(DataComponents.ENTITY_DATA)?.type()
     val availableSun = player.getTotalSun()
     val sunCost = itemStack.get(PazComponents.SUN_COST)?.getSunCost(type)?: 0

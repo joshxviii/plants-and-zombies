@@ -16,8 +16,11 @@
   - If a Boss is not defeated by the end of a boss wave, the raid will be lost.
 - Reworked the Digger Zombie's behavior.
   - When 10 - 30 blocks away from its target, The Digger Zombie will attempt to tunnel into the ground closer to its target.
+- Added Vampire Browncoat variant.
+  - Has a chance to appear during Halloween season.
 - Balloon Zombies can drop balloons when killed.
 - Unleashed Balloons will pop after 2 minutes.
+- Hypnotized mobs will now target non-hypnotized mobs of the same type as well as other enemies.
 - Reduced how often and how many graves the grave digger will dig.
 - During a raid, the center flag will display a beacon beam while far away.
 - Plants will now only snap onto blocks that they can survive on. 

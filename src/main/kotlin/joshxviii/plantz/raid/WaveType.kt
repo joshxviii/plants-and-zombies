@@ -437,6 +437,7 @@ enum class WaveType(
             val wave = raid.currentWaveNumber()
             val random = raid.random
             if (zombie is SuperBrainz) zombie.variant = SuperBrainzVariant.TOXIC
+            if (zombie is BrownCoat) zombie.variant = BrownCoatVariant.VAMPIRE
 
             val pumpkinChance = random.nextFloat() < 0.65f || zombie is PirateCaptainGhost
             if (zombie !is SuperBrainz && pumpkinChance) {
