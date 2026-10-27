@@ -696,6 +696,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             pumpkin.getAttribute(Attributes.MAX_HEALTH)?.baseValue = maxOf(pumpkin.maxHealth, armor).toDouble()
             pumpkin.state = PlantState.IDLE
             pumpkin.health = armor
+            pumpkin.yRot = yRot
             (this.owner as? Player)?.let { pumpkin.tame(it) }
         }
         if (level.addFreshEntity(pumpkin)) {
@@ -964,12 +965,12 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun remove(reason: RemovalReason) {
         super.remove(reason)
-        if (reason == RemovalReason.DISCARDED) restorePumpkinFromArmor()
         if (reason != RemovalReason.UNLOADED_WITH_PLAYER) detachFromEntity()
     }
 
     override fun die(source: DamageSource) {
         super.die(source)
+        restorePumpkinFromArmor()
         if (source.entity is Player) {
             val sunCost = PazConfig.getSunCost(type)
             val level = level() as? ServerLevel
@@ -996,6 +997,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             val itemEntity = ItemEntity(level, x, y + 0.5, z, drop)
             level.addFreshEntity(itemEntity)
         }
+        restorePumpkinFromArmor()
         this.discard()
         return true
     }

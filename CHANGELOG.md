@@ -5,6 +5,10 @@
   - ***Currently not obtainable outside of Creative mode.***
 - Added Citron
 
+# Changelog 1.5.2
+### Hotfix
+- Pumpkins are no longer duplicated when using a Gardening Glove.
+
 # Changelog 1.5.1
 ### Changes / Additions
 - Added Pumpkin Plant.
