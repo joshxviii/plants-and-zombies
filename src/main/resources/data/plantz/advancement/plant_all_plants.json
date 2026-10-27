@@ -257,6 +257,14 @@
           "type": "plantz:pumpkin"
         }
       }
+    },
+    "plantz:citron": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:citron"
+        }
+      }
     }
   },
   "sends_telemetry_event": false

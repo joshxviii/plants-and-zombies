@@ -334,7 +334,7 @@ object PazEntities {
         width = 0.85f,
         height = 0.5f,
         attributes = Plant.Companion.PlantAttributes(
-            maxHealth = 30.0,
+            maxHealth = 30.0
         )
     )
     @JvmField val ROYAL_SUNFLOWER: EntityType<RoyalSunflower> = registerPlant(
@@ -348,6 +348,19 @@ object PazEntities {
             movementSpeed = 0.17,
             attackDamage = 10.0,
             knockbackResistance = 0.9
+        )
+    )
+    @JvmField val CITRON: EntityType<Citron> = registerPlant(
+        "citron", EntityType.Builder.of(::Citron, MobCategory.CREATURE),
+        width = 0.85f,
+        height = 0.76f,
+        eyeHeight = 0.6f,
+        attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 50.0,
+            followRange = 32.0,
+            movementSpeed = 0.22,
+            attackDamage = 3.0,
+            knockbackResistance = 0.1
         )
     )
     // endregion

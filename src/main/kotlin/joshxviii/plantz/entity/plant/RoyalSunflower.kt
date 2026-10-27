@@ -27,18 +27,12 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.pathfinder.PathType
 import net.minecraft.world.phys.Vec3
 
-class RoyalSunflower(
-    type: EntityType<out Plant>,
-    level: Level,
-) : Plant(PazEntities.ROYAL_SUNFLOWER, level) {
+class RoyalSunflower(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
     companion object {
         const val BEAM_COLOR = 0xFFFF00
     }
 
-    override fun sleepsDuringNight(): Boolean = false
-
-    override fun clampToGrid(): Boolean = false
-    override fun canSurviveOn(block: BlockState): Boolean = true
+    override fun canWalk(): Boolean = true
 
     override fun registerGoals() {
         super.registerGoals()

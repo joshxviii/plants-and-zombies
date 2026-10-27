@@ -136,6 +136,7 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(GraveBusterModel.LAYER_LOCATION) { GraveBusterModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(PumpkinModel.LAYER_LOCATION) { PumpkinModel.createBodyLayer() }
 
+        ModelLayerRegistry.registerModelLayer(CitronModel.LAYER_LOCATION) { CitronModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(RoyalSunflowerModel.LAYER_LOCATION) { RoyalSunflowerModel.createBodyLayer() }
 
         ModelLayerRegistry.registerModelLayer(PeaModel.LAYER_LOCATION) { PeaModel.createBodyLayer() }
@@ -211,6 +212,7 @@ object PazModels {
 
         EntityRenderers.register(PazEntities.SUN_SHROOM) { PlantRenderer(SunShroomModel(it.bakeLayer(SunShroomModel.LAYER_LOCATION)), it, SunShroomBabyModel(it.bakeLayer(SunShroomBabyModel.LAYER_LOCATION))) }
 
+        EntityRenderers.register(PazEntities.CITRON) { PlantRenderer(CitronModel(it.bakeLayer(CitronModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.ROYAL_SUNFLOWER) { RoyalSunflowerRenderer(it) }
 
         EntityRenderers.register(PazEntities.PEA) { ProjectileRenderer(PeaModel(it.bakeLayer(PeaModel.LAYER_LOCATION)), it) }

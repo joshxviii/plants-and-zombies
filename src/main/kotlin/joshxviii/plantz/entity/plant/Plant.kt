@@ -46,6 +46,7 @@ import net.minecraft.world.entity.ai.control.BodyRotationControl
 import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal
@@ -263,7 +264,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return super.getLookControl()
     }
     protected val noLookControl = object : LookControl(this) {}
-    override fun createBodyControl(): BodyRotationControl = object : BodyRotationControl(this) { override fun clientTick() {} }
+    override fun createBodyControl(): BodyRotationControl = if (canWalk()) super.createBodyControl() else object : BodyRotationControl(this) { override fun clientTick() {} }
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
@@ -345,6 +346,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         if (canLookAround()) {
             this.goalSelector.addGoal(3, RandomLookAroundGoal(this))
             this.goalSelector.addGoal(3, LookAtPlayerGoal(this, Player::class.java, 8.0f))
+        }
+        if (canWalk()) {
+            this.goalSelector.addGoal(4, RandomStrollGoal(this, 1.0))
         }
         attackGoals()
     }
@@ -736,12 +740,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
     fun exposedToRain(): Boolean = level().isRainingAt(blockPosition().above())
     open fun canLookAround(): Boolean = true
+    open fun canWalk(): Boolean = false
     open fun sleepsDuringNight(): Boolean = false
     open fun sleepsDuringDay(): Boolean = this.`is`(PazTags.EntityTypes.MUSHROOM)
-    open fun canSurviveOn(block: BlockState) : Boolean = block.`is`(PLANTABLE)
+    open fun canSurviveOn(block: BlockState) : Boolean = canWalk() || block.`is`(PLANTABLE)
     open fun canPlaceOn(block: BlockState) : Boolean = canSurviveOn(block)
     open fun canProduceSeeds(): Boolean = true
-    open fun clampToGrid() = onValidGround()
+    open fun clampToGrid() = !canWalk() && onValidGround()
     open fun cooldownFinished() {}
 
     fun hurtOnCollide(other: Entity?) {
