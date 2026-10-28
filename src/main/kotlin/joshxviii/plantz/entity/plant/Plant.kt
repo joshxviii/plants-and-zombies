@@ -8,6 +8,7 @@ import joshxviii.plantz.ai.goal.SleepGoal
 import joshxviii.plantz.api.SeedMutationManager
 import joshxviii.plantz.block.entity.FlagBlockEntity
 import joshxviii.plantz.entity.Sun
+import joshxviii.plantz.item.GardeningGloveItem
 import joshxviii.plantz.item.SeedPacketItem
 import joshxviii.plantz.raid.isNearRaid
 import net.minecraft.ChatFormatting
@@ -689,7 +690,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         playSound(SoundEvents.PUMPKIN_CARVE, 0.5f, 1f)
     }
 
-    protected fun restorePumpkinFromArmor() {
+    fun restorePumpkinFromArmor() {
         val armor = pumpkinArmor
         val pumpkinData = pumpkinEntityData ?: return
         if (armor <= 0f) return
@@ -937,7 +938,16 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             if (processWateringItem(player, itemStack, hand, growNeeds)) return InteractionResult.SUCCESS
 
             // glove interaction
-            if (processGloveItem(player, itemStack, hand)) return InteractionResult.SUCCESS
+
+
+            // seed + held glove interactions
+            val result = processSeedPacketInteraction(player, itemStack, hand)
+            if (result == PacketInteractionResult.SUCCESS) {
+                if (itemStack.`is`(PazItems.GARDENING_GLOVE)) GardeningGloveItem.removePlant(itemStack, player, hand)
+                else itemStack.consume(1, player)
+                return InteractionResult.SUCCESS
+            }
+            if (result == PacketInteractionResult.FAIL) if (processGloveItem(player, itemStack, hand)) return InteractionResult.SUCCESS
 
             //pot helmet interaction
             if (
@@ -987,7 +997,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun die(source: DamageSource) {
         super.die(source)
-        restorePumpkinFromArmor()
         if (source.entity is Player) {
             val sunCost = PazConfig.getSunCost(type)
             val level = level() as? ServerLevel

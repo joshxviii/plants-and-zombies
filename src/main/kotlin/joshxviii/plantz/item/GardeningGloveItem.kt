@@ -1,5 +1,7 @@
 package joshxviii.plantz.item
 
+import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.entity.plant.processSeedPacketInteraction
 import joshxviii.plantz.removeItemFromInventory
 import net.minecraft.ChatFormatting
 import net.minecraft.core.component.DataComponentGetter
@@ -12,6 +14,7 @@ import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.item.ItemEntity
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ItemUseAnimation
@@ -58,6 +61,13 @@ class GardeningGloveItem(properties: Properties) : Item(properties) {
             }
             item.hurtAndBreak(1, owner, hand)
         }
+
+        fun removePlant(item: ItemStack, owner: LivingEntity?, hand: InteractionHand) {
+            item.remove(DataComponents.ENTITY_DATA)
+            owner?.let{
+                hurtAndDropPlant(item, owner, hand)
+            }
+        }
     }
 
     override fun getUseAnimation(itemStack: ItemStack): ItemUseAnimation {
@@ -90,8 +100,6 @@ class GardeningGloveItem(properties: Properties) : Item(properties) {
         }
         if (!isHolding) return InteractionResult.TRY_WITH_EMPTY_HAND
 
-        if (level !is ServerLevel) return InteractionResult.SUCCESS
-
         val result = SeedPacketItem.tryPlant(
             level = level,
             player = context.player,
@@ -104,10 +112,7 @@ class GardeningGloveItem(properties: Properties) : Item(properties) {
         )
 
         if (result == InteractionResult.SUCCESS) {
-            stack.remove(DataComponents.ENTITY_DATA)
-            player?.let {
-                hurtAndDropPlant(stack, it, context.hand)
-            }
+            removePlant(stack, context.player, context.hand)
         }
         return result
     }

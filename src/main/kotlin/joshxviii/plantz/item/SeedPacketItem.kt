@@ -49,14 +49,6 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
         return Component.translatable("item.plantz.seed_packet.entity", entityName)
     }
 
-    override fun interactLivingEntity(itemStack: ItemStack, player: Player, target: LivingEntity, type: InteractionHand): InteractionResult {
-        val result = Companion.interactLivingEntity(itemStack, player, target, type)
-        return if (result == InteractionResult.PASS)
-            super.interactLivingEntity(itemStack, player, target, type)
-        else
-            result
-    }
-
     override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResult {
         return Companion.use(level, player, hand)
     }
@@ -66,26 +58,6 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
     }
 
     companion object {
-
-        fun interactLivingEntity(
-            itemStack: ItemStack,
-            player: Player,
-            target: LivingEntity,
-            type: InteractionHand
-        ): InteractionResult {
-            if (player.cooldowns.isOnCooldown(itemStack)) return InteractionResult.PASS
-            if (target is Plant) {
-                val result = target.processSeedPacketInteraction(player, itemStack)
-                if (result == PacketInteractionResult.SUCCESS) {
-                    itemStack.consume(1, player)
-                    applyCooldown(itemStack, player)
-                    return InteractionResult.SUCCESS
-                }
-                if (result == PacketInteractionResult.FAIL) return InteractionResult.CONSUME
-            }
-            return InteractionResult.PASS
-        }
-
         fun use(level: Level, player: Player, hand: InteractionHand): InteractionResult {
             val itemStack = player.getItemInHand(hand)
 
@@ -287,7 +259,7 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
                 player.cooldowns.addCooldown(group, (cooldownTime*20).toInt())
             } else {
                 player.cooldowns.removeCooldown(group)
-                itemStack.set(DataComponents.USE_COOLDOWN, UseCooldown(0f))
+                itemStack.remove(DataComponents.USE_COOLDOWN)
             }
         }
 

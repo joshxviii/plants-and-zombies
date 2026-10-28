@@ -2,6 +2,7 @@ package joshxviii.plantz.entity.plant
 
 import com.mojang.logging.LogUtils
 import joshxviii.plantz.*
+import joshxviii.plantz.item.GardeningGloveItem
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.ChatFormatting
 import net.minecraft.core.component.DataComponents
@@ -13,6 +14,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.ProblemReporter.ScopedCollector
 import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
@@ -120,11 +122,14 @@ fun Plant.processGloveItem(player: Player, item: ItemStack, hand: InteractionHan
                 return true
             }
 
+            if (level().isClientSide) return true
+
             val data = this.saveAsCompoundTag()
             item.set(DataComponents.ENTITY_DATA, TypedEntityData.of(this.type, data))
 
             playSound(SoundEvents.ARMOR_EQUIP_LEATHER.value())
             addParticlesAroundSelf(level(), ParticleTypes.DUST_PLUME, verticalSpreadScale = 0.5, height = 0f)
+            this.restorePumpkinFromArmor()
             this.discard()
             return true
         }
@@ -139,8 +144,10 @@ fun Plant.processGloveItem(player: Player, item: ItemStack, hand: InteractionHan
     return true
 }
 
-// seed packet interaction
-fun Plant.processSeedPacketInteraction(player: Player, itemStack: ItemStack, blockState: BlockState? = null): PacketInteractionResult {
+// seed packet / held glove interaction
+fun Plant.processSeedPacketInteraction(player: Player, itemStack: ItemStack, hand: InteractionHand): PacketInteractionResult {
+    if (!itemStack.has(DataComponents.ENTITY_DATA)) return PacketInteractionResult.FAIL
+    if (player.cooldowns.isOnCooldown(itemStack)) return PacketInteractionResult.FAIL
     if (!verifyOwner(player)) return PacketInteractionResult.FAIL
     val type = itemStack.get(DataComponents.ENTITY_DATA)?.type()
     val availableSun = player.getTotalSun()
@@ -164,17 +171,26 @@ fun Plant.processSeedPacketInteraction(player: Player, itemStack: ItemStack, blo
             }
         }
         PazEntities.PUMPKIN -> pumpkinSeedInteraction(itemStack, cantAfford, player)
-        else -> when (this) {// placing plant into pumpkin
-            is Pumpkin -> if (isGrowingSeeds) PacketInteractionResult.NO_INTERACTION else pumpkinSeedInteraction(itemStack, cantAfford, player)
-            else -> PacketInteractionResult.NO_INTERACTION
-        }
+        else -> PacketInteractionResult.NO_INTERACTION
     }
-    // show message
-    if (result == PacketInteractionResult.CANT_AFFORD) player.sendOverlayMessage(Component.translatable("message.plantz.not_enough_item", PazItems.SUN.name(), availableSun, sunCost).withStyle(ChatFormatting.RED))
-    // remove used sun
-    if (result == PacketInteractionResult.SUCCESS && !player.hasInfiniteMaterials()) {
-        player.removeSunFromStorageAndInventory(sunCost)
-        SeedPacketItem.applyCooldown(itemStack, player)
+
+    when (result) {
+        PacketInteractionResult.CANT_AFFORD -> {// show error message
+            player.sendOverlayMessage(Component.translatable("message.plantz.not_enough_item", PazItems.SUN.name(), availableSun, sunCost).withStyle(ChatFormatting.RED))
+        }
+        PacketInteractionResult.SUCCESS -> {
+            if (!player.hasInfiniteMaterials()) {// remove used sun
+                player.removeSunFromStorageAndInventory(sunCost)
+                if (!itemStack.`is`(PazItems.SEED_PACKET)) SeedPacketItem.applyCooldown(itemStack, player)
+            }
+        }
+        PacketInteractionResult.NO_INTERACTION -> {
+            return when (this) {// placing plant into pumpkin
+                is Pumpkin -> if (isGrowingSeeds) PacketInteractionResult.NO_INTERACTION else pumpkinSeedInteraction(itemStack, cantAfford, player)
+                else -> PacketInteractionResult.NO_INTERACTION
+            }
+        }
+        else -> {}
     }
     return result
 }
@@ -182,6 +198,7 @@ fun Plant.processSeedPacketInteraction(player: Player, itemStack: ItemStack, blo
 fun Plant.pumpkinSeedInteraction(itemStack: ItemStack, cantAfford: Boolean, player: Player): PacketInteractionResult {
     if (this.hasPumpkinArmor()) return PacketInteractionResult.NO_INTERACTION
     if (this !is Pumpkin) {
+        if (this.`is`(PazTags.EntityTypes.CANNOT_PUMPKIN)) return PacketInteractionResult.NO_INTERACTION
         applyPumpkinArmor(pumpkinData = itemStack.get(DataComponents.ENTITY_DATA))
         return PacketInteractionResult.SUCCESS
     }
@@ -216,6 +233,7 @@ fun Entity.saveAsCompoundTag(discards: List<String> = listOf("Pos")): CompoundTa
         saveWithoutId(output)
         if (this is Plant) plantSaveData(output)
         discards.forEach { output.discard(it) }
+        output.discard("plantz:PumpkinArmor")
         output.discard("leash")
         output.discard("UUID")
         return output.buildResult()
