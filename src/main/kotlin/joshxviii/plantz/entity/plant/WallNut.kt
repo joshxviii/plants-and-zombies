@@ -7,10 +7,11 @@ import joshxviii.plantz.PazTags
 import joshxviii.plantz.PazTags.EntityTypes.IGNORE_WALLNUT_COLLISION
 import joshxviii.plantz.PazTags.EntityTypes.WALLNUT_DEFLECTABLE
 import joshxviii.plantz.applyImpulse
-import joshxviii.plantz.entity.plant.RollingPlant.Companion.ROLLING
 import joshxviii.plantz.item.GardeningGloveItem
 import joshxviii.plantz.pazResource
 import net.minecraft.core.Direction
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
@@ -33,15 +34,15 @@ import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
 import org.joml.Quaternionf
 
-open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, level), RollingPlant {
+open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
     companion object {
         fun wallNutReducedDamage(entity: Entity?, damage: Float): Float {
             return if (entity is Zombie) damage*0.75f else damage
         }
 
+        val ROLLING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(WallNut::class.java, EntityDataSerializers.BOOLEAN)
         val ROLLING_ID: Identifier = pazResource("rolling")
-        private const val ROLL_FRICTION = 0.99
         private val KNOCK_BACK_MODIFIER = AttributeModifier(ROLLING_ID, 99.0, AttributeModifier.Operation.ADD_VALUE)
         private val STEP_HEIGHT_MODIFIER = AttributeModifier(ROLLING_ID, 0.75, AttributeModifier.Operation.ADD_VALUE)
     }
@@ -52,8 +53,6 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
         get() = this.entityData.get(ROLLING)
         set(value) { this.entityData.set(ROLLING, value) }
 
-    override var rollRotation: Quaternionf = Quaternionf()
-
     override fun isRolling(): Boolean = rolling
 
     fun roll(direction: Vec3 = Direction.fromYRot(yRot.toDouble()).unitVec3, power: Float = 0.51f) {
@@ -63,7 +62,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
         getAttribute(Attributes.STEP_HEIGHT)!!.let { if (!it.hasModifier(ROLLING_ID)) it.addTransientModifier(STEP_HEIGHT_MODIFIER) }
     }
 
-    fun stopRoll() {
+    override fun stopRoll() {
         rolling = false
         //yBodyRot = Direction.getApproximateNearest(Vec3(cos(yBodyRot.toDouble() * Mth.DEG_TO_RAD), 0.0, sin(yBodyRot.toDouble() * Mth.DEG_TO_RAD))).unitVec3.toAngle()
         deltaMovement = Vec3.ZERO
@@ -76,6 +75,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
         getAttribute(Attributes.STEP_HEIGHT)!!.let {
             if (it.hasModifier(ROLLING_ID)) it.removeModifier(ROLLING_ID)
         }
+
     }
 
     fun resetRolledOverEntities() {
@@ -83,37 +83,12 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
     }
 
     override fun canLookAround(): Boolean = false
-    override fun clampToGrid(): Boolean = !rolling && super.clampToGrid()
 
     override fun limitPistonMovement(vec: Vec3): Vec3 {
         val result = super.limitPistonMovement(vec)
         if (result.length() > 0.25) roll(result.normalize())
         return result
     }
-
-    override fun shouldDiscardFriction(): Boolean {
-        return rolling || super.shouldDiscardFriction()
-    }
-
-    override fun tick() {
-        super.tick()
-        if (!rolling) return
-        if (level() !is ServerLevel) return
-
-        val motion = deltaMovement
-        if (motion.horizontalDistance() > 1.0e-4) {
-            //yBodyRot = deltaMovement.normalize().toAngle() - 90
-            setDeltaMovement(
-                motion.x * ROLL_FRICTION,
-                motion.y,
-                motion.z * ROLL_FRICTION
-            )
-        }
-
-        if (deltaMovement.horizontalDistance() < 0.085 && leashHolder==null) stopRoll()
-    }
-
-    override fun getLookControl(): LookControl = noLookControl
 
     override fun isInvulnerableTo(level: ServerLevel, source: DamageSource): Boolean {
         if (rolling && source.`is`(PazTags.DamageTypes.IGNORED_BY_ROLLING_NUT)) return true

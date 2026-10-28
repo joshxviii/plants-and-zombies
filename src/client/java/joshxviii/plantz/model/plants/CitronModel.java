@@ -1,9 +1,7 @@
 package joshxviii.plantz.model.plants;
 
 import joshxviii.plantz.animation.plants.CitronAnimation;
-import joshxviii.plantz.animation.plants.RoyalSunflowerAnimation;
 import joshxviii.plantz.renderer.entity.plant.PlantRenderState;
-import joshxviii.plantz.renderer.entity.plant.RollingPLantRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -94,7 +92,7 @@ public class CitronModel extends PlantModel {
 
 		PartDefinition glasses = head.addOrReplaceChild("glasses", CubeListBuilder.create().texOffs(50, 0).addBox(-3.5F, -1.0F, 0.0F, 7.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -2.0F, -5.25F));
 
-		PartDefinition eyebrows = head.addOrReplaceChild("eyebrows", CubeListBuilder.create(), PartPose.offset(0.0F, -3.5F, -5.0F));
+		PartDefinition eyebrows = head.addOrReplaceChild("eyebrows", CubeListBuilder.create(), PartPose.offset(0.0F, -3.5F, -5.2F));
 
 		PartDefinition left_eyebrow = eyebrows.addOrReplaceChild("left_eyebrow", CubeListBuilder.create().texOffs(52, 2).addBox(-2.0F, -0.5F, 0.0F, 4.0F, 1.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(3.0F, 0.0F, -0.025F));
 
@@ -140,22 +138,25 @@ public class CitronModel extends PlantModel {
 	}
 
 	@Override
+	public KeyframeAnimation getProcessedIdle(PlantRenderState state) {
+		return state.getUseSpecialAction() ? this.transformBallAnimation : super.getProcessedIdle(state);
+	}
+
+	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
 		this.body.yRot = state.bodyRot * Mth.DEG_TO_RAD;
 		this.head.xRot = state.xRot * Mth.DEG_TO_RAD;
 		this.head.yRot = state.yRot * Mth.DEG_TO_RAD;
 
-		if (!(state instanceof RollingPLantRenderState rollingState)) return;
-
 		ball.xRot = 0.0F;
 		ball.yRot = 0.0F;
 		ball.zRot = 0.0F;
 
-		Quaternionf q = rollingState.getRollRotation();
+		Quaternionf q = state.getRollRotation();
 
-		if (rollingState.isRolling()) ball.rotateBy(q);
+		if (state.isRolling()) ball.rotateBy(q);
 
-		body.yRot = rollingState.yRot * Mth.DEG_TO_RAD;
+		body.yRot = state.yRot * Mth.DEG_TO_RAD;
 	}
 }

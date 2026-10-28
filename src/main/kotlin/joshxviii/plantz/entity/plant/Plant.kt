@@ -68,6 +68,7 @@ import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
+import org.joml.Quaternionf
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -139,6 +140,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val POWERED_UP: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, EntityDataSerializers.BOOLEAN)
 
         val ON_PLAYER_HEAD_EFFECTS: Identifier = pazResource("on_player_head_effects")
+        private const val ROLL_FRICTION = 0.99
 
         const val PLANT_DAMAGE = 1.0
 
@@ -171,6 +173,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     var clientOldAttachPosition: BlockPos? = null
+    var rollRotation: Quaternionf = Quaternionf()
     private var nutrientSupply = NUTRIENT_SUPPLY_MAX
     private var loadedFromSave = false
 
@@ -599,6 +602,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                 else -> null
             }?.let { level.addParticle(it, x, y+eyeHeight+0.55, z, 0.0, 0.0, 0.0) }
         }
+
+        if (isRolling()) calculateRollFriction()
     }
 
     /**
@@ -758,6 +763,14 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return PlantGrowNeeds.SUN
     }
 
+    fun calculateRollFriction() {
+        val motion = deltaMovement
+        if (motion.horizontalDistance() > 1.0e-4) { setDeltaMovement(motion.x * ROLL_FRICTION, motion.y, motion.z * ROLL_FRICTION) }
+        if (deltaMovement.horizontalDistance() < 0.085 && leashHolder==null) stopRoll()
+    }
+    open fun stopRoll() {
+        deltaMovement = Vec3.ZERO
+    }
     /** if on invalid ground plant should start to suffocate */
     private fun onValidGround() : Boolean {
         return (attachedEntity != null) || hasPumpkinArmor() || canSurviveOn(getBlockBelow()) || vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
@@ -767,15 +780,19 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return level().isBrightOutside && level().getBrightness(LightLayer.SKY, BlockPos.containing(x, eyeY, z)) >= 7
     }
     fun exposedToRain(): Boolean = level().isRainingAt(blockPosition().above())
-    open fun canLookAround(): Boolean = true
+    open fun canLookAround(): Boolean = !isRolling()
     open fun canWalk(): Boolean = false
     open fun sleepsDuringNight(): Boolean = false
     open fun sleepsDuringDay(): Boolean = this.`is`(PazTags.EntityTypes.MUSHROOM)
     open fun canSurviveOn(block: BlockState) : Boolean = canWalk() || block.`is`(PLANTABLE)
     open fun canPlaceOn(block: BlockState) : Boolean = canSurviveOn(block)
     open fun canProduceSeeds(): Boolean = true
-    open fun clampToGrid() = !canWalk() && onValidGround()
+    open fun clampToGrid() = !canWalk() && !isRolling() && onValidGround()
     open fun cooldownFinished() {}
+    open fun isRolling(): Boolean = false
+    override fun shouldDiscardFriction(): Boolean {
+        return isRolling() || super.shouldDiscardFriction()
+    }
 
     fun hurtOnCollide(other: Entity?) {
         if (other is Zombie && other.swingTime == 0 && !other.isHypnotized()) {// when colliding with a zombie, the zombie will attack the plant

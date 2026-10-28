@@ -109,7 +109,7 @@ fun Plant.processGloveItem(player: Player, item: ItemStack, hand: InteractionHan
         // owner check
         !verifyOwner(player) -> return false
         // roll wallnut
-        (this is WallNut && this.rolling) -> {
+        (this.isRolling()) -> {
             dropAllLeashConnections(player)
             deltaMovement = Vec3.ZERO
         }

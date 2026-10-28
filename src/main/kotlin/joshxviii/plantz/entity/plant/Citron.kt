@@ -4,14 +4,18 @@ import joshxviii.plantz.BeamParticleOptions
 import joshxviii.plantz.NukeSmokeParticleOptions
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazServerParticles
+import joshxviii.plantz.PazSounds
 import joshxviii.plantz.ai.goal.BeamAttackGoal
 import joshxviii.plantz.ai.goal.NavigateToTargetGoal
+import joshxviii.plantz.applyImpulse
+import joshxviii.plantz.item.GardeningGloveItem
 import joshxviii.plantz.pazResource
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
@@ -21,23 +25,22 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import org.joml.Quaternionf
 
-class Citron(type: EntityType<out Plant>, level: Level) : Plant(type, level), RollingPlant {
+class Citron(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
     companion object {
         val BALL_TRANSFORMATION: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Citron::class.java, EntityDataSerializers.BOOLEAN)
         val TRANSFORMED_ID: Identifier = pazResource("transformed")
 
-        private val SPEED_MODIFIER = AttributeModifier(TRANSFORMED_ID, 0.19, AttributeModifier.Operation.ADD_VALUE)
+        private val SPEED_MODIFIER = AttributeModifier(TRANSFORMED_ID, 0.1, AttributeModifier.Operation.ADD_VALUE)
         private val STEP_HEIGHT_MODIFIER = AttributeModifier(TRANSFORMED_ID, 1.0, AttributeModifier.Operation.ADD_VALUE)
 
         const val BEAM_COLOR = 0xEE9933
     }
-
-    override var rollRotation: Quaternionf = Quaternionf()
 
     var isTransformed: Boolean
         get() = this.entityData.get(BALL_TRANSFORMATION)
@@ -51,12 +54,20 @@ class Citron(type: EntityType<out Plant>, level: Level) : Plant(type, level), Ro
     val walkGoal = NavigateToTargetGoal(this)
     val ballGoal = NavigateToTargetGoal(
         this,
-        keepAwayDistance = 3.0,
+        keepAwayDistance = 8.0,
         alwaysFaceTarget = false
     )
 
     override fun isRolling(): Boolean = isTransformed
     override fun canWalk(): Boolean = true
+
+    override fun attackedWithGlove(player: Player, item: ItemStack, hand: InteractionHand) {
+        if (!isTransformed) return
+        funnyBounce()
+        val direction = player.lookAngle.horizontal()
+        applyImpulse(direction, pow = 0.35f, uncertainty = 0.1f, ignoreResistance = true)
+        GardeningGloveItem.hurtAndDropPlant(item, player, hand)
+    }
 
     override fun registerGoals() {
         super.registerGoals()
@@ -70,6 +81,7 @@ class Citron(type: EntityType<out Plant>, level: Level) : Plant(type, level), Ro
             damageType = PazDamageTypes.ENERGY,
             damageMultiplier = 1.0f,
             particleFactory = { startPos, endPos ->
+                playSound(PazSounds.SUPER_BRAINZ_LAZER)
                 val laserStart = calculateUpVector(this.xRot + 95, this.yHeadRot + 25).scale(0.9).add(startPos)
                 (level() as ServerLevel).sendParticles(
                     BeamParticleOptions(endPos.offsetRandom(random, .25f),

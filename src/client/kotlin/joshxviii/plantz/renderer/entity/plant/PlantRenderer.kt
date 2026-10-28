@@ -9,6 +9,7 @@ import joshxviii.plantz.renderer.entity.plant.PlantRenderState.Companion.TEXTURE
 import joshxviii.plantz.renderer.getEmissiveTextureLocation
 import joshxviii.plantz.renderer.getTextureLocation
 import joshxviii.plantz.renderer.validMagicName
+import net.minecraft.client.Minecraft
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.Model
 import net.minecraft.client.model.geom.ModelPart
@@ -33,6 +34,7 @@ import net.minecraft.world.phys.Vec3
 import org.joml.Quaternionf
 import kotlin.collections.listOf
 import kotlin.math.pow
+import kotlin.math.sqrt
 
 open class PlantRenderer(
     private val defaultModel: EntityModel<PlantRenderState>,
@@ -43,6 +45,45 @@ open class PlantRenderer(
     defaultModel,
     0.5f
 ) {
+
+    companion object {
+        private fun updateClientRoll(entity: Plant) {
+            if (Minecraft.getInstance().isPaused) return
+            val tickScale = entity.level().tickRateManager().tickrate() / 20f
+
+            if (!entity.isRolling()) {
+                entity.rollRotation.identity()
+                return
+            }
+
+            val dx = (entity.x - entity.xo).toFloat()
+            val dz = (entity.z - entity.zo).toFloat()
+            val distance = sqrt(dx * dx + dz * dz) * tickScale
+            if (distance < 1e-4f) return
+
+            val yawRad = Mth.DEG_TO_RAD * (180.0f - entity.yRot).toDouble()
+            val cos = Mth.cos(yawRad)
+            val sin = Mth.sin(-yawRad)
+
+            val localDx = dx * cos + dz * sin
+            val localDz = dx * sin + -dz * cos
+
+            val radius = sqrt(16.0f * entity.scale)
+            val angle = distance / radius
+
+            var axisX = localDz
+            var axisZ = -localDx
+            val axisLen = sqrt(axisX * axisX + axisZ * axisZ)
+            if (axisLen < 1e-4f) return
+            axisX /= axisLen
+            axisZ /= axisLen
+
+            val delta = Quaternionf().fromAxisAngleRad(axisX, 0f, axisZ, angle)
+            delta.mul(entity.rollRotation, entity.rollRotation)
+            entity.rollRotation.normalize()
+        }
+    }
+
     init {
         addLayer(EmissivePlantLayer(this))
         addLayer(SunGlowLayer(this))
@@ -108,6 +149,11 @@ open class PlantRenderer(
         state.isAsleep = entity.isAsleep
         state.pumpkinArmor = entity.pumpkinArmor
         state.damagedAmount = entity.damagedPercent
+
+        updateClientRoll(entity)
+        state.isRolling = entity.isRolling()
+        state.rollRotation.set(entity.rollRotation)
+
         state.initAnimationState.copyFrom(entity.initAnimationState)
         state.idleAnimationState.copyFrom(entity.idleAnimationState)
         state.actionAnimationState.copyFrom(entity.actionAnimationState)
@@ -120,6 +166,7 @@ open class PlantRenderer(
             when (entity) {
                 is BonkChoy -> entity.useUppercut
                 is Chomper -> entity.isChewing
+                is Citron -> entity.isTransformed
                 else -> false
             }
         state.textureExtra = mutableListOf<String>().apply {
@@ -235,6 +282,8 @@ open class PlantRenderState : LivingEntityRenderState() {
     var glowPercent: Float = 0f
     var plantState: PlantState = PlantState.IDLE
     var useSpecialAction: Boolean = false
+    var isRolling: Boolean = false
+    var rollRotation: Quaternionf = Quaternionf()
     val initAnimationState: AnimationState = AnimationState()
     val idleAnimationState: AnimationState = AnimationState()
     val actionAnimationState: AnimationState = AnimationState()
