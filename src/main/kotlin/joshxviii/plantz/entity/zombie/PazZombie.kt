@@ -184,6 +184,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             val jumpStrength: Double = 0.42,
             val followRange: Double = 50.0,
             val armor: Double = 0.0,
+            val armorToughness: Double = 0.0,
             val spawnReinforcementsChance: Double = 0.0,
             val explosionKnockbackResistance: Double = 0.0,
             val knockbackResistance: Double = 0.2,

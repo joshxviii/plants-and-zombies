@@ -126,7 +126,7 @@ object PazItems {
             .component(DataComponents.BLOCKS_ATTACKS, BlocksAttacks(
                 0.25f,
                 1.0f,
-                listOf(DamageReduction(90.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 1.0f)),
+                listOf(DamageReduction(80.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 0.9f)),
                 ItemDamageFunction.DEFAULT,
                 Optional.empty<HolderSet<DamageType>>(),
                 Optional.of(PazSounds.PROJECTILE_HIT_PAPER),

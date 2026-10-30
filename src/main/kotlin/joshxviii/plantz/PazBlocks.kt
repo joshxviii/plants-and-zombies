@@ -246,7 +246,7 @@ object PazBlocks {
     @JvmField val REINFORCED_BRAINZ_ALLOY_BLOCK: Block = registerBlock(
         "reinforced_brainz_alloy_block",
         BlockBehaviour.Properties.of().sound(SoundType.COPPER).requiresCorrectToolForDrops()
-            .strength(10.0F, 1200.0F),
+            .strength(14.0F, 1200.0F),
     )
     @JvmField val BRAINZ_ALLOY_FENCE: Block = registerBlock(
         "brainz_alloy_fence",

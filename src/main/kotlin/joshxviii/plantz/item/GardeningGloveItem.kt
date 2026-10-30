@@ -137,7 +137,7 @@ class GardeningGloveItem(properties: Properties) : Item(properties) {
     }
 
     override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResult {
-        player.startUsingItem(hand)
+        if (player.getItemInHand(hand).has(DataComponents.ENTITY_DATA)) player.startUsingItem(hand)
         return super.use(level, player, hand)
     }
 

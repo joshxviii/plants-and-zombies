@@ -873,7 +873,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun checkDespawn() {
         super.checkDespawn()
     }
-
+    open fun attackedWithGlove(attacker: LivingEntity, item: ItemStack, hand: InteractionHand) {}
     override fun skipAttackInteraction(source: Entity): Boolean {
         val item = source.weaponItem ?: ItemStack.EMPTY
         if (source is Player && this.hasSameRootOwner(source) && item.`is`(PazItems.GARDENING_GLOVE)) {
@@ -883,8 +883,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
         return super.skipAttackInteraction(source)
     }
-
-    open fun attackedWithGlove(attacker: LivingEntity, item: ItemStack, hand: InteractionHand) {}
 
     override fun mobInteract(player: Player, hand: InteractionHand): InteractionResult {
         val itemStack = player.getItemInHand(hand)
@@ -982,6 +980,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             yBodyRot = clampYRot(yBodyRot)
         }
     }
+
+    override fun shouldTryTeleportToOwner(): Boolean = false
 
     override fun remove(reason: RemovalReason) {
         super.remove(reason)

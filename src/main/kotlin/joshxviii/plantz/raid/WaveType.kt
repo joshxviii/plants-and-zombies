@@ -443,7 +443,7 @@ enum class WaveType(
             if (zombie is BrownCoat) zombie.variant = BrownCoatVariant.VAMPIRE
 
             val pumpkinChance = random.nextFloat() < 0.65f || zombie is PirateCaptainGhost
-            if (zombie !is SuperBrainz && pumpkinChance) {
+            if (zombie !is SuperBrainz && zombie.getItemBySlot(EquipmentSlot.HEAD).isEmpty && pumpkinChance) {
                 if (random.nextFloat() < 0.4f) zombie.setItemSlot(EquipmentSlot.HEAD, Items.JACK_O_LANTERN.defaultInstance)
                 else zombie.setItemSlot(EquipmentSlot.HEAD, Items.CARVED_PUMPKIN.defaultInstance)
                 zombie.setDropChance(EquipmentSlot.HEAD, 0.0f)

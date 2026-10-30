@@ -57,7 +57,7 @@ class ProtectsHeadDataComponent(
 
     fun canBlockFrom(source: DamageSource, user: LivingEntity): Boolean {
         if (source.`is`(DamageTypeTags.DAMAGES_HELMET)) return true
-        val sourcePosition = source.directEntity?.eyePosition ?: source.sourcePosition ?: return false
+        val sourcePosition = source.directEntity?.let { it.boundingBox.center } ?: source.sourcePosition ?: return false
         return sourcePosition.y >= user.eyeY - BELOW_EYE_LEVEL_TOLERANCE && !(source.`is`(PazTags.DamageTypes.BYPASSES_HEAD_PROTECTION))
     }
 
@@ -112,7 +112,7 @@ class ProtectsHeadDataComponent(
     data class DamageReduction(
         val type: Optional<HolderSet<DamageType>> = Optional.empty(),
         val base: Float = 0.0f,
-        val factor: Float = 1.0f
+        val factor: Float = 0.9f
     ) {
         fun resolve(source: DamageSource, dealtDamage: Float): Float {
             if (type.isPresent && !type.get().contains(source.typeHolder())) return 0.0f
