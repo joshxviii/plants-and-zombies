@@ -403,7 +403,6 @@ class ZombieRaid(
         val bossEntities = bossType.bossEntityEntries(this, waveType)
         for ((type, configure) in bossEntities) {
             val zombie = type.create(level, EntitySpawnReason.EVENT) ?: return
-            val spawnPos = pos
             setBoss(zombie)
             joinRaid(level, zombie, exists = false, pos = pos, configure = configure)
         }

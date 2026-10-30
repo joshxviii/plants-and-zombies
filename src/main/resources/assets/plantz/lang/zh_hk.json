@@ -125,6 +125,8 @@
   "effect.plantz.painted.magenta": "已染紫紅",
   "effect.plantz.painted.pink": "已染粉紅",
 
+  "enchantment.plantz.lobbing": "投擲",
+
   "component.stored_sun.description": "儲存並使用收集到的陽光",
   "component.stored_sun": "%s / %s",
   "component.stored_water.description": "用於為植物澆水",
@@ -352,6 +354,8 @@
   "container.plantz.mailbox_success": "發送成功！",
   "container.plantz.time_machine.wip": "???",
 
+  "gui.plantz.letter": "信",
+
   "plantz.subtitles.projectile.deflected": "投射物被彈開",
   "plantz.subtitles.projectile.shoot": "投射物發射",
 
@@ -386,5 +390,7 @@
   "plantz.subtitles.entity.gargantuar.hurt": "巨人殭屍受傷",
 
   "plantz.subtitles.event.mob_effect.hypnotized": "生物被催眠",
-  "plantz.subtitles.event.mob_effect.zombie_omen": "殭屍襲擊逼近"
+  "plantz.subtitles.event.mob_effect.zombie_omen": "殭屍襲擊逼近",
+
+  "biome.plantz.graveyard": "墓地"
 }

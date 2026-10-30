@@ -125,6 +125,8 @@
   "effect.plantz.painted.magenta": "赤紫色塗り",
   "effect.plantz.painted.pink": "桃色塗り",
 
+  "enchantment.plantz.lobbing": "遠投",
+
   "component.stored_sun.description": "集めた太陽光の貯蔵と使用ができる",
   "component.stored_sun": "%s / %s",
   "component.stored_water.description": "プラントに水を与える",
@@ -351,6 +353,8 @@
   "container.plantz.mailbox_success": "送信完了！",
   "container.plantz.time_machine.wip": "???",
 
+  "gui.plantz.letter": "手紙",
+
   "plantz.subtitles.projectile.deflected": "投射物が弾かれた",
   "plantz.subtitles.projectile.shoot": "投射物が発射された",
 
@@ -385,6 +389,7 @@
   "plantz.subtitles.entity.gargantuar.hurt": "ガルガンチュアがダメージを受ける",
 
   "plantz.subtitles.event.mob_effect.hypnotized": "Mobが魅惑される",
-  "plantz.subtitles.event.mob_effect.zombie_omen": "ゾンビ襲撃が差し迫る"
+  "plantz.subtitles.event.mob_effect.zombie_omen": "ゾンビ襲撃が差し迫る",
 
+  "biome.plantz.graveyard": "墓地"
 }
