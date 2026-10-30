@@ -3,6 +3,7 @@ package joshxviii.plantz.entity.projectile
 import joshxviii.plantz.*
 import joshxviii.plantz.PazTags.EntityTypes.IGNORE_PAZ_PROJECTILES
 import joshxviii.plantz.entity.Balloon
+import joshxviii.plantz.entity.plant.ExplosivePlant.Companion.scaledExplosion
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
@@ -40,6 +41,7 @@ import java.util.*
 import java.util.Arrays.sort
 import java.util.function.Predicate
 import kotlin.math.sign
+import kotlin.math.sqrt
 
 abstract class PazProjectile(
     type: EntityType<out PazProjectile>,
@@ -59,7 +61,13 @@ abstract class PazProjectile(
         val EXPLOSION_CALCULATOR: ExplosionDamageCalculator = SimpleExplosionDamageCalculator(false, true, Optional.of(1.0f), Optional.ofNullable(null))
         val PIERCE_LEVEL: EntityDataAccessor<Byte> = SynchedEntityData.defineId(PazProjectile::class.java, EntityDataSerializers.BYTE)
         val IN_GROUND: EntityDataAccessor<Boolean> = SynchedEntityData.defineId(PazProjectile::class.java, EntityDataSerializers.BOOLEAN)
+        val SCALE: EntityDataAccessor<Float> = SynchedEntityData.defineId(PazProjectile::class.java, EntityDataSerializers.FLOAT)
     }
+
+
+    var scale : Float
+        get() = this.entityData.get(SCALE)
+        set(value) { this.entityData.set(SCALE, value) }
 
     init {
         if (entityOwner != null) {
@@ -74,6 +82,7 @@ abstract class PazProjectile(
                 entityOwner.xRot,
                 entityOwner.yRot
             )
+            scale = entityOwner.getAttribute(Attributes.SCALE)?.value?.toFloat()?:1.0f
         }
     }
 
@@ -264,6 +273,7 @@ abstract class PazProjectile(
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         entityData.define(IN_GROUND, false)
         entityData.define(PIERCE_LEVEL, 0.toByte())
+        entityData.define(SCALE, 1.0f)
     }
 
     fun setInGround(inGround: Boolean) = this.entityData.set(IN_GROUND, inGround)
@@ -317,7 +327,7 @@ abstract class PazProjectile(
             getOwner(),
             damageSources().source(damageType, getOwner()),
             EXPLOSION_CALCULATOR, x, y, z,
-            radius,
+            radius*sqrt(scale),
             false,
             Level.ExplosionInteraction.MOB,
             ParticleTypes.LARGE_SMOKE,
@@ -325,17 +335,7 @@ abstract class PazProjectile(
             WeightedList.of(),
             sound
         )
-        if (level is ServerLevel) {
-            level.sendParticles(NukeWaveParticleOptions(color = 0xD0370D, scale = radius * 1f),
-                x, y, z, 1, 0.0, 0.0, 0.0, 0.0
-            )
-            level.sendParticles(NukeBlastParticleOptions(color = 0xFFE88D, scale = radius * 0.5f),
-                x, y, z, 1, 0.0, 0.0, 0.0, 0.0
-            )
-            level.sendParticles(NukeSmokeParticleOptions(color = 0xB87878, scale = radius * 0.3f),
-                x, y+1, z, 16, 0.0, 0.5, 0.0, 0.0
-            )
-        }
+        scaledExplosion(scale = scale)
     }
 
     private fun applyInertia() {

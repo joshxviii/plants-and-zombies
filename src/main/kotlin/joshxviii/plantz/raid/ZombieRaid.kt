@@ -311,7 +311,7 @@ class ZombieRaid(
             val entity = level.getEntity(record.uuid)
             if (entity is Zombie && entity.isAlive) {
                 pending.remove()
-                addWaveMob(entity, record.wave, level, false)
+                addWaveMob(entity, record.wave, level)
                 RaiderRecord.loadInto(entity, record)
                 setDirty(level)
             }
@@ -399,7 +399,7 @@ class ZombieRaid(
     }
 
     fun spawnBoss(level: ServerLevel, pos: BlockPos, waveType: WaveType) {
-        val bossType: BossType = BossType.pickBossType(this)
+        val bossType: BossType = BossType.pickBossType(this, waveType)
         val bossEntities = bossType.bossEntityEntries(this, waveType)
         for ((type, configure) in bossEntities) {
             val zombie = type.create(level, EntitySpawnReason.EVENT) ?: return
@@ -408,7 +408,7 @@ class ZombieRaid(
             joinRaid(level, zombie, exists = false, pos = pos, configure = configure)
         }
         val bossName = bossEntities.firstOrNull()?.entityType?.description?: Component.empty()
-        if (waveType == WaveType.DEFAULT) announceBoss(bossName)
+        announceBoss(waveType, bossName)
     }
 
     fun joinRaid(
@@ -421,7 +421,7 @@ class ZombieRaid(
         configure: (Zombie) -> Unit = {},
     ) {
         if (status != ZombieRaidStatus.ONGOING) return
-        val added = addWaveMob(zombie, waveNumber, level, addMaxHealth)
+        val added = addWaveMob(zombie, waveNumber, level)
         if (added) {
             if (!exists && pos != null) {
                 zombie.setPos(pos.x.toDouble() + 0.5, pos.y.toDouble(), pos.z.toDouble() + 0.5)
@@ -435,6 +435,13 @@ class ZombieRaid(
                 zombie.setPersistenceRequired()
                 configure(zombie)
                 level.addFreshEntityWithPassengers(zombie)
+            }
+            if (addMaxHealth) {
+                val countHealth = (zombie as? ZombieRaider)?.`plantz$getAddsHealthToRaid`() ?: true
+                if (countHealth) {
+                    totalZombieHealth += zombie.maxHealth
+                    if (zombie.isBoss()) totalBossHealth += zombie.maxHealth
+                }
             }
         }
     }
@@ -479,7 +486,7 @@ class ZombieRaid(
 
     private fun setDirty(level: ServerLevel) { level.getZombieRaids().setDirty() }
 
-    private fun addWaveMob(zombie: Zombie, wave: Int = currentWaveNumber(), level: ServerLevel, addMaxHealth: Boolean): Boolean {
+    private fun addWaveMob(zombie: Zombie, wave: Int = currentWaveNumber(), level: ServerLevel): Boolean {
         waveZombieMap.computeIfAbsent(wave) { Sets.newHashSet<Zombie>() }
         val zombies = waveZombieMap[wave] as MutableSet<Zombie>
         if (zombies.contains(zombie)) return false
@@ -491,11 +498,6 @@ class ZombieRaid(
 
         zombies.add(zombie)
         (zombie as? ZombieRaider)?.`plantz$setIsFromRaid`(true)
-        val countHealth = (zombie as? ZombieRaider)?.`plantz$getAddsHealthToRaid`() ?: true
-        if (countHealth && addMaxHealth) {
-            totalZombieHealth += zombie.maxHealth
-            if (zombie.isBoss()) totalBossHealth += zombie.maxHealth
-        }
         sendClientUpdate(level)
         return true
     }
@@ -583,10 +585,10 @@ class ZombieRaid(
         showTitleMessage(title, subtitle)
     }
 
-    private fun announceBoss(bossName: Component) {
+    private fun announceBoss(waveType: WaveType, bossName: Component) {
         val title = Component.translatable("event.plantz.zombie_raid.boss_wave").apply { withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD) }
         val subtitle = Component.translatable("event.plantz.zombie_raid.boss", bossName).apply { withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.BOLD) }
-        showTitleMessage(title, subtitle)
+        if (waveType == WaveType.DEFAULT) showTitleMessage(title, subtitle)
         zombieRaidEvent.players.forEach {
             it.sendSystemMessage(Component.translatable("event.plantz.zombie_raid.boss.spawn", bossName).withColor(0x872727))
         }

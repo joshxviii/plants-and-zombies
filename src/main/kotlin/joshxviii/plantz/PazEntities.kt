@@ -17,19 +17,12 @@ import joshxviii.plantz.entity.plant.*
 import joshxviii.plantz.entity.projectile.*
 import joshxviii.plantz.entity.zombie.*
 import joshxviii.plantz.mixin.MobAccessor
-import joshxviii.plantz.raid.ZombieRaid
-import joshxviii.plantz.raid.isNearRaid
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
-import net.fabricmc.fabric.mixin.networking.client.accessor.MinecraftAccessor
-import net.minecraft.commands.arguments.TeamArgument
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
-import net.minecraft.server.commands.TeamCommand
-import net.minecraft.server.jsonrpc.internalapi.MinecraftApi
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.Mob.createMobAttributes
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
@@ -38,7 +31,6 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.monster.zombie.ZombifiedPiglin
 import net.minecraft.world.entity.projectile.Projectile
-import net.minecraft.world.scores.Team
 
 object PazEntities {
 
@@ -505,13 +497,13 @@ object PazEntities {
     @JvmField val ROBO_ZOMBIE: EntityType<RoboZombie> =  registerZombie(
         "robo_zombie",
         EntityType.Builder.of(::RoboZombie, MobCategory.MONSTER)
-            .sized(1.3f, 1.95f)
+            .sized(1.3964844f, 1.95f)
             .eyeHeight(1.74f)
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
             armor = 12.0,
             armorToughness = 9.0,
-            attackDamage = 12.0,
+            attackDamage = 11.0,
             maxHealth = 128.0,
             stepHeight = 1.0,
             movementSpeed = 0.215,
@@ -522,7 +514,7 @@ object PazEntities {
     @JvmField val SUPER_BRAINZ: EntityType<SuperBrainz> =  registerZombie(
         "super_brainz",
         EntityType.Builder.of(::SuperBrainz, MobCategory.MONSTER)
-            .sized(1.25f, 2.4f)
+            .sized(1.3f, 2.4f)
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
             armor = 20.0,

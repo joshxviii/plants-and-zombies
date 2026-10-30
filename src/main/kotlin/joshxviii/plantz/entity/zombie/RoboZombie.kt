@@ -161,7 +161,9 @@ class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(typ
         ))
         goalSelector.addGoal(4, ProjectileAttackGoal(
             usingEntity = this,
-            projectileFactory =  { Missile(level(), this) },
+            projectileFactory =  {
+                Missile(level(), this)
+            },
             velocity = 0.9,
             attackRadius = 30f,
             leadShots = false,

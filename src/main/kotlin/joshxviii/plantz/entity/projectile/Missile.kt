@@ -31,6 +31,6 @@ class Missile(
 
     override fun onHit(hitResult: HitResult) {
         super.onHit(hitResult)
-        explode(3f, PazSounds.MISSILE_EXPLODE)
+        explode(2.5f, PazSounds.MISSILE_EXPLODE)
     }
 }

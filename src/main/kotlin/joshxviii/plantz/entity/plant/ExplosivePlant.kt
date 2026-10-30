@@ -22,6 +22,7 @@ import net.minecraft.util.random.WeightedList
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.damagesource.DamageType
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
@@ -36,10 +37,11 @@ import kotlin.time.times
 abstract class ExplosivePlant(type: EntityType<out ExplosivePlant>, level: Level) : Plant(type, level) {
     companion object {
 
-        fun LivingEntity.scaledExplosion(
+        fun Entity.scaledExplosion(
             waveColor: Int = 0xD0370D,
             blastColor: Int = 0xFFE88D,
-            smokeColor: Int = 0xB87878
+            smokeColor: Int = 0xB87878,
+            scale: Float = if (this is LivingEntity) this.scale else 1.0f
         ) {
             val level = level() as? ServerLevel ?: return
             level.sendParticles(

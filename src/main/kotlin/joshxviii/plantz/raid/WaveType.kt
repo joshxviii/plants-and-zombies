@@ -87,7 +87,7 @@ enum class WaveType(
                 ),
                 WaveSpawnEntry(
                     PazEntities.SOLDIER_ZOMBIE,
-                    if (credits && wave > 10) scaled(1f + (wave - 10) * 0.5f, omen, true) else 0
+                    if (credits && wave > 10) scaled(1f + (wave - 10) * 0.4f, omen, true) else 0
                 ),
                 if (raid.random.nextFloat() < 0.4f) WaveSpawnEntry(
                     PazEntities.SUPER_BRAINZ,
@@ -277,9 +277,9 @@ enum class WaveType(
         lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_PIRATE }
     ),
     ROBO_ARMY(
-        minWave = 12,
+        minWave = 10,
         maxWave = 16,
-        creditsRequired = true,
+        creditsRequired = false,
         weightFn = { raid, credits ->
             if (!credits) 0f else 0.2f + (raid.zombieRaidOmenLevel * 0.05f)
         },
@@ -289,20 +289,24 @@ enum class WaveType(
 
             listOf(
                 WaveSpawnEntry(
+                    PazEntities.BROWN_COAT,
+                    scaled(0.7f + wave * 1.2f, omen, credits, min = 2)
+                ),
+                WaveSpawnEntry(
                     PazEntities.ZOMBIE_DRONE,
-                    scaled(4f + wave * 0.9f, omen, credits, min = 2, max = 10)
+                    scaled(2f + wave * 0.9f, omen, credits, min = 2, max = 10)
                 ),
                 WaveSpawnEntry(
                     PazEntities.ENGINEER_ZOMBIE,
-                    scaled(1.5f + wave * 0.45f, omen, credits, min = 2)
+                    scaled(0.6f + wave * 0.45f, omen, credits, min = 1)
                 ),
                 WaveSpawnEntry(
                     PazEntities.SOLDIER_ZOMBIE,
-                    scaled(3f + wave * 0.6f, omen, credits, min = 1)
+                    scaled(2f + wave * 0.6f, omen, credits, min = 1)
                 ),
                 WaveSpawnEntry(
                     PazEntities.ROBO_ZOMBIE,
-                    scaled(0.5f + wave * 0.35f, omen, credits, min = 1, max = 4),
+                    scaled(0.3f + wave * 0.2f, omen, credits, min = 0, max = 4),
                     ::configureRoboArmy
                 ),
             )
@@ -310,7 +314,7 @@ enum class WaveType(
         lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_ARMY }
     ),
     LEAGUE_OF_AWESOME(
-        minWave = 13,
+        minWave = 12,
         maxWave = 20,
         creditsRequired = true,
         weightFn = { raid, credits ->
@@ -500,7 +504,7 @@ enum class WaveType(
         fun configureRoboArmy(zombie: Zombie) {
             if (zombie is RoboZombie) {
                 val level = zombie.level() as? ServerLevel ?: return
-                if (zombie.random.nextFloat() < 0.25f) {
+                if (zombie.random.nextFloat() < 0.33f) {
                     PazEntities.SOLDIER_ZOMBIE.create(zombie.level(), EntitySpawnReason.JOCKEY)?.let {
                         it.snapTo(zombie.x, zombie.y, zombie.z, zombie.yRot, 0.0f)
                         it.finalizeSpawn(level, level.getCurrentDifficultyAt(zombie.blockPosition()), EntitySpawnReason.JOCKEY, null)

@@ -12,6 +12,7 @@ import joshxviii.plantz.entity.Balloon
 import joshxviii.plantz.entity.ZombieRaider
 import joshxviii.plantz.entity.setCountHealth
 import joshxviii.plantz.item.BalloonItem
+import joshxviii.plantz.raid.BossType
 import joshxviii.plantz.raid.ZombieRaid.Companion.RAID_DISTANCE
 import joshxviii.plantz.raid.getZombieRaids
 import net.minecraft.core.BlockPos
@@ -227,6 +228,11 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     }
     override fun getStepSound(): SoundEvent {
         return SoundEvents.ZOMBIE_STEP
+    }
+    override fun getVoicePitch(): Float {
+        val bossified = this.getAttribute(Attributes.SCALE)!!.hasModifier(BossType.BOSSIFY)
+        val pitch = super.getVoicePitch()
+        return if (bossified) pitch * 0.65f else pitch
     }
 
     override fun onEquipItem(slot: EquipmentSlot, oldStack: ItemStack, stack: ItemStack) {
