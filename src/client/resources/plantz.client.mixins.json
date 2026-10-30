@@ -12,11 +12,9 @@
     "AvatarRendererMixin",
     "BossHealthOverlayAccessor",
     "BossHealthOverlayMixin",
-    "ClientPacketListenerMixin",
     "GuiMixin",
     "HumanoidModelMixin",
     "LivingEntityRendererMixin",
-    "LocalPlayerMixin",
     "NowPlayingToastMixin",
     "SoundManagerMixin"
   ]

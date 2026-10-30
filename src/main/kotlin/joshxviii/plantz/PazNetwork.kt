@@ -7,6 +7,8 @@ import joshxviii.plantz.networking.SendMailResponsePayload
 import joshxviii.plantz.networking.ServerConfigResponsePayload
 import joshxviii.plantz.networking.UpdateCollectionBoxPayload
 import joshxviii.plantz.networking.UpdateCollectionBoxPayload.Companion.handleUpdateCollectionBoxPacket
+import joshxviii.plantz.networking.UpdateLetterPayload
+import joshxviii.plantz.networking.UpdateLetterPayload.Companion.handleUpdateLetterPacket
 import joshxviii.plantz.networking.ZombieRaidClientData
 import joshxviii.plantz.networking.ZombieRaidResponsePayload
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
@@ -31,6 +33,7 @@ object PazNetwork {
         // Register payloads
         PayloadTypeRegistry.serverboundPlay().register(SendMailRequestPayload.ID, SendMailRequestPayload.STREAM_CODEC)
         PayloadTypeRegistry.serverboundPlay().register(UpdateCollectionBoxPayload.ID, UpdateCollectionBoxPayload.STREAM_CODEC)
+        PayloadTypeRegistry.serverboundPlay().register(UpdateLetterPayload.ID, UpdateLetterPayload.STREAM_CODEC)
 
         PayloadTypeRegistry.clientboundPlay().register(SendMailRequestPayload.ID, SendMailRequestPayload.STREAM_CODEC)
         PayloadTypeRegistry.clientboundPlay().register(SendMailResponsePayload.ID, SendMailResponsePayload.STREAM_CODEC)
@@ -41,5 +44,6 @@ object PazNetwork {
         // Register server receiver
         ServerPlayNetworking.registerGlobalReceiver(SendMailRequestPayload.ID, ::handleSendMailPacket)
         ServerPlayNetworking.registerGlobalReceiver(UpdateCollectionBoxPayload.ID, ::handleUpdateCollectionBoxPacket)
+        ServerPlayNetworking.registerGlobalReceiver(UpdateLetterPayload.ID, ::handleUpdateLetterPacket)
     }
 }

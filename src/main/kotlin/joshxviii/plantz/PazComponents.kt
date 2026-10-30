@@ -2,6 +2,7 @@ package joshxviii.plantz
 
 import com.mojang.serialization.Codec
 import joshxviii.plantz.item.component.BrainzAlloyCost
+import joshxviii.plantz.item.component.LetterDataComponent
 import joshxviii.plantz.item.component.ProtectsHeadDataComponent
 import joshxviii.plantz.item.component.StoredSun
 import joshxviii.plantz.item.component.StoredWater
@@ -60,6 +61,14 @@ object PazComponents {
         "blocking_item_break_chance"
     ) { it.persistent(Codec.floatRange(0.0f, 1.0f))
         .networkSynchronized(net.minecraft.network.codec.ByteBufCodecs.FLOAT)
+        .cacheEncoding()
+    }
+
+    @JvmField
+    val LETTER_DATA: DataComponentType<LetterDataComponent> = register(
+        "letter_data"
+    ) { it.persistent(LetterDataComponent.CODEC)
+        .networkSynchronized(LetterDataComponent.STREAM_CODEC)
         .cacheEncoding()
     }
 

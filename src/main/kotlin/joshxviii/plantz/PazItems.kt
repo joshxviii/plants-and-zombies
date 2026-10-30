@@ -53,7 +53,6 @@ import net.minecraft.world.item.component.BlocksAttacks.DamageReduction
 import net.minecraft.world.item.component.BlocksAttacks.ItemDamageFunction
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.item.component.UseCooldown
-import net.minecraft.world.item.component.WritableBookContent
 import net.minecraft.world.item.equipment.ArmorMaterials
 import net.minecraft.world.item.equipment.ArmorType
 import net.minecraft.world.item.equipment.EquipmentAssets
@@ -248,7 +247,8 @@ object PazItems {
     @JvmField
     val LETTER: Item = registerItem(
         "letter", ::LetterItem,
-        properties = Item.Properties().stacksTo(1).component(DataComponents.WRITABLE_BOOK_CONTENT, WritableBookContent.EMPTY)
+        properties = Item.Properties().stacksTo(1)
+            .component(PazComponents.LETTER_DATA, LetterDataComponent())
     )
     @JvmField
     val SEED_PACKET: Item = registerItem(
@@ -374,6 +374,7 @@ object PazItems {
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BRAINZ_ALLOY_COST)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.PROTECTS_HEAD)
+        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.LETTER_DATA)
 
         DefaultItemComponentEvents.MODIFY.register { ctx ->
             ctx.modify({ it.defaultInstance.`is`(BUCKET_WEARABLE)}, ::bucketHeadItem)
