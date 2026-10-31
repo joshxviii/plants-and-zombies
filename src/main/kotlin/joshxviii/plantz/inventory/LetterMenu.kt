@@ -26,7 +26,7 @@ class LetterMenu(
     val letterData: LetterDataComponent
         get() = letterStack.get(PazComponents.LETTER_DATA) ?: LetterDataComponent()
     val editable: Boolean
-        get() = !letterData.sign && letterStack.get(DataComponents.WRITTEN_BOOK_CONTENT) == null
+        get() = !letterData.signed && letterStack.get(DataComponents.WRITTEN_BOOK_CONTENT) == null
 
     val inputContainer = object : SimpleContainer(1) {
         override fun setChanged() {
@@ -34,7 +34,7 @@ class LetterMenu(
             this@LetterMenu.slotsChanged(this)
         }
     }
-    val attachmentSlot: Slot = addSlot(object : Slot(inputContainer, 0, if (editable) 10 else 56, 109) {
+    val attachmentSlot: Slot = addSlot(object : Slot(inputContainer, 0, if (editable) 11 else 56, 108) {
         override fun mayPlace(itemStack: ItemStack): Boolean =
             editable && !itemStack.`is`(PazItems.LETTER)
 
@@ -81,7 +81,7 @@ class LetterMenu(
 
         val current = letterData
         val attachment = attachmentSlot.item.copy()
-        if (current.sign && !attachment.isEmpty) return
+        if (current.signed && !attachment.isEmpty) return
         if (attachment.count > 1) attachment.count = 1
         letter.set(PazComponents.LETTER_DATA, current.copy(item = attachment))
         inventory.setChanged()
@@ -94,7 +94,7 @@ class LetterMenu(
         if (letter.isEmpty) return
         val current = letterData
         val attachment = attachmentSlot.item.copy()
-        if (current.sign && !attachment.isEmpty) return
+        if (current.signed && !attachment.isEmpty) return
         letter.set(PazComponents.LETTER_DATA, current.copy(item = attachment))
         inventory.setChanged()
     }

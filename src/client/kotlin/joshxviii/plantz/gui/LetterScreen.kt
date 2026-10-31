@@ -1,5 +1,6 @@
 package joshxviii.plantz.gui
 
+import joshxviii.plantz.PazComponents
 import joshxviii.plantz.inventory.LetterMenu
 import joshxviii.plantz.item.component.LetterBackground
 import joshxviii.plantz.item.component.LetterFont
@@ -21,7 +22,6 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.FontDescription
 import net.minecraft.network.chat.Style
 import net.minecraft.world.entity.player.Inventory
-import net.minecraft.world.item.ItemStack
 
 class LetterScreen(
     val menu: LetterMenu,
@@ -53,7 +53,7 @@ class LetterScreen(
     private val editable = menu.editable
     private val bookAccess = BookViewScreen.BookAccess.fromItem(itemStack) ?: BookViewScreen.EMPTY_ACCESS
     private val legacyPages = (0 until bookAccess.pageCount).map(bookAccess::getPage)
-    private val pageComponents = if (originalData.pages.isNotEmpty() || originalData.sign) {
+    private val pageComponents = if (originalData.pages.isNotEmpty() || originalData.signed) {
         originalData.pages.map(Component::literal)
     } else {
         legacyPages
@@ -84,12 +84,13 @@ class LetterScreen(
             addRenderableWidget(pageEditor)
             pageEditor.setValue(pages[0], true)
 
-            addRenderableWidget(
-                Button.builder(fontButtonLabel()) {
-                    selectedFont = LetterFont.entries[(selectedFont.ordinal + 1) % LetterFont.entries.size]
-                    it.setMessage(fontButtonLabel())
-                }.pos(leftPos + LETTER_WIDTH + 4, topPos + 27).width(CONTROL_WIDTH).build()
-            )
+            // TODO add some cool fonts
+//            addRenderableWidget(
+//                Button.builder(fontButtonLabel()) {
+//                    selectedFont = LetterFont.entries[(selectedFont.ordinal + 1) % LetterFont.entries.size]
+//                    it.setMessage(fontButtonLabel())
+//                }.pos(leftPos + LETTER_WIDTH + 4, topPos + 27).width(CONTROL_WIDTH).build()
+//            )
             addRenderableWidget(
                 Button.builder(backgroundButtonLabel()) {
                     selectedBackground =
@@ -186,11 +187,11 @@ class LetterScreen(
             BACKGROUND_TEXTURE_SIZE,
             BACKGROUND_TEXTURE_SIZE
         )
-        graphics.blit(
+        if(editable || menu.attachmentSlot.hasItem()) graphics.blit(
             RenderPipelines.GUI_TEXTURED,
             ATTACHMENT_SLOT,
-            leftPos + menu.attachmentSlot.x,
-            topPos + menu.attachmentSlot.y,
+            leftPos + menu.attachmentSlot.x - 1,
+            topPos + menu.attachmentSlot.y - 1,
             0f,
             0f,
             SLOT_SIZE,
@@ -217,14 +218,16 @@ class LetterScreen(
         val player = Minecraft.getInstance().player ?: return
         while (pages.isNotEmpty() && pages.last().isEmpty()) pages.removeAt(pages.lastIndex)
 
-        val data = originalData.copy(
+        val data = menu.letterData.copy(
             background = selectedBackground,
             font = selectedFont,
-            item = ItemStack.EMPTY,
+            item = menu.attachmentSlot.item.copy(),
             pages = pages.toList(),
-            sign = sign || originalData.sign,
+            signed = sign || originalData.signed,
             author = if (sign) player.name.string else originalData.author
         )
+        itemStack.set(PazComponents.LETTER_DATA, data)
+        menu.inventory.setChanged()
         ClientPlayNetworking.send(UpdateLetterPayload(menu.handIndex, data))
         saved = true
     }

@@ -25,7 +25,7 @@ data class LetterDataComponent(
     val font: LetterFont = LetterFont.BASIC,
     val item: ItemStack = ItemStack.EMPTY,
     val pages: List<String> = emptyList(),
-    val sign: Boolean = false,
+    val signed: Boolean = false,
     val author: String = "",
 ) : TooltipProvider {
     override fun addToTooltip(
@@ -34,8 +34,11 @@ data class LetterDataComponent(
         flag: TooltipFlag,
         components: DataComponentGetter
     ) {
+        if (signed) consumer.accept(
+            Component.translatable("component.letter.signed", Component.translatable(author)).withStyle(ChatFormatting.GRAY)
+        )
         if (!item.isEmpty) consumer.accept(
-            Component.translatable("tooltip.plantz.letter_item", item.hoverName, item.count).withStyle(ChatFormatting.GRAY)
+            Component.translatable("component.letter.item", item.hoverName, item.count).withStyle(ChatFormatting.GRAY)
         )
     }
 
@@ -48,7 +51,7 @@ data class LetterDataComponent(
                 ItemStack.OPTIONAL_CODEC.optionalFieldOf("item", ItemStack.EMPTY).forGetter(LetterDataComponent::item),
                 Codec.string(0, 1024).sizeLimitedListOf(100).optionalFieldOf("pages", emptyList())
                     .forGetter(LetterDataComponent::pages),
-                Codec.BOOL.optionalFieldOf("sealed", false).forGetter(LetterDataComponent::sign),
+                Codec.BOOL.optionalFieldOf("sealed", false).forGetter(LetterDataComponent::signed),
                 Codec.STRING.optionalFieldOf("author", "").forGetter(LetterDataComponent::author)
             ).apply(instance) { background, font, item, pages, sealed, author ->
                 LetterDataComponent(background, font, item, pages, sealed, author)
@@ -65,7 +68,7 @@ data class LetterDataComponent(
             ByteBufCodecs.stringUtf8(1024).apply(ByteBufCodecs.list(100)),
             LetterDataComponent::pages,
             ByteBufCodecs.BOOL,
-            LetterDataComponent::sign,
+            LetterDataComponent::signed,
             ByteBufCodecs.stringUtf8(64),
             LetterDataComponent::author,
             ::LetterDataComponent

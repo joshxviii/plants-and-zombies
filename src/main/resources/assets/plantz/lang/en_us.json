@@ -134,6 +134,9 @@
   "component.item_cost": "%s Cost: %s",
   "component.blocks_damage.description": "Protects against damage from above",
   "component.blocks_damage": "Break Chance: %s%%",
+  "component.letter.signed": "From: %s",
+  "component.letter.item": "%s x%s",
+
   "item.plantz.zombie_banner": "Brainz Banner",
 
   "item.plantz.sun": "Sun",
@@ -371,7 +374,7 @@
   "letter_background.plantz.hearts": "Hearts",
   "letter_background.plantz.fancy": "Fancy",
   "letter_background.plantz.torn": "Torn",
-  "tooltip.plantz.letter_item": "%s x%s",
+
 
   "plantz.subtitles.projectile.deflected": "Projectile deflected",
   "plantz.subtitles.projectile.shoot": "Projectile fired",

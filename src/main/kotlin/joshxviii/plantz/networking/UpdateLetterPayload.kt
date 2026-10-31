@@ -11,6 +11,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
+import net.minecraft.world.InteractionHand
 
 data class UpdateLetterPayload(
     val hand: Int,
@@ -29,20 +30,32 @@ data class UpdateLetterPayload(
 
         fun handleUpdateLetterPacket(payload: UpdateLetterPayload, context: ServerPlayNetworking.Context) {
             val player = context.player()
-            val menu = player.containerMenu as? LetterMenu ?: return
-            if (menu.handIndex != payload.hand || !menu.stillValid(player)) return
-            val letter = menu.letterStack
+            val hand = when (payload.hand) {
+                0 -> InteractionHand.MAIN_HAND
+                1 -> InteractionHand.OFF_HAND
+                else -> return
+            }
+            val activeMenu = player.containerMenu
+            if (activeMenu is LetterMenu) {
+                if (activeMenu.handIndex != payload.hand || !activeMenu.stillValid(player)) return
+            } else if (activeMenu !== player.inventoryMenu) {
+                return
+            }
+
+            val letter = player.getItemInHand(hand)
             if (!letter.`is`(PazItems.LETTER) || letter.get(DataComponents.WRITTEN_BOOK_CONTENT) != null) return
 
             val current = letter.get(PazComponents.LETTER_DATA) ?: LetterDataComponent()
-            if (current.sign || payload.data.pages.size > 100 || payload.data.pages.any { it.length > 1024 }) return
+            if (current.signed || payload.data.pages.size > 100 || payload.data.pages.any { it.length > 1024 }) return
             val updated = payload.data.copy(
                 item = current.item.copy(),
-                author = if (payload.data.sign) player.name.string else current.author
+                author = if (payload.data.signed) player.name.string else current.author
             )
             letter.set(PazComponents.LETTER_DATA, updated)
             letter.remove(DataComponents.WRITABLE_BOOK_CONTENT)
-            player.containerMenu.broadcastChanges()
+            player.inventory.setChanged()
+            activeMenu.broadcastChanges()
+            if (activeMenu !== player.inventoryMenu) player.inventoryMenu.broadcastChanges()
         }
     }
 
