@@ -1,6 +1,7 @@
 package joshxviii.plantz.item.component
 
 import com.mojang.serialization.Codec
+import joshxviii.plantz.PazBlocks
 import net.minecraft.ChatFormatting
 import net.minecraft.core.component.DataComponentGetter
 import net.minecraft.core.registries.BuiltInRegistries
@@ -15,7 +16,7 @@ import net.minecraft.world.level.block.Blocks
 import java.util.function.Consumer
 
 data class DoorShield(
-    val doorType: Block = Blocks.OAK_DOOR,
+    val doorType: Block = PazBlocks.BRAINZ_ALLOY_DOOR,
 ) : TooltipProvider {
     override fun addToTooltip(
         context: Item.TooltipContext,

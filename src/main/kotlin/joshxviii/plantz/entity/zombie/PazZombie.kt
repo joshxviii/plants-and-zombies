@@ -233,11 +233,6 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         return if (bossified) pitch * 0.65f else pitch
     }
 
-    override fun equipmentHasChanged(previous: ItemStack, current: ItemStack): Boolean {
-        val hasChanged = super.equipmentHasChanged(previous, current)
-        return hasChanged
-    }
-
     override fun onEquipItem(slot: EquipmentSlot, oldStack: ItemStack, stack: ItemStack) {
         if (stack.`is`(PazItems.DUCKY_TUBE) && slot == EquipmentSlot.LEGS) {
             this.getNavigation().setCanFloat(true)
@@ -248,11 +243,10 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             this.getNavigation().recomputePath()
         };
         super.onEquipItem(slot, oldStack, stack)
-        if (slot.type == EquipmentSlot.Type.HAND) useItems()
     }
 
     private fun useItems() {
-        if (level().isClientSide || isUsingItem) return
+        if (isUsingItem) return
 
         val hand = when {
             getItemInHand(InteractionHand.MAIN_HAND).`is`(PazTags.ItemTags.ZOMBIE_CAN_USE) -> InteractionHand.MAIN_HAND
@@ -560,7 +554,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             if (spawnReason != EntitySpawnReason.NATURAL) setDropChance(EquipmentSlot.LEGS, 0.0f)
             else setDropChance(EquipmentSlot.LEGS, 0.15f)
         }
-        
+        useItems()
         return data
     }
 }
