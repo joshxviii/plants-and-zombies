@@ -7,6 +7,7 @@ import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.entity.Balloon
 import net.minecraft.core.component.DataComponents
+import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
@@ -74,6 +75,11 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
             else -> listOf(DyeColor.RED, DyeColor.YELLOW, DyeColor.BLUE)
         }
         spawnBalloons(balloonCount, balloonColors)
+    }
+
+    override fun getTypeName(): Component {
+        return if (variant != BrownCoatVariant.BROWN) Component.translatable("entity.plantz.browncoat.variant.${variant.name.lowercase()}")
+        else super.getTypeName()
     }
 
     override fun finalizeSpawn(
