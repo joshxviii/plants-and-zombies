@@ -2,6 +2,7 @@ package joshxviii.plantz
 
 import joshxviii.plantz.PazEntities.ALL_STAR
 import joshxviii.plantz.PazEntities.BACKUP_DANCER
+import joshxviii.plantz.PazEntities.BARON_VON_BATS
 import joshxviii.plantz.PazEntities.BROWN_COAT
 import joshxviii.plantz.PazEntities.DIGGER_ZOMBIE
 import joshxviii.plantz.PazEntities.DISCO_ZOMBIE
@@ -15,6 +16,7 @@ import joshxviii.plantz.PazEntities.PIRATE_CAPTAIN
 import joshxviii.plantz.PazEntities.ROBO_ZOMBIE
 import joshxviii.plantz.PazEntities.SOLDIER_ZOMBIE
 import joshxviii.plantz.PazEntities.SUPER_BRAINZ
+import joshxviii.plantz.PazEntities.ZOMBIE_BAT
 import joshxviii.plantz.PazEntities.ZOMBIE_YETI
 import joshxviii.plantz.PazTags.ItemTags.BUCKET_WEARABLE
 import joshxviii.plantz.entity.zombie.PazZombie
@@ -295,6 +297,8 @@ object PazItems {
     @JvmField val PIRATE_CAPTAIN_SPAWN_EGG: Item = registerSpawnEgg(PIRATE_CAPTAIN)
     @JvmField val SUPER_BRAINZ_SPAWN_EGG: Item = registerSpawnEgg(SUPER_BRAINZ)
     @JvmField val IMP_SPAWN_EGG: Item = registerSpawnEgg(IMP)
+    @JvmField val ZOMBIE_BAT_SPAWN_EGG: Item = registerSpawnEgg(ZOMBIE_BAT)
+    @JvmField val BARON_VON_BATS_SPAWN_EGG: Item = registerSpawnEgg(BARON_VON_BATS)
     @JvmField val GARGANTUAR_SPAWN_EGG: Item = registerSpawnEgg(GARGANTUAR)
 
     @JvmField val GNOME_SPAWN_EGG: Item = registerSpawnEgg(GNOME)

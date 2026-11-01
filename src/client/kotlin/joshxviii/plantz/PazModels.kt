@@ -1,6 +1,5 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.block.entity.*
 import joshxviii.plantz.model.BalloonModel
 import joshxviii.plantz.model.FlagBlockModel
 import joshxviii.plantz.model.GnomeArmorModel
@@ -140,6 +139,8 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(RoboZombieModel.LAYER_LOCATION) { RoboZombieModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(SuperBrainzModel.LAYER_LOCATION) { SuperBrainzModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(ImpModel.LAYER_LOCATION) { ImpModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(ZombieBatModel.LAYER_LOCATION) { ZombieBatModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(BaronVonBatsModel.LAYER_LOCATION) { BaronVonBatsModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(GargantuarModel.LAYER_LOCATION) { GargantuarModel.createBodyLayer() }
 
         ModelLayerRegistry.registerModelLayer(ZombieTurretModel.LAYER_LOCATION) { ZombieTurretModel.createBodyLayer() }
@@ -223,6 +224,8 @@ object PazModels {
         EntityRenderers.register(PazEntities.SUPER_BRAINZ) { SuperBrainzRenderer(it) }
         EntityRenderers.register(PazEntities.IMP) { PazZombieRenderer(it, ImpModel(it.bakeLayer(ImpModel.LAYER_LOCATION)), ImpModel(it.bakeLayer(ImpModel.LAYER_LOCATION))) }
         EntityRenderers.register(PazEntities.GARGANTUAR) { GargantuarRenderer(it) }
+        EntityRenderers.register(PazEntities.ZOMBIE_BAT) { ZombieBatRenderer(it) }
+        EntityRenderers.register(PazEntities.BARON_VON_BATS) { PazZombieRenderer(it, BaronVonBatsModel(it.bakeLayer(BaronVonBatsModel.LAYER_LOCATION))) }
 
         EntityRenderers.register(PazEntities.ZOMBIE_TURRET) { BlueprintMachineRenderer(it) }
         EntityRenderers.register(PazEntities.ELECTRO_TURRET) { BlueprintMachineRenderer(it, ElectroTurretModel(it.bakeLayer(ElectroTurretModel.LAYER_LOCATION))) }

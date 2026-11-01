@@ -541,9 +541,8 @@ object PazEntities {
             movementSpeed = 0.32,
             spawnReinforcementsChance = 0.3,
         )
-
     )
-    @JvmField val GARGANTUAR: EntityType<Gargantuar> =  registerZombie(
+    @JvmField val GARGANTUAR: EntityType<Gargantuar> = registerZombie(
         "gargantuar",
         EntityType.Builder.of(::Gargantuar, MobCategory.MONSTER)
             .sized(1.7f, 3.2f)
@@ -552,11 +551,42 @@ object PazEntities {
         attributes = PazZombie.Companion.PazZombieAttributes(
             armor = 6.0,
             attackDamage = 7.0,
-            maxHealth = 550.0,
+            maxHealth = 600.0,
             movementSpeed = 0.21,
             knockbackResistance = 1.4,
             explosionKnockbackResistance = 0.7,
             scale = 1.33,
+            stepHeight = 1.0,
+            attackRange = 2.0,
+            spawnReinforcementsChance = 0.0,
+        )
+    )
+    @JvmField val ZOMBIE_BAT: EntityType<ZombieBat> =  registerZombie(
+        "zombie_bat",
+        EntityType.Builder.of(::ZombieBat, MobCategory.MONSTER)
+            .sized(0.5F, 0.9F)
+            .eyeHeight(0.45F)
+            .clientTrackingRange(8),
+        attributes = PazZombie.Companion.PazZombieAttributes(
+            attackDamage = 2.0,
+            maxHealth = 20.0,
+            movementSpeed = 0.32,
+            spawnReinforcementsChance = 0.3,
+        )
+    )
+    @JvmField val BARON_VON_BATS: EntityType<BaronVonBats> = registerZombie(
+        "baron_von_bats",
+        EntityType.Builder.of(::BaronVonBats, MobCategory.MONSTER)
+            .sized(0.6f, 1.95f)
+            .clientTrackingRange(8),
+        attributes = PazZombie.Companion.PazZombieAttributes(
+            armor = 6.0,
+            attackDamage = 7.0,
+            maxHealth = 500.0,
+            movementSpeed = 0.21,
+            flyingSpeed = 0.24,
+            knockbackResistance = 1.4,
+            explosionKnockbackResistance = 0.5,
             stepHeight = 1.0,
             attackRange = 2.0,
             spawnReinforcementsChance = 0.0,
