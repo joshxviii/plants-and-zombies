@@ -2,6 +2,7 @@ package joshxviii.plantz
 
 import com.mojang.serialization.Codec
 import joshxviii.plantz.item.component.BrainzAlloyCost
+import joshxviii.plantz.item.component.DoorShield
 import joshxviii.plantz.item.component.LetterDataComponent
 import joshxviii.plantz.item.component.ProtectsHeadDataComponent
 import joshxviii.plantz.item.component.StoredSun
@@ -69,6 +70,14 @@ object PazComponents {
         "letter_data"
     ) { it.persistent(LetterDataComponent.CODEC)
         .networkSynchronized(LetterDataComponent.STREAM_CODEC)
+        .cacheEncoding()
+    }
+
+    @JvmField
+    val DOOR_SHIELD: DataComponentType<DoorShield> = register(
+        "door_shield"
+    ) { it.persistent(DoorShield.CODEC)
+        .networkSynchronized(DoorShield.STREAM_CODEC)
         .cacheEncoding()
     }
 

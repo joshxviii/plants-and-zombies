@@ -142,6 +142,13 @@ object PazItems {
         "taco",
         properties = Item.Properties().food(FoodProperties.Builder().nutrition(9).saturationModifier(1.1f).build())
     )
+    @JvmField
+    val DOOR_SHIELD: Item = registerItem(
+        "door_shield",
+        properties = Item.Properties()
+            .stacksTo(1)
+            .component(PazComponents.DOOR_SHIELD, DoorShield())
+    )
     const val DUCKY_TUBE_DAMAGE_INTERVAL = 45
     val DUCKY_EQUIP_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, pazResource("ducky_tube"))
     @JvmField
@@ -379,6 +386,7 @@ object PazItems {
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BRAINZ_ALLOY_COST)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.PROTECTS_HEAD)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.LETTER_DATA)
+        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.DOOR_SHIELD)
 
         DefaultItemComponentEvents.MODIFY.register { ctx ->
             ctx.modify({ it.defaultInstance.`is`(BUCKET_WEARABLE)}, ::bucketHeadItem)

@@ -105,6 +105,7 @@ object PazCreativeTab {
                 output.accept(PazBlocks.BRAINZ_FLAG)
                 output.accept(PazBlocks.PLANTZ_FLAG)
                 output.accept(PazItems.TACO)
+                output.accept(PazItems.DOOR_SHIELD)
                 output.accept(PazItems.BRAINZ_ALLOY)
                 if (PazConfig.SHOW_HIDDEN_ITEMS) {
                     output.accept(PazItems.BRAINZIUM)
@@ -128,6 +129,8 @@ object PazCreativeTab {
                 output.accept(PazBlocks.TREADED_BRAINZ_ALLOY_BLOCK)
                 output.accept(PazBlocks.REINFORCED_BRAINZ_ALLOY_BLOCK)
                 output.accept(PazBlocks.BRAINZ_ALLOY_FENCE)
+                output.accept(PazBlocks.BRAINZ_ALLOY_DOOR)
+                output.accept(PazBlocks.BRAINZ_ALLOY_TRAPDOOR)
                 output.accept(PazBlocks.GRAVESTONE)
                 output.accept(PazBlocks.BLUE_GARDEN_GNOME)
                 output.accept(PazBlocks.GREEN_GARDEN_GNOME)

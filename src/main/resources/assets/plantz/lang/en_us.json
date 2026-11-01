@@ -156,6 +156,8 @@
   "item.plantz.dye_blaster": "Dye Blaster",
   "item.plantz.dye_blaster.description": "%s chance of consuming dye",
   "item.plantz.taco": "Taco",
+  "item.plantz.door_shield": "Door Shield",
+  "component.door_shield": "Door: %s",
   "item.plantz.letter": "Letter",
   "item.plantz.brainzium": "Brainzium",
   "item.plantz.brainz_alloy": "Brainz Alloy",
@@ -220,6 +222,8 @@
   "item.plantz.treaded_brainz_alloy_block": "Treaded Brainz Alloy",
   "item.plantz.reinforced_brainz_alloy_block": "Reinforced Brainz Alloy",
   "item.plantz.brainz_alloy_fence": "Brainz Alloy Fence",
+  "item.plantz.brainz_alloy_door": "Brainz Alloy Door",
+  "item.plantz.brainz_alloy_trapdoor": "Brainz Alloy Trapdoor",
   "item.plantz.gravestone": "Gravestone",
 
   "item.minecraft.potion.effect.hypnotize": "Potion of Hypnosis",

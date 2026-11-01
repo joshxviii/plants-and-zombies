@@ -81,6 +81,7 @@ object PazModels {
 
     fun registerAll() {
         ItemModels.ID_MAPPER.put(pazResource("plant_icon"), PlantIconItemModel.Unbaked.MAP_CODEC)
+        ItemModels.ID_MAPPER.put(pazResource("door_shield_model"), DoorShieldItemModel.Unbaked.MAP_CODEC)
 
         ModelLayerRegistry.registerModelLayer(EMPTY_LAYER) { LayerDefinition.create(MeshDefinition(), 0, 0) }
 

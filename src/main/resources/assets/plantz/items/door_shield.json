@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "plantz:door_shield_model",
+        "model": "plantz:item/door_shield"
+      }
+    ]
+  }
+}
