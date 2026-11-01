@@ -8,10 +8,8 @@ import joshxviii.plantz.ai.control.PazMoveControl
 import joshxviii.plantz.ai.goal.FlyingPathfindingGoal
 import joshxviii.plantz.ai.pathfinding.PazFlyingPathNavigation
 import joshxviii.plantz.ai.pathfinding.PazGroundPathNavigation
-import joshxviii.plantz.entity.Balloon
 import joshxviii.plantz.entity.ZombieRaider
 import joshxviii.plantz.entity.setCountHealth
-import joshxviii.plantz.item.BalloonItem
 import joshxviii.plantz.raid.BossType
 import joshxviii.plantz.raid.ZombieRaid.Companion.RAID_DISTANCE
 import joshxviii.plantz.raid.getZombieRaids
@@ -30,6 +28,7 @@ import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
 import net.minecraft.world.Difficulty
 import net.minecraft.world.DifficultyInstance
+import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeInstance
@@ -63,7 +62,6 @@ import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
 import java.util.*
-import kotlin.collections.getValue
 import kotlin.jvm.optionals.getOrElse
 import kotlin.math.max
 
@@ -235,6 +233,11 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         return if (bossified) pitch * 0.65f else pitch
     }
 
+    override fun equipmentHasChanged(previous: ItemStack, current: ItemStack): Boolean {
+        val hasChanged = super.equipmentHasChanged(previous, current)
+        return hasChanged
+    }
+
     override fun onEquipItem(slot: EquipmentSlot, oldStack: ItemStack, stack: ItemStack) {
         if (stack.`is`(PazItems.DUCKY_TUBE) && slot == EquipmentSlot.LEGS) {
             this.getNavigation().setCanFloat(true)
@@ -244,8 +247,19 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             this.getNavigation().setCanFloat(false)
             this.getNavigation().recomputePath()
         };
-
         super.onEquipItem(slot, oldStack, stack)
+        if (slot.type == EquipmentSlot.Type.HAND) useItems()
+    }
+
+    private fun useItems() {
+        if (level().isClientSide || isUsingItem) return
+
+        val hand = when {
+            getItemInHand(InteractionHand.MAIN_HAND).`is`(PazTags.ItemTags.ZOMBIE_CAN_USE) -> InteractionHand.MAIN_HAND
+            getItemInHand(InteractionHand.OFF_HAND).`is`(PazTags.ItemTags.ZOMBIE_CAN_USE) -> InteractionHand.OFF_HAND
+            else -> return
+        }
+        startUsingItem(hand)
     }
 
     override fun pickUpItem(level: ServerLevel, entity: ItemEntity) {
@@ -340,6 +354,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     var emergeTime = -1
     override fun tick() {
         super.tick()
+        useItems()
         moveDirO = moveDir
         val delta = deltaMovement
 

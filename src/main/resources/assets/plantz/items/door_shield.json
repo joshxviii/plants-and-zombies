@@ -1,11 +1,14 @@
 {
   "model": {
-    "type": "minecraft:composite",
-    "models": [
-      {
-        "type": "plantz:door_shield_model",
-        "model": "plantz:item/door_shield"
-      }
-    ]
+    "type": "minecraft:condition",
+    "on_false": {
+      "type": "plantz:door_shield_model",
+      "model": "plantz:item/door_shield/door_shield"
+    },
+    "on_true": {
+      "type": "plantz:door_shield_model",
+      "model": "plantz:item/door_shield/door_shield_blocking"
+    },
+    "property": "minecraft:using_item"
   }
 }

@@ -43,15 +43,13 @@ class NewspaperZombie(type: EntityType<out NewspaperZombie>, level: Level) : Paz
         return !mainHandItem.`is`(PazItems.NEWSPAPER)
     }
 
-    override fun equipmentHasChanged(previous: ItemStack, current: ItemStack): Boolean {
-        val hasChanged = super.equipmentHasChanged(previous, current)
+    override fun onEquipItem(slot: EquipmentSlot, oldStack: ItemStack, stack: ItemStack) {
+        super.onEquipItem(slot, oldStack, stack)
         updateNewspaper()
-        return hasChanged
     }
 
     fun updateNewspaper() {
         if(mainHandItem.`is`(PazItems.NEWSPAPER)) {
-            this.startUsingItem(usedItemHand)
             this.setLivingEntityFlag(LIVING_ENTITY_FLAG_IS_USING, true)
             removeAngerBoost()
         }

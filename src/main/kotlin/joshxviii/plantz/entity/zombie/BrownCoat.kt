@@ -2,6 +2,7 @@ package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazDataSerializers.BROWN_COAT_VARIANT
+import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.entity.Balloon
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -93,13 +94,19 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
             random
         )
 
-        if (getItemBySlot(EquipmentSlot.HEAD).isEmpty){
+        if (getItemBySlot(EquipmentSlot.HEAD).isEmpty) {
             if (random.nextFloat() < 0.18) {
                 setItemSlot(EquipmentSlot.HEAD, PazBlocks.CONE.asItem().defaultInstance)
                 setDropChance(EquipmentSlot.HEAD, 0.02f)
             }
             else if (random.nextFloat() < 0.07 && getItemBySlot(EquipmentSlot.HEAD).isEmpty) {
                 setItemSlot(EquipmentSlot.HEAD, Items.BUCKET.defaultInstance)
+            }
+        }
+
+        if (getItemBySlot(EquipmentSlot.MAINHAND).isEmpty) {
+            if (random.nextFloat() < 1.07) {
+                setItemSlot(EquipmentSlot.MAINHAND, PazItems.DOOR_SHIELD.defaultInstance)
             }
         }
 

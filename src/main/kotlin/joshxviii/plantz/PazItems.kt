@@ -26,7 +26,6 @@ import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
 import net.fabricmc.fabric.api.registry.FuelValueEvents
 import net.fabricmc.fabric.impl.item.ItemComponentTooltipProviderRegistryImpl
 import net.minecraft.core.Direction
-import net.minecraft.core.Holder
 import net.minecraft.core.HolderSet
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponentMap
@@ -37,10 +36,8 @@ import net.minecraft.core.dispenser.MinecartDispenseItemBehavior
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
-import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.DamageTypeTags
-import net.minecraft.tags.ItemTags
 import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
@@ -63,7 +60,6 @@ import net.minecraft.world.level.block.ComposterBlock
 import net.minecraft.world.level.block.DispenserBlock
 import net.minecraft.world.phys.AABB
 import java.util.*
-import java.util.List
 import java.util.function.Function
 
 object PazItems {
@@ -124,15 +120,17 @@ object PazItems {
     val NEWSPAPER: Item = registerItem(
         "newspaper", ::NewspaperItem,
         properties = Item.Properties()
-            .component(DataComponents.BLOCKS_ATTACKS, BlocksAttacks(
-                0.25f,
-                1.0f,
-                listOf(DamageReduction(80.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 0.9f)),
-                ItemDamageFunction.DEFAULT,
-                Optional.empty<HolderSet<DamageType>>(),
-                Optional.of(PazSounds.PROJECTILE_HIT_PAPER),
-                Optional.of(SoundEvents.SHIELD_BREAK)
-            )
+            .delayedComponent(DataComponents.BLOCKS_ATTACKS, {
+                BlocksAttacks(
+                    0.25f,
+                    1.0f,
+                    listOf(DamageReduction(80.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 0.9f)),
+                    ItemDamageFunction.DEFAULT,
+                    Optional.of<HolderSet<DamageType>>(it.getOrThrow(DamageTypeTags.BYPASSES_SHIELD)),
+                    Optional.of(PazSounds.PROJECTILE_HIT_PAPER),
+                    Optional.of(SoundEvents.SHIELD_BREAK)
+                )
+            }
             )
             .component(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.08f)
             .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
@@ -144,10 +142,23 @@ object PazItems {
     )
     @JvmField
     val DOOR_SHIELD: Item = registerItem(
-        "door_shield",
+        "door_shield", ::DoorShieldItem,
         properties = Item.Properties()
-            .stacksTo(1)
+            .durability(336)
+            .equippableUnswappable(EquipmentSlot.OFFHAND)
             .component(PazComponents.DOOR_SHIELD, DoorShield())
+            .delayedComponent(DataComponents.BLOCKS_ATTACKS, {
+                BlocksAttacks(
+                    0.25f,
+                    1.0f,
+                    listOf(DamageReduction(90.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 1.0f)),
+                    ItemDamageFunction.DEFAULT,
+                    Optional.of<HolderSet<DamageType>>(it.getOrThrow(DamageTypeTags.BYPASSES_SHIELD)),
+                    Optional.of(SoundEvents.SHIELD_BLOCK),
+                    Optional.of(SoundEvents.SHIELD_BREAK)
+                )
+            })
+            .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
     )
     const val DUCKY_TUBE_DAMAGE_INTERVAL = 45
     val DUCKY_EQUIP_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, pazResource("ducky_tube"))

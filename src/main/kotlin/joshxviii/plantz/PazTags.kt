@@ -25,6 +25,7 @@ object PazTags {
     }
 
     object ItemTags {
+        @JvmField val ZOMBIE_CAN_USE = tag("zombie_can_use")
         @JvmField val GNOME_PREFERRED_WEAPONS = tag("gnome_preferred_weapons")
         @JvmField val DIGGER_PREFERRED_WEAPONS = tag("digger_preferred_weapons")
         @JvmField val NEWSPAPER_ZOMBIE_PREFERRED_WEAPONS = tag("newspaper_zombie_preferred_weapons")

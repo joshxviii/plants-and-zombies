@@ -136,6 +136,7 @@
   "component.blocks_damage": "Break Chance: %s%%",
   "component.letter.signed": "From: %s",
   "component.letter.item": "%s x%s",
+  "component.door_shield": "%s",
 
   "item.plantz.zombie_banner": "Brainz Banner",
 
@@ -157,7 +158,7 @@
   "item.plantz.dye_blaster.description": "%s chance of consuming dye",
   "item.plantz.taco": "Taco",
   "item.plantz.door_shield": "Door Shield",
-  "component.door_shield": "Door: %s",
+  "item.plantz.door_shield.type": "%s Shield",
   "item.plantz.letter": "Letter",
   "item.plantz.brainzium": "Brainzium",
   "item.plantz.brainz_alloy": "Brainz Alloy",
@@ -294,6 +295,8 @@
   "block.plantz.purple_mailbox": "Purple Mailbox",
   "block.plantz.magenta_mailbox": "Magenta Mailbox",
   "block.plantz.pink_mailbox": "Pink Mailbox",
+
+  "block.plantz.brainz_alloy_door": "Brainz Alloy Door",
 
   "entity.plantz.empty": "Empty",
   "entity.plantz.sunflower": "Sunflower",

@@ -1,6 +1,7 @@
 package joshxviii.plantz.item.component
 
 import com.mojang.serialization.Codec
+import net.minecraft.ChatFormatting
 import net.minecraft.core.component.DataComponentGetter
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
@@ -22,7 +23,7 @@ data class DoorShield(
         flag: TooltipFlag,
         components: DataComponentGetter
     ) {
-        consumer.accept(Component.translatable("component.door_shield", doorType.name).withColor(0x7B44A3))
+        //consumer.accept(Component.translatable("component.door_shield", doorType.name).withStyle(ChatFormatting.GRAY))
     }
 
 
