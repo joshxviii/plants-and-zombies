@@ -38,9 +38,7 @@ class DoorShieldItemModel(
         owner: ItemOwner?,
         seed: Int
     ) {
-        val door = item.get(PazComponents.DOOR_SHIELD)?.doorType
-            ?.takeIf { it is DoorBlock }
-            ?: Blocks.OAK_DOOR
+        val door = item.get(PazComponents.DOOR_SHIELD)?.doorType?.takeIf { it is DoorBlock } ?: return
         output.appendModelIdentityElement(this)
         val layer = output.newLayer()
         layer.setLocalTransform(Matrix4f().translate(0f, 0f, -8/16f))
@@ -69,13 +67,10 @@ class DoorShieldItemModel(
         val emitter = (layer as FabricLayerRenderState).emitter()
         if (yOffset != 0f) {
             emitter.pushTransform { quad ->
-                for (vertex in 0..3) {
-                    quad.pos(vertex, quad.x(vertex), quad.y(vertex) + yOffset, quad.z(vertex))
-                }
+                for (vertex in 0..3) quad.pos(vertex, quad.x(vertex), quad.y(vertex) + yOffset, quad.z(vertex))
                 true
             }
         }
-
         try {
             model.emitQuads(
                 emitter,

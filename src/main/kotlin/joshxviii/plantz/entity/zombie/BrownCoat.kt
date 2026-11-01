@@ -105,7 +105,7 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
         }
 
         if (getItemBySlot(EquipmentSlot.MAINHAND).isEmpty) {
-            if (random.nextFloat() < 1.07) {
+            if (random.nextFloat() < 0.05) {
                 setItemSlot(EquipmentSlot.MAINHAND, PazItems.DOOR_SHIELD.defaultInstance)
             }
         }

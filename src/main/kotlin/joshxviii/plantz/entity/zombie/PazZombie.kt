@@ -123,8 +123,6 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
                     true,
                     false
                 ) ?: return
-                zombie.setPersistenceRequired()
-
                 level.addFreshEntity(zombie)
             }
         }
