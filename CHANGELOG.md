@@ -8,6 +8,9 @@
 # Changelog 1.5.2
 ### Changes / Additions
 - Added Brainz Alloy Door and Trapdoor.
+- Added Door Shields.
+  - Can be crafted from any Door and a Shield.
+- Browncoats can now spawn with door shields.
 - During the final wave at the 1-minute mark, all remaining zombies will teleport closer to the flag.
 - Cones, Buckets, and Football helmets now only block damage from above.
   - They have also been given a buff to armor and armor toughness.

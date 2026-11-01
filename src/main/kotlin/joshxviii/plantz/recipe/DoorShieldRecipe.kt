@@ -15,6 +15,7 @@ import net.minecraft.tags.ItemTags
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.crafting.CraftingBookCategory
 import net.minecraft.world.item.crafting.CraftingInput
 import net.minecraft.world.item.crafting.CustomRecipe
 import net.minecraft.world.item.crafting.RecipeSerializer
@@ -34,6 +35,8 @@ class DoorShieldRecipe : CustomRecipe() {
             it.set(PazComponents.DOOR_SHIELD, DoorShield(door))
         }
     }
+
+    override fun category(): CraftingBookCategory = CraftingBookCategory.EQUIPMENT
 
     override fun getSerializer(): RecipeSerializer<DoorShieldRecipe> = SERIALIZER
 

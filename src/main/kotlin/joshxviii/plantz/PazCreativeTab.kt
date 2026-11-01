@@ -100,12 +100,12 @@ object PazCreativeTab {
                 output.accept(PazItems.DUCKY_TUBE)
                 output.accept(PazBlocks.CONE)
                 output.accept(PazItems.NEWSPAPER)
+                output.accept(PazItems.DOOR_SHIELD)
                 output.accept(PazItems.FOOTBALL_HELMET)
                 output.accept(PazItems.DYE_BLASTER)
                 output.accept(PazBlocks.BRAINZ_FLAG)
                 output.accept(PazBlocks.PLANTZ_FLAG)
                 output.accept(PazItems.TACO)
-                output.accept(PazItems.DOOR_SHIELD)
                 output.accept(PazItems.BRAINZ_ALLOY)
                 if (PazConfig.SHOW_HIDDEN_ITEMS) {
                     output.accept(PazItems.BRAINZIUM)

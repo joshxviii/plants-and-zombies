@@ -39,7 +39,7 @@ class DoorShieldItemModel(
         seed: Int
     ) {
         val door = item.get(PazComponents.DOOR_SHIELD)?.doorType?.takeIf { it is DoorBlock } ?: return
-        output.appendModelIdentityElement(this)
+        output.appendModelIdentityElement(door)
         val layer = output.newLayer()
         layer.setLocalTransform(Matrix4f().translate(0f, 0f, -8/16f))
         displayProperties.applyToLayer(layer, displayContext)
