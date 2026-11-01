@@ -1,10 +1,12 @@
 package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazDataSerializers.BROWN_COAT_VARIANT
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.entity.Balloon
+import net.minecraft.core.component.DataComponents
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
@@ -104,9 +106,12 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
             }
         }
 
-        if (getItemBySlot(EquipmentSlot.MAINHAND).isEmpty) {
+        if (getItemBySlot(EquipmentSlot.OFFHAND).isEmpty) {
             if (random.nextFloat() < 0.05) {
-                setItemSlot(EquipmentSlot.MAINHAND, PazItems.DOOR_SHIELD.defaultInstance)
+                val doorShield = PazItems.DOOR_SHIELD.defaultInstance
+                doorShield.set(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.015f)
+                setItemSlot(EquipmentSlot.OFFHAND, doorShield)
+                setDropChance(EquipmentSlot.OFFHAND, 0f)
             }
         }
 

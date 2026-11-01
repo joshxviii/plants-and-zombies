@@ -9,6 +9,8 @@ object PazDamageTypes {
     @JvmField
     val PLANT = registerDamageType("plant")
     @JvmField
+    val PIERCING_PROJECTILE = registerDamageType("piercing_projectile")
+    @JvmField
     val PLANT_EXPLODE = registerDamageType("plant_explode")
     @JvmField
     val PLANT_FREEZE = registerDamageType("plant_freeze")
