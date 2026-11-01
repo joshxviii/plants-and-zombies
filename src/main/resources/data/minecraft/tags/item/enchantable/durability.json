@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "plantz:gardening_glove",
-    "plantz:dye_blaster"
+    "plantz:dye_blaster",
+    "plantz:door_shield"
   ]
 }

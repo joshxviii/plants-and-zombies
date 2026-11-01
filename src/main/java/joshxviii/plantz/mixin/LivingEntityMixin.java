@@ -76,9 +76,6 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     @Unique
     private @Nullable Plant plantEntity = null;
 
-    @Unique
-    private boolean plantz$blockedDamage;
-
     @Override
     public @Nullable Plant plantz$getPlant() {
         return plantEntity;
@@ -276,7 +273,6 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     @Inject(method = "hurtServer", at = @At("HEAD"), cancellable = true)
     public void ownerIgnorePlantAttacks(ServerLevel level, DamageSource source, float damage, CallbackInfoReturnable<Boolean> cir) {
         var self = (LivingEntity) (Object) this;
-        plantz$blockedDamage = false;
         var sourceEntity = source.getEntity();
         var directEntity = source.getDirectEntity();
         if (source.is(DamageTypes.LIGHTNING_BOLT)) self.addEffect(new MobEffectInstance(PazEffects.ELECTRIFIED, 300, 1));
@@ -298,24 +294,9 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
         }
     }
 
-    @Inject(method = "tick", at = @At("HEAD"))
-    private void plantz$clearBlockedDamage(CallbackInfo ci) {
-        plantz$blockedDamage = false;
-    }
-
-    @Inject(method = "applyItemBlocking", at = @At("RETURN"))
-    private void plantz$recordBlockedDamage(ServerLevel level, DamageSource source, float damage, CallbackInfoReturnable<Float> cir) {
-        if (cir.getReturnValue() > 0.0F) {
-            plantz$blockedDamage = true;
-        }
-    }
-
-    @Inject(method = "knockback", at = @At("HEAD"), cancellable = true)
-    private void plantz$preventKnockbackFromBlockedDamage(double strength, double x, double z, CallbackInfo ci) {
-        if (plantz$blockedDamage) {
-            plantz$blockedDamage = false;
-            ci.cancel();
-        }
+    @Inject(method = "blockedByItem", at = @At("HEAD"), cancellable = true)
+    private void plantz$preventKnockbackWhileBlocking(LivingEntity defender, CallbackInfo ci) {
+        ci.cancel();
     }
 
 
