@@ -50,10 +50,6 @@ class ZombieBat(type: EntityType<out ZombieBat>, level: Level) : PazZombie(type,
         super.registerGoals()
     }
 
-    override fun addBehaviourGoals() {
-        addBehaviourGoalsNoMelee()
-    }
-
     override fun handleAttributes(difficultyModifier: Float, spawnReason: EntitySpawnReason) {}
 
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {

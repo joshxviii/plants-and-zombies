@@ -571,6 +571,7 @@ object PazEntities {
             attackDamage = 2.0,
             maxHealth = 20.0,
             movementSpeed = 0.32,
+            flyingSpeed = 0.28,
             spawnReinforcementsChance = 0.3,
         )
     )
@@ -584,7 +585,6 @@ object PazEntities {
             attackDamage = 7.0,
             maxHealth = 500.0,
             movementSpeed = 0.21,
-            flyingSpeed = 0.24,
             knockbackResistance = 1.4,
             explosionKnockbackResistance = 0.5,
             stepHeight = 1.0,

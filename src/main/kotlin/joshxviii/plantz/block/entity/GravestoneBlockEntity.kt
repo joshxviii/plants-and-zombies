@@ -15,6 +15,7 @@ import joshxviii.plantz.entity.zombie.PazZombie.Companion.SPAWN_TABLE_WEIGHTS
 import joshxviii.plantz.entity.zombie.PazZombie.Companion.findSpawnPosition
 import joshxviii.plantz.entity.zombie.PazZombie.Companion.rollZombieType
 import net.minecraft.core.BlockPos
+import net.minecraft.core.UUIDUtil
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundSource
 import net.minecraft.util.Mth
@@ -26,7 +27,11 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.LightLayer
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.AABB
+import java.util.UUID
+import kotlin.jvm.optionals.getOrDefault
 
 class GravestoneBlockEntity(
     worldPosition: BlockPos,
@@ -41,12 +46,31 @@ class GravestoneBlockEntity(
 
         fun tick(level: Level, pos: BlockPos, state: BlockState, blockEntity: GravestoneBlockEntity) {
             if (level.isClientSide || level !is ServerLevel) return
+            blockEntity.updateTrackedZombies(level)
             if (blockEntity.ticksSinceLastSpawn++ >= blockEntity.spawnDelay) blockEntity.trySpawnZombie(level, pos)
         }
     }
 
     private var spawnDelay = SPAWN_DELAY_MIN
     private var ticksSinceLastSpawn = 0
+    private val trackedZombieIds = mutableSetOf<UUID>()
+
+    override fun saveAdditional(output: ValueOutput) {
+        super.saveAdditional(output)
+        output.store("tracked_zombies", UUIDUtil.CODEC_SET, trackedZombieIds)
+    }
+
+    override fun loadAdditional(input: ValueInput) {
+        super.loadAdditional(input)
+        trackedZombieIds.clear()
+        trackedZombieIds.addAll(input.read("tracked_zombies", UUIDUtil.CODEC_SET).getOrDefault(emptySet()))
+    }
+
+    private fun updateTrackedZombies(level: ServerLevel) {
+        if (trackedZombieIds.removeIf { uuid -> level.getEntity(uuid)?.let { !it.isAlive } == true }) {
+            setChanged()
+        }
+    }
 
     private fun isDarkEnough(level: ServerLevel): Boolean {
         return !(level.isBrightOutside && level.getBrightness(LightLayer.SKY, blockPos) >= 7)
@@ -65,11 +89,9 @@ class GravestoneBlockEntity(
         if (nearbyPlayer == null) return false
 
         val aabb = AABB.ofSize(pos.center, 32.0, 16.0, 32.0)
-        val nearbyZombies = level.getEntitiesOfClass(Zombie::class.java, aabb) { zombie ->
-            true
-        }
+        val nearbyZombies = level.getEntitiesOfClass(Zombie::class.java, aabb) { it.isAlive }
 
-        return nearbyZombies.size < MAX_ZOMBIES
+        return trackedZombieIds.size < MAX_ZOMBIES && nearbyZombies.size < MAX_ZOMBIES
     }
 
     private fun trySpawnZombie(level: ServerLevel, pos: BlockPos) {
@@ -88,7 +110,9 @@ class GravestoneBlockEntity(
         ) ?: return
         zombie.setPersistenceRequired()
 
-        level.addFreshEntity(zombie)
+        if (!level.addFreshEntity(zombie)) return
+        trackedZombieIds.add(zombie.uuid)
+        setChanged()
 
         spawnDelay = Mth.randomBetweenInclusive(level.random, SPAWN_DELAY_MIN, SPAWN_DELAY_MAX)
         ticksSinceLastSpawn = 0

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "plantz:item/baron_bvons_bats_spawn_egg"
+    "layer0": "plantz:item/baron_von_bats_spawn_egg"
   }
 }
