@@ -246,6 +246,8 @@
   "item.plantz.pirate_captain_spawn_egg": "Pirate Captain Spawn Egg",
   "item.plantz.super_brainz_spawn_egg": "Super Brainz Spawn Egg",
   "item.plantz.imp_spawn_egg": "Imp Spawn Egg",
+  "item.plantz.zombie_bat_spawn_egg": "Zombie Bat Spawn Egg",
+  "item.plantz.baron_von_bats_spawn_egg": "Baron Von Bats Spawn Egg",
   "item.plantz.gargantuar_spawn_egg": "Gargantuar Spawn Egg",
 
   "item.plantz.gnome_spawn_egg": "Gnome Spawn Egg",
@@ -336,6 +338,8 @@
   "entity.plantz.pirate_captain_ghost": "Pirate Captain Ghost",
   "entity.plantz.super_brainz": "Super Brainz",
   "entity.plantz.imp": "Imp",
+  "entity.plantz.zombie_bat": "Zombie Bat",
+  "entity.plantz.baron_von_bats": "Baron Von Bats",
   "entity.plantz.gargantuar": "Gargantuar",
 
   "entity.plantz.zombie_turret": "Zombie Turret",

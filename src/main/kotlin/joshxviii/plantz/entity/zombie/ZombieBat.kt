@@ -6,8 +6,10 @@ import joshxviii.plantz.PazSounds
 import joshxviii.plantz.ai.goal.NavigateToTargetGoal
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.entity.isActiveInRaid
+import joshxviii.plantz.entity.zombie.RoboZombie.Companion.MISSILE_COOLDOWN_TIME
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup.level
 import net.minecraft.core.BlockPos
+import net.minecraft.core.UUIDUtil
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -32,6 +34,11 @@ import net.minecraft.world.item.component.Fireworks
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
+import java.util.Optional
+import java.util.UUID
+import kotlin.jvm.optionals.getOrNull
 
 class ZombieBat(type: EntityType<out ZombieBat>, level: Level) : PazZombie(type, level) {
 
@@ -42,8 +49,20 @@ class ZombieBat(type: EntityType<out ZombieBat>, level: Level) : PazZombie(type,
     init {
     }
 
+    var barronId: UUID? = null
+
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
+    }
+
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+        output.storeNullable("baron_id", UUIDUtil.CODEC , barronId)
+    }
+
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+        barronId = input.read("baron_id", UUIDUtil.CODEC).getOrNull()
     }
 
     override fun registerGoals() {
@@ -71,7 +90,7 @@ class ZombieBat(type: EntityType<out ZombieBat>, level: Level) : PazZombie(type,
     override fun canBreakDoors(): Boolean = false
     override fun canHoldItem(itemStack: ItemStack): Boolean = false
     override fun getStepSound(): SoundEvent = SoundEvents.EMPTY
-    override fun getVoicePitch(): Float = 1.85f
+    override fun getVoicePitch(): Float = 1.9f
     override fun getSoundVolume(): Float = 0.7f
 
     override fun getDefaultGravity(): Double = 0.0

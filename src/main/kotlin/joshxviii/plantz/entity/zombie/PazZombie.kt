@@ -164,10 +164,10 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
 
         // for group spawning and gravestone spawning
         val SPAWN_TABLE_WEIGHTS = mapOf(
-            PazEntities.BROWN_COAT          to 20,
-            PazEntities.NEWSPAPER_ZOMBIE    to 7,
-            PazEntities.DIGGER_ZOMBIE       to 1,
-            PazEntities.DISCO_ZOMBIE        to 1,
+            PazEntities.BROWN_COAT          to 40,
+            PazEntities.NEWSPAPER_ZOMBIE    to 8,
+            PazEntities.DIGGER_ZOMBIE       to 2,
+            PazEntities.DISCO_ZOMBIE        to 2,
             PazEntities.ALL_STAR            to 1,
         )
 
@@ -177,7 +177,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
 
         data class PazZombieAttributes(
             val maxHealth: Double = 20.0,
-            val attackDamage: Double = 1.0,
+            val attackDamage: Double = 1.5,
             val attackKnockback: Double = 0.4,
             val attackRange: Double = 1.5,
             val movementSpeed: Double = ZOMBIE_SPEED,

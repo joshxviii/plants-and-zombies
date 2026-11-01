@@ -11,12 +11,15 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.monster.zombie.Zombie
 
+/**
+ * Defines a boss type for a zombie raid. Multiple entities can be spawned as a single boss type.
+ */
 enum class BossType(
     private val weightFn: (ZombieRaid, WaveType) -> Float,
     private val bossSpawns: (ZombieRaid, WaveType) -> List<BossEntry>,
 ): StringRepresentable {
     GARGANTUAR(
-        weightFn = { _, wave -> if (wave == WaveType.DEFAULT || wave == WaveType.PIRATE_INVASION) 1f else 0f },
+        weightFn = { _, wave -> if (wave == WaveType.DEFAULT || wave == WaveType.PIRATE_INVASION) 3f else 0f },
         bossSpawns = { raid, wave ->
             listOf(
                 BossEntry(
@@ -32,6 +35,16 @@ enum class BossType(
             listOf(
                 BossEntry(
                     PazEntities.ROBO_ZOMBIE, ::bossify
+                ),
+            )
+        }
+    ),
+    BARON_VON_BATS(
+        weightFn = { _, wave -> 1f },
+        bossSpawns = { raid, wave ->
+            listOf(
+                BossEntry(
+                    PazEntities.BARON_VON_BATS,
                 ),
             )
         }
@@ -60,7 +73,7 @@ enum class BossType(
 
         val BOSSIFY: Identifier = pazResource("bossify")
         private val BOSS_SCALE = AttributeModifier(BOSSIFY, 1.0, AttributeModifier.Operation.ADD_VALUE)
-        private val BOSS_HEALTH = AttributeModifier(BOSSIFY, 15.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+        private val BOSS_HEALTH = AttributeModifier(BOSSIFY, 3.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
 
         fun bossify(zombie: Zombie) {
             zombie.getAttribute(Attributes.SCALE)?.let { if (!it.hasModifier(BOSSIFY)) it.addPermanentModifier(BOSS_SCALE) }
