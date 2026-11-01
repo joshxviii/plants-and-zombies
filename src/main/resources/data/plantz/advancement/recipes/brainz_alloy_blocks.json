@@ -33,7 +33,9 @@
       "plantz:brainz_alloy_slab",
       "plantz:reinforced_brainz_alloy_block",
       "plantz:treaded_brainz_alloy_block",
-      "plantz:brainz_alloy_fence"
+      "plantz:brainz_alloy_fence",
+      "plantz:brainz_alloy_door",
+      "plantz:brainz_alloy_trapdoor"
     ]
   }
 }

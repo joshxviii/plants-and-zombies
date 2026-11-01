@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": "plantz:brainz_alloy"
+  },
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "result": {
+    "count": 16,
+    "id": "plantz:brainz_alloy_trapdoor"
+  }
+}

@@ -27,17 +27,15 @@ import net.minecraft.world.item.Rarity
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.item.component.Weapon
 import net.minecraft.world.item.equipment.Equippable
-import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.IronBarsBlock
-import net.minecraft.world.level.block.SlabBlock
-import net.minecraft.world.level.block.SoundType
-import net.minecraft.world.level.block.StairBlock
+import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.state.properties.BlockSetType
 import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.IntegerProperty
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument
 import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.level.material.PushReaction
 
@@ -253,6 +251,25 @@ object PazBlocks {
         BlockBehaviour.Properties.of().sound(SoundType.COPPER).requiresCorrectToolForDrops()
             .strength(3.0f, 6.0f).noOcclusion(),
         ::IronBarsBlock
+    )
+    @JvmField val BRAINZ_ALLOY_DOOR: Block = registerBlock(
+        "brainz_alloy_door",
+        BlockBehaviour.Properties.of()
+            .mapColor(BRAINZ_ALLOY_BLOCK.defaultMapColor())
+            .strength(5.0f)
+            .noOcclusion()
+            .pushReaction(PushReaction.DESTROY),
+        { DoorBlock(BlockSetType.COPPER, it) },
+    )
+    @JvmField val BRAINZ_ALLOY_TRAPDOOR: Block = registerBlock(
+        "brainz_alloy_trapdoor",
+        BlockBehaviour.Properties.of()
+            .mapColor(BRAINZ_ALLOY_BLOCK.defaultMapColor())
+            .requiresCorrectToolForDrops()
+            .strength(5.0f)
+            .noOcclusion()
+            .isValidSpawn(Blocks::never),
+        { TrapDoorBlock(BlockSetType.COPPER, it) },
     )
 
     @JvmField val BRAINZ_FLAG: Block = registerBlock(

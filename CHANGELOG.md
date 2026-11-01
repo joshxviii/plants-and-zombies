@@ -7,6 +7,7 @@
 
 # Changelog 1.5.2
 ### Changes / Additions
+- Added Brainz Alloy Door and Trapdoor.
 - During the final wave at the 1-minute mark, all remaining zombies will teleport closer to the flag.
 - Cones, Buckets, and Football helmets now only block damage from above.
   - They have also been given a buff to armor and armor toughness.
@@ -18,7 +19,7 @@
 - Dye Blasters now store dye ammo. Dye Blaster can only be fired after being loaded with dye. Each shot has a chance to consume the stored dye.
 ### Hotfix
 - Pumpkins are no longer duplicated when using a Gardening Glove.
-- 
+- Various other bug fixes / improvements
 
 # Changelog 1.5.1
 ### Changes / Additions
