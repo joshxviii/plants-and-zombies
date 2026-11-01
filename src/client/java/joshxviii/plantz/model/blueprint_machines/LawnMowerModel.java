@@ -25,6 +25,7 @@ public class LawnMowerModel<T extends BlueprintMachineRenderState> extends Entit
 		this.front_wheels = this.body.getChild("front_wheels");
 		this.back_wheels = this.body.getChild("back_wheels");
 		this.handle = this.body.getChild("handle");
+		
 	}
 
 	public static LayerDefinition createBodyLayer() {

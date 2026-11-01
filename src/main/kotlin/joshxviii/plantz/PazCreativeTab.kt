@@ -80,7 +80,7 @@ object PazCreativeTab {
                 output.accept(PazItems.ROBO_ZOMBIE_SPAWN_EGG)
                 output.accept(PazItems.PIRATE_CAPTAIN_SPAWN_EGG)
                 output.accept(PazItems.SUPER_BRAINZ_SPAWN_EGG)
-                if (PazConfig.SHOW_HIDDEN_ITEMS) output.accept(PazItems.ZOMBIE_BAT_SPAWN_EGG)
+                if (PazConfig.SHOW_HIDDEN_ITEMS) output.accept(PazItems.ZOMBAT_SPAWN_EGG)
                 if (PazConfig.SHOW_HIDDEN_ITEMS) output.accept(PazItems.BARON_VON_BATS_SPAWN_EGG)
                 output.accept(PazItems.GARGANTUAR_SPAWN_EGG)
 

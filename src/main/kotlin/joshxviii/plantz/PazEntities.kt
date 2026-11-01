@@ -562,9 +562,9 @@ object PazEntities {
             spawnReinforcementsChance = 0.0,
         )
     )
-    @JvmField val ZOMBIE_BAT: EntityType<ZombieBat> =  registerZombie(
-        "zombie_bat",
-        EntityType.Builder.of(::ZombieBat, MobCategory.MONSTER)
+    @JvmField val ZOMBAT: EntityType<Zombat> =  registerZombie(
+        "zombat",
+        EntityType.Builder.of(::Zombat, MobCategory.MONSTER)
             .sized(0.5F, 0.9F)
             .eyeHeight(0.45F)
             .clientTrackingRange(8),

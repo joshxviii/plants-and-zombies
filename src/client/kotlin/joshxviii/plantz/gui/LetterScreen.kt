@@ -29,8 +29,8 @@ class LetterScreen(
     title: Component = Component.translatable("gui.plantz.letter")
 ) : AbstractContainerScreen<LetterMenu>(menu, inventory, title, MENU_WIDTH, MENU_HEIGHT) {
     companion object {
-        private const val TEXT_WIDTH = 176
-        private const val TEXT_HEIGHT = 133
+        private const val TEXT_WIDTH = 148
+        private const val TEXT_HEIGHT = 102
         private const val LETTER_WIDTH = 185
         private const val LETTER_HEIGHT = 133
         private const val BACKGROUND_TEXTURE_SIZE = 256
@@ -75,14 +75,14 @@ class LetterScreen(
                 .setCursorColor(TEXT_COLOR)
                 .setShowBackground(false)
                 .setTextShadow(false)
-                .setX(backgroundLeft() + 4)
-                .setY(topPos + 4)
-                .build(font, TEXT_WIDTH, TEXT_HEIGHT - 32, CommonComponents.EMPTY)
+                .setX(textLeft())
+                .setY(textTop())
+                .build(font, TEXT_WIDTH, TEXT_HEIGHT, CommonComponents.EMPTY)
             pageEditor.setCharacterLimit(1024)
-            pageEditor.setLineLimit(126 / 9)
+            pageEditor.setLineLimit(TEXT_HEIGHT / 10)
             pageEditor.setValueListener { value -> pages[0] = value }
             addRenderableWidget(pageEditor)
-            pageEditor.setValue(pages[0], true)
+            pageEditor.setValue(pages[0], false)
 
             // TODO add some cool fonts
 //            addRenderableWidget(
@@ -159,16 +159,15 @@ class LetterScreen(
     override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, a: Float) {
         super.extractRenderState(graphics, mouseX, mouseY, a)
         val collector = graphics.textRenderer()
-        collector.accept(TextAlignment.RIGHT, leftPos + LETTER_WIDTH - 5, topPos, pageNumber)
 
         if (!editable) {
             val page = (pageComponents.firstOrNull() ?: CommonComponents.EMPTY).copy()
             page.withStyle(Style.EMPTY.withFont(FontDescription.Resource(originalData.font.getFont())))
             page.withColor(TEXT_COLOR)
             page.withoutShadow()
-            val lines = font.split(page, TEXT_WIDTH)
-            for (index in 0 until minOf(126 / 9, lines.size)) {
-                collector.accept(backgroundLeft() + 8, topPos + 8 + index * 9, lines[index])
+            val lines = font.split(page, TEXT_WIDTH - 2)
+            for (index in 0 until minOf(TEXT_HEIGHT / 10, lines.size)) {
+                collector.accept(textLeft() + 4, textTop() + 4 + index * 9, lines[index])
             }
         }
     }
@@ -240,6 +239,9 @@ class LetterScreen(
         "gui.plantz.letter.background", Component.translatable(selectedBackground.translationKey)
     )
 
-    fun backgroundLeft() = if (editable) leftPos else (width - 187) / 2
+    fun backgroundLeft() = if (editable) leftPos else (width - LETTER_WIDTH) / 2
     fun backgroundTop() = topPos
+
+    fun textLeft() = backgroundLeft() - (TEXT_WIDTH - LETTER_WIDTH) / 2
+    fun textTop() = topPos + 10
 }
