@@ -134,6 +134,10 @@
   "component.item_cost": "%s 消耗：%s",
   "component.blocks_damage.description": "保护免受上方伤害",
   "component.blocks_damage": "破碎概率: %s%%",
+  "component.letter.signed": "来自：%s",
+  "component.letter.item": "%s x%s",
+  "component.door_shield": "%s",
+
   "item.plantz.zombie_banner": "脑子旗帜",
 
   "item.plantz.sun": "阳光",
@@ -153,6 +157,8 @@
   "item.plantz.dye_blaster": "彩漆枪",
   "item.plantz.dye_blaster.description": "消耗染料概率：%s",
   "item.plantz.taco": "玉米卷",
+  "item.plantz.door_shield": "门板盾牌",
+  "item.plantz.door_shield.type": "%s 盾牌",
   "item.plantz.letter": "信件",
   "item.plantz.brainzium": "脑晶",
   "item.plantz.brainz_alloy": "脑合金",
@@ -217,6 +223,8 @@
   "item.plantz.treaded_brainz_alloy_block": "防滑脑合金块",
   "item.plantz.reinforced_brainz_alloy_block": "强化脑合金块",
   "item.plantz.brainz_alloy_fence": "脑合金栅栏",
+  "item.plantz.brainz_alloy_door": "脑合金门",
+  "item.plantz.brainz_alloy_trapdoor": "脑合金活板门",
   "item.plantz.gravestone": "墓碑",
 
   "item.minecraft.potion.effect.hypnotize": "魅惑药水",
@@ -243,6 +251,8 @@
   "item.plantz.pirate_captain_spawn_egg": "海盗船长刷怪蛋",
   "item.plantz.super_brainz_spawn_egg": "超尸刷怪蛋",
   "item.plantz.imp_spawn_egg": "小鬼僵尸刷怪蛋",
+  "item.plantz.zombie_bat_spawn_egg": "僵尸蝙蝠刷怪蛋",
+  "item.plantz.baron_von_bats_spawn_egg": "蝙蝠男爵刷怪蛋",
   "item.plantz.gargantuar_spawn_egg": "巨人僵尸刷怪蛋",
 
   "item.plantz.gnome_spawn_egg": "花园地精刷怪蛋",
@@ -285,6 +295,8 @@
   "block.plantz.purple_mailbox": "紫色信箱",
   "block.plantz.magenta_mailbox": "品红色信箱",
   "block.plantz.pink_mailbox": "粉红色信箱",
+
+  "block.plantz.brainz_alloy_door": "脑合金门",
 
   "entity.plantz.empty": "空",
   "entity.plantz.sunflower": "向日葵",
@@ -333,6 +345,8 @@
   "entity.plantz.pirate_captain_ghost": "海盗船长幽灵",
   "entity.plantz.super_brainz": "超尸",
   "entity.plantz.imp": "小鬼僵尸",
+  "entity.plantz.zombie_bat": "僵尸蝙蝠",
+  "entity.plantz.baron_von_bats": "蝙蝠男爵",
   "entity.plantz.gargantuar": "巨人僵尸",
 
   "entity.plantz.zombie_turret": "僵尸炮塔",
@@ -355,6 +369,23 @@
   "container.plantz.time_machine.wip": "???",
 
   "gui.plantz.letter": "信",
+  "gui.plantz.letter.font": "字体：%s",
+  "gui.plantz.letter.background": "信纸：%s",
+  "gui.plantz.letter.attachment": "附件",
+  "gui.plantz.letter.sign": "签名",
+  "gui.plantz.letter.confirm_title": "签署信件？",
+  "gui.plantz.letter.confirm_message": "一旦密封，此信件将无法再编辑。",
+  "gui.plantz.letter.confirm_sign": "签名",
+  "gui.plantz.letter.title": "信件",
+  "gui.plantz.letter.signed_by": "由 %s 签署",
+  "letter_font.plantz.basic": "基础",
+  "letter_font.plantz.hand_written": "手写",
+  "letter_font.plantz.fancy": "花式",
+  "letter_background.plantz.default": "默认",
+  "letter_background.plantz.hearts": "爱心",
+  "letter_background.plantz.fancy": "花式",
+  "letter_background.plantz.torn": "撕裂",
+
 
   "plantz.subtitles.projectile.deflected": "投射物：被弹开",
   "plantz.subtitles.projectile.shoot": "投射物：发射",

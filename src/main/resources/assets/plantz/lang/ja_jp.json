@@ -134,6 +134,10 @@
   "component.item_cost": "%sコスト: %s",
   "component.blocks_damage.description": "上方からのダメージから保護する",
   "component.blocks_damage": "損害: %s%%",
+  "component.letter.signed": "送り主：%s",
+  "component.letter.item": "%s x%s",
+  "component.door_shield": "%s",
+
   "item.plantz.zombie_banner": "脳の旗",
 
   "item.plantz.sun": "太陽光",
@@ -153,6 +157,8 @@
   "item.plantz.dye_blaster": "染料銃",
   "item.plantz.dye_blaster.description": "染料消費：%s",
   "item.plantz.taco": "タコス",
+  "item.plantz.door_shield": "ドア盾",
+  "item.plantz.door_shield.type": "%sの",
   "item.plantz.letter": "手紙",
   "item.plantz.brainzium": "脳金",
   "item.plantz.brainz_alloy": "脳合金",
@@ -217,7 +223,8 @@
   "item.plantz.treaded_brainz_alloy_block": "縞脳合金",
   "item.plantz.reinforced_brainz_alloy_block": "強化された脳合金",
   "item.plantz.brainz_alloy_fence": "脳合金のフェンス",
-
+  "item.plantz.brainz_alloy_door": "脳合金のドア",
+  "item.plantz.brainz_alloy_trapdoor": "脳合金のトラップドア",
   "item.plantz.gravestone": "お墓",
 
   "item.minecraft.potion.effect.hypnotize": "催眠のポーション",
@@ -245,6 +252,8 @@
   "item.plantz.super_brainz_spawn_egg": "スーパーブレインズのスポーンエッグ",
   "item.plantz.imp_spawn_egg": "インプのスポーンエッグ",
   "item.plantz.gargantuar_spawn_egg": "ガルガンチュアのスポーンエッグ",
+  "item.plantz.zombie_bat_spawn_egg": "ゾンバットのスポーンエッグ",
+  "item.plantz.baron_von_bats_spawn_egg": "グレイブマンサーのスポーンエッグ",
   "item.plantz.gnome_spawn_egg": "ガーデンノームのスポーンエッグ",
 
   "item.plantz.music_disc_grassy_groove": "レコード",
@@ -285,6 +294,8 @@
   "block.plantz.purple_mailbox": "紫色の郵便箱",
   "block.plantz.magenta_mailbox": "赤紫色の郵便箱",
   "block.plantz.pink_mailbox": "桃色の郵便箱",
+
+ "block.plantz.brainz_alloy_door": "脳合金のドア",
 
   "entity.plantz.empty": "空",
   "entity.plantz.sunflower": "サンフラワー",
@@ -333,12 +344,15 @@
   "entity.plantz.pirate_captain_ghost": "海賊船長ゾンビの幽霊",
   "entity.plantz.super_brainz": "スーパーブレインズ",
   "entity.plantz.imp": "インプ",
+  "entity.plantz.zombie_bat": "ゾンバット",
+  "entity.plantz.baron_von_bats": "グレイブマンサー",
   "entity.plantz.gargantuar": "ガルガンチュア",
+
   "entity.plantz.zombie_turret": "ゾンビタレット",
   "entity.plantz.electro_turret": "エレクトロタレット",
   "entity.plantz.zombie_drone": "ゾンビドローン",
-
   "entity.plantz.lawn_mower": "芝刈り機",
+
   "entity.plantz.gnome": "ガーデンノーム",
   "entity.plantz.plant_pot_minecart": "プラントポット付きトロッコ",
 
@@ -354,6 +368,23 @@
   "container.plantz.time_machine.wip": "???",
 
   "gui.plantz.letter": "手紙",
+  "gui.plantz.letter.font": "フォント：%s",
+  "gui.plantz.letter.background": "便箋：%s",
+  "gui.plantz.letter.attachment": "添付ファイル",
+  "gui.plantz.letter.sign": "署名",
+  "gui.plantz.letter.confirm_title": "手紙に署名しますか？",
+  "gui.plantz.letter.confirm_message": "封をした後は、この手紙を編集できなくなります。",
+  "gui.plantz.letter.confirm_sign": "署名",
+  "gui.plantz.letter.title": "手紙",
+  "gui.plantz.letter.signed_by": "%s が署名",
+  "letter_font.plantz.basic": "ベーシック",
+  "letter_font.plantz.hand_written": "手書き",
+  "letter_font.plantz.fancy": "ファンシー",
+  "letter_background.plantz.default": "デフォルト",
+  "letter_background.plantz.hearts": "ハート",
+  "letter_background.plantz.fancy": "ファンシー",
+  "letter_background.plantz.torn": "破れ",
+
 
   "plantz.subtitles.projectile.deflected": "投射物が弾かれた",
   "plantz.subtitles.projectile.shoot": "投射物が発射された",
