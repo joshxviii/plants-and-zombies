@@ -2,8 +2,10 @@ package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
+import joshxviii.plantz.PazSounds
 import joshxviii.plantz.ai.goal.SummonMinionsGoal
 import joshxviii.plantz.ai.goal.NavigateToTargetGoal
+import joshxviii.plantz.item.BaronStaffItem
 import net.minecraft.core.UUIDUtil
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -40,6 +42,10 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
             SynchedEntityData.defineId<Int>(BaronVonBats::class.java, EntityDataSerializers.INT)
         val TELEPORT_TIME_ID: EntityDataAccessor<Int> =
             SynchedEntityData.defineId<Int>(BaronVonBats::class.java, EntityDataSerializers.INT)
+        private val BEAM_TIME_ID: EntityDataAccessor<Int> =
+            SynchedEntityData.defineId<Int>(BaronVonBats::class.java, EntityDataSerializers.INT)
+        private val BEAM_COOLDOWN_ID: EntityDataAccessor<Int> =
+            SynchedEntityData.defineId<Int>(BaronVonBats::class.java, EntityDataSerializers.INT)
         private val TRANSFORM_DELAY_ID: EntityDataAccessor<Int> =
             SynchedEntityData.defineId<Int>(BaronVonBats::class.java, EntityDataSerializers.INT)
         private const val TELEPORT_COOLDOWN = 190
@@ -50,6 +56,11 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         private const val TRANSFORMATION_DURATION = 200
         private const val TRANSFORMATION_COOLDOWN_MIN = 600
         private const val TRANSFORMATION_COOLDOWN_MAX = 1000
+        private const val BEAM_DURATION = 30
+        private const val BEAM_COOLDOWN = 220
+        private const val BEAM_INTERVAL = 10
+        private const val BEAM_DAMAGE = 2.0f
+        private const val BEAM_RANGE = 14.0
         const val TELEPORT_DURATION = 40
     }
 
@@ -67,6 +78,12 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
     var teleportTime: Int
         get() = entityData.get(TELEPORT_TIME_ID)
         set(value) = entityData.set(TELEPORT_TIME_ID, value)
+    private var beamAttackTime: Int
+        get() = entityData.get(BEAM_TIME_ID)
+        set(value) = entityData.set(BEAM_TIME_ID, value)
+    private var beamCooldown: Int
+        get() = entityData.get(BEAM_COOLDOWN_ID)
+        set(value) = entityData.set(BEAM_COOLDOWN_ID, value)
     private var transformDelay: Int
         get() = entityData.get(TRANSFORM_DELAY_ID)
         set(value) = entityData.set(TRANSFORM_DELAY_ID, value)
@@ -96,6 +113,8 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         entityData.define(BAT_TRANSFORMATION, false)
         entityData.define(SUMMON_TIME_ID, 0)
         entityData.define(TELEPORT_TIME_ID, 0)
+        entityData.define(BEAM_TIME_ID, 0)
+        entityData.define(BEAM_COOLDOWN_ID, BEAM_COOLDOWN)
         entityData.define(TRANSFORM_DELAY_ID, 0)
     }
 
@@ -104,6 +123,7 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         output.store("tracked_bats", UUIDUtil.CODEC_SET, trackedBatIds)
         output.store("tracked_vampire_browncoats", UUIDUtil.CODEC_SET, trackedVampireIds)
         output.putInt("teleport_cooldown", teleportCooldown)
+        output.putInt("beam_cooldown", beamCooldown)
         output.putInt("transformation_cooldown", transformationCooldown)
         output.putInt("transformation_time", transformationTime)
         output.putInt("transform_delay", transformDelay)
@@ -117,6 +137,8 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         trackedVampireIds.clear()
         trackedVampireIds.addAll(input.read("tracked_vampire_browncoats", UUIDUtil.CODEC_SET).getOrDefault(emptySet()))
         teleportCooldown = input.getIntOr("teleport_cooldown", TELEPORT_COOLDOWN)
+        beamCooldown = input.getIntOr("beam_cooldown", BEAM_COOLDOWN)
+        beamAttackTime = 0
         transformationCooldown = input.getIntOr("transformation_cooldown", TRANSFORMATION_COOLDOWN_MIN)
         transformationTime = input.getIntOr("transformation_time", 0)
         transformDelay = input.getIntOr("transform_delay", 0)
@@ -126,7 +148,7 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
 
     override fun registerGoals() {
         super.registerGoals()
-        goalSelector.addGoal(3, NavigateToTargetGoal(this, speedModifier = 1.5, keepAwayDistance = 8.0, alwaysFaceTarget = false))
+        goalSelector.addGoal(3, NavigateToTargetGoal(this, speedModifier = 1.5, keepAwayDistance = 7.0, alwaysFaceTarget = true))
         goalSelector.addGoal(
             1,
             SummonMinionsGoal(
@@ -136,10 +158,13 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
                 isSummoning = { summoningTime > 0 },
                 beginSummoning = { summoningTime = 1 },
                 configureMinion = { if (it is BrownCoat) it.variant = BrownCoatVariant.VAMPIRE },
-                canSummon = { teleportTime <= 0 && transformDelay <= 0 && !isTransformed }
+                canSummon = {
+                    teleportTime <= 0 && transformDelay <= 0 && beamAttackTime <= 0 && !isTransformed
+                }
             )
         )
         goalSelector.addGoal(1, TeleportAwayFromTargetGoal())
+        goalSelector.addGoal(2, StaffBeamAttackGoal())
     }
 
     override fun addBehaviourGoals() {
@@ -157,6 +182,15 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         return !isTransformed && super.hurtServer(level, source, damage)
     }
 
+    fun updateHealthFromBats() {
+        if (!isTransformed) return
+        val serverLevel = level() as? ServerLevel ?: return
+        val batHealth = trackedBatIds.sumOf { id ->
+            (serverLevel.getEntity(id) as? Zombat)?.health?.toDouble() ?: 0.0
+        }
+        health = batHealth.toFloat().coerceIn(0.0f, maxHealth)
+    }
+
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         val result = super.doHurtTarget(level, target)
         return result
@@ -168,6 +202,7 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         val serverLevel = level() as? ServerLevel
         if (serverLevel != null) {
             if (isTransformed) {
+                updateHealthFromBats()
                 transformationTime--
                 val anyLivingBats = trackedBatIds.any { id ->
                     (serverLevel.getEntity(id) as? Zombat)?.isAlive == true
@@ -180,11 +215,13 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
                 if (transformDelay == 0) transformIntoBats(serverLevel)
             } else {
                 if (transformationCooldown > 0) transformationCooldown--
+                if (beamCooldown > 0) beamCooldown--
                 if (
                     transformationCooldown <= 0 &&
                     target?.isAlive == true &&
                     teleportTime <= 0 &&
                     summoningTime <= 0 &&
+                    beamAttackTime <= 0 &&
                     !isTransformed
                 ) {
                     beginBatTransformation()
@@ -223,6 +260,46 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         navigation.stop()
         transformDelay = 15
         transformAnimation.start(tickCount)
+    }
+
+    private inner class StaffBeamAttackGoal : Goal() {
+        init {
+            flags = EnumSet.of(Flag.MOVE, Flag.LOOK)
+        }
+
+        override fun canUse(): Boolean {
+            if (
+                beamCooldown > 0 || beamAttackTime > 0 || isTransformed ||
+                transformDelay > 0 || teleportTime > 0 || summoningTime > 0
+            ) return false
+            val target = target?.takeIf { it.isAlive } ?: return false
+            return distanceToSqr(target) <= BEAM_RANGE * BEAM_RANGE
+        }
+
+        override fun canContinueToUse(): Boolean =
+            beamAttackTime > 0 && !isTransformed &&
+                target?.let { it.isAlive && distanceToSqr(it) <= BEAM_RANGE * BEAM_RANGE } == true
+
+        override fun requiresUpdateEveryTick(): Boolean = true
+
+        override fun start() {
+            navigation.stop()
+            beamAttackTime = BEAM_DURATION
+            beamCooldown = BEAM_COOLDOWN
+        }
+
+        override fun tick() {
+            val target = target?.takeIf { it.isAlive } ?: return
+            lookControl.setLookAt(target, 4.0f, 30.0f)
+            if (beamAttackTime % BEAM_INTERVAL == 0) {
+                (weaponItem.item as? BaronStaffItem)?.shootBeam(this@BaronVonBats, BEAM_DAMAGE)
+            }
+            beamAttackTime--
+        }
+
+        override fun stop() {
+            beamAttackTime = 0
+        }
     }
 
     private fun transformIntoBats(serverLevel: ServerLevel) {
@@ -388,7 +465,7 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         override fun canUse(): Boolean {
             if (
                 teleportCooldown > 0 || teleportTime > 0 || summoningTime > 0 ||
-                transformDelay > 0 || isTransformed || !isAggressive
+                transformDelay > 0 || beamAttackTime > 0 || isTransformed || !isAggressive
             ) return false
             val target = target?.takeIf { it.isAlive } ?: return false
             if (distanceToSqr(target) > ESCAPE_TRIGGER_DISTANCE * ESCAPE_TRIGGER_DISTANCE) return false

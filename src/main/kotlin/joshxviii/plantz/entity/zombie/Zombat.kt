@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.DifficultyInstance
+import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
@@ -48,9 +49,26 @@ class Zombat(type: EntityType<out Zombat>, level: Level) : PazZombie(type, level
 
     override fun handleAttributes(difficultyModifier: Float, spawnReason: EntitySpawnReason) {}
 
+    override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
+        val hurt = super.hurtServer(level, source, damage)
+        updateBaronHealth(level)
+        return hurt
+    }
+
+    override fun heal(amount: Float) {
+        super.heal(amount)
+        (level() as? ServerLevel)?.let(::updateBaronHealth)
+    }
+
+    private fun updateBaronHealth(level: ServerLevel) {
+        barronId?.let { id ->
+            (level.getEntity(id) as? BaronVonBats)?.updateHealthFromBats()
+        }
+    }
+
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         val result = super.doHurtTarget(level, target)
-        if (result) heal(2.0f)
+        if (result) heal(maxHealth * 0.1f)
         return result
     }
 
