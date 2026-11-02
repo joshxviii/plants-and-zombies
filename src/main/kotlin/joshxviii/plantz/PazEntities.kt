@@ -571,7 +571,7 @@ object PazEntities {
         attributes = PazZombie.Companion.PazZombieAttributes(
             attackDamage = 2.0,
             maxHealth = 20.0,
-            flyingSpeed = 0.32,
+            flyingSpeed = 0.40,
         )
     )
     @JvmField val BARON_VON_BATS: EntityType<BaronVonBats> = registerZombie(

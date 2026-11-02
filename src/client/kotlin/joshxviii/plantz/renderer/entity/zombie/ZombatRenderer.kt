@@ -26,6 +26,7 @@ class ZombatRenderer(
 
     override fun extractRenderState(entity: Zombat, state: ZombatRenderState, partialTicks: Float) {
         super.extractRenderState(entity, state, partialTicks)
+        state.isBaronBat = entity.isBaronBat
     }
 
     override fun createRenderState(): ZombatRenderState {
@@ -33,10 +34,13 @@ class ZombatRenderer(
     }
 
     override fun getTextureLocation(state: ZombatRenderState): Identifier {
-        return state.getTextureLocation(PazZombieRenderState.TEXTURE_PATH)
+        val suffixes = mutableListOf<String>()
+        if (state.isBaronBat) suffixes.add("baron")
+        return state.getTextureLocation(PazZombieRenderState.TEXTURE_PATH, suffixes)
     }
 
 }
 
 class ZombatRenderState: PazZombieRenderState() {
+    var isBaronBat = false
 }

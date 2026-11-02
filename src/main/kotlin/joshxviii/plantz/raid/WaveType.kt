@@ -413,7 +413,7 @@ enum class WaveType(
                     zombie.setItemSlot(slot, itemStack)
                 }
             }
-            if (zombie.random.nextFloat() < 0.2f) {
+            if (zombie is BrownCoat && zombie.random.nextFloat() < 0.2f) {
                 val doorShield = PazItems.DOOR_SHIELD.defaultInstance
                 doorShield.set(PazComponents.DOOR_SHIELD, DoorShield(Blocks.IRON_DOOR))
                 doorShield.set(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.015f)
