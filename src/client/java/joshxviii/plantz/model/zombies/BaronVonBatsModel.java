@@ -55,6 +55,8 @@ public class BaronVonBatsModel<S extends PazZombieRenderState> extends PazZombie
 		PartDefinition top_hat = head.addOrReplaceChild("top_hat", CubeListBuilder.create().texOffs(64, 0).addBox(-4.0F, -8.5F, -4.0F, 8.0F, 9.0F, 8.0F, new CubeDeformation(0.5F))
 				.texOffs(56, 17).addBox(-6.0F, -1.0F, -6.0F, 12.0F, 2.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -8.0F, 0.0F));
 
+		PartDefinition cube_r1 = top_hat.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(56, 17).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 0.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 3.1416F, 0.0F, 0.0F));
+
 		PartDefinition hair = head.addOrReplaceChild("hair", CubeListBuilder.create().texOffs(67, 39).addBox(-5.0F, -6.9F, 1.5F, 10.0F, 5.0F, 3.0F, new CubeDeformation(0.0F))
 				.texOffs(64, 31).addBox(-6.0F, -3.5F, 2.0F, 12.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 

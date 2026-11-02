@@ -218,7 +218,12 @@ enum class WaveType(
                 ),
                 WaveSpawnEntry(
                     PazEntities.IMP,
-                    scaled(2f + wave * 0.7f, omen, credits, min = 2),
+                    scaled(1f + wave * 0.4f, omen, credits, max = 5),
+                    { configureZomboween(it, raid) }
+                ),
+                WaveSpawnEntry(
+                    PazEntities.ZOMBAT,
+                    scaled(1.4f + wave * 0.8f, omen, credits, min = 2),
                     { configureZomboween(it, raid) }
                 ),
                 WaveSpawnEntry(

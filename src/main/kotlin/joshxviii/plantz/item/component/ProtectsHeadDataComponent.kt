@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
+import joshxviii.plantz.PazTags
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Holder
 import net.minecraft.core.HolderSet
@@ -56,8 +57,8 @@ class ProtectsHeadDataComponent(
 
     fun canBlockFrom(source: DamageSource, user: LivingEntity): Boolean {
         if (source.`is`(DamageTypeTags.DAMAGES_HELMET)) return true
-        val sourcePosition = source.directEntity?.let { it.boundingBox.center } ?: source.sourcePosition ?: return false
-        return sourcePosition.y >= user.eyeY - BELOW_EYE_LEVEL_TOLERANCE && !source.`is`(DamageTypeTags.BYPASSES_SHIELD)
+        val sourcePosition = source.directEntity?.boundingBox?.center ?: source.sourcePosition ?: return false
+        return sourcePosition.y >= user.eyeY - BELOW_EYE_LEVEL_TOLERANCE && !source.`is`(PazTags.DamageTypes.BYPASSES_HEAD_PROTECTION)
     }
 
     fun resolveBlockedDamage(source: DamageSource, dealtDamage: Float): Float {
