@@ -8,7 +8,7 @@
 # Changelog 1.5.2
 ### Changes / Additions
 - Added Baron Von Bats
-  - Baron Von Bats has a chance to spawn as a boss during wave10 instead of Gargantuar.
+  - Baron Von Bats has a chance to spawn as a boss during wave 10 instead of Gargantuar.
 - Added Zombat
   - Heals itself when hurting other mobs.
 - Added Brainz Alloy Door and Trapdoor.

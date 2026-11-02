@@ -28,6 +28,7 @@ public class BaronVonBatsModel<S extends PazZombieRenderState> extends PazZombie
 	private final KeyframeAnimation vanishAnimation;
 	private final KeyframeAnimation appearAnimation;
 	private final KeyframeAnimation transformBatAnimation;
+	ModelPart top_hat;
 
 	public BaronVonBatsModel(final ModelPart root) {
 		super(null, root);
@@ -37,6 +38,7 @@ public class BaronVonBatsModel<S extends PazZombieRenderState> extends PazZombie
 		this.vanishAnimation = BaronVonBatsAnimation.vanish.bake(mainRoot);
 		this.appearAnimation = BaronVonBatsAnimation.emerge.bake(mainRoot);
 		this.transformBatAnimation = BaronVonBatsAnimation.transform.bake(mainRoot);
+		top_hat = getHead().getChild("top_hat");
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -83,6 +85,7 @@ public class BaronVonBatsModel<S extends PazZombieRenderState> extends PazZombie
 		super.setupAnim(state);
 		super.resetPose();
 		AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, false, state);
+		this.top_hat.visible = (state.headItem.isEmpty() && state.headEquipment.isEmpty());
 
 		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
 		this.head.yRot = state.yRot * (float) (Math.PI / 180.0);

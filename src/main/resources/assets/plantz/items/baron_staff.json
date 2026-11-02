@@ -16,8 +16,16 @@
       }
     ],
     "fallback": {
-      "type": "minecraft:model",
-      "model": "plantz:item/baron_staff_in_hand"
+      "type": "minecraft:condition",
+      "property": "minecraft:using_item",
+      "on_false": {
+        "type": "minecraft:model",
+        "model": "plantz:item/baron_staff_in_hand"
+      },
+      "on_true": {
+        "type": "minecraft:model",
+        "model": "plantz:item/baron_staff_in_hand_beam"
+      }
     },
     "property": "minecraft:display_context"
   },

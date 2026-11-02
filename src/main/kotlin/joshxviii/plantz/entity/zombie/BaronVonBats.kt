@@ -56,10 +56,8 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         private const val TRANSFORMATION_DURATION = 200
         private const val TRANSFORMATION_COOLDOWN_MIN = 600
         private const val TRANSFORMATION_COOLDOWN_MAX = 1000
-        private const val BEAM_DURATION = 30
+        private const val BEAM_DURATION = 20
         private const val BEAM_COOLDOWN = 220
-        private const val BEAM_INTERVAL = 10
-        private const val BEAM_DAMAGE = 2.0f
         private const val BEAM_RANGE = 14.0
         const val TELEPORT_DURATION = 40
     }
@@ -291,14 +289,13 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         override fun tick() {
             val target = target?.takeIf { it.isAlive } ?: return
             lookControl.setLookAt(target, 4.0f, 30.0f)
-            if (beamAttackTime % BEAM_INTERVAL == 0) {
-                (weaponItem.item as? BaronStaffItem)?.shootBeam(this@BaronVonBats, BEAM_DAMAGE)
-            }
+            startUsingItem(usedItemHand)
             beamAttackTime--
         }
 
         override fun stop() {
             beamAttackTime = 0
+            stopUsingItem()
         }
     }
 
@@ -318,6 +315,7 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
             bat.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(blockPosition()), EntitySpawnReason.MOB_SUMMONED, null)
             bat.barronId = uuid
             bat.target = target
+            bat.customName = customName
             bat.setPersistenceRequired()
             if (serverLevel.addFreshEntity(bat)) {
                 bats.add(bat)

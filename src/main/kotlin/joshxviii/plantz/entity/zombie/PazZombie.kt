@@ -511,7 +511,11 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     open fun canEquipBalloons() = true
     open fun canClimbWalls(): Boolean = false
 
-    override fun maxUpStep(): Float = if (isInWater) 0.5f else super.maxUpStep()
+    override fun canAttack(target: LivingEntity): Boolean {
+        if (!target.isHypnotized() && target is Zombie) return false
+        else return super.canAttack(target)
+    }
+    //override fun maxUpStep(): Float = if (isInWater) 0.5f else super.maxUpStep()
     override fun isSunSensitive(): Boolean = false
     override fun convertsInWater(): Boolean = false
     override fun canSpawnInLiquids(): Boolean = canEquipDuckyInWater()

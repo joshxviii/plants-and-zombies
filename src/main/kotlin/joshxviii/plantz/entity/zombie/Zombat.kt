@@ -1,7 +1,9 @@
 package joshxviii.plantz.entity.zombie
 
+import joshxviii.plantz.PazEntities
 import net.minecraft.core.BlockPos
 import net.minecraft.core.UUIDUtil
+import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
@@ -41,6 +43,11 @@ class Zombat(type: EntityType<out Zombat>, level: Level) : PazZombie(type, level
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
         barronId = input.read("baron_id", UUIDUtil.CODEC).getOrNull()
+    }
+
+    override fun getTypeName(): Component {
+        if (barronId != null) return PazEntities.BARON_VON_BATS.description
+        return super.getTypeName()
     }
 
     override fun registerGoals() {

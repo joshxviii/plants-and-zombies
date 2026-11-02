@@ -231,6 +231,7 @@ object PazItems {
         "baron_staff", ::BaronStaffItem,
         properties = Item.Properties()
             .rarity(Rarity.EPIC)
+            .useCooldown(1f)
             .durability(560)
             .enchantable(1)
             .stacksTo(1)
