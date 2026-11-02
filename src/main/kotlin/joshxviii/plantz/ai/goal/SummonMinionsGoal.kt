@@ -135,12 +135,7 @@ class SummonMinionsGoal(
             angle * (180.0f / Math.PI.toFloat()),
             0.0f
         )
-        minion.finalizeSpawn(
-            level,
-            level.getCurrentDifficultyAt(pos),
-            EntitySpawnReason.REINFORCEMENT,
-            PazZombieGroupData(isRaider = summoner.isActiveInRaid())
-        )
+        minion.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.REINFORCEMENT, PazZombieGroupData(isRaider = summoner.isActiveInRaid()))
         minion.setPersistenceRequired()
         summoner.activeEffects.find { it.effect.`is`(PazEffects.HYPNOTIZE.unwrapKey().orElseThrow()) }
             ?.let(minion::addEffect)

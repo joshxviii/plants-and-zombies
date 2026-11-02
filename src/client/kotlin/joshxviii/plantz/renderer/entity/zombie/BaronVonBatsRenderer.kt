@@ -23,7 +23,8 @@ class BaronVonBatsRenderer(
         collector: SubmitNodeCollector,
         camera: CameraRenderState
     ) {
-        super.submit(state, poseStack, collector, camera)
+        (state as BaronVonBatsRenderState)
+        if (!state.isTransformed) super.submit(state, poseStack, collector, camera)
     }
 
     override fun createRenderState(): PazZombieRenderState {
@@ -43,6 +44,8 @@ class BaronVonBatsRenderer(
         super.extractRenderState(entity, state, partialTicks)
         state.actionAnimationState.copyFrom(entity.summonAnimation)
         state.teleportAnimationState.copyFrom(entity.teleportAnimation)
+        state.transformAnimationState.copyFrom(entity.transformAnimation)
+        state.isTransformed = entity.isTransformed
         state.teleportTime = entity.teleportTime
         state.isAppearing = (entity.teleportTime > BaronVonBats.TELEPORT_DURATION * 0.5)
     }
@@ -51,6 +54,8 @@ class BaronVonBatsRenderer(
 
 class BaronVonBatsRenderState: PazZombieRenderState() {
     val teleportAnimationState: AnimationState = AnimationState()
+    val transformAnimationState: AnimationState = AnimationState()
     var teleportTime: Int = 0
     var isAppearing: Boolean = false
+    var isTransformed: Boolean = false
 }

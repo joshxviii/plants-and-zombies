@@ -2,11 +2,13 @@ package joshxviii.plantz.raid
 
 import com.mojang.serialization.Codec
 import io.netty.buffer.ByteBuf
+import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazLootTables
 import joshxviii.plantz.SeasonalEvents
 import joshxviii.plantz.entity.zombie.*
+import joshxviii.plantz.item.component.DoorShield
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
@@ -29,6 +31,7 @@ import net.minecraft.world.item.component.DyedItemColor
 import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.item.enchantment.providers.VanillaEnchantmentProviders
+import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.storage.loot.LootTable
 import java.util.function.IntFunction
 import kotlin.math.pow
@@ -409,6 +412,13 @@ enum class WaveType(
                     )
                     zombie.setItemSlot(slot, itemStack)
                 }
+            }
+            if (zombie.random.nextFloat() < 0.2f) {
+                val doorShield = PazItems.DOOR_SHIELD.defaultInstance
+                doorShield.set(PazComponents.DOOR_SHIELD, DoorShield(Blocks.IRON_DOOR))
+                doorShield.set(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.015f)
+                zombie.setItemSlot(EquipmentSlot.OFFHAND, doorShield)
+                zombie.setDropChance(EquipmentSlot.OFFHAND, 0f)
             }
         }
 

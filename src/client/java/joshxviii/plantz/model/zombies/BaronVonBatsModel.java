@@ -90,6 +90,7 @@ public class BaronVonBatsModel<S extends PazZombieRenderState> extends PazZombie
 		if (!(state instanceof BaronVonBatsRenderState baronState)) return;
 		walkAnimation.applyWalk(baronState.walkAnimationPos, baronState.walkAnimationSpeed, 2f, 2f);
 		summonAnimation.apply(baronState.getActionAnimationState(), state.ageInTicks);
+		transformBatAnimation.apply(baronState.getTransformAnimationState(), state.ageInTicks);
 
 		var appearing = baronState.isAppearing();
 		(appearing ? appearAnimation : vanishAnimation).apply(baronState.getTeleportAnimationState(), state.ageInTicks);

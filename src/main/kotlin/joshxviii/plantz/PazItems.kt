@@ -233,7 +233,6 @@ object PazItems {
             .rarity(Rarity.EPIC)
             .durability(560)
             .enchantable(1)
-            .repairable(BRAINZ_ALLOY)
             .stacksTo(1)
     )
     @JvmField

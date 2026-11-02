@@ -15,9 +15,10 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.Mth
 import net.minecraft.world.DifficultyInstance
+import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.goal.Goal
-import net.minecraft.world.item.Items
+import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
@@ -39,11 +40,16 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
             SynchedEntityData.defineId<Int>(BaronVonBats::class.java, EntityDataSerializers.INT)
         val TELEPORT_TIME_ID: EntityDataAccessor<Int> =
             SynchedEntityData.defineId<Int>(BaronVonBats::class.java, EntityDataSerializers.INT)
+        private val TRANSFORM_DELAY_ID: EntityDataAccessor<Int> =
+            SynchedEntityData.defineId<Int>(BaronVonBats::class.java, EntityDataSerializers.INT)
         private const val TELEPORT_COOLDOWN = 190
         private const val ESCAPE_TRIGGER_DISTANCE = 10.0
         private const val MIN_TELEPORT_DISTANCE = 16.0
         private const val MAX_TELEPORT_DISTANCE = 24.0
         private const val TELEPORT_COOLDOWN_VARIANCE = 100
+        private const val TRANSFORMATION_DURATION = 200
+        private const val TRANSFORMATION_COOLDOWN_MIN = 600
+        private const val TRANSFORMATION_COOLDOWN_MAX = 1000
         const val TELEPORT_DURATION = 40
     }
 
@@ -53,6 +59,7 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
 
     val summonAnimation: AnimationState = AnimationState()
     val teleportAnimation: AnimationState = AnimationState()
+    val transformAnimation: AnimationState = AnimationState()
 
     var summoningTime: Int
         get() = entityData.get(SUMMON_TIME_ID)
@@ -60,6 +67,9 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
     var teleportTime: Int
         get() = entityData.get(TELEPORT_TIME_ID)
         set(value) = entityData.set(TELEPORT_TIME_ID, value)
+    private var transformDelay: Int
+        get() = entityData.get(TRANSFORM_DELAY_ID)
+        set(value) = entityData.set(TRANSFORM_DELAY_ID, value)
 
     var isTransformed: Boolean
         get() = this.entityData.get(BAT_TRANSFORMATION)
@@ -70,17 +80,23 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
     private val trackedBatIds = mutableSetOf<UUID>()
     private val trackedVampireIds = mutableSetOf<UUID>()
     private var teleportCooldown = TELEPORT_COOLDOWN
+    private var transformationCooldown = TRANSFORMATION_COOLDOWN_MIN
+    private var transformationTime = 0
     private var pendingTeleportDestination: Vec3? = null
 
-    override fun isImmobile(): Boolean = isTransformed || teleportTime > 0 || super.isImmobile()
+    override fun isImmobile(): Boolean =
+        isTransformed || transformDelay > 0 || teleportTime > 0 || super.isImmobile()
+    override fun isPickable(): Boolean = !isTransformed && super.isPickable()
+    override fun isPushable(): Boolean = !isTransformed && super.isPushable()
     override fun getMoveControl() =
-        if (summoningTime > 0 || teleportTime > 0) noMoveControl else super.getMoveControl()
+        if (summoningTime > 0 || transformDelay > 0 || teleportTime > 0) noMoveControl else super.getMoveControl()
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
         entityData.define(BAT_TRANSFORMATION, false)
         entityData.define(SUMMON_TIME_ID, 0)
         entityData.define(TELEPORT_TIME_ID, 0)
+        entityData.define(TRANSFORM_DELAY_ID, 0)
     }
 
     override fun addAdditionalSaveData(output: ValueOutput) {
@@ -88,6 +104,10 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         output.store("tracked_bats", UUIDUtil.CODEC_SET, trackedBatIds)
         output.store("tracked_vampire_browncoats", UUIDUtil.CODEC_SET, trackedVampireIds)
         output.putInt("teleport_cooldown", teleportCooldown)
+        output.putInt("transformation_cooldown", transformationCooldown)
+        output.putInt("transformation_time", transformationTime)
+        output.putInt("transform_delay", transformDelay)
+        output.putBoolean("is_transformed", isTransformed)
     }
 
     override fun readAdditionalSaveData(input: ValueInput) {
@@ -97,6 +117,11 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         trackedVampireIds.clear()
         trackedVampireIds.addAll(input.read("tracked_vampire_browncoats", UUIDUtil.CODEC_SET).getOrDefault(emptySet()))
         teleportCooldown = input.getIntOr("teleport_cooldown", TELEPORT_COOLDOWN)
+        transformationCooldown = input.getIntOr("transformation_cooldown", TRANSFORMATION_COOLDOWN_MIN)
+        transformationTime = input.getIntOr("transformation_time", 0)
+        transformDelay = input.getIntOr("transform_delay", 0)
+        entityData.set(BAT_TRANSFORMATION, input.getBooleanOr("is_transformed", false))
+        updateBehavior()
     }
 
     override fun registerGoals() {
@@ -111,7 +136,7 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
                 isSummoning = { summoningTime > 0 },
                 beginSummoning = { summoningTime = 1 },
                 configureMinion = { if (it is BrownCoat) it.variant = BrownCoatVariant.VAMPIRE },
-                canSummon = { teleportTime <= 0 }
+                canSummon = { teleportTime <= 0 && transformDelay <= 0 && !isTransformed }
             )
         )
         goalSelector.addGoal(1, TeleportAwayFromTargetGoal())
@@ -122,10 +147,15 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
     }
 
     fun updateBehavior() {
-
+        isInvisible = isTransformed
+        isNoGravity = isTransformed
     }
 
     override fun handleAttributes(difficultyModifier: Float, spawnReason: EntitySpawnReason) {}
+
+    override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
+        return !isTransformed && super.hurtServer(level, source, damage)
+    }
 
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         val result = super.doHurtTarget(level, target)
@@ -134,6 +164,35 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
 
     override fun tick() {
         super.tick()
+        updateBehavior()
+        val serverLevel = level() as? ServerLevel
+        if (serverLevel != null) {
+            if (isTransformed) {
+                transformationTime--
+                val anyLivingBats = trackedBatIds.any { id ->
+                    (serverLevel.getEntity(id) as? Zombat)?.isAlive == true
+                }
+                if (transformationTime <= 0 || !anyLivingBats) {
+                    returnToBaron(serverLevel)
+                }
+            } else if (transformDelay > 0) {
+                transformDelay--
+                if (transformDelay == 0) transformIntoBats(serverLevel)
+            } else {
+                if (transformationCooldown > 0) transformationCooldown--
+                if (
+                    transformationCooldown <= 0 &&
+                    target?.isAlive == true &&
+                    teleportTime <= 0 &&
+                    summoningTime <= 0 &&
+                    !isTransformed
+                ) {
+                    beginBatTransformation()
+                }
+            }
+        }
+        if (transformDelay > 0) transformAnimation.startIfStopped(tickCount)
+        else transformAnimation.stop()
         if (summoningTime > 0) {
             summonAnimation.startIfStopped(tickCount)
             if (summoningTime++ >= 42) {
@@ -158,6 +217,110 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         } else {
             teleportAnimation.stop()
         }
+    }
+
+    private fun beginBatTransformation() {
+        navigation.stop()
+        transformDelay = 15
+        transformAnimation.start(tickCount)
+    }
+
+    private fun transformIntoBats(serverLevel: ServerLevel) {
+        val target = target?.takeIf { it.isAlive } ?: run {
+            transformationCooldown = 20
+            return
+        }
+        val count = random.nextInt(6, 8)
+        val bats = mutableListOf<Zombat>()
+
+        repeat(count) {
+            val angle = random.nextDouble() * Math.PI * 2.0
+            val spawnPos = Vec3(x + cos(angle) * 1.5, y + 0.5, z + sin(angle) * 1.5)
+            val bat = PazEntities.ZOMBAT.create(serverLevel, EntitySpawnReason.MOB_SUMMONED) ?: return@repeat
+            bat.snapTo(spawnPos, random.nextFloat() * 360.0f, 0.0f)
+            bat.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(blockPosition()), EntitySpawnReason.MOB_SUMMONED, null)
+            bat.barronId = uuid
+            bat.target = target
+            bat.setPersistenceRequired()
+            if (serverLevel.addFreshEntity(bat)) {
+                bats.add(bat)
+            }
+        }
+
+        if (bats.isEmpty()) {
+            transformationCooldown = 20
+            return
+        }
+
+        val batMaxHealth = maxHealth / bats.size
+        val batHealth = health / bats.size
+        trackedBatIds.clear()
+        bats.forEach { bat ->
+            bat.getAttribute(Attributes.MAX_HEALTH)?.baseValue = batMaxHealth.toDouble()
+            bat.health = batHealth.coerceAtMost(bat.maxHealth)
+            trackedBatIds.add(bat.uuid)
+        }
+        transformationTime = TRANSFORMATION_DURATION
+        transformDelay = 0
+        transformationCooldown = random.nextInt(TRANSFORMATION_COOLDOWN_MIN, TRANSFORMATION_COOLDOWN_MAX + 1)
+        navigation.stop()
+        isTransformed = true
+        serverLevel.sendParticles(ParticleTypes.LARGE_SMOKE, x, y + 1.0, z, 18, 0.5, 0.5, 0.5, 0.04)
+        playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0f, 1.2f)
+    }
+
+    private fun returnToBaron(serverLevel: ServerLevel) {
+        val bats = trackedBatIds.mapNotNull { serverLevel.getEntity(it) as? Zombat }
+        val combinedHealth = bats.sumOf { it.health.toDouble() }.toFloat()
+        noPhysics = false
+        val returnPosition = findSafePositionNearBats(serverLevel, bats) ?: run {
+            noPhysics = true
+            return
+        }
+        if (!teleportTo(serverLevel, returnPosition.x, returnPosition.y, returnPosition.z, emptySet(), yRot, xRot, false)) {
+            noPhysics = true
+            return
+        }
+        bats.forEach { it.discard() }
+        trackedBatIds.clear()
+        transformationTime = 0
+        isTransformed = false
+        health = combinedHealth.coerceIn(0.0f, maxHealth)
+        serverLevel.sendParticles(ParticleTypes.LARGE_SMOKE, x, y + 1.0, z, 18, 0.5, 0.5, 0.5, 0.04)
+        playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0f, 0.8f)
+    }
+
+    private fun findSafePositionNearBats(serverLevel: ServerLevel, bats: List<Zombat>): Vec3? {
+        val origins = bats.map { it.position() }.ifEmpty { listOf(position()) }
+        val candidates = linkedSetOf<BlockPos>()
+        for (origin in origins) {
+            val center = BlockPos.containing(origin)
+            for (yOffset in -8..4) {
+                for (xOffset in -4..4) {
+                    for (zOffset in -4..4) {
+                        candidates.add(center.offset(xOffset, yOffset, zOffset))
+                    }
+                }
+            }
+        }
+
+        return candidates.asSequence()
+            .filter { feet ->
+                val below = feet.below()
+                serverLevel.isLoaded(below) &&
+                    serverLevel.isLoaded(feet) &&
+                    serverLevel.isLoaded(feet.above(2)) &&
+                    serverLevel.getBlockState(below).isFaceSturdy(serverLevel, below, Direction.UP)
+            }
+            .sortedBy { feet ->
+                val candidate = Vec3(feet.x + 0.5, feet.y.toDouble(), feet.z + 0.5)
+                origins.minOf { candidate.distanceToSqr(it) }
+            }
+            .map { feet -> Vec3(feet.x + 0.5, feet.y.toDouble(), feet.z + 0.5) }
+            .firstOrNull { candidate ->
+                val shiftedBox = boundingBox.move(candidate.subtract(position()))
+                serverLevel.noCollision(this, shiftedBox)
+            }
     }
 
     private fun completeTeleport() {
@@ -223,7 +386,10 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         }
 
         override fun canUse(): Boolean {
-            if (teleportCooldown > 0 || teleportTime > 0 || summoningTime > 0 || isTransformed || !isAggressive) return false
+            if (
+                teleportCooldown > 0 || teleportTime > 0 || summoningTime > 0 ||
+                transformDelay > 0 || isTransformed || !isAggressive
+            ) return false
             val target = target?.takeIf { it.isAlive } ?: return false
             if (distanceToSqr(target) > ESCAPE_TRIGGER_DISTANCE * ESCAPE_TRIGGER_DISTANCE) return false
             destination = findDestination(target)
