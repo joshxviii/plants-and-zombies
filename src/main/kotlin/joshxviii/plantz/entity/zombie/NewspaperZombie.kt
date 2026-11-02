@@ -40,7 +40,7 @@ class NewspaperZombie(type: EntityType<out NewspaperZombie>, level: Level) : Paz
     }
 
     fun isAngry() : Boolean {
-        return !mainHandItem.`is`(PazItems.NEWSPAPER)
+        return !offhandItem.`is`(PazItems.NEWSPAPER)
     }
 
     override fun onEquipItem(slot: EquipmentSlot, oldStack: ItemStack, stack: ItemStack) {
@@ -49,7 +49,7 @@ class NewspaperZombie(type: EntityType<out NewspaperZombie>, level: Level) : Paz
     }
 
     fun updateNewspaper() {
-        if(mainHandItem.`is`(PazItems.NEWSPAPER)) {
+        if(offhandItem.`is`(PazItems.NEWSPAPER)) {
             this.setLivingEntityFlag(LIVING_ENTITY_FLAG_IS_USING, true)
             removeAngerBoost()
         }

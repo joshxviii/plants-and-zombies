@@ -188,6 +188,7 @@ object PazBlocks {
             .pushReaction(PushReaction.DESTROY),
         ::ConeBlock,
         Item.Properties()
+            .enchantable(10)
             .component(PazComponents.PROTECTS_HEAD, ProtectsHeadDataComponent(
                 blockSound = PazSounds.PROJECTILE_HIT_CONE
             ))

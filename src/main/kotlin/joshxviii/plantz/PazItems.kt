@@ -52,6 +52,7 @@ import net.minecraft.world.item.component.BlocksAttacks.DamageReduction
 import net.minecraft.world.item.component.BlocksAttacks.ItemDamageFunction
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.item.component.UseCooldown
+import net.minecraft.world.item.enchantment.Enchantable
 import net.minecraft.world.item.equipment.ArmorMaterials
 import net.minecraft.world.item.equipment.ArmorType
 import net.minecraft.world.item.equipment.EquipmentAssets
@@ -346,6 +347,7 @@ object PazItems {
         builder.set(PazComponents.PROTECTS_HEAD, ProtectsHeadDataComponent(
             blockSound = PazSounds.PROJECTILE_HIT_BUCKET
         ))
+        builder.set(DataComponents.ENCHANTABLE, Enchantable(10))
         builder.set(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.02f)
         builder.set(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
             .setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)

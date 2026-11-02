@@ -79,7 +79,7 @@ enum class WaveType(
                 ),
                 WaveSpawnEntry(
                     PazEntities.GARGANTUAR,
-                    if (wave > 11) scaled(0.5f + (wave - 13) * 0.3f, omen, credits, max = 3) else 0
+                    if (wave > 11) scaled(0.5f + (wave - 13) * 0.3f, omen, credits, max = 2) else 0
                 ),
                 WaveSpawnEntry(
                     PazEntities.ENGINEER_ZOMBIE,
@@ -91,13 +91,11 @@ enum class WaveType(
                 ),
                 if (raid.random.nextFloat() < 0.4f) WaveSpawnEntry(
                     PazEntities.SUPER_BRAINZ,
-                    if (wave > 15) scaled(0.4f + (wave - 15) * 0.3f, omen, credits, max = 3) else 0,
-                    { configureZomboween(it, raid) }
+                    if (wave > 15) scaled(0.3f + (wave - 15) * 0.3f, omen, credits, max = 2) else 0,
                 )
                 else WaveSpawnEntry(
                     PazEntities.ROBO_ZOMBIE,
-                    if (wave > 16) scaled(0.4f + (wave - 16) * 0.3f, omen, credits, max = 3) else 0,
-                    { configureZomboween(it, raid) }
+                    if (wave > 16) scaled(0.3f + (wave - 16) * 0.3f, omen, credits, max = 2) else 0,
                 ),
                 graveDiggerEntry(raid),
             )
@@ -268,7 +266,7 @@ enum class WaveType(
                 ),
                 WaveSpawnEntry(
                     PazEntities.GARGANTUAR,
-                    if (wave > 10) scaled(0.3f + wave * 0.1f, omen, credits, max = 3) else 0,
+                    if (wave > 10) scaled(0.2f + wave * 0.1f, omen, credits, max = 2) else 0,
                     ::configurePirateInvasion
                 ),
                 graveDiggerEntry(raid),
@@ -356,6 +354,7 @@ enum class WaveType(
         private val BY_ID: IntFunction<WaveType> =
             ByIdMap.continuous(WaveType::ordinal, WaveType.entries.toTypedArray(), ByIdMap.OutOfBoundsStrategy.ZERO);
         val STREAM_CODEC: StreamCodec<ByteBuf, WaveType> = ByteBufCodecs.idMapper<WaveType>(BY_ID, WaveType::ordinal)
+        private const val MAX_EQUIPMENT_LOCAL_DIFFICULTY = 3_600_000L
 
         fun pickWaveType(raid: ZombieRaid, creditsUnlocked: Boolean): WaveType {
             val eligible = WaveType.entries.filter { it.isAvailable(raid, creditsUnlocked) }
@@ -535,6 +534,44 @@ enum class WaveType(
         fun graveDiggerEntry(raid: ZombieRaid): WaveSpawnEntry = WaveSpawnEntry(
             PazEntities.GRAVE_DIGGER, if (raid.currentWaveNumber() > 4 && raid.random.nextFloat() < 0.175f) 1 else 0
         )
+
+        fun configureRaidEquipment(zombie: Zombie, raid: ZombieRaid) {
+            val serverLevel = zombie.level() as? ServerLevel ?: return
+            val progress = if (raid.numWaves <= 1 && raid.currentWaveNumber() >= raid.numWaves) 1f
+            else ((raid.currentWaveNumber() - 1).toFloat() / ZombieRaid.MAXIMUM_WAVE_COUNT).coerceIn(0f, 1f)
+            val localDifficulty = serverLevel.getCurrentDifficultyAt(zombie.blockPosition())
+            val difficulty = raidEquipmentDifficulty(serverLevel, localDifficulty, progress)
+            val random = zombie.random
+
+            zombie.equipZombieEquipment(random, progress)
+            zombie.enchantZombieEquipment(serverLevel, random, difficulty)
+        }
+
+        private fun raidEquipmentDifficulty(
+            level: ServerLevel,
+            difficulty: DifficultyInstance,
+            progress: Float,
+        ): DifficultyInstance {
+            val gameTime = level.overworldClockTime
+
+            fun difficultyAt(localTime: Long) = DifficultyInstance(
+                difficulty.difficulty,
+                gameTime,
+                localTime,
+                1f
+            )
+
+            var low = 0L
+            var high = MAX_EQUIPMENT_LOCAL_DIFFICULTY
+            while (low < high) {
+                val middle = (low + high) / 2
+                if (difficultyAt(middle).effectiveDifficulty < difficulty.effectiveDifficulty) low = middle + 1
+                else high = middle
+            }
+
+            val localTime = low + ((MAX_EQUIPMENT_LOCAL_DIFFICULTY - low) * progress).toLong()
+            return difficultyAt(localTime)
+        }
     }
 
 
@@ -544,7 +581,13 @@ enum class WaveType(
 
     fun weight(raid: ZombieRaid, creditsUnlocked: Boolean): Float = weightFn(raid, creditsUnlocked)
 
-    fun spawnEntries(raid: ZombieRaid, creditsUnlocked: Boolean): List<WaveSpawnEntry> = spawnFn(raid, creditsUnlocked)
+    fun spawnEntries(raid: ZombieRaid, creditsUnlocked: Boolean): List<WaveSpawnEntry> =
+        spawnFn(raid, creditsUnlocked).map { entry ->
+            entry.copy(configure = { zombie ->
+                if (zombie is BrownCoat) configureRaidEquipment(zombie, raid)
+                entry.configure(zombie)
+            })
+        }
 
     fun popupMessage(): Component {
         return Component.translatable("event.plantz.zombie_raid.special_wave.${name.lowercase()}")
