@@ -1,6 +1,6 @@
 package joshxviii.plantz.entity.zombie
 
-import PazOwnableZombie
+import joshxviii.plantz.PazOwnableZombie
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.hasSameRootOwner
@@ -26,7 +26,6 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
-import net.minecraft.world.level.entity.UniquelyIdentifyable
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
