@@ -256,7 +256,7 @@
   "item.plantz.super_brainz_spawn_egg": "スーパーブレインズのスポーンエッグ",
   "item.plantz.imp_spawn_egg": "インプのスポーンエッグ",
   "item.plantz.gargantuar_spawn_egg": "ガルガンチュアのスポーンエッグ",
-  "item.plantz.zombie_bat_spawn_egg": "ゾンバットのスポーンエッグ",
+  "item.plantz.zombat_spawn_egg": "ゾンバットのスポーンエッグ",
   "item.plantz.baron_von_bats_spawn_egg": "グレイブマンサーのスポーンエッグ",
   "item.plantz.gnome_spawn_egg": "ガーデンノームのスポーンエッグ",
 
@@ -353,7 +353,7 @@
   "entity.plantz.pirate_captain_ghost": "海賊船長ゾンビの幽霊",
   "entity.plantz.super_brainz": "スーパーブレインズ",
   "entity.plantz.imp": "インプ",
-  "entity.plantz.zombie_bat": "ゾンバット",
+  "entity.plantz.zombat": "ゾンバット",
   "entity.plantz.baron_von_bats": "グレイブマンサー",
   "entity.plantz.gargantuar": "ガルガンチュア",
 

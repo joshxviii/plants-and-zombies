@@ -255,7 +255,7 @@
   "item.plantz.pirate_captain_spawn_egg": "海盗船长刷怪蛋",
   "item.plantz.super_brainz_spawn_egg": "超尸刷怪蛋",
   "item.plantz.imp_spawn_egg": "小鬼僵尸刷怪蛋",
-  "item.plantz.zombie_bat_spawn_egg": "僵尸蝙蝠刷怪蛋",
+  "item.plantz.zombat_spawn_egg": "僵尸蝙蝠刷怪蛋",
   "item.plantz.baron_von_bats_spawn_egg": "蝙蝠男爵刷怪蛋",
   "item.plantz.gargantuar_spawn_egg": "巨人僵尸刷怪蛋",
 
@@ -354,7 +354,7 @@
   "entity.plantz.pirate_captain_ghost": "海盗船长幽灵",
   "entity.plantz.super_brainz": "超尸",
   "entity.plantz.imp": "小鬼僵尸",
-  "entity.plantz.zombie_bat": "僵尸蝙蝠",
+  "entity.plantz.zombat": "僵尸蝙蝠",
   "entity.plantz.baron_von_bats": "蝙蝠男爵",
   "entity.plantz.gargantuar": "巨人僵尸",
 
