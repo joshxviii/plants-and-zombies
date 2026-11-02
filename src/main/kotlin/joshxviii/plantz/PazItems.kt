@@ -228,10 +228,10 @@ object PazItems {
     )
     @JvmField
     val BARON_STAFF: Item = registerItem(
-        "baron_staff",
+        "baron_staff", ::BaronStaffItem,
         properties = Item.Properties()
-            .rarity(Rarity.RARE)
-            .durability(985)
+            .rarity(Rarity.EPIC)
+            .durability(560)
             .enchantable(1)
             .repairable(BRAINZ_ALLOY)
             .stacksTo(1)
