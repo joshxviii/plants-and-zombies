@@ -14,7 +14,9 @@
 - Added Brainz Alloy Door and Trapdoor.
 - Added Door Shields.
   - Can be crafted from any Door and a Shield.
-- Browncoats can now spawn with door shields.
+  - Browncoats can now spawn with door shields.
+- Added Baron's Staff
+  - Has a rare chance to drop from defeating Baron Von Bats.
 - During the final wave at the 1-minute mark, all remaining zombies will teleport closer to the flag.
 - Cones, Buckets, and Football helmets now only block damage from above.
   - They have also been given a buff to armor and armor toughness.
