@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "plantz:item/zombie_bat_spawn_egg"
+    "layer0": "plantz:item/baron_staff"
   }
 }

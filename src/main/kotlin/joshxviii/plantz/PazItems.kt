@@ -16,7 +16,7 @@ import joshxviii.plantz.PazEntities.PIRATE_CAPTAIN
 import joshxviii.plantz.PazEntities.ROBO_ZOMBIE
 import joshxviii.plantz.PazEntities.SOLDIER_ZOMBIE
 import joshxviii.plantz.PazEntities.SUPER_BRAINZ
-import joshxviii.plantz.PazEntities.ZOMBIE_BAT
+import joshxviii.plantz.PazEntities.ZOMBAT
 import joshxviii.plantz.PazEntities.ZOMBIE_YETI
 import joshxviii.plantz.PazTags.ItemTags.BUCKET_WEARABLE
 import joshxviii.plantz.entity.zombie.PazZombie
@@ -52,6 +52,7 @@ import net.minecraft.world.item.component.BlocksAttacks.DamageReduction
 import net.minecraft.world.item.component.BlocksAttacks.ItemDamageFunction
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.item.component.UseCooldown
+import net.minecraft.world.item.enchantment.Enchantable
 import net.minecraft.world.item.equipment.ArmorMaterials
 import net.minecraft.world.item.equipment.ArmorType
 import net.minecraft.world.item.equipment.EquipmentAssets
@@ -226,6 +227,15 @@ object PazItems {
             .stacksTo(1)
     )
     @JvmField
+    val BARON_STAFF: Item = registerItem(
+        "baron_staff", ::BaronStaffItem,
+        properties = Item.Properties()
+            .rarity(Rarity.EPIC)
+            .durability(560)
+            .enchantable(1)
+            .stacksTo(1)
+    )
+    @JvmField
     val FOOTBALL_HELMET: Item = registerItem(
         "football_helmet", ::FootballHelmetItem,
         properties = Item.Properties()
@@ -315,7 +325,7 @@ object PazItems {
     @JvmField val PIRATE_CAPTAIN_SPAWN_EGG: Item = registerSpawnEgg(PIRATE_CAPTAIN)
     @JvmField val SUPER_BRAINZ_SPAWN_EGG: Item = registerSpawnEgg(SUPER_BRAINZ)
     @JvmField val IMP_SPAWN_EGG: Item = registerSpawnEgg(IMP)
-    @JvmField val ZOMBIE_BAT_SPAWN_EGG: Item = registerSpawnEgg(ZOMBIE_BAT)
+    @JvmField val ZOMBAT_SPAWN_EGG: Item = registerSpawnEgg(ZOMBAT)
     @JvmField val BARON_VON_BATS_SPAWN_EGG: Item = registerSpawnEgg(BARON_VON_BATS)
     @JvmField val GARGANTUAR_SPAWN_EGG: Item = registerSpawnEgg(GARGANTUAR)
 
@@ -346,6 +356,7 @@ object PazItems {
         builder.set(PazComponents.PROTECTS_HEAD, ProtectsHeadDataComponent(
             blockSound = PazSounds.PROJECTILE_HIT_BUCKET
         ))
+        builder.set(DataComponents.ENCHANTABLE, Enchantable(10))
         builder.set(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.02f)
         builder.set(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
             .setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)

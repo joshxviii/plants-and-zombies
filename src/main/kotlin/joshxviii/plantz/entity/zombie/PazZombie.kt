@@ -54,6 +54,9 @@ import net.minecraft.world.entity.npc.villager.AbstractVillager
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
+import net.minecraft.world.item.enchantment.EnchantmentHelper
+import net.minecraft.world.item.enchantment.providers.VanillaEnchantmentProviders
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.ServerLevelAccessor
@@ -554,6 +557,48 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         }
         useItems()
         return data
+    }
+}
+
+fun Zombie.equipZombieEquipment(random: RandomSource, equipmentChance: Float) {
+    if (getItemBySlot(EquipmentSlot.HEAD).isEmpty) {
+        if (random.nextFloat() < 0.28f * equipmentChance) {
+            setItemSlot(EquipmentSlot.HEAD, PazBlocks.CONE.asItem().defaultInstance)
+            setDropChance(EquipmentSlot.HEAD, 0.02f)
+        } else if (random.nextFloat() < 0.11f * equipmentChance && getItemBySlot(EquipmentSlot.HEAD).isEmpty) {
+            val bucket = Items.BUCKET.defaultInstance
+            setItemSlot(EquipmentSlot.HEAD, bucket)
+            setDropChance(EquipmentSlot.HEAD, 0f)
+        }
+    }
+
+    if (getItemBySlot(EquipmentSlot.OFFHAND).isEmpty && random.nextFloat() < 0.07f * equipmentChance) {
+        val doorShield = PazItems.DOOR_SHIELD.defaultInstance
+        doorShield.set(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.015f)
+        setItemSlot(EquipmentSlot.OFFHAND, doorShield)
+        setDropChance(EquipmentSlot.OFFHAND, 0f)
+    }
+}
+
+fun Zombie.enchantZombieEquipment(
+    level: ServerLevel,
+    random: RandomSource,
+    difficulty: DifficultyInstance
+) {
+    val headItem = getItemBySlot(EquipmentSlot.HEAD)
+    if (
+        !headItem.isEmpty &&
+        (headItem.`is`(PazBlocks.CONE.asItem()) || headItem.`is`(Items.BUCKET)) &&
+        random.nextFloat() < 0.5f * difficulty.specialMultiplier
+    ) {
+        EnchantmentHelper.enchantItemFromProvider(
+            headItem,
+            level.registryAccess(),
+            VanillaEnchantmentProviders.MOB_SPAWN_EQUIPMENT,
+            difficulty,
+            random
+        )
+        setItemSlot(EquipmentSlot.HEAD, headItem)
     }
 }
 

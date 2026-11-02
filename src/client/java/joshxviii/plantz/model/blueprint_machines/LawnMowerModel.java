@@ -1,6 +1,8 @@
 package joshxviii.plantz.model.blueprint_machines;
 
+import joshxviii.plantz.animation.blueprint_machines.LawnMowerAnimation;
 import joshxviii.plantz.renderer.entity.BlueprintMachineRenderState;
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -17,6 +19,7 @@ public class LawnMowerModel<T extends BlueprintMachineRenderState> extends Entit
 	private final ModelPart front_wheels;
 	private final ModelPart back_wheels;
 	private final ModelPart handle;
+	private final KeyframeAnimation mowAnimation;
 
 	public LawnMowerModel(ModelPart root) {
 		super(root);
@@ -25,6 +28,7 @@ public class LawnMowerModel<T extends BlueprintMachineRenderState> extends Entit
 		this.front_wheels = this.body.getChild("front_wheels");
 		this.back_wheels = this.body.getChild("back_wheels");
 		this.handle = this.body.getChild("handle");
+		this.mowAnimation = LawnMowerAnimation.mow.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -54,5 +58,6 @@ public class LawnMowerModel<T extends BlueprintMachineRenderState> extends Entit
 	@Override
 	public void setupAnim(@NonNull T state) {
 		super.setupAnim(state);
+		this.mowAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
 	}
 }

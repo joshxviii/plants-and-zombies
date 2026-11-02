@@ -46,19 +46,23 @@ class FlagBlockEntity(
         private set(value) {
             field = value.coerceAtMost(maxHealth)
         }
+    var tickCount : Int = 0
     private var resetTime : Int = 0
 
     override fun setChanged() {
         super.setChanged()
-        if (this.blockState.`is`(PazBlocks.PLANTZ_FLAG)) {
-            (level as? ServerLevel)?.let { level ->
-                val nearbyPlants = level.getEntitiesOfClass(Plant::class.java, AABB(worldPosition).inflate(FLAG_POWER_RANGE))
-                nearbyPlants.forEach { it.updatePlantPower(level, true) }
+        if (tickCount== 0) {
+            if (this.blockState.`is`(PazBlocks.PLANTZ_FLAG)) {
+                (level as? ServerLevel)?.let { level ->
+                    val nearbyPlants = level.getEntitiesOfClass(Plant::class.java, AABB(worldPosition).inflate(FLAG_POWER_RANGE))
+                    nearbyPlants.forEach { it.updatePlantPower(level, true) }
+                }
             }
         }
     }
 
     fun tick(level: Level, pos: BlockPos, state: BlockState) {
+        tickCount++
         if (level.isClientSide) return
         if (resetTime > 0) {
             resetTime--

@@ -8,7 +8,7 @@ import net.minecraft.client.animation.KeyframeAnimations;
 /**
  * @author Josh
  */
-public class ZombieBatAnimation {
+public class ZombatAnimation {
         public static final AnimationDefinition idle = AnimationDefinition.Builder.withLength(0.0F).looping()
                 .addAnimation("left_arm", new AnimationChannel(AnimationChannel.Targets.ROTATION,
                         new Keyframe(0.0F, KeyframeAnimations.degreeVec(-90.152F, 0.0F, -0.506F), AnimationChannel.Interpolations.LINEAR)

@@ -552,7 +552,7 @@ object PazEntities {
         attributes = PazZombie.Companion.PazZombieAttributes(
             armor = 6.0,
             attackDamage = 7.0,
-            maxHealth = 600.0,
+            maxHealth = 700.0,
             movementSpeed = 0.21,
             knockbackResistance = 1.4,
             explosionKnockbackResistance = 0.7,
@@ -562,9 +562,9 @@ object PazEntities {
             spawnReinforcementsChance = 0.0,
         )
     )
-    @JvmField val ZOMBIE_BAT: EntityType<ZombieBat> =  registerZombie(
-        "zombie_bat",
-        EntityType.Builder.of(::ZombieBat, MobCategory.MONSTER)
+    @JvmField val ZOMBAT: EntityType<Zombat> =  registerZombie(
+        "zombat",
+        EntityType.Builder.of(::Zombat, MobCategory.MONSTER)
             .sized(0.5F, 0.9F)
             .eyeHeight(0.45F)
             .clientTrackingRange(8),
@@ -584,10 +584,10 @@ object PazEntities {
         attributes = PazZombie.Companion.PazZombieAttributes(
             armor = 6.0,
             attackDamage = 7.0,
-            maxHealth = 500.0,
+            maxHealth = 600.0,
             movementSpeed = 0.21,
-            knockbackResistance = 1.4,
-            explosionKnockbackResistance = 0.5,
+            knockbackResistance = 0.3,
+            explosionKnockbackResistance = 0.2,
             stepHeight = 1.0,
             attackRange = 2.0,
             spawnReinforcementsChance = 0.0,

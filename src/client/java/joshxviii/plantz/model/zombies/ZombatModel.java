@@ -5,9 +5,7 @@
 
 package joshxviii.plantz.model.zombies;
 
-import joshxviii.plantz.animation.zombies.DiscoZombieAnimation;
-import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderState;
-import joshxviii.plantz.renderer.entity.zombie.ZombieBatRenderState;
+import joshxviii.plantz.renderer.entity.zombie.ZombatRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.animation.definitions.BatAnimation;
 import net.minecraft.client.model.EntityModel;
@@ -19,8 +17,8 @@ import org.jetbrains.annotations.NotNull;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
-public class ZombieBatModel<S extends ZombieBatRenderState> extends EntityModel<S> {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("zombie_bat"), "main");
+public class ZombatModel<S extends ZombatRenderState> extends EntityModel<S> {
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("zombat"), "main");
 	private final ModelPart head;
 	private final ModelPart body;
 	private final ModelPart left_wing;
@@ -31,7 +29,7 @@ public class ZombieBatModel<S extends ZombieBatRenderState> extends EntityModel<
 	private final KeyframeAnimation flyingAnimation;
 	private final KeyframeAnimation restingAnimation;
 
-	public ZombieBatModel(final ModelPart root) {
+	public ZombatModel(final ModelPart root) {
 		super(root);
 		this.head = root.getChild("head");
 		this.body = root.getChild("body");

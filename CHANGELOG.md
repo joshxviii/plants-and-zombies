@@ -7,6 +7,10 @@
 
 # Changelog 1.5.2
 ### Changes / Additions
+- Added Baron Von Bats
+  - Baron Von Bats has a chance to spawn as a boss during wave10 instead of Gargantuar.
+- Added Zombat
+  - Heals itself when hurting other mobs.
 - Added Brainz Alloy Door and Trapdoor.
 - Added Door Shields.
   - Can be crafted from any Door and a Shield.

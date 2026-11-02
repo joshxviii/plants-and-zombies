@@ -8,8 +8,11 @@ package joshxviii.plantz.model.zombies;
 import joshxviii.plantz.animation.zombies.BaronVonBatsAnimation;
 import joshxviii.plantz.animation.zombies.DiscoZombieAnimation;
 import joshxviii.plantz.renderer.RenderingUtilsKt;
+import joshxviii.plantz.renderer.entity.zombie.BaronVonBatsRenderState;
+import joshxviii.plantz.renderer.entity.zombie.DiggerZombieRenderState;
 import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
+import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -20,27 +23,20 @@ import static joshxviii.plantz.UtilsKt.pazResource;
 
 public class BaronVonBatsModel<S extends PazZombieRenderState> extends PazZombieModel<S> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("baron_von_bats"), "main");
-	private final ModelPart top_hat;
-//	private final KeyframeAnimation walkAnimation;
-//	private final KeyframeAnimation summonAnimation;
-//	private final KeyframeAnimation vanishAnimation;
-//	private final KeyframeAnimation transformBatAnimation;
+	private final KeyframeAnimation walkAnimation;
+	private final KeyframeAnimation summonAnimation;
+	private final KeyframeAnimation vanishAnimation;
+	private final KeyframeAnimation appearAnimation;
+	private final KeyframeAnimation transformBatAnimation;
 
 	public BaronVonBatsModel(final ModelPart root) {
-		super(
-				null,
-				root
-		);
-//		this.walkAnimation = BaronVonBatsAnimation.walk.bake(root);
-//		this.summonAnimation = BaronVonBatsAnimation.summon.bake(root);
-//		this.vanishAnimation = BaronVonBatsAnimation.vanish.bake(root);
-//		this.transformBatAnimation = BaronVonBatsAnimation.transform.bake(root);
-		this.top_hat = RenderingUtilsKt.getChildOrNull(this.getHead(), "top_hat");
-	}
-
-	@Override
-	public <T extends PazZombieRenderState> PazZombieModel<T> forArmor(ModelPart root) {
-		return new BaronVonBatsModel<>(root);
+		super(null, root);
+		var mainRoot = root.hasChild("root") ? root.getChild("root") : root;
+		this.walkAnimation = BaronVonBatsAnimation.walk.bake(mainRoot);
+		this.summonAnimation = BaronVonBatsAnimation.summon.bake(mainRoot);
+		this.vanishAnimation = BaronVonBatsAnimation.vanish.bake(mainRoot);
+		this.appearAnimation = BaronVonBatsAnimation.emerge.bake(mainRoot);
+		this.transformBatAnimation = BaronVonBatsAnimation.transform.bake(mainRoot);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -85,5 +81,18 @@ public class BaronVonBatsModel<S extends PazZombieRenderState> extends PazZombie
 	@Override
 	public void setupAnim(@NotNull S state) {
 		super.setupAnim(state);
+		super.resetPose();
+		AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, false, state);
+
+		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
+		this.head.yRot = state.yRot * (float) (Math.PI / 180.0);
+
+		if (!(state instanceof BaronVonBatsRenderState baronState)) return;
+		walkAnimation.applyWalk(baronState.walkAnimationPos, baronState.walkAnimationSpeed, 2f, 2f);
+		summonAnimation.apply(baronState.getActionAnimationState(), state.ageInTicks);
+		transformBatAnimation.apply(baronState.getTransformAnimationState(), state.ageInTicks);
+
+		var appearing = baronState.isAppearing();
+		(appearing ? appearAnimation : vanishAnimation).apply(baronState.getTeleportAnimationState(), state.ageInTicks);
 	}
 }

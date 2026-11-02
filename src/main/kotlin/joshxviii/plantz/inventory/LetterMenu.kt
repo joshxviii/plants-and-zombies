@@ -34,7 +34,7 @@ class LetterMenu(
             this@LetterMenu.slotsChanged(this)
         }
     }
-    val attachmentSlot: Slot = addSlot(object : Slot(inputContainer, 0, if (editable) 11 else 56, 108) {
+    val attachmentSlot: Slot = addSlot(object : Slot(inputContainer, 0, if (editable) 150 else 197, 108) {
         override fun mayPlace(itemStack: ItemStack): Boolean =
             editable && !itemStack.`is`(PazItems.LETTER)
 

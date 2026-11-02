@@ -1,46 +1,24 @@
 package joshxviii.plantz.entity.zombie
 
-import it.unimi.dsi.fastutil.ints.IntList
-import joshxviii.plantz.PazEntities
-import joshxviii.plantz.PazSounds
-import joshxviii.plantz.ai.goal.NavigateToTargetGoal
-import joshxviii.plantz.ai.goal.ProjectileAttackGoal
-import joshxviii.plantz.entity.isActiveInRaid
-import joshxviii.plantz.entity.zombie.RoboZombie.Companion.MISSILE_COOLDOWN_TIME
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup.level
 import net.minecraft.core.BlockPos
 import net.minecraft.core.UUIDUtil
-import net.minecraft.core.component.DataComponents
-import net.minecraft.network.syncher.EntityDataAccessor
-import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
-import net.minecraft.server.jsonrpc.methods.ServerSettingsService.difficulty
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.DifficultyInstance
-import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
-import net.minecraft.world.entity.projectile.FireworkRocketEntity
-import net.minecraft.world.entity.projectile.ProjectileUtil
-import net.minecraft.world.item.CrossbowItem
-import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
-import net.minecraft.world.item.component.ChargedProjectiles
-import net.minecraft.world.item.component.FireworkExplosion
-import net.minecraft.world.item.component.Fireworks
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
-import java.util.Optional
 import java.util.UUID
 import kotlin.jvm.optionals.getOrNull
 
-class ZombieBat(type: EntityType<out ZombieBat>, level: Level) : PazZombie(type, level) {
+class Zombat(type: EntityType<out Zombat>, level: Level) : PazZombie(type, level) {
 
     companion object {
 
@@ -71,8 +49,26 @@ class ZombieBat(type: EntityType<out ZombieBat>, level: Level) : PazZombie(type,
 
     override fun handleAttributes(difficultyModifier: Float, spawnReason: EntitySpawnReason) {}
 
+    override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
+        val hurt = super.hurtServer(level, source, damage)
+        updateBaronHealth(level)
+        return hurt
+    }
+
+    override fun heal(amount: Float) {
+        super.heal(amount)
+        (level() as? ServerLevel)?.let(::updateBaronHealth)
+    }
+
+    private fun updateBaronHealth(level: ServerLevel) {
+        barronId?.let { id ->
+            (level.getEntity(id) as? BaronVonBats)?.updateHealthFromBats()
+        }
+    }
+
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         val result = super.doHurtTarget(level, target)
+        if (result) heal(maxHealth * 0.1f)
         return result
     }
 
