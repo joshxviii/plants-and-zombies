@@ -125,6 +125,8 @@
   "effect.plantz.painted.magenta": "Pintado de Magenta",
   "effect.plantz.painted.pink": "Pintado de Rosa",
 
+  "enchantment.plantz.lobbing": "Arremesso",
+
   "component.stored_sun.description": "Armazena e utiliza os Sóis coletados",
   "component.stored_sun": "%s / %s",
   "component.stored_water.description": "Usado para hidratar plantas",
@@ -352,6 +354,8 @@
   "container.plantz.mailbox_success": "Enviado!",
   "container.plantz.time_machine.wip": "???",
 
+  "gui.plantz.letter": "Carta",
+
   "plantz.subtitles.projectile.deflected": "Projétil defletido",
   "plantz.subtitles.projectile.shoot": "Projétil disparado",
 
@@ -386,5 +390,7 @@
   "plantz.subtitles.entity.gargantuar.hurt": "Zumbi Devorador ferido",
 
   "plantz.subtitles.event.mob_effect.hypnotized": "Criatura é hipnotizada",
-  "plantz.subtitles.event.mob_effect.zombie_omen": "Presságio de Invasão Zumbi"
+  "plantz.subtitles.event.mob_effect.zombie_omen": "Presságio de Invasão Zumbi",
+
+  "biome.plantz.graveyard": "Cemitério"
 }

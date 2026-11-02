@@ -7,14 +7,21 @@
       },
       "trigger": "minecraft:recipe_unlocked"
     },
-    "has_cooked_beef": {
+    "has_ingredients": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:cooked_beef"
-            ]
+            "items": "#c:foods/leafy_green"
+          },
+          {
+            "items": "#c:crops/tomato"
+          },
+          {
+            "items": "#c:crops/onion"
+          },
+          {
+            "items": "minecraft:cooked_beef"
           }
         ]
       }
@@ -23,7 +30,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_cooked_beef"
+      "has_ingredients"
     ]
   ],
   "rewards": {

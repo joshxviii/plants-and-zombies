@@ -530,7 +530,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         super.tick()
         attachedEntity?.positionPlant(this)
         if (attachedEntity?.canWearPlant() == false) {
-            if(dropAsSeedPacketItem(force = true)) playSound(SoundEvents.ROOTED_DIRT_BREAK)
+            if(dropAsSeedPacketItem(force = true, dropPumpkin = true)) playSound(SoundEvents.ROOTED_DIRT_BREAK)
         }
         val level = this.level()
 
@@ -690,11 +690,18 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         playSound(SoundEvents.PUMPKIN_CARVE, 0.5f, 1f)
     }
 
-    fun restorePumpkinFromArmor() {
+    fun restorePumpkinFromArmor(asItem: Boolean = false) {
         val armor = pumpkinArmor
         val pumpkinData = pumpkinEntityData ?: return
         if (armor <= 0f) return
         val level = level() as? ServerLevel?: return
+        if (asItem) {
+            val drop = SeedPacketItem.stackFor(pumpkinData.type()).also { pumpkinData.copyTagWithoutId().getString("CustomName").getOrNull()
+                ?.let { name -> it.set(DataComponents.CUSTOM_NAME, Component.literal(name)) } }
+            val itemEntity = ItemEntity(level, x, y + 0.5, z, drop)
+            level.addFreshEntity(itemEntity)
+            return
+        }
         val pumpkin = pumpkinData.type().create(level, EntitySpawnReason.LOAD) ?: return
         pumpkinData.loadInto(pumpkin)
         pumpkin.setPos(x, y, z)
@@ -703,6 +710,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             pumpkin.state = PlantState.IDLE
             pumpkin.health = armor
             pumpkin.yRot = yRot
+            pumpkin.yHeadRot = yHeadRot
+            pumpkin.yBodyRot = yBodyRot
             (this.owner as? Player)?.let { pumpkin.tame(it) }
         }
         if (level.addFreshEntity(pumpkin)) {
@@ -872,8 +881,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         if (spawnReason == EntitySpawnReason.SPAWN_ITEM_USE) state = PlantState.INIT
         if (spawnReason == EntitySpawnReason.NATURAL) {
             val yaw = Direction.getRandom(random).toYRot()
-            yHeadRot = yaw
-            yBodyRot = yaw
             yRot = yaw
         }
 
@@ -883,7 +890,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun checkDespawn() {
         super.checkDespawn()
     }
-
+    open fun attackedWithGlove(attacker: LivingEntity, item: ItemStack, hand: InteractionHand) {}
     override fun skipAttackInteraction(source: Entity): Boolean {
         val item = source.weaponItem ?: ItemStack.EMPTY
         if (source is Player && this.hasSameRootOwner(source) && item.`is`(PazItems.GARDENING_GLOVE)) {
@@ -893,8 +900,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
         return super.skipAttackInteraction(source)
     }
-
-    open fun attackedWithGlove(player: Player, item: ItemStack, hand: InteractionHand) {}
 
     override fun mobInteract(player: Player, hand: InteractionHand): InteractionResult {
         val itemStack = player.getItemInHand(hand)
@@ -987,8 +992,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             (attachedEntity as PlantHeadAttachment).`plantz$setPlantData`(CompoundTag())
             (attachedEntity as PlantHeadAttachment).`plantz$setPlant`(null)
             attachedEntity = null
+            yRot = clampYRot(yRot)
+            yHeadRot = clampYRot(yHeadRot)
+            yBodyRot = clampYRot(yBodyRot)
         }
     }
+
+    override fun shouldTryTeleportToOwner(): Boolean = false
 
     override fun remove(reason: RemovalReason) {
         super.remove(reason)
@@ -1016,14 +1026,14 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return this.hasSameRootOwner(target)
     }
 
-    fun dropAsSeedPacketItem(force: Boolean = false): Boolean {
+    fun dropAsSeedPacketItem(force: Boolean = false, dropPumpkin: Boolean = false): Boolean {
         val level = level() as? ServerLevel ?: return false
         if (force || customName!=null) {// Spawn a seed packet item containing this plant's data
             val drop = SeedPacketItem.stackFor(this.type).also { if (customName!=null) it.set(DataComponents.CUSTOM_NAME, customName) }
             val itemEntity = ItemEntity(level, x, y + 0.5, z, drop)
             level.addFreshEntity(itemEntity)
         }
-        restorePumpkinFromArmor()
+        restorePumpkinFromArmor(asItem = dropPumpkin)
         this.discard()
         return true
     }

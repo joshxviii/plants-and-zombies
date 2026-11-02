@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_bottom_right_open",
+  "textures": {
+    "bottom": "plantz:block/brainz_alloy_door_bottom",
+    "top": "plantz:block/brainz_alloy_door_top"
+  }
+}

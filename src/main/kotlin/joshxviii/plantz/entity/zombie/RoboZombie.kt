@@ -13,6 +13,7 @@ import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.util.Mth
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
@@ -25,6 +26,9 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
+import net.minecraft.world.phys.Vec3
+import kotlin.math.cos
+import kotlin.math.sin
 
 class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(type, level) {
 
@@ -157,7 +161,9 @@ class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(typ
         ))
         goalSelector.addGoal(4, ProjectileAttackGoal(
             usingEntity = this,
-            projectileFactory =  { Missile(level(), this) },
+            projectileFactory =  {
+                Missile(level(), this)
+            },
             velocity = 0.9,
             attackRadius = 30f,
             leadShots = false,
@@ -185,6 +191,14 @@ class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(typ
     override fun canClimbWalls(): Boolean = isTransformed || super.canClimbWalls()
 
     override fun getMoveControl(): MoveControl = if (missileTime>0) noMoveControl else super.getMoveControl()
+
+    override fun getPassengerRidingPosition(passenger: Entity): Vec3 {
+        val vec3 = super.getPassengerRidingPosition(passenger)
+        val scale = 0.25
+        val rx = cos((yBodyRot - 90) * Mth.DEG_TO_RAD).toDouble() * scale
+        val rz = sin((yBodyRot - 90) * Mth.DEG_TO_RAD).toDouble() * scale
+        return if (isTransformed) vec3.add(rx, -0.45, rz) else vec3
+    }
 
     override fun tick() {
         super.tick()

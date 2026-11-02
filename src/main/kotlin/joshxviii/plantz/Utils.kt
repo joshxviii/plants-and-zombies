@@ -7,6 +7,7 @@ import joshxviii.plantz.entity.plant.saveAsCompoundTag
 import joshxviii.plantz.raid.WaveType
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.core.Vec3i
 import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
@@ -29,7 +30,6 @@ import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.item.FallingBlockEntity
-import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.DyeColor
@@ -99,7 +99,7 @@ interface PlantHeadAttachment {
     fun `plantz$getPlantData`(): CompoundTag
     fun `plantz$setPlantData`(value: CompoundTag)
     companion object {
-        fun potBlockInteraction(state: BlockState, level: Level, pos: BlockPos, player: Player) : InteractionResult {
+        fun potHelmetPlaceInteraction(level: Level, pos: BlockPos, player: Player) : InteractionResult {
             if (level !is ServerLevel) return InteractionResult.PASS
             val hasPlant = (player as PlantHeadAttachment).`plantz$hasPlantOnHead`()
             if (hasPlant && player.isShiftKeyDown) {
@@ -237,7 +237,7 @@ fun Entity.positionPlant(plant: Plant) {
         position.y - offset.y,
         position.z - offset.z
     )
-    plant.yBodyRot = this.yHeadRot
+    plant.yRot = this.yHeadRot
 }
 
 fun Player.hasSpaceForSun(item: ItemStack): Boolean {
@@ -292,6 +292,8 @@ fun Player.removeItemFromInventory(itemType: Item?, amount: Int = 1): Int {
     if(itemType == null || itemType == Items.AIR) return 0
     return inventory.clearOrCountMatchingItems({ it.`is`(itemType) }, amount, inventoryMenu.getCraftSlots())
 }
+
+fun clampYRot(yaw: Float): Float = Direction.fromYRot(yaw.toDouble()).toYRot()
 
 fun Float.percentFormat(): String = "%.0f%%".format(this * 100)
 

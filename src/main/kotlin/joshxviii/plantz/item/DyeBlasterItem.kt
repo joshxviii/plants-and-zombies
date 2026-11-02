@@ -4,9 +4,7 @@ import joshxviii.plantz.PazSounds
 import joshxviii.plantz.entity.projectile.PaintBall
 import joshxviii.plantz.percentFormat
 import net.minecraft.ChatFormatting
-import net.minecraft.core.component.DataComponentGetter
 import net.minecraft.core.component.DataComponents
-import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
@@ -19,13 +17,14 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.ItemStackTemplate
 import net.minecraft.world.item.ItemUseAnimation
 import net.minecraft.world.item.ProjectileWeaponItem
-import net.minecraft.world.item.TooltipFlag
+import net.minecraft.world.item.component.ChargedProjectiles
+import net.minecraft.world.item.component.DyedItemColor
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec2
-import net.minecraft.world.phys.Vec3
 import java.util.function.Predicate
 
 class DyeBlasterItem(properties: Properties) : ProjectileWeaponItem(properties) {
@@ -40,15 +39,28 @@ class DyeBlasterItem(properties: Properties) : ProjectileWeaponItem(properties) 
         const val AMMO_CHANCE: Float = 0.4f
     }
 
+    override fun useOnRelease(itemStack: ItemStack): Boolean {
+        return super.useOnRelease(itemStack)
+    }
+
     override fun onUseTick(level: Level, livingEntity: LivingEntity, itemStack: ItemStack, ticksRemaining: Int) {
         super.onUseTick(level, livingEntity, itemStack, ticksRemaining)
-        val ammo = livingEntity.getProjectile(itemStack)
-        if (ammo.isEmpty) return
+        val ammo = itemStack.get(DataComponents.CHARGED_PROJECTILES)?.items?.firstOrNull()?.create()
+        if (ammo == null) {
+            reload(level, livingEntity, itemStack)
+            return
+        }
         if (ticksRemaining%4 != 0) return
-        level.playSound(null, livingEntity.blockPosition(), PazSounds.DYE_BLASTER, SoundSource.NEUTRAL, 0.3f, 1f)
+        level.playSound(livingEntity, livingEntity.blockPosition(), PazSounds.DYE_BLASTER, SoundSource.NEUTRAL, 0.3f, 0.7f)
         itemStack.hurtAndBreak(1, livingEntity, livingEntity.usedItemHand)
-        if (level.random.nextFloat() < AMMO_CHANCE) draw(itemStack, ammo, livingEntity)
-        if (level is ServerLevel) shoot(level, livingEntity, livingEntity.usedItemHand, itemStack, listOf(ammo), 1.2f, 8.0f, false, null)
+        if (level is ServerLevel) {
+            if (level.random.nextFloat() < AMMO_CHANCE) {
+                itemStack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY)
+                itemStack.remove(DataComponents.DYED_COLOR)
+                reload(level, livingEntity, itemStack)
+            }
+            shoot(level, livingEntity, livingEntity.usedItemHand, itemStack, listOf(ammo), 1.2f, 8.0f, false, null)
+        }
     }
 
     override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResult {
@@ -59,6 +71,16 @@ class DyeBlasterItem(properties: Properties) : ProjectileWeaponItem(properties) 
             player.startUsingItem(hand)
             return InteractionResult.CONSUME
         }
+    }
+
+    fun reload(level: Level, livingEntity: LivingEntity, itemStack: ItemStack): ItemStack {
+        val ammo = draw(itemStack, livingEntity.getProjectile(itemStack), livingEntity).firstOrNull()?: ItemStack.EMPTY
+        if (!ammo.isEmpty && ammo.`is`(ItemTags.DYES)) {
+            itemStack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles(mutableListOf(ItemStackTemplate(ammo.item))))
+            ammo.get(DataComponents.DYE)?.fireworkColor?.let { itemStack.set(DataComponents.DYED_COLOR, DyedItemColor(it)) }
+            level.playSound(livingEntity, livingEntity.blockPosition(), SoundEvents.CROSSBOW_LOADING_END.value(), SoundSource.NEUTRAL, 0.3f, 1.4f)
+        }
+        return ammo
     }
 
     override fun getUseDuration(itemStack: ItemStack, user: LivingEntity): Int {

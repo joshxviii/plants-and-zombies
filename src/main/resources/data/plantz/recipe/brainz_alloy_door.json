@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": "plantz:brainz_alloy"
+  },
+  "pattern": [
+    "## ",
+    "## ",
+    "## "
+  ],
+  "result": {
+    "count": 3,
+    "id": "plantz:brainz_alloy_door"
+  }
+}

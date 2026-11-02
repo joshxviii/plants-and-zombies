@@ -294,5 +294,10 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
         }
     }
 
+    @Inject(method = "blockedByItem", at = @At("HEAD"), cancellable = true)
+    private void plantz$preventKnockbackWhileBlocking(LivingEntity defender, CallbackInfo ci) {
+        ci.cancel();
+    }
+
 
 }

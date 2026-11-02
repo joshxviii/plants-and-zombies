@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "plantz:door_shield"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_ingredients": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#minecraft:doors"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_ingredients"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "plantz:door_shield"
+    ]
+  }
+}

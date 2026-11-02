@@ -12,7 +12,7 @@
   "advancements.plantz.grow_plant_seeds": "綠手指",
   "advancements.plantz.grow_plant_seeds.description": "從植物獲取種子",
   "advancements.plantz.grave_buster_bust": "盜墓筆記",
-  "advancements.plantz.grave_buster_bust.description": "使用墓碑吞噬者掘墓",
+  "advancements.plantz.grave_buster_bust.description": "使用噬碑藤掘墓",
   "advancements.plantz.plant_all_plants": "植物百科",
   "advancements.plantz.plant_all_plants.description": "種植每一種植物各一株",
   "advancements.plantz.plant_pot_minecart": "出發喇！",
@@ -27,7 +27,7 @@
   "advancements.plantz.read_newspaper.description": "獲取並閱讀每日報紙",
   "advancements.plantz.root": "植物與殭屍",
   "advancements.plantz.root.description": "多多曬太陽！",
-  "advancements.plantz.send_mail": "你有新郵件！",
+  "advancements.plantz.send_mail": "你有新信件！",
   "advancements.plantz.send_mail.description": "寄一封信給鄰居！",
   "advancements.plantz.receive_hero_mail": "花園中最偉大的英雄！",
   "advancements.plantz.receive_hero_mail.description": "完成殭屍襲擊後領取獎勵！",
@@ -125,12 +125,14 @@
   "effect.plantz.painted.magenta": "已染紫紅",
   "effect.plantz.painted.pink": "已染粉紅",
 
+  "enchantment.plantz.lobbing": "投擲",
+
   "component.stored_sun.description": "儲存並使用收集到的陽光",
   "component.stored_sun": "%s / %s",
   "component.stored_water.description": "用於為植物澆水",
   "component.stored_water": "水: %s / %s",
   "component.item_cost": "%s 消耗：%s",
-  "component.blocks_damage.description": "可抵擋的投射物：",
+  "component.blocks_damage.description": "保護免受上方傷害",
   "component.blocks_damage": "破碎機率: %s%%",
   "item.plantz.zombie_banner": "腦袋旗幟",
 
@@ -183,7 +185,7 @@
   "item.plantz.magenta_balloon": "紫紅色氣球",
   "item.plantz.pink_balloon": "粉紅色氣球",
 
-  "item.plantz.mail_collection_box": "郵件收集箱",
+  "item.plantz.mail_collection_box": "信件收集箱",
   "item.plantz.mailbox": "信箱",
   "item.plantz.light_gray_mailbox": "淺灰色信箱",
   "item.plantz.gray_mailbox": "灰色信箱",
@@ -266,7 +268,7 @@
   "block.plantz.red_garden_gnome": "紅色花園地精",
   "block.plantz.yellow_garden_gnome": "黃色花園地精",
 
-  "block.plantz.mail_collection_box": "郵件收集箱",
+  "block.plantz.mail_collection_box": "信件收集箱",
   "block.plantz.mailbox": "信箱",
   "block.plantz.light_gray_mailbox": "淺灰色信箱",
   "block.plantz.gray_mailbox": "灰色信箱",
@@ -343,7 +345,7 @@
 
   "itemGroup.plantz.plantz_tab": "植物與殭屍",
 
-  "container.plantz.send_mail": "發送郵件",
+  "container.plantz.send_mail": "發送信件",
   "container.plantz.mailbox_coords": "%d, %d, %d",
   "container.plantz.mailbox_coords_mini": "%s（%s）",
   "container.plantz.address_search": "正在搜尋信箱……",
@@ -351,6 +353,8 @@
   "container.plantz.mailbox_full": "信箱已滿！",
   "container.plantz.mailbox_success": "發送成功！",
   "container.plantz.time_machine.wip": "???",
+
+  "gui.plantz.letter": "信",
 
   "plantz.subtitles.projectile.deflected": "投射物被彈開",
   "plantz.subtitles.projectile.shoot": "投射物發射",
@@ -386,5 +390,7 @@
   "plantz.subtitles.entity.gargantuar.hurt": "巨人殭屍受傷",
 
   "plantz.subtitles.event.mob_effect.hypnotized": "生物被催眠",
-  "plantz.subtitles.event.mob_effect.zombie_omen": "殭屍襲擊逼近"
+  "plantz.subtitles.event.mob_effect.zombie_omen": "殭屍襲擊逼近",
+
+  "biome.plantz.graveyard": "墓地"
 }

@@ -12,7 +12,7 @@ class Needle(
     owner: LivingEntity? = null,
     spawnOffset: Vec2 = Vec2.ZERO,
 ) : PazProjectile(PazEntities.NEEDLE, level, owner, spawnOffset,
-    PazDamageTypes.PLANT
+    PazDamageTypes.PIERCING_PROJECTILE
 ) {
     override fun stickInGroundTime(): Int = 100
     override fun getPierceLevel(): Byte = 4

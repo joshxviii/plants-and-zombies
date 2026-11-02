@@ -2,6 +2,8 @@
   "replace": false,
   "values": [
     "plantz:plant_fume",
-    "#plantz:is_electric"
+    "plantz:piercing_projectile",
+    "#plantz:is_electric",
+    "#plantz:is_energy"
   ]
 }

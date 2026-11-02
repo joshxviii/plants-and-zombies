@@ -1,14 +1,8 @@
 package joshxviii.plantz.inventory
 
 import joshxviii.plantz.MailCollectionBoxData
-import joshxviii.plantz.MailboxData
 import joshxviii.plantz.PazMenus
 import joshxviii.plantz.block.entity.MailCollectionBoxEntity
-import net.minecraft.core.BlockPos
-import net.minecraft.network.protocol.Packet
-import net.minecraft.network.protocol.PacketType
-import net.minecraft.network.protocol.game.ClientGamePacketListener
-import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.Container
 import net.minecraft.world.SimpleContainer
 import net.minecraft.world.entity.player.Inventory

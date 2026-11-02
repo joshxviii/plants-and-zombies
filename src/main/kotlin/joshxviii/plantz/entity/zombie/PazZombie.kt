@@ -8,10 +8,9 @@ import joshxviii.plantz.ai.control.PazMoveControl
 import joshxviii.plantz.ai.goal.FlyingPathfindingGoal
 import joshxviii.plantz.ai.pathfinding.PazFlyingPathNavigation
 import joshxviii.plantz.ai.pathfinding.PazGroundPathNavigation
-import joshxviii.plantz.entity.Balloon
 import joshxviii.plantz.entity.ZombieRaider
 import joshxviii.plantz.entity.setCountHealth
-import joshxviii.plantz.item.BalloonItem
+import joshxviii.plantz.raid.BossType
 import joshxviii.plantz.raid.ZombieRaid.Companion.RAID_DISTANCE
 import joshxviii.plantz.raid.getZombieRaids
 import net.minecraft.core.BlockPos
@@ -29,6 +28,7 @@ import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
 import net.minecraft.world.Difficulty
 import net.minecraft.world.DifficultyInstance
+import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeInstance
@@ -54,6 +54,9 @@ import net.minecraft.world.entity.npc.villager.AbstractVillager
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
+import net.minecraft.world.item.enchantment.EnchantmentHelper
+import net.minecraft.world.item.enchantment.providers.VanillaEnchantmentProviders
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.ServerLevelAccessor
@@ -62,7 +65,6 @@ import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
 import java.util.*
-import kotlin.collections.getValue
 import kotlin.jvm.optionals.getOrElse
 import kotlin.math.max
 
@@ -124,8 +126,6 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
                     true,
                     false
                 ) ?: return
-                zombie.setPersistenceRequired()
-
                 level.addFreshEntity(zombie)
             }
         }
@@ -163,10 +163,10 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
 
         // for group spawning and gravestone spawning
         val SPAWN_TABLE_WEIGHTS = mapOf(
-            PazEntities.BROWN_COAT          to 20,
-            PazEntities.NEWSPAPER_ZOMBIE    to 7,
-            PazEntities.DIGGER_ZOMBIE       to 1,
-            PazEntities.DISCO_ZOMBIE        to 1,
+            PazEntities.BROWN_COAT          to 40,
+            PazEntities.NEWSPAPER_ZOMBIE    to 8,
+            PazEntities.DIGGER_ZOMBIE       to 2,
+            PazEntities.DISCO_ZOMBIE        to 2,
             PazEntities.ALL_STAR            to 1,
         )
 
@@ -176,7 +176,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
 
         data class PazZombieAttributes(
             val maxHealth: Double = 20.0,
-            val attackDamage: Double = 1.0,
+            val attackDamage: Double = 1.5,
             val attackKnockback: Double = 0.4,
             val attackRange: Double = 1.5,
             val movementSpeed: Double = ZOMBIE_SPEED,
@@ -184,6 +184,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             val jumpStrength: Double = 0.42,
             val followRange: Double = 50.0,
             val armor: Double = 0.0,
+            val armorToughness: Double = 0.0,
             val spawnReinforcementsChance: Double = 0.0,
             val explosionKnockbackResistance: Double = 0.0,
             val knockbackResistance: Double = 0.2,
@@ -227,6 +228,11 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     override fun getStepSound(): SoundEvent {
         return SoundEvents.ZOMBIE_STEP
     }
+    override fun getVoicePitch(): Float {
+        val bossified = this.getAttribute(Attributes.SCALE)!!.hasModifier(BossType.BOSSIFY)
+        val pitch = super.getVoicePitch()
+        return if (bossified) pitch * 0.65f else pitch
+    }
 
     override fun onEquipItem(slot: EquipmentSlot, oldStack: ItemStack, stack: ItemStack) {
         if (stack.`is`(PazItems.DUCKY_TUBE) && slot == EquipmentSlot.LEGS) {
@@ -237,8 +243,18 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             this.getNavigation().setCanFloat(false)
             this.getNavigation().recomputePath()
         };
-
         super.onEquipItem(slot, oldStack, stack)
+    }
+
+    private fun useItems() {
+        if (isUsingItem) return
+
+        val hand = when {
+            getItemInHand(InteractionHand.MAIN_HAND).`is`(PazTags.ItemTags.ZOMBIE_CAN_USE) -> InteractionHand.MAIN_HAND
+            getItemInHand(InteractionHand.OFF_HAND).`is`(PazTags.ItemTags.ZOMBIE_CAN_USE) -> InteractionHand.OFF_HAND
+            else -> return
+        }
+        startUsingItem(hand)
     }
 
     override fun pickUpItem(level: ServerLevel, entity: ItemEntity) {
@@ -330,8 +346,10 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
 
     var waterTime = -1
     var retreatTime = -1
+    var emergeTime = -1
     override fun tick() {
         super.tick()
+        useItems()
         moveDirO = moveDir
         val delta = deltaMovement
 
@@ -372,10 +390,13 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
                 emergeAnimation.startIfStopped(tickCount)
                 retreatAnimation.stop()
                 floatAnimation.stop()
-                if (tickCount > emergingTime()) state = ZombieState.IDLE
+                if (emergeTime++ > emergingTime()) {
+                    state = ZombieState.IDLE
+                    emergeTime = -1
+                }
 
-                if (tickCount < 15) {
-                    if(tickCount==1) playSound(SoundEvents.ROOTED_DIRT_HIT, 1.0f, 0.2f)
+                if (emergeTime < 15) {
+                    if(emergeTime%8==0) playSound(SoundEvents.ROOTED_DIRT_HIT, 1.0f, 0.2f)
                     serverLevel?.sendParticles(
                         BlockParticleOption(ParticleTypes.BLOCK, serverLevel.getBlockState(blockPosition().below())),
                         x, y + 0.05, z, 8, 0.25, 0.0, 0.25, 0.4
@@ -490,6 +511,10 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     open fun canEquipBalloons() = true
     open fun canClimbWalls(): Boolean = false
 
+    override fun canAttack(target: LivingEntity): Boolean {
+        if (!target.isHypnotized() && target is Zombie) return false
+        else return super.canAttack(target)
+    }
     override fun maxUpStep(): Float = if (isInWater) 0.5f else super.maxUpStep()
     override fun isSunSensitive(): Boolean = false
     override fun convertsInWater(): Boolean = false
@@ -534,8 +559,50 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             if (spawnReason != EntitySpawnReason.NATURAL) setDropChance(EquipmentSlot.LEGS, 0.0f)
             else setDropChance(EquipmentSlot.LEGS, 0.15f)
         }
-        
+        useItems()
         return data
+    }
+}
+
+fun Zombie.equipZombieEquipment(random: RandomSource, equipmentChance: Float) {
+    if (getItemBySlot(EquipmentSlot.HEAD).isEmpty) {
+        if (random.nextFloat() < 0.28f * equipmentChance) {
+            setItemSlot(EquipmentSlot.HEAD, PazBlocks.CONE.asItem().defaultInstance)
+            setDropChance(EquipmentSlot.HEAD, 0.02f)
+        } else if (random.nextFloat() < 0.11f * equipmentChance && getItemBySlot(EquipmentSlot.HEAD).isEmpty) {
+            val bucket = Items.BUCKET.defaultInstance
+            setItemSlot(EquipmentSlot.HEAD, bucket)
+            setDropChance(EquipmentSlot.HEAD, 0f)
+        }
+    }
+
+    if (getItemBySlot(EquipmentSlot.OFFHAND).isEmpty && random.nextFloat() < 0.07f * equipmentChance) {
+        val doorShield = PazItems.DOOR_SHIELD.defaultInstance
+        doorShield.set(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.015f)
+        setItemSlot(EquipmentSlot.OFFHAND, doorShield)
+        setDropChance(EquipmentSlot.OFFHAND, 0f)
+    }
+}
+
+fun Zombie.enchantZombieEquipment(
+    level: ServerLevel,
+    random: RandomSource,
+    difficulty: DifficultyInstance
+) {
+    val headItem = getItemBySlot(EquipmentSlot.HEAD)
+    if (
+        !headItem.isEmpty &&
+        (headItem.`is`(PazBlocks.CONE.asItem()) || headItem.`is`(Items.BUCKET)) &&
+        random.nextFloat() < 0.5f * difficulty.specialMultiplier
+    ) {
+        EnchantmentHelper.enchantItemFromProvider(
+            headItem,
+            level.registryAccess(),
+            VanillaEnchantmentProviders.MOB_SPAWN_EQUIPMENT,
+            difficulty,
+            random
+        )
+        setItemSlot(EquipmentSlot.HEAD, headItem)
     }
 }
 

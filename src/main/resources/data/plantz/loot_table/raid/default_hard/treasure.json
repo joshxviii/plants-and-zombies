@@ -54,7 +54,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:enchanted_book",
-          "weight": 10,
+          "weight": 15,
           "functions": [
             {
               "function": "minecraft:set_enchantments",
@@ -69,8 +69,24 @@
         },
         {
           "type": "minecraft:item",
+          "name": "minecraft:enchanted_book",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_enchantments",
+              "enchantments": {
+                "plantz:lobbing": {
+                  "min": 1,
+                  "max": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "plantz:sun_bottle",
-          "weight": 13,
+          "weight": 18,
           "functions": [
             {
               "function": "minecraft:set_count",

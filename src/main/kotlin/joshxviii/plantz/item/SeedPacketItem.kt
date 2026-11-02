@@ -167,9 +167,9 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
                             horizontalDir.opposite.toYRot()
                     else
                         horizontalDir.opposite.toYRot()
+                entity.yRot = yaw
                 entity.yHeadRot = yaw
                 entity.yBodyRot = yaw
-                entity.yRot = yaw
             }
 
             entity.let {

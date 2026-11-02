@@ -1,84 +1,101 @@
 package joshxviii.plantz.entity.zombie
 
-import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazSounds
-import joshxviii.plantz.entity.isActiveInRaid
-import net.minecraft.core.BlockPos
-import net.minecraft.core.Direction
-import net.minecraft.core.Vec3i
+import joshxviii.plantz.ai.goal.SummonMinionsGoal
+import net.minecraft.core.UUIDUtil
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.util.Mth
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.control.MoveControl
-import net.minecraft.world.entity.ai.goal.Goal
-import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
-import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.level.gameevent.GameEvent
-import net.minecraft.world.level.material.Fluids
-import net.minecraft.world.phys.Vec3
-import kotlin.math.max
-import kotlin.math.min
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
+import java.util.UUID
+import kotlin.jvm.optionals.getOrDefault
 
 class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(type, level) {
 
     companion object {
-        val SUMMON_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(DiscoZombie::class.java, EntityDataSerializers.INT)
+        val SUMMON_TIME_ID: EntityDataAccessor<Int> =
+            SynchedEntityData.defineId<Int>(DiscoZombie::class.java, EntityDataSerializers.INT)
     }
 
     init {
         xpReward = 12
     }
-    
-    val summonAnimation : AnimationState = AnimationState()
+
+    val summonAnimation: AnimationState = AnimationState()
     var summoningTime: Int
         get() = this.entityData.get(SUMMON_TIME_ID)
         set(value) = this.entityData.set(SUMMON_TIME_ID, value)
+    private val trackedBackupDancerIds = mutableSetOf<UUID>()
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
         entityData.define(SUMMON_TIME_ID, 0)
     }
 
-    override fun getMoveControl(): MoveControl = if (summoningTime>0) noMoveControl else super.getMoveControl()
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+        output.store("tracked_backup", UUIDUtil.CODEC_SET, trackedBackupDancerIds)
+    }
+
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+        trackedBackupDancerIds.clear()
+        trackedBackupDancerIds.addAll(input.read("tracked_backup", UUIDUtil.CODEC_SET).getOrDefault(emptySet()))
+    }
+
+    override fun getMoveControl(): MoveControl = if (summoningTime > 0) noMoveControl else super.getMoveControl()
 
     override fun tick() {
         super.tick()
-        if(summoningTime>0) {
+        if (summoningTime > 0) {
             summonAnimation.startIfStopped(tickCount)
             summoningTime++
         }
-        if (summoningTime==10) playSound(PazSounds.DISCO_ZOMBIE_BOOGIE, 1.0f, 1.0f)
-        if (summoningTime==20) playSound(PazSounds.DISCO_ZOMBIE_SUMMON, 1.0f, 1.0f)
-        if (summoningTime>40) {
+        if (summoningTime == 10) playSound(PazSounds.DISCO_ZOMBIE_BOOGIE, 1.0f, 1.0f)
+        if (summoningTime == 20) playSound(PazSounds.DISCO_ZOMBIE_SUMMON, 1.0f, 1.0f)
+        if (summoningTime > 40) {
             summonAnimation.stop()
-            summoningTime=0
+            summoningTime = 0
         }
     }
 
     override fun registerGoals() {
         super.registerGoals()
-        goalSelector.addGoal(1,SummonBackupGoal(this))
+        goalSelector.addGoal(
+            1,
+            SummonMinionsGoal(
+                this,
+                PazEntities.BACKUP_DANCER,
+                trackedBackupDancerIds,
+                isSummoning = { summoningTime > 0 },
+                beginSummoning = { summoningTime = 1 }
+            )
+        )
     }
 
     override fun getAmbientSound(): SoundEvent {
         return PazSounds.DISCO_ZOMBIE_AMBIENT
     }
+
     override fun getHurtSound(source: DamageSource): SoundEvent {
         return PazSounds.DISCO_ZOMBIE_HURT
     }
+
     override fun getDeathSound(): SoundEvent {
         return PazSounds.DISCO_ZOMBIE_DEATH
     }
+
     override fun getStepSound(): SoundEvent {
         return SoundEvents.ZOMBIE_STEP
     }
@@ -99,93 +116,6 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
         val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
         if (spawnReason != EntitySpawnReason.CONVERSION) setCanBreakDoors(true)
         return data
-    }
-
-    private class SummonBackupGoal(
-        val summoner: DiscoZombie,
-    ) : Goal() {
-        companion object {
-            const val DEFAULT_AMOUNT = 3
-            const val SUMMON_DISTANCE = 2
-            const val SUMMON_DELAY_TIME = 105
-            val backupTargeting: TargetingConditions = TargetingConditions.forNonCombat().range(16.0).ignoreInvisibilityTesting()
-        }
-        var summonTime = summoner.random.nextInt(20,60)
-
-        override fun canUse(): Boolean {
-            if (summoner.summoningTime>0) return true
-            val nearbyBackupDancers: Int = getServerLevel(summoner.level()).getNearbyEntities(BackupDancer::class.java, backupTargeting, summoner, summoner.boundingBox.inflate(16.0)).size
-            return summoner.isAggressive && !summoner.isDeadOrDying && (summoner.target?.isAlive == true) && nearbyBackupDancers < 3
-        }
-
-        override fun tick() {
-            super.tick()
-            if (--summonTime == 0) summoner.summoningTime=1
-            if (summonTime<-8) trySummonBackup()
-        }
-
-        private fun getSummonAmount(): Int {
-            var amount = DEFAULT_AMOUNT
-            val level = summoner.level() as ServerLevelAccessor
-            val multi = level.getCurrentDifficultyAt(summoner.blockPosition()).specialMultiplier
-            if(multi > 0.0) repeat(3) {
-                if(summoner.random.nextFloat() < 0.25 * multi) amount++
-            }
-            return amount
-        }
-
-        private fun trySummonBackup() {
-            summonTime = SUMMON_DELAY_TIME + summoner.random.nextInt(50)
-            val target = summoner.target?: return
-            val angleToTarget = (summoner.yRot * Math.PI.toFloat()) / 180.0f
-            val minY = min(target.y, summoner.y) - 2.0
-            val maxY = max(target.y, summoner.y) + 2.0
-            val amount = getSummonAmount()
-            val a = (2*Math.PI / amount)// spread angle evenly based on summons amount
-            for(i in 1..amount) {
-                // get x/z coords based on angle
-                val b = a*i-a*(amount+1)*.5
-                val x = summoner.x + Mth.cos(b+angleToTarget)*SUMMON_DISTANCE
-                val z = summoner.z + Mth.sin(b+angleToTarget)*SUMMON_DISTANCE
-                tryCreateBackupDancer(x, z, minY, maxY, angleToTarget)
-            }
-        }
-
-        private fun tryCreateBackupDancer(x: Double, z: Double, minY: Double, maxY: Double, angle: Float) {
-            val level = summoner.level() as ServerLevel
-            var pos = BlockPos.containing(x, maxY, z)
-            var success = false
-            var topOffset = 0.0
-            do {// search for an empty space from minY to maxY
-                val belowState = level.getBlockState(pos.below())
-                val blockState = level.getBlockState(pos)
-                val fluidState = blockState.fluidState
-                if (belowState.isFaceSturdy(level, pos.below(), Direction.UP)) {
-                    if (!level.isEmptyBlock(pos)) {
-                        val blockState: BlockState = blockState
-                        val shape = blockState.getCollisionShape(level, pos)
-                        if (!shape.isEmpty) topOffset = shape.max(Direction.Axis.Y)
-                    }
-                    success = true; break
-                }
-                if (fluidState.`is`(Fluids.WATER)) {
-                    topOffset = fluidState.getHeight(level, pos).toDouble()
-                    success = true; break
-                }
-                pos = pos.below()
-            } while (pos.y >= Mth.floor(minY) - 1)
-
-            if (success) {
-                val backup = PazEntities.BACKUP_DANCER.create(level, EntitySpawnReason.MOB_SUMMONED)?: return
-                // apply hypnotize-effect if present
-                backup.snapTo(BlockPos(Vec3i(x.toInt(),(pos.y+topOffset).toInt(),z.toInt())), angle * (180.0f / Math.PI.toFloat()), 0.0f)
-                backup.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.REINFORCEMENT, PazZombieGroupData(isRaider = summoner.isActiveInRaid()))
-                val effect = summoner.activeEffects.find { it.effect.`is`(PazEffects.HYPNOTIZE.unwrapKey().get()) }
-                if (effect!=null) backup.addEffect(effect)
-                level.addFreshEntity(backup)
-                level.gameEvent(GameEvent.ENTITY_PLACE, Vec3(x, pos.y+topOffset, z), GameEvent.Context.of(summoner))
-            }
-        }
     }
 
 }

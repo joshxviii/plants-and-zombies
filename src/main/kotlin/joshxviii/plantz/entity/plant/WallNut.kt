@@ -3,6 +3,7 @@ package joshxviii.plantz.entity.plant
 import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazCriteria
 import joshxviii.plantz.PazDamageTypes
+import joshxviii.plantz.PazSounds
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.PazTags.EntityTypes.IGNORE_WALLNUT_COLLISION
 import joshxviii.plantz.PazTags.EntityTypes.WALLNUT_DEFLECTABLE
@@ -16,6 +17,7 @@ import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.sounds.SoundSource
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
@@ -95,12 +97,12 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
         return super.isInvulnerableTo(level, source)
     }
 
-    override fun attackedWithGlove(player: Player, item: ItemStack, hand: InteractionHand) {
+    override fun attackedWithGlove(attacker: LivingEntity, item: ItemStack, hand: InteractionHand) {
         if (hasPumpkinArmor()) return
         funnyBounce()
-        val direction = player.lookAngle.horizontal()
+        val direction = attacker.lookAngle.horizontal()
         roll(direction, power = 0.35f)
-        GardeningGloveItem.hurtAndDropPlant(item, player, hand)
+        GardeningGloveItem.hurtAndDropPlant(item, attacker, hand)
     }
 
     override fun doPush(entity: Entity) {

@@ -2,19 +2,13 @@ package joshxviii.plantz.renderer.entity.zombie
 
 import com.mojang.blaze3d.vertex.PoseStack
 import joshxviii.plantz.entity.zombie.PazZombie
-import joshxviii.plantz.entity.zombie.RoboZombie
 import joshxviii.plantz.entity.zombie.ZombieYeti
 import joshxviii.plantz.model.zombies.PazZombieModel
-import joshxviii.plantz.model.zombies.RoboZombieModel
 import joshxviii.plantz.model.zombies.ZombieYetiModel
-import joshxviii.plantz.toAngle
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.state.level.CameraRenderState
-import net.minecraft.util.Mth
 import net.minecraft.world.entity.AnimationState
-import net.minecraft.world.phys.Vec3
-import kotlin.math.sqrt
 
 class ZombieYetiRenderer(
     context: EntityRendererProvider.Context,

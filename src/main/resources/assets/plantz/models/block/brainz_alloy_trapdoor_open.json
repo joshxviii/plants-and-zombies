@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_trapdoor_open",
+  "textures": {
+    "texture": "plantz:block/brainz_alloy_trapdoor"
+  }
+}

@@ -18,7 +18,7 @@ object PazSounds {
     @JvmField val PROJECTILE_SHOOT = register("entity.projectile.shoot")
     @JvmField val PROJECTILE_HIT_CONE = register("entity.projectile.hit_cone")
     @JvmField val PROJECTILE_HIT_BUCKET = register("entity.projectile.hit_bucket")
-    @JvmField val PROJECTILE_HIT_PAPER = register("entity.projectile.hit_paper")
+    @JvmField val PROJECTILE_HIT_PAPER = registerForHolder("entity.projectile.hit_paper")
 
     @JvmField val ELECTRIC_ZAP = register("entity.projectile.electric_zap")
     @JvmField val MISSILE_EXPLODE = registerForHolder("entity.projectile.missile.explode")

@@ -61,7 +61,7 @@ class ZenPlantPotBlock(properties: Properties) : HorizontalDirectionalBlock(prop
         player: Player,
         hitResult: BlockHitResult
     ): InteractionResult {
-        val result = PlantHeadAttachment.potBlockInteraction(state, level, pos, player)
+        val result = PlantHeadAttachment.potHelmetPlaceInteraction(level, pos, player)
         return if (result == InteractionResult.PASS) super.useWithoutItem(state, level, pos, player, hitResult) else result
     }
 

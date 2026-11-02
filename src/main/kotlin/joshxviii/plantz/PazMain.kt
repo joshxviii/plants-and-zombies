@@ -7,6 +7,7 @@ import joshxviii.plantz.block.entity.getMailboxMailQueue
 import joshxviii.plantz.block.entity.getTimeMachineManager
 import joshxviii.plantz.block.entity.TimeMachineBlockEntity
 import joshxviii.plantz.networking.ServerConfigResponsePayload
+import joshxviii.plantz.recipe.DoorShieldRecipe
 import joshxviii.plantz.raid.ZombieRaids
 import joshxviii.plantz.raid.getZombieRaids
 import net.fabricmc.api.ModInitializer
@@ -29,6 +30,8 @@ object PazMain : ModInitializer {
 
 	override fun onInitialize() {
 		PazRegistries.initialize()
+		DoorShieldRecipe.register()
+		PazEnchantments.initialize()
 		PazConfig.load()
 		// clear client raid cache + load config
 		ServerLifecycleEvents.SERVER_STARTING.register {

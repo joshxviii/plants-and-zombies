@@ -62,6 +62,8 @@
   "death.attack.zombie_energy": "%1$s was vaporized by %2$s",
   "death.attack.plant": "%1$s was killed",
   "death.attack.plant.player": "%1$s was killed by %2$s",
+  "death.attack.piercing_projectile": "%1$s was pierced",
+  "death.attack.piercing_projectile.player": "%1$s was pierced by %2$s",
   "death.attack.ice_plant": "%1$s was frozen to death",
   "death.attack.ice_plant.player": "%1$s was frozen to death by %2$s",
   "death.attack.fire_plant": "%1$s was incinerated",
@@ -73,8 +75,9 @@
   "death.attack.electric_plant": "%1$s was electrocuted by %2$s",
   "death.attack.electric_zap": "%1$s was electrocuted",
   "death.attack.electric_zap.player": "%1$s was electrocuted by %2$s",
-  "death.attack.energy": "%1$s was vaporized",
+  "death.attack.energy": "%1$s was vaporized by %2$s",
   "death.attack.energy.player": "%1$s was vaporized by %2$s",
+  "death.attack.energy.item": "%1$s was vaporized by %2$s using %3$s",
   "death.attack.toxic": "%1$s was poisoned",
   "death.attack.toxic.player": "%1$s was poisoned by %2$s",
   "death.attack.paint": "%1$s was turned into an art piece by %2$s",
@@ -125,13 +128,19 @@
   "effect.plantz.painted.magenta": "Painted Magenta",
   "effect.plantz.painted.pink": "Painted Pink",
 
+  "enchantment.plantz.lobbing": "Lobbing",
+
   "component.stored_sun.description": "Stores and uses collected Sun",
   "component.stored_sun": "%s / %s",
   "component.stored_water.description": "Used to hydrate plants",
   "component.stored_water": "Water: %s / %s",
   "component.item_cost": "%s Cost: %s",
-  "component.blocks_damage.description": "Blocks Projectiles:",
+  "component.blocks_damage.description": "Protects against damage from above",
   "component.blocks_damage": "Break Chance: %s%%",
+  "component.letter.signed": "From: %s",
+  "component.letter.item": "%s x%s",
+  "component.door_shield": "%s",
+
   "item.plantz.zombie_banner": "Brainz Banner",
 
   "item.plantz.sun": "Sun",
@@ -150,7 +159,10 @@
   "item.plantz.newspaper": "Newspaper",
   "item.plantz.dye_blaster": "Dye Blaster",
   "item.plantz.dye_blaster.description": "%s chance of consuming dye",
+  "item.plantz.baron_staff": "Baron's Staff",
   "item.plantz.taco": "Taco",
+  "item.plantz.door_shield": "Door Shield",
+  "item.plantz.door_shield.type": "%s Shield",
   "item.plantz.letter": "Letter",
   "item.plantz.brainzium": "Brainzium",
   "item.plantz.brainz_alloy": "Brainz Alloy",
@@ -215,6 +227,8 @@
   "item.plantz.treaded_brainz_alloy_block": "Treaded Brainz Alloy",
   "item.plantz.reinforced_brainz_alloy_block": "Reinforced Brainz Alloy",
   "item.plantz.brainz_alloy_fence": "Brainz Alloy Fence",
+  "item.plantz.brainz_alloy_door": "Brainz Alloy Door",
+  "item.plantz.brainz_alloy_trapdoor": "Brainz Alloy Trapdoor",
   "item.plantz.gravestone": "Gravestone",
 
   "item.minecraft.potion.effect.hypnotize": "Potion of Hypnosis",
@@ -241,6 +255,8 @@
   "item.plantz.pirate_captain_spawn_egg": "Pirate Captain Spawn Egg",
   "item.plantz.super_brainz_spawn_egg": "Super Brainz Spawn Egg",
   "item.plantz.imp_spawn_egg": "Imp Spawn Egg",
+  "item.plantz.zombat_spawn_egg": "Zombat Spawn Egg",
+  "item.plantz.baron_von_bats_spawn_egg": "Baron Von Bats Spawn Egg",
   "item.plantz.gargantuar_spawn_egg": "Gargantuar Spawn Egg",
 
   "item.plantz.gnome_spawn_egg": "Gnome Spawn Egg",
@@ -284,6 +300,8 @@
   "block.plantz.magenta_mailbox": "Magenta Mailbox",
   "block.plantz.pink_mailbox": "Pink Mailbox",
 
+  "block.plantz.brainz_alloy_door": "Brainz Alloy Door",
+
   "entity.plantz.empty": "Empty",
   "entity.plantz.sunflower": "Sunflower",
   "entity.plantz.peashooter": "Peashooter",
@@ -317,6 +335,11 @@
   "entity.plantz.pumpkin": "Pumpkin",
 
   "entity.plantz.browncoat": "Browncoat",
+  "entity.plantz.browncoat.variant.balloon": "Balloon Zombie",
+  "entity.plantz.browncoat.variant.snow": "Snowcoat",
+  "entity.plantz.browncoat.variant.desert": "Desert Zombie",
+  "entity.plantz.browncoat.variant.buccaneer": "Buccaneer",
+  "entity.plantz.browncoat.variant.vampire": "Vampire Zombie",
   "entity.plantz.newspaper_zombie": "Newspaper Zombie",
   "entity.plantz.digger_zombie": "Digger Zombie",
   "entity.plantz.engineer_zombie": "Engineer Zombie",
@@ -331,6 +354,8 @@
   "entity.plantz.pirate_captain_ghost": "Pirate Captain Ghost",
   "entity.plantz.super_brainz": "Super Brainz",
   "entity.plantz.imp": "Imp",
+  "entity.plantz.zombat": "Zombat",
+  "entity.plantz.baron_von_bats": "Baron Von Bats",
   "entity.plantz.gargantuar": "Gargantuar",
 
   "entity.plantz.zombie_turret": "Zombie Turret",
@@ -353,6 +378,25 @@
 
   "container.plantz.time_machine.wip": "???",
   "container.plantz.time_machine.display": "NEXT STOP: %s",
+
+  "gui.plantz.letter": "Letter",
+  "gui.plantz.letter.font": "Font: %s",
+  "gui.plantz.letter.background": "Background: %s",
+  "gui.plantz.letter.attachment": "Attachment",
+  "gui.plantz.letter.sign": "Sign",
+  "gui.plantz.letter.confirm_title": "Sign letter?",
+  "gui.plantz.letter.confirm_message": "Once sealed, this letter can no longer be edited.",
+  "gui.plantz.letter.confirm_sign": "Sign",
+  "gui.plantz.letter.title": "Letter",
+  "gui.plantz.letter.signed_by": "Signed by %s",
+  "letter_font.plantz.basic": "Basic",
+  "letter_font.plantz.hand_written": "Handwritten",
+  "letter_font.plantz.fancy": "Fancy",
+  "letter_background.plantz.default": "Default",
+  "letter_background.plantz.hearts": "Hearts",
+  "letter_background.plantz.fancy": "Fancy",
+  "letter_background.plantz.torn": "Torn",
+
 
   "plantz.subtitles.projectile.deflected": "Projectile deflected",
   "plantz.subtitles.projectile.shoot": "Projectile fired",
@@ -389,6 +433,7 @@
 
   "plantz.subtitles.event.mob_effect.hypnotized": "Hypnotized mob",
   "plantz.subtitles.event.mob_effect.zombie_omen": "Zombie raid omen",
+
   "biome.plantz.graveyard": "Graveyard",
   "biome.plantz.ancient_egypt": "Ancient Egypt",
   "biome.plantz.jurassic_period": "Jurassic Period",

@@ -6,8 +6,29 @@
 - Added Citron
 
 # Changelog 1.5.2
+### Changes / Additions
+- Added Baron Von Bats
+  - Baron Von Bats has a chance to spawn as a boss during wave 10 instead of Gargantuar.
+- Added Zombat
+  - Heals itself when hurting other mobs.
+- Added Brainz Alloy Door and Trapdoor.
+- Added Door Shields.
+  - Can be crafted from any Door and a Shield.
+  - Browncoats can now spawn with door shields.
+- Added Baron's Staff
+  - Has a rare chance to drop from defeating Baron Von Bats.
+- During the final wave at the 1-minute mark, all remaining zombies will teleport closer to the flag.
+- Cones, Buckets, and Football helmets now only block damage from above.
+  - They have also been given a buff to armor and armor toughness.
+- Newspapers now work like Shields and only block damage from the front.
+- While a plant is equipped with the Plant Pot Helmet, The Gardening Glove can be used to place the plant back on the ground.
+- Dye Blaster, Gardening Glove, Plant Pot Helmet, and Ducky Tube can now be enchanted.
+- Added a new enchantment, "Lobbing".
+  - This enchantment applies to the Gardening Glove and allows the player to toss the held plant.
+- Dye Blasters now store dye ammo. Dye Blaster can only be fired after being loaded with dye. Each shot has a chance to consume the stored dye.
 ### Hotfix
 - Pumpkins are no longer duplicated when using a Gardening Glove.
+- Various other bug fixes / improvements
 
 # Changelog 1.5.1
 ### Changes / Additions

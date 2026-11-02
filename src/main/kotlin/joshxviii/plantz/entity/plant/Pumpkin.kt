@@ -11,4 +11,5 @@ class Pumpkin(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
     override fun attackGoals() {}
     override fun canLookAround(): Boolean = false
     override fun canSurviveOn(block: BlockState): Boolean = true
+    override fun clampToGrid(): Boolean = !getBlockBelow().getCollisionShape(level(), blockPosition().below()).isEmpty
 }

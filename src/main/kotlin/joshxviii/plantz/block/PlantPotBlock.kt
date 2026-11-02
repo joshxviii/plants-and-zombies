@@ -4,7 +4,6 @@ import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PlantHeadAttachment
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.RandomSource
 import net.minecraft.util.Util
 import net.minecraft.world.InteractionResult
@@ -61,7 +60,7 @@ class PlantPotBlock(properties: Properties) : HorizontalDirectionalBlock(propert
         player: Player,
         hitResult: BlockHitResult
     ): InteractionResult {
-        val result = PlantHeadAttachment.potBlockInteraction(state, level, pos, player)
+        val result = PlantHeadAttachment.potHelmetPlaceInteraction(level, pos, player)
         return if (result == InteractionResult.PASS) super.useWithoutItem(state, level, pos, player, hitResult) else result
     }
 
