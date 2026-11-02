@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.DifficultyInstance
+import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
@@ -47,6 +48,13 @@ class Zombat(type: EntityType<out Zombat>, level: Level) : PazZombie(type, level
     }
 
     override fun handleAttributes(difficultyModifier: Float, spawnReason: EntitySpawnReason) {}
+
+    override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
+        barronId?.let {
+            level.getEntity(it)?.hurtServer(level, source, damage)
+        }
+        return super.hurtServer(level, source, damage)
+    }
 
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         val result = super.doHurtTarget(level, target)

@@ -79,7 +79,7 @@ enum class WaveType(
                 ),
                 WaveSpawnEntry(
                     PazEntities.GARGANTUAR,
-                    if (wave > 11) scaled(0.5f + (wave - 13) * 0.3f, omen, credits, max = 2) else 0
+                    if (wave > 11) scaled(0.2f + (wave - 13) * 0.3f, omen, credits, max = 2) else 0
                 ),
                 WaveSpawnEntry(
                     PazEntities.ENGINEER_ZOMBIE,
@@ -266,7 +266,7 @@ enum class WaveType(
                 ),
                 WaveSpawnEntry(
                     PazEntities.GARGANTUAR,
-                    if (wave > 10) scaled(0.2f + wave * 0.1f, omen, credits, max = 2) else 0,
+                    if (wave > 10) scaled((0.1f + wave * 0.1f) - 13f, omen, credits, max = 2) else 0,
                     ::configurePirateInvasion
                 ),
                 graveDiggerEntry(raid),

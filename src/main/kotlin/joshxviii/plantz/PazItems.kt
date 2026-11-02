@@ -227,6 +227,16 @@ object PazItems {
             .stacksTo(1)
     )
     @JvmField
+    val BARON_STAFF: Item = registerItem(
+        "baron_staff",
+        properties = Item.Properties()
+            .rarity(Rarity.RARE)
+            .durability(985)
+            .enchantable(1)
+            .repairable(BRAINZ_ALLOY)
+            .stacksTo(1)
+    )
+    @JvmField
     val FOOTBALL_HELMET: Item = registerItem(
         "football_helmet", ::FootballHelmetItem,
         properties = Item.Properties()

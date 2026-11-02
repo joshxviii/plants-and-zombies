@@ -40,7 +40,7 @@ enum class BossType(
         }
     ),
     BARON_VON_BATS(
-        weightFn = { _, wave -> 0f },
+        weightFn = { _, wave -> 1f },
         bossSpawns = { raid, wave ->
             listOf(
                 BossEntry(

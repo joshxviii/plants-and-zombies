@@ -226,7 +226,7 @@ object PazModels {
         EntityRenderers.register(PazEntities.IMP) { PazZombieRenderer(it, ImpModel(it.bakeLayer(ImpModel.LAYER_LOCATION)), ImpModel(it.bakeLayer(ImpModel.LAYER_LOCATION))) }
         EntityRenderers.register(PazEntities.GARGANTUAR) { GargantuarRenderer(it) }
         EntityRenderers.register(PazEntities.ZOMBAT) { ZombatRenderer(it) }
-        EntityRenderers.register(PazEntities.BARON_VON_BATS) { PazZombieRenderer(it, BaronVonBatsModel(it.bakeLayer(BaronVonBatsModel.LAYER_LOCATION))) }
+        EntityRenderers.register(PazEntities.BARON_VON_BATS) { BaronVonBatsRenderer(it) }
 
         EntityRenderers.register(PazEntities.ZOMBIE_TURRET) { BlueprintMachineRenderer(it) }
         EntityRenderers.register(PazEntities.ELECTRO_TURRET) { BlueprintMachineRenderer(it, ElectroTurretModel(it.bakeLayer(ElectroTurretModel.LAYER_LOCATION))) }
