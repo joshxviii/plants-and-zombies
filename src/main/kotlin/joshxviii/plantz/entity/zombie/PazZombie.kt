@@ -578,7 +578,7 @@ fun Zombie.equipZombieEquipment(random: RandomSource, equipmentChance: Float) {
 
     if (getItemBySlot(EquipmentSlot.OFFHAND).isEmpty && random.nextFloat() < 0.07f * equipmentChance) {
         val doorShield = PazItems.DOOR_SHIELD.defaultInstance
-        doorShield.set(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.015f)
+        doorShield.damageValue = random.nextIntBetweenInclusive(200, 250)
         setItemSlot(EquipmentSlot.OFFHAND, doorShield)
         setDropChance(EquipmentSlot.OFFHAND, 0f)
     }

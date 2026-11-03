@@ -69,7 +69,7 @@ class ProtectsHeadDataComponent(
 
     fun hurtBlockingItem(level: Level, item: ItemStack, user: LivingEntity, slot: EquipmentSlot, damage: Float) {
         if (damage<=0f) return
-        if (BlockingItemBreakChance.handle(level, item, user, damage)) return
+        if (BlockingItemBreakChance.handle(level, item, user, damage, slot)) return
 
         if (user is Player && !level.isClientSide) {
             user.awardStat(Stats.ITEM_USED.get(item.item))

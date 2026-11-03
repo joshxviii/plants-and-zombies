@@ -2,6 +2,7 @@ package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
+import joshxviii.plantz.PazTags
 import joshxviii.plantz.ai.goal.SummonMinionsGoal
 import joshxviii.plantz.ai.goal.NavigateToTargetGoal
 import net.minecraft.core.UUIDUtil
@@ -13,12 +14,14 @@ import net.minecraft.core.Direction
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.tags.TagKey
 import net.minecraft.util.Mth
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.item.Item
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
@@ -183,6 +186,7 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         return super.hurtServer(level, source, damage)
     }
 
+    override fun getPreferredWeaponType(): TagKey<Item> = PazTags.ItemTags.BARON_PREFERRED_WEAPONS
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         val result = super.doHurtTarget(level, target)
         return result
@@ -329,6 +333,7 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         trackedBatIds.clear()
         bats.forEach { bat ->
             bat.getAttribute(Attributes.MAX_HEALTH)?.baseValue = batMaxHealth.toDouble()
+            bat.getAttribute(Attributes.ATTACK_DAMAGE)?.baseValue = 2.0
             bat.health = batHealth.coerceAtMost(bat.maxHealth)
             trackedBatIds.add(bat.uuid)
         }

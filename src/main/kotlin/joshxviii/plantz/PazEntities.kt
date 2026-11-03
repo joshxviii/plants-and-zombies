@@ -550,7 +550,8 @@ object PazEntities {
             .passengerAttachments(2.0f)
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
-            armor = 6.0,
+            armor = 10.0,
+            armorToughness = 2.0,
             attackDamage = 7.0,
             maxHealth = 650.0,
             movementSpeed = 0.21,
@@ -580,7 +581,7 @@ object PazEntities {
             .sized(0.6f, 1.95f)
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
-            armor = 6.0,
+            armor = 8.0,
             attackDamage = 7.0,
             maxHealth = 550.0,
             movementSpeed = 0.21,

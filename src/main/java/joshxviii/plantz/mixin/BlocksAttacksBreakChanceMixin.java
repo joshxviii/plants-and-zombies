@@ -22,7 +22,7 @@ public abstract class BlocksAttacksBreakChanceMixin {
         float damage,
         CallbackInfo ci
     ) {
-        if (BlockingItemBreakChance.handle(level, item, user, damage)) {
+        if (BlockingItemBreakChance.handle(level, item, user, damage, hand.asEquipmentSlot())) {
             ci.cancel();
         }
     }

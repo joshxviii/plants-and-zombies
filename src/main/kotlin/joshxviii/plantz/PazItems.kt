@@ -148,18 +148,32 @@ object PazItems {
             .durability(336)
             .equippableUnswappable(EquipmentSlot.OFFHAND)
             .component(PazComponents.DOOR_SHIELD, DoorShield())
+            .component(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
+                .add(
+                    Attributes.ARMOR,
+                    AttributeModifier(pazResource("door_armor"), 10.0, AttributeModifier.Operation.ADD_VALUE),
+                    EquipmentSlotGroup.HAND
+                ).add(
+                    Attributes.ARMOR_TOUGHNESS,
+                    AttributeModifier(pazResource("door_armor_toughness"), 2.0, AttributeModifier.Operation.ADD_VALUE),
+                    EquipmentSlotGroup.HAND
+                ).add(
+                    Attributes.KNOCKBACK_RESISTANCE,
+                    AttributeModifier(pazResource("door_armor_resistance"), 0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL),
+                    EquipmentSlotGroup.HAND
+                ).build())
+            .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
             .delayedComponent(DataComponents.BLOCKS_ATTACKS, {
                 BlocksAttacks(
                     0.25f,
                     1.0f,
-                    listOf(DamageReduction(90.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 1.0f)),
+                    listOf(DamageReduction(80.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 1.0f)),
                     ItemDamageFunction.DEFAULT,
                     Optional.of<HolderSet<DamageType>>(it.getOrThrow(DamageTypeTags.BYPASSES_SHIELD)),
                     Optional.of(SoundEvents.SHIELD_BLOCK),
                     Optional.of(SoundEvents.SHIELD_BREAK)
                 )
             })
-            .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
     )
     const val DUCKY_TUBE_DAMAGE_INTERVAL = 45
     val DUCKY_EQUIP_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, pazResource("ducky_tube"))
@@ -253,15 +267,11 @@ object PazItems {
                 DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
                     .add(
                         Attributes.ARMOR,
-                        AttributeModifier(pazResource("football_armor"), 10.0, AttributeModifier.Operation.ADD_VALUE),
+                        AttributeModifier(pazResource("football_armor"), 12.0, AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.HEAD
                     ).add(
                         Attributes.ARMOR_TOUGHNESS,
                         AttributeModifier(pazResource("football_armor_toughness"), 2.0, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.HEAD
-                    ).add(
-                        Attributes.KNOCKBACK_RESISTANCE,
-                        AttributeModifier(pazResource("football_knockback_resistance"), 0.15, AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.HEAD
                     ).build()
             )
@@ -366,15 +376,15 @@ object PazItems {
         builder.set(DataComponents.ATTRIBUTE_MODIFIERS, builder.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder().build())
             .withModifierAdded(
                 Attributes.ARMOR,
-                AttributeModifier(pazResource("bucket_armor"), 8.0, AttributeModifier.Operation.ADD_VALUE),
+                AttributeModifier(pazResource("bucket_armor"), 25.0, AttributeModifier.Operation.ADD_VALUE),
                 EquipmentSlotGroup.HEAD
             ).withModifierAdded(
                 Attributes.ARMOR_TOUGHNESS,
-                AttributeModifier(pazResource("bucket_armor_toughness"), 2.0, AttributeModifier.Operation.ADD_VALUE),
+                AttributeModifier(pazResource("bucket_armor_toughness"), 8.0, AttributeModifier.Operation.ADD_VALUE),
                 EquipmentSlotGroup.HEAD
             ).withModifierAdded(
                 Attributes.KNOCKBACK_RESISTANCE,
-                AttributeModifier(pazResource("bucket_knockback_resistance"), 0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL),
+                AttributeModifier(pazResource("bucket_knockback_resistance"), 0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL),
                 EquipmentSlotGroup.HEAD
             )
         )

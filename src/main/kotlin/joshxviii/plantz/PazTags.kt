@@ -29,6 +29,7 @@ object PazTags {
         @JvmField val GNOME_PREFERRED_WEAPONS = tag("gnome_preferred_weapons")
         @JvmField val DIGGER_PREFERRED_WEAPONS = tag("digger_preferred_weapons")
         @JvmField val NEWSPAPER_ZOMBIE_PREFERRED_WEAPONS = tag("newspaper_zombie_preferred_weapons")
+        @JvmField val BARON_PREFERRED_WEAPONS = tag("baron_preferred_weapons")
         @JvmField val BUCKET_WEARABLE = tag("bucket_wearable")
         private fun tag(name: String): TagKey<Item> = TagKey.create(Registries.ITEM, pazResource(name))
     }
