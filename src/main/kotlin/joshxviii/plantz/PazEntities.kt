@@ -2,6 +2,7 @@ package joshxviii.plantz
 
 import joshxviii.plantz.PazTags.EntityTypes.ATTACKS_PLANTS
 import joshxviii.plantz.PazTags.EntityTypes.IGNORED_BY_PLANT_ATTACKERS
+import joshxviii.plantz.PazTags.EntityTypes.ZOMBIE_ATTACK_ON_COLLIDE
 import joshxviii.plantz.PazTags.EntityTypes.ZOMBIE_RAIDERS
 import joshxviii.plantz.ai.goal.DestroyFlagGoal
 import joshxviii.plantz.ai.goal.PathfindToFlagGoal
@@ -44,7 +45,11 @@ object PazEntities {
             }
 
             if (entity is Mob && entity.`is`(ATTACKS_PLANTS) && entity !is ZombifiedPiglin) {
-                (entity as MobAccessor).targetSelector.addGoal(1, NearestAttackableTargetGoal(entity, WallNut::class.java, 6, true, true) { target, level -> ((target as? WallNut)?.let { it.distanceToSqr(entity) < 3.5 } ?: false)})
+                (entity as MobAccessor).targetSelector.addGoal(
+                    0, NearestAttackableTargetGoal(entity, Plant::class.java, 1, false, false) { target, _ ->
+                        target.`is`(ZOMBIE_ATTACK_ON_COLLIDE) && entity.boundingBox.intersects(target.boundingBox.inflate(0.25))
+                    }
+                )
                 // same priority as player
                 (entity as MobAccessor).targetSelector.addGoal(2, NearestAttackableTargetGoal(entity, Plant::class.java, 5, true, false) { target, level -> !target.`is`(IGNORED_BY_PLANT_ATTACKERS) })
             }

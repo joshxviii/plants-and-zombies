@@ -168,8 +168,6 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
     override fun canBeCollidedWith(other: Entity?): Boolean {
         if (isRolling) return super.canBeCollidedWith(other)
 
-        hurtOnCollide(other)
-
         if (other?.`is`(IGNORE_WALLNUT_COLLISION) == true) return false
         return isAlive && other != attachedEntity
     }

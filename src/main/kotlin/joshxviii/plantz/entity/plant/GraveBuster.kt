@@ -30,8 +30,8 @@ class GraveBuster(type: EntityType<out Plant>, level: Level) : Plant(type, level
     }
     override fun attackGoals() {}
 
-    override fun canPlaceOn(block: BlockState): Boolean {
-        return block.`is`(PazTags.BlockTags.FARMABLE) || block.`is`(PazBlocks.GRAVESTONE)
+    override fun canSurviveOn(block: BlockState): Boolean {
+        return super.canSurviveOn(block) || block.`is`(PazBlocks.GRAVESTONE)
     }
 
     override fun tick() {

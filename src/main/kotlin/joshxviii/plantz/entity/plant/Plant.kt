@@ -666,10 +666,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         funnyBounce()
     }
     fun applyPumpkinArmor(
-        amount: Int = PazConfig.PUMPKIN_ARMOR_AMOUNT,
+        amount: Float = PazConfig.PUMPKIN_ARMOR_AMOUNT.toFloat(),
         pumpkinData: TypedEntityData<EntityType<*>>? = null
     ) {
-        pumpkinArmor = amount.toFloat()
+        pumpkinArmor = amount
         pumpkinData?.let { pumpkinEntityData = it }
         playSound(SoundEvents.WOLF_ARMOR_REPAIR, 0.5f, 1f)
         funnyBounce()
@@ -786,18 +786,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     open fun canProduceSeeds(): Boolean = true
     open fun clampToGrid() = !canWalk() && onValidGround()
     open fun cooldownFinished() {}
-
-    fun hurtOnCollide(other: Entity?) {
-        if (other is Zombie && other.swingTime == 0 && !other.isHypnotized()) {// when colliding with a zombie, the zombie will attack the plant
-            val level = other.level() as? ServerLevel
-            if (level != null && other.isAlive) {
-                val damage = other.getAttribute(Attributes.ATTACK_DAMAGE)?.value?.toFloat() ?: 1f
-                if (hurtServer(level, other.damageSources().mobAttack(other), damage)) {
-                    other.swing(InteractionHand.MAIN_HAND)
-                }
-            }
-        }
-    }
 
     fun updatePlantPower(level: ServerLevel, nearFlag: Boolean) {
         if (nearFlag != poweredUp) {
