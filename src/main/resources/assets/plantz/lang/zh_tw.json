@@ -136,7 +136,7 @@
   "component.plantz.stored_water": "水: %s / %s",
   "component.plantz.item_cost": "%s 消耗：%s",
   "component.plantz.blocks_damage.description": "保護免於上方傷害",
-  "component.plantz.blocks_break_chance": "破碎機率: %s%%",
+  "component.plantz.block_break_chance": "破碎機率: %s%%",
   "component.plantz.letter.signed": "來自：%s",
   "component.plantz.letter.item": "%s x%s",
   "component.plantz.door_shield": "%s",
