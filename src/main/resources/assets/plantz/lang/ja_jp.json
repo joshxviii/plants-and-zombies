@@ -130,16 +130,16 @@
 
   "enchantment.plantz.lobbing": "遠投",
 
-  "component.stored_sun.description": "集めた太陽光の貯蔵と使用ができる",
-  "component.stored_sun": "%s / %s",
-  "component.stored_water.description": "プラントに水を与える",
-  "component.stored_water": "水: %s / %s",
-  "component.item_cost": "%sコスト: %s",
-  "component.blocks_damage.description": "上方からのダメージから保護する",
-  "component.blocks_damage": "損害: %s%%",
-  "component.letter.signed": "送り主：%s",
-  "component.letter.item": "%s x%s",
-  "component.door_shield": "%s",
+  "component.plantz.stored_sun.description": "集めた太陽光の貯蔵と使用ができる",
+  "component.plantz.stored_sun": "%s / %s",
+  "component.plantz.stored_water.description": "プラントに水を与える",
+  "component.plantz.stored_water": "水: %s / %s",
+  "component.plantz.item_cost": "%sコスト: %s",
+  "component.plantz.blocks_damage.description": "上方からのダメージから保護する",
+  "component.plantz.blocks_damage": "損害: %s%%",
+  "component.plantz.letter.signed": "送り主：%s",
+  "component.plantz.letter.item": "%s x%s",
+  "component.plantz.door_shield": "%s",
 
   "item.plantz.zombie_banner": "脳の旗",
 
