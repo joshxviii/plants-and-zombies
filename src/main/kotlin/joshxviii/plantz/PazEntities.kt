@@ -46,12 +46,23 @@ object PazEntities {
 
             if (entity is Mob && entity.`is`(ATTACKS_PLANTS) && entity !is ZombifiedPiglin) {
                 (entity as MobAccessor).targetSelector.addGoal(
-                    0, NearestAttackableTargetGoal(entity, Plant::class.java, 1, false, false) { target, _ ->
-                        target.`is`(ZOMBIE_ATTACK_ON_COLLIDE) && entity.boundingBox.intersects(target.boundingBox.inflate(0.25))
+                    0, object : NearestAttackableTargetGoal<Plant>(entity, Plant::class.java, 1, false, false, { target, _ ->
+                        target.`is`(ZOMBIE_ATTACK_ON_COLLIDE) && entity.boundingBox.intersects(target.boundingBox.inflate(0.1))
+                    }) {
+                        override fun canContinueToUse(): Boolean {
+                            val currentTarget = entity.target ?: return false
+                            return super.canContinueToUse()
+                                && currentTarget.`is`(ZOMBIE_ATTACK_ON_COLLIDE)
+                                && entity.boundingBox.intersects(currentTarget.boundingBox.inflate(0.1))
+                        }
                     }
                 )
                 // same priority as player
-                (entity as MobAccessor).targetSelector.addGoal(2, NearestAttackableTargetGoal(entity, Plant::class.java, 5, true, false) { target, level -> !target.`is`(IGNORED_BY_PLANT_ATTACKERS) })
+                (entity as MobAccessor).targetSelector.addGoal(
+                    2, NearestAttackableTargetGoal(entity, Plant::class.java, 5, true, false) { target, level ->
+                        !target.`is`(IGNORED_BY_PLANT_ATTACKERS)
+                    }
+                )
             }
         }
     }
@@ -72,7 +83,9 @@ object PazEntities {
         width = 1.0f,
         height = 1.125f,
         attributes = Plant.Companion.PlantAttributes(
-            maxHealth = 60.0,
+            maxHealth = 50.0,
+            armor = 8.0,
+            armorToughness = 5.0
         )
     )
     @JvmField val EXPLODE_O_NUT: EntityType<ExplodeONut> = registerPlant(
@@ -81,7 +94,9 @@ object PazEntities {
         width = 1.0f,
         height = 1.125f,
         attributes = Plant.Companion.PlantAttributes(
-            maxHealth = 60.0,
+            maxHealth = 50.0,
+            armor = 8.0,
+            armorToughness = 5.0
         )
     )
     @JvmField val CHOMPER: EntityType<Chomper> = registerPlant(

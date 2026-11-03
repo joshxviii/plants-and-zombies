@@ -10,6 +10,7 @@
     "LivingEntityMixin",
     "LivingEntityProtectsHeadMixin",
     "MobAccessor",
+    "OverworldBiomeBuilderMixin",
     "PlayerListMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",

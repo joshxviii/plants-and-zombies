@@ -60,7 +60,7 @@
   "death.attack.zombie_explode": "%1$s was blown up %2$s",
   "death.attack.zombie_electric": "%1$s was electrocuted by %2$s",
   "death.attack.zombie_energy": "%1$s was vaporized by %2$s",
-  "death.attack.plant": "%1$s was killed",
+  "death.attack.plant": "%1$s was killed by %2$s",
   "death.attack.plant.player": "%1$s was killed by %2$s",
   "death.attack.piercing_projectile": "%1$s was pierced",
   "death.attack.piercing_projectile.player": "%1$s was pierced by %2$s",

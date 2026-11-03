@@ -153,6 +153,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             val stepHeight: Double = 0.0,
             val followRange: Double = 14.0,
             val armor: Double = 0.0,
+            val armorToughness: Double = 0.0,
             val scale: Double = 1.0,
         ) {
             fun apply(builder: AttributeSupplier.Builder): AttributeSupplier.Builder {
@@ -166,6 +167,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                     .add(Attributes.MOVEMENT_SPEED, movementSpeed)
                     .add(Attributes.STEP_HEIGHT, stepHeight)
                     .add(Attributes.ARMOR, armor)
+                    .add(Attributes.ARMOR_TOUGHNESS, armorToughness)
                     .add(Attributes.SCALE, scale)
             }
         }
