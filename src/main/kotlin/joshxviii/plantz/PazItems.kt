@@ -133,7 +133,7 @@ object PazItems {
                 )
             }
             )
-            .component(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.08f)
+            .component(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, BlockingItemBreakChanceComponent(0.08f))
             .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
     )
     @JvmField
@@ -151,11 +151,7 @@ object PazItems {
             .component(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
                 .add(
                     Attributes.ARMOR,
-                    AttributeModifier(pazResource("door_armor"), 10.0, AttributeModifier.Operation.ADD_VALUE),
-                    EquipmentSlotGroup.HAND
-                ).add(
-                    Attributes.ARMOR_TOUGHNESS,
-                    AttributeModifier(pazResource("door_armor_toughness"), 2.0, AttributeModifier.Operation.ADD_VALUE),
+                    AttributeModifier(pazResource("door_armor"), 4.0, AttributeModifier.Operation.ADD_VALUE),
                     EquipmentSlotGroup.HAND
                 ).add(
                     Attributes.KNOCKBACK_RESISTANCE,
@@ -257,7 +253,7 @@ object PazItems {
             .humanoidArmor(ArmorMaterials.CHAINMAIL, ArmorType.HELMET)
             .component(PazComponents.PROTECTS_HEAD, ProtectsHeadDataComponent()
             )
-            .component(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.015f)
+            .component(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, BlockingItemBreakChanceComponent(0.015f))
             .component(
                 DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
                     .setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)
@@ -267,11 +263,7 @@ object PazItems {
                 DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
                     .add(
                         Attributes.ARMOR,
-                        AttributeModifier(pazResource("football_armor"), 12.0, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.HEAD
-                    ).add(
-                        Attributes.ARMOR_TOUGHNESS,
-                        AttributeModifier(pazResource("football_armor_toughness"), 2.0, AttributeModifier.Operation.ADD_VALUE),
+                        AttributeModifier(pazResource("football_armor"), 2.0, AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.HEAD
                     ).build()
             )
@@ -368,7 +360,7 @@ object PazItems {
             blockSound = PazSounds.PROJECTILE_HIT_BUCKET
         ))
         builder.set(DataComponents.ENCHANTABLE, Enchantable(10))
-        builder.set(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.02f)
+        builder.set(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, BlockingItemBreakChanceComponent(0.05f))
         builder.set(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
             .setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)
             .build()
@@ -376,7 +368,7 @@ object PazItems {
         builder.set(DataComponents.ATTRIBUTE_MODIFIERS, builder.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder().build())
             .withModifierAdded(
                 Attributes.ARMOR,
-                AttributeModifier(pazResource("bucket_armor"), 25.0, AttributeModifier.Operation.ADD_VALUE),
+                AttributeModifier(pazResource("bucket_armor"), 20.0, AttributeModifier.Operation.ADD_VALUE),
                 EquipmentSlotGroup.HEAD
             ).withModifierAdded(
                 Attributes.ARMOR_TOUGHNESS,
@@ -388,19 +380,6 @@ object PazItems {
                 EquipmentSlotGroup.HEAD
             )
         )
-    }
-
-    fun doorShield(builder: DataComponentMap.Builder, item:  Item) {
-        builder.set(DataComponents.BLOCKS_ATTACKS, BlocksAttacks(
-            0.25f,
-            1.0f,
-            listOf(DamageReduction(90.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 1.0f)),
-            ItemDamageFunction.DEFAULT,
-            Optional.empty<HolderSet<DamageType>>(),
-            Optional.of(SoundEvents.SHIELD_BLOCK),
-            Optional.of(SoundEvents.SHIELD_BREAK)
-        ))
-        builder.set(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.05f)
     }
 
     fun initialize() {

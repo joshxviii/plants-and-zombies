@@ -192,7 +192,7 @@ object PazBlocks {
             .component(PazComponents.PROTECTS_HEAD, ProtectsHeadDataComponent(
                 blockSound = PazSounds.PROJECTILE_HIT_CONE
             ))
-            .component(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.08f)
+            .component(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, BlockingItemBreakChanceComponent(0.1f))
             .component(
                 DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
                     .setEquipSound(SoundEvents.ARMOR_EQUIP_LEATHER)
@@ -201,7 +201,7 @@ object PazBlocks {
                 DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
                     .add(
                         Attributes.ARMOR,
-                        AttributeModifier(pazResource("cone_armor"), 15.0, AttributeModifier.Operation.ADD_VALUE),
+                        AttributeModifier(pazResource("cone_armor"), 10.0, AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.HEAD
                     ).add(
                         Attributes.ARMOR_TOUGHNESS,

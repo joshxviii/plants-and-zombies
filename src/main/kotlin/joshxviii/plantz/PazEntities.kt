@@ -434,6 +434,7 @@ object PazEntities {
             .eyeHeight(1.74f)
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
+            armor = 8.0,
             attackDamage = 7.0,
             maxHealth = 65.0,
             stepHeight = 1.0,
@@ -461,6 +462,7 @@ object PazEntities {
             .eyeHeight(1.74f)
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
+            armor = 6.0,
             attackDamage = 4.0,
             maxHealth = 38.0,
             movementSpeed = 0.237,
@@ -476,7 +478,7 @@ object PazEntities {
         attributes = PazZombie.Companion.PazZombieAttributes(
             armor = 4.0,
             attackDamage = 6.0,
-            maxHealth = 90.0,
+            maxHealth = 80.0,
             movementSpeed = 0.21,
             spawnReinforcementsChance = 0.0,
         )
@@ -489,7 +491,7 @@ object PazEntities {
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
             attackDamage = 6.0,
-            maxHealth = 55.0,
+            maxHealth = 50.0,
             movementSpeed = 0.25,
             followRange = 100.0,
             spawnReinforcementsChance = 0.0,
@@ -502,7 +504,7 @@ object PazEntities {
             .eyeHeight(1.74f)
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
-            armor = 12.0,
+            armor = 22.0,
             armorToughness = 9.0,
             attackDamage = 11.0,
             maxHealth = 128.0,
@@ -521,7 +523,7 @@ object PazEntities {
             armor = 20.0,
             armorToughness = 4.0,
             attackDamage = 10.0,
-            maxHealth = 150.0,
+            maxHealth = 140.0,
             stepHeight = 1.0,
             movementSpeed = 0.25,
             flyingSpeed = 0.28,

@@ -15,6 +15,7 @@ import net.minecraft.server.jsonrpc.methods.ServerSettingsService.difficulty
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.tags.DamageTypeTags
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
@@ -68,7 +69,7 @@ class PirateCaptain(type: EntityType<out PirateCaptain>, level: Level) : PazZomb
     }
 
     init {
-        xpReward = 80
+        xpReward = 0
     }
 
     override fun getAmbientSound(): SoundEvent {
@@ -144,16 +145,18 @@ class PirateCaptain(type: EntityType<out PirateCaptain>, level: Level) : PazZomb
         }
     }
 
-    override fun remove(reason: RemovalReason) {
-        if (reason == RemovalReason.KILLED) {
-            convertTo(PazEntities.PIRATE_CAPTAIN_GHOST, ConversionParams.single(this, true, true)) {
-                it.playSound(SoundEvents.ZOMBIE_VILLAGER_CONVERTED)
-                (level() as? ServerLevel)?.let { level ->
-                    it.finalizeSpawn(level, level.getCurrentDifficultyAt(blockPosition()), EntitySpawnReason.CONVERSION, PazZombieGroupData(isRaider = this.isActiveInRaid()))
-                }
+    override fun die(source: DamageSource) {
+        super.die(source)
+        if (!source.`is`(DamageTypeTags.BYPASSES_INVULNERABILITY) && level() is ServerLevel) convertToGhost()
+    }
+
+    fun convertToGhost() {
+        convertTo(PazEntities.PIRATE_CAPTAIN_GHOST, ConversionParams.single(this, true, true)) {
+            it.playSound(SoundEvents.ZOMBIE_VILLAGER_CONVERTED)
+            (level() as? ServerLevel)?.let { level ->
+                it.finalizeSpawn(level, level.getCurrentDifficultyAt(blockPosition()), EntitySpawnReason.CONVERSION, PazZombieGroupData(isRaider = this.isActiveInRaid()))
             }
         }
-        super.remove(reason)
     }
 
     override fun finalizeSpawn(
