@@ -59,12 +59,13 @@ import net.minecraft.world.phys.AABB
 import java.util.*
 import java.util.function.Predicate
 import kotlin.math.abs
+import kotlin.math.pow
 
 class ZombieRaid(
     val center: BlockPos,
     var ticksActive: Long = 0,
     var zombieRaidOmenLevel: Float = 0f,
-    var waveTypes: MutableList<WaveType> = mutableListOf(),
+    var waves: MutableList<CompletedWave> = mutableListOf(),
     var raidCooldownTicks: Int = PRE_RAID_TICKS,
     var postRaidTicks: Int = 0,
     var totalZombieHealth: Float = 0f,
@@ -105,7 +106,9 @@ class ZombieRaid(
                 BlockPos.CODEC.fieldOf("center").forGetter<ZombieRaid> { it.center },
                 Codec.LONG.fieldOf("ticks_active").forGetter<ZombieRaid> { it.ticksActive },
                 Codec.FLOAT.fieldOf("raid_omen_level").forGetter<ZombieRaid> { it.zombieRaidOmenLevel },
-                WaveType.CODEC.listOf().fieldOf("wave_types").forGetter<ZombieRaid> { it.waveTypes },
+                CompletedWave.CODEC.listOf().xmap({ it.toMutableList() }, { it.toList() })
+                    .fieldOf("wave_types")
+                    .forGetter<ZombieRaid> { it.waves },
                 Codec.INT.fieldOf("cooldown_ticks").forGetter<ZombieRaid> { it.raidCooldownTicks },
                 Codec.INT.fieldOf("post_raid_ticks").forGetter<ZombieRaid> { it.postRaidTicks },
                 Codec.FLOAT.fieldOf("total_health").forGetter<ZombieRaid> { it.totalZombieHealth },
@@ -144,7 +147,9 @@ class ZombieRaid(
         const val GARDEN_HERO_EFFECT_DURATION: Int = 72000
         const val COUNTDOWN_BEFORE_LOSS: Int = 200 //10 seconds
         const val MAXIMUM_WAVE_COUNT: Int = 20
-        const val BONUS_REWARD_INTERVAL = 5
+        private const val BOSS_CHANCE_GROWTH_FACTOR = 2.4f
+        private const val WAVES_UNTIL_GUARANTEED_BOSS = 5f
+        private const val BOSS_CHANCE_SPEED_BONUS_WINDOW_SECONDS = 60f
     }
 
     val random: RandomSource = RandomSource.create()
@@ -245,8 +250,8 @@ class ZombieRaid(
             zombieRaidEvent.players.forEach { player ->// advancement
                 PazCriteria.WIN_ZOMBIE_RAID.trigger(player, true)
                 PazCriteria.WIN_HARDEST_RAID.trigger(player, numWaves>=MAXIMUM_WAVE_COUNT && starterHasSeenCredits)
-                val effect = MobEffectInstance(PazEffects.GARDEN_HERO, GARDEN_HERO_EFFECT_DURATION, (waveTypes.size-1).coerceAtLeast(0), false, true)
-                (player as GardenHeroRewards).`plantz$setWaveList`(waveTypes)
+                val effect = MobEffectInstance(PazEffects.GARDEN_HERO, GARDEN_HERO_EFFECT_DURATION, (waves.size-1).coerceAtLeast(0), false, true)
+                (player as GardenHeroRewards).`plantz$setWaveList`(waves.toMutableList())
                 player.addEffect(effect)
                 player.sendSystemMessage(ZOMBIE_RAID_VICTORY)
                 showTitleMessage(ZOMBIE_RAID_VICTORY_TITLE, sound = PazSounds.RAID_VICTORY, soundSource = SoundSource.MUSIC)
@@ -334,9 +339,7 @@ class ZombieRaid(
             }
             for (zombie in zombieSet) {
                 val zombiePos = zombie.blockPosition()
-                if (zombie.isRemoved || zombie.level().dimension() !== level.dimension() || this.center.distSqr(
-                        zombiePos
-                    ) >= RAID_DISTANCE * RAID_DISTANCE * 2
+                if (zombie.isRemoved || zombie.level().dimension() !== level.dimension() || this.center.distSqr(zombiePos) >= RAID_DISTANCE * RAID_DISTANCE * 2
                 ) {
                     toRemove.add(zombie)
                     continue
@@ -372,19 +375,16 @@ class ZombieRaid(
     private fun spawnNextWave(level: ServerLevel, pos: BlockPos) {
         val creditsUnlocked = hasRaidStarterSeenCredits(level)
         val waveType = WaveType.pickWaveType(this, creditsUnlocked)
-        waveTypes = waveTypes.toMutableList()
-        waveTypes.add(waveType)
+        val bossType = if (random.nextFloat() < calculateBossChance()) BossType.pickBossType(this, waveType) else null
+        waves.add(CompletedWave(waveType, bossType))
         val wave = currentWaveNumber()
-        val shouldSpawnBoss = wave % 5 == 0
-        var leaderSet = false
         totalZombieHealth = 0f
         totalBossHealth = 0f
-        waveTimer = if (isFinalWave()) FINAL_WAVE_DURATION else if (shouldSpawnBoss) BOSS_WAVE_DURATION else WAVE_DURATION
-        if (waveType != WaveType.DEFAULT) announceSpecialWave(waveType)
-        if (shouldSpawnBoss) spawnBoss(level, pos, waveType)
+        waveTimer = if (wave >= numWaves) FINAL_WAVE_DURATION else if (bossType!=null) BOSS_WAVE_DURATION else WAVE_DURATION
 
+        // Wave spawns
         val waveEntries = waveType.spawnEntries(this, creditsUnlocked)
-
+        var leaderSet = false
         for ((type, count, configure) in waveEntries) {
             for (i in 0..<count) {
                 val zombie = type.create(level, EntitySpawnReason.EVENT) ?: break
@@ -396,18 +396,28 @@ class ZombieRaid(
                 joinRaid(level, zombie, true, wave, false, spawnPos, configure)
             }
         }
+        if (waveType != WaveType.DEFAULT) announceSpecialWave(waveType)
+
+        // Boss spawns
+        if (bossType!=null) {
+            var bossName: Component? = null
+            val bossEntities = bossType.bossEntityEntries(this, waveType)
+            for ((type, configure) in bossEntities) {
+                val zombie = type.create(level, EntitySpawnReason.EVENT) ?: break
+                setBoss(zombie)
+                joinRaid(level, zombie, true, exists = false, pos = pos, configure = configure)
+                if (bossName == null) bossName = zombie.name
+            }
+            announceBoss(waveType, bossName ?: Component.empty())
+        }
     }
 
-    fun spawnBoss(level: ServerLevel, pos: BlockPos, waveType: WaveType) {
-        val bossType: BossType = BossType.pickBossType(this, waveType)
-        val bossEntities = bossType.bossEntityEntries(this, waveType)
-        for ((type, configure) in bossEntities) {
-            val zombie = type.create(level, EntitySpawnReason.EVENT) ?: return
-            setBoss(zombie)
-            joinRaid(level, zombie, exists = false, pos = pos, configure = configure)
-        }
-        val bossName = getBosses().firstOrNull()?.name?: Component.empty()
-        announceBoss(waveType, bossName)
+    private fun calculateBossChance(): Float {
+        val elapsedWaveSeconds = (WAVE_DURATION - waveTimer).coerceAtLeast(0) / 20f
+        val speedMultiplier = (2f - elapsedWaveSeconds / BOSS_CHANCE_SPEED_BONUS_WINDOW_SECONDS).coerceIn(0f, 1f)
+        val wavesSinceLastBoss = waves.asReversed().takeWhile { it.bossType == null }.size
+        val x = wavesSinceLastBoss / WAVES_UNTIL_GUARANTEED_BOSS
+        return (x.pow(BOSS_CHANCE_GROWTH_FACTOR).coerceIn(0f, 1f) * speedMultiplier).coerceAtMost(1f)
     }
 
     fun joinRaid(
@@ -505,7 +515,7 @@ class ZombieRaid(
         val data = ZombieRaidClientData(
             id = zombieRaidEvent.id,
             status = if (terminate) ZombieRaidStatus.TERMINATE else status,
-            waveTypes = waveTypes,
+            waves = waves,
             activeTime = ticksActive.toInt(),
             numWaves = numWaves,
             waveTimer = waveTimer,
@@ -531,7 +541,7 @@ class ZombieRaid(
         (zombie as? ZombieRaider)?.`plantz$setIsBoss`(true)
     }
 
-    fun currentWaveNumber(): Int = waveTypes.size
+    fun currentWaveNumber(): Int = waves.size
     fun isFinalWave(): Boolean = currentWaveNumber() >= numWaves
     fun getLeaders(): List<Zombie> = waveZombieMap.values.flatMap { it.filter { z -> z.isLeader() } }
     fun getBosses(): List<Zombie> = waveZombieMap.values.flatMap { it.filter { z -> z.isBoss() } }
@@ -585,9 +595,9 @@ class ZombieRaid(
     }
 
     private fun announceBoss(waveType: WaveType, bossName: Component) {
-        val title = Component.translatable("event.plantz.zombie_raid.boss_wave").apply { withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD) }
-        val subtitle = Component.translatable("event.plantz.zombie_raid.boss", bossName).apply { withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.BOLD) }
-        if (waveType == WaveType.DEFAULT) showTitleMessage(title, subtitle)
+        //val title = Component.translatable("event.plantz.zombie_raid.boss_wave").apply { withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD) }
+        //val subtitle = Component.translatable("event.plantz.zombie_raid.boss", bossName).apply { withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.BOLD) }
+        //if (waveType == WaveType.DEFAULT) showTitleMessage(title, subtitle)
         zombieRaidEvent.players.forEach {
             it.sendSystemMessage(Component.translatable("event.plantz.zombie_raid.boss.spawn", bossName).withColor(0x872727))
         }

@@ -1,7 +1,7 @@
 package joshxviii.plantz.networking
 
 import joshxviii.plantz.pazResource
-import joshxviii.plantz.raid.WaveType
+import joshxviii.plantz.raid.CompletedWave
 import joshxviii.plantz.raid.ZombieRaid
 import net.minecraft.core.UUIDUtil
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -20,7 +20,7 @@ class ZombieRaidResponsePayload(
             StreamCodec.composite(
                 UUIDUtil.STREAM_CODEC, { it.data.id },
                 ByteBufCodecs.VAR_INT, { it.data.status.ordinal },
-                WaveType.STREAM_CODEC.apply(ByteBufCodecs.list()), { it.data.waveTypes },
+                CompletedWave.STREAM_CODEC.apply(ByteBufCodecs.list()), { it.data.waves },
                 ByteBufCodecs.VAR_INT, { it.data.numWaves },
                 ByteBufCodecs.VAR_INT, { it.data.waveTimer },
                 ByteBufCodecs.VAR_INT, { it.data.activeTime },
@@ -48,7 +48,7 @@ class ZombieRaidResponsePayload(
 data class ZombieRaidClientData(
     val id: UUID = UUID.randomUUID(),
     val status: ZombieRaid.ZombieRaidStatus = ZombieRaid.ZombieRaidStatus.STOPPED,
-    val waveTypes: List<WaveType> = listOf(WaveType.DEFAULT),
+    val waves: List<CompletedWave> = listOf(),
     val numWaves: Int = 0,
     val waveTimer: Int = 0,
     val activeTime: Int = 0,
@@ -57,8 +57,8 @@ data class ZombieRaidClientData(
     val bossProgressBar: Float = 0f,
     val seenCredits: Boolean = false
 ) {
-    fun currentWaveNumber(): Int = waveTypes.size
-    fun currentWaveType(): WaveType? = waveTypes.lastOrNull()
-    fun isFinalWave(): Boolean = waveTypes.size == numWaves
+    fun currentWaveNumber(): Int = waves.size
+    fun currentWaveType(): CompletedWave? = waves.lastOrNull()
+    fun isFinalWave(): Boolean = waves.size == numWaves
     fun bossIsAlive(): Boolean = bossProgressBar > 0f
 }

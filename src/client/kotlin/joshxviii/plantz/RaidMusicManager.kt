@@ -141,7 +141,7 @@ object RaidMusicManager {
     fun getMusicFromRaidContext(raidEvent: ZombieRaidClientData): RaidMusicLayer {
         val totalWaves = raidEvent.numWaves
         val currentWave = raidEvent.currentWaveNumber()
-        val waveType = raidEvent.currentWaveType()
+        val waveType = raidEvent.currentWaveType()?.type
 
         return when (waveType) {
             WaveType.DEFAULT -> when {

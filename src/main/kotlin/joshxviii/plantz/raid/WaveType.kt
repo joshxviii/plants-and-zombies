@@ -44,6 +44,9 @@ enum class WaveType(
     private val spawnFn: (ZombieRaid, Boolean) -> List<WaveSpawnEntry>,
     val lootTableFn: (Int, Boolean) ->  ResourceKey<LootTable> = { _, _ -> PazLootTables.MAIL_REWARD_DEFAULT_EASY }
 ): StringRepresentable {
+    //TODO: wave types should also be data-driven. A wave type should be defined in "plantz/wave_type/[wave_name].json".
+    // SpawnRequirements, Weights, WaveSpawnEntries, LootTables and Zombie Configurations should all be editable in the .json.
+    // Parsing should be done in a new [PazAPI] class.
     DEFAULT(
         minWave = 0,
         maxWave = 99,

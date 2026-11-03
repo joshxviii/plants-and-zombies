@@ -1,15 +1,22 @@
 package joshxviii.plantz.raid
 
+import com.mojang.serialization.Codec
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.entity.zombie.*
 import joshxviii.plantz.pazResource
+import io.netty.buffer.ByteBuf
 import net.minecraft.network.chat.Component
+import net.minecraft.network.codec.ByteBufCodecs
+import net.minecraft.network.codec.StreamCodec
 import net.minecraft.resources.Identifier
+import net.minecraft.util.ByIdMap
 import net.minecraft.util.StringRepresentable
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.monster.zombie.Zombie
+
+// Hero reward bonus loot should only be given out when a boss wave happens, rather than every 5 waves (current).
 
 /**
  * Defines a boss type for a zombie raid. Multiple entities can be spawned as a single boss type.
@@ -18,6 +25,9 @@ enum class BossType(
     private val weightFn: (ZombieRaid, WaveType) -> Float,
     private val bossSpawns: (ZombieRaid, WaveType) -> List<BossEntry>,
 ): StringRepresentable {
+    //TODO: I would like to make this a data-driven system. Boss types should be defined as "plantz/boss_type/[boss_name].json" files.
+    // SpawnRequirements, Weights, BossEntries, and Boss Configurations should all be editable in the .json.
+    // Parsing should be done in a new [PazAPI] class.
     STAR_PLAYER(
         weightFn = { raid, wave -> if (raid.currentWaveNumber() < 7) 3f else 0f },
         bossSpawns = { raid, wave ->
@@ -67,6 +77,10 @@ enum class BossType(
     override fun getSerializedName(): String = name.lowercase()
 
     companion object {
+        val CODEC: Codec<BossType> = StringRepresentable.fromEnum<BossType> { entries.toTypedArray() }
+        private val BY_ID = ByIdMap.continuous(BossType::ordinal, entries.toTypedArray(), ByIdMap.OutOfBoundsStrategy.ZERO)
+        val STREAM_CODEC: StreamCodec<ByteBuf, BossType> = ByteBufCodecs.idMapper(BY_ID, BossType::ordinal)
+
         fun pickBossType(raid: ZombieRaid, waveType: WaveType): BossType {
             val eligible = BossType.entries
             val totalWeight = eligible.sumOf { it.weight(raid, waveType).toDouble() }.toFloat()
