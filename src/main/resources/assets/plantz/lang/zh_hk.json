@@ -60,7 +60,7 @@
   "death.attack.zombie_explode": "%1$s被%2$s炸飛了",
   "death.attack.zombie_electric": "%1$s被%2$s電死了",
   "death.attack.zombie_energy": "%1$s被%2$s蒸發了",
-  "death.attack.plant": "%1$s被殺死了",
+  "death.attack.plant": "%1$s被%2$s殺死了",
   "death.attack.plant.player": "%1$s被%2$s殺死了",
   "death.attack.piercing_projectile": "%1$s被刺穿了",
   "death.attack.piercing_projectile.player": "%1$s被%2$s刺穿了",
@@ -81,7 +81,6 @@
   "death.attack.toxic": "%1$s中毒身亡",
   "death.attack.toxic.player": "%1$s因%2$s中毒身亡",
   "death.attack.paint": "%1$s被%2$s製成了一件藝術品",
-
 
   "event.plantz.zombie_raid": "殭屍預兆",
   "event.plantz.zombie_raid.start": "殭屍來了...",
@@ -348,6 +347,7 @@
   "entity.plantz.disco_zombie": "舞動殭屍",
   "entity.plantz.backup_dancer": "伴舞殭屍",
   "entity.plantz.all_star": "全明星殭屍",
+  "entity.plantz.all_star.variant.giga": "暗黑橄欖球殭屍",
   "entity.plantz.grave_digger": "掘墓殭屍",
   "entity.plantz.soldier_zombie": "士兵殭屍",
   "entity.plantz.robo_zombie": "機器人殭屍",
