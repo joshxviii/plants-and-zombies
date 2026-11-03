@@ -18,8 +18,18 @@ enum class BossType(
     private val weightFn: (ZombieRaid, WaveType) -> Float,
     private val bossSpawns: (ZombieRaid, WaveType) -> List<BossEntry>,
 ): StringRepresentable {
+    STAR_PLAYER(
+        weightFn = { raid, wave -> if (raid.currentWaveNumber() < 7) 3f else 0f },
+        bossSpawns = { raid, wave ->
+            listOf(
+                BossEntry(
+                    PazEntities.ALL_STAR, ::bossify
+                ),
+            )
+        }
+    ),
     GARGANTUAR(
-        weightFn = { _, wave -> if (wave == WaveType.DEFAULT || wave == WaveType.PIRATE_INVASION) 3f else 0f },
+        weightFn = { raid, wave -> if (raid.currentWaveNumber() > 7 && wave == WaveType.DEFAULT || wave == WaveType.PIRATE_INVASION) 3f else 0f },
         bossSpawns = { raid, wave ->
             listOf(
                 BossEntry(
@@ -40,7 +50,7 @@ enum class BossType(
         }
     ),
     BARON_VON_BATS(
-        weightFn = { _, wave -> if (wave == WaveType.DEFAULT || wave == WaveType.ZOMBOWEEN) 1f else 0f },
+        weightFn = { raid, wave -> if (raid.currentWaveNumber() > 9 && wave == WaveType.DEFAULT || wave == WaveType.ZOMBOWEEN) 1f else 0f },
         bossSpawns = { raid, wave ->
             listOf(
                 BossEntry(

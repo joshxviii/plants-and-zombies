@@ -36,6 +36,7 @@ import net.minecraft.world.item.component.TooltipProvider
 import net.minecraft.world.level.Level
 import java.util.Optional
 import java.util.function.Consumer
+import kotlin.compareTo
 
 private const val BELOW_EYE_LEVEL_TOLERANCE = 0.25
 
@@ -56,9 +57,12 @@ class ProtectsHeadDataComponent(
     }
 
     fun canBlockFrom(source: DamageSource, user: LivingEntity): Boolean {
-        if (source.`is`(DamageTypeTags.DAMAGES_HELMET)) return true
+        return source.`is`(DamageTypeTags.DAMAGES_HELMET) || !source.`is`(PazTags.DamageTypes.BYPASSES_HEAD_PROTECTION)
+    }
+
+    fun isFromAbove(source: DamageSource, user: LivingEntity): Boolean {
         val sourcePosition = source.directEntity?.boundingBox?.center ?: source.sourcePosition ?: return false
-        return sourcePosition.y >= user.eyeY - BELOW_EYE_LEVEL_TOLERANCE && !source.`is`(PazTags.DamageTypes.BYPASSES_HEAD_PROTECTION)
+        return sourcePosition.y >= user.eyeY - BELOW_EYE_LEVEL_TOLERANCE
     }
 
     fun resolveBlockedDamage(source: DamageSource, dealtDamage: Float): Float {

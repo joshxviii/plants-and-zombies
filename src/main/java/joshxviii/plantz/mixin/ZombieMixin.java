@@ -4,7 +4,6 @@ import joshxviii.plantz.*;
 import joshxviii.plantz.entity.ZombieRaider;
 import joshxviii.plantz.entity.zombie.Gargantuar;
 import joshxviii.plantz.entity.zombie.PazZombie;
-import joshxviii.plantz.entity.zombie.ZombieYeti;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -16,6 +15,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -29,10 +29,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
-
-import java.util.Objects;
-
-import static joshxviii.plantz.entity.zombie.PazZombie.LEADER_MODIFIER_ID;
 
 /**
  * @author Josh
@@ -140,7 +136,10 @@ public class ZombieMixin implements ZombieRaider {
         if (spawnReason == EntitySpawnReason.REINFORCEMENT || spawnReason == EntitySpawnReason.EVENT) return;
 
         Zombie entity = (Zombie) (Object) this;
-        if (!entity.is(PazTags.EntityTypes.CAN_BE_LEADER)) return;
+        if (!entity.is(PazTags.EntityTypes.CAN_BE_LEADER)) {
+            PazZombie.Companion.removeLeaderModifiers(entity);
+            return;
+        }
 
         boolean isBornLeader = PazZombie.Companion.isBornLeader(entity);
         boolean bonusPromotionChance = level.getRandom().nextFloat() < BONUS_LEADER_CHANCE;

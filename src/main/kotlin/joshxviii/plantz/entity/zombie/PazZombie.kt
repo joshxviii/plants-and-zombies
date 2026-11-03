@@ -64,6 +64,7 @@ import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
+import java.net.IDN
 import java.util.*
 import kotlin.jvm.optionals.getOrElse
 import kotlin.math.max
@@ -158,7 +159,12 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         }
 
         fun isBornLeader(zombie: Zombie): Boolean {
-            return Objects.requireNonNull<AttributeInstance>(zombie.getAttribute(Attributes.MAX_HEALTH)).hasModifier(Identifier.withDefaultNamespace(LEADER_MODIFIER_ID))
+            return Objects.requireNonNull<AttributeInstance>(zombie.getAttribute(Attributes.MAX_HEALTH)).hasModifier(LEADER_MODIFIER_ID)
+        }
+
+        fun removeLeaderModifiers(zombie: Zombie) {
+            Objects.requireNonNull<AttributeInstance>(zombie.getAttribute(Attributes.MAX_HEALTH)).removeModifier(LEADER_MODIFIER_ID)
+            Objects.requireNonNull<AttributeInstance>(zombie.getAttribute(Attributes.SPAWN_REINFORCEMENTS_CHANCE)).removeModifier(LEADER_MODIFIER_ID)
         }
 
         // for group spawning and gravestone spawning
@@ -172,7 +178,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
 
         const val ZOMBIE_SPEED = 0.23
         const val MAX_EQUIPPABLE_BALLOONS = 4
-        const val LEADER_MODIFIER_ID: String = "leader_zombie_bonus"
+        val LEADER_MODIFIER_ID: Identifier = Identifier.withDefaultNamespace("leader_zombie_bonus")
 
         data class PazZombieAttributes(
             val maxHealth: Double = 20.0,

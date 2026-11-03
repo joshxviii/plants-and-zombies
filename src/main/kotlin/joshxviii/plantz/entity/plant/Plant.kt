@@ -771,7 +771,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     /** if on invalid ground plant should start to suffocate */
-    private fun onValidGround() : Boolean {
+    fun onValidGround() : Boolean {
         return (attachedEntity != null) || hasPumpkinArmor() || canSurviveOn(getBlockBelow()) || vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
     }
 

@@ -258,7 +258,7 @@ enum class WaveType(
             listOf(
                 WaveSpawnEntry(
                     PazEntities.BROWN_COAT,
-                    scaled(6f + wave * 1.4f, omen, credits, min = 5), {
+                    scaled(6.5f + wave * 1.4f, omen, credits, min = 5), {
                         configurePirateInvasion(it)
                         configureDefaultBalloonChance(it, raid)
                     }),
@@ -274,7 +274,7 @@ enum class WaveType(
                 ),
                 WaveSpawnEntry(
                     PazEntities.GARGANTUAR,
-                    if (wave > 10) scaled((0.1f + wave * 0.1f) - 13f, omen, credits, max = 2) else 0,
+                    if (wave > 10) scaled((0.2f + wave * 0.3f) - 11f, omen, credits, max = 2) else 0,
                     ::configurePirateInvasion
                 ),
                 graveDiggerEntry(raid),

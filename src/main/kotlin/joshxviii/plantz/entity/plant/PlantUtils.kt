@@ -137,6 +137,7 @@ fun Plant.processGloveItem(player: Player, item: ItemStack, hand: InteractionHan
         (item.has(DataComponents.ENTITY_DATA)) -> return false
         // pet :)
         else -> {
+            if (!this.onValidGround()) return false
             this.funnyBounce()
             addParticlesAroundSelf(level(), ParticleTypes.HEART, amount = 0..0, height = eyeHeight)
         }

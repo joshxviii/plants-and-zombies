@@ -126,7 +126,7 @@ object PazItems {
                 BlocksAttacks(
                     0.25f,
                     1.0f,
-                    listOf(DamageReduction(80.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 0.9f)),
+                    listOf(DamageReduction(90.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 0.9f)),
                     ItemDamageFunction.DEFAULT,
                     Optional.of<HolderSet<DamageType>>(it.getOrThrow(DamageTypeTags.BYPASSES_SHIELD)),
                     Optional.of(PazSounds.PROJECTILE_HIT_PAPER),
@@ -164,7 +164,7 @@ object PazItems {
                 BlocksAttacks(
                     0.25f,
                     1.0f,
-                    listOf(DamageReduction(80.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 1.0f)),
+                    listOf(DamageReduction(90.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 1.0f)),
                     ItemDamageFunction.DEFAULT,
                     Optional.of<HolderSet<DamageType>>(it.getOrThrow(DamageTypeTags.BYPASSES_SHIELD)),
                     Optional.of(SoundEvents.SHIELD_BLOCK),
