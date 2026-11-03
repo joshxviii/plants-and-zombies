@@ -369,7 +369,7 @@ object PazItems {
         builder.set(DataComponents.ATTRIBUTE_MODIFIERS, builder.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder().build())
             .withModifierAdded(
                 Attributes.ARMOR,
-                AttributeModifier(pazResource("bucket_armor"), 20.0, AttributeModifier.Operation.ADD_VALUE),
+                AttributeModifier(pazResource("bucket_armor"), 15.0, AttributeModifier.Operation.ADD_VALUE),
                 EquipmentSlotGroup.HEAD
             ).withModifierAdded(
                 Attributes.ARMOR_TOUGHNESS,

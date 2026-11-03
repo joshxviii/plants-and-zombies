@@ -50,7 +50,7 @@ class BaronStaffItem(properties: Properties) : Item(properties) {
         itemStack: ItemStack?,
         damage: Float
     ) {
-        level.playSound(livingEntity, livingEntity.blockPosition(), PazSounds.SUPER_BRAINZ_LAZER, livingEntity.soundSource, 1.0f, 1.2f)
+        level.playSound(livingEntity, livingEntity.blockPosition(), PazSounds.SUPER_BRAINZ_LAZER, livingEntity.soundSource, 0.6f, 1.2f)
         val serverLevel = level as? ServerLevel ?: return
         val startPos = livingEntity.eyePosition.add(livingEntity.lookAngle.subtract(Vec3.Y_AXIS).scale(0.05))
         val maxEndPos = startPos.add(livingEntity.headLookAngle.scale(BEAM_RANGE))

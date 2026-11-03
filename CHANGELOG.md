@@ -7,8 +7,13 @@
 
 # Changelog 1.5.2
 ### Changes / Additions
+- Zombie Raids now have "Boss Chance"
+  - Boss Chance represents the odds that the next wave will spawn a boss.
+  - The chance increases exponentially every wave.
+  - Once a boss spawns, the chance is reset.
+- Added Giga variant for All Star, which can spawn as a Boss
 - Added Baron Von Bats
-  - Baron Von Bats has a chance to spawn as a boss during wave 10 instead of Gargantuar.
+  - Baron Von Bats has a chance to spawn as a Boss.
 - Added Zombat
   - Heals itself when hurting other mobs.
 - Added Brainz Alloy Door and Trapdoor.
@@ -18,6 +23,7 @@
 - Added Baron's Staff
   - Has a rare chance to drop from defeating Baron Von Bats.
 - During the final wave at the 1-minute mark, all remaining zombies will teleport closer to the flag.
+- Hero Bonus rewards are now given for each Boss Wave rather than every 5 waves.
 - Cones, Buckets, and Football helmets now only block damage from above.
   - They have also been given a buff to armor and armor toughness.
 - Newspapers now work like Shields and only block damage from the front.

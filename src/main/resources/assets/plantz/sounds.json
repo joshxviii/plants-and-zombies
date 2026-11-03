@@ -414,6 +414,12 @@
     ], "subtitle": "plantz.subtitles.event.raid.special_wave"
   },
 
+  "event.raid.boss_spawn": {
+    "sounds": [
+      { "name": "block/mob/evocation_illager/prepare_summon", "volume": 6.0, "pitch": 0.825 }
+    ], "subtitle": "plantz.subtitles.event.raid.boss_spawn"
+  },
+
   "event.raid.taco_reward": {
     "sounds": [{ "name": "plantz:event/taco_reward", "volume": 1.0, "pitch": 1.0  }], "subtitle": "plantz.subtitles.event.raid.taco_reward"
   },

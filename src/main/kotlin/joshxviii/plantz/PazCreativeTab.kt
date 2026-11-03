@@ -1,12 +1,14 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.item.BlueprintItem
+import joshxviii.plantz.item.DoorShieldItem.Companion.stackFor
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
+import net.minecraft.tags.BlockTags
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 
@@ -100,7 +102,8 @@ object PazCreativeTab {
                 output.accept(PazItems.DUCKY_TUBE)
                 output.accept(PazBlocks.CONE)
                 output.accept(PazItems.NEWSPAPER)
-                output.accept(PazItems.DOOR_SHIELD)
+                if (PazConfig.SHOW_HIDDEN_ITEMS) BuiltInRegistries.BLOCK.forEach { if (it.defaultBlockState().`is`(BlockTags.DOORS)) output.accept(stackFor(it)) }
+                else output.accept(PazItems.DOOR_SHIELD)
                 output.accept(PazItems.FOOTBALL_HELMET)
                 output.accept(PazItems.DYE_BLASTER)
                 output.accept(PazItems.BARON_STAFF)

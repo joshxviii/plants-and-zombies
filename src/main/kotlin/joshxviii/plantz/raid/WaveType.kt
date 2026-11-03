@@ -421,6 +421,7 @@ enum class WaveType(
                         zombie.random
                     )
                     zombie.setItemSlot(slot, itemStack)
+                    zombie.setDropChance(slot, 0f)
                 }
             }
             if (zombie is BrownCoat && zombie.random.nextFloat() < 0.2f) {
@@ -495,26 +496,20 @@ enum class WaveType(
             }
 
             if (zombie !is Gargantuar) {
-                for (slot in mutableListOf(
-                    EquipmentSlot.CHEST,
-                    EquipmentSlot.LEGS,
-                    EquipmentSlot.FEET
-                ).apply { if (zombie is BrownCoat) addFirst(EquipmentSlot.HEAD) }) {
+                for (slot in mutableListOf(EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET)) {
                     val level = zombie.level() as? ServerLevel ?: continue
                     val difficulty = level.getCurrentDifficultyAt(zombie.blockPosition())
-                    if (slot == EquipmentSlot.HEAD && !zombie.getItemBySlot(slot).isEmpty) continue
-                    if (zombie.random.nextFloat() < 0.25f * difficulty.specialMultiplier) {
+                    if (zombie.random.nextFloat() < 0.25f) {
                         val itemStack = Mob.getEquipmentForSlot(slot, 2)?.defaultInstance ?: continue
-
-                        if (zombie.random.nextFloat() < 0.25f) EnchantmentHelper.enchantItemFromProvider(
+                        if (zombie.random.nextFloat() < 0.3f * difficulty.specialMultiplier) EnchantmentHelper.enchantItemFromProvider(
                             itemStack,
                             level.registryAccess(),
                             VanillaEnchantmentProviders.MOB_SPAWN_EQUIPMENT,
                             level.getCurrentDifficultyAt(zombie.blockPosition()),
                             zombie.random
                         )
-
                         zombie.setItemSlot(slot, itemStack)
+                        zombie.setDropChance(slot, 0f)
                     }
                 }
             }

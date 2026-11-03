@@ -80,7 +80,6 @@ class NewspaperZombie(type: EntityType<out NewspaperZombie>, level: Level) : Paz
     }
 
     override fun getPreferredWeaponType(): TagKey<Item> = PazTags.ItemTags.NEWSPAPER_ZOMBIE_PREFERRED_WEAPONS
-    override fun canPickUpLoot(): Boolean = true
 
     override fun finalizeSpawn(
         level: ServerLevelAccessor,

@@ -201,11 +201,11 @@ object PazBlocks {
                 DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
                     .add(
                         Attributes.ARMOR,
-                        AttributeModifier(pazResource("cone_armor"), 10.0, AttributeModifier.Operation.ADD_VALUE),
+                        AttributeModifier(pazResource("cone_armor"), 8.0, AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.HEAD
                     ).add(
                         Attributes.ARMOR_TOUGHNESS,
-                        AttributeModifier(pazResource("cone_armor_toughness"), 5.0, AttributeModifier.Operation.ADD_VALUE),
+                        AttributeModifier(pazResource("cone_armor_toughness"), 4.0, AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.HEAD
                     ).add(
                         Attributes.KNOCKBACK_RESISTANCE,

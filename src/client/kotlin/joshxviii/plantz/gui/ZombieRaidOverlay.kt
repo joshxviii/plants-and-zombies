@@ -76,15 +76,6 @@ object ZombieRaidOverlay {
         // tombstone bg
         graphics.blit(RenderPipelines.GUI_TEXTURED, if (raidEvent.seenCredits) BACKGROUND_CREDITS else BACKGROUND, x, y, 0f, 0f, BG_WIDTH, BG_HEIGHT, BG_WIDTH, BG_HEIGHT)
 
-        // boss chance
-        val bossChanceText = "${Mth.floor(raidEvent.bossChance * 100f)}%"
-        val bossChanceIconSize = 12
-        val bossChanceWidth = font.width(bossChanceText) + bossChanceIconSize
-        val bossChanceX = screenWidth - bossChanceWidth - 26
-        val bossChanceY = y + 14
-        graphics.text(font, bossChanceText, bossChanceX, bossChanceY, ARGB.opaque(0xFFFFFF))
-        graphics.blit(RenderPipelines.GUI_TEXTURED, BOSS_CHANCE_SPRITE, bossChanceX + font.width(bossChanceText), bossChanceY - 2, 0f, 0f, bossChanceIconSize, bossChanceIconSize, bossChanceIconSize, bossChanceIconSize,)
-
         // flag health
         renderPlantBar(x, y, graphics, raidEvent)
 
@@ -93,6 +84,15 @@ object ZombieRaidOverlay {
 
         // boss health
         if (renderBossbar) bossBar(x, y, graphics, raidEvent)
+
+        // boss chance
+        val bossChanceText = "${Mth.floor(raidEvent.bossChance * 100f)}%"
+        val bossChanceIconSize = 12
+        val bossChanceWidth = font.width(bossChanceText) + bossChanceIconSize
+        val bossChanceX = screenWidth - (screenWidth / 4) + (bossChanceWidth/ 2) - 15
+        val bossChanceY = y + 27
+        graphics.text(font, bossChanceText, bossChanceX, bossChanceY, ARGB.opaque(0xFFFFFF))
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BOSS_CHANCE_SPRITE, bossChanceX + font.width(bossChanceText), bossChanceY - 2, 0f, 0f, bossChanceIconSize, bossChanceIconSize, bossChanceIconSize, bossChanceIconSize)
 
         // timer
         val time = raidEvent.waveTimer
