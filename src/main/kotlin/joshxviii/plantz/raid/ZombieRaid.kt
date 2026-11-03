@@ -406,7 +406,7 @@ class ZombieRaid(
             setBoss(zombie)
             joinRaid(level, zombie, exists = false, pos = pos, configure = configure)
         }
-        val bossName = bossEntities.firstOrNull()?.entityType?.description?: Component.empty()
+        val bossName = getBosses().firstOrNull()?.name?: Component.empty()
         announceBoss(waveType, bossName)
     }
 

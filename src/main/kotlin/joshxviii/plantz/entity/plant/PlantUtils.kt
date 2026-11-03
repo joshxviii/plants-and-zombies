@@ -239,6 +239,7 @@ fun Entity.saveAsCompoundTag(discards: List<String> = listOf("Pos")): CompoundTa
         if (this is Plant) plantSaveData(output)
         discards.forEach { output.discard(it) }
         output.discard("plantz:PumpkinArmor")
+        output.discard("Motion")
         output.discard("leash")
         output.discard("UUID")
         return output.buildResult()

@@ -65,20 +65,20 @@ enum class WaveType(
                 ),
                 WaveSpawnEntry(
                     PazEntities.DIGGER_ZOMBIE,
-                    if (wave > 3) scaled(0.7f + wave * 0.4f, omen, credits) else 0
+                    if (wave > 3) scaled(0.7f + (wave - 3) * 0.4f, omen, credits) else 0
                 ),
                 WaveSpawnEntry(
                     PazEntities.IMP,
-                    if (wave > 3) scaled(1f + (wave - 3) * 0.7f, omen, credits) else 0, {
+                    if (wave > 4) scaled(0.7f + (wave - 4) * 0.7f, omen, credits) else 0, {
                         configureDefaultBalloonChance(it, raid)
                     }),
                 WaveSpawnEntry(
                     PazEntities.ALL_STAR,
-                    if (wave > 4) scaled(1f + (wave - 4) * 0.5f, omen, credits) else 0
+                    if (wave > 5) scaled(0.5f + (wave - 5) * 0.5f, omen, credits) else 0
                 ),
                 WaveSpawnEntry(
                     PazEntities.DISCO_ZOMBIE,
-                    if (wave > 5) scaled(0.8f + (wave - 5) * 0.35f, omen, credits) else 0
+                    if (wave > 5) scaled(0.8f + (wave - 7) * 0.35f, omen, credits) else 0
                 ),
                 WaveSpawnEntry(
                     PazEntities.GARGANTUAR,
@@ -146,16 +146,16 @@ enum class WaveType(
             listOf(
                 WaveSpawnEntry(
                     PazEntities.BROWN_COAT,
-                    scaled(4f + wave * 0.9f, omen, credits, min = 3),
+                    scaled(6f + wave * 0.9f, omen, credits, min = 3),
                     ::configureHalftimeShowdown
                 ),
                 WaveSpawnEntry(
                     PazEntities.ALL_STAR,
-                    scaled(2.5f + wave * 0.9f, omen, credits, min = 2, max = 12)
+                    scaled(2.5f + (wave - 2) * 0.6f, omen, credits, min = 2, max = 10)
                 ),
                 WaveSpawnEntry(
                     PazEntities.IMP,
-                    scaled(3.5f + wave * 0.8f, omen, credits, min = 1), {
+                    scaled(3.0f + (wave - 2) * 0.8f, omen, credits, min = 1), {
                         configureHalftimeShowdown(it)
                         configureDefaultBalloonChance(it, raid)
                     }
@@ -274,7 +274,7 @@ enum class WaveType(
                 ),
                 WaveSpawnEntry(
                     PazEntities.GARGANTUAR,
-                    if (wave > 10) scaled((0.2f + wave * 0.3f) - 11f, omen, credits, max = 2) else 0,
+                    if (wave > 10) scaled(0.2f + (wave - 11) * 0.3f, omen, credits, max = 2) else 0,
                     ::configurePirateInvasion
                 ),
                 graveDiggerEntry(raid),
@@ -401,8 +401,10 @@ enum class WaveType(
         }
 
         fun configureBucketBrigade(zombie: Zombie) {
-            zombie.setItemSlot(EquipmentSlot.HEAD, Items.BUCKET.defaultInstance)
-            zombie.setDropChance(EquipmentSlot.HEAD, 0.0f)
+            if (zombie.random.nextFloat() < 0.65f) {
+                zombie.setItemSlot(EquipmentSlot.HEAD, Items.BUCKET.defaultInstance)
+                zombie.setDropChance(EquipmentSlot.HEAD, 0.0f)
+            }
             for (slot in mutableListOf(EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET)) {
                 val level = zombie.level() as? ServerLevel ?: continue
                 val difficulty = level.getCurrentDifficultyAt(zombie.blockPosition())
@@ -421,7 +423,7 @@ enum class WaveType(
             if (zombie is BrownCoat && zombie.random.nextFloat() < 0.2f) {
                 val doorShield = PazItems.DOOR_SHIELD.defaultInstance
                 doorShield.set(PazComponents.DOOR_SHIELD, DoorShieldComponent(Blocks.IRON_DOOR))
-                doorShield.damageValue = zombie.random.nextIntBetweenInclusive(200, 250)
+                doorShield.damageValue = zombie.random.nextIntBetweenInclusive(250, 300)
                 zombie.setItemSlot(EquipmentSlot.OFFHAND, doorShield)
                 zombie.setDropChance(EquipmentSlot.OFFHAND, 0f)
             }
