@@ -75,7 +75,7 @@
   "death.attack.electric_plant": "%1$s was electrocuted by %2$s",
   "death.attack.electric_zap": "%1$s was electrocuted",
   "death.attack.electric_zap.player": "%1$s was electrocuted by %2$s",
-  "death.attack.energy": "%1$s was vaporized",
+  "death.attack.energy": "%1$s was vaporized by %2$s",
   "death.attack.energy.player": "%1$s was vaporized by %2$s",
   "death.attack.energy.item": "%1$s was vaporized by %2$s using %3$s",
   "death.attack.toxic": "%1$s was poisoned",

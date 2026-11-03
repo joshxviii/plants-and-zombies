@@ -342,7 +342,7 @@ class ZombieRaid(
                     continue
                 }
                 if (
-                    isFinalWave() && waveTimer == PANIC_START_TIME &&
+                    (isFinalWave() || getBosses().isNotEmpty()) && waveTimer == PANIC_START_TIME &&
                     zombiePos.distSqr(center) > MAX_PANIC_DISTANCE * MAX_PANIC_DISTANCE
                 ) {
                     findPanicTeleportPos(level, zombie, 10)?.let { teleportPos ->

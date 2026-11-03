@@ -3,6 +3,7 @@
   "values": [
     "plantz:plant_fume",
     "plantz:piercing_projectile",
-    "#plantz:is_electric"
+    "#plantz:is_electric",
+    "#plantz:is_energy"
   ]
 }

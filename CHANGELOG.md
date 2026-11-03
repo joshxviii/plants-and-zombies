@@ -8,13 +8,15 @@
 # Changelog 1.5.2
 ### Changes / Additions
 - Added Baron Von Bats
-  - Baron Von Bats has a chance to spawn as a boss during wave10 instead of Gargantuar.
+  - Baron Von Bats has a chance to spawn as a boss during wave 10 instead of Gargantuar.
 - Added Zombat
   - Heals itself when hurting other mobs.
 - Added Brainz Alloy Door and Trapdoor.
 - Added Door Shields.
   - Can be crafted from any Door and a Shield.
-- Browncoats can now spawn with door shields.
+  - Browncoats can now spawn with door shields.
+- Added Baron's Staff
+  - Has a rare chance to drop from defeating Baron Von Bats.
 - During the final wave at the 1-minute mark, all remaining zombies will teleport closer to the flag.
 - Cones, Buckets, and Football helmets now only block damage from above.
   - They have also been given a buff to armor and armor toughness.

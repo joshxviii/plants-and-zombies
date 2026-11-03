@@ -22,6 +22,7 @@ import net.minecraft.world.phys.Vec3
 
 class BaronStaffItem(properties: Properties) : Item(properties) {
     companion object {
+        const val USE_DURATION = 8
         private const val BEAM_RANGE = 14.0
         private const val BEAM_WIDTH = 0.1
         private const val BEAM_DAMAGE = 8.0f
@@ -34,9 +35,9 @@ class BaronStaffItem(properties: Properties) : Item(properties) {
     }
 
     override fun onUseTick(level: Level, livingEntity: LivingEntity, itemStack: ItemStack, ticksRemaining: Int) {
-        if ((livingEntity as? Player)?.cooldowns?.isOnCooldown(itemStack) == true) return
-        if (livingEntity is Player) livingEntity.cooldowns.addCooldown(itemStack, 20)
-        shootBeam(level, livingEntity, itemStack, BEAM_DAMAGE)
+        if (ticksRemaining==USE_DURATION)
+            level.playSound(livingEntity, livingEntity.blockPosition(), PazSounds.ELECTRIC_ZAP, livingEntity.soundSource, 0.3f, 2.0f)
+        if (ticksRemaining==1) shootBeam(level, livingEntity, itemStack, BEAM_DAMAGE)
     }
 
     fun shootBeam(livingEntity: LivingEntity, damage: Float) {
@@ -49,7 +50,6 @@ class BaronStaffItem(properties: Properties) : Item(properties) {
         itemStack: ItemStack?,
         damage: Float
     ) {
-
         level.playSound(livingEntity, livingEntity.blockPosition(), PazSounds.SUPER_BRAINZ_LAZER, livingEntity.soundSource, 1.0f, 1.2f)
         val serverLevel = level as? ServerLevel ?: return
         val startPos = livingEntity.eyePosition.add(livingEntity.lookAngle.subtract(Vec3.Y_AXIS).scale(0.05))
@@ -75,7 +75,7 @@ class BaronStaffItem(properties: Properties) : Item(properties) {
             2, 0.0, 0.0, 0.0, 0.0
         )
 
-        val damageSource = livingEntity.damageSources().source(PazDamageTypes.ENERGY, livingEntity)
+        val damageSource = livingEntity.damageSources().source(PazDamageTypes.ENERGY, livingEntity, livingEntity)
         val entities = level.getEntities(livingEntity, beamBounds) { entity ->
             entity.isAlive && entity.boundingBox.inflate(BEAM_WIDTH / 2.0)
                 .clip(startPos, endPos).isPresent &&
@@ -91,7 +91,7 @@ class BaronStaffItem(properties: Properties) : Item(properties) {
     }
 
     override fun getUseDuration(itemStack: ItemStack, user: LivingEntity): Int {
-        return 6
+        return USE_DURATION
     }
 
     override fun getUseAnimation(itemStack: ItemStack): ItemUseAnimation {

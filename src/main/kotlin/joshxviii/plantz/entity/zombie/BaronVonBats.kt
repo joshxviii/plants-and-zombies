@@ -2,10 +2,8 @@ package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
-import joshxviii.plantz.PazSounds
 import joshxviii.plantz.ai.goal.SummonMinionsGoal
 import joshxviii.plantz.ai.goal.NavigateToTargetGoal
-import joshxviii.plantz.item.BaronStaffItem
 import net.minecraft.core.UUIDUtil
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -56,10 +54,8 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         private const val TRANSFORMATION_DURATION = 200
         private const val TRANSFORMATION_COOLDOWN_MIN = 600
         private const val TRANSFORMATION_COOLDOWN_MAX = 1000
-        private const val BEAM_DURATION = 30
+        private const val BEAM_DURATION = 20
         private const val BEAM_COOLDOWN = 220
-        private const val BEAM_INTERVAL = 10
-        private const val BEAM_DAMAGE = 2.0f
         private const val BEAM_RANGE = 14.0
         const val TELEPORT_DURATION = 40
     }
@@ -174,6 +170,7 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
     fun updateBehavior() {
         isInvisible = isTransformed
         isNoGravity = isTransformed
+        isSilent = isTransformed
     }
 
     override fun handleAttributes(difficultyModifier: Float, spawnReason: EntitySpawnReason) {}
@@ -182,13 +179,8 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         return !isTransformed && super.hurtServer(level, source, damage)
     }
 
-    fun updateHealthFromBats() {
-        if (!isTransformed) return
-        val serverLevel = level() as? ServerLevel ?: return
-        val batHealth = trackedBatIds.sumOf { id ->
-            (serverLevel.getEntity(id) as? Zombat)?.health?.toDouble() ?: 0.0
-        }
-        health = batHealth.toFloat().coerceIn(0.0f, maxHealth)
+    fun hurtAsBaronBat(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
+        return super.hurtServer(level, source, damage)
     }
 
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
@@ -202,12 +194,11 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         val serverLevel = level() as? ServerLevel
         if (serverLevel != null) {
             if (isTransformed) {
-                updateHealthFromBats()
                 transformationTime--
                 val anyLivingBats = trackedBatIds.any { id ->
                     (serverLevel.getEntity(id) as? Zombat)?.isAlive == true
                 }
-                if (transformationTime <= 0 || !anyLivingBats) {
+                if (transformationTime <= 0 || !anyLivingBats || !isAlive) {
                     returnToBaron(serverLevel)
                 }
             } else if (transformDelay > 0) {
@@ -291,14 +282,13 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
         override fun tick() {
             val target = target?.takeIf { it.isAlive } ?: return
             lookControl.setLookAt(target, 4.0f, 30.0f)
-            if (beamAttackTime % BEAM_INTERVAL == 0) {
-                (weaponItem.item as? BaronStaffItem)?.shootBeam(this@BaronVonBats, BEAM_DAMAGE)
-            }
+            startUsingItem(usedItemHand)
             beamAttackTime--
         }
 
         override fun stop() {
             beamAttackTime = 0
+            stopUsingItem()
         }
     }
 
@@ -316,10 +306,15 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
             val bat = PazEntities.ZOMBAT.create(serverLevel, EntitySpawnReason.MOB_SUMMONED) ?: return@repeat
             bat.snapTo(spawnPos, random.nextFloat() * 360.0f, 0.0f)
             bat.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(blockPosition()), EntitySpawnReason.MOB_SUMMONED, null)
-            bat.barronId = uuid
+            bat.baronId = uuid
             bat.target = target
             bat.setPersistenceRequired()
             if (serverLevel.addFreshEntity(bat)) {
+                if (bats.isEmpty()) {
+                    bat.isBaronBat = true
+                    bat.customName = customName
+                    startRiding(bat)
+                }
                 bats.add(bat)
             }
         }
@@ -348,56 +343,13 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
 
     private fun returnToBaron(serverLevel: ServerLevel) {
         val bats = trackedBatIds.mapNotNull { serverLevel.getEntity(it) as? Zombat }
-        val combinedHealth = bats.sumOf { it.health.toDouble() }.toFloat()
         noPhysics = false
-        val returnPosition = findSafePositionNearBats(serverLevel, bats) ?: run {
-            noPhysics = true
-            return
-        }
-        if (!teleportTo(serverLevel, returnPosition.x, returnPosition.y, returnPosition.z, emptySet(), yRot, xRot, false)) {
-            noPhysics = true
-            return
-        }
         bats.forEach { it.discard() }
         trackedBatIds.clear()
         transformationTime = 0
         isTransformed = false
-        health = combinedHealth.coerceIn(0.0f, maxHealth)
         serverLevel.sendParticles(ParticleTypes.LARGE_SMOKE, x, y + 1.0, z, 18, 0.5, 0.5, 0.5, 0.04)
         playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0f, 0.8f)
-    }
-
-    private fun findSafePositionNearBats(serverLevel: ServerLevel, bats: List<Zombat>): Vec3? {
-        val origins = bats.map { it.position() }.ifEmpty { listOf(position()) }
-        val candidates = linkedSetOf<BlockPos>()
-        for (origin in origins) {
-            val center = BlockPos.containing(origin)
-            for (yOffset in -8..4) {
-                for (xOffset in -4..4) {
-                    for (zOffset in -4..4) {
-                        candidates.add(center.offset(xOffset, yOffset, zOffset))
-                    }
-                }
-            }
-        }
-
-        return candidates.asSequence()
-            .filter { feet ->
-                val below = feet.below()
-                serverLevel.isLoaded(below) &&
-                    serverLevel.isLoaded(feet) &&
-                    serverLevel.isLoaded(feet.above(2)) &&
-                    serverLevel.getBlockState(below).isFaceSturdy(serverLevel, below, Direction.UP)
-            }
-            .sortedBy { feet ->
-                val candidate = Vec3(feet.x + 0.5, feet.y.toDouble(), feet.z + 0.5)
-                origins.minOf { candidate.distanceToSqr(it) }
-            }
-            .map { feet -> Vec3(feet.x + 0.5, feet.y.toDouble(), feet.z + 0.5) }
-            .firstOrNull { candidate ->
-                val shiftedBox = boundingBox.move(candidate.subtract(position()))
-                serverLevel.noCollision(this, shiftedBox)
-            }
     }
 
     private fun completeTeleport() {
@@ -415,28 +367,9 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
 
         pendingTeleportDestination = null
         level.sendParticles(ParticleTypes.PORTAL, origin.x, origin.y + 1.0, origin.z, 24, 0.4, 0.8, 0.4, 0.1)
-        level.sendParticles(
-            ParticleTypes.PORTAL,
-            destination.x,
-            destination.y + 1.0,
-            destination.z,
-            24,
-            0.4,
-            0.8,
-            0.4,
-            0.1
-        )
+        level.sendParticles(ParticleTypes.PORTAL, destination.x, destination.y + 1.0, destination.z, 24, 0.4, 0.8, 0.4, 0.1)
         level.playSound(null, origin.x, origin.y, origin.z, SoundEvents.ENDERMAN_TELEPORT, soundSource, 1.0f, 1.0f)
-        level.playSound(
-            null,
-            destination.x,
-            destination.y,
-            destination.z,
-            SoundEvents.ENDERMAN_TELEPORT,
-            soundSource,
-            1.0f,
-            1.0f
-        )
+        level.playSound(null, destination.x, destination.y, destination.z, SoundEvents.ENDERMAN_TELEPORT, soundSource, 1.0f, 1.0f)
     }
 
     override fun remove(reason: RemovalReason) {

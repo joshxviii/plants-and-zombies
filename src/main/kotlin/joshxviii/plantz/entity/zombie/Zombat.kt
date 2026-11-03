@@ -1,7 +1,11 @@
 package joshxviii.plantz.entity.zombie
 
+import joshxviii.plantz.PazEntities
+import joshxviii.plantz.PazTags
 import net.minecraft.core.BlockPos
 import net.minecraft.core.UUIDUtil
+import net.minecraft.network.chat.Component
+import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
@@ -9,60 +13,82 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
+import net.minecraft.world.entity.ai.goal.Goal
+import net.minecraft.world.entity.vehicle.boat.AbstractBoat
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
-import java.util.UUID
+import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 class Zombat(type: EntityType<out Zombat>, level: Level) : PazZombie(type, level) {
 
     companion object {
-
+        val BARON_BAT_ID = SynchedEntityData.defineId(Zombat::class.java, EntityDataSerializers.BOOLEAN)
     }
 
     init {
     }
 
-    var barronId: UUID? = null
+    var isBaronBat: Boolean
+        get() = entityData.get(BARON_BAT_ID)
+        set(value) = entityData.set(BARON_BAT_ID, value)
+
+    var baronId: UUID? = null
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
+        entityData.define(BARON_BAT_ID, false)
     }
 
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
-        output.storeNullable("baron_id", UUIDUtil.CODEC , barronId)
+        output.storeNullable("baron_id", UUIDUtil.CODEC , baronId)
+        output.putBoolean("baron_bat", isBaronBat)
     }
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
-        barronId = input.read("baron_id", UUIDUtil.CODEC).getOrNull()
+        baronId = input.read("baron_id", UUIDUtil.CODEC).getOrNull()
+        isBaronBat = input.getBooleanOr("baron_bat", entityData.get(BARON_BAT_ID))
+    }
+
+    override fun getTypeName(): Component {
+        if (isBaronBat) return PazEntities.BARON_VON_BATS.description
+        return super.getTypeName()
     }
 
     override fun registerGoals() {
         super.registerGoals()
     }
 
+    override fun updateControlFlags() {
+        val noController = this.controllingPassenger !is Mob || this.controllingPassenger?.`is`(PazTags.EntityTypes.ZOMBIE_RAIDERS) == true
+        val notInBoat = this.vehicle !is AbstractBoat
+        this.goalSelector.setControlFlag(Goal.Flag.MOVE, noController)
+        this.goalSelector.setControlFlag(Goal.Flag.JUMP, noController && notInBoat)
+        this.goalSelector.setControlFlag(Goal.Flag.LOOK, noController)
+        this.goalSelector.setControlFlag(Goal.Flag.TARGET, noController)
+    }
+
     override fun handleAttributes(difficultyModifier: Float, spawnReason: EntitySpawnReason) {}
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
-        val hurt = super.hurtServer(level, source, damage)
-        updateBaronHealth(level)
-        return hurt
+        val baron = if (isBaronBat) baronId?.let { level.getEntity(it) as? BaronVonBats } else null
+        if (baron != null) {
+            baron.hurtAsBaronBat(level, source, damage)
+            return super.hurtServer(level, source, 0f)
+        }
+        else return super.hurtServer(level, source, damage)
     }
 
     override fun heal(amount: Float) {
         super.heal(amount)
-        (level() as? ServerLevel)?.let(::updateBaronHealth)
-    }
-
-    private fun updateBaronHealth(level: ServerLevel) {
-        barronId?.let { id ->
-            (level.getEntity(id) as? BaronVonBats)?.updateHealthFromBats()
+        baronId?.let { id ->
+            ((level() as? ServerLevel)?.getEntity(id) as? BaronVonBats)?.heal(amount)
         }
     }
 

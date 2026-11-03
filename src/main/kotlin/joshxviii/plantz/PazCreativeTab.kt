@@ -103,7 +103,7 @@ object PazCreativeTab {
                 output.accept(PazItems.DOOR_SHIELD)
                 output.accept(PazItems.FOOTBALL_HELMET)
                 output.accept(PazItems.DYE_BLASTER)
-                if (PazConfig.SHOW_HIDDEN_ITEMS) output.accept(PazItems.BARON_STAFF)
+                output.accept(PazItems.BARON_STAFF)
                 output.accept(PazBlocks.BRAINZ_FLAG)
                 output.accept(PazBlocks.PLANTZ_FLAG)
                 output.accept(PazItems.TACO)

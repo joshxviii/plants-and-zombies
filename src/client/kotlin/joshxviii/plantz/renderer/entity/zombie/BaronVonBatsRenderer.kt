@@ -8,6 +8,8 @@ import joshxviii.plantz.model.zombies.BaronVonBatsModel
 import joshxviii.plantz.model.zombies.PazZombieModel
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.client.renderer.rendertype.RenderType
+import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.world.entity.AnimationState
 import kotlin.math.abs
@@ -29,6 +31,11 @@ class BaronVonBatsRenderer(
 
     override fun createRenderState(): PazZombieRenderState {
         return BaronVonBatsRenderState()
+    }
+
+    override fun getRenderType(state: PazZombieRenderState, isBodyVisible: Boolean, forceTransparent: Boolean, appearGlowing: Boolean): RenderType? {
+        return if (isBodyVisible && !forceTransparent) RenderTypes.entityCutoutCull(getTextureLocation(state))
+        else super.getRenderType(state, isBodyVisible, forceTransparent, appearGlowing)
     }
 
     override fun getShadowRadius(state: PazZombieRenderState): Float {

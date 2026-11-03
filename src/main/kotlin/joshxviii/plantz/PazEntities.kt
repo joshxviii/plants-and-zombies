@@ -552,7 +552,7 @@ object PazEntities {
         attributes = PazZombie.Companion.PazZombieAttributes(
             armor = 6.0,
             attackDamage = 7.0,
-            maxHealth = 700.0,
+            maxHealth = 650.0,
             movementSpeed = 0.21,
             knockbackResistance = 1.4,
             explosionKnockbackResistance = 0.7,
@@ -571,9 +571,7 @@ object PazEntities {
         attributes = PazZombie.Companion.PazZombieAttributes(
             attackDamage = 2.0,
             maxHealth = 20.0,
-            movementSpeed = 0.32,
-            flyingSpeed = 0.28,
-            spawnReinforcementsChance = 0.3,
+            flyingSpeed = 0.40,
         )
     )
     @JvmField val BARON_VON_BATS: EntityType<BaronVonBats> = registerZombie(
@@ -584,7 +582,7 @@ object PazEntities {
         attributes = PazZombie.Companion.PazZombieAttributes(
             armor = 6.0,
             attackDamage = 7.0,
-            maxHealth = 600.0,
+            maxHealth = 550.0,
             movementSpeed = 0.21,
             knockbackResistance = 0.3,
             explosionKnockbackResistance = 0.2,

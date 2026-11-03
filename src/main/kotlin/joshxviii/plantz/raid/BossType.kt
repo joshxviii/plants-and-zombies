@@ -30,7 +30,7 @@ enum class BossType(
         }
     ),
     ROBO_MECH(
-        weightFn = { _, wave -> if (wave == WaveType.ROBO_ARMY) 10f else 0f },
+        weightFn = { _, wave -> if (wave == WaveType.ROBO_ARMY) 1f else 0f },
         bossSpawns = { raid, wave ->
             listOf(
                 BossEntry(
@@ -40,7 +40,7 @@ enum class BossType(
         }
     ),
     BARON_VON_BATS(
-        weightFn = { _, wave -> 1f },
+        weightFn = { _, wave -> if (wave == WaveType.DEFAULT || wave == WaveType.ZOMBOWEEN) 1f else 0f },
         bossSpawns = { raid, wave ->
             listOf(
                 BossEntry(
@@ -50,7 +50,7 @@ enum class BossType(
         }
     ),
     ZOMBOSS(
-        weightFn = { _, _ -> 0f },
+        weightFn = { _, wave -> if (wave == WaveType.ZOMBOSS) 1f else 0f },
         bossSpawns = { raid, wave -> listOf() }
     );
 
