@@ -84,10 +84,6 @@ enum class WaveType(
                     if (wave > 5) scaled(0.8f + (wave - 7) * 0.35f, omen, credits) else 0
                 ),
                 WaveSpawnEntry(
-                    PazEntities.GARGANTUAR,
-                    if (wave > 11) scaled(0.2f + (wave - 13) * 0.3f, omen, credits, max = 2) else 0
-                ),
-                WaveSpawnEntry(
                     PazEntities.ENGINEER_ZOMBIE,
                     if (wave > 7) scaled(1f + (wave - 7) * 0.4f, omen, true) else 0
                 ),
@@ -275,11 +271,6 @@ enum class WaveType(
                     PazEntities.PIRATE_CAPTAIN,
                     if (credits) scaled(1f + wave * 0.4f, omen, true, min = 1) else 0
                 ),
-                WaveSpawnEntry(
-                    PazEntities.GARGANTUAR,
-                    if (wave > 10) scaled(0.2f + (wave - 11) * 0.3f, omen, credits, max = 2) else 0,
-                    ::configurePirateInvasion
-                ),
                 graveDiggerEntry(raid),
             )
         },
@@ -381,7 +372,7 @@ enum class WaveType(
             return DEFAULT
         }
 
-        fun omenScale(omen: Float): Float = 1f+(omen-1f) * 0.05f
+        fun omenScale(omen: Float): Float = 1f+(omen-1f) * 0.002f
         fun creditsBonus(credits: Boolean): Float = if (credits) 1.2f else 1f // credits bonus
 
         fun scaled(base: Float, omen: Float, credits: Boolean, min: Int = 0, max: Int = Int.MAX_VALUE): Int {
@@ -412,7 +403,7 @@ enum class WaveType(
                 val level = zombie.level() as? ServerLevel ?: continue
                 val difficulty = level.getCurrentDifficultyAt(zombie.blockPosition())
                 if (zombie.random.nextFloat() < 0.7f) {
-                    val itemStack = Mob.getEquipmentForSlot(slot, 4)?.defaultInstance ?: continue
+                    val itemStack = Mob.getEquipmentForSlot(slot, 3)?.defaultInstance ?: continue
                     if (zombie.random.nextFloat() < 0.3f * difficulty.specialMultiplier) EnchantmentHelper.enchantItemFromProvider(
                         itemStack,
                         level.registryAccess(),

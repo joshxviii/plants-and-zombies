@@ -57,7 +57,6 @@ class DoorShieldItem(properties: Properties) : Item(properties) {
     }
 
     companion object {
-
         fun stackFor(doorType: Block): ItemStack {
             val stack = ItemStack(PazItems.DOOR_SHIELD)
             stack.set(PazComponents.DOOR_SHIELD, DoorShieldComponent(doorType))

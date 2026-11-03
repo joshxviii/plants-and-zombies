@@ -416,7 +416,7 @@
 
   "event.raid.boss_spawn": {
     "sounds": [
-      { "name": "block/mob/evocation_illager/prepare_summon", "volume": 6.0, "pitch": 0.825 }
+      { "name": "mob/evocation_illager/prepare_summon", "volume": 6.0, "pitch": 0.825 }
     ], "subtitle": "plantz.subtitles.event.raid.boss_spawn"
   },
 

@@ -139,7 +139,7 @@ class ZombieRaid(
         const val MIN_PANIC_DISTANCE: Int = 8
         const val MAX_PANIC_DISTANCE: Int = 28
 
-        const val FLAG_MAX_HEALTH: Int = 400
+        const val FLAG_MAX_HEALTH: Int = 500
 
         const val PRE_RAID_TICKS: Int = 100
         const val POST_RAID_TICKS: Int = 80

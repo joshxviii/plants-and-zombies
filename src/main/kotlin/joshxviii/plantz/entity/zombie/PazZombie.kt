@@ -252,7 +252,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         super.onEquipItem(slot, oldStack, stack)
     }
 
-    private fun useItems() {
+    fun useItems() {
         if (isUsingItem) return
 
         val hand = when {

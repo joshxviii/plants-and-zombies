@@ -122,6 +122,7 @@ object PazItems {
     val NEWSPAPER: Item = registerItem(
         "newspaper", ::NewspaperItem,
         properties = Item.Properties()
+            .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
             .delayedComponent(DataComponents.BLOCKS_ATTACKS, {
                 BlocksAttacks(
                     0.25f,
@@ -135,7 +136,6 @@ object PazItems {
             }
             )
             .component(PazComponents.BLOCK_BREAK_CHANCE, BlockBreakChanceComponent(0.08f))
-            .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
     )
     @JvmField
     val TACO: Item = registerItem(
