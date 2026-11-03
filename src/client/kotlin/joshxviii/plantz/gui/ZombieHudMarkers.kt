@@ -81,8 +81,6 @@ object ZombieHudMarkers {
         //submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale * state.scale, outlinePad = 1.15f)
 
         // head icon
-        // TODO [use3dIcon] uses a copied render of the entity model with everything except the head removed.
-        //  it definitely has an impact on performance, but I can't find a better way to render worn head items like the cones/football helmets.
 
         // TODO I should probably take a screen shot when resources are loaded of each entity in the zombie raider tag list and save the head marker image to reuse here
         submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale * state.scale)
