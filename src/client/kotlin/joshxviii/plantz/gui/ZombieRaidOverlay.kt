@@ -32,6 +32,7 @@ object ZombieRaidOverlay {
     val ZOMBIE_HEAD_SPRITE: Identifier = pazResource("textures/gui/raid/zombie_head.png")
     val ZOMBIE_HEAD_CREDITS_SPRITE: Identifier = pazResource("textures/gui/raid/zombie_head_after_credits.png")
     val BOSS_HEAD_SPRITE: Identifier = pazResource("textures/gui/raid/boss_head.png")
+    val BOSS_CHANCE_SPRITE: Identifier = pazResource("textures/gui/raid/boss_chance.png")
     val HEALTH_BAR_PLANT: Identifier = pazResource("textures/gui/raid/flag_health.png")
     val HEALTH_BAR_PLANT_FLASH: Identifier = pazResource("textures/gui/raid/flag_health_flash.png")
     val HEALTH_BAR_ZOMBIES: Identifier = pazResource("textures/gui/raid/zombie_health.png")
@@ -74,6 +75,15 @@ object ZombieRaidOverlay {
 
         // tombstone bg
         graphics.blit(RenderPipelines.GUI_TEXTURED, if (raidEvent.seenCredits) BACKGROUND_CREDITS else BACKGROUND, x, y, 0f, 0f, BG_WIDTH, BG_HEIGHT, BG_WIDTH, BG_HEIGHT)
+
+        // boss chance
+        val bossChanceText = "${Mth.floor(raidEvent.bossChance * 100f)}%"
+        val bossChanceIconSize = 12
+        val bossChanceWidth = font.width(bossChanceText) + bossChanceIconSize
+        val bossChanceX = screenWidth - bossChanceWidth - 26
+        val bossChanceY = y + 14
+        graphics.text(font, bossChanceText, bossChanceX, bossChanceY, ARGB.opaque(0xFFFFFF))
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BOSS_CHANCE_SPRITE, bossChanceX + font.width(bossChanceText), bossChanceY - 2, 0f, 0f, bossChanceIconSize, bossChanceIconSize, bossChanceIconSize, bossChanceIconSize,)
 
         // flag health
         renderPlantBar(x, y, graphics, raidEvent)

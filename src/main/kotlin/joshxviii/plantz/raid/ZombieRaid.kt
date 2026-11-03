@@ -522,7 +522,8 @@ class ZombieRaid(
             bossProgressBar = bossProgressBar(),
             zombieProgressBar = zombieProgressBar(),
             plantProgressBar = plantProgressBar(level),
-            seenCredits = starterHasSeenCredits
+            seenCredits = starterHasSeenCredits,
+            bossChance = calculateBossChance(),
         )
 
         val packet = ZombieRaidResponsePayload(data)
@@ -595,9 +596,6 @@ class ZombieRaid(
     }
 
     private fun announceBoss(waveType: WaveType, bossName: Component) {
-        //val title = Component.translatable("event.plantz.zombie_raid.boss_wave").apply { withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD) }
-        //val subtitle = Component.translatable("event.plantz.zombie_raid.boss", bossName).apply { withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.BOLD) }
-        //if (waveType == WaveType.DEFAULT) showTitleMessage(title, subtitle)
         zombieRaidEvent.players.forEach {
             it.sendSystemMessage(Component.translatable("event.plantz.zombie_raid.boss.spawn", bossName).withColor(0x872727))
         }
