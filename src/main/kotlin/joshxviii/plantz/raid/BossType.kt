@@ -22,6 +22,8 @@ import net.minecraft.world.entity.monster.zombie.Zombie
  * Defines a boss type for a zombie raid. Multiple entities can be spawned as a single boss type.
  */
 enum class BossType(
+    private val minWave: Int,
+    private val maxWave: Int,
     private val weightFn: (ZombieRaid, WaveType) -> Float,
     private val bossSpawns: (ZombieRaid, WaveType) -> List<BossEntry>,
 ): StringRepresentable {
@@ -29,7 +31,9 @@ enum class BossType(
     // SpawnRequirements, Weights, BossEntries, and Boss Configurations should all be editable in the .json.
     // Parsing should be done in a new [PazAPI] class.
     STAR_PLAYER(
-        weightFn = { raid, wave -> if (raid.currentWaveNumber() < 7) 3f else 0f },
+        minWave = 1,
+        maxWave = 7,
+        weightFn = { raid, wave -> 1f },
         bossSpawns = { raid, wave ->
             listOf(
                 BossEntry(
@@ -38,8 +42,22 @@ enum class BossType(
             )
         }
     ),
+    BARON_VON_BATS(
+        minWave = 6,
+        maxWave = 18,
+        weightFn = { raid, wave -> if (raid.currentWaveNumber() > 9 && wave == WaveType.DEFAULT || wave == WaveType.ZOMBOWEEN) 1f else 0f },
+        bossSpawns = { raid, wave ->
+            listOf(
+                BossEntry(
+                    PazEntities.BARON_VON_BATS,
+                ),
+            )
+        }
+    ),
     GARGANTUAR(
-        weightFn = { raid, wave -> if (raid.currentWaveNumber() > 7 && wave == WaveType.DEFAULT || wave == WaveType.PIRATE_INVASION) 3f else 0f },
+        minWave = 9,
+        maxWave = 20,
+        weightFn = { raid, wave -> if (wave == WaveType.DEFAULT || wave == WaveType.PIRATE_INVASION) 3f else 0f },
         bossSpawns = { raid, wave ->
             listOf(
                 BossEntry(
@@ -50,6 +68,8 @@ enum class BossType(
         }
     ),
     ROBO_MECH(
+        minWave = 10,
+        maxWave = 20,
         weightFn = { _, wave -> if (wave == WaveType.ROBO_ARMY) 1f else 0f },
         bossSpawns = { raid, wave ->
             listOf(
@@ -59,17 +79,9 @@ enum class BossType(
             )
         }
     ),
-    BARON_VON_BATS(
-        weightFn = { raid, wave -> if (raid.currentWaveNumber() > 9 && wave == WaveType.DEFAULT || wave == WaveType.ZOMBOWEEN) 1f else 0f },
-        bossSpawns = { raid, wave ->
-            listOf(
-                BossEntry(
-                    PazEntities.BARON_VON_BATS,
-                ),
-            )
-        }
-    ),
     ZOMBOSS(
+        minWave = 20,
+        maxWave = 20,
         weightFn = { _, wave -> if (wave == WaveType.ZOMBOSS) 1f else 0f },
         bossSpawns = { raid, wave -> listOf() }
     );
@@ -81,18 +93,18 @@ enum class BossType(
         private val BY_ID = ByIdMap.continuous(BossType::ordinal, entries.toTypedArray(), ByIdMap.OutOfBoundsStrategy.ZERO)
         val STREAM_CODEC: StreamCodec<ByteBuf, BossType> = ByteBufCodecs.idMapper(BY_ID, BossType::ordinal)
 
-        fun pickBossType(raid: ZombieRaid, waveType: WaveType): BossType {
-            val eligible = BossType.entries
+        fun pickBossType(raid: ZombieRaid, waveType: WaveType): BossType? {
+            val eligible = BossType.entries.filter { it.isAvailable(raid) }
             val totalWeight = eligible.sumOf { it.weight(raid, waveType).toDouble() }.toFloat()
-            if (totalWeight <= 0f) return GARGANTUAR
+            if (totalWeight <= 0f) return null
 
             val roll = raid.random.nextFloat() * totalWeight
             var runningWeight = 0f
-            for (wave in eligible) {
-                runningWeight += wave.weight(raid, waveType)
-                if (roll < runningWeight) return wave
+            for (bossType in eligible) {
+                runningWeight += bossType.weight(raid, waveType)
+                if (roll < runningWeight) return bossType
             }
-            return GARGANTUAR
+            return null
         }
 
         val BOSSIFY: Identifier = pazResource("bossify")
@@ -111,6 +123,8 @@ enum class BossType(
     }
 
     fun bossEntityEntries(raid: ZombieRaid, wave: WaveType): List<BossEntry> = bossSpawns(raid, wave)
+
+    fun isAvailable(raid: ZombieRaid): Boolean = raid.currentWaveNumber() + 1 in minWave..maxWave
 
     fun weight(raid: ZombieRaid, waveType: WaveType): Float = weightFn(raid, waveType)
 
