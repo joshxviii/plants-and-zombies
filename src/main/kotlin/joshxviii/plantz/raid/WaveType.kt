@@ -8,7 +8,7 @@ import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazLootTables
 import joshxviii.plantz.SeasonalEvents
 import joshxviii.plantz.entity.zombie.*
-import joshxviii.plantz.item.component.DoorShield
+import joshxviii.plantz.item.component.DoorShieldComponent
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
@@ -420,7 +420,7 @@ enum class WaveType(
             }
             if (zombie is BrownCoat && zombie.random.nextFloat() < 0.2f) {
                 val doorShield = PazItems.DOOR_SHIELD.defaultInstance
-                doorShield.set(PazComponents.DOOR_SHIELD, DoorShield(Blocks.IRON_DOOR))
+                doorShield.set(PazComponents.DOOR_SHIELD, DoorShieldComponent(Blocks.IRON_DOOR))
                 doorShield.damageValue = zombie.random.nextIntBetweenInclusive(200, 250)
                 zombie.setItemSlot(EquipmentSlot.OFFHAND, doorShield)
                 zombie.setDropChance(EquipmentSlot.OFFHAND, 0f)

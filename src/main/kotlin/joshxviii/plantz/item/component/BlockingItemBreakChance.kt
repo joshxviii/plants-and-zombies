@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level
 object BlockingItemBreakChance {
     @JvmStatic
     fun handle(level: Level, item: ItemStack, user: LivingEntity, damage: Float, slot: EquipmentSlot): Boolean {
-        val breakChance = item.get(PazComponents.BLOCKING_ITEM_BREAK_CHANCE)
+        val breakChance = item.get(PazComponents.BLOCK_BREAK_CHANCE)
         if (breakChance == null && user is Player) return false
         if (level !is ServerLevel) return true
 
@@ -29,7 +29,7 @@ object BlockingItemBreakChance {
             }
         }
 
-        if (breakChance != null && damage > 0.0f && user.random.nextFloat() < breakChance) {
+        if (breakChance != null && damage > 0.0f && user.random.nextFloat() < breakChance.chance) {
             val breakSound = item.get(DataComponents.BREAK_SOUND) ?: SoundEvents.ITEM_BREAK
             item.shrink(1)
             if (!user.isSilent) {

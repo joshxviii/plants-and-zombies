@@ -52,7 +52,7 @@ class ProtectsHeadDataComponent(
         flag: TooltipFlag,
         components: DataComponentGetter
     ) {
-        consumer.accept(Component.translatable("component.blocks_damage.description").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC))
+        consumer.accept(Component.translatable("component.plantz.blocks_damage.description").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC))
     }
 
     fun canBlockFrom(source: DamageSource, user: LivingEntity): Boolean {

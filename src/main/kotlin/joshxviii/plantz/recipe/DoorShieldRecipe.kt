@@ -3,14 +3,12 @@ package joshxviii.plantz.recipe
 import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazItems
-import joshxviii.plantz.PazMain
-import joshxviii.plantz.item.component.DoorShield
+import joshxviii.plantz.item.component.DoorShieldComponent
 import joshxviii.plantz.pazResource
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
-import net.minecraft.resources.Identifier
 import net.minecraft.tags.ItemTags
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemStack
@@ -32,7 +30,7 @@ class DoorShieldRecipe : CustomRecipe() {
     override fun assemble(input: CraftingInput): ItemStack {
         val door = doorBlock(input) ?: return ItemStack.EMPTY
         return ItemStack(PazItems.DOOR_SHIELD).also {
-            it.set(PazComponents.DOOR_SHIELD, DoorShield(door))
+            it.set(PazComponents.DOOR_SHIELD, DoorShieldComponent(door))
         }
     }
 

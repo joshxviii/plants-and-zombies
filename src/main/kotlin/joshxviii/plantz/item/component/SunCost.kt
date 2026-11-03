@@ -25,7 +25,7 @@ data class SunCost(
         components: DataComponentGetter
     ) {
         val type = components.get(DataComponents.ENTITY_DATA)?.type()
-        consumer.accept(Component.translatable("component.item_cost", PazItems.SUN.name(), getSunCost(type)).withStyle(ChatFormatting.GOLD))
+        consumer.accept(Component.translatable("component.plantz.item_cost", PazItems.SUN.name(), getSunCost(type)).withStyle(ChatFormatting.GOLD))
     }
 
     fun getSunCost(forType: EntityType<*>?): Int {

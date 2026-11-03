@@ -3,6 +3,7 @@ package joshxviii.plantz
 import joshxviii.plantz.block.*
 import joshxviii.plantz.block.entity.*
 import joshxviii.plantz.item.FlagItem
+import joshxviii.plantz.item.component.BlockBreakChanceComponent
 import joshxviii.plantz.item.component.ProtectsHeadDataComponent
 import joshxviii.plantz.item.component.StoredWater.Companion.DEFAULT_CAPACITY
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
@@ -35,7 +36,6 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.BlockSetType
 import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.IntegerProperty
-import net.minecraft.world.level.block.state.properties.NoteBlockInstrument
 import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.level.material.PushReaction
 
@@ -192,7 +192,7 @@ object PazBlocks {
             .component(PazComponents.PROTECTS_HEAD, ProtectsHeadDataComponent(
                 blockSound = PazSounds.PROJECTILE_HIT_CONE
             ))
-            .component(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, BlockingItemBreakChanceComponent(0.1f))
+            .component(PazComponents.BLOCK_BREAK_CHANCE, BlockBreakChanceComponent(0.1f))
             .component(
                 DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
                     .setEquipSound(SoundEvents.ARMOR_EQUIP_LEATHER)

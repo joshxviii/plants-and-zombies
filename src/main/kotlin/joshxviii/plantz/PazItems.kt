@@ -1,5 +1,6 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.item.component.BlockBreakChanceComponent
 import joshxviii.plantz.PazEntities.ALL_STAR
 import joshxviii.plantz.PazEntities.BACKUP_DANCER
 import joshxviii.plantz.PazEntities.BARON_VON_BATS
@@ -133,7 +134,7 @@ object PazItems {
                 )
             }
             )
-            .component(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, BlockingItemBreakChanceComponent(0.08f))
+            .component(PazComponents.BLOCK_BREAK_CHANCE, BlockBreakChanceComponent(0.08f))
             .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
     )
     @JvmField
@@ -147,7 +148,7 @@ object PazItems {
         properties = Item.Properties()
             .durability(336)
             .equippableUnswappable(EquipmentSlot.OFFHAND)
-            .component(PazComponents.DOOR_SHIELD, DoorShield())
+            .component(PazComponents.DOOR_SHIELD, DoorShieldComponent())
             .component(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
                 .add(
                     Attributes.ARMOR,
@@ -253,7 +254,7 @@ object PazItems {
             .humanoidArmor(ArmorMaterials.CHAINMAIL, ArmorType.HELMET)
             .component(PazComponents.PROTECTS_HEAD, ProtectsHeadDataComponent()
             )
-            .component(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, BlockingItemBreakChanceComponent(0.015f))
+            .component(PazComponents.BLOCK_BREAK_CHANCE, BlockBreakChanceComponent(0.015f))
             .component(
                 DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
                     .setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)
@@ -360,7 +361,7 @@ object PazItems {
             blockSound = PazSounds.PROJECTILE_HIT_BUCKET
         ))
         builder.set(DataComponents.ENCHANTABLE, Enchantable(10))
-        builder.set(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, BlockingItemBreakChanceComponent(0.05f))
+        builder.set(PazComponents.BLOCK_BREAK_CHANCE, BlockBreakChanceComponent(0.05f))
         builder.set(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
             .setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)
             .build()
@@ -392,13 +393,14 @@ object PazItems {
         ComposterBlock.COMPOSTABLES.put(SEED_PACKET.asItem(), 1.0f)
 
         // Modify components
+        ItemComponentTooltipProviderRegistryImpl.addFirst(PazComponents.PROTECTS_HEAD)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_WATER)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_SUN)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BRAINZ_ALLOY_COST)
-        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.PROTECTS_HEAD)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.LETTER_DATA)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.DOOR_SHIELD)
+        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BLOCK_BREAK_CHANCE)
 
         DefaultItemComponentEvents.MODIFY.register { ctx ->
             ctx.modify({ it.defaultInstance.`is`(BUCKET_WEARABLE)}, ::bucketHeadItem)
