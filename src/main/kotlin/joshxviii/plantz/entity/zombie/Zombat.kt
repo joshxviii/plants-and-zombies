@@ -79,8 +79,9 @@ class Zombat(type: EntityType<out Zombat>, level: Level) : PazZombie(type, level
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
         val baron = if (isBaronBat) baronId?.let { level.getEntity(it) as? BaronVonBats } else null
         if (baron != null) {
-            baron.hurtAsBaronBat(level, source, damage)
-            return super.hurtServer(level, source, 0f)
+            val baronWasHurt = baron.hurtAsBaronBat(level, source, damage)
+            val batWasHurt = super.hurtServer(level, source, 0f)
+            return baronWasHurt || batWasHurt
         }
         else return super.hurtServer(level, source, damage)
     }

@@ -137,6 +137,7 @@ fun Plant.processGloveItem(player: Player, item: ItemStack, hand: InteractionHan
         (item.has(DataComponents.ENTITY_DATA)) -> return false
         // pet :)
         else -> {
+            if (!this.onValidGround()) return false
             this.funnyBounce()
             addParticlesAroundSelf(level(), ParticleTypes.HEART, amount = 0..0, height = eyeHeight)
         }
@@ -211,14 +212,18 @@ fun Plant.pumpkinSeedInteraction(itemStack: ItemStack, cantAfford: Boolean, play
             level, EntityType.createDefaultStackConfig(level, itemStack, null), blockPosition(), EntitySpawnReason.SPAWN_ITEM_USE, true, true
         )?.let {
             val pumpkinData = this.saveAsCompoundTag()
+
             val filteredData = pumpkinData.copy().apply {
+                remove("Health")
                 remove("CustomName")
                 remove("plantz:State")
                 remove("plantz:Cooldown")
             }
             val mergedData = TypedEntityData.of(seedType, seedData.copyTagWithoutId().merge(filteredData))
             mergedData.loadInto(it)
-            if (it is Plant) it.applyPumpkinArmor(pumpkinData = TypedEntityData.of(this.type, pumpkinData))
+            if (it is Plant) it.applyPumpkinArmor(
+                amount = pumpkinData.getFloatOr("Health", PazConfig.PUMPKIN_ARMOR_AMOUNT.toFloat()),
+                pumpkinData = TypedEntityData.of(this.type, pumpkinData))
             if (level.addFreshEntity(it)) discard()
         }
         return PacketInteractionResult.SUCCESS
@@ -234,6 +239,7 @@ fun Entity.saveAsCompoundTag(discards: List<String> = listOf("Pos")): CompoundTa
         if (this is Plant) plantSaveData(output)
         discards.forEach { output.discard(it) }
         output.discard("plantz:PumpkinArmor")
+        output.discard("Motion")
         output.discard("leash")
         output.discard("UUID")
         return output.buildResult()

@@ -18,8 +18,18 @@ enum class BossType(
     private val weightFn: (ZombieRaid, WaveType) -> Float,
     private val bossSpawns: (ZombieRaid, WaveType) -> List<BossEntry>,
 ): StringRepresentable {
+    STAR_PLAYER(
+        weightFn = { raid, wave -> if (raid.currentWaveNumber() < 7) 3f else 0f },
+        bossSpawns = { raid, wave ->
+            listOf(
+                BossEntry(
+                    PazEntities.ALL_STAR, ::bossify
+                ),
+            )
+        }
+    ),
     GARGANTUAR(
-        weightFn = { _, wave -> if (wave == WaveType.DEFAULT || wave == WaveType.PIRATE_INVASION) 3f else 0f },
+        weightFn = { raid, wave -> if (raid.currentWaveNumber() > 7 && wave == WaveType.DEFAULT || wave == WaveType.PIRATE_INVASION) 3f else 0f },
         bossSpawns = { raid, wave ->
             listOf(
                 BossEntry(
@@ -40,7 +50,7 @@ enum class BossType(
         }
     ),
     BARON_VON_BATS(
-        weightFn = { _, wave -> if (wave == WaveType.DEFAULT || wave == WaveType.ZOMBOWEEN) 1f else 0f },
+        weightFn = { raid, wave -> if (raid.currentWaveNumber() > 9 && wave == WaveType.DEFAULT || wave == WaveType.ZOMBOWEEN) 1f else 0f },
         bossSpawns = { raid, wave ->
             listOf(
                 BossEntry(
@@ -72,14 +82,17 @@ enum class BossType(
         }
 
         val BOSSIFY: Identifier = pazResource("bossify")
-        private val BOSS_SCALE = AttributeModifier(BOSSIFY, 1.0, AttributeModifier.Operation.ADD_VALUE)
-        private val BOSS_HEALTH = AttributeModifier(BOSSIFY, 3.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+        private val BOSS_SCALE = AttributeModifier(BOSSIFY, 0.25, AttributeModifier.Operation.ADD_VALUE)
+        private val BOSS_HEALTH = AttributeModifier(BOSSIFY, 2.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+        private val BOSS_DAMAGE = AttributeModifier(BOSSIFY, 1.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE)
 
         fun bossify(zombie: Zombie) {
             zombie.getAttribute(Attributes.SCALE)?.let { if (!it.hasModifier(BOSSIFY)) it.addPermanentModifier(BOSS_SCALE) }
             zombie.getAttribute(Attributes.MAX_HEALTH)?.let { if (!it.hasModifier(BOSSIFY)) it.addPermanentModifier(BOSS_HEALTH) }
+            zombie.getAttribute(Attributes.ATTACK_DAMAGE)?.let { if (!it.hasModifier(BOSSIFY)) it.addPermanentModifier(BOSS_DAMAGE) }
             zombie.health = zombie.maxHealth
             if (zombie is RoboZombie) zombie.isTransformed = true
+            if (zombie is AllStar) zombie.variant = AllStarVariant.GIGA
         }
     }
 

@@ -2,20 +2,16 @@ package joshxviii.plantz.item
 
 import joshxviii.plantz.PlantHeadAttachment
 import joshxviii.plantz.PazEnchantments
-import joshxviii.plantz.PazItems
 import joshxviii.plantz.applyImpulse
-import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.plant.WallNut
+import joshxviii.plantz.pazResource
 import joshxviii.plantz.removeItemFromInventory
 import net.minecraft.ChatFormatting
-import net.minecraft.core.BlockPos
-import net.minecraft.core.Direction
 import net.minecraft.core.component.DataComponentGetter
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.sounds.SoundSource
 import net.minecraft.tags.BlockTags
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -31,7 +27,6 @@ import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.item.enchantment.ItemEnchantments
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.CropBlock
-import net.minecraft.world.level.block.entity.BeaconBlockEntity.playSound
 
 class GardeningGloveItem(properties: Properties) : Item(properties) {
 
@@ -79,10 +74,6 @@ class GardeningGloveItem(properties: Properties) : Item(properties) {
                 hurtAndDropPlant(item, owner, hand)
             }
         }
-    }
-
-    override fun getUseAnimation(itemStack: ItemStack): ItemUseAnimation {
-        return ItemUseAnimation.BRUSH
     }
 
     override fun useOn(context: UseOnContext): InteractionResult {
@@ -137,19 +128,27 @@ class GardeningGloveItem(properties: Properties) : Item(properties) {
     }
 
     override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResult {
-        if (player.getItemInHand(hand).has(DataComponents.ENTITY_DATA)) player.startUsingItem(hand)
+        val item = player.getItemInHand(hand)
+        val hasLobbing = item.enchantments.keySet().any { it.`is`(pazResource("lobbing")) }
+        if (item.has(DataComponents.ENTITY_DATA) && hasLobbing) player.startUsingItem(hand)
         return super.use(level, player, hand)
     }
 
+    override fun getUseDuration(itemStack: ItemStack, user: LivingEntity): Int = 0
+
+    override fun getUseAnimation(itemStack: ItemStack): ItemUseAnimation {
+        return ItemUseAnimation.BRUSH
+    }
+
     override fun onUseTick(level: Level, livingEntity: LivingEntity, itemStack: ItemStack, ticksRemaining: Int) {
-        super.onUseTick(level, livingEntity, itemStack, ticksRemaining)
+        if (ticksRemaining>1) return
         if (level.isClientSide || livingEntity !is Player) return
 
         val stack = livingEntity.getItemInHand(livingEntity.usedItemHand)
         val plantData = stack.get(DataComponents.ENTITY_DATA) ?: return
-        val lobbingLevel = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY)
+        val lobbingLevel = stack.enchantments
             .entrySet()
-            .firstOrNull { it.key.value().effects().has(PazEnchantments.LOB_PLANT) }
+            .firstOrNull { it.key.value().effects().has(PazEnchantments.LOBBING) }
             ?.intValue ?: 0
         if (lobbingLevel == 0) return
 

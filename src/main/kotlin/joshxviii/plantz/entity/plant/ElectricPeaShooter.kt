@@ -20,7 +20,7 @@ class ElectricPeaShooter(type: EntityType<out Plant>, level: Level) : Plant(type
         this.goalSelector.addGoal(2, ProjectileAttackGoal(
             usingEntity = this,
             projectileFactory = { PeaElectric(level(), this) },
-            cooldownTime = 20,
+            cooldownTime = 22,
             actionDelay = 3))
         this.targetSelector.addGoal(4, NearestAttackableTargetGoal(this, LivingEntity::class.java, 5, true, false) { target, level ->
             target !is Plant

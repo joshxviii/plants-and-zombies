@@ -2,6 +2,7 @@ package joshxviii.plantz
 
 import joshxviii.plantz.PazTags.EntityTypes.ATTACKS_PLANTS
 import joshxviii.plantz.PazTags.EntityTypes.IGNORED_BY_PLANT_ATTACKERS
+import joshxviii.plantz.PazTags.EntityTypes.ZOMBIE_ATTACK_ON_COLLIDE
 import joshxviii.plantz.PazTags.EntityTypes.ZOMBIE_RAIDERS
 import joshxviii.plantz.ai.goal.DestroyFlagGoal
 import joshxviii.plantz.ai.goal.PathfindToFlagGoal
@@ -44,9 +45,24 @@ object PazEntities {
             }
 
             if (entity is Mob && entity.`is`(ATTACKS_PLANTS) && entity !is ZombifiedPiglin) {
-                (entity as MobAccessor).targetSelector.addGoal(1, NearestAttackableTargetGoal(entity, WallNut::class.java, 6, true, true) { target, level -> ((target as? WallNut)?.let { it.distanceToSqr(entity) < 3.5 } ?: false)})
+                (entity as MobAccessor).targetSelector.addGoal(
+                    0, object : NearestAttackableTargetGoal<Plant>(entity, Plant::class.java, 1, false, false, { target, _ ->
+                        target.`is`(ZOMBIE_ATTACK_ON_COLLIDE) && entity.boundingBox.intersects(target.boundingBox.inflate(0.1))
+                    }) {
+                        override fun canContinueToUse(): Boolean {
+                            val currentTarget = entity.target ?: return false
+                            return super.canContinueToUse()
+                                && currentTarget.`is`(ZOMBIE_ATTACK_ON_COLLIDE)
+                                && entity.boundingBox.intersects(currentTarget.boundingBox.inflate(0.1))
+                        }
+                    }
+                )
                 // same priority as player
-                (entity as MobAccessor).targetSelector.addGoal(2, NearestAttackableTargetGoal(entity, Plant::class.java, 5, true, false) { target, level -> !target.`is`(IGNORED_BY_PLANT_ATTACKERS) })
+                (entity as MobAccessor).targetSelector.addGoal(
+                    2, NearestAttackableTargetGoal(entity, Plant::class.java, 5, true, false) { target, level ->
+                        !target.`is`(IGNORED_BY_PLANT_ATTACKERS)
+                    }
+                )
             }
         }
     }
@@ -67,7 +83,9 @@ object PazEntities {
         width = 1.0f,
         height = 1.125f,
         attributes = Plant.Companion.PlantAttributes(
-            maxHealth = 60.0,
+            maxHealth = 50.0,
+            armor = 8.0,
+            armorToughness = 5.0
         )
     )
     @JvmField val EXPLODE_O_NUT: EntityType<ExplodeONut> = registerPlant(
@@ -76,7 +94,9 @@ object PazEntities {
         width = 1.0f,
         height = 1.125f,
         attributes = Plant.Companion.PlantAttributes(
-            maxHealth = 60.0,
+            maxHealth = 50.0,
+            armor = 8.0,
+            armorToughness = 5.0
         )
     )
     @JvmField val CHOMPER: EntityType<Chomper> = registerPlant(
@@ -434,8 +454,9 @@ object PazEntities {
             .eyeHeight(1.74f)
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
+            armor = 8.0,
             attackDamage = 7.0,
-            maxHealth = 65.0,
+            maxHealth = 55.0,
             stepHeight = 1.0,
             movementSpeed = 0.23,
             spawnReinforcementsChance = 1.5,
@@ -450,7 +471,7 @@ object PazEntities {
         attributes = PazZombie.Companion.PazZombieAttributes(
             attackDamage = 2.5,
             movementSpeed = 0.22,
-            maxHealth = 40.0,
+            maxHealth = 30.0,
             followRange = 32.0,
         )
     )
@@ -461,8 +482,9 @@ object PazEntities {
             .eyeHeight(1.74f)
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
+            armor = 6.0,
             attackDamage = 4.0,
-            maxHealth = 38.0,
+            maxHealth = 35.0,
             movementSpeed = 0.237,
             spawnReinforcementsChance = 2.0,
         )
@@ -476,7 +498,7 @@ object PazEntities {
         attributes = PazZombie.Companion.PazZombieAttributes(
             armor = 4.0,
             attackDamage = 6.0,
-            maxHealth = 90.0,
+            maxHealth = 80.0,
             movementSpeed = 0.21,
             spawnReinforcementsChance = 0.0,
         )
@@ -489,7 +511,7 @@ object PazEntities {
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
             attackDamage = 6.0,
-            maxHealth = 55.0,
+            maxHealth = 50.0,
             movementSpeed = 0.25,
             followRange = 100.0,
             spawnReinforcementsChance = 0.0,
@@ -502,7 +524,7 @@ object PazEntities {
             .eyeHeight(1.74f)
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
-            armor = 12.0,
+            armor = 22.0,
             armorToughness = 9.0,
             attackDamage = 11.0,
             maxHealth = 128.0,
@@ -521,7 +543,7 @@ object PazEntities {
             armor = 20.0,
             armorToughness = 4.0,
             attackDamage = 10.0,
-            maxHealth = 150.0,
+            maxHealth = 140.0,
             stepHeight = 1.0,
             movementSpeed = 0.25,
             flyingSpeed = 0.28,
@@ -539,7 +561,7 @@ object PazEntities {
         attributes = PazZombie.Companion.PazZombieAttributes(
             attackDamage = 1.5,
             maxHealth = 20.0,
-            movementSpeed = 0.32,
+            movementSpeed = 0.3,
             spawnReinforcementsChance = 0.3,
         )
     )
@@ -550,7 +572,8 @@ object PazEntities {
             .passengerAttachments(2.0f)
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
-            armor = 6.0,
+            armor = 10.0,
+            armorToughness = 2.0,
             attackDamage = 7.0,
             maxHealth = 650.0,
             movementSpeed = 0.21,
@@ -580,7 +603,7 @@ object PazEntities {
             .sized(0.6f, 1.95f)
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
-            armor = 6.0,
+            armor = 8.0,
             attackDamage = 7.0,
             maxHealth = 550.0,
             movementSpeed = 0.21,

@@ -30,8 +30,8 @@ data class StoredWater(
         flag: TooltipFlag,
         components: DataComponentGetter
     ) {
-        consumer.accept(Component.translatable("component.stored_water.description").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC))
-        //consumer.accept(Component.translatable("component.stored_water", storedWater, maxCapacity).withStyle(ChatFormatting.AQUA))
+        consumer.accept(Component.translatable("component.plantz.stored_water.description").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC))
+        //consumer.accept(Component.translatable("component.plantz.stored_water", storedWater, maxCapacity).withStyle(ChatFormatting.AQUA))
     }
 
     fun storagePercentage(): Float = (storedWater.toFloat() / maxCapacity)

@@ -5,10 +5,12 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "BlocksAttacksBreakChanceMixin",
+    "EntityProjectileDeflectionMixin",
     "LivingEntityAccessor",
     "LivingEntityMixin",
     "LivingEntityProtectsHeadMixin",
     "MobAccessor",
+    "OverworldBiomeBuilderMixin",
     "PlayerListMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",

@@ -39,10 +39,6 @@ import org.joml.Quaternionf
 open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
     companion object {
-        fun wallNutReducedDamage(entity: Entity?, damage: Float): Float {
-            return if (entity is Zombie) damage*0.75f else damage
-        }
-
         val ROLLING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(WallNut::class.java, EntityDataSerializers.BOOLEAN)
         val ROLLING_ID: Identifier = pazResource("rolling")
         private const val ROLL_FRICTION = 0.99
@@ -168,8 +164,6 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
     override fun canBeCollidedWith(other: Entity?): Boolean {
         if (isRolling) return super.canBeCollidedWith(other)
 
-        hurtOnCollide(other)
-
         if (other?.`is`(IGNORE_WALLNUT_COLLISION) == true) return false
         return isAlive && other != attachedEntity
     }
@@ -182,9 +176,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
     }
 
     override fun actuallyHurt(level: ServerLevel, source: DamageSource, damage: Float) {
-        super.actuallyHurt(level, source,
-            wallNutReducedDamage(source.entity, damage)
-        )
+        super.actuallyHurt(level, source, damage)
     }
 
     override fun canSurviveOn(block: BlockState): Boolean {

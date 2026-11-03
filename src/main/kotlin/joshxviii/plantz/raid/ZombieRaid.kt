@@ -375,7 +375,7 @@ class ZombieRaid(
         waveTypes = waveTypes.toMutableList()
         waveTypes.add(waveType)
         val wave = currentWaveNumber()
-        val shouldSpawnBoss = wave % 10 == 0
+        val shouldSpawnBoss = wave % 5 == 0
         var leaderSet = false
         totalZombieHealth = 0f
         totalBossHealth = 0f
@@ -406,7 +406,7 @@ class ZombieRaid(
             setBoss(zombie)
             joinRaid(level, zombie, exists = false, pos = pos, configure = configure)
         }
-        val bossName = bossEntities.firstOrNull()?.entityType?.description?: Component.empty()
+        val bossName = getBosses().firstOrNull()?.name?: Component.empty()
         announceBoss(waveType, bossName)
     }
 

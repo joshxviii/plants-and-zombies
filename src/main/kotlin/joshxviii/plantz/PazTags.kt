@@ -29,6 +29,7 @@ object PazTags {
         @JvmField val GNOME_PREFERRED_WEAPONS = tag("gnome_preferred_weapons")
         @JvmField val DIGGER_PREFERRED_WEAPONS = tag("digger_preferred_weapons")
         @JvmField val NEWSPAPER_ZOMBIE_PREFERRED_WEAPONS = tag("newspaper_zombie_preferred_weapons")
+        @JvmField val BARON_PREFERRED_WEAPONS = tag("baron_preferred_weapons")
         @JvmField val BUCKET_WEARABLE = tag("bucket_wearable")
         private fun tag(name: String): TagKey<Item> = TagKey.create(Registries.ITEM, pazResource(name))
     }
@@ -47,6 +48,7 @@ object PazTags {
         @JvmField val ZOMBIE_RAIDERS = tag("zombie_raider")
         @JvmField val CAN_BE_LEADER = tag("can_be_leader")
         @JvmField val ATTACKS_PLANTS = tag("attacks_plants")
+        @JvmField val ZOMBIE_ATTACK_ON_COLLIDE = tag("zombie_attack_on_collide")
         @JvmField val IGNORED_BY_PLANT_ATTACKERS = tag("ignored_by_plant_attackers")
         @JvmField val GNOME_RIDEABLE = tag("gnome_rideable")
         @JvmField val WALLNUT_DEFLECTABLE = tag("wallnut_deflectable")

@@ -1,5 +1,6 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.item.component.BlockBreakChanceComponent
 import joshxviii.plantz.PazEntities.ALL_STAR
 import joshxviii.plantz.PazEntities.BACKUP_DANCER
 import joshxviii.plantz.PazEntities.BARON_VON_BATS
@@ -125,7 +126,7 @@ object PazItems {
                 BlocksAttacks(
                     0.25f,
                     1.0f,
-                    listOf(DamageReduction(80.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 0.9f)),
+                    listOf(DamageReduction(90.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 0.9f)),
                     ItemDamageFunction.DEFAULT,
                     Optional.of<HolderSet<DamageType>>(it.getOrThrow(DamageTypeTags.BYPASSES_SHIELD)),
                     Optional.of(PazSounds.PROJECTILE_HIT_PAPER),
@@ -133,7 +134,7 @@ object PazItems {
                 )
             }
             )
-            .component(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.08f)
+            .component(PazComponents.BLOCK_BREAK_CHANCE, BlockBreakChanceComponent(0.08f))
             .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
     )
     @JvmField
@@ -147,7 +148,18 @@ object PazItems {
         properties = Item.Properties()
             .durability(336)
             .equippableUnswappable(EquipmentSlot.OFFHAND)
-            .component(PazComponents.DOOR_SHIELD, DoorShield())
+            .component(PazComponents.DOOR_SHIELD, DoorShieldComponent())
+            .component(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
+                .add(
+                    Attributes.ARMOR,
+                    AttributeModifier(pazResource("door_armor"), 4.0, AttributeModifier.Operation.ADD_VALUE),
+                    EquipmentSlotGroup.HAND
+                ).add(
+                    Attributes.KNOCKBACK_RESISTANCE,
+                    AttributeModifier(pazResource("door_armor_resistance"), 0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL),
+                    EquipmentSlotGroup.HAND
+                ).build())
+            .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
             .delayedComponent(DataComponents.BLOCKS_ATTACKS, {
                 BlocksAttacks(
                     0.25f,
@@ -159,7 +171,6 @@ object PazItems {
                     Optional.of(SoundEvents.SHIELD_BREAK)
                 )
             })
-            .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
     )
     const val DUCKY_TUBE_DAMAGE_INTERVAL = 45
     val DUCKY_EQUIP_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, pazResource("ducky_tube"))
@@ -243,7 +254,7 @@ object PazItems {
             .humanoidArmor(ArmorMaterials.CHAINMAIL, ArmorType.HELMET)
             .component(PazComponents.PROTECTS_HEAD, ProtectsHeadDataComponent()
             )
-            .component(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.015f)
+            .component(PazComponents.BLOCK_BREAK_CHANCE, BlockBreakChanceComponent(0.015f))
             .component(
                 DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
                     .setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)
@@ -253,15 +264,7 @@ object PazItems {
                 DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
                     .add(
                         Attributes.ARMOR,
-                        AttributeModifier(pazResource("football_armor"), 10.0, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.HEAD
-                    ).add(
-                        Attributes.ARMOR_TOUGHNESS,
-                        AttributeModifier(pazResource("football_armor_toughness"), 2.0, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.HEAD
-                    ).add(
-                        Attributes.KNOCKBACK_RESISTANCE,
-                        AttributeModifier(pazResource("football_knockback_resistance"), 0.15, AttributeModifier.Operation.ADD_VALUE),
+                        AttributeModifier(pazResource("football_armor"), 2.0, AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.HEAD
                     ).build()
             )
@@ -358,7 +361,7 @@ object PazItems {
             blockSound = PazSounds.PROJECTILE_HIT_BUCKET
         ))
         builder.set(DataComponents.ENCHANTABLE, Enchantable(10))
-        builder.set(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.02f)
+        builder.set(PazComponents.BLOCK_BREAK_CHANCE, BlockBreakChanceComponent(0.05f))
         builder.set(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
             .setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)
             .build()
@@ -366,31 +369,18 @@ object PazItems {
         builder.set(DataComponents.ATTRIBUTE_MODIFIERS, builder.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder().build())
             .withModifierAdded(
                 Attributes.ARMOR,
-                AttributeModifier(pazResource("bucket_armor"), 8.0, AttributeModifier.Operation.ADD_VALUE),
+                AttributeModifier(pazResource("bucket_armor"), 20.0, AttributeModifier.Operation.ADD_VALUE),
                 EquipmentSlotGroup.HEAD
             ).withModifierAdded(
                 Attributes.ARMOR_TOUGHNESS,
-                AttributeModifier(pazResource("bucket_armor_toughness"), 2.0, AttributeModifier.Operation.ADD_VALUE),
+                AttributeModifier(pazResource("bucket_armor_toughness"), 8.0, AttributeModifier.Operation.ADD_VALUE),
                 EquipmentSlotGroup.HEAD
             ).withModifierAdded(
                 Attributes.KNOCKBACK_RESISTANCE,
-                AttributeModifier(pazResource("bucket_knockback_resistance"), 0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL),
+                AttributeModifier(pazResource("bucket_knockback_resistance"), 0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL),
                 EquipmentSlotGroup.HEAD
             )
         )
-    }
-
-    fun doorShield(builder: DataComponentMap.Builder, item:  Item) {
-        builder.set(DataComponents.BLOCKS_ATTACKS, BlocksAttacks(
-            0.25f,
-            1.0f,
-            listOf(DamageReduction(90.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 1.0f)),
-            ItemDamageFunction.DEFAULT,
-            Optional.empty<HolderSet<DamageType>>(),
-            Optional.of(SoundEvents.SHIELD_BLOCK),
-            Optional.of(SoundEvents.SHIELD_BREAK)
-        ))
-        builder.set(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.05f)
     }
 
     fun initialize() {
@@ -403,13 +393,14 @@ object PazItems {
         ComposterBlock.COMPOSTABLES.put(SEED_PACKET.asItem(), 1.0f)
 
         // Modify components
+        ItemComponentTooltipProviderRegistryImpl.addFirst(PazComponents.PROTECTS_HEAD)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_WATER)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_SUN)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BRAINZ_ALLOY_COST)
-        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.PROTECTS_HEAD)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.LETTER_DATA)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.DOOR_SHIELD)
+        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BLOCK_BREAK_CHANCE)
 
         DefaultItemComponentEvents.MODIFY.register { ctx ->
             ctx.modify({ it.defaultInstance.`is`(BUCKET_WEARABLE)}, ::bucketHeadItem)

@@ -26,7 +26,7 @@
 - Added a new enchantment, "Lobbing".
   - This enchantment applies to the Gardening Glove and allows the player to toss the held plant.
 - Dye Blasters now store dye ammo. Dye Blaster can only be fired after being loaded with dye. Each shot has a chance to consume the stored dye.
-### Hotfix
+### Fixes
 - Pumpkins are no longer duplicated when using a Gardening Glove.
 - Various other bug fixes / improvements
 
