@@ -29,6 +29,7 @@ class SummonMinionsGoal(
     private val beginSummoning: () -> Unit,
     private val configureMinion: (PazZombie) -> Unit = {},
     private val canSummon: () -> Boolean = { true },
+    private val shouldAddToRaid: Boolean = true
 ) : Goal() {
     companion object {
         const val DEFAULT_AMOUNT = 3
@@ -135,7 +136,10 @@ class SummonMinionsGoal(
             angle * (180.0f / Math.PI.toFloat()),
             0.0f
         )
-        minion.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.REINFORCEMENT, PazZombieGroupData(isRaider = summoner.isActiveInRaid()))
+        minion.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.REINFORCEMENT, PazZombieGroupData(
+            isRaider = summoner.isActiveInRaid() && shouldAddToRaid,
+            ignoreFlag = true
+        ))
         minion.setPersistenceRequired()
         summoner.activeEffects.find { it.effect.`is`(PazEffects.HYPNOTIZE.unwrapKey().orElseThrow()) }
             ?.let(minion::addEffect)

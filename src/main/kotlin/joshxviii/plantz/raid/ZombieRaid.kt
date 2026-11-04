@@ -43,7 +43,6 @@ import net.minecraft.util.RandomSource
 import net.minecraft.util.StringRepresentable
 import net.minecraft.world.BossEvent
 import net.minecraft.world.Difficulty
-import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.SpawnGroupData
@@ -57,7 +56,6 @@ import net.minecraft.world.item.component.Fireworks
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.levelgen.Heightmap
 import net.minecraft.world.phys.AABB
-import org.apache.logging.log4j.core.jmx.Server
 import java.util.*
 import java.util.function.Predicate
 import kotlin.math.abs
@@ -151,7 +149,7 @@ class ZombieRaid(
         const val GARDEN_HERO_EFFECT_DURATION: Int = 72000
         const val COUNTDOWN_BEFORE_LOSS: Int = 200 //10 seconds
         const val MAXIMUM_WAVE_COUNT: Int = 20
-        private const val BOSS_CHANCE_GROWTH_FACTOR = 2.4f
+        private const val BOSS_CHANCE_GROWTH_FACTOR = 2.5f
         private const val WAVES_UNTIL_GUARANTEED_BOSS = 6f
         private const val BOSS_CHANCE_SPEED_BONUS_WINDOW_SECONDS = 60f
     }
@@ -355,7 +353,18 @@ class ZombieRaid(
                 if (level.getEntity(zombie.getUUID()) == null) toRemove.add(zombie)
             }
         }
+        val bossWasDefeated = toRemove.any { it.isBoss() && !it.isAlive }
+        val livingBossWasRemoved = toRemove.any { it.isBoss() && it.isAlive }
         for (zombie in toRemove) removeFromRaid(level, zombie, true)
+        if (
+            bossWasDefeated && !livingBossWasRemoved &&
+            getBosses().isEmpty() && pendingRaiders.values.none { it.isBoss }
+        ) {
+            zombieRaidEvent.players.forEach { player ->
+                player.sendSystemMessage(Component.translatable("event.plantz.zombie_raid.boss.defeat").withStyle(ChatFormatting.RED))
+                PazCriteria.BOSS_DEFEAT_TRIGGER.trigger(player, waves.count {it.boss!=null})
+            }
+        }
     }
 
     fun absorbRaidOmen(player: ServerPlayer): Boolean {
@@ -393,9 +402,8 @@ class ZombieRaid(
         }
     }
 
-
     /**
-     * Spawns a wave for this current raid.
+     * Spawns a new wave for this raid.
      */
     private fun spawnWave(
         level: ServerLevel,
@@ -442,8 +450,8 @@ class ZombieRaid(
     private fun calculateBossChance(): Float {
         if (isFinalWave()) return 0f
         //if (currentWaveNumber() >= numWaves-1) return 1f// final wave always has a boss
-        val wavesSinceLastBoss = (waves.asReversed().takeWhile { it.boss == null }.size).coerceAtLeast(0)
-        val x = wavesSinceLastBoss / WAVES_UNTIL_GUARANTEED_BOSS
+        val wavesSinceLastBoss = (waves.filterIndexed { index, _ -> index!=0 }.asReversed().takeWhile { it.boss == null }.size).coerceAtLeast(0)+1
+        val x = wavesSinceLastBoss / (WAVES_UNTIL_GUARANTEED_BOSS - 1)
         return (x.pow(BOSS_CHANCE_GROWTH_FACTOR).coerceIn(0f, 1f)).coerceAtMost(1f)
     }
 
@@ -571,9 +579,11 @@ class ZombieRaid(
         (zombie as? ZombieRaider)?.`plantz$setIsBoss`(true)
     }
 
+    fun isStopped(): Boolean = status == ZombieRaidStatus.STOPPED
+    fun isFinalWave(): Boolean = currentWaveNumber() >= numWaves
+    private fun willLoseWhenTimeRunsOut(): Boolean = isFinalWave() || getBosses().isNotEmpty()
     fun currentWaveNumber(): Int = waves.size
     fun currentWave(): CompletedWave? = waves.lastOrNull()
-    fun isFinalWave(): Boolean = currentWaveNumber() >= numWaves
     fun getLeaders(): List<Zombie> = waveZombieMap.values.flatMap { it.filter { z -> z.isLeader() } }
     fun getBosses(): List<Zombie> = waveZombieMap.values.flatMap { it.filter { z -> z.isBoss() } }
     fun getAliveRaiders(): Int = waveZombieMap.values.stream().mapToInt { it.map { z -> if (z.getEffectiveRaidHealth()>0f) 1 else 0 }.sum() }.sum() + pendingRaiders.size
@@ -615,10 +625,6 @@ class ZombieRaid(
             && status == ZombieRaidStatus.ONGOING
             && !willLoseWhenTimeRunsOut()
 
-    }
-
-    private fun willLoseWhenTimeRunsOut(): Boolean {
-        return isFinalWave() || getBosses().isNotEmpty()
     }
 
     private fun refreshRaidProfile(level: ServerLevel) {
@@ -741,5 +747,5 @@ class ZombieRaid(
         }
         zombieRaidEvent.removeAllPlayers()
     }
-    fun isStopped(): Boolean = status == ZombieRaidStatus.STOPPED
+
 }

@@ -93,6 +93,7 @@
   "event.plantz.zombie_raid.final_wave": "Final Wave!",
   "event.plantz.zombie_raid.special_wave": "Special Wave: %s",
   "event.plantz.zombie_raid.boss.spawn": "A boss has spawned: %s",
+  "event.plantz.zombie_raid.boss.defeat": "A Boss was defeated!",
   "event.plantz.zombie_raid.special_wave.bucket_brigade": "Bucket Brigade!",
   "event.plantz.zombie_raid.special_wave.halftime_showdown": "Half-Time Showdown!",
   "event.plantz.zombie_raid.special_wave.winter_wonderland": "Winter Wonderland!",

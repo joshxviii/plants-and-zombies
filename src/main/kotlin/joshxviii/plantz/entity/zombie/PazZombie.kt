@@ -536,7 +536,6 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     fun randomEquip(random: RandomSource, difficulty: DifficultyInstance) {
         super.populateDefaultEquipmentSlots(random, difficulty)
     }
-    fun isRaider() = (this as? ZombieRaider)?.`plantz$getIsFromRaid`()?: false
 
     override fun finalizeSpawn(
         level: ServerLevelAccessor,
@@ -547,6 +546,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         val newData = PazZombieGroupData(
             isRaider = (groupData as? PazZombieGroupData)?.isRaider?: false,
             isCountedTowardRaidHealth = (groupData as? PazZombieGroupData)?.isCountedTowardRaidHealth?: false,
+            ignoreFlag = (groupData as? PazZombieGroupData)?.ignoreFlag?: false,
             isBaby = isBaby && (groupData as? ZombieGroupData)?.isBaby?: false
         )
         val level = level() as ServerLevel
@@ -555,6 +555,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             this.setCountHealth(newData.isCountedTowardRaidHealth)
             raid?.joinRaid(level, this)
         }
+        (this as? ZombieRaider)?.`plantz$setIgnoreFlag`(newData.ignoreFlag)
 
         val data = super.finalizeSpawn(level, difficulty, spawnReason, newData)
 
@@ -615,6 +616,7 @@ fun Zombie.enchantZombieEquipment(
 class PazZombieGroupData(
     val isRaider: Boolean = false,
     val isCountedTowardRaidHealth: Boolean = true,
+    val ignoreFlag: Boolean = false,
     isBaby: Boolean = false
 ) : Zombie.ZombieGroupData(
     isBaby,

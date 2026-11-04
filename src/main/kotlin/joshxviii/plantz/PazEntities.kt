@@ -9,11 +9,13 @@ import joshxviii.plantz.ai.goal.PathfindToFlagGoal
 import joshxviii.plantz.entity.Balloon
 import joshxviii.plantz.entity.PlantPotMinecart
 import joshxviii.plantz.entity.Sun
+import joshxviii.plantz.entity.ZombieRaider
 import joshxviii.plantz.entity.blueprint_machines.ElectroTurret
 import joshxviii.plantz.entity.blueprint_machines.LawnMower
 import joshxviii.plantz.entity.blueprint_machines.ZombieDrone
 import joshxviii.plantz.entity.blueprint_machines.ZombieTurret
 import joshxviii.plantz.entity.gnome.Gnome
+import joshxviii.plantz.entity.ignoresFlag
 import joshxviii.plantz.entity.plant.*
 import joshxviii.plantz.entity.projectile.*
 import joshxviii.plantz.entity.zombie.*
@@ -39,7 +41,8 @@ object PazEntities {
         ServerEntityEvents.ENTITY_LOAD.register { entity, level ->
             if (entity is Zombie) (entity as MobAccessor).targetSelector.addGoal(4, NearestAttackableTargetGoal(entity, Gnome::class.java, 5, true, false, null))
 
-            if (entity is PathfinderMob && entity.`is`(ZOMBIE_RAIDERS)) {
+            val ignore = (entity as? Zombie)?.ignoresFlag() ?: false
+            if (entity is PathfinderMob && entity.`is`(ZOMBIE_RAIDERS) && !ignore) {
                 (entity as MobAccessor).goalSelector.addGoal(1, PathfindToFlagGoal(entity))
                 (entity as MobAccessor).goalSelector.addGoal(2, DestroyFlagGoal(entity))
             }
@@ -575,7 +578,7 @@ object PazEntities {
             armor = 10.0,
             armorToughness = 2.0,
             attackDamage = 7.0,
-            maxHealth = 650.0,
+            maxHealth = 600.0,
             movementSpeed = 0.21,
             knockbackResistance = 1.4,
             explosionKnockbackResistance = 0.7,
@@ -605,7 +608,7 @@ object PazEntities {
         attributes = PazZombie.Companion.PazZombieAttributes(
             armor = 8.0,
             attackDamage = 7.0,
-            maxHealth = 550.0,
+            maxHealth = 450.0,
             movementSpeed = 0.21,
             knockbackResistance = 0.3,
             explosionKnockbackResistance = 0.2,
