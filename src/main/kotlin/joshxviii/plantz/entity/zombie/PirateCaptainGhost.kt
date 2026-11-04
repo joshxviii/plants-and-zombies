@@ -30,7 +30,7 @@ class PirateCaptainGhost(type: EntityType<out PirateCaptainGhost>, level: Level)
     }
 
     init {
-        xpReward = 120
+        xpReward = 90
     }
 
     override fun getAmbientSound(): SoundEvent {

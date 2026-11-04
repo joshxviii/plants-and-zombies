@@ -191,7 +191,7 @@ enum class WaveType(
                 ),
                 WaveSpawnEntry(
                     PazEntities.ZOMBIE_YETI,
-                    scaled(1.2f + wave * 0.35f, omen, credits, min = 1)
+                    scaled(1.2f + (wave - 4) * 0.35f, omen, credits, min = 1)
                 ),
                 graveDiggerEntry(raid),
             )
@@ -486,7 +486,7 @@ enum class WaveType(
                 }
             }
 
-            if (zombie !is Gargantuar) {
+            if (zombie !is Gargantuar && zombie !is Imp) {
                 for (slot in mutableListOf(EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET)) {
                     val level = zombie.level() as? ServerLevel ?: continue
                     val difficulty = level.getCurrentDifficultyAt(zombie.blockPosition())

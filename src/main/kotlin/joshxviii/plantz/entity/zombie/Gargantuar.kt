@@ -54,7 +54,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
     }
 
     init {
-        xpReward = 200
+        xpReward = 120
     }
 
     val smashAttackAnimation : AnimationState = AnimationState()

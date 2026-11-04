@@ -73,7 +73,6 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
 
     @Unique
     private List<CompletedWave> completedRaidWaveList = List.of();
-
     @Unique
     private @Nullable Plant plantEntity = null;
 
@@ -111,8 +110,6 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     public void plantz$setWaveList(@NotNull List<CompletedWave> value) {
         completedRaidWaveList = value;
     }
-
-
 
     @Unique
     public boolean plantz$getHypnoId() {
@@ -202,7 +199,6 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
             output.store("plantz:AttachedPlant", CompoundTag.CODEC, this.plantz$getPlantData());
         }
         if (self instanceof ServerPlayer) output.store("plantz:CompletedWaveList", Codec.list(CompletedWave.Companion.getCODEC()), this.plantz$getWaveList());
-
     }
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     private void loadCustomFlags(ValueInput input, CallbackInfo ci) {
@@ -213,7 +209,9 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
         self.getEntityData().set(DATA_BUTTER_ID, input.getBooleanOr("plantz:IsButtered", false));
         self.getEntityData().set(DATA_PAINTED_COLORS, input.read("plantz:PaintedColor", Codec.unboundedMap(Codec.INT, Codec.INT)).orElseGet(HashMap::new));
         plantz$setPlantData(input.read("plantz:AttachedPlant", CompoundTag.CODEC).orElseGet(CompoundTag::new));
-        if (self instanceof ServerPlayer) plantz$setWaveList(input.read("plantz:CompletedWaveList", Codec.list(CompletedWave.Companion.getCODEC())).orElseGet(List::of));
+        if (self instanceof ServerPlayer) {
+            plantz$setWaveList(input.read("plantz:CompletedWaveList", Codec.list(CompletedWave.Companion.getCODEC())).orElseGet(List::of));
+        }
 
         if (self instanceof PathfinderMob mob) {
             prevFloatTag = mob.getNavigation().canFloat();
@@ -299,6 +297,5 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     private void plantz$preventKnockbackWhileBlocking(LivingEntity defender, CallbackInfo ci) {
         ci.cancel();
     }
-
 
 }

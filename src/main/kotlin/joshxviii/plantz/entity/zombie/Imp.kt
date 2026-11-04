@@ -48,7 +48,7 @@ class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie
         set(value) = this.entityData.set(BARREL, value)
 
     init {
-
+        xpReward = 3
     }
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {

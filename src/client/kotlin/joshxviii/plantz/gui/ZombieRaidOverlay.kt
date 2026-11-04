@@ -63,7 +63,8 @@ object ZombieRaidOverlay {
     }
 
     private fun renderRaidUI(graphics: GuiGraphicsExtractor, deltaTracker: DeltaTracker) {
-        val font = Minecraft.getInstance().font
+        val mc = Minecraft.getInstance()
+        val font = mc.font
         val raidEvent = ZombieRaidClientCache.get() ?: return
 
         val screenWidth = graphics.guiWidth()
@@ -86,7 +87,7 @@ object ZombieRaidOverlay {
         if (renderBossbar) bossBar(x, y, graphics, raidEvent)
 
         // boss chance
-        if (raidEvent.status == ZombieRaid.ZombieRaidStatus.NEXT_WAVE) bossChance(x, y, graphics, raidEvent)
+        if (raidEvent.status == ZombieRaid.ZombieRaidStatus.NEXT_WAVE || mc.options.keyPlayerList.isDown) bossChance(x, y, graphics, raidEvent)
 
         // timer
         val time = raidEvent.waveTimer
@@ -164,7 +165,7 @@ object ZombieRaidOverlay {
         val bossChanceText = "${Mth.floor(raidEvent.bossChance * 100f)}%"
         val bossChanceIconSize = 12
         val bossChanceWidth = font.width(bossChanceText) + bossChanceIconSize
-        val bossChanceX = x + BG_WIDTH + 3 - (bossChanceWidth/2)
+        val bossChanceX = x + BG_WIDTH + 8 - (bossChanceWidth/2)
         val bossChanceY = y + 14
         graphics.text(font, bossChanceText, bossChanceX, bossChanceY, ARGB.opaque(0xFFFFFF))
         graphics.blit(RenderPipelines.GUI_TEXTURED, BOSS_CHANCE_SPRITE, bossChanceX + font.width(bossChanceText), bossChanceY - 2, 0f, 0f, bossChanceIconSize, bossChanceIconSize, bossChanceIconSize, bossChanceIconSize)
