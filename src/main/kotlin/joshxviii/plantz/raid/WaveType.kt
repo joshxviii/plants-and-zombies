@@ -191,7 +191,7 @@ enum class WaveType(
                 ),
                 WaveSpawnEntry(
                     PazEntities.ZOMBIE_YETI,
-                    scaled(1.2f + (wave - 4) * 0.35f, omen, credits, min = 1)
+                    scaled(1f + (wave - 4) * 0.3f, omen, credits, min = 1)
                 ),
                 graveDiggerEntry(raid),
             )

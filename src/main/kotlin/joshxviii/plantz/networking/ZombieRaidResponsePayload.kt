@@ -29,13 +29,22 @@ class ZombieRaidResponsePayload(
                 ByteBufCodecs.FLOAT,   { it.data.bossProgressBar },
                 ByteBufCodecs.BOOL,    { it.data.seenCredits },
                 ByteBufCodecs.FLOAT,   { it.data.bossChance },
-                { id, status, waveTypes, num, timer, activeTime, plantProgress, zombieProgress, bossProgress, credits, bossChance ->
+                RaidDetails.STREAM_CODEC, { it.data.details },
+                { id, status, waveTypes, num, timer, activeTime, plantProgress, zombieProgress, bossProgress, credits, bossChance, details ->
                     ZombieRaidResponsePayload(
                         ZombieRaidClientData(
-                            id,
-                            ZombieRaid.ZombieRaidStatus.entries[status],
-                            waveTypes,
-                            num, timer, activeTime, plantProgress, zombieProgress, bossProgress, credits, bossChance
+                            id = id,
+                            status = ZombieRaid.ZombieRaidStatus.entries[status],
+                            waves = waveTypes,
+                            numWaves = num,
+                            waveTimer = timer,
+                            activeTime = activeTime,
+                            plantProgressBar = plantProgress,
+                            zombieProgressBar = zombieProgress,
+                            bossProgressBar = bossProgress,
+                            seenCredits = credits,
+                            bossChance = bossChance,
+                            details = details,
                         )
                     )
                 }
@@ -46,6 +55,9 @@ class ZombieRaidResponsePayload(
 
 }
 
+/**
+ * Raid data for the client
+ */
 data class ZombieRaidClientData(
     val id: UUID = UUID.randomUUID(),
     val status: ZombieRaid.ZombieRaidStatus = ZombieRaid.ZombieRaidStatus.STOPPED,
@@ -58,9 +70,32 @@ data class ZombieRaidClientData(
     val bossProgressBar: Float = 0f,
     val seenCredits: Boolean = false,
     val bossChance: Float = 0f,
+    val details: RaidDetails = RaidDetails(),
 ) {
     fun currentWaveNumber(): Int = waves.size
     fun currentWaveType(): CompletedWave? = waves.lastOrNull()
     fun isFinalWave(): Boolean = waves.size == numWaves
     fun bossIsAlive(): Boolean = bossProgressBar > 0f
+}
+
+/**
+ * More detailed information that is not necessary for rendering the main UI.
+ */
+data class RaidDetails(
+    val flagHealth: Float = 0f,
+    val flagMaxHealth: Float = 0f,
+    val remainingRaiders: Int = 0,
+    val remainingBossHealth: Float = 0f,
+    val totalBossHealth: Float = 0f,
+) {
+    companion object {
+        val STREAM_CODEC: StreamCodec<RegistryFriendlyByteBuf, RaidDetails> = StreamCodec.composite(
+            ByteBufCodecs.FLOAT, RaidDetails::flagHealth,
+            ByteBufCodecs.FLOAT, RaidDetails::flagMaxHealth,
+            ByteBufCodecs.VAR_INT, RaidDetails::remainingRaiders,
+            ByteBufCodecs.FLOAT, RaidDetails::remainingBossHealth,
+            ByteBufCodecs.FLOAT, RaidDetails::totalBossHealth,
+            ::RaidDetails,
+        )
+    }
 }

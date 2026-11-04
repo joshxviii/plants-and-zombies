@@ -79,11 +79,11 @@ public class AllStarModel<S extends PazZombieRenderState> extends PazZombieModel
     @Override
     public void setupAnim(@NotNull S state) {
         super.setupAnim(state);
-        resetPose();
+        //resetPose();
         if (this.helmet != null) this.helmet.visible = (state.headItem.isEmpty() && state.headEquipment.isEmpty());
 
-        AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, false, state);
-        walkAnimation.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 1.5f, 2f);
+        //AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, false, state);
+        //walkAnimation.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 1.5f, 2f);
         actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
     }
 }

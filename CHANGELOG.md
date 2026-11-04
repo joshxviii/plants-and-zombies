@@ -11,6 +11,7 @@
   - Boss Chance represents the odds that the next wave will spawn a boss.
   - The chance increases exponentially every wave.
   - Once a boss spawns, the chance is reset.
+  - Pressing "Tab" will display the Boss Chance and other details about the raid.
 - Added Giga variant for All Star, which can spawn as a Boss
 - Added Baron Von Bats
   - Baron Von Bats has a chance to spawn as a Boss.
@@ -32,7 +33,7 @@
 - Added a new enchantment, "Lobbing".
   - This enchantment applies to the Gardening Glove and allows the player to toss the held plant.
 - Dye Blasters now store dye ammo. Dye Blaster can only be fired after being loaded with dye. Each shot has a chance to consume the stored dye.
-### Fixes
+### Fixes / Technical Changes
 - Pumpkins are no longer duplicated when using a Gardening Glove.
 - Various other bug fixes / improvements
 

@@ -1,14 +1,15 @@
 {
   "display": {
     "icon": {
-      "id": "plantz:baron_staff"
+      "id": "plantz:gargantuar_spawn_egg"
     },
     "title": {
       "translate": "advancements.plantz.biggest_three"
     },
     "description": {
       "translate": "advancements.plantz.biggest_three.description"
-    }
+    },
+    "frame": "challenge"
   },
   "parent": "plantz:bigger_three",
   "criteria": {
@@ -17,9 +18,7 @@
       "conditions": {
         "entity": {
           "type": "plantz:all_star",
-          "predicate": {
-            "nbt": "{\"variant\":\"giga\"}"
-          }
+          "nbt": "{\"variant\":\"giga\"}"
         }
       }
     },

@@ -12,7 +12,7 @@
     "frame": "challenge",
     "hidden": true
   },
-  "parent": "plantz:taco_time",
+  "parent": "plantz:receive_hero_mail",
   "criteria": {
     "has_time_machine": {
       "trigger": "minecraft:inventory_changed",

@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "plantz:taco"
+      "id": "plantz:baron_staff"
     },
     "title": {
       "translate": "advancements.plantz.boss_slayer"
@@ -9,7 +9,7 @@
     "description": {
       "translate": "advancements.plantz.boss_slayer.description"
     },
-    "frame": "goal"
+    "frame": "challenge"
   },
   "parent": "plantz:taco_time",
   "criteria": {

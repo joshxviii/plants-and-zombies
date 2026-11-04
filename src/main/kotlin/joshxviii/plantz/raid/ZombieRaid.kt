@@ -17,6 +17,7 @@ import joshxviii.plantz.entity.isLeader
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.networking.ZombieRaidClientData
+import joshxviii.plantz.networking.RaidDetails
 import joshxviii.plantz.networking.ZombieRaidResponsePayload
 import net.minecraft.ChatFormatting
 import net.minecraft.SharedConstants
@@ -582,6 +583,7 @@ class ZombieRaid(
             plantProgressBar = plantProgressBar(level),
             seenCredits = starterHasSeenCredits,
             bossChance = bossChance,
+            details = raidDetails(level),
         )
 
         val packet = ZombieRaidResponsePayload(data)
@@ -605,6 +607,17 @@ class ZombieRaid(
     fun getLeaders(): List<Zombie> = waveZombieMap.values.flatMap { it.filter { z -> z.isLeader() } }
     fun getBosses(): List<Zombie> = waveZombieMap.values.flatMap { it.filter { z -> z.isBoss() } }
     fun getAliveRaiders(): Int = waveZombieMap.values.stream().mapToInt { it.map { z -> if (z.getEffectiveRaidHealth()>0f) 1 else 0 }.sum() }.sum() + pendingRaiders.size
+    private fun raidDetails(level: ServerLevel): RaidDetails {
+        val flag = level.getBlockEntity(center) as? FlagBlockEntity
+        val bosses = getBosses()
+        return RaidDetails(
+            flagHealth = flag?.health ?: 0f,
+            flagMaxHealth = flag?.maxHealth ?: 0f,
+            remainingBossHealth = bosses.sumOf { it.getEffectiveRaidHealth().toDouble() }.toFloat(),
+            totalBossHealth = totalBossHealth,
+            remainingRaiders = getAliveRaiders(),
+        )
+    }
     fun plantProgressBar(level: ServerLevel): Float {
         if (status == ZombieRaidStatus.LOSS) return 0f
         else {
