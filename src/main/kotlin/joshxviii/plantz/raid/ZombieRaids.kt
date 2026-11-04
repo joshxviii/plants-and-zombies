@@ -71,7 +71,7 @@ class ZombieRaids(
 
         while (raidIterator.hasNext()) {
             val raid = raidIterator.next()
-            if (!level.gameRules.get(GameRules.RAIDS) || level.difficulty == Difficulty.PEACEFUL) raid.stop()
+            if (!level.gameRules.get(GameRules.RAIDS) || level.difficulty == Difficulty.PEACEFUL) raid.stop(level)
 
             if (raid.isStopped()) {
                 (level.getBlockEntity(raid.center) as? FlagBlockEntity)?.setMaxHealth(refill = true)

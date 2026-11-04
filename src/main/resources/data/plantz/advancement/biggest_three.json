@@ -8,8 +8,7 @@
     },
     "description": {
       "translate": "advancements.plantz.biggest_three.description"
-    },
-    "frame": "challenge"
+    }
   },
   "parent": "plantz:bigger_three",
   "criteria": {
