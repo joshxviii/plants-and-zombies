@@ -269,7 +269,7 @@ enum class WaveType(
                     }),
                 WaveSpawnEntry(
                     PazEntities.PIRATE_CAPTAIN,
-                    if (credits) scaled(1f + wave * 0.4f, omen, true, min = 1) else 0
+                    if (credits) scaled(1f + wave * 0.4f, omen, true, min = 1) else if (wave>10) 1 else 0
                 ),
                 graveDiggerEntry(raid),
             )

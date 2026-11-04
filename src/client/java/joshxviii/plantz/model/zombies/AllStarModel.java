@@ -42,8 +42,10 @@ public class AllStarModel<S extends PazZombieRenderState> extends PazZombieModel
 
         PartDefinition helmet = head.addOrReplaceChild("helmet", CubeListBuilder.create().texOffs(48, 48).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.75F))
                 .texOffs(48, 64).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(1.0F))
-                .texOffs(48, 39).addBox(4.75F, -7.35F, -2.0F, 2.0F, 5.0F, 2.0F, new CubeDeformation(0.0F))
-                .texOffs(48, 39).mirror().addBox(-6.75F, -7.35F, -2.0F, 2.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(0.0F, -4.0F, 0.5F));
+                .texOffs(48, 39).addBox(5.75F, -7.35F, -1.0F, 1.0F, 5.0F, 2.0F, new CubeDeformation(0.0F))
+                .texOffs(48, 39).addBox(4.75F, -4.35F, -1.0F, 1.0F, 2.0F, 2.0F, new CubeDeformation(0.0F))
+                .texOffs(49, 39).mirror().addBox(-6.75F, -7.35F, -1.0F, 1.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)).mirror(false)
+                .texOffs(49, 39).mirror().addBox(-5.75F, -4.35F, -1.0F, 1.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(0.0F, -4.0F, 0.5F));
 
         PartDefinition hat = head.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.offset(0.0F, -8.0F, 0.5F));
 
@@ -54,7 +56,7 @@ public class AllStarModel<S extends PazZombieRenderState> extends PazZombieModel
         PartDefinition right_leg = root.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(32, 0).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-2.0F, 7.4583F, 0.0F));
 
         PartDefinition left_arm = root.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(16, 34).addBox(0.0F, -1.625F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
-                .texOffs(24, 16).addBox(0.0F, -1.875F, -2.5F, 7.0F, 4.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(4.0F, -2.9167F, 0.0F));
+                .texOffs(24, 16).addBox(-0.1F, -1.875F, -2.5F, 7.0F, 4.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(4.0F, -2.9167F, 0.0F));
 
         PartDefinition cube_r1 = left_arm.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(48, 46).addBox(0.0F, -0.5F, -0.5F, 0.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(2.0F, -2.375F, -1.0F, 0.0F, 0.7854F, 0.0F));
 
@@ -69,7 +71,7 @@ public class AllStarModel<S extends PazZombieRenderState> extends PazZombieModel
         PartDefinition cube_r6 = left_arm.addOrReplaceChild("cube_r6", CubeListBuilder.create().texOffs(48, 46).addBox(0.0F, -0.5F, -0.5F, 0.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(6.0F, -2.375F, -1.0F, 0.0F, 0.7854F, 0.0F));
 
         PartDefinition right_arm = root.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(32, 34).addBox(-4.0F, -1.625F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
-                .texOffs(24, 25).addBox(-7.0F, -1.875F, -2.5F, 7.0F, 4.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(-4.0F, -2.9167F, 0.0F));
+                .texOffs(24, 25).addBox(-6.9F, -1.875F, -2.5F, 7.0F, 4.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(-4.0F, -2.9167F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 80, 80);
     }

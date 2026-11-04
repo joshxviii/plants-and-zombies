@@ -87,7 +87,7 @@ object ZombieRaidOverlay {
         if (renderBossbar) bossBar(x, y, graphics, raidEvent)
 
         // boss chance
-        if (raidEvent.status == ZombieRaid.ZombieRaidStatus.NEXT_WAVE || mc.options.keyPlayerList.isDown) bossChance(x, y, graphics, raidEvent)
+        if (raidEvent.status == ZombieRaid.ZombieRaidStatus.NEXT_WAVE || isTabDown()) bossChance(x, y, graphics, raidEvent)
 
         // timer
         val time = raidEvent.waveTimer
@@ -112,14 +112,19 @@ object ZombieRaidOverlay {
     }
 
     private fun renderPlantBar(x: Int, y: Int, graphics: GuiGraphicsExtractor, raidEvent: ZombieRaidClientData) {
+        val mc = Minecraft.getInstance()
+        val 
         val flagBarWidth = Mth.floor(BAR_WIDTH * raidEvent.plantProgressBar)
         val flagHealthX = x+17 + (BAR_WIDTH - flagBarWidth)
         val flagHealthY = y+15
-        val guiTicks = Minecraft.getInstance().gui.guiTicks
+        val guiTicks = mc.gui.guiTicks
         val flagFrame = Mth.ceil(guiTicks / 10.0) % 2
         val flash = isDamageFlashActive(guiTicks, flagDamageFlashUntil)
         graphics.blit(RenderPipelines.GUI_TEXTURED, if (flash) HEALTH_BAR_PLANT_FLASH else HEALTH_BAR_PLANT, flagHealthX, flagHealthY, 0f, 0f, flagBarWidth, BAR_HEIGHT, BAR_WIDTH, BAR_HEIGHT)
         graphics.blit(RenderPipelines.GUI_TEXTURED, PLANT_FLAG_SPRITE, flagHealthX-7, flagHealthY-5, 7f*flagFrame, 0f, 7, 10, 14, 10)
+        if (isTabDown()) {
+            val waveText = "${raidEvent.currentWaveNumber()} / ${raidEvent.numWaves}"
+        }
     }
 
     private fun zombieBar(x: Int, y: Int, graphics: GuiGraphicsExtractor, raidEvent: ZombieRaidClientData) {
@@ -195,4 +200,6 @@ object ZombieRaidOverlay {
     }
 
     private fun isDamageFlashActive(guiTicks: Int, flashUntil: Int): Boolean = guiTicks < flashUntil
+
+    private fun isTabDown(): Boolean = Minecraft.getInstance().options.keyPlayerList.isDown
 }

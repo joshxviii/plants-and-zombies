@@ -8,9 +8,7 @@
     },
     "description": {
       "translate": "advancements.plantz.bigger_three.description"
-    },
-    "frame": "task",
-    "hidden": false
+    }
   },
   "parent": "plantz:big_three",
   "criteria": {

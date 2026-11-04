@@ -1,0 +1,44 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:baron_staff"
+    },
+    "title": {
+      "translate": "advancements.plantz.biggest_three"
+    },
+    "description": {
+      "translate": "advancements.plantz.biggest_three.description"
+    }
+  },
+  "parent": "plantz:bigger_three",
+  "criteria": {
+    "plantz:all_star": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "plantz:all_star",
+          "predicate": {
+            "nbt": "{\"variant\":\"giga\"}"
+          }
+        }
+      }
+    },
+    "plantz:disco_zombie": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "plantz:baron_von_bats"
+        }
+      }
+    },
+    "plantz:zombie_yeti": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "plantz:gargantuar"
+        }
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

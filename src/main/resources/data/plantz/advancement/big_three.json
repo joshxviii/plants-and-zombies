@@ -8,9 +8,7 @@
     },
     "description": {
       "translate": "advancements.plantz.big_three.description"
-    },
-    "frame": "task",
-    "hidden": false
+    }
   },
   "parent": "plantz:cone_head",
   "criteria": {

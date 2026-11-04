@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:taco"
+    },
+    "title": {
+      "translate": "advancements.plantz.boss_slayer"
+    },
+    "description": {
+      "translate": "advancements.plantz.boss_slayer.description"
+    },
+    "frame": "goal"
+  },
+  "parent": "plantz:taco_time",
+  "criteria": {
+    "boss_1": {"conditions": {"boss_defeats": 1}, "trigger": "plantz:boss_defeat"},
+    "boss_2": {"conditions": {"boss_defeats": 2}, "trigger": "plantz:boss_defeat"}
+  },
+  "requirements": [
+    [
+      "boss_1",
+      "boss_2"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
