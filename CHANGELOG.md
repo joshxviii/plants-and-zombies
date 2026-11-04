@@ -35,7 +35,10 @@
 - Dye Blasters now store dye ammo. Dye Blaster can only be fired after being loaded with dye. Each shot has a chance to consume the stored dye.
 ### Fixes / Technical Changes
 - Pumpkins are no longer duplicated when using a Gardening Glove.
-- Various other bug fixes / improvements
+- The `plantz:stored_sun` item component has a new field `capacity:[<amount>]`.
+  - Example stick with 999 sun capacity:
+  <br/>`/give @s stick[minecraft:item_model="plantz:sun",plantz:stored_sun={capacity:999,stored_sun:0},minecraft:max_stack_size=1]`
+- Various other bug fixes and improvements
 
 # Changelog 1.5.1
 ### Changes / Additions

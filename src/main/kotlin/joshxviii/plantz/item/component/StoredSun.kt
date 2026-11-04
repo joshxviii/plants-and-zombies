@@ -15,6 +15,7 @@ import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.component.TooltipProvider
 import java.util.Optional
 import java.util.function.Consumer
+import kotlin.jvm.optionals.getOrDefault
 import kotlin.math.max
 import kotlin.math.min
 
@@ -26,10 +27,8 @@ import kotlin.math.min
  */
 data class StoredSun(
     val storedSun: Int = 0,
+    val max: Int = PazConfig.SUN_BATTERY_MAX
 ) : TooltipProvider {
-
-    val max: Int
-        get() = PazConfig.SUN_BATTERY_MAX
 
     override fun addToTooltip(
         context: Item.TooltipContext,
@@ -53,13 +52,16 @@ data class StoredSun(
         val CODEC: Codec<StoredSun> = RecordCodecBuilder.create { inst ->
             inst.group(
                 Codec.INT.optionalFieldOf("stored_sun").forGetter { Optional.of(it.storedSun.coerceIn(0, it.max)) },
+                Codec.INT.optionalFieldOf("capacity").forGetter { Optional.of(it.max) },
                 Codec.BOOL.optionalFieldOf("is_fully_charged").forGetter { Optional.ofNullable(it.isFull()) },
-            ).apply(inst) { storedSun, _ -> StoredSun(storedSun.orElse(0)?:0) }
+            ).apply(inst) { storedSun, max, _ -> StoredSun(storedSun.getOrDefault(0), max.getOrDefault(PazConfig.SUN_BATTERY_MAX)) }
         }
 
         val STREAM_CODEC: StreamCodec<ByteBuf, StoredSun> = StreamCodec.composite(
             ByteBufCodecs.INT,
             StoredSun::storedSun,
+            ByteBufCodecs.INT,
+            StoredSun::max,
             ::StoredSun
         )
     }

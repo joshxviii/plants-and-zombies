@@ -1,5 +1,6 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.item.model.PlantIconItemModel
 import joshxviii.plantz.model.BalloonModel
 import joshxviii.plantz.model.FlagBlockModel
 import joshxviii.plantz.model.GnomeArmorModel

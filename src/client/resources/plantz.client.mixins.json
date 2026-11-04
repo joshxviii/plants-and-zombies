@@ -16,6 +16,7 @@
     "HumanoidModelMixin",
     "LivingEntityRendererMixin",
     "NowPlayingToastMixin",
+    "RangeSelectItemModelPropertiesMixin",
     "SoundManagerMixin"
   ]
 }

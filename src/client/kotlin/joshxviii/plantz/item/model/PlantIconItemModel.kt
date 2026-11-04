@@ -1,4 +1,4 @@
-package joshxviii.plantz
+package joshxviii.plantz.item.model
 
 import com.mojang.serialization.MapCodec
 import net.minecraft.client.Minecraft
@@ -16,6 +16,7 @@ import net.minecraft.world.entity.ItemOwner
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
 import org.joml.Matrix4fc
+import kotlin.collections.get
 
 class PlantIconItemModel(
     private val overlays: Map<EntityType<*>, ItemModel>
