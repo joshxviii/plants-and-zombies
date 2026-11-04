@@ -42,7 +42,7 @@ enum class WaveType(
     private val creditsRequired: Boolean,
     private val weightFn: (ZombieRaid, Boolean) -> Float,
     private val spawnFn: (ZombieRaid, Boolean) -> List<WaveSpawnEntry>,
-    val lootTableFn: (Int, Boolean) ->  ResourceKey<LootTable> = { _, _ -> PazLootTables.MAIL_REWARD_DEFAULT_EASY }
+    val lootTableFn: (Int) -> ResourceKey<LootTable> = { PazLootTables.MAIL_REWARD_DEFAULT_EASY }
 ): StringRepresentable {
     //TODO: wave types should also be data-driven. A wave type should be defined in "plantz/wave_type/[wave_name].json".
     // SpawnRequirements, Weights, WaveSpawnEntries, LootTables and Zombie Configurations should all be editable in the .json.
@@ -102,7 +102,7 @@ enum class WaveType(
                 graveDiggerEntry(raid),
             )
         },
-        lootTableFn = { waveNum, _ -> if (waveNum > 7) PazLootTables.MAIL_REWARD_DEFAULT_HARD else PazLootTables.MAIL_REWARD_DEFAULT_EASY }
+        lootTableFn = { if (it > 7) PazLootTables.MAIL_REWARD_DEFAULT_HARD else PazLootTables.MAIL_REWARD_DEFAULT_EASY }
     ),
     BUCKET_BRIGADE(
         minWave = 1,
@@ -129,7 +129,7 @@ enum class WaveType(
                 )
             )
         },
-        lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_BUCKET }
+        lootTableFn = { PazLootTables.MAIL_REWARD_BUCKET }
     ),
     HALFTIME_SHOWDOWN(
         minWave = 2,
@@ -162,7 +162,7 @@ enum class WaveType(
                 graveDiggerEntry(raid),
             )
         },
-        lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_HALFTIME }
+        lootTableFn = { PazLootTables.MAIL_REWARD_HALFTIME }
     ),
     WINTER_WONDERLAND(
         minWave = 5,
@@ -196,7 +196,7 @@ enum class WaveType(
                 graveDiggerEntry(raid),
             )
         },
-        lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_WINTER }
+        lootTableFn = { PazLootTables.MAIL_REWARD_WINTER }
     ),
     ZOMBOWEEN(
         minWave = 4,
@@ -241,7 +241,7 @@ enum class WaveType(
                 )
             )
         },
-        lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_ZOMBOWEEN }
+        lootTableFn = { PazLootTables.MAIL_REWARD_ZOMBOWEEN }
     ),
     PIRATE_INVASION(
         minWave = 9,
@@ -274,7 +274,7 @@ enum class WaveType(
                 graveDiggerEntry(raid),
             )
         },
-        lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_PIRATE }
+        lootTableFn = { PazLootTables.MAIL_REWARD_PIRATE }
     ),
     ROBO_ARMY(
         minWave = 10,
@@ -311,7 +311,7 @@ enum class WaveType(
                 ),
             )
         },
-        lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_ARMY }
+        lootTableFn = { PazLootTables.MAIL_REWARD_ARMY }
     ),
     LEAGUE_OF_AWESOME(
         minWave = 12,
@@ -337,7 +337,7 @@ enum class WaveType(
                 )
             )
         },
-        lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_LEAGUE }
+        lootTableFn = { PazLootTables.MAIL_REWARD_LEAGUE }
     ),
     ZOMBOSS(
         minWave = 20,
@@ -345,7 +345,7 @@ enum class WaveType(
         creditsRequired = true,
         weightFn = { raid, credits -> 0f },
         spawnFn = { raid, credits -> listOf() },
-        lootTableFn = { _, _ -> PazLootTables.MAIL_REWARD_ZOMBOSS }
+        lootTableFn = { PazLootTables.MAIL_REWARD_ZOMBOSS }
     );
 
 

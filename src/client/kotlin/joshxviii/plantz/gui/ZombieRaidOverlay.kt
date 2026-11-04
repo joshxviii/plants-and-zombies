@@ -123,7 +123,7 @@ object ZombieRaidOverlay {
         graphics.blit(RenderPipelines.GUI_TEXTURED, if (flash) HEALTH_BAR_PLANT_FLASH else HEALTH_BAR_PLANT, flagHealthX, flagHealthY, 0f, 0f, flagBarWidth, BAR_HEIGHT, BAR_WIDTH, BAR_HEIGHT)
         graphics.blit(RenderPipelines.GUI_TEXTURED, PLANT_FLAG_SPRITE, flagHealthX-7, flagHealthY-5, 7f*flagFrame, 0f, 7, 10, 14, 10)
         if (isTabDown()) {
-            val health = "${Mth.floor(raidEvent.details.flagHealth)}/${Mth.floor(raidEvent.details.flagMaxHealth)}"
+            val health = "${Mth.floor(raidEvent.details.flagHealth/raidEvent.details.flagMaxHealth*100)}%"
             graphics.text(mc.font, health, x + 17, y + 22, -1, true)
         }
     }
@@ -147,9 +147,9 @@ object ZombieRaidOverlay {
         if (isTabDown()) {
             val font = Minecraft.getInstance().font
             val remainingText = "${raidEvent.details.remainingRaiders}"
-            val remainingX = x + BG_WIDTH - 17 - font.width(remainingText)
+            val remainingX = x + BG_WIDTH - 16 - font.width(remainingText)
             graphics.blit(RenderPipelines.GUI_TEXTURED, ZOMBIE_REMAINING, remainingX-13, y + 20, 0f, 0f, 12, 12, 12, 12)
-            graphics.text(font, remainingText, remainingX, y + 23, -1, true)
+            graphics.text(font, remainingText, remainingX, y + 22, -1, true)
         }
     }
 
