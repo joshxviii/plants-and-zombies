@@ -5,7 +5,6 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.entity.zombie.*
 import joshxviii.plantz.pazResource
 import io.netty.buffer.ByteBuf
-import net.minecraft.network.chat.Component
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.resources.Identifier
@@ -30,7 +29,7 @@ enum class BossType(
     //TODO: I would like to make this a data-driven system. Boss types should be defined as "plantz/boss_type/[boss_name].json" files.
     // SpawnRequirements, Weights, BossEntries, and Boss Configurations should all be editable in the .json.
     // Parsing should be done in a new [PazAPI] class.
-    STAR_PLAYER(
+    GIGA_ALL_STAR(
         minWave = 1,
         maxWave = 7,
         weightFn = { raid, wave -> 1f },
@@ -67,7 +66,7 @@ enum class BossType(
             )
         }
     ),
-    ROBO_MECH(
+    ROBO_TANK(
         minWave = 10,
         maxWave = 20,
         weightFn = { _, wave -> if (wave == WaveType.ROBO_ARMY) 1f else 0f },

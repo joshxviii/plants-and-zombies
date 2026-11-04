@@ -352,7 +352,7 @@ class ZombieRaid(
         val livingBossWasRemoved = toRemove.any { it.isBoss() && it.isAlive }
         for (zombie in toRemove) removeFromRaid(level, zombie, true)
         if (
-            bossWasDefeated && !livingBossWasRemoved &&
+            bossWasDefeated && !livingBossWasRemoved && isActive() &&
             getBosses().isEmpty() && pendingRaiders.values.none { it.isBoss }
         ) {
             zombieRaidEvent.players.forEach { player ->
@@ -573,6 +573,7 @@ class ZombieRaid(
     }
 
     fun isStopped(): Boolean = status == ZombieRaidStatus.STOPPED
+    fun isActive(): Boolean = status != ZombieRaidStatus.NEXT_WAVE || status == ZombieRaidStatus.ONGOING
     fun isFinalWave(): Boolean = currentWaveNumber() >= numWaves
     private fun willLoseWhenTimeRunsOut(): Boolean = isFinalWave() || getBosses().isNotEmpty()
     fun currentWaveNumber(): Int = waves.size

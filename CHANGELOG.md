@@ -35,6 +35,23 @@
 - Dye Blasters now store dye ammo. Dye Blaster can only be fired after being loaded with dye. Each shot has a chance to consume the stored dye.
 ### Fixes / Technical Changes
 - Pumpkins are no longer duplicated when using a Gardening Glove.
+- Added new commands:
+  - `/pz help`
+    - Prompts a link in chat to the discord server
+  - `/pz raid start [<wave_count>]`
+    - Requires "op" privileges
+    - Attempts to start a raid near the player.
+    - The command will fail when a flag isn't nearby.
+    - Has an optional field, `[<wave_count>]` which controls the number of waves the raid will have.
+  - `/pz raid stop`
+    - Requires "op" privileges
+    - Stops whatever raid the player is currently near.
+    - Command fails when no active raid is nearby.
+  - `/pz raid wave_start [<wave_type|wave_type>] [<boss_type|boss_type>]`
+    - Requires "op" privileges
+    - Starts the next wave immediately.
+    - Has optional field `[<wave_type|wave_type>]` , a valid wave type from the available selection.
+    - Also has optional field `[<boss_type|boss_type>]` , a valid boss type from the available selection.
 - The `plantz:stored_sun` item component has a new field `capacity:[<amount>]`.
   - Example stick with 999 sun capacity:
   <br/>`/give @s stick[minecraft:item_model="plantz:sun",plantz:stored_sun={capacity:999,stored_sun:0},minecraft:max_stack_size=1]`
