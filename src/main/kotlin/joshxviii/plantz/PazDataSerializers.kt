@@ -9,6 +9,7 @@ import joshxviii.plantz.entity.zombie.AllStarVariant
 import joshxviii.plantz.entity.zombie.BrownCoatVariant
 import joshxviii.plantz.entity.zombie.GargantuarVariant
 import joshxviii.plantz.entity.zombie.ImpVariant
+import joshxviii.plantz.entity.zombie.RoboZombieVariant
 import joshxviii.plantz.entity.zombie.SuperBrainzVariant
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricEntityDataRegistry
 import net.minecraft.network.codec.ByteBufCodecs
@@ -24,6 +25,7 @@ object PazDataSerializers {
     @JvmField val BROWN_COAT_VARIANT = EntityDataSerializer.forValueType<BrownCoatVariant>(BrownCoatVariant.STREAM_CODEC)
     @JvmField val IMP_VARIANT = EntityDataSerializer.forValueType<ImpVariant>(ImpVariant.STREAM_CODEC)
     @JvmField val ALL_STAR_VARIANT = EntityDataSerializer.forValueType<AllStarVariant>(AllStarVariant.STREAM_CODEC)
+    @JvmField val ROBO_ZOMBIE_VARIANT = EntityDataSerializer.forValueType<RoboZombieVariant>(RoboZombieVariant.STREAM_CODEC)
     @JvmField val SUPER_BRAINZ_VARIANT = EntityDataSerializer.forValueType<SuperBrainzVariant>(SuperBrainzVariant.STREAM_CODEC)
     @JvmField val GARGANTUAR_VARIANT = EntityDataSerializer.forValueType<GargantuarVariant>(GargantuarVariant.STREAM_CODEC)
     @JvmField val GNOME_VARIANT = EntityDataSerializer.forValueType<GnomeVariant>(GnomeVariant.STREAM_CODEC)
@@ -37,6 +39,7 @@ object PazDataSerializers {
         FabricEntityDataRegistry.register(pazResource("brown_coat_variant"), BROWN_COAT_VARIANT)
         FabricEntityDataRegistry.register(pazResource("imp_variant"), IMP_VARIANT)
         FabricEntityDataRegistry.register(pazResource("all_star_variant"), ALL_STAR_VARIANT)
+        FabricEntityDataRegistry.register(pazResource("robo_zombie_variant"), ROBO_ZOMBIE_VARIANT)
         FabricEntityDataRegistry.register(pazResource("super_brainz_variant"), SUPER_BRAINZ_VARIANT)
         FabricEntityDataRegistry.register(pazResource("gargantuar_variant"), GARGANTUAR_VARIANT)
         FabricEntityDataRegistry.register(pazResource("gnome_variant"), GNOME_VARIANT)

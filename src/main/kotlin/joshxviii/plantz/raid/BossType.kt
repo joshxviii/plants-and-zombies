@@ -66,7 +66,7 @@ enum class BossType(
             )
         }
     ),
-    ROBO_TANK(
+    ROBO_GENERAL(
         minWave = 10,
         maxWave = 20,
         weightFn = { _, wave -> if (wave == WaveType.ROBO_ARMY) 1f else 0f },
@@ -116,7 +116,10 @@ enum class BossType(
             zombie.getAttribute(Attributes.MAX_HEALTH)?.let { if (!it.hasModifier(BOSSIFY)) it.addPermanentModifier(BOSS_HEALTH) }
             zombie.getAttribute(Attributes.ATTACK_DAMAGE)?.let { if (!it.hasModifier(BOSSIFY)) it.addPermanentModifier(BOSS_DAMAGE) }
             zombie.health = zombie.maxHealth
-            if (zombie is RoboZombie) zombie.isTransformed = true
+            if (zombie is RoboZombie) {
+                zombie.isTransformed = true
+                zombie.variant = RoboZombieVariant.GENERAL
+            }
             if (zombie is AllStar) zombie.variant = AllStarVariant.GIGA
         }
     }
