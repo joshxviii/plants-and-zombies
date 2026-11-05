@@ -202,6 +202,11 @@ abstract class BodyItemAttachmentRenderLayer<S : LivingEntityRenderState, M : En
         humanoidModel.body.translateAndRotate(poseStack)
         poseStack.mulPose(Axis.ZP.rotationDegrees(180.0f))
 
+        if (itemStack.`is`(PazItems.COFFIN)) {
+            state.xRot = if (state.isCrouching) 25f else 0f
+            state.yRot = 0f
+            state.headItem.clear()
+        }
         if (state.isBaby) {
             poseStack.scale(0.5f, 0.5f, 0.5f)
             poseStack.translate(0.0, 0.5, 0.0)

@@ -18,6 +18,7 @@ import joshxviii.plantz.PazEntities.ROBO_ZOMBIE
 import joshxviii.plantz.PazEntities.SOLDIER_ZOMBIE
 import joshxviii.plantz.PazEntities.SUPER_BRAINZ
 import joshxviii.plantz.PazEntities.ZOMBAT
+import joshxviii.plantz.PazEntities.ZOMBIE_GOAT
 import joshxviii.plantz.PazEntities.ZOMBIE_YETI
 import joshxviii.plantz.PazTags.ItemTags.BUCKET_WEARABLE
 import joshxviii.plantz.entity.zombie.PazZombie
@@ -275,7 +276,6 @@ object PazItems {
             .humanoidArmor(ArmorMaterials.CHAINMAIL, ArmorType.HELMET)
             .component(PazComponents.PROTECTS_HEAD, ProtectsHeadDataComponent()
             )
-            .component(PazComponents.BLOCK_BREAK_CHANCE, BlockBreakChanceComponent(0.015f))
             .component(
                 DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
                     .setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)
@@ -350,9 +350,10 @@ object PazItems {
     @JvmField val PIRATE_CAPTAIN_SPAWN_EGG: Item = registerSpawnEgg(PIRATE_CAPTAIN)
     @JvmField val SUPER_BRAINZ_SPAWN_EGG: Item = registerSpawnEgg(SUPER_BRAINZ)
     @JvmField val IMP_SPAWN_EGG: Item = registerSpawnEgg(IMP)
-    @JvmField val ZOMBAT_SPAWN_EGG: Item = registerSpawnEgg(ZOMBAT)
-    @JvmField val BARON_VON_BATS_SPAWN_EGG: Item = registerSpawnEgg(BARON_VON_BATS)
     @JvmField val GARGANTUAR_SPAWN_EGG: Item = registerSpawnEgg(GARGANTUAR)
+    @JvmField val BARON_VON_BATS_SPAWN_EGG: Item = registerSpawnEgg(BARON_VON_BATS)
+    @JvmField val ZOMBAT_SPAWN_EGG: Item = registerSpawnEgg(ZOMBAT)
+    @JvmField val ZOMBIE_GOAT_SPAWN_EGG: Item = registerSpawnEgg(ZOMBIE_GOAT)
 
     @JvmField val GNOME_SPAWN_EGG: Item = registerSpawnEgg(GNOME)
 

@@ -2,6 +2,7 @@ package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazTags
+import joshxviii.plantz.entity.setIgnoreFlag
 import net.minecraft.core.BlockPos
 import net.minecraft.core.UUIDUtil
 import net.minecraft.network.chat.Component
@@ -29,7 +30,14 @@ class ZombieGoat(type: EntityType<out ZombieGoat>, level: Level) : PazZombie(typ
     companion object {
     }
 
-    init {
+    override fun getAmbientSound(): SoundEvent {
+        return SoundEvents.GOAT_AMBIENT
+    }
+    override fun getHurtSound(source: DamageSource): SoundEvent {
+        return SoundEvents.GOAT_HURT
+    }
+    override fun getDeathSound(): SoundEvent {
+        return SoundEvents.GOAT_DEATH
     }
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
@@ -65,9 +73,6 @@ class ZombieGoat(type: EntityType<out ZombieGoat>, level: Level) : PazZombie(typ
     override fun canBreakDoors(): Boolean = false
     override fun canHoldItem(itemStack: ItemStack): Boolean = false
 
-    override fun getDefaultGravity(): Double = 0.0
-    override fun checkFallDamage(ya: Double, onGround: Boolean, onState: BlockState, pos: BlockPos) {}
-
     override fun finalizeSpawn(
         level: ServerLevelAccessor,
         difficulty: DifficultyInstance,
@@ -75,6 +80,7 @@ class ZombieGoat(type: EntityType<out ZombieGoat>, level: Level) : PazZombie(typ
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
+        this.setIgnoreFlag(true)
         return data
     }
 }

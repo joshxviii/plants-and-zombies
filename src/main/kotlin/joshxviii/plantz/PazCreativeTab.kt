@@ -75,9 +75,10 @@ object PazCreativeTab {
                 output.accept(PazItems.ROBO_ZOMBIE_SPAWN_EGG)
                 output.accept(PazItems.PIRATE_CAPTAIN_SPAWN_EGG)
                 output.accept(PazItems.SUPER_BRAINZ_SPAWN_EGG)
-                output.accept(PazItems.ZOMBAT_SPAWN_EGG)
                 output.accept(PazItems.BARON_VON_BATS_SPAWN_EGG)
                 output.accept(PazItems.GARGANTUAR_SPAWN_EGG)
+                output.accept(PazItems.ZOMBAT_SPAWN_EGG)
+                output.accept(PazItems.ZOMBIE_GOAT_SPAWN_EGG)
 
                 // gnome
                 if (PazConfig.SHOW_HIDDEN_ITEMS) output.accept(PazItems.GNOME_SPAWN_EGG)
@@ -101,6 +102,7 @@ object PazCreativeTab {
                 output.accept(PazItems.PLANT_POT_MINECART)
                 output.accept(PazItems.PLANT_POT_HELMET)
                 output.accept(PazItems.DUCKY_TUBE)
+                output.accept(PazItems.COFFIN)
                 output.accept(PazBlocks.CONE)
                 output.accept(PazItems.NEWSPAPER)
                 output.accept(PazItems.FOOTBALL_HELMET)

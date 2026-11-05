@@ -52,6 +52,10 @@ fun Zombie.setCountHealth(value: Boolean) {
     if (this is ZombieRaider) this.`plantz$setAddsHealthToRaid`(value)
 }
 
+fun Zombie.setIgnoreFlag(value: Boolean) {
+    if (this is ZombieRaider) this.`plantz$setIgnoreFlag`(value)
+}
+
 fun Zombie.ignoresFlag(): Boolean = this is ZombieRaider && this.`plantz$getIgnoreFlag`()
 
 fun Zombie.isActiveInRaid(): Boolean = this is ZombieRaider && this.`plantz$getIsFromRaid`() && this.isAlive
