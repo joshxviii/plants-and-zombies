@@ -7,6 +7,7 @@ import joshxviii.plantz.ai.goal.NavigateToTargetGoal
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.entity.projectile.Missile
 import joshxviii.plantz.pazResource
+import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
@@ -239,6 +240,11 @@ class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(typ
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         val result = super.doHurtTarget(level, target)
         return result
+    }
+
+    override fun getTypeName(): Component {
+        return if (variant != RoboZombieVariant.ROBO) Component.translatable("entity.plantz.robo_zombie.variant.${variant.name.lowercase()}")
+        else super.getTypeName()
     }
 
     override fun finalizeSpawn(

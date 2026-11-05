@@ -79,9 +79,9 @@ data class ServerConfig(
 )
 data class ClientConfig(
     var showDebugInfo: Boolean = false,
-    var alwaysShowHeadMarkers: Boolean = false,
     var showHiddenItemsInCreativeTab: Boolean = false,
-    var hideRaidUi: Boolean = false,
+    var showRaidUi: Boolean = false,
+    var showSunInfo: Boolean = false
 )
 
 object PazConfig {
@@ -110,6 +110,9 @@ object PazConfig {
         server = loadConfig(serverConfigPath, ServerConfig())
     }
 
+    fun saveClient() = saveConfig(clientConfigPath, client)
+    fun saveServer() = saveConfig(serverConfigPath, server)
+
     private inline fun <reified T> loadConfig(path: Path, default: T): T {
         return if (path.exists()) {
             try {
@@ -133,15 +136,14 @@ object PazConfig {
     val SHOW_DEBUG_INFO: Boolean
         get() = client.showDebugInfo
 
-    val ALWAYS_SHOW_HEAD_MARKERS: Boolean
-        get() = client.alwaysShowHeadMarkers
-
     val SHOW_HIDDEN_ITEMS: Boolean
         get() = client.showHiddenItemsInCreativeTab
 
-    val HIDE_RAID_UI: Boolean
-        get() = client.hideRaidUi
+    val SHOW_RAID_UI: Boolean
+        get() = client.showRaidUi
 
+    val SHOW_SUN_INFO: Boolean
+        get() = client.showSunInfo
 
 
     val COFFEE_BUFF_DURATION: Int
@@ -228,11 +230,11 @@ object PazConfig {
 
     fun putDefaultSunCost(entityId: Identifier, sunCost: Int) {
         server.sunCosts.putIfAbsent(entityId.toString(), sunCost.coerceAtLeast(0))
-        saveConfig(serverConfigPath, server)
+        saveServer()
     }
 
     fun putDefaultAlloyCost(entityId: Identifier, alloyCost: Int) {
         server.alloyCosts.putIfAbsent(entityId.toString(), alloyCost.coerceAtLeast(0))
-        saveConfig(serverConfigPath, server)
+        saveServer()
     }
 }

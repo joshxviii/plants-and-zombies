@@ -4,6 +4,7 @@ import joshxviii.plantz.networking.MailboxListResponsePayload
 import joshxviii.plantz.networking.SendMailRequestPayload
 import joshxviii.plantz.networking.SendMailRequestPayload.Companion.handleSendMailPacket
 import joshxviii.plantz.networking.SendMailResponsePayload
+import joshxviii.plantz.networking.OpenOptionsScreenPayload
 import joshxviii.plantz.networking.ServerConfigResponsePayload
 import joshxviii.plantz.networking.UpdateCollectionBoxPayload
 import joshxviii.plantz.networking.UpdateCollectionBoxPayload.Companion.handleUpdateCollectionBoxPacket
@@ -40,6 +41,7 @@ object PazNetwork {
         PayloadTypeRegistry.clientboundPlay().register(MailboxListResponsePayload.ID, MailboxListResponsePayload.STREAM_CODEC)
         PayloadTypeRegistry.clientboundPlay().register(ServerConfigResponsePayload.ID, ServerConfigResponsePayload.STREAM_CODEC)
         PayloadTypeRegistry.clientboundPlay().register(ZombieRaidResponsePayload.ID, ZombieRaidResponsePayload.STREAM_CODEC)
+        PayloadTypeRegistry.clientboundPlay().register(OpenOptionsScreenPayload.ID, OpenOptionsScreenPayload.STREAM_CODEC)
 
         // Register server receiver
         ServerPlayNetworking.registerGlobalReceiver(SendMailRequestPayload.ID, ::handleSendMailPacket)

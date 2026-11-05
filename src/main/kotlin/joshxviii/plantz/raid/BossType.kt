@@ -44,7 +44,7 @@ enum class BossType(
     BARON_VON_BATS(
         minWave = 6,
         maxWave = 18,
-        weightFn = { _, wave -> if (wave == WaveType.DEFAULT || wave == WaveType.ZOMBOWEEN) 1f else 0f },
+        weightFn = { _, wave -> if (wave == WaveType.DEFAULT || wave == WaveType.ZOMBOWEEN) 2f else 0f },
         bossSpawns = { raid, wave ->
             listOf(
                 BossEntry(
@@ -56,7 +56,7 @@ enum class BossType(
     GARGANTUAR(
         minWave = 9,
         maxWave = 20,
-        weightFn = { _, wave -> if (wave == WaveType.DEFAULT || wave == WaveType.PIRATE_INVASION) 2f else 0f },
+        weightFn = { _, wave -> if (wave == WaveType.DEFAULT || wave == WaveType.PIRATE_INVASION) 3f else 0f },
         bossSpawns = { raid, wave ->
             listOf(
                 BossEntry(
@@ -69,7 +69,7 @@ enum class BossType(
     ROBO_GENERAL(
         minWave = 10,
         maxWave = 20,
-        weightFn = { _, wave -> if (wave == WaveType.ROBO_ARMY) 1f else 0f },
+        weightFn = { _, wave -> if (wave == WaveType.DEFAULT || wave == WaveType.ROBO_ARMY) 1f else 0f },
         bossSpawns = { raid, wave ->
             listOf(
                 BossEntry(
@@ -107,7 +107,7 @@ enum class BossType(
         }
 
         val BOSSIFY: Identifier = pazResource("bossify")
-        private val BOSS_SCALE = AttributeModifier(BOSSIFY, 0.25, AttributeModifier.Operation.ADD_VALUE)
+        private val BOSS_SCALE = AttributeModifier(BOSSIFY, 0.33, AttributeModifier.Operation.ADD_VALUE)
         private val BOSS_HEALTH = AttributeModifier(BOSSIFY, 2.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
         private val BOSS_DAMAGE = AttributeModifier(BOSSIFY, 1.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE)
 

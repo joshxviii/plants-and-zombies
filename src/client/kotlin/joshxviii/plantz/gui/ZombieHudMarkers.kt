@@ -34,8 +34,7 @@ object ZombieHudMarkers {
     fun renderIcons(graphics: GuiGraphicsExtractor, deltaTracker: DeltaTracker) {
         val mc = Minecraft.getInstance()
         if (mc.level == null || mc.player == null) return
-        if (!PazConfig.ALWAYS_SHOW_HEAD_MARKERS) PazNetwork.ZombieRaidClientCache.get()
-            ?: return
+        PazNetwork.ZombieRaidClientCache.get() ?: return
 
         for ((worldPos, zombie) in collect(mc)) {
             val screen = project(worldPos) ?: continue
@@ -130,9 +129,8 @@ object ZombieHudMarkers {
             for (entity in level.entitiesForRendering()) {
                 if (entity !is Zombie) continue
 
-                if (!PazConfig.ALWAYS_SHOW_HEAD_MARKERS) {
-                    if (!entity.isActiveInRaid()) continue
-                }
+                if (!entity.isActiveInRaid()) continue
+
                 if (!isViewObscured(cam, entity)) continue
 
                 val pos = entity.getPosition(client.deltaTracker.getGameTimeDeltaPartialTick(false)).add(0.0, entity.eyeHeight.toDouble(), 0.0)

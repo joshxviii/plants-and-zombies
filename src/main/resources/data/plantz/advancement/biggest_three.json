@@ -16,8 +16,8 @@
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {
-          "type": "plantz:all_star",
-          "nbt": "{\"variant\":\"giga\"}"
+          "type": "plantz:robo_zombie",
+          "nbt": "{\"variant\":\"general\"}"
         }
       }
     },

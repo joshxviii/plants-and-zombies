@@ -226,6 +226,8 @@ class ZombieRaid(
             if (raidCooldownTicks <= 0) {
                 status = ZombieRaidStatus.ONGOING
                 raidCooldownTicks = PRE_RAID_TICKS
+                totalZombieHealth = 0f
+                totalBossHealth = 0f
             }
             else {
                 status = ZombieRaidStatus.NEXT_WAVE
@@ -378,8 +380,6 @@ class ZombieRaid(
         val bossType = forceBossType ?: if (random.nextFloat() < bossChance) BossType.pickBossType(this, waveType) else null
         waves.add(CompletedWave(waveType, pos, bossType))
         val wave = currentWaveNumber()
-        totalZombieHealth = 0f
-        totalBossHealth = 0f
         waveTimer = if (wave >= numWaves) FINAL_WAVE_DURATION else if (bossType!=null) BOSS_WAVE_DURATION else WAVE_DURATION
 
         // Wave spawns

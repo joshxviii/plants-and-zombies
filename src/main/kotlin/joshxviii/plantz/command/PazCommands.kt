@@ -12,7 +12,9 @@ import joshxviii.plantz.raid.BossType
 import joshxviii.plantz.raid.WaveType
 import joshxviii.plantz.raid.ZombieRaid
 import joshxviii.plantz.raid.getZombieRaids
+import joshxviii.plantz.networking.OpenOptionsScreenPayload
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.ChatFormatting
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
@@ -44,6 +46,7 @@ object PazCommands {
     private fun register(dispatcher: CommandDispatcher<CommandSourceStack>) {
         val root: LiteralArgumentBuilder<CommandSourceStack> = Commands.literal("pz")
             .then(Commands.literal("help").executes(::help))
+            .then(Commands.literal("options").executes(::options))
             .then(
                 Commands.literal("raid")
                     .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
@@ -83,6 +86,11 @@ object PazCommands {
                 .withHoverEvent(HoverEvent.ShowText(Component.translatable("commands.plantz.help.hover")))
         )
         ctx.source.sendSuccess({ Component.translatable("commands.plantz.help", link) }, false)
+        return 1
+    }
+
+    private fun options(ctx: CommandContext<CommandSourceStack>): Int {
+        ServerPlayNetworking.send(ctx.source.playerOrException, OpenOptionsScreenPayload)
         return 1
     }
 

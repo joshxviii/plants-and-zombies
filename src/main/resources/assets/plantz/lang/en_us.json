@@ -4,7 +4,7 @@
   "advancements.plantz.bigger_three": "Graveyard Warfare",
   "advancements.plantz.bigger_three.description": "Defeat a Robo-zombie, Pirate Captain, and Super Brainz",
   "advancements.plantz.biggest_three": "Head Honchos",
-  "advancements.plantz.biggest_three.description": "Defeat a Giga-All Star, Baron Von Bats, and Gargantuar",
+  "advancements.plantz.biggest_three.description": "Defeat a Robo-General, Baron Von Bats, and Gargantuar",
   "advancements.plantz.cone_head": "U R A Wizard!",
   "advancements.plantz.cone_head.description": "Wear a Cone on your head",
   "advancements.plantz.disco_hypno": "Disco is Undead",
@@ -85,6 +85,10 @@
   "death.attack.toxic": "%1$s was poisoned",
   "death.attack.toxic.player": "%1$s was poisoned by %2$s",
   "death.attack.paint": "%1$s was turned into an art piece by %2$s",
+
+  "options.plantz.title": "Plants & Zombies",
+  "options.plantz.show_raid_ui": "Raid UI: %s",
+  "options.plantz.show_sun_info": "Sun Info HUD: %s",
 
   "commands.plantz.help": "Plants & Zombies - ask a question in the Discord: %s",
   "commands.plantz.help.hover": "",
@@ -369,6 +373,7 @@
   "entity.plantz.grave_digger": "Grave Digger",
   "entity.plantz.soldier_zombie": "Soldier Zombie",
   "entity.plantz.robo_zombie": "Robo-Zombie",
+  "entity.plantz.robo_zombie.variant.general": "Robo-General",
   "entity.plantz.pirate_captain": "Pirate Captain",
   "entity.plantz.pirate_captain_ghost": "Pirate Captain Ghost",
   "entity.plantz.super_brainz": "Super Brainz",

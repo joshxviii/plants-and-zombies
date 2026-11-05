@@ -13,6 +13,7 @@
   - Once a boss spawns, the chance is reset.
   - Pressing "Tab" will display the Boss Chance and other details about the raid.
 - Added Giga variant for All Star, which can spawn as a Boss
+- Added General variant for Robo-Zombie, which can spawn as a Boss
 - Added Baron Von Bats
   - Baron Von Bats has a chance to spawn as a Boss.
 - Added Zombat
@@ -33,11 +34,16 @@
 - Added a new enchantment, "Lobbing".
   - This enchantment applies to the Gardening Glove and allows the player to toss the held plant.
 - Dye Blasters now store dye ammo. Dye Blaster can only be fired after being loaded with dye. Each shot has a chance to consume the stored dye.
+- Added a new options menu accessible with `/pz options`
 ### Fixes / Technical Changes
 - Pumpkins are no longer duplicated when using a Gardening Glove.
+- Added a new client config option: `showSunInfo`.
+  - When enabled, sun cost for seed packets and your total held sun is displayed on the HUD.
 - Added new commands:
   - `/pz help`
     - Prompts a link in chat to the discord server
+  - `/pz options`
+    - Opens the options menu
   - `/pz raid start [<wave_count>]`
     - Requires "op" privileges
     - Attempts to start a raid near the player.
@@ -271,7 +277,7 @@
     - `alloyCost` – A list of entity ids paired with an integer.
   - `paz-client.json`:
     - `showHiddenItemsInCreativeTab` – Enables some W.I.P items in the creative tab.
-    - `hideRaidUi` – Hides the zombie raid UI.
+    - `showRaidUi` – Hides the zombie raid UI.
 - Added `seed_mutation` data directory.
   - The path for editing Seed Mutations is: `data/<namespace>/seed_mutation/<entity_name>.json`
   - Entry Format:

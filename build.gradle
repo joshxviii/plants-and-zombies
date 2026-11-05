@@ -46,6 +46,7 @@ dependencies {
 	implementation "com.github.glitchfiend:TerraBlender-fabric:${project.terrablender_version}"
 
 	compileOnly "maven.modrinth:iris:${project.iris_version}"
+	compileOnly "maven.modrinth:modmenu:${project.modmenu_version}"
 }
 
 processResources {
