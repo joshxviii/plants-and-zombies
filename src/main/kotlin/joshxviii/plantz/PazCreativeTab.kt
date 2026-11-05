@@ -60,14 +60,6 @@ object PazCreativeTab {
                 output.accept(SeedPacketItem.stackFor(PazEntities.GRAVE_BUSTER))
                 output.accept(SeedPacketItem.stackFor(PazEntities.PUMPKIN))
 
-                // machine blueprints
-                if (PazConfig.SHOW_HIDDEN_ITEMS) {
-                    output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_TURRET))
-                    output.accept(BlueprintItem.stackFor(PazEntities.ELECTRO_TURRET))
-                    output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_DRONE))
-                    output.accept(BlueprintItem.stackFor(PazEntities.LAWN_MOWER))
-                }
-
                 // zombie spawn eggs
                 output.accept(PazItems.BROWN_COAT_SPAWN_EGG)
                 output.accept(PazItems.NEWSPAPER_ZOMBIE_SPAWN_EGG)
@@ -90,6 +82,14 @@ object PazCreativeTab {
                 // gnome
                 if (PazConfig.SHOW_HIDDEN_ITEMS) output.accept(PazItems.GNOME_SPAWN_EGG)
 
+                // machine blueprints
+                if (PazConfig.SHOW_HIDDEN_ITEMS) {
+                    output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_TURRET))
+                    output.accept(BlueprintItem.stackFor(PazEntities.ELECTRO_TURRET))
+                    output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_DRONE))
+                    output.accept(BlueprintItem.stackFor(PazEntities.LAWN_MOWER))
+                }
+
                 // items + blocks
                 output.accept(PazItems.SUN_BATTERY)
                 output.accept(PazItems.SUN)
@@ -104,10 +104,10 @@ object PazCreativeTab {
                 output.accept(PazBlocks.CONE)
                 output.accept(PazItems.NEWSPAPER)
                 output.accept(PazItems.FOOTBALL_HELMET)
-                if (PazConfig.SHOW_HIDDEN_ITEMS) BuiltInRegistries.BLOCK.forEach { if (it.defaultBlockState().`is`(BlockTags.DOORS)) output.accept(stackFor(it)) }
-                else output.accept(PazItems.DOOR_SHIELD)
                 output.accept(PazItems.DYE_BLASTER)
                 output.accept(PazItems.BARON_STAFF)
+                if (PazConfig.SHOW_HIDDEN_ITEMS) BuiltInRegistries.BLOCK.forEach { if (it.defaultBlockState().`is`(BlockTags.DOORS)) output.accept(stackFor(it)) }
+                else output.accept(PazItems.DOOR_SHIELD)
                 output.accept(PazBlocks.BRAINZ_FLAG)
                 output.accept(PazBlocks.PLANTZ_FLAG)
                 output.accept(PazItems.TACO)

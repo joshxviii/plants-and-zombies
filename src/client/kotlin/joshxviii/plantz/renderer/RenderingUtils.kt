@@ -1,6 +1,6 @@
 package joshxviii.plantz.renderer
 
-import joshxviii.plantz.PazEntities.MAGIC_NAMES
+import joshxviii.plantz.PazEntities
 import joshxviii.plantz.pazResource
 import joshxviii.plantz.renderer.entity.ProjectileRenderState
 import net.minecraft.client.Minecraft
@@ -15,6 +15,9 @@ import net.minecraft.resources.Identifier
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.ARGB
 import net.minecraft.util.FormattedCharSequence
+import net.minecraft.world.entity.EntityType
+import kotlin.String
+import kotlin.collections.List
 import kotlin.collections.component1
 import kotlin.collections.component2
 
@@ -54,6 +57,14 @@ fun resolveTextureLocation(base: String, rm: ResourceManager, suffixes: List<Str
     return null
 }
 
+val MAGIC_NAMES = mapOf<EntityType<*>, List<String>>(
+    PazEntities.SUNFLOWER           to listOf("vampire"),
+    PazEntities.MARIGOLD            to listOf("flowey"),
+    PazEntities.CHOMPER             to listOf("chester"),
+    PazEntities.FIRE_PEA_SHOOTER    to listOf("blaze"),
+    PazEntities.DISCO_ZOMBIE        to listOf("mj"),
+    PazEntities.BROWN_COAT          to listOf("tugboat", "mustache")
+)
 fun LivingEntityRenderState.validMagicName(name: String): String? {
     val type = this.entityType
     val str = name.lowercase()

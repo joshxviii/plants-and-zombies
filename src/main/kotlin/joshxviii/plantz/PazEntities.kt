@@ -80,6 +80,9 @@ object PazEntities {
         "marigold",
         EntityType.Builder.of(::Marigold, MobCategory.CREATURE),
         height = 0.94f,
+        attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 16.0
+        )
     )
     @JvmField val PEA_SHOOTER: EntityType<PeaShooter> = registerPlant(
         "peashooter",
@@ -593,18 +596,6 @@ object PazEntities {
             spawnReinforcementsChance = 0.0,
         )
     )
-    @JvmField val ZOMBAT: EntityType<Zombat> =  registerZombie(
-        "zombat",
-        EntityType.Builder.of(::Zombat, MobCategory.MONSTER)
-            .sized(0.5F, 0.9F)
-            .eyeHeight(0.45F)
-            .clientTrackingRange(8),
-        attributes = PazZombie.Companion.PazZombieAttributes(
-            attackDamage = 2.0,
-            maxHealth = 20.0,
-            flyingSpeed = 0.40,
-        )
-    )
     @JvmField val BARON_VON_BATS: EntityType<BaronVonBats> = registerZombie(
         "baron_von_bats",
         EntityType.Builder.of(::BaronVonBats, MobCategory.MONSTER)
@@ -620,6 +611,29 @@ object PazEntities {
             stepHeight = 1.0,
             attackRange = 2.0,
             spawnReinforcementsChance = 0.0,
+        )
+    )
+    @JvmField val ZOMBAT: EntityType<Zombat> =  registerZombie(
+        "zombat",
+        EntityType.Builder.of(::Zombat, MobCategory.MONSTER)
+            .sized(0.5F, 0.9F)
+            .eyeHeight(0.45F)
+            .clientTrackingRange(8),
+        attributes = PazZombie.Companion.PazZombieAttributes(
+            attackDamage = 2.0,
+            maxHealth = 20.0,
+            flyingSpeed = 0.40,
+        )
+    )
+    @JvmField val ZOMBIE_GOAT: EntityType<ZombieGoat> =  registerZombie(
+        "zombie_goat",
+        EntityType.Builder.of(::ZombieGoat, MobCategory.CREATURE)
+            .sized(0.9F, 1.3F)
+            .passengerAttachments(1.1125F)
+            .clientTrackingRange(10),
+        attributes = PazZombie.Companion.PazZombieAttributes(
+            attackDamage = 1.0,
+            maxHealth = 14.0,
         )
     )
     // endregion
@@ -788,12 +802,4 @@ object PazEntities {
         val id = ResourceKey.create(Registries.ENTITY_TYPE, pazResource(name))
         return Registry.register(BuiltInRegistries.ENTITY_TYPE, id, builder.build(id))
     }
-
-    val MAGIC_NAMES = mapOf<EntityType<*>, List<String>>(
-        SUNFLOWER           to listOf("vampire"),
-        CHOMPER             to listOf("chester"),
-        FIRE_PEA_SHOOTER    to listOf("blaze"),
-        DISCO_ZOMBIE        to listOf("mj"),
-        BROWN_COAT          to listOf("tugboat", "mustache")
-    )
 }

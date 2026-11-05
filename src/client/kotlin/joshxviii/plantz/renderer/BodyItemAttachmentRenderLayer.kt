@@ -166,6 +166,14 @@ class DyeVatRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
     stackSelector = { it.mainHandItemStack },
 )
 
+class CoffinRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
+    parent: RenderLayerParent<S, M>
+) : BodyItemAttachmentRenderLayer<S, M>(
+    parent = parent,
+    expectedItem = PazItems.COFFIN,
+    stackSelector = { it.chestEquipment },
+)
+
 abstract class BodyItemAttachmentRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
     parent: RenderLayerParent<S, M>,
     private val expectedItem: Item,

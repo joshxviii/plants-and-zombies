@@ -25,7 +25,7 @@ object SunInfoHud {
         val x = graphics.guiWidth() / 2
         val y = graphics.guiHeight()
 
-        displaySun((x - hotbarWidth / 2) - 2, y - 15, graphics)
+        displayHeldSun((x - hotbarWidth / 2) - 2, y - 14, graphics)
         displaySeedCost(x, y - 34, graphics, itemStack, highlightTimer)
     }
 
@@ -43,7 +43,7 @@ object SunInfoHud {
         sunIcon(x - offsetX + textWidth + 1, offsetY-1, graphics, iconWidth, true, alpha)
     }
 
-    fun displaySun(x: Int , y: Int, graphics: GuiGraphicsExtractor) {
+    fun displayHeldSun(x: Int, y: Int, graphics: GuiGraphicsExtractor) {
         val sunTotal = mc.player?.getTotalSun()?: return
         if (sunTotal <= 0) return
         val text = "${sunTotal}"
