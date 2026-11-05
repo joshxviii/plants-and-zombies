@@ -2,8 +2,9 @@
 	"format_version": "26.3",
 	"parent": "plantz:item/door_shield/door_shield",
 	"textures": {
-		"top": "oak_door_top",
-		"bottom": "oak_door_bottom"
+		"top": "plantz:block/brainz_alloy_door_top",
+		"bottom": "plantz:block/brainz_alloy_door_bottom",
+		"particle": "plantz:block/brainz_alloy_door_bottom"
 	},
 	"elements": [
 		{

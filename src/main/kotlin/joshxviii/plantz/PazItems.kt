@@ -195,8 +195,8 @@ object PazItems {
                 .setAsset(DUCKY_EQUIP_ASSET)
                 .build())
     )
-    @JvmField
     val COFFIN_EQUIP_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, pazResource("coffin"))
+    @JvmField
     val COFFIN: Item = registerItem(
         "coffin",
         properties = Item.Properties()

@@ -27,9 +27,11 @@ import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.Identifier
 import net.minecraft.util.ARGB
+import net.minecraft.util.Mth
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
+import org.joml.Vector3f
 import kotlin.math.pow
 
 class SpecialEffectsLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(private val renderer: RenderLayerParent<S, M>) : RenderLayer<S, M>(
@@ -203,9 +205,16 @@ abstract class BodyItemAttachmentRenderLayer<S : LivingEntityRenderState, M : En
         poseStack.mulPose(Axis.ZP.rotationDegrees(180.0f))
 
         if (itemStack.`is`(PazItems.COFFIN)) {
+            poseStack.pushPose()
             state.xRot = if (state.isCrouching) 25f else 0f
             state.yRot = 0f
-            state.headItem.clear()
+            humanoidModel.head.resetPose()
+            val hatTranslateY = -4f
+            humanoidModel.head.y = humanoidModel.body.y + Mth.cos(state.xRot * Mth.DEG_TO_RAD.toDouble()) * hatTranslateY
+            humanoidModel.head.z = Mth.sin(state.xRot * Mth.DEG_TO_RAD.toDouble()) * hatTranslateY
+            humanoidModel.head.rotateBy(Axis.XP.rotationDegrees(state.xRot))
+            humanoidModel.head.offsetScale(Vector3f(0.05f,0.05f,0.05f))
+            poseStack.popPose()
         }
         if (state.isBaby) {
             poseStack.scale(0.5f, 0.5f, 0.5f)
