@@ -3,6 +3,7 @@ package joshxviii.plantz.mixin.client;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.vertex.PoseStack;
 import joshxviii.plantz.PazEffects;
+import joshxviii.plantz.renderer.CoffinRenderLayer;
 import joshxviii.plantz.renderer.DuckyTubeRenderLayer;
 import joshxviii.plantz.renderer.DyeVatRenderLayer;
 import joshxviii.plantz.renderer.SpecialEffectsLayer;
@@ -37,8 +38,11 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extend
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void plantz$addDuckyTubeLayer(EntityRendererProvider.Context context, M model, float shadow, CallbackInfo ci) {
+        //TODO try to consolidate these into one render layer
         this.addLayer(new DuckyTubeRenderLayer<>(this));
         this.addLayer(new DyeVatRenderLayer<>(this));
+        this.addLayer(new CoffinRenderLayer<>(this));
+
         this.addLayer(new SpecialEffectsLayer<>(this));
     }
 

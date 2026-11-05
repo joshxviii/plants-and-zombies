@@ -207,7 +207,7 @@ object PazItems {
                     .add(
                         Attributes.ARMOR,
                         AttributeModifier(pazResource("coffin"), 15.0, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.LEGS
+                        EquipmentSlotGroup.CHEST
                     ).build())
             .component(DataComponents.EQUIPPABLE,
                 Equippable.builder(EquipmentSlot.CHEST)
