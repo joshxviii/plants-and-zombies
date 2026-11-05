@@ -51,24 +51,34 @@ object PazCreativeTabs {
         output.accept(SeedPacketItem.stackFor(PazEntities.PUMPKIN))
     }
 
+    private fun customEggs(output: CreativeModeTab.Output, stacks: List<ItemStack>) {
+        stacks.forEach { output.accept(it) }
+    }
+
     fun zombieEntities(output: CreativeModeTab.Output) {
         // zombie spawn eggs
         output.accept(PazItems.BROWN_COAT_SPAWN_EGG)
+        if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.brownCoat())
         output.accept(PazItems.NEWSPAPER_ZOMBIE_SPAWN_EGG)
         output.accept(PazItems.DIGGER_ZOMBIE_SPAWN_EGG)
         output.accept(PazItems.ENGINEER_ZOMBIE_SPAWN_EGG)
         output.accept(PazItems.BACKUP_DANCER_SPAWN_EGG)
         output.accept(PazItems.DISCO_ZOMBIE_SPAWN_EGG)
         output.accept(PazItems.ALL_STAR_SPAWN_EGG)
+        if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.allStar())
         output.accept(PazItems.GRAVE_DIGGER_SPAWN_EGG)
         output.accept(PazItems.ZOMBIE_YETI_SPAWN_EGG)
         output.accept(PazItems.IMP_SPAWN_EGG)
+        if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.imp())
         output.accept(PazItems.SOLDIER_ZOMBIE_SPAWN_EGG)
         output.accept(PazItems.ROBO_ZOMBIE_SPAWN_EGG)
+        if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.roboZombie())
         output.accept(PazItems.PIRATE_CAPTAIN_SPAWN_EGG)
         output.accept(PazItems.SUPER_BRAINZ_SPAWN_EGG)
+        if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.superBrainz())
         output.accept(PazItems.BARON_VON_BATS_SPAWN_EGG)
         output.accept(PazItems.GARGANTUAR_SPAWN_EGG)
+        customEggs(output, ZombieSpawnEggs.gargantuar())
         output.accept(PazItems.ZOMBAT_SPAWN_EGG)
         if (PazConfig.SPLIT_ITEM_TABS) output.accept(PazItems.ZOMBIE_GOAT_SPAWN_EGG)
 
@@ -82,12 +92,9 @@ object PazCreativeTabs {
     }
 
     fun miscItems(output: CreativeModeTab.Output) {
-        // music
-        output.accept(PazItems.MUSIC_DISC_GRASSY_GROOVE)
-
         // items
-        output.accept(PazItems.SUN_BATTERY)
         output.accept(PazItems.SUN)
+        output.accept(PazItems.SUN_BATTERY)
         output.accept(PazItems.SUN_BOTTLE)
         output.accept(PazItems.WATERING_CAN)
         output.accept(PazItems.GARDENING_GLOVE)
@@ -112,6 +119,8 @@ object PazCreativeTabs {
             output.accept(PazItems.BRAINZIUM)
             output.accept(PazItems.LETTER)
         }
+        // music
+        output.accept(PazItems.MUSIC_DISC_GRASSY_GROOVE)
 
         // balloons
         PazItems.balloonByColor.forEach { output.accept(it.value) }

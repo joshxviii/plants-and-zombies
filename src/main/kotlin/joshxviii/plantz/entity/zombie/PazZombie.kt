@@ -353,8 +353,16 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     var waterTime = -1
     var retreatTime = -1
     var emergeTime = -1
+    private var spawnedFromItem = false
+
+    protected open fun onSpawnedFromItem() {}
+
     override fun tick() {
         super.tick()
+        if (spawnedFromItem && !level().isClientSide) {
+            spawnedFromItem = false
+            onSpawnedFromItem()
+        }
         useItems()
         moveDirO = moveDir
         val delta = deltaMovement
@@ -558,6 +566,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         (this as? ZombieRaider)?.`plantz$setIgnoreFlag`(newData.ignoreFlag)
 
         val data = super.finalizeSpawn(level, difficulty, spawnReason, newData)
+        spawnedFromItem = spawnReason == EntitySpawnReason.SPAWN_ITEM_USE
 
         if (spawnReason == EntitySpawnReason.REINFORCEMENT || spawnReason == EntitySpawnReason.EVENT) state = ZombieState.EMERGING
 

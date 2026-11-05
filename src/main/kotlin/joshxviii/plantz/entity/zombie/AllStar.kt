@@ -1,5 +1,6 @@
 package joshxviii.plantz.entity.zombie
 
+import joshxviii.plantz.raid.BossType
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazDataSerializers.ALL_STAR_VARIANT
 import joshxviii.plantz.PazItems
@@ -159,6 +160,10 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
     override fun getTypeName(): Component {
         return if (variant != AllStarVariant.ALL_STAR) Component.translatable("entity.plantz.all_star.variant.${variant.name.lowercase()}")
         else super.getTypeName()
+    }
+
+    override fun onSpawnedFromItem() {
+        if (variant == AllStarVariant.GIGA) BossType.bossify(this)
     }
 
     override fun finalizeSpawn(

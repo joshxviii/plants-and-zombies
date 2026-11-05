@@ -1,7 +1,12 @@
 package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazDataSerializers.BROWN_COAT_VARIANT
+import joshxviii.plantz.PazEntities
+import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazTags
+import net.minecraft.core.component.DataComponents
+import net.minecraft.core.component.TypedDataComponent
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
@@ -11,6 +16,8 @@ import net.minecraft.util.RandomSource
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.entity.*
 import net.minecraft.world.item.DyeColor
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.component.TypedEntityData
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.storage.ValueInput
@@ -75,6 +82,10 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
         spawnBalloons(balloonCount, balloonColors)
     }
 
+    override fun onSpawnedFromItem() {
+        if (variant == BrownCoatVariant.BALLOON) spawnWithBalloons()
+    }
+
     override fun getTypeName(): Component {
         return if (variant != BrownCoatVariant.BROWN) Component.translatable("entity.plantz.browncoat.variant.${variant.name.lowercase()}")
         else super.getTypeName()
@@ -87,7 +98,7 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
-
+        if (spawnReason == EntitySpawnReason.SPAWN_ITEM_USE) return data
         val random = level.random
         setCanBreakDoors(true)
         val structureManager = (level as ServerLevel).structureManager()
@@ -102,9 +113,11 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
 
         if (spawnReason != EntitySpawnReason.EVENT) equipZombieEquipment(random, difficulty.specialMultiplier + 0.1f)
 
-        val spawnBalloons = (spawnReason != EntitySpawnReason.EVENT && spawnReason != EntitySpawnReason.REINFORCEMENT && y > level.seaLevel && random.nextFloat() < 0.02)
+        val spawnBalloons = (spawnReason != EntitySpawnReason.EVENT && spawnReason != EntitySpawnReason.REINFORCEMENT && spawnReason != EntitySpawnReason.SPAWN_ITEM_USE && y > level.seaLevel && random.nextFloat() < 0.02)
         if (spawnBalloons) spawnWithBalloons()
 
         return data
     }
+
+
 }

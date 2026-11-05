@@ -735,7 +735,7 @@ object PazEntities {
             .noLootTable()
             .sized(0.3F, 0.3F)
             .clientTrackingRange(6)
-            .updateInterval(20)
+            .updateInterval(2)
     )
     // endregion
 

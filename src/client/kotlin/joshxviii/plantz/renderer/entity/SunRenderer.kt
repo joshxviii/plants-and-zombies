@@ -2,6 +2,7 @@ package joshxviii.plantz.renderer.entity
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
+import com.mojang.math.Axis
 import joshxviii.plantz.entity.Sun
 import joshxviii.plantz.pazResource
 import net.minecraft.client.renderer.RenderPipelines
@@ -9,14 +10,15 @@ import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.state.EntityRenderState
+import net.minecraft.client.renderer.rendertype.LayeringTransform
 import net.minecraft.client.renderer.rendertype.OutputTarget
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.core.BlockPos
+import net.minecraft.util.LightCoordsUtil
 import net.minecraft.util.Mth
-import kotlin.math.floor
 
 class SunRenderer(context: EntityRendererProvider.Context) :
     EntityRenderer<Sun, SunRenderState>(context) {
@@ -35,33 +37,36 @@ class SunRenderer(context: EntityRendererProvider.Context) :
         submitNodeCollector: SubmitNodeCollector,
         camera: CameraRenderState
     ) {
-        poseStack.pushPose()
-        val r = 1.0f
-        val xo = 0.5f
-        val yo = 0.25f
-        val rr = state.ageInTicks / 4.0f
-        val br = 0xFFFF77
-        val rc = 0xFFFF77
-        val gc = 0xFFFF77
-        val bc = ((Mth.sin(rr + 10.0) + r) * xo * br).toInt()
-        poseStack.translate(0.0f, 0.1f, 0.0f)
-        poseStack.mulPose(camera.orientation)
-        val s = 1.2f-(8.0f/(state.value.coerceAtLeast(1)+8f))
-        poseStack.scale(s, s, s)
-        val timeLeft = floor(state.lifeTime - state.ageInTicks).toInt()
-        val isFlashing = (timeLeft <= 40) && timeLeft % 2 == 0
-        if (!isFlashing) submitNodeCollector.submitCustomGeometry(
-            poseStack,
-            EMISSIVE_SUN,
-        ) { pose: PoseStack.Pose, buffer: VertexConsumer ->
-            vertex(buffer, pose, -xo, -yo, rc, gc, bc, 0f, 1f, state.lightCoords)
-            vertex(buffer, pose, xo, -yo, rc, gc, bc, 1f, 1f, state.lightCoords)
-            vertex(buffer, pose, xo, 0.75f, rc, gc, bc, 1f, 0f, state.lightCoords)
-            vertex(buffer, pose, -xo, 0.75f, rc, gc, bc, 0f, 0f, state.lightCoords)
+        val blinkedOut = state.isExpiring && state.ageInTicks.toInt() % 2 == 0
+        if (!blinkedOut) {
+            val scale = Sun.scaleForValue(state.value)
+            poseStack.pushPose()
+            poseStack.translate(0.0f, state.centerY, 0.0f)
+            poseStack.mulPose(camera.orientation)
+            poseStack.scale(scale, scale, scale)
+            //poseStack.mulPose(Axis.YP.rotation(state.ageInTicks * SPIN_SPEED + state.phase))
+            submitPlane(state, poseStack, submitNodeCollector)
+            //poseStack.mulPose(Axis.YP.rotation(Mth.HALF_PI))
+            //submitPlane(state, poseStack, submitNodeCollector)
+            poseStack.popPose()
         }
-        poseStack.popPose()
 
         super.submit(state, poseStack, submitNodeCollector, camera)
+    }
+
+    private fun submitPlane(state: SunRenderState, poseStack: PoseStack, collector: SubmitNodeCollector) {
+        val light = LightCoordsUtil.FULL_BRIGHT
+        collector.submitCustomGeometry(poseStack, EMISSIVE_SUN) { pose: PoseStack.Pose, buffer: VertexConsumer ->
+            vertex(buffer, pose, -HALF, -HALF, 0f, 1f, light)
+            vertex(buffer, pose, HALF, -HALF, 1f, 1f, light)
+            vertex(buffer, pose, HALF, HALF, 1f, 0f, light)
+            vertex(buffer, pose, -HALF, HALF, 0f, 0f, light)
+
+            vertex(buffer, pose, -HALF, -HALF, 0f, 1f, light)
+            vertex(buffer, pose, -HALF, HALF, 0f, 0f, light)
+            vertex(buffer, pose, HALF, HALF, 1f, 0f, light)
+            vertex(buffer, pose, HALF, -HALF, 1f, 1f, light)
+        }
     }
 
     override fun createRenderState(): SunRenderState {
@@ -71,8 +76,9 @@ class SunRenderer(context: EntityRendererProvider.Context) :
     override fun extractRenderState(entity: Sun, state: SunRenderState, partialTicks: Float) {
         super.extractRenderState(entity, state, partialTicks)
         state.value = entity.value
-        state.lifeTime = entity.getLifeTime()
-        state.icon = 0
+        state.isExpiring = entity.isExpiring
+        state.centerY = entity.bbHeight / 2f
+        state.phase = entity.id * 0.7f
     }
 
     companion object {
@@ -87,25 +93,18 @@ class SunRenderer(context: EntityRendererProvider.Context) :
                     .useOverlay()
                     .affectsCrumbling()
                     .sortOnUpload()
+                    .setLayeringTransform(LayeringTransform.NO_LAYERING)
                     .setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
                     .createRenderSetup()
             )
 
 
-        private fun vertex(
-            buffer: VertexConsumer,
-            pose: PoseStack.Pose,
-            x: Float,
-            y: Float,
-            r: Int,
-            g: Int,
-            b: Int,
-            u: Float,
-            v: Float,
-            lightCoords: Int
-        ) {
+        private const val HALF = 0.5f
+        private const val SPIN_SPEED = 0.06f
+
+        private fun vertex(buffer: VertexConsumer, pose: PoseStack.Pose, x: Float, y: Float, u: Float, v: Float, lightCoords: Int) {
             buffer.addVertex(pose, x, y, 0.0f)
-                .setColor(r, g, b, 128)
+                .setColor(255, 255, 255, 200)
                 .setUv(u, v)
                 .setOverlay(OverlayTexture.NO_OVERLAY)
                 .setLight(lightCoords)
@@ -116,6 +115,7 @@ class SunRenderer(context: EntityRendererProvider.Context) :
 
 class SunRenderState : EntityRenderState() {
     var value: Int = 0
-    var lifeTime: Int = 0
-    var icon: Int = 0
+    var isExpiring: Boolean = false
+    var phase: Float = 0f
+    var centerY: Float = 0.15f
 }
