@@ -21,10 +21,11 @@
   - Baron Von Bats has a chance to spawn as a Boss.
 - Added Zombat
   - Heals itself when hurting other mobs.
-- Added Brainz Alloy Door and Trapdoor.
-- Added Door Shields.
+- Added Brainz Alloy Door and Trapdoor
+- Added Door Shields
   - Can be crafted from any Door and a Shield.
   - Browncoats can now spawn with Door Shields.
+- Added Coffin
 - Added Baron's Staff
   - Has a rare chance to drop from defeating Baron Von Bats.
 - During the final wave at the 1-minute mark, all remaining zombies will teleport closer to the flag.
