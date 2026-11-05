@@ -15,7 +15,7 @@ import net.minecraft.resources.Identifier
 class ZombieGoatRenderer(
     context: EntityRendererProvider.Context,
 ): MobRenderer<ZombieGoat, ZombieGoatRenderState, ZombieGoatModel<ZombieGoatRenderState>>(context,
-    ZombieGoatModel(context.bakeLayer(ZombieGoatModel.LAYER_LOCATION)), 0.45f) {
+    ZombieGoatModel(context.bakeLayer(ZombieGoatModel.LAYER_LOCATION)), 0.4f) {
 
     override fun submit(
         state: ZombieGoatRenderState,

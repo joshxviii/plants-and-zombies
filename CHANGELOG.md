@@ -41,6 +41,7 @@
 - Added a new options menu accessible with `/pz options`
 ### Fixes / Technical Changes
 - Pumpkins are no longer duplicated when using a Gardening Glove.
+- Leader zombies no longer spawn a bunch of other zombies that do not despawn.
 - Added a new client config option: `showSunInfo`.
   - When enabled, sun cost for seed packets and your total held sun is displayed on the HUD.
 - Added new commands:
@@ -293,7 +294,7 @@
     - `poweredUpCooldownReduction` – This value will reduce the cooldown for powered up plants. (default is a 20% reduction)
     - `alloyCost` – A list of entity ids paired with an integer.
   - `paz-client.json`:
-    - `showHiddenItemsInCreativeTab` – Enables some W.I.P items in the creative tab.
+    - `splitItemTabs` – Enables some W.I.P items in the creative tab.
     - `showRaidUi` – Hides the zombie raid UI.
 - Added `seed_mutation` data directory.
   - The path for editing Seed Mutations is: `data/<namespace>/seed_mutation/<entity_name>.json`

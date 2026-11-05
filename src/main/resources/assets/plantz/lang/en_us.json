@@ -89,6 +89,7 @@
   "options.plantz.title": "Plants & Zombies",
   "options.plantz.show_raid_ui": "Raid UI: %s",
   "options.plantz.show_sun_info": "Sun Info HUD: %s",
+  "options.plantz.split_item_tabs": "Split Item Tabs: %s",
 
   "commands.plantz.help": "Plants & Zombies - ask a question in the Discord: %s",
   "commands.plantz.help.hover": "",
@@ -152,14 +153,14 @@
 
   "enchantment.plantz.lobbing": "Lobbing",
 
-  "component.plantz.stored_sun.description": "Stores and uses collected Sun",
+  "component.plantz.stored_sun.description": "Stores collected Sun",
   "component.plantz.stored_sun": "%s / %s",
   "component.plantz.stored_water.description": "Used to hydrate plants",
   "component.plantz.stored_water": "Water: %s / %s",
   "component.plantz.item_cost": "%s Cost: %s",
-  "component.plantz.blocks_damage.description": "Protects against damage from above",
+  "component.plantz.protects_head": "Blocks damage from above",
   "component.plantz.block_break_chance": "Break chance: %s%%",
-  "component.plantz.worn_body_blocker": "Blocks attacks automatically",
+  "component.plantz.worn_body_blocker": "Blocks direct attacks",
   "component.plantz.letter.signed": "From: %s",
   "component.plantz.letter.item": "%s x%s",
   "component.plantz.door_shield": "%s",
@@ -395,6 +396,7 @@
   "entity.plantz.plant_pot_minecart": "Minecart with Plant Pot",
 
   "itemGroup.plantz.plantz_tab": "Plants & Zombies",
+  "itemGroup.plantz.seed_packet_tab": "Plants & Zombies - Seed Packets",
 
   "container.plantz.send_mail": "Send Mail",
   "container.plantz.mailbox_coords": "%d, %d, %d",

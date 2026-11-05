@@ -628,8 +628,8 @@ object PazEntities {
     @JvmField val ZOMBIE_GOAT: EntityType<ZombieGoat> =  registerZombie(
         "zombie_goat",
         EntityType.Builder.of(::ZombieGoat, MobCategory.CREATURE)
-            .sized(0.9F, 1.3F)
-            .passengerAttachments(1.1125F)
+            .sized(0.68F, 0.84F)
+            .passengerAttachments(0.78F)
             .clientTrackingRange(10),
         attributes = PazZombie.Companion.PazZombieAttributes(
             attackDamage = 1.0,

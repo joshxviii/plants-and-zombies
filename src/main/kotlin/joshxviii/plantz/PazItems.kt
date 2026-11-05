@@ -203,13 +203,6 @@ object PazItems {
             .durability(80)
             .repairable(ItemTags.PLANKS)
             .enchantable(1)
-            .attributes(
-                ItemAttributeModifiers.builder()
-                    .add(
-                        Attributes.ARMOR,
-                        AttributeModifier(pazResource("coffin"), 4.0, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.CHEST
-                    ).build())
             .component(DataComponents.EQUIPPABLE,
                 Equippable.builder(EquipmentSlot.CHEST)
                     .setAsset(COFFIN_EQUIP_ASSET)

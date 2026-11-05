@@ -34,6 +34,11 @@ object PazClientOptions {
             get = { PazConfig.client.showSunInfo },
             set = { PazConfig.client.showSunInfo = it },
         ),
+        ToggleOption(
+            "options.plantz.split_item_tabs",
+            get = { PazConfig.client.splitItemTabs },
+            set = { PazConfig.client.splitItemTabs = it },
+        ),
     )
 }
 
