@@ -8,6 +8,7 @@ import joshxviii.plantz.item.component.ProtectsHeadDataComponent
 import joshxviii.plantz.item.component.StoredSun
 import joshxviii.plantz.item.component.StoredWater
 import joshxviii.plantz.item.component.SunCost
+import joshxviii.plantz.item.component.WornBodyBlockerComponent
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.registries.BuiltInRegistries
@@ -70,6 +71,14 @@ object PazComponents {
         "letter_data"
     ) { it.persistent(LetterDataComponent.CODEC)
         .networkSynchronized(LetterDataComponent.STREAM_CODEC)
+        .cacheEncoding()
+    }
+
+    @JvmField
+    val WORN_BODY_BLOCKER: DataComponentType<WornBodyBlockerComponent> = register(
+        "worn_body_blocker"
+    ) { it.persistent(WornBodyBlockerComponent.CODEC)
+        .networkSynchronized(WornBodyBlockerComponent.STREAM_CODEC)
         .cacheEncoding()
     }
 

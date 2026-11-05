@@ -159,6 +159,7 @@
   "component.plantz.item_cost": "%s Cost: %s",
   "component.plantz.blocks_damage.description": "Protects against damage from above",
   "component.plantz.block_break_chance": "Break chance: %s%%",
+  "component.plantz.worn_body_blocker": "Blocks attacks automatically",
   "component.plantz.letter.signed": "From: %s",
   "component.plantz.letter.item": "%s x%s",
   "component.plantz.door_shield": "%s",

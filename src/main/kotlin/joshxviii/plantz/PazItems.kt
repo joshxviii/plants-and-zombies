@@ -150,17 +150,17 @@ object PazItems {
         properties = Item.Properties()
             .durability(336)
             .equippableUnswappable(EquipmentSlot.OFFHAND)
-            .component(PazComponents.DOOR_SHIELD, DoorShieldComponent())
             .component(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
                 .add(
                     Attributes.ARMOR,
-                    AttributeModifier(pazResource("door_armor"), 4.0, AttributeModifier.Operation.ADD_VALUE),
+                    AttributeModifier(pazResource("door_armor"), 3.0, AttributeModifier.Operation.ADD_VALUE),
                     EquipmentSlotGroup.HAND
                 ).add(
                     Attributes.KNOCKBACK_RESISTANCE,
                     AttributeModifier(pazResource("door_armor_resistance"), 0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL),
                     EquipmentSlotGroup.HAND
                 ).build())
+            .component(PazComponents.DOOR_SHIELD, DoorShieldComponent())
             .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
             .delayedComponent(DataComponents.BLOCKS_ATTACKS, {
                 BlocksAttacks(
@@ -200,20 +200,33 @@ object PazItems {
     val COFFIN: Item = registerItem(
         "coffin",
         properties = Item.Properties()
-            .durability(270)
+            .durability(80)
             .repairable(ItemTags.PLANKS)
             .enchantable(1)
             .attributes(
                 ItemAttributeModifiers.builder()
                     .add(
                         Attributes.ARMOR,
-                        AttributeModifier(pazResource("coffin"), 15.0, AttributeModifier.Operation.ADD_VALUE),
+                        AttributeModifier(pazResource("coffin"), 4.0, AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.CHEST
                     ).build())
             .component(DataComponents.EQUIPPABLE,
                 Equippable.builder(EquipmentSlot.CHEST)
                     .setAsset(COFFIN_EQUIP_ASSET)
                     .build())
+            .component(PazComponents.WORN_BODY_BLOCKER, WornBodyBlockerComponent)
+            .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
+            .delayedComponent(DataComponents.BLOCKS_ATTACKS, {
+                BlocksAttacks(
+                    0.0f,
+                    1.0f,
+                    listOf(DamageReduction(360.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 1.0f)),
+                    ItemDamageFunction.DEFAULT,
+                    Optional.of<HolderSet<DamageType>>(it.getOrThrow(DamageTypeTags.BYPASSES_SHIELD)),
+                    Optional.of(SoundEvents.SHIELD_BLOCK),
+                    Optional.of(SoundEvents.SHIELD_BREAK)
+                )
+            })
     )
     @JvmField val WHITE_BALLOON: Item = registerItem("white_balloon", {BalloonItem(it, DyeColor.WHITE)}, properties = Item.Properties())
     @JvmField val LIGHT_GRAY_BALLOON: Item = registerItem("light_gray_balloon", {BalloonItem(it, DyeColor.LIGHT_GRAY)}, properties = Item.Properties())
@@ -416,13 +429,15 @@ object PazItems {
 
         // Modify components
         ItemComponentTooltipProviderRegistryImpl.addFirst(PazComponents.PROTECTS_HEAD)
+        ItemComponentTooltipProviderRegistryImpl.addFirst(PazComponents.WORN_BODY_BLOCKER)
+        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.DOOR_SHIELD)
+        ItemComponentTooltipProviderRegistryImpl.addFirst(PazComponents.BLOCK_BREAK_CHANCE)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_WATER)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_SUN)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BRAINZ_ALLOY_COST)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.LETTER_DATA)
-        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.DOOR_SHIELD)
-        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BLOCK_BREAK_CHANCE)
+
 
         DefaultItemComponentEvents.MODIFY.register { ctx ->
             ctx.modify({ it.defaultInstance.`is`(BUCKET_WEARABLE)}, ::bucketHeadItem)

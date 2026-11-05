@@ -2,9 +2,7 @@ package joshxviii.plantz.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.vertex.PoseStack;
-import joshxviii.plantz.PazEffects;
-import joshxviii.plantz.PazItems;
-import joshxviii.plantz.renderer.CoffinRenderLayer;
+import joshxviii.plantz.renderer.BodyBlockerRenderLayer;
 import joshxviii.plantz.renderer.DuckyTubeRenderLayer;
 import joshxviii.plantz.renderer.DyeVatRenderLayer;
 import joshxviii.plantz.renderer.SpecialEffectsLayer;
@@ -15,12 +13,9 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.util.ARGB;
-import net.minecraft.world.entity.Avatar;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -45,7 +40,7 @@ abstract public class LivingEntityRendererMixin<T extends LivingEntity, S extend
         //TODO try to consolidate these into one render layer
         this.addLayer(new DuckyTubeRenderLayer<>(this));
         this.addLayer(new DyeVatRenderLayer<>(this));
-        this.addLayer(new CoffinRenderLayer<>(this));
+        this.addLayer(new BodyBlockerRenderLayer<>(this));
 
         this.addLayer(new SpecialEffectsLayer<>(this));
     }

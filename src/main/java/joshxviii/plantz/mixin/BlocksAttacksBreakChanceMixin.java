@@ -1,6 +1,8 @@
 package joshxviii.plantz.mixin;
 
+import joshxviii.plantz.PazComponents;
 import joshxviii.plantz.item.component.BlockingItemBreakChance;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -22,6 +24,14 @@ public abstract class BlocksAttacksBreakChanceMixin {
         float damage,
         CallbackInfo ci
     ) {
+        if (item.has(PazComponents.WORN_BODY_BLOCKER) && item == user.getItemBySlot(EquipmentSlot.CHEST)) {
+            if (!level.isClientSide() && damage > 0.0f) {
+                int itemDamage = ((BlocksAttacks) (Object) this).itemDamage().apply(damage);
+                if (itemDamage > 0) item.hurtAndBreak(itemDamage, user, EquipmentSlot.CHEST);
+            }
+            ci.cancel();
+            return;
+        }
         if (BlockingItemBreakChance.handle(level, item, user, damage, hand.asEquipmentSlot())) {
             ci.cancel();
         }

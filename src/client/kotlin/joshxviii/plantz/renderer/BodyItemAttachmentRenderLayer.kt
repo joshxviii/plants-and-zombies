@@ -2,6 +2,7 @@ package joshxviii.plantz.renderer
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
+import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazModels.HAS_BUTTER_KEY
@@ -28,7 +29,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.Identifier
 import net.minecraft.util.ARGB
 import net.minecraft.util.Mth
-import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
 import org.joml.Vector3f
@@ -156,30 +156,30 @@ class DuckyTubeRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
     parent: RenderLayerParent<S, M>
 ) : BodyItemAttachmentRenderLayer<S, M>(
     parent = parent,
-    expectedItem = PazItems.DUCKY_TUBE,
     stackSelector = { it.legsEquipment },
+    matches = { it.`is`(PazItems.DUCKY_TUBE) },
 )
 
 class DyeVatRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
     parent: RenderLayerParent<S, M>
 ) : BodyItemAttachmentRenderLayer<S, M>(
     parent = parent,
-    expectedItem = PazItems.DYE_BLASTER,
     stackSelector = { it.mainHandItemStack },
+    matches = { it.`is`(PazItems.DYE_BLASTER) },
 )
 
-class CoffinRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
+class BodyBlockerRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
     parent: RenderLayerParent<S, M>
 ) : BodyItemAttachmentRenderLayer<S, M>(
     parent = parent,
-    expectedItem = PazItems.COFFIN,
     stackSelector = { it.chestEquipment },
+    matches = { it.has(PazComponents.WORN_BODY_BLOCKER) },
 )
 
 abstract class BodyItemAttachmentRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
     parent: RenderLayerParent<S, M>,
-    private val expectedItem: Item,
     private val stackSelector: (HumanoidRenderState) -> ItemStack,
+    private val matches: (ItemStack) -> Boolean,
 ) : RenderLayer<S, M>(parent) {
 
     private val itemRenderState = ItemStackRenderState()
@@ -196,7 +196,7 @@ abstract class BodyItemAttachmentRenderLayer<S : LivingEntityRenderState, M : En
         val humanState = state as? HumanoidRenderState ?: return
         val itemStack = stackSelector(humanState)
 
-        if (!itemStack.`is`(expectedItem)) return
+        if (!matches(itemStack)) return
 
         poseStack.pushPose()
 
@@ -204,7 +204,7 @@ abstract class BodyItemAttachmentRenderLayer<S : LivingEntityRenderState, M : En
         humanoidModel.body.translateAndRotate(poseStack)
         poseStack.mulPose(Axis.ZP.rotationDegrees(180.0f))
 
-        if (itemStack.`is`(PazItems.COFFIN)) {
+        if (itemStack.has(PazComponents.WORN_BODY_BLOCKER)) {
             poseStack.pushPose()
             state.xRot = if (state.isCrouching) 25f else 0f
             state.yRot = 0f
