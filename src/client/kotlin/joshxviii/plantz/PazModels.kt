@@ -89,6 +89,7 @@ object PazModels {
         // REGISTER MODELS
         ModelLayerRegistry.registerModelLayer(PeaShooterModel.LAYER_LOCATION) { PeaShooterModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(SunflowerModel.LAYER_LOCATION) { SunflowerModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(MarigoldModel.LAYER_LOCATION) { MarigoldModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(WallNutModel.LAYER_LOCATION) { WallNutModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(ChomperModel.LAYER_LOCATION) { ChomperModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(CherryBombModel.LAYER_LOCATION) { CherryBombModel.createBodyLayer() }
@@ -163,6 +164,7 @@ object PazModels {
         // REGISTER ENTITY RENDERERS
         EntityRenderers.register(PazEntities.PEA_SHOOTER) { PlantRenderer(PeaShooterModel(it.bakeLayer(PeaShooterModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.SUNFLOWER) { PlantRenderer(SunflowerModel(it.bakeLayer(SunflowerModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.MARIGOLD) { PlantRenderer(MarigoldModel(it.bakeLayer(MarigoldModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.WALL_NUT) { WallNutRenderer(it) }
         EntityRenderers.register(PazEntities.EXPLODE_O_NUT) { WallNutRenderer(it) }
         EntityRenderers.register(PazEntities.CHOMPER) { PlantRenderer(ChomperModel(it.bakeLayer(ChomperModel.LAYER_LOCATION)), it) }

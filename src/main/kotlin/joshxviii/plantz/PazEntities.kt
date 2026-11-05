@@ -76,6 +76,11 @@ object PazEntities {
         EntityType.Builder.of(::Sunflower, MobCategory.CREATURE),
         height = 1.1f,
     )
+    @JvmField val MARIGOLD: EntityType<Marigold> = registerPlant(
+        "marigold",
+        EntityType.Builder.of(::Marigold, MobCategory.CREATURE),
+        height = 0.94f,
+    )
     @JvmField val PEA_SHOOTER: EntityType<PeaShooter> = registerPlant(
         "peashooter",
         EntityType.Builder.of(::PeaShooter, MobCategory.CREATURE),

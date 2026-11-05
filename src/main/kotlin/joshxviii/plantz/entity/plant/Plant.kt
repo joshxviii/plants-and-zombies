@@ -313,7 +313,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         super.onSyncedDataUpdated(accessor)
         if (level().isClientSide) when (accessor) {
             POWERED_UP -> if (poweredUp) funnyBounce()
-            RECEIVED_SUN, RECEIVED_WATER -> funnyBounce()
         }
         if (state == PlantState.INIT) initAnimationState.startIfStopped(tickCount)
     }
@@ -608,6 +607,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
      * State machine for plant animations
      */
     private fun updateAnimationState() {
+        if (state != PlantState.INIT && tickCount == 1) funnyBounce()
         when (state) {
             PlantState.INIT -> {
                 initAnimationState.startIfStopped(tickCount)
@@ -734,21 +734,21 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val level = level() as? ServerLevel ?: return
         receivedSun = 0
         receivedWater = 0
-        val stack = SeedMutationManager.resolve(this)
-        val itemEntity = ItemEntity(level, x, y + 0.5, z, stack)
-        level.addFreshEntity(itemEntity)
+        SeedMutationManager.resolve(this).forEach { stack ->
+            level.addFreshEntity(ItemEntity(level, x, y + 0.5, z, stack))
+        }
         playSound(SoundEvents.ROOTED_DIRT_BREAK)
         if (player is ServerPlayer) PazCriteria.GROW_SEEDS.trigger(player, true)
     }
 
-    fun sunRequiredForSeeds(): Int {
+    open fun sunRequiredForSeeds(): Int {
         return Mth.floor(
             Mth.floor(PazConfig.getSunCost(type)*2f).coerceAtLeast(4) *
             if (receivedWater > 1) PazConfig.HYDRATION_SUN_REDUCTION.toFloat() else 1f// receive a bonus for larger water sources that reduces the sun needed by half.
         )
     }
 
-    fun timeRequiredForSeeds() : Int {
+    open fun timeRequiredForSeeds() : Int {
         val sunCost = PazConfig.getSunCost(type)
         val zenBuff = getBlockBelow().`is`(PazBlocks.ZEN_PLANT_POT)
         return PazConfig.getGrowTime(sunCost, zenBuff)

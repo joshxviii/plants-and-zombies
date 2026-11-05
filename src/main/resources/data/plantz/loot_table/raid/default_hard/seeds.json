@@ -7,7 +7,7 @@
         {
           "type": "minecraft:item",
           "name": "plantz:sun_bottle",
-          "weight": 30,
+          "weight": 20,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -15,6 +15,25 @@
                 "min": 2,
                 "max": 12
               }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:seed_packet",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "minecraft:entity_data": {
+                  "id": "plantz:marigold"
+                }
+              }
+            },
+            {
+              "function": "minecraft:set_count",
+              "count": 1
             }
           ]
         },

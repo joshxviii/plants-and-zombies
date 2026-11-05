@@ -45,6 +45,7 @@ data class ServerConfig(
     ),
     var sunCosts: MutableMap<String, Int> = mutableMapOf(
         "plantz:sunflower"              to 5,
+        "plantz:marigold"               to 5,
         "plantz:peashooter"             to 5,
         "plantz:wallnut"                to 5,
         "plantz:explode_o_nut"          to 5,
@@ -80,7 +81,7 @@ data class ServerConfig(
 data class ClientConfig(
     var showDebugInfo: Boolean = false,
     var showHiddenItemsInCreativeTab: Boolean = false,
-    var showRaidUi: Boolean = false,
+    var showRaidUi: Boolean = true,
     var showSunInfo: Boolean = false
 )
 

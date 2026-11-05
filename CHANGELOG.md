@@ -7,6 +7,9 @@
 
 # Changelog 1.5.2
 ### Changes / Additions
+- Added Marigold
+  - Obtained through raid rewards.
+  - Marigold will drop treasure instead of seed packets from zen gardening.
 - Zombie Raids now have "Boss Chance"
   - Boss Chance represents the odds that the next wave will spawn a boss.
   - The chance increases exponentially every wave.
@@ -61,6 +64,19 @@
 - The `plantz:stored_sun` item component has a new field `capacity:[<amount>]`.
   - Example stick with 999 sun capacity:
   <br/>`/give @s stick[minecraft:item_model="plantz:sun",plantz:stored_sun={capacity:999,stored_sun:0},minecraft:max_stack_size=1]`
+- Seed mutation files now accept a loot table as a valid result, Example:
+  ```
+  {
+    "mutations": [
+      {
+        "chance": 0.5,
+        "result": {
+          "loot_table": "plantz:seed_mutations/marigold"
+        }
+      }
+    ]
+  }
+  ```
 - Various other bug fixes and improvements
 
 # Changelog 1.5.1

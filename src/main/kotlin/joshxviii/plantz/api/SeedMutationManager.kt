@@ -1,5 +1,6 @@
 package joshxviii.plantz.api
 
+import com.mojang.datafixers.util.Either
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
 import com.mojang.serialization.codecs.RecordCodecBuilder
@@ -13,6 +14,7 @@ import net.minecraft.core.HolderSet
 import net.minecraft.core.RegistryCodecs
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
+import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.RandomSource
@@ -22,11 +24,14 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.biome.Biome
+import net.minecraft.world.level.storage.loot.LootParams
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Data driven seed mutation manager.
+ * Data-driven seed mutation manager.
  */
 object SeedMutationManager {
     fun get(level: ServerLevel, type: EntityType<*>): SeedMutationData? {
@@ -38,8 +43,8 @@ object SeedMutationManager {
         return p
     }
 
-    fun resolve(entity: Entity): ItemStack {
-        val default = SeedPacketItem.stackFor(entity.type)
+    fun resolve(entity: Entity): List<ItemStack> {
+        val default = listOf(SeedPacketItem.stackFor(entity.type))
         val level = entity.level() as? ServerLevel ?: return default
         val data = get(level, entity.type) ?: return default
         val pos = entity.blockPosition()
@@ -48,9 +53,16 @@ object SeedMutationManager {
         for (rule in data.mutations) {
             if (rule.matches(level, pos, random)) {
                 return when (val result = rule.result) {
-                    is SeedMutationResult.EntityTypeResult -> SeedPacketItem.stackFor(result.entityType.value())
+                    is SeedMutationResult.EntityTypeResult -> listOf(SeedPacketItem.stackFor(result.entityType.value()))
                     is SeedMutationResult.ItemStackResult ->
-                        ItemStack(result.item.value(), result.count.roll(random))
+                        listOf(ItemStack(result.item.value(), result.count.roll(random)))
+                    is SeedMutationResult.LootTableResult -> {
+                        val params = LootParams.Builder(level)
+                            .withParameter(LootContextParams.ORIGIN, entity.position())
+                            .create(LootContextParamSets.CHEST)
+                        val key = ResourceKey.create(Registries.LOOT_TABLE, result.lootTable)
+                        level.server.reloadableRegistries().getLootTable(key).getRandomItems(params)
+                    }
                 }
             }
         }
@@ -121,19 +133,33 @@ sealed interface SeedMutationResult {
             }
         }
     }
+    data class LootTableResult(val lootTable: Identifier) : SeedMutationResult {
+        companion object {
+            val CODEC: Codec<LootTableResult> = Identifier.CODEC.fieldOf("loot_table").xmap(::LootTableResult, LootTableResult::lootTable).codec()
+        }
+    }
 
     companion object {
-        val CODEC: Codec<SeedMutationResult> = Codec.either(
-            BuiltInRegistries.ENTITY_TYPE.holderByNameCodec(),
-            ItemStackResult.CODEC,
-        ).xmap(
-            { result ->
-                result.map({ EntityTypeResult(it) }, { it })
-            },
+        private val OBJECT_CODEC: Codec<SeedMutationResult> = Codec.either(ItemStackResult.CODEC, LootTableResult.CODEC).xmap(
+            { it.map({ r -> r as SeedMutationResult }, { r -> r as SeedMutationResult }) },
             { result ->
                 when (result) {
-                    is EntityTypeResult -> com.mojang.datafixers.util.Either.left(result.entityType)
-                    is ItemStackResult -> com.mojang.datafixers.util.Either.right(result)
+                    is ItemStackResult -> Either.left(result)
+                    is LootTableResult -> Either.right(result)
+                    is EntityTypeResult -> throw IllegalStateException("Entity type results are not objects")
+                }
+            }
+        )
+
+        val CODEC: Codec<SeedMutationResult> = Codec.either(
+            BuiltInRegistries.ENTITY_TYPE.holderByNameCodec(),
+            OBJECT_CODEC,
+        ).xmap(
+            { it.map({ e -> EntityTypeResult(e) as SeedMutationResult }, { r -> r }) },
+            { result ->
+                when (result) {
+                    is EntityTypeResult -> Either.left(result.entityType)
+                    else -> Either.right(result)
                 }
             }
         )
