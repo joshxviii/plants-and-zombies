@@ -30,6 +30,10 @@ class ZombieGoat(type: EntityType<out ZombieGoat>, level: Level) : PazZombie(typ
     companion object {
     }
 
+    init {
+        xpReward = 0
+    }
+
     override fun getAmbientSound(): SoundEvent {
         return SoundEvents.GOAT_AMBIENT
     }

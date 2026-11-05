@@ -9,58 +9,14 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.tags.BlockTags
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.Level
 
 object PazCreativeTabs {
-    private val PAZ_TAB_KEY: ResourceKey<CreativeModeTab> = ResourceKey.create(Registries.CREATIVE_MODE_TAB, pazResource("plantz_tab"))
 
-    private val ITEMS_TAB_KEY: ResourceKey<CreativeModeTab> = ResourceKey.create(Registries.CREATIVE_MODE_TAB, pazResource("item_tab"))
-    private val PLANT_TAB_KEY: ResourceKey<CreativeModeTab> = ResourceKey.create(Registries.CREATIVE_MODE_TAB, pazResource("seed_packet_tab"))
-    private val ZOMBIE_TAB_KEY: ResourceKey<CreativeModeTab> = ResourceKey.create(Registries.CREATIVE_MODE_TAB, pazResource("zombie_tab"))
-
-    val PAZ_TAB: CreativeModeTab = Registry.register(
-        BuiltInRegistries.CREATIVE_MODE_TAB, PAZ_TAB_KEY,
-        CreativeModeTab.builder(CreativeModeTab.Row.BOTTOM, 0)
-            .title(Component.translatable("itemGroup.plantz.plantz_tab"))
-            .icon { ItemStack(PazItems.SUN) }
-            .displayItems { parameters, output ->
-                plantEntities(output)
-                zombieEntities(output)
-                miscItems(output)
-            }.build()
-    )
-
-    val ITEM_TAB: CreativeModeTab = Registry.register(
-        BuiltInRegistries.CREATIVE_MODE_TAB, ITEMS_TAB_KEY,
-        CreativeModeTab.builder(CreativeModeTab.Row.BOTTOM, 0)
-            .title(Component.translatable("itemGroup.plantz.item_tab"))
-            .icon { ItemStack(PazItems.SUN) }
-            .displayItems { parameters, output ->
-                miscItems(output, true)
-            }.build()
-    )
-    val PLANT_TAB: CreativeModeTab = Registry.register(
-        BuiltInRegistries.CREATIVE_MODE_TAB, PLANT_TAB_KEY,
-        CreativeModeTab.builder(CreativeModeTab.Row.BOTTOM, 1)
-            .title(Component.translatable("itemGroup.plantz.seed_packet_tab"))
-            .icon { SeedPacketItem.stackFor(PazEntities.SUNFLOWER) }
-            .displayItems { parameters, output ->
-                plantEntities(output, true)
-            }.build()
-        )
-    val ZOMBIE_TAB: CreativeModeTab = Registry.register(
-        BuiltInRegistries.CREATIVE_MODE_TAB, ZOMBIE_TAB_KEY,
-        CreativeModeTab.builder(CreativeModeTab.Row.BOTTOM, 2)
-            .title(Component.translatable("itemGroup.plantz.zombie_tab"))
-            .icon { ItemStack(PazItems.BROWN_COAT_SPAWN_EGG) }
-            .displayItems { parameters, output ->
-                zombieEntities(output, true)
-            }.build()
-    )
-
-    fun plantEntities(output: CreativeModeTab.Output, requiredTabSplit: Boolean = false) {
-        if (requiredTabSplit && !PazConfig.SPLIT_ITEM_TABS) return
+    fun plantEntities(output: CreativeModeTab.Output) {
         // plant seed packets
         output.accept(SeedPacketItem.stackFor(PazEntities.SUNFLOWER))
         output.accept(SeedPacketItem.stackFor(PazEntities.MARIGOLD))
@@ -95,8 +51,7 @@ object PazCreativeTabs {
         output.accept(SeedPacketItem.stackFor(PazEntities.PUMPKIN))
     }
 
-    fun zombieEntities(output: CreativeModeTab.Output, requiredTabSplit: Boolean = false) {
-        if (requiredTabSplit && !PazConfig.SPLIT_ITEM_TABS) return
+    fun zombieEntities(output: CreativeModeTab.Output) {
         // zombie spawn eggs
         output.accept(PazItems.BROWN_COAT_SPAWN_EGG)
         output.accept(PazItems.NEWSPAPER_ZOMBIE_SPAWN_EGG)
@@ -117,9 +72,6 @@ object PazCreativeTabs {
         output.accept(PazItems.ZOMBAT_SPAWN_EGG)
         if (PazConfig.SPLIT_ITEM_TABS) output.accept(PazItems.ZOMBIE_GOAT_SPAWN_EGG)
 
-        // gnome
-        if (PazConfig.SPLIT_ITEM_TABS) output.accept(PazItems.GNOME_SPAWN_EGG)
-
         // machine blueprints
         if (PazConfig.SPLIT_ITEM_TABS) {
             output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_TURRET))
@@ -129,9 +81,7 @@ object PazCreativeTabs {
         }
     }
 
-    fun miscItems(output: CreativeModeTab.Output, requiredTabSplit: Boolean = false) {
-        if (requiredTabSplit && !PazConfig.SPLIT_ITEM_TABS) return
-
+    fun miscItems(output: CreativeModeTab.Output) {
         // music
         output.accept(PazItems.MUSIC_DISC_GRASSY_GROOVE)
 
@@ -187,6 +137,55 @@ object PazCreativeTabs {
         output.accept(PazBlocks.GOLDEN_GARDEN_GNOME)
         output.accept(PazBlocks.LAWN_FLAMINGO)
         if (PazConfig.SPLIT_ITEM_TABS) output.accept(PazBlocks.TIME_MACHINE)
+
+        // gnome
+        if (PazConfig.SPLIT_ITEM_TABS) output.accept(PazItems.GNOME_SPAWN_EGG)
+    }
+
+    private val PAZ_TAB_KEY: ResourceKey<CreativeModeTab> = ResourceKey.create(Registries.CREATIVE_MODE_TAB, pazResource("plantz_tab"))
+    private val PLANT_TAB_KEY: ResourceKey<CreativeModeTab> = ResourceKey.create(Registries.CREATIVE_MODE_TAB, pazResource("seed_packet_tab"))
+    private val ZOMBIE_TAB_KEY: ResourceKey<CreativeModeTab> = ResourceKey.create(Registries.CREATIVE_MODE_TAB, pazResource("zombie_tab"))
+
+    val PAZ_TAB: CreativeModeTab = Registry.register(
+        BuiltInRegistries.CREATIVE_MODE_TAB, PAZ_TAB_KEY,
+        CreativeModeTab.builder(CreativeModeTab.Row.BOTTOM, 0)
+            .title(Component.translatable("itemGroup.plantz.item_tab"))
+            .icon { ItemStack(PazItems.SUN) }
+            .displayItems { parameters, output ->
+                if (!PazConfig.SPLIT_ITEM_TABS) {
+                    plantEntities(output)
+                    zombieEntities(output)
+                }
+                miscItems(output)
+            }.build()
+    )
+    val PLANT_TAB: CreativeModeTab = Registry.register(
+        BuiltInRegistries.CREATIVE_MODE_TAB, PLANT_TAB_KEY,
+        CreativeModeTab.builder(CreativeModeTab.Row.BOTTOM, 1)
+            .title(Component.translatable("itemGroup.plantz.seed_packet_tab"))
+            .icon { SeedPacketItem.stackFor(PazEntities.SUNFLOWER) }
+            .displayItems { parameters, output ->
+                if (PazConfig.SPLIT_ITEM_TABS) plantEntities(output)
+            }.build()
+    )
+    val ZOMBIE_TAB: CreativeModeTab = Registry.register(
+        BuiltInRegistries.CREATIVE_MODE_TAB, ZOMBIE_TAB_KEY,
+        CreativeModeTab.builder(CreativeModeTab.Row.BOTTOM, 2)
+            .title(Component.translatable("itemGroup.plantz.zombie_tab"))
+            .icon { ItemStack(PazItems.BROWN_COAT_SPAWN_EGG) }
+            .displayItems { parameters, output ->
+                if (PazConfig.SPLIT_ITEM_TABS) zombieEntities(output)
+            }.build()
+    )
+
+    fun rebuildTabs(level: Level?, player: Player?) {
+        if (level == null || player == null) return
+        val parameters = CreativeModeTab.ItemDisplayParameters(
+            level.enabledFeatures(),
+            player.canUseGameMasterBlocks(),
+            level.registryAccess()
+        )
+        listOf(PAZ_TAB, PLANT_TAB, ZOMBIE_TAB).forEach { it.buildContents(parameters) }
     }
 
     fun initialize() {}

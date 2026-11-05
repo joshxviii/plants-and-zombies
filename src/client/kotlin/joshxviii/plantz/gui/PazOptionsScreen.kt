@@ -1,6 +1,9 @@
 package joshxviii.plantz.gui
 
 import joshxviii.plantz.PazConfig
+import joshxviii.plantz.PazCreativeTabs
+import net.minecraft.ChatFormatting
+import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
@@ -15,20 +18,20 @@ class ToggleOption(
     val labelKey: String,
     val get: () -> Boolean,
     val set: (Boolean) -> Unit,
+    val onChange: () -> Unit = {},
 ) {
+    companion object {
+        val ON = CommonComponents.OPTION_ON.copy().withStyle(ChatFormatting.GREEN)
+        val OFF = CommonComponents.OPTION_OFF.copy().withStyle(ChatFormatting.RED)
+    }
     fun label(): Component = Component.translatable(
         labelKey,
-        if (get()) CommonComponents.OPTION_ON else CommonComponents.OPTION_OFF
+        if (get()) ON else OFF
     )
 }
 
 object PazClientOptions {
     val ALL: List<ToggleOption> = listOf(
-        ToggleOption(
-            "options.plantz.show_raid_ui",
-            get = { PazConfig.client.showRaidUi },
-            set = { PazConfig.client.showRaidUi = it },
-        ),
         ToggleOption(
             "options.plantz.show_sun_info",
             get = { PazConfig.client.showSunInfo },
@@ -38,6 +41,15 @@ object PazClientOptions {
             "options.plantz.split_item_tabs",
             get = { PazConfig.client.splitItemTabs },
             set = { PazConfig.client.splitItemTabs = it },
+            onChange = {
+                val mc = Minecraft.getInstance()
+                PazCreativeTabs.rebuildTabs(mc.level, mc.player)
+            },
+        ),
+        ToggleOption(
+            "options.plantz.show_raid_ui",
+            get = { PazConfig.client.showRaidUi },
+            set = { PazConfig.client.showRaidUi = it },
         ),
     )
 }
@@ -63,6 +75,7 @@ class PazOptionsScreen(private val parent: Screen? = null) : Screen(Component.tr
         inner class Row(option: ToggleOption) : Entry<Row>() {
             private val button: Button = Button.builder(option.label()) { b ->
                 option.set(!option.get())
+                option.onChange()
                 b.message = option.label()
                 PazConfig.saveClient()
             }.bounds(0, 0, 160, BUTTON_HEIGHT).build()

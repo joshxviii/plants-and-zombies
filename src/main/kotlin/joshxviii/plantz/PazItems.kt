@@ -65,6 +65,7 @@ import net.minecraft.world.level.block.DispenserBlock
 import net.minecraft.world.phys.AABB
 import java.util.*
 import java.util.function.Function
+import kotlin.jvm.java
 
 object PazItems {
     @JvmField
@@ -178,7 +179,7 @@ object PazItems {
     val DUCKY_EQUIP_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, pazResource("ducky_tube"))
     @JvmField
     val DUCKY_TUBE: Item = registerItem(
-        "ducky_tube",
+        "ducky_tube", ::DuckTubeItem,
         properties = Item.Properties()
             .durability(200)
             .repairable(Items.PHANTOM_MEMBRANE)

@@ -39,11 +39,11 @@ class GardeningGloveItem(properties: Properties) : Item(properties) {
             )
         }
 
-        fun addToTooltip(consumer: MutableList<Component>, components: DataComponentGetter, shiftKey: Component) {
+        fun addToTooltip(consumer: MutableList<Component>, components: DataComponentGetter) {
             val data = components.get(DataComponents.ENTITY_DATA)
 
             if (data == null) {
-                consumer.add(1, Component.translatable("item.plantz.gardening_glove.description", shiftKey)
+                consumer.add(1, Component.translatable("item.plantz.gardening_glove.description")
                     .withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC))
                 return
             }

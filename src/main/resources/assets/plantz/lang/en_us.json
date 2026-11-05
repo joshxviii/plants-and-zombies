@@ -179,6 +179,7 @@
   "item.plantz.football_helmet": "Football Helmet",
   "item.plantz.football_helmet.description": "Charge while sprinting",
   "item.plantz.ducky_tube": "Ducky Tube",
+  "item.plantz.ducky_tube.description": "Floats in water",
   "item.plantz.coffin": "Coffin",
   "item.plantz.bot_blueprint": "Bot Blueprint",
   "item.plantz.newspaper": "Newspaper",
@@ -395,8 +396,9 @@
   "entity.plantz.gnome": "Garden Gnome",
   "entity.plantz.plant_pot_minecart": "Minecart with Plant Pot",
 
-  "itemGroup.plantz.plantz_tab": "Plants & Zombies",
-  "itemGroup.plantz.seed_packet_tab": "Plants & Zombies - Seed Packets",
+  "itemGroup.plantz.item_tab": "Plants & Zombies",
+  "itemGroup.plantz.seed_packet_tab": "P&Z Seed Packets",
+  "itemGroup.plantz.zombie_tab": "P&Z Zombies",
 
   "container.plantz.send_mail": "Send Mail",
   "container.plantz.mailbox_coords": "%d, %d, %d",

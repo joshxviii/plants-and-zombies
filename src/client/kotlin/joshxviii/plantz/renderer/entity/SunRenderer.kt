@@ -80,7 +80,7 @@ class SunRenderer(context: EntityRendererProvider.Context) :
         val EMISSIVE_SUN =
             RenderType.create(
                 "sun",
-                RenderSetup.builder(RenderPipelines.ENERGY_SWIRL)
+                RenderSetup.builder(RenderPipelines.BEACON_BEAM_TRANSLUCENT)
                     .withTexture("Sampler0", SUN_LOCATION)
                     .setOutputTarget(OutputTarget.ITEM_ENTITY_TARGET)
                     .useLightmap()
