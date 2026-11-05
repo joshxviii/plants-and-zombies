@@ -1,7 +1,7 @@
 package joshxviii.plantz.networking
 
 import joshxviii.plantz.pazResource
-import joshxviii.plantz.raid.WaveType
+import joshxviii.plantz.raid.CompletedWave
 import joshxviii.plantz.raid.ZombieRaid
 import net.minecraft.core.UUIDUtil
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -20,7 +20,7 @@ class ZombieRaidResponsePayload(
             StreamCodec.composite(
                 UUIDUtil.STREAM_CODEC, { it.data.id },
                 ByteBufCodecs.VAR_INT, { it.data.status.ordinal },
-                WaveType.STREAM_CODEC.apply(ByteBufCodecs.list()), { it.data.waveTypes },
+                CompletedWave.STREAM_CODEC.apply(ByteBufCodecs.list()), { it.data.waves },
                 ByteBufCodecs.VAR_INT, { it.data.numWaves },
                 ByteBufCodecs.VAR_INT, { it.data.waveTimer },
                 ByteBufCodecs.VAR_INT, { it.data.activeTime },
@@ -28,13 +28,23 @@ class ZombieRaidResponsePayload(
                 ByteBufCodecs.FLOAT,   { it.data.zombieProgressBar },
                 ByteBufCodecs.FLOAT,   { it.data.bossProgressBar },
                 ByteBufCodecs.BOOL,    { it.data.seenCredits },
-                { id, status, waveTypes, num, timer, activeTime, plantProgress, zombieProgress, bossProgress, credits ->
+                ByteBufCodecs.FLOAT,   { it.data.bossChance },
+                RaidDetails.STREAM_CODEC, { it.data.details },
+                { id, status, waveTypes, num, timer, activeTime, plantProgress, zombieProgress, bossProgress, credits, bossChance, details ->
                     ZombieRaidResponsePayload(
                         ZombieRaidClientData(
-                            id,
-                            ZombieRaid.ZombieRaidStatus.entries[status],
-                            waveTypes,
-                            num, timer, activeTime, plantProgress, zombieProgress, bossProgress, credits
+                            id = id,
+                            status = ZombieRaid.ZombieRaidStatus.entries[status],
+                            waves = waveTypes,
+                            numWaves = num,
+                            waveTimer = timer,
+                            activeTime = activeTime,
+                            plantProgressBar = plantProgress,
+                            zombieProgressBar = zombieProgress,
+                            bossProgressBar = bossProgress,
+                            seenCredits = credits,
+                            bossChance = bossChance,
+                            details = details,
                         )
                     )
                 }
@@ -45,20 +55,47 @@ class ZombieRaidResponsePayload(
 
 }
 
+/**
+ * Raid data for the client
+ */
 data class ZombieRaidClientData(
     val id: UUID = UUID.randomUUID(),
     val status: ZombieRaid.ZombieRaidStatus = ZombieRaid.ZombieRaidStatus.STOPPED,
-    val waveTypes: List<WaveType> = listOf(WaveType.DEFAULT),
+    val waves: List<CompletedWave> = listOf(),
     val numWaves: Int = 0,
     val waveTimer: Int = 0,
     val activeTime: Int = 0,
     val plantProgressBar: Float = 0f,
     val zombieProgressBar: Float = 0f,
     val bossProgressBar: Float = 0f,
-    val seenCredits: Boolean = false
+    val seenCredits: Boolean = false,
+    val bossChance: Float = 0f,
+    val details: RaidDetails = RaidDetails(),
 ) {
-    fun currentWaveNumber(): Int = waveTypes.size
-    fun currentWaveType(): WaveType? = waveTypes.lastOrNull()
-    fun isFinalWave(): Boolean = waveTypes.size == numWaves
+    fun currentWaveNumber(): Int = waves.size
+    fun currentWaveType(): CompletedWave? = waves.lastOrNull()
+    fun isFinalWave(): Boolean = waves.size == numWaves
     fun bossIsAlive(): Boolean = bossProgressBar > 0f
+}
+
+/**
+ * More detailed information that is not necessary for rendering the main UI.
+ */
+data class RaidDetails(
+    val flagHealth: Float = 0f,
+    val flagMaxHealth: Float = 0f,
+    val remainingRaiders: Int = 0,
+    val remainingBossHealth: Float = 0f,
+    val totalBossHealth: Float = 0f,
+) {
+    companion object {
+        val STREAM_CODEC: StreamCodec<RegistryFriendlyByteBuf, RaidDetails> = StreamCodec.composite(
+            ByteBufCodecs.FLOAT, RaidDetails::flagHealth,
+            ByteBufCodecs.FLOAT, RaidDetails::flagMaxHealth,
+            ByteBufCodecs.VAR_INT, RaidDetails::remainingRaiders,
+            ByteBufCodecs.FLOAT, RaidDetails::remainingBossHealth,
+            ByteBufCodecs.FLOAT, RaidDetails::totalBossHealth,
+            ::RaidDetails,
+        )
+    }
 }

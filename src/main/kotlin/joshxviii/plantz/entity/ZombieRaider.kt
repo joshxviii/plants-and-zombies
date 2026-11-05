@@ -40,6 +40,8 @@ interface ZombieRaider {
     fun `plantz$getIsLeader`(): Boolean
     fun `plantz$getIsBoss`(): Boolean
     fun `plantz$setIsBoss`(value: Boolean)
+    fun `plantz$getIgnoreFlag`(): Boolean
+    fun `plantz$setIgnoreFlag`(value: Boolean)
 }
 
 fun Zombie.getEffectiveRaidHealth(): Float {
@@ -49,6 +51,12 @@ fun Zombie.getEffectiveRaidHealth(): Float {
 fun Zombie.setCountHealth(value: Boolean) {
     if (this is ZombieRaider) this.`plantz$setAddsHealthToRaid`(value)
 }
+
+fun Zombie.setIgnoreFlag(value: Boolean) {
+    if (this is ZombieRaider) this.`plantz$setIgnoreFlag`(value)
+}
+
+fun Zombie.ignoresFlag(): Boolean = this is ZombieRaider && this.`plantz$getIgnoreFlag`()
 
 fun Zombie.isActiveInRaid(): Boolean = this is ZombieRaider && this.`plantz$getIsFromRaid`() && this.isAlive
 

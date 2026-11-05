@@ -9,11 +9,13 @@ import joshxviii.plantz.ai.goal.PathfindToFlagGoal
 import joshxviii.plantz.entity.Balloon
 import joshxviii.plantz.entity.PlantPotMinecart
 import joshxviii.plantz.entity.Sun
+import joshxviii.plantz.entity.ZombieRaider
 import joshxviii.plantz.entity.blueprint_machines.ElectroTurret
 import joshxviii.plantz.entity.blueprint_machines.LawnMower
 import joshxviii.plantz.entity.blueprint_machines.ZombieDrone
 import joshxviii.plantz.entity.blueprint_machines.ZombieTurret
 import joshxviii.plantz.entity.gnome.Gnome
+import joshxviii.plantz.entity.ignoresFlag
 import joshxviii.plantz.entity.plant.*
 import joshxviii.plantz.entity.projectile.*
 import joshxviii.plantz.entity.zombie.*
@@ -39,7 +41,8 @@ object PazEntities {
         ServerEntityEvents.ENTITY_LOAD.register { entity, level ->
             if (entity is Zombie) (entity as MobAccessor).targetSelector.addGoal(4, NearestAttackableTargetGoal(entity, Gnome::class.java, 5, true, false, null))
 
-            if (entity is PathfinderMob && entity.`is`(ZOMBIE_RAIDERS)) {
+            val ignore = (entity as? Zombie)?.ignoresFlag() ?: false
+            if (entity is PathfinderMob && entity.`is`(ZOMBIE_RAIDERS) && !ignore) {
                 (entity as MobAccessor).goalSelector.addGoal(1, PathfindToFlagGoal(entity))
                 (entity as MobAccessor).goalSelector.addGoal(2, DestroyFlagGoal(entity))
             }
@@ -72,6 +75,14 @@ object PazEntities {
         "sunflower",
         EntityType.Builder.of(::Sunflower, MobCategory.CREATURE),
         height = 1.1f,
+    )
+    @JvmField val MARIGOLD: EntityType<Marigold> = registerPlant(
+        "marigold",
+        EntityType.Builder.of(::Marigold, MobCategory.CREATURE),
+        height = 0.94f,
+        attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 16.0
+        )
     )
     @JvmField val PEA_SHOOTER: EntityType<PeaShooter> = registerPlant(
         "peashooter",
@@ -541,12 +552,12 @@ object PazEntities {
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
             armor = 20.0,
-            armorToughness = 4.0,
-            attackDamage = 10.0,
-            maxHealth = 140.0,
+            armorToughness = 6.0,
+            attackDamage = 12.0,
+            maxHealth = 160.0,
             stepHeight = 1.0,
             movementSpeed = 0.25,
-            flyingSpeed = 0.28,
+            flyingSpeed = 0.29,
             knockbackResistance = 0.8,
             spawnReinforcementsChance = 0.0,
         )
@@ -575,11 +586,28 @@ object PazEntities {
             armor = 10.0,
             armorToughness = 2.0,
             attackDamage = 7.0,
-            maxHealth = 650.0,
+            maxHealth = 600.0,
             movementSpeed = 0.21,
             knockbackResistance = 1.4,
             explosionKnockbackResistance = 0.7,
             scale = 1.33,
+            stepHeight = 1.0,
+            attackRange = 2.0,
+            spawnReinforcementsChance = 0.0,
+        )
+    )
+    @JvmField val BARON_VON_BATS: EntityType<BaronVonBats> = registerZombie(
+        "baron_von_bats",
+        EntityType.Builder.of(::BaronVonBats, MobCategory.MONSTER)
+            .sized(0.6f, 1.95f)
+            .clientTrackingRange(8),
+        attributes = PazZombie.Companion.PazZombieAttributes(
+            armor = 8.0,
+            attackDamage = 7.0,
+            maxHealth = 450.0,
+            movementSpeed = 0.21,
+            knockbackResistance = 0.3,
+            explosionKnockbackResistance = 0.2,
             stepHeight = 1.0,
             attackRange = 2.0,
             spawnReinforcementsChance = 0.0,
@@ -597,21 +625,15 @@ object PazEntities {
             flyingSpeed = 0.40,
         )
     )
-    @JvmField val BARON_VON_BATS: EntityType<BaronVonBats> = registerZombie(
-        "baron_von_bats",
-        EntityType.Builder.of(::BaronVonBats, MobCategory.MONSTER)
-            .sized(0.6f, 1.95f)
-            .clientTrackingRange(8),
+    @JvmField val ZOMBIE_GOAT: EntityType<ZombieGoat> =  registerZombie(
+        "zombie_goat",
+        EntityType.Builder.of(::ZombieGoat, MobCategory.CREATURE)
+            .sized(0.9F, 1.3F)
+            .passengerAttachments(1.1125F)
+            .clientTrackingRange(10),
         attributes = PazZombie.Companion.PazZombieAttributes(
-            armor = 8.0,
-            attackDamage = 7.0,
-            maxHealth = 550.0,
-            movementSpeed = 0.21,
-            knockbackResistance = 0.3,
-            explosionKnockbackResistance = 0.2,
-            stepHeight = 1.0,
-            attackRange = 2.0,
-            spawnReinforcementsChance = 0.0,
+            attackDamage = 1.0,
+            maxHealth = 14.0,
         )
     )
     // endregion
@@ -780,12 +802,4 @@ object PazEntities {
         val id = ResourceKey.create(Registries.ENTITY_TYPE, pazResource(name))
         return Registry.register(BuiltInRegistries.ENTITY_TYPE, id, builder.build(id))
     }
-
-    val MAGIC_NAMES = mapOf<EntityType<*>, List<String>>(
-        SUNFLOWER           to listOf("vampire"),
-        CHOMPER             to listOf("chester"),
-        FIRE_PEA_SHOOTER    to listOf("blaze"),
-        DISCO_ZOMBIE        to listOf("mj"),
-        BROWN_COAT          to listOf("tugboat", "mustache")
-    )
 }

@@ -138,6 +138,7 @@ open class PlantRenderer(
                 if (entity.isAsleep || entity.isGrowingSeeds) 0f
                 else 1f - ((state.cooldown).coerceIn(0, 100) / 100f)
             }
+            is Marigold -> if (!entity.isGrowingSeeds) 0f else entity.receivedSun / entity.sunRequiredForSeeds().toFloat()
             is ExplosivePlant -> entity.getSwelling(partialTick)
             else -> 0f
         }

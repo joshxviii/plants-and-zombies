@@ -30,14 +30,7 @@ class ZombieOmenMobEffect(
     override fun applyEffectTick(level: ServerLevel, mob: LivingEntity, amplification: Int): Boolean {
         if (mob !is ServerPlayer || mob.isSpectator) return false
 
-        val zombieRaidPos = level.poiManager.findClosest(
-            { p: Holder<PoiType> -> p.value() == PLANTZ_FLAG_POI },
-            mob.blockPosition(),
-            MAX_FLAG_DISTANCE,
-            PoiManager.Occupancy.HAS_SPACE
-        ).orElse(null)
-
-        level.getZombieRaids().createOrExtendZombieRaid(mob, zombieRaidPos)
+        level.getZombieRaids().createOrExtendZombieRaid(mob)
 
         return true
     }

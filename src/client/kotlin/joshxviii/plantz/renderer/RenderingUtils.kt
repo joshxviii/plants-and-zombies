@@ -1,6 +1,6 @@
 package joshxviii.plantz.renderer
 
-import joshxviii.plantz.PazEntities.MAGIC_NAMES
+import joshxviii.plantz.PazEntities
 import joshxviii.plantz.pazResource
 import joshxviii.plantz.renderer.entity.ProjectileRenderState
 import net.minecraft.client.Minecraft
@@ -15,19 +15,22 @@ import net.minecraft.resources.Identifier
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.ARGB
 import net.minecraft.util.FormattedCharSequence
+import net.minecraft.world.entity.EntityType
+import kotlin.String
+import kotlin.collections.List
 import kotlin.collections.component1
 import kotlin.collections.component2
 
-fun GuiGraphicsExtractor.outlineText(font: Font, text: String, x: Int = 0, y: Int = 0, color: Int = 0xFFFFFF, outlineColor: Int = ARGB.multiply(color, 0x333333)) {
+fun GuiGraphicsExtractor.outlineText(font: Font, text: String, x: Int = 0, y: Int = 0, color: Int = 0xFFFFFF, outlineColor: Int = ARGB.multiply(color, 0x545454)) {
     val c = Component.literal(text)
     outlineText(font, c, x, y, color, outlineColor)
 }
 
-fun GuiGraphicsExtractor.outlineText(font: Font, text: Component, x: Int = 0, y: Int = 0, color: Int = 0xFFFFFF, outlineColor: Int = ARGB.multiply(color, 0x333333)) {
+fun GuiGraphicsExtractor.outlineText(font: Font, text: Component, x: Int = 0, y: Int = 0, color: Int = 0xFFFFFF, outlineColor: Int = ARGB.multiply(color, 0x545454)) {
     outlineText(font, text.visualOrderText, x, y, color, outlineColor)
 }
 
-fun GuiGraphicsExtractor.outlineText(font: Font, text: FormattedCharSequence, x: Int = 0, y: Int = 0, color: Int = 0xFFFFFF, outlineColor: Int = ARGB.multiply(color, 0x333333)) {
+fun GuiGraphicsExtractor.outlineText(font: Font, text: FormattedCharSequence, x: Int = 0, y: Int = 0, color: Int = 0xFFFFFF, outlineColor: Int = ARGB.multiply(color, 0x545454)) {
     text(font, text, x+1, y, ARGB.opaque(outlineColor), false)
     text(font, text, x-1, y, ARGB.opaque(outlineColor), false)
     text(font, text, x, y+1, ARGB.opaque(outlineColor), false)
@@ -54,6 +57,14 @@ fun resolveTextureLocation(base: String, rm: ResourceManager, suffixes: List<Str
     return null
 }
 
+val MAGIC_NAMES = mapOf<EntityType<*>, List<String>>(
+    PazEntities.SUNFLOWER           to listOf("vampire"),
+    PazEntities.MARIGOLD            to listOf("flowey"),
+    PazEntities.CHOMPER             to listOf("chester"),
+    PazEntities.FIRE_PEA_SHOOTER    to listOf("blaze"),
+    PazEntities.DISCO_ZOMBIE        to listOf("mj"),
+    PazEntities.BROWN_COAT          to listOf("tugboat", "mustache")
+)
 fun LivingEntityRenderState.validMagicName(name: String): String? {
     val type = this.entityType
     val str = name.lowercase()

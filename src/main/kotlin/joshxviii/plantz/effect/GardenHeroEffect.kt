@@ -1,11 +1,8 @@
 package joshxviii.plantz.effect
 
-import joshxviii.plantz.GardenHeroRewards
-import joshxviii.plantz.PazLootTables
+import joshxviii.plantz.raid.CompletedWave
+import joshxviii.plantz.raid.GardenHeroRewards
 import joshxviii.plantz.raid.WaveType
-import joshxviii.plantz.raid.ZombieRaid
-import net.minecraft.resources.ResourceKey
-import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectCategory
 import net.minecraft.world.effect.MobEffectInstance
@@ -31,9 +28,9 @@ class GardenHeroEffect(
         val hero = (entity as? GardenHeroRewards)?: return
         val waveList = hero.`plantz$getWaveList`()
         if (waveList.isEmpty()) {
-            val newList = mutableListOf<WaveType>()
+            val newList = mutableListOf<CompletedWave>()
             for (i in 0..effectInstance.amplifier) {
-                newList.add(WaveType.DEFAULT)
+                newList.add(CompletedWave(WaveType.DEFAULT))
             }
             hero.`plantz$setWaveList`(newList)
         }

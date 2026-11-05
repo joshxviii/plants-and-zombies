@@ -1,6 +1,7 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.api.SeedMutationManager
+import joshxviii.plantz.command.PazCommands
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.block.entity.MailboxManager
 import joshxviii.plantz.block.entity.getMailboxMailQueue
@@ -56,6 +57,7 @@ object PazMain : ModInitializer {
 		}
 		ServerBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register { blockEntity, level -> }
 
+		PazCommands.initialize()
 		PazServerParticles.initialize()
 		PazBlocks.initialize()
 		PazItems.initialize()

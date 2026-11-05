@@ -17,6 +17,7 @@ import joshxviii.plantz.entity.isLeader
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.networking.ZombieRaidClientData
+import joshxviii.plantz.networking.RaidDetails
 import joshxviii.plantz.networking.ZombieRaidResponsePayload
 import net.minecraft.ChatFormatting
 import net.minecraft.SharedConstants
@@ -42,7 +43,6 @@ import net.minecraft.util.RandomSource
 import net.minecraft.util.StringRepresentable
 import net.minecraft.world.BossEvent
 import net.minecraft.world.Difficulty
-import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.SpawnGroupData
@@ -59,22 +59,24 @@ import net.minecraft.world.phys.AABB
 import java.util.*
 import java.util.function.Predicate
 import kotlin.math.abs
+import kotlin.math.pow
 
 class ZombieRaid(
     val center: BlockPos,
+    var numWaves: Int = 0,
     var ticksActive: Long = 0,
     var zombieRaidOmenLevel: Float = 0f,
-    var waveTypes: MutableList<WaveType> = mutableListOf(),
+    var waves: MutableList<CompletedWave> = mutableListOf(),
     var raidCooldownTicks: Int = PRE_RAID_TICKS,
     var postRaidTicks: Int = 0,
     var totalZombieHealth: Float = 0f,
     var totalBossHealth: Float = 0f,
-    var numWaves: Int = 0,
     var waveTimer: Int = 0,
     var status: ZombieRaidStatus = ZombieRaidStatus.INIT,
     var startedBy: UUID? = null,
     var starterHasSeenCredits: Boolean = false,
     savedRaiders: List<RaiderRecord> = listOf(),
+    var bossChance: Float = 0f,
 ) {
     companion object {
         private fun getVictoryFirework(): ItemStack {
@@ -102,24 +104,22 @@ class ZombieRaid(
         }
         val MAP_CODEC : MapCodec<ZombieRaid> = RecordCodecBuilder.mapCodec { r ->
             r.group(
-                BlockPos.CODEC.fieldOf("center").forGetter<ZombieRaid> { it.center },
-                Codec.LONG.fieldOf("ticks_active").forGetter<ZombieRaid> { it.ticksActive },
-                Codec.FLOAT.fieldOf("raid_omen_level").forGetter<ZombieRaid> { it.zombieRaidOmenLevel },
-                WaveType.CODEC.listOf().fieldOf("wave_types").forGetter<ZombieRaid> { it.waveTypes },
-                Codec.INT.fieldOf("cooldown_ticks").forGetter<ZombieRaid> { it.raidCooldownTicks },
-                Codec.INT.fieldOf("post_raid_ticks").forGetter<ZombieRaid> { it.postRaidTicks },
-                Codec.FLOAT.fieldOf("total_health").forGetter<ZombieRaid> { it.totalZombieHealth },
-                Codec.FLOAT.fieldOf("total_boss").forGetter<ZombieRaid> { it.totalBossHealth },
-                Codec.INT.fieldOf("wave_count").forGetter<ZombieRaid> { it.numWaves },
-                Codec.INT.fieldOf("wave_timer").forGetter<ZombieRaid> { it.waveTimer },
-                ZombieRaidStatus.CODEC.fieldOf("status").forGetter<ZombieRaid> { it.status },
-                Codec.STRING.xmap(UUID::fromString, UUID::toString)
-                    .optionalFieldOf("started_by")
-                    .xmap({ it.orElse(null) }, { Optional.ofNullable(it) })
-                    .forGetter<ZombieRaid> { it.startedBy },
-                Codec.BOOL.optionalFieldOf("starter_has_seen_credits", false).forGetter<ZombieRaid> { it.starterHasSeenCredits },
-                RaiderRecord.CODEC.listOf().optionalFieldOf("raiders", listOf()).forGetter<ZombieRaid> { it.raiderRecords() },
-            ).apply<ZombieRaid>(r, ::ZombieRaid )
+                BlockPos.CODEC.fieldOf("center").forGetter { it.center },
+                Codec.INT.fieldOf("wave_count").forGetter { it.numWaves },
+                Codec.LONG.fieldOf("ticks_active").forGetter { it.ticksActive },
+                Codec.FLOAT.fieldOf("raid_omen_level").forGetter { it.zombieRaidOmenLevel },
+                CompletedWave.CODEC.listOf().xmap({ it.toMutableList() }, { it.toList() }).fieldOf("wave_types").forGetter { it.waves },
+                Codec.INT.fieldOf("cooldown_ticks").forGetter { it.raidCooldownTicks },
+                Codec.INT.fieldOf("post_raid_ticks").forGetter { it.postRaidTicks },
+                Codec.FLOAT.fieldOf("total_health").forGetter { it.totalZombieHealth },
+                Codec.FLOAT.fieldOf("total_boss").forGetter { it.totalBossHealth },
+                Codec.INT.fieldOf("wave_timer").forGetter { it.waveTimer },
+                ZombieRaidStatus.CODEC.fieldOf("status").forGetter { it.status },
+                Codec.STRING.xmap(UUID::fromString, UUID::toString).optionalFieldOf("started_by").xmap({ it.orElse(null) }, { Optional.ofNullable(it) }).forGetter { it.startedBy },
+                Codec.BOOL.optionalFieldOf("starter_has_seen_credits", false).forGetter { it.starterHasSeenCredits },
+                RaiderRecord.CODEC.listOf().optionalFieldOf("raiders", listOf()).forGetter { it.raiderRecords() },
+                Codec.FLOAT.optionalFieldOf("boss_chance", 0f).forGetter { it.bossChance },
+            ).apply(r, ::ZombieRaid )
         }
         val ZOMBIE_RAID_BAR_START: Component = Component.translatable("event.plantz.zombie_raid.start").withStyle(ChatFormatting.GOLD)
         val ZOMBIE_RAID_BAR_START_CREDITS: Component = Component.translatable("event.plantz.zombie_raid.start.after_credits").withStyle(ChatFormatting.GOLD)
@@ -134,7 +134,7 @@ class ZombieRaid(
         const val MIN_PANIC_DISTANCE: Int = 8
         const val MAX_PANIC_DISTANCE: Int = 28
 
-        const val FLAG_MAX_HEALTH: Int = 400
+        const val FLAG_MAX_HEALTH: Int = 500
 
         const val PRE_RAID_TICKS: Int = 100
         const val POST_RAID_TICKS: Int = 80
@@ -144,7 +144,9 @@ class ZombieRaid(
         const val GARDEN_HERO_EFFECT_DURATION: Int = 72000
         const val COUNTDOWN_BEFORE_LOSS: Int = 200 //10 seconds
         const val MAXIMUM_WAVE_COUNT: Int = 20
-        const val BONUS_REWARD_INTERVAL = 5
+        private const val BOSS_CHANCE_GROWTH_FACTOR = 2.5f
+        private const val WAVES_UNTIL_GUARANTEED_BOSS = 6f
+        private const val BOSS_CHANCE_SPEED_BONUS_WINDOW_SECONDS = 60f
     }
 
     val random: RandomSource = RandomSource.create()
@@ -206,7 +208,7 @@ class ZombieRaid(
         }
 
         if (postRaidTicks > 0) { postRaidTicks-- // post-loading time
-            if (postRaidTicks <= 0) stop()
+            if (postRaidTicks <= 0) stop(level)
             if (status == ZombieRaidStatus.VICTORY) {
                 if (ticksActive % 20L == 0L) {
                     val firework = getVictoryFirework()
@@ -217,13 +219,15 @@ class ZombieRaid(
         }
 
         if (
-            ((getAliveRaiders() == 0 && raidCooldownTicks > 0) || waveTimer == 0) && !isFinalWave()
+            ((getAliveRaiders() == 0 && raidCooldownTicks > 0) || waveTimer == 0) && !willLoseWhenTimeRunsOut()
         ) {
             raidCooldownTicks-- // pre-loading time
             waveTimer = 0
             if (raidCooldownTicks <= 0) {
                 status = ZombieRaidStatus.ONGOING
                 raidCooldownTicks = PRE_RAID_TICKS
+                totalZombieHealth = 0f
+                totalBossHealth = 0f
             }
             else {
                 status = ZombieRaidStatus.NEXT_WAVE
@@ -233,7 +237,7 @@ class ZombieRaid(
 
         if (waveTimer>0) {
             waveTimer--
-            if ((isFinalWave() || getBosses().isNotEmpty()) && (waveTimer<=COUNTDOWN_BEFORE_LOSS+20 && waveTimer%20==19 || waveTimer==PANIC_START_TIME)) {// count down before loss
+            if (willLoseWhenTimeRunsOut() && (waveTimer<=COUNTDOWN_BEFORE_LOSS+20 && waveTimer%20==19 || waveTimer==PANIC_START_TIME)) {// count down before loss
                 showTitleMessage(Component.literal(waveTimer.tickSecondFormat()).withStyle(ChatFormatting.RED).withStyle(ChatFormatting.BOLD))
             }
         }
@@ -245,9 +249,7 @@ class ZombieRaid(
             zombieRaidEvent.players.forEach { player ->// advancement
                 PazCriteria.WIN_ZOMBIE_RAID.trigger(player, true)
                 PazCriteria.WIN_HARDEST_RAID.trigger(player, numWaves>=MAXIMUM_WAVE_COUNT && starterHasSeenCredits)
-                val effect = MobEffectInstance(PazEffects.GARDEN_HERO, GARDEN_HERO_EFFECT_DURATION, (waveTypes.size-1).coerceAtLeast(0), false, true)
-                (player as GardenHeroRewards).`plantz$setWaveList`(waveTypes)
-                player.addEffect(effect)
+                GardenHeroRewards.setPlayerRewards(player, waves)
                 player.sendSystemMessage(ZOMBIE_RAID_VICTORY)
                 showTitleMessage(ZOMBIE_RAID_VICTORY_TITLE, sound = PazSounds.RAID_VICTORY, soundSource = SoundSource.MUSIC)
             }
@@ -266,13 +268,7 @@ class ZombieRaid(
             return
         }
 
-        if (shouldSpawnNextWave()) {
-            val spawnPos = findRandomSpawnPos(level, 20) ?: return
-            spawnNextWave(level, spawnPos)
-            zombieRaidEvent.players.forEach { player ->
-                PazCriteria.RAID_WAVE_TRIGGER.trigger(player, currentWaveNumber())
-            }
-        }
+        if (shouldSpawnNextWave()) spawnNextWave(level)
         else if (waveTimer <= 0) {// destroy flag when timer runs out
             (level.getBlockEntity(center) as? FlagBlockEntity)?.destroy()
         }
@@ -289,7 +285,7 @@ class ZombieRaid(
     }
 
     private fun updatePlayers(level: ServerLevel) {
-        val currentPlayersInRaid: MutableSet<ServerPlayer> = Sets.newHashSet<ServerPlayer>(zombieRaidEvent.players)
+        val currentPlayersInRaid: MutableSet<ServerPlayer> = Sets.newHashSet(zombieRaidEvent.players)
         val newPlayersInRaid = level.getPlayers( validPlayer() )
         for (player in newPlayersInRaid) if (!currentPlayersInRaid.contains(player)) {
             zombieRaidEvent.addPlayer(player)
@@ -334,15 +330,13 @@ class ZombieRaid(
             }
             for (zombie in zombieSet) {
                 val zombiePos = zombie.blockPosition()
-                if (zombie.isRemoved || zombie.level().dimension() !== level.dimension() || this.center.distSqr(
-                        zombiePos
-                    ) >= RAID_DISTANCE * RAID_DISTANCE * 2
+                if (zombie.isRemoved || zombie.level().dimension() !== level.dimension() || this.center.distSqr(zombiePos) >= RAID_DISTANCE * RAID_DISTANCE * 2
                 ) {
                     toRemove.add(zombie)
                     continue
                 }
                 if (
-                    (isFinalWave() || getBosses().isNotEmpty()) && waveTimer == PANIC_START_TIME &&
+                    willLoseWhenTimeRunsOut() && waveTimer == PANIC_START_TIME &&
                     zombiePos.distSqr(center) > MAX_PANIC_DISTANCE * MAX_PANIC_DISTANCE
                 ) {
                     findPanicTeleportPos(level, zombie, 10)?.let { teleportPos ->
@@ -356,35 +350,63 @@ class ZombieRaid(
                 if (level.getEntity(zombie.getUUID()) == null) toRemove.add(zombie)
             }
         }
+        val bossWasDefeated = toRemove.any { it.isBoss() && it.isDeadOrDying }
+        val livingBossWasRemoved = toRemove.any { it.isBoss() && !it.isDeadOrDying }
         for (zombie in toRemove) removeFromRaid(level, zombie, true)
+        if (
+            bossWasDefeated && !livingBossWasRemoved && isActive() &&
+            getBosses().isEmpty() && pendingRaiders.values.none { it.isBoss }
+        ) {
+            zombieRaidEvent.players.forEach { player ->
+                player.sendSystemMessage(Component.translatable("event.plantz.zombie_raid.boss.defeat").withStyle(ChatFormatting.GOLD))
+                PazCriteria.BOSS_DEFEAT_TRIGGER.trigger(player)
+            }
+        }
     }
 
     fun absorbRaidOmen(player: ServerPlayer): Boolean {
         val effect = player.getEffect(PazEffects.ZOMBIE_OMEN)?: return false
         val amp = effect.amplifier+1f
-        val value = if (status == ZombieRaidStatus.INIT) amp
-        else .5f * amp
-        zombieRaidOmenLevel += value
+        if (status != ZombieRaidStatus.INIT) numWaves += Mth.floor(amp)
+        zombieRaidOmenLevel += amp * if (status == ZombieRaidStatus.INIT) 1f else .5f
         player.removeEffect(PazEffects.ZOMBIE_OMEN)
         return true
     }
 
-    private fun spawnNextWave(level: ServerLevel, pos: BlockPos) {
+    fun spawnNextWave(level: ServerLevel, forceWaveType: WaveType? = null, forceBossType: BossType? = null) {
+        val pos = findRandomSpawnPos(level, 20) ?: return
         val creditsUnlocked = hasRaidStarterSeenCredits(level)
-        val waveType = WaveType.pickWaveType(this, creditsUnlocked)
-        waveTypes = waveTypes.toMutableList()
-        waveTypes.add(waveType)
+        val waveType = forceWaveType ?: WaveType.pickWaveType(this, creditsUnlocked)
+        val bossType = forceBossType ?: if (random.nextFloat() < bossChance) BossType.pickBossType(this, waveType) else null
+        waves.add(CompletedWave(waveType, pos, bossType))
         val wave = currentWaveNumber()
-        val shouldSpawnBoss = wave % 5 == 0
-        var leaderSet = false
-        totalZombieHealth = 0f
-        totalBossHealth = 0f
-        waveTimer = if (isFinalWave()) FINAL_WAVE_DURATION else if (shouldSpawnBoss) BOSS_WAVE_DURATION else WAVE_DURATION
-        if (waveType != WaveType.DEFAULT) announceSpecialWave(waveType)
-        if (shouldSpawnBoss) spawnBoss(level, pos, waveType)
+        waveTimer = if (wave >= numWaves) FINAL_WAVE_DURATION else if (bossType!=null) BOSS_WAVE_DURATION else WAVE_DURATION
 
+        // Wave spawns
+        spawnWave(level, waveType, pos, creditsUnlocked)
+
+        // Boss spawns
+        if (bossType!=null) spawnBoss(level, bossType, pos, waveType)
+
+        //next boss chance
+        bossChance = calculateBossChance()
+        if (isFinalWave()) showTitleMessage(Component.translatable("event.plantz.zombie_raid.final_wave").apply { withStyle(ChatFormatting.RED) }, Component.empty())
+        zombieRaidEvent.players.forEach { player ->
+            PazCriteria.RAID_WAVE_TRIGGER.trigger(player, currentWaveNumber())
+        }
+    }
+
+    /**
+     * Spawns a new wave for this raid.
+     */
+    private fun spawnWave(
+        level: ServerLevel,
+        waveType: WaveType,
+        pos: BlockPos = currentWave()?.pos ?: BlockPos.ZERO,
+        creditsUnlocked: Boolean = hasRaidStarterSeenCredits(level),
+    ) {
         val waveEntries = waveType.spawnEntries(this, creditsUnlocked)
-
+        var leaderSet = false
         for ((type, count, configure) in waveEntries) {
             for (i in 0..<count) {
                 val zombie = type.create(level, EntitySpawnReason.EVENT) ?: break
@@ -393,21 +415,38 @@ class ZombieRaid(
                     setLeader(zombie)
                     leaderSet = true
                 }
-                joinRaid(level, zombie, true, wave, false, spawnPos, configure)
+                joinRaid(level, zombie, true, exists = false, pos = spawnPos, configure = configure)
             }
         }
+        if (waveType != WaveType.DEFAULT) announceSpecialWave(waveType)
     }
 
-    fun spawnBoss(level: ServerLevel, pos: BlockPos, waveType: WaveType) {
-        val bossType: BossType = BossType.pickBossType(this, waveType)
+    /**
+     * Spawns a boss for this current raid.
+     */
+    private fun spawnBoss(
+        level: ServerLevel,
+        bossType: BossType,
+        pos: BlockPos = currentWave()?.pos ?: BlockPos.ZERO,
+        waveType: WaveType = currentWave()?.type ?: WaveType.DEFAULT,
+    ) {
+        var bossName: Component? = null
         val bossEntities = bossType.bossEntityEntries(this, waveType)
         for ((type, configure) in bossEntities) {
-            val zombie = type.create(level, EntitySpawnReason.EVENT) ?: return
+            val zombie = type.create(level, EntitySpawnReason.EVENT) ?: break
             setBoss(zombie)
-            joinRaid(level, zombie, exists = false, pos = pos, configure = configure)
+            if (joinRaid(level, zombie, true, exists = false, pos = pos, configure = configure))
+            if (bossName == null) bossName = zombie.name
         }
-        val bossName = getBosses().firstOrNull()?.name?: Component.empty()
-        announceBoss(waveType, bossName)
+        announceBoss((bossName ?: Component.empty()))
+    }
+
+    private fun calculateBossChance(): Float {
+        if (isFinalWave()) return 0f
+        //if (currentWaveNumber() >= numWaves-1) return 1f// final wave always has a boss
+        val wavesSinceLastBoss = (waves.filterIndexed { index, _ -> index!=0 }.asReversed().takeWhile { it.boss == null }.size).coerceAtLeast(0)+1
+        val x = wavesSinceLastBoss / (WAVES_UNTIL_GUARANTEED_BOSS - 1)
+        return (x.pow(BOSS_CHANCE_GROWTH_FACTOR).coerceIn(0f, 1f)).coerceAtMost(1f)
     }
 
     fun joinRaid(
@@ -418,8 +457,8 @@ class ZombieRaid(
         exists: Boolean = true,
         pos: BlockPos? = null,
         configure: (Zombie) -> Unit = {},
-    ) {
-        if (status != ZombieRaidStatus.ONGOING) return
+    ): Boolean {
+        if (status != ZombieRaidStatus.ONGOING) return false
         val added = addWaveMob(zombie, waveNumber, level)
         if (added) {
             if (!exists && pos != null) {
@@ -443,6 +482,7 @@ class ZombieRaid(
                 }
             }
         }
+        return added
     }
 
     fun removeFromRaid(level: ServerLevel, zombie: Zombie, removeFromTotalHealth: Boolean = true) {
@@ -461,7 +501,6 @@ class ZombieRaid(
     }
 
     private fun vanishAllZombies(level: ServerLevel) {
-        level.playLocalSound(center, SoundEvents.WITHER_DEATH, SoundSource.UI, 1f, 0.4f, false)
         waveZombieMap.values.forEach { zombies ->
             zombies.forEach { zombie ->
                 if (zombie is PazZombie) {
@@ -505,14 +544,16 @@ class ZombieRaid(
         val data = ZombieRaidClientData(
             id = zombieRaidEvent.id,
             status = if (terminate) ZombieRaidStatus.TERMINATE else status,
-            waveTypes = waveTypes,
+            waves = waves,
             activeTime = ticksActive.toInt(),
             numWaves = numWaves,
             waveTimer = waveTimer,
             bossProgressBar = bossProgressBar(),
             zombieProgressBar = zombieProgressBar(),
             plantProgressBar = plantProgressBar(level),
-            seenCredits = starterHasSeenCredits
+            seenCredits = starterHasSeenCredits,
+            bossChance = bossChance,
+            details = raidDetails(level),
         )
 
         val packet = ZombieRaidResponsePayload(data)
@@ -531,11 +572,26 @@ class ZombieRaid(
         (zombie as? ZombieRaider)?.`plantz$setIsBoss`(true)
     }
 
-    fun currentWaveNumber(): Int = waveTypes.size
+    fun isStopped(): Boolean = status == ZombieRaidStatus.STOPPED
+    fun isActive(): Boolean = status == ZombieRaidStatus.NEXT_WAVE || status == ZombieRaidStatus.ONGOING
     fun isFinalWave(): Boolean = currentWaveNumber() >= numWaves
+    private fun willLoseWhenTimeRunsOut(): Boolean = isFinalWave() || getBosses().isNotEmpty()
+    fun currentWaveNumber(): Int = waves.size
+    fun currentWave(): CompletedWave? = waves.lastOrNull()
     fun getLeaders(): List<Zombie> = waveZombieMap.values.flatMap { it.filter { z -> z.isLeader() } }
     fun getBosses(): List<Zombie> = waveZombieMap.values.flatMap { it.filter { z -> z.isBoss() } }
     fun getAliveRaiders(): Int = waveZombieMap.values.stream().mapToInt { it.map { z -> if (z.getEffectiveRaidHealth()>0f) 1 else 0 }.sum() }.sum() + pendingRaiders.size
+    private fun raidDetails(level: ServerLevel): RaidDetails {
+        val flag = level.getBlockEntity(center) as? FlagBlockEntity
+        val bosses = getBosses()
+        return RaidDetails(
+            flagHealth = flag?.health ?: 0f,
+            flagMaxHealth = flag?.maxHealth ?: 0f,
+            remainingBossHealth = bosses.sumOf { it.getEffectiveRaidHealth().toDouble() }.toFloat(),
+            totalBossHealth = totalBossHealth,
+            remainingRaiders = getAliveRaiders(),
+        )
+    }
     fun plantProgressBar(level: ServerLevel): Float {
         if (status == ZombieRaidStatus.LOSS) return 0f
         else {
@@ -561,13 +617,13 @@ class ZombieRaid(
     private fun shouldSpawnNextWave(): Boolean {
         return (getAliveRaiders() == 0 || waveTimer == 0)
             && status == ZombieRaidStatus.ONGOING
-            && !isFinalWave()
-            && getBosses().isEmpty()
+            && !willLoseWhenTimeRunsOut()
+
     }
 
     private fun refreshRaidProfile(level: ServerLevel) {
         if (!starterHasSeenCredits) starterHasSeenCredits = hasRaidStarterSeenCredits(level)
-        numWaves = getWaveSpawnCount(level.difficulty, this)
+        if (numWaves<=0) numWaves = getWaveSpawnCount(level.difficulty, this)
     }
 
     private fun hasRaidStarterSeenCredits(level: ServerLevel): Boolean {
@@ -577,19 +633,18 @@ class ZombieRaid(
     }
 
     private fun announceSpecialWave(wave: WaveType) {
-        val titleColor = if (wave == WaveType.ZOMBOWEEN) ChatFormatting.DARK_PURPLE else ChatFormatting.GREEN
-        val subColor = if (wave == WaveType.ZOMBOWEEN) ChatFormatting.GOLD else ChatFormatting.DARK_PURPLE
-        val title: Component = Component.translatable("event.plantz.zombie_raid.special_wave").apply { withStyle(titleColor, ChatFormatting.BOLD) }
+        val subColor = if (wave == WaveType.ZOMBOWEEN) ChatFormatting.GOLD else ChatFormatting.RED
         val subtitle: Component = wave.popupMessage().copy().apply { withStyle(subColor, ChatFormatting.BOLD) }
-        showTitleMessage(title, subtitle)
+        showTitleMessage(Component.empty(), subtitle)
+        zombieRaidEvent.players.forEach {
+            it.sendSystemMessage(Component.translatable("event.plantz.zombie_raid.special_wave", subtitle).withColor(0x872727))
+        }
     }
 
-    private fun announceBoss(waveType: WaveType, bossName: Component) {
-        val title = Component.translatable("event.plantz.zombie_raid.boss_wave").apply { withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD) }
-        val subtitle = Component.translatable("event.plantz.zombie_raid.boss", bossName).apply { withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.BOLD) }
-        if (waveType == WaveType.DEFAULT) showTitleMessage(title, subtitle)
+    private fun announceBoss(bossName: Component) {
         zombieRaidEvent.players.forEach {
-            it.sendSystemMessage(Component.translatable("event.plantz.zombie_raid.boss.spawn", bossName).withColor(0x872727))
+            it.connection.send(ClientboundSoundPacket(PazSounds.BOSS_SPAWN, SoundSource.UI, it.x, it.y, it.z, 1.0f, 1.0f, random.nextLong()))
+            it.sendSystemMessage(Component.translatable("event.plantz.zombie_raid.boss.spawn", bossName.copy().apply { withStyle(ChatFormatting.RED, ChatFormatting.BOLD) }).withColor(0x872727))
         }
     }
 
@@ -674,13 +729,14 @@ class ZombieRaid(
         }
     }
 
-    fun stop() {
+    fun stop(level: ServerLevel) {
         val data = ZombieRaidClientData(id = zombieRaidEvent.id, status = ZombieRaidStatus.TERMINATE)
         status = ZombieRaidStatus.STOPPED
         zombieRaidEvent.players.forEach { player ->// terminate raid connection
             player.connection.send(ClientboundCustomPayloadPacket(ZombieRaidResponsePayload(data)))
         }
         zombieRaidEvent.removeAllPlayers()
+        vanishAllZombies(level)
     }
-    fun isStopped(): Boolean = status == ZombieRaidStatus.STOPPED
+
 }

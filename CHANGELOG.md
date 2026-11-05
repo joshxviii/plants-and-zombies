@@ -7,17 +7,29 @@
 
 # Changelog 1.5.2
 ### Changes / Additions
+- Added Marigold
+  - Obtained through raid rewards.
+  - Marigold will drop treasure instead of seed packets from zen gardening.
+- Zombie Raids now have "Boss Chance"
+  - Boss Chance represents the odds that the next wave will spawn a boss.
+  - The chance increases exponentially every wave.
+  - Once a boss spawns, the chance is reset.
+  - Pressing "Tab" will display the Boss Chance and other details about the raid.
+- Added Giga variant for All Star, which can spawn as a Boss
+- Added General variant for Robo-Zombie, which can spawn as a Boss
 - Added Baron Von Bats
-  - Baron Von Bats has a chance to spawn as a boss during wave 10 instead of Gargantuar.
+  - Baron Von Bats has a chance to spawn as a Boss.
 - Added Zombat
   - Heals itself when hurting other mobs.
-- Added Brainz Alloy Door and Trapdoor.
-- Added Door Shields.
+- Added Brainz Alloy Door and Trapdoor
+- Added Door Shields
   - Can be crafted from any Door and a Shield.
-  - Browncoats can now spawn with door shields.
+  - Browncoats can now spawn with Door Shields.
+- Added Coffin
 - Added Baron's Staff
   - Has a rare chance to drop from defeating Baron Von Bats.
 - During the final wave at the 1-minute mark, all remaining zombies will teleport closer to the flag.
+- Hero Bonus rewards are now given for each Boss Wave rather than every 5 waves.
 - Cones, Buckets, and Football helmets now only block damage from above.
   - They have also been given a buff to armor and armor toughness.
 - Newspapers now work like Shields and only block damage from the front.
@@ -26,9 +38,47 @@
 - Added a new enchantment, "Lobbing".
   - This enchantment applies to the Gardening Glove and allows the player to toss the held plant.
 - Dye Blasters now store dye ammo. Dye Blaster can only be fired after being loaded with dye. Each shot has a chance to consume the stored dye.
-### Fixes
+- Added a new options menu accessible with `/pz options`
+### Fixes / Technical Changes
 - Pumpkins are no longer duplicated when using a Gardening Glove.
-- Various other bug fixes / improvements
+- Added a new client config option: `showSunInfo`.
+  - When enabled, sun cost for seed packets and your total held sun is displayed on the HUD.
+- Added new commands:
+  - `/pz help`
+    - Prompts a link in chat to the discord server
+  - `/pz options`
+    - Opens the options menu
+  - `/pz raid start [<wave_count>]`
+    - Requires "op" privileges
+    - Attempts to start a raid near the player.
+    - The command will fail when a flag isn't nearby.
+    - Has an optional field, `[<wave_count>]` which controls the number of waves the raid will have.
+  - `/pz raid stop`
+    - Requires "op" privileges
+    - Stops whatever raid the player is currently near.
+    - Command fails when no active raid is nearby.
+  - `/pz raid wave_start [<wave_type|wave_type>] [<boss_type|boss_type>]`
+    - Requires "op" privileges
+    - Starts the next wave immediately.
+    - Has optional field `[<wave_type|wave_type>]` , a valid wave type from the available selection.
+    - Also has optional field `[<boss_type|boss_type>]` , a valid boss type from the available selection.
+- The `plantz:stored_sun` item component has a new field `capacity:[<amount>]`.
+  - Example stick with 999 sun capacity:
+  <br/>`/give @s stick[minecraft:item_model="plantz:sun",plantz:stored_sun={capacity:999,stored_sun:0},minecraft:max_stack_size=1]`
+- Seed mutation files now accept a loot table as a valid result, Example:
+  ```
+  {
+    "mutations": [
+      {
+        "chance": 0.5,
+        "result": {
+          "loot_table": "plantz:seed_mutations/marigold"
+        }
+      }
+    ]
+  }
+  ```
+- Various other bug fixes and improvements
 
 # Changelog 1.5.1
 ### Changes / Additions
@@ -244,7 +294,7 @@
     - `alloyCost` – A list of entity ids paired with an integer.
   - `paz-client.json`:
     - `showHiddenItemsInCreativeTab` – Enables some W.I.P items in the creative tab.
-    - `hideRaidUi` – Hides the zombie raid UI.
+    - `showRaidUi` – Hides the zombie raid UI.
 - Added `seed_mutation` data directory.
   - The path for editing Seed Mutations is: `data/<namespace>/seed_mutation/<entity_name>.json`
   - Entry Format:

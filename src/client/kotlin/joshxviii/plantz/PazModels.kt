@@ -1,5 +1,6 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.item.model.PlantIconItemModel
 import joshxviii.plantz.model.BalloonModel
 import joshxviii.plantz.model.FlagBlockModel
 import joshxviii.plantz.model.GnomeArmorModel
@@ -88,6 +89,7 @@ object PazModels {
         // REGISTER MODELS
         ModelLayerRegistry.registerModelLayer(PeaShooterModel.LAYER_LOCATION) { PeaShooterModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(SunflowerModel.LAYER_LOCATION) { SunflowerModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(MarigoldModel.LAYER_LOCATION) { MarigoldModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(WallNutModel.LAYER_LOCATION) { WallNutModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(ChomperModel.LAYER_LOCATION) { ChomperModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(CherryBombModel.LAYER_LOCATION) { CherryBombModel.createBodyLayer() }
@@ -140,9 +142,10 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(RoboZombieModel.LAYER_LOCATION) { RoboZombieModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(SuperBrainzModel.LAYER_LOCATION) { SuperBrainzModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(ImpModel.LAYER_LOCATION) { ImpModel.createBodyLayer() }
-        ModelLayerRegistry.registerModelLayer(ZombatModel.LAYER_LOCATION) { ZombatModel.createBodyLayer() }
-        ModelLayerRegistry.registerModelLayer(BaronVonBatsModel.LAYER_LOCATION) { BaronVonBatsModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(GargantuarModel.LAYER_LOCATION) { GargantuarModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(BaronVonBatsModel.LAYER_LOCATION) { BaronVonBatsModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(ZombatModel.LAYER_LOCATION) { ZombatModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(ZombieGoatModel.LAYER_LOCATION) { ZombieGoatModel.createBodyLayer() }
 
         ModelLayerRegistry.registerModelLayer(ZombieTurretModel.LAYER_LOCATION) { ZombieTurretModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(ElectroTurretModel.LAYER_LOCATION) { ElectroTurretModel.createBodyLayer() }
@@ -162,6 +165,7 @@ object PazModels {
         // REGISTER ENTITY RENDERERS
         EntityRenderers.register(PazEntities.PEA_SHOOTER) { PlantRenderer(PeaShooterModel(it.bakeLayer(PeaShooterModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.SUNFLOWER) { PlantRenderer(SunflowerModel(it.bakeLayer(SunflowerModel.LAYER_LOCATION)), it) }
+        EntityRenderers.register(PazEntities.MARIGOLD) { PlantRenderer(MarigoldModel(it.bakeLayer(MarigoldModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.WALL_NUT) { WallNutRenderer(it) }
         EntityRenderers.register(PazEntities.EXPLODE_O_NUT) { WallNutRenderer(it) }
         EntityRenderers.register(PazEntities.CHOMPER) { PlantRenderer(ChomperModel(it.bakeLayer(ChomperModel.LAYER_LOCATION)), it) }
@@ -225,8 +229,9 @@ object PazModels {
         EntityRenderers.register(PazEntities.SUPER_BRAINZ) { SuperBrainzRenderer(it) }
         EntityRenderers.register(PazEntities.IMP) { PazZombieRenderer(it, ImpModel(it.bakeLayer(ImpModel.LAYER_LOCATION)), ImpModel(it.bakeLayer(ImpModel.LAYER_LOCATION))) }
         EntityRenderers.register(PazEntities.GARGANTUAR) { GargantuarRenderer(it) }
-        EntityRenderers.register(PazEntities.ZOMBAT) { ZombatRenderer(it) }
         EntityRenderers.register(PazEntities.BARON_VON_BATS) { BaronVonBatsRenderer(it) }
+        EntityRenderers.register(PazEntities.ZOMBAT) { ZombatRenderer(it) }
+        EntityRenderers.register(PazEntities.ZOMBIE_GOAT) { ZombieGoatRenderer(it) }
 
         EntityRenderers.register(PazEntities.ZOMBIE_TURRET) { BlueprintMachineRenderer(it) }
         EntityRenderers.register(PazEntities.ELECTRO_TURRET) { BlueprintMachineRenderer(it, ElectroTurretModel(it.bakeLayer(ElectroTurretModel.LAYER_LOCATION))) }

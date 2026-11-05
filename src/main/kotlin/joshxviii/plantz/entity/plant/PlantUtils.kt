@@ -39,7 +39,6 @@ fun Plant.processSunItem(player: Player, item: ItemStack, hand: InteractionHand,
     val hasStoredSun = item.get(PazComponents.STORED_SUN)?.hasSun() == true
     val isSunItem = item.`is`(PazItems.SUN)
     if (!hasStoredSun && !isSunItem) return false
-    val level = level() as? ServerLevel?: return false
     var success = false
 
     if (isTame && health < maxHealth) {// heal
@@ -47,6 +46,7 @@ fun Plant.processSunItem(player: Player, item: ItemStack, hand: InteractionHand,
         success = true
     }
     else if (!isTame) {// try to tame
+        val level = level() as? ServerLevel?: return false
         if (random.nextFloat() < PazConfig.getTameChance(type)) {
             tame(player)
             level.broadcastEntityEvent(this, 7.toByte())
@@ -59,6 +59,7 @@ fun Plant.processSunItem(player: Player, item: ItemStack, hand: InteractionHand,
             receivedSun.toFloat()/sunRequiredForSeeds() + 0.9f
         )
         if (receivedSun++ >= sunRequiredForSeeds()) awardSeedPacket(player)
+        funnyBounce()
         success = true
     }
 

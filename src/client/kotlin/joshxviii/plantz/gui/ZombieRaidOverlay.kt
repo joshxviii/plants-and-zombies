@@ -31,7 +31,9 @@ object ZombieRaidOverlay {
     val PLANT_FLAG_SPRITE: Identifier = pazResource("textures/gui/raid/plant_flag.png")
     val ZOMBIE_HEAD_SPRITE: Identifier = pazResource("textures/gui/raid/zombie_head.png")
     val ZOMBIE_HEAD_CREDITS_SPRITE: Identifier = pazResource("textures/gui/raid/zombie_head_after_credits.png")
+    val ZOMBIE_REMAINING: Identifier = pazResource("textures/gui/raid/zombies_remaining.png")
     val BOSS_HEAD_SPRITE: Identifier = pazResource("textures/gui/raid/boss_head.png")
+    val BOSS_CHANCE_SPRITE: Identifier = pazResource("textures/gui/raid/boss_chance.png")
     val HEALTH_BAR_PLANT: Identifier = pazResource("textures/gui/raid/flag_health.png")
     val HEALTH_BAR_PLANT_FLASH: Identifier = pazResource("textures/gui/raid/flag_health_flash.png")
     val HEALTH_BAR_ZOMBIES: Identifier = pazResource("textures/gui/raid/zombie_health.png")
@@ -52,17 +54,20 @@ object ZombieRaidOverlay {
     private var lastBossHealth: Float? = null
     private var bossDamageFlashUntil = 0
 
+    val mc = Minecraft.getInstance()
+    val font
+        get() = mc.font
+
     fun extractRenderState(
         graphics: GuiGraphicsExtractor,
         deltaTracker: DeltaTracker
     ) {
-        if (PazConfig.HIDE_RAID_UI) return
+        if (!PazConfig.SHOW_RAID_UI) return
         renderRaidUI(graphics, deltaTracker)
         ZombieHudMarkers.renderIcons(graphics, deltaTracker)
     }
 
     private fun renderRaidUI(graphics: GuiGraphicsExtractor, deltaTracker: DeltaTracker) {
-        val font = Minecraft.getInstance().font
         val raidEvent = ZombieRaidClientCache.get() ?: return
 
         val screenWidth = graphics.guiWidth()
@@ -83,6 +88,9 @@ object ZombieRaidOverlay {
 
         // boss health
         if (renderBossbar) bossBar(x, y, graphics, raidEvent)
+
+        // boss chance
+        if (raidEvent.status == ZombieRaid.ZombieRaidStatus.NEXT_WAVE || isTabDown()) bossChance(x, y, graphics, raidEvent)
 
         // timer
         val time = raidEvent.waveTimer
@@ -110,10 +118,15 @@ object ZombieRaidOverlay {
         val flagBarWidth = Mth.floor(BAR_WIDTH * raidEvent.plantProgressBar)
         val flagHealthX = x+17 + (BAR_WIDTH - flagBarWidth)
         val flagHealthY = y+15
-        val flagFrame = if (raidEvent.activeTime % 30 > 15) 1 else 0
-        val flash = isDamageFlashActive(raidEvent.activeTime, flagDamageFlashUntil)
+        val guiTicks = mc.gui.guiTicks
+        val flagFrame = Mth.ceil(guiTicks / 10.0) % 2
+        val flash = isDamageFlashActive(guiTicks, flagDamageFlashUntil)
         graphics.blit(RenderPipelines.GUI_TEXTURED, if (flash) HEALTH_BAR_PLANT_FLASH else HEALTH_BAR_PLANT, flagHealthX, flagHealthY, 0f, 0f, flagBarWidth, BAR_HEIGHT, BAR_WIDTH, BAR_HEIGHT)
         graphics.blit(RenderPipelines.GUI_TEXTURED, PLANT_FLAG_SPRITE, flagHealthX-7, flagHealthY-5, 7f*flagFrame, 0f, 7, 10, 14, 10)
+        if (isTabDown()) {
+            val health = "${Mth.floor(raidEvent.details.flagHealth/raidEvent.details.flagMaxHealth*100)}%"
+            graphics.text(mc.font, health, x + 17, y + 22, -1, true)
+        }
     }
 
     private fun zombieBar(x: Int, y: Int, graphics: GuiGraphicsExtractor, raidEvent: ZombieRaidClientData) {
@@ -132,49 +145,68 @@ object ZombieRaidOverlay {
                 graphics.blit(RenderPipelines.GUI_TEXTURED, if (raidEvent.seenCredits) ZOMBIE_HEAD_CREDITS_SPRITE else  ZOMBIE_HEAD_SPRITE, headX, headY, headWidth*headFrame, 0f, headWidth, 11, headWidth*4, 11)
             }
         }
+        if (isTabDown()) {
+            val remainingText = "${raidEvent.details.remainingRaiders}"
+            val remainingX = x + BG_WIDTH - 16 - font.width(remainingText)
+            graphics.blit(RenderPipelines.GUI_TEXTURED, ZOMBIE_REMAINING, remainingX-13, y + 20, 0f, 0f, 12, 12, 12, 12)
+            graphics.text(font, remainingText, remainingX, y + 22, -1, true)
+        }
     }
 
     private fun bossBar(x: Int, y: Int, graphics: GuiGraphicsExtractor, raidEvent: ZombieRaidClientData) {
         val bossHealthPercent = raidEvent.bossProgressBar
-        val font = Minecraft.getInstance().font
 
         val barX = (graphics.guiWidth()-132)/2
-        val barY = y+32
-        graphics.blit(RenderPipelines.GUI_TEXTURED, BOSS_BAR_BACKGROUND, barX, barY, 0f, 0f, 132, 15, 132, 15)
+        val barY = y+31
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BOSS_BAR_BACKGROUND, barX, barY, 0f, 0f, 132, 14, 132, 14)
 
         val bossBarWidth = 126
         val bossBarHeight = 8
-        val flash = isDamageFlashActive(raidEvent.activeTime, bossDamageFlashUntil)
-        graphics.blit(RenderPipelines.GUI_TEXTURED, if (flash) BOSS_BAR_FLASH else BOSS_BAR, barX+3, barY+4, 0f, 0f, Mth.floor(bossBarWidth * bossHealthPercent), bossBarHeight, bossBarWidth, bossBarHeight)
-        graphics.blit(RenderPipelines.GUI_TEXTURED, BOSS_HEAD_SPRITE, barX+Mth.floor(bossBarWidth * bossHealthPercent)-10, barY, 0f, 0f, 16, 16, 16, 16)
+        val flash = isDamageFlashActive(mc.gui.guiTicks, bossDamageFlashUntil)
+        graphics.blit(RenderPipelines.GUI_TEXTURED, if (flash) BOSS_BAR_FLASH else BOSS_BAR, barX+3, barY+3, 0f, 0f, Mth.floor(bossBarWidth * bossHealthPercent), bossBarHeight, bossBarWidth, bossBarHeight)
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BOSS_HEAD_SPRITE, barX+Mth.floor(bossBarWidth * bossHealthPercent)-10, barY-1, 0f, 0f, 16, 16, 16, 16)
 
-        val text = "$bossHealthPercent"
-        val bossHealthX = (graphics.guiWidth()/2) - font.width(text) / 2
-        val bossHealthY = y + 45
-        //graphics.text(font, text, bossHealthX, bossHealthY, -1)
+        if (isTabDown()) {
+            val bossHealth = "${Mth.floor(raidEvent.details.remainingBossHealth)}/${Mth.floor(raidEvent.details.totalBossHealth)}"
+            val bossHealthX = graphics.guiWidth() / 2 - font.width(bossHealth) / 2
+            graphics.text(font, bossHealth, bossHealthX, barY+4, ARGB.opaque(0xA050B3), true)
+        }
+    }
+
+    fun bossChance(x: Int, y: Int, graphics: GuiGraphicsExtractor, raidEvent: ZombieRaidClientData) {
+        val bossChanceText = "${Mth.floor(raidEvent.bossChance * 100f)}%"
+        val bossChanceIconSize = 12
+        val bossChanceWidth = font.width(bossChanceText) + bossChanceIconSize
+        val bossChanceX = x + BG_WIDTH + 8 - (bossChanceWidth/2)
+        val bossChanceY = y + 14
+        graphics.text(font, bossChanceText, bossChanceX, bossChanceY, ARGB.opaque(0xFFFFFF))
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BOSS_CHANCE_SPRITE, bossChanceX + font.width(bossChanceText), bossChanceY - 2, 0f, 0f, bossChanceIconSize, bossChanceIconSize, bossChanceIconSize, bossChanceIconSize)
     }
 
     fun flashingStatus(raidEvent: ZombieRaidClientData) {
+        val guiTicks = mc.gui.guiTicks
         if (lastRaidId != raidEvent.id) {
             lastRaidId = raidEvent.id
             lastFlagHealth = raidEvent.plantProgressBar
-            flagDamageFlashUntil = raidEvent.activeTime
+            flagDamageFlashUntil = guiTicks
             lastBossHealth = raidEvent.bossProgressBar
-            bossDamageFlashUntil = raidEvent.activeTime
+            bossDamageFlashUntil = guiTicks
         } else {
             val previousFlagHealth = lastFlagHealth
             if (previousFlagHealth != null && raidEvent.plantProgressBar < previousFlagHealth) {
-                flagDamageFlashUntil = raidEvent.activeTime + HEALTH_DAMAGE_FLASH_DURATION
+                flagDamageFlashUntil = guiTicks + HEALTH_DAMAGE_FLASH_DURATION
             }
             lastFlagHealth = raidEvent.plantProgressBar
 
             val previousBossHealth = lastBossHealth
             if (previousBossHealth != null && raidEvent.bossProgressBar < previousBossHealth) {
-                bossDamageFlashUntil = raidEvent.activeTime + HEALTH_DAMAGE_FLASH_DURATION
+                bossDamageFlashUntil = guiTicks + HEALTH_DAMAGE_FLASH_DURATION
             }
             lastBossHealth = raidEvent.bossProgressBar
         }
     }
 
-    private fun isDamageFlashActive(activeTime: Int, flashUntil: Int): Boolean = activeTime < flashUntil
+    private fun isDamageFlashActive(guiTicks: Int, flashUntil: Int): Boolean = guiTicks < flashUntil
+
+    private fun isTabDown(): Boolean = mc.options.keyPlayerList.isDown
 }

@@ -102,6 +102,7 @@ open class PazZombieRenderer(
                     if (entity.hasBarrel) add("barrel")
                 }
                 is AllStar -> add(entity.variant.suffix)
+                is RoboZombie -> add(entity.variant.suffix)
                 is SuperBrainz -> add(entity.variant.suffix)
                 else -> {}
             }

@@ -44,6 +44,8 @@ public class ZombieMixin implements ZombieRaider {
     static private final EntityDataAccessor<Boolean> IS_LEADER  = SynchedEntityData.defineId(Zombie.class, EntityDataSerializers.BOOLEAN);
     @Unique
     static private final EntityDataAccessor<Boolean> IS_BOSS  = SynchedEntityData.defineId(Zombie.class, EntityDataSerializers.BOOLEAN);
+    @Unique
+    static private final EntityDataAccessor<Boolean> IGNORE_FLAG  = SynchedEntityData.defineId(Zombie.class, EntityDataSerializers.BOOLEAN);
 
     @Override
     public boolean plantz$getIsFromRaid() {
@@ -85,12 +87,23 @@ public class ZombieMixin implements ZombieRaider {
         ((Entity) (Object) this).getEntityData().set(IS_BOSS, value);
     }
 
+    @Override
+    public boolean plantz$getIgnoreFlag() {
+        return ((Entity) (Object) this).getEntityData().get(IGNORE_FLAG);
+    }
+
+    @Override
+    public void plantz$setIgnoreFlag(boolean value) {
+        ((Entity) (Object) this).getEntityData().set(IGNORE_FLAG, value);
+    }
+
     @Inject(method = "defineSynchedData", at = @At("TAIL"))
     public void syncedData(SynchedEntityData.Builder entityData, CallbackInfo ci) {
         entityData.define(IS_FROM_RAID, false);
         entityData.define(ADDS_HEALTH_TO_RAID, true);
         entityData.define(IS_LEADER, false);
         entityData.define(IS_BOSS, false);
+        entityData.define(IGNORE_FLAG, false);
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
@@ -99,6 +112,7 @@ public class ZombieMixin implements ZombieRaider {
         output.putBoolean("plantz:AddsHealthToRaid", this.plantz$getAddsHealthToRaid());
         output.putBoolean("plantz:IsLeader", this.plantz$getIsLeader());
         output.putBoolean("plantz:IsBoss", this.plantz$getIsBoss());
+        output.putBoolean("plantz:IgnoreFlag", this.plantz$getIgnoreFlag());
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
@@ -107,6 +121,7 @@ public class ZombieMixin implements ZombieRaider {
         this.plantz$setAddsHealthToRaid(input.getBooleanOr("plantz:AddsHealthToRaid", true));
         this.plantz$setIsLeader(input.getBooleanOr("plantz:IsLeader", false));
         this.plantz$setIsBoss(input.getBooleanOr("plantz:IsBoss", false));
+        this.plantz$setIgnoreFlag(input.getBooleanOr("plantz:IgnoreFlag", false));
     }
 
     @ModifyArgs(method = "hurtServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Monster;hurtServer(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)Z"))

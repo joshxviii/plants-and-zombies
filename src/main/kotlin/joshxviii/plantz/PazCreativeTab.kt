@@ -1,12 +1,14 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.item.BlueprintItem
+import joshxviii.plantz.item.DoorShieldItem.Companion.stackFor
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
+import net.minecraft.tags.BlockTags
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 
@@ -27,6 +29,7 @@ object PazCreativeTab {
 
                 // seed packets
                 output.accept(SeedPacketItem.stackFor(PazEntities.SUNFLOWER))
+                output.accept(SeedPacketItem.stackFor(PazEntities.MARIGOLD))
                 output.accept(SeedPacketItem.stackFor(PazEntities.PEA_SHOOTER))
                 output.accept(SeedPacketItem.stackFor(PazEntities.WALL_NUT))
                 output.accept(SeedPacketItem.stackFor(PazEntities.EXPLODE_O_NUT))
@@ -57,14 +60,6 @@ object PazCreativeTab {
                 output.accept(SeedPacketItem.stackFor(PazEntities.GRAVE_BUSTER))
                 output.accept(SeedPacketItem.stackFor(PazEntities.PUMPKIN))
 
-                // machine blueprints
-                if (PazConfig.SHOW_HIDDEN_ITEMS) {
-                    output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_TURRET))
-                    output.accept(BlueprintItem.stackFor(PazEntities.ELECTRO_TURRET))
-                    output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_DRONE))
-                    output.accept(BlueprintItem.stackFor(PazEntities.LAWN_MOWER))
-                }
-
                 // zombie spawn eggs
                 output.accept(PazItems.BROWN_COAT_SPAWN_EGG)
                 output.accept(PazItems.NEWSPAPER_ZOMBIE_SPAWN_EGG)
@@ -80,12 +75,21 @@ object PazCreativeTab {
                 output.accept(PazItems.ROBO_ZOMBIE_SPAWN_EGG)
                 output.accept(PazItems.PIRATE_CAPTAIN_SPAWN_EGG)
                 output.accept(PazItems.SUPER_BRAINZ_SPAWN_EGG)
-                output.accept(PazItems.ZOMBAT_SPAWN_EGG)
                 output.accept(PazItems.BARON_VON_BATS_SPAWN_EGG)
                 output.accept(PazItems.GARGANTUAR_SPAWN_EGG)
+                output.accept(PazItems.ZOMBAT_SPAWN_EGG)
+                output.accept(PazItems.ZOMBIE_GOAT_SPAWN_EGG)
 
                 // gnome
                 if (PazConfig.SHOW_HIDDEN_ITEMS) output.accept(PazItems.GNOME_SPAWN_EGG)
+
+                // machine blueprints
+                if (PazConfig.SHOW_HIDDEN_ITEMS) {
+                    output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_TURRET))
+                    output.accept(BlueprintItem.stackFor(PazEntities.ELECTRO_TURRET))
+                    output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_DRONE))
+                    output.accept(BlueprintItem.stackFor(PazEntities.LAWN_MOWER))
+                }
 
                 // items + blocks
                 output.accept(PazItems.SUN_BATTERY)
@@ -98,12 +102,14 @@ object PazCreativeTab {
                 output.accept(PazItems.PLANT_POT_MINECART)
                 output.accept(PazItems.PLANT_POT_HELMET)
                 output.accept(PazItems.DUCKY_TUBE)
+                output.accept(PazItems.COFFIN)
                 output.accept(PazBlocks.CONE)
                 output.accept(PazItems.NEWSPAPER)
-                output.accept(PazItems.DOOR_SHIELD)
                 output.accept(PazItems.FOOTBALL_HELMET)
                 output.accept(PazItems.DYE_BLASTER)
                 output.accept(PazItems.BARON_STAFF)
+                if (PazConfig.SHOW_HIDDEN_ITEMS) BuiltInRegistries.BLOCK.forEach { if (it.defaultBlockState().`is`(BlockTags.DOORS)) output.accept(stackFor(it)) }
+                else output.accept(PazItems.DOOR_SHIELD)
                 output.accept(PazBlocks.BRAINZ_FLAG)
                 output.accept(PazBlocks.PLANTZ_FLAG)
                 output.accept(PazItems.TACO)

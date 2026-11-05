@@ -4,7 +4,8 @@ import com.mojang.serialization.Codec;
 import joshxviii.plantz.*;
 import joshxviii.plantz.effect.PaintedMobEffect;
 import joshxviii.plantz.entity.plant.Plant;
-import joshxviii.plantz.raid.WaveType;
+import joshxviii.plantz.raid.CompletedWave;
+import joshxviii.plantz.raid.GardenHeroRewards;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
@@ -71,8 +72,7 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     private CompoundTag plantData = new CompoundTag();
 
     @Unique
-    private List<WaveType> completedRaidWaveList = List.of();
-
+    private List<CompletedWave> completedRaidWaveList = List.of();
     @Unique
     private @Nullable Plant plantEntity = null;
 
@@ -102,16 +102,14 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     }
 
     @Override
-    public @NotNull List<WaveType> plantz$getWaveList() {
+    public @NotNull List<CompletedWave> plantz$getWaveList() {
         return completedRaidWaveList;
     }
 
     @Override
-    public void plantz$setWaveList(@NotNull List<WaveType> value) {
+    public void plantz$setWaveList(@NotNull List<CompletedWave> value) {
         completedRaidWaveList = value;
     }
-
-
 
     @Unique
     public boolean plantz$getHypnoId() {
@@ -200,8 +198,7 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
         if (!this.plantz$getPlantData().isEmpty()) {
             output.store("plantz:AttachedPlant", CompoundTag.CODEC, this.plantz$getPlantData());
         }
-        if (self instanceof ServerPlayer) output.store("plantz:CompletedWaveList", Codec.list(WaveType.Companion.getCODEC()), this.plantz$getWaveList());
-
+        if (self instanceof ServerPlayer) output.store("plantz:CompletedWaveList", Codec.list(CompletedWave.Companion.getCODEC()), this.plantz$getWaveList());
     }
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     private void loadCustomFlags(ValueInput input, CallbackInfo ci) {
@@ -212,7 +209,9 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
         self.getEntityData().set(DATA_BUTTER_ID, input.getBooleanOr("plantz:IsButtered", false));
         self.getEntityData().set(DATA_PAINTED_COLORS, input.read("plantz:PaintedColor", Codec.unboundedMap(Codec.INT, Codec.INT)).orElseGet(HashMap::new));
         plantz$setPlantData(input.read("plantz:AttachedPlant", CompoundTag.CODEC).orElseGet(CompoundTag::new));
-        if (self instanceof ServerPlayer) plantz$setWaveList(input.read("plantz:CompletedWaveList", Codec.list(WaveType.Companion.getCODEC())).orElseGet(List::of));
+        if (self instanceof ServerPlayer) {
+            plantz$setWaveList(input.read("plantz:CompletedWaveList", Codec.list(CompletedWave.Companion.getCODEC())).orElseGet(List::of));
+        }
 
         if (self instanceof PathfinderMob mob) {
             prevFloatTag = mob.getNavigation().canFloat();
@@ -298,6 +297,5 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     private void plantz$preventKnockbackWhileBlocking(LivingEntity defender, CallbackInfo ci) {
         ci.cancel();
     }
-
 
 }

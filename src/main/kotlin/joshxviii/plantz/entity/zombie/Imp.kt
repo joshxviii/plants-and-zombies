@@ -16,6 +16,7 @@ import net.minecraft.util.random.WeightedList
 import net.minecraft.world.Difficulty
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.*
 import net.minecraft.world.item.DyeColor
@@ -47,7 +48,7 @@ class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie
         set(value) = this.entityData.set(BARREL, value)
 
     init {
-
+        xpReward = 3
     }
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
@@ -97,9 +98,9 @@ class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie
         applyImpulse(0.0, 1.0, 0.0, 1f, 0.5f)
         level.explode(
             this,
-            damageSources().source(PazDamageTypes.ZOMBIE_EXPLODE, this),
+            damageSources().source(DamageTypes.EXPLOSION, this),
             BARREL_DAMAGE_CALCULATOR, x, y+0.5, z,
-            2.0f,
+            1.5f,
             false,
             Level.ExplosionInteraction.MOB,
             ParticleTypes.LARGE_SMOKE,

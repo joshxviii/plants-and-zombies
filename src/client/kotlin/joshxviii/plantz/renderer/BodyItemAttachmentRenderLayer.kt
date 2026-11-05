@@ -166,6 +166,14 @@ class DyeVatRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
     stackSelector = { it.mainHandItemStack },
 )
 
+class CoffinRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
+    parent: RenderLayerParent<S, M>
+) : BodyItemAttachmentRenderLayer<S, M>(
+    parent = parent,
+    expectedItem = PazItems.COFFIN,
+    stackSelector = { it.chestEquipment },
+)
+
 abstract class BodyItemAttachmentRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
     parent: RenderLayerParent<S, M>,
     private val expectedItem: Item,
@@ -194,6 +202,11 @@ abstract class BodyItemAttachmentRenderLayer<S : LivingEntityRenderState, M : En
         humanoidModel.body.translateAndRotate(poseStack)
         poseStack.mulPose(Axis.ZP.rotationDegrees(180.0f))
 
+        if (itemStack.`is`(PazItems.COFFIN)) {
+            state.xRot = if (state.isCrouching) 25f else 0f
+            state.yRot = 0f
+            state.headItem.clear()
+        }
         if (state.isBaby) {
             poseStack.scale(0.5f, 0.5f, 0.5f)
             poseStack.translate(0.0, 0.5, 0.0)

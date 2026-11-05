@@ -79,7 +79,8 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
                 PazEntities.BACKUP_DANCER,
                 trackedBackupDancerIds,
                 isSummoning = { summoningTime > 0 },
-                beginSummoning = { summoningTime = 1 }
+                beginSummoning = { summoningTime = 1 },
+                shouldAddToRaid = false
             )
         )
     }

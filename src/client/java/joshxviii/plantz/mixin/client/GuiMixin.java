@@ -2,8 +2,8 @@ package joshxviii.plantz.mixin.client;
 
 import joshxviii.plantz.PazEffects;
 import joshxviii.plantz.PazModels;
-import joshxviii.plantz.gui.ZombieHudMarkers;
 import joshxviii.plantz.effect.PaintedMobEffect;
+import joshxviii.plantz.gui.SunInfoHud;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -14,6 +14,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -38,6 +39,17 @@ public abstract class GuiMixin {
     @Shadow
     @Final
     private Minecraft minecraft;
+
+    @Shadow
+    private ItemStack lastToolHighlight;
+
+    @Shadow
+    private int toolHighlightTimer;
+
+    @Inject(method = "extractHotbarAndDecorations", at = @At("HEAD"))
+    public void displayStoredSun(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        SunInfoHud.INSTANCE.extractRenderState(graphics, deltaTracker, this.lastToolHighlight, this.toolHighlightTimer);
+    }
 
     @Inject(method = "extractCameraOverlays", at = @At("HEAD"))
     public void extractCameraOverlays(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {

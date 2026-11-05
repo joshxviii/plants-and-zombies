@@ -1,0 +1,80 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:baron_staff"
+    },
+    "title": {
+      "translate": "advancements.plantz.boss_slayer"
+    },
+    "description": {
+      "translate": "advancements.plantz.boss_slayer.description"
+    },
+    "frame": "challenge"
+  },
+  "parent": "plantz:taco_time",
+  "criteria": {
+    "boss_1": {"conditions": {"boss_defeats": 1}, "trigger": "plantz:boss_defeat"},
+    "boss_2": {"conditions": {"boss_defeats": 2}, "trigger": "plantz:boss_defeat"},
+    "boss_3": {"conditions": {"boss_defeats": 3}, "trigger": "plantz:boss_defeat"},
+    "boss_4": {"conditions": {"boss_defeats": 4}, "trigger": "plantz:boss_defeat"},
+    "boss_5": {"conditions": {"boss_defeats": 5}, "trigger": "plantz:boss_defeat"},
+    "boss_6": {"conditions": {"boss_defeats": 6}, "trigger": "plantz:boss_defeat"},
+    "boss_7": {"conditions": {"boss_defeats": 7}, "trigger": "plantz:boss_defeat"},
+    "boss_8": {"conditions": {"boss_defeats": 8}, "trigger": "plantz:boss_defeat"},
+    "boss_9": {"conditions": {"boss_defeats": 9}, "trigger": "plantz:boss_defeat"},
+    "boss_10": {"conditions": {"boss_defeats": 10}, "trigger": "plantz:boss_defeat"},
+    "boss_11": {"conditions": {"boss_defeats": 11}, "trigger": "plantz:boss_defeat"},
+    "boss_12": {"conditions": {"boss_defeats": 12}, "trigger": "plantz:boss_defeat"},
+    "boss_13": {"conditions": {"boss_defeats": 13}, "trigger": "plantz:boss_defeat"},
+    "boss_14": {"conditions": {"boss_defeats": 14}, "trigger": "plantz:boss_defeat"},
+    "boss_15": {"conditions": {"boss_defeats": 15}, "trigger": "plantz:boss_defeat"},
+    "boss_16": {"conditions": {"boss_defeats": 16}, "trigger": "plantz:boss_defeat"},
+    "boss_17": {"conditions": {"boss_defeats": 17}, "trigger": "plantz:boss_defeat"},
+    "boss_18": {"conditions": {"boss_defeats": 18}, "trigger": "plantz:boss_defeat"},
+    "boss_19": {"conditions": {"boss_defeats": 19}, "trigger": "plantz:boss_defeat"},
+    "boss_20": {"conditions": {"boss_defeats": 20}, "trigger": "plantz:boss_defeat"},
+    "boss_21": {"conditions": {"boss_defeats": 21}, "trigger": "plantz:boss_defeat"},
+    "boss_22": {"conditions": {"boss_defeats": 22}, "trigger": "plantz:boss_defeat"},
+    "boss_23": {"conditions": {"boss_defeats": 23}, "trigger": "plantz:boss_defeat"},
+    "boss_24": {"conditions": {"boss_defeats": 24}, "trigger": "plantz:boss_defeat"},
+    "boss_25": {"conditions": {"boss_defeats": 25}, "trigger": "plantz:boss_defeat"},
+    "boss_26": {"conditions": {"boss_defeats": 26}, "trigger": "plantz:boss_defeat"},
+    "boss_27": {"conditions": {"boss_defeats": 27}, "trigger": "plantz:boss_defeat"},
+    "boss_28": {"conditions": {"boss_defeats": 28}, "trigger": "plantz:boss_defeat"},
+    "boss_29": {"conditions": {"boss_defeats": 29}, "trigger": "plantz:boss_defeat"},
+    "boss_30": {"conditions": {"boss_defeats": 30}, "trigger": "plantz:boss_defeat"}
+  },
+  "requirements": [
+    ["boss_1"],
+    ["boss_2"],
+    ["boss_3"],
+    ["boss_4"],
+    ["boss_5"],
+    ["boss_6"],
+    ["boss_7"],
+    ["boss_8"],
+    ["boss_9"],
+    ["boss_10"],
+    ["boss_11"],
+    ["boss_12"],
+    ["boss_13"],
+    ["boss_14"],
+    ["boss_15"],
+    ["boss_16"],
+    ["boss_17"],
+    ["boss_18"],
+    ["boss_19"],
+    ["boss_20"],
+    ["boss_21"],
+    ["boss_22"],
+    ["boss_23"],
+    ["boss_24"],
+    ["boss_25"],
+    ["boss_26"],
+    ["boss_27"],
+    ["boss_28"],
+    ["boss_29"],
+    ["boss_30"]
+  ],
+  "sends_telemetry_event": true
+}
