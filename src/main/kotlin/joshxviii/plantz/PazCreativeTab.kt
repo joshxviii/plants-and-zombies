@@ -104,10 +104,10 @@ object PazCreativeTab {
                 output.accept(PazBlocks.CONE)
                 output.accept(PazItems.NEWSPAPER)
                 output.accept(PazItems.FOOTBALL_HELMET)
-                if (PazConfig.SHOW_HIDDEN_ITEMS) BuiltInRegistries.BLOCK.forEach { if (it.defaultBlockState().`is`(BlockTags.DOORS)) output.accept(stackFor(it)) }
-                else output.accept(PazItems.DOOR_SHIELD)
                 output.accept(PazItems.DYE_BLASTER)
                 output.accept(PazItems.BARON_STAFF)
+                if (PazConfig.SHOW_HIDDEN_ITEMS) BuiltInRegistries.BLOCK.forEach { if (it.defaultBlockState().`is`(BlockTags.DOORS)) output.accept(stackFor(it)) }
+                else output.accept(PazItems.DOOR_SHIELD)
                 output.accept(PazBlocks.BRAINZ_FLAG)
                 output.accept(PazBlocks.PLANTZ_FLAG)
                 output.accept(PazItems.TACO)

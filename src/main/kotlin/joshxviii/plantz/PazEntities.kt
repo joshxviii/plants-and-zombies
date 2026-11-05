@@ -802,12 +802,4 @@ object PazEntities {
         val id = ResourceKey.create(Registries.ENTITY_TYPE, pazResource(name))
         return Registry.register(BuiltInRegistries.ENTITY_TYPE, id, builder.build(id))
     }
-
-    val MAGIC_NAMES = mapOf<EntityType<*>, List<String>>(
-        SUNFLOWER           to listOf("vampire"),
-        CHOMPER             to listOf("chester"),
-        FIRE_PEA_SHOOTER    to listOf("blaze"),
-        DISCO_ZOMBIE        to listOf("mj"),
-        BROWN_COAT          to listOf("tugboat", "mustache")
-    )
 }

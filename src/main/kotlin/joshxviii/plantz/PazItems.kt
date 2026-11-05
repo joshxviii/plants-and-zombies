@@ -39,6 +39,7 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.DamageTypeTags
+import net.minecraft.tags.ItemTags
 import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
@@ -176,7 +177,7 @@ object PazItems {
     val DUCKY_EQUIP_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, pazResource("ducky_tube"))
     @JvmField
     val DUCKY_TUBE: Item = registerItem(
-        "ducky_tube", ::DuckyTubeItem,
+        "ducky_tube",
         properties = Item.Properties()
             .durability(200)
             .repairable(Items.PHANTOM_MEMBRANE)
@@ -192,6 +193,26 @@ object PazItems {
                 Equippable.builder(EquipmentSlot.LEGS)
                 .setAsset(DUCKY_EQUIP_ASSET)
                 .build())
+    )
+    @JvmField
+    val COFFIN_EQUIP_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, pazResource("coffin"))
+    val COFFIN: Item = registerItem(
+        "coffin",
+        properties = Item.Properties()
+            .durability(270)
+            .repairable(ItemTags.PLANKS)
+            .enchantable(1)
+            .attributes(
+                ItemAttributeModifiers.builder()
+                    .add(
+                        Attributes.ARMOR,
+                        AttributeModifier(pazResource("coffin"), 15.0, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.LEGS
+                    ).build())
+            .component(DataComponents.EQUIPPABLE,
+                Equippable.builder(EquipmentSlot.CHEST)
+                    .setAsset(COFFIN_EQUIP_ASSET)
+                    .build())
     )
     @JvmField val WHITE_BALLOON: Item = registerItem("white_balloon", {BalloonItem(it, DyeColor.WHITE)}, properties = Item.Properties())
     @JvmField val LIGHT_GRAY_BALLOON: Item = registerItem("light_gray_balloon", {BalloonItem(it, DyeColor.LIGHT_GRAY)}, properties = Item.Properties())
