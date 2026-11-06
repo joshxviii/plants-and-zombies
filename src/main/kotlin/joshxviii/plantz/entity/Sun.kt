@@ -1,7 +1,7 @@
 package joshxviii.plantz.entity
 
 import joshxviii.plantz.*
-import joshxviii.plantz.PazBlocks.SUN_BATTERY_POI
+import joshxviii.plantz.PazPoiTypes.SUN_BATTERY
 import joshxviii.plantz.block.entity.SunBatteryBlockEntity
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.core.BlockPos
@@ -16,7 +16,6 @@ import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.village.poi.PoiManager.Occupancy
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.entity.EntityTypeTest
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
@@ -135,7 +134,6 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
     override fun tick() {
         super.tick()
         if (level().isClientSide) {
-            interpolation.interpolate()
             return
         }
 
@@ -250,7 +248,7 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
     fun getNearestBattery(range: Double = 4.5): Vec3? {
         val poiManager = (level() as? ServerLevel)?.poiManager ?: return null
         val pos: BlockPos = poiManager.findClosest(
-            { it.value() == SUN_BATTERY_POI },
+            { it.`is`(SUN_BATTERY) },
             blockPosition(),
             range.toInt(),
             Occupancy.ANY

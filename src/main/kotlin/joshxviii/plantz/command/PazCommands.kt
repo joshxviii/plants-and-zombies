@@ -7,6 +7,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
+import joshxviii.plantz.PazPoiTypes.PLANTZ_FLAG
 import joshxviii.plantz.effect.ZombieOmenMobEffect
 import joshxviii.plantz.raid.BossType
 import joshxviii.plantz.raid.WaveType
@@ -102,7 +103,7 @@ object PazCommands {
 
         val raid = raids.createOrExtendZombieRaid(player, waveCount) ?: run {
             val flagNearby = level.poiManager.findClosest(
-                { it.value() == joshxviii.plantz.PazBlocks.PLANTZ_FLAG_POI },
+                { it.`is`(PLANTZ_FLAG) },
                 player.blockPosition(),
                 ZombieOmenMobEffect.MAX_FLAG_DISTANCE,
                 PoiManager.Occupancy.HAS_SPACE

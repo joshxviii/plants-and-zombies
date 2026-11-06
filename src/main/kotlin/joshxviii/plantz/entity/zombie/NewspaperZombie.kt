@@ -42,20 +42,20 @@ class NewspaperZombie(type: EntityType<out NewspaperZombie>, level: Level) : Paz
     }
 
     fun removeAngerBoost() {
-        getAttribute(Attributes.MOVEMENT_SPEED)!!.let {
+        getAttribute(Attributes.MOVEMENT_SPEED)?.let {
             if (it.hasModifier(ANGRY_BONUS_ID)) it.removeModifier(ANGRY_BONUS_ID)
         }
-        getAttribute(Attributes.ATTACK_DAMAGE)!!.let {
+        getAttribute(Attributes.ATTACK_DAMAGE)?.let {
             if (it.hasModifier(ANGRY_BONUS_ID)) it.removeModifier(ANGRY_BONUS_ID)
         }
         setCanBreakDoors(false)
     }
 
     fun applyAngerBoost() {
-        getAttribute(Attributes.MOVEMENT_SPEED)!!.let {
+        getAttribute(Attributes.MOVEMENT_SPEED)?.let {
             if (!it.hasModifier(ANGRY_BONUS_ID)) it.addTransientModifier(AttributeModifier(ANGRY_BONUS_ID, 0.11, AttributeModifier.Operation.ADD_VALUE))
         }
-        getAttribute(Attributes.ATTACK_DAMAGE)!!.let {
+        getAttribute(Attributes.ATTACK_DAMAGE)?.let {
             if (!it.hasModifier(ANGRY_BONUS_ID)) it.addTransientModifier(AttributeModifier(ANGRY_BONUS_ID, 2.0, AttributeModifier.Operation.ADD_VALUE))
         }
         setCanBreakDoors(true)

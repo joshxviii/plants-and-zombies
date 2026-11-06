@@ -1,7 +1,6 @@
 package joshxviii.plantz.gui
 
 import joshxviii.plantz.PazBlocks
-import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazNetwork
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.getHeldBalloons
@@ -84,8 +83,8 @@ object ZombieHudMarkers {
         // TODO I should probably take a screen shot when resources are loaded of each entity in the zombie raider tag list and save the head marker image to reuse here
         submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale * state.scale)
 
-        if (zombie.mainHandItem.`is`(PazBlocks.BRAINZ_FLAG.asItem()) || zombie.offhandItem.`is`(PazBlocks.BRAINZ_FLAG.asItem())) submitItem(graphics,
-            PazBlocks.BRAINZ_FLAG.asItem().defaultInstance, cx, cy, baseScale)
+        if (zombie.mainHandItem.`is`(PazBlocks.BRAINZ_FLAG_BLOCK.asItem()) || zombie.offhandItem.`is`(PazBlocks.BRAINZ_FLAG_BLOCK.asItem())) submitItem(graphics,
+            PazBlocks.BRAINZ_FLAG_BLOCK.asItem().defaultInstance, cx, cy, baseScale)
 
         val balloon = (zombie as? PazZombie)?.getHeldBalloons()?.firstOrNull()
         if (balloon != null) submitItem(graphics, balloon.pickResult, cx, cy-8, baseScale)

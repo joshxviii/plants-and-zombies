@@ -108,7 +108,7 @@ class SunBatteryBlock(properties: Properties) : BaseEntityBlock(properties), Sim
             val state = if (dir.axis === Direction.Axis.Y) {
                 defaultBlockState()
                     .setValue(FACE, if (dir == Direction.UP) AttachFace.CEILING else AttachFace.FLOOR)
-                    .setValue(FACING, context.horizontalDirection)
+                    .setValue(FACING, context.horizontalDirection.opposite)
             } else {
                 defaultBlockState()
                     .setValue(FACE, AttachFace.WALL)

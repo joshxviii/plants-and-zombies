@@ -70,5 +70,6 @@ object PazMain : ModInitializer {
 		PazMenus.initialize()
 		PazNetwork.initialize()
 		PazJukeboxSongs.initialize()
+		PazPoiTypes.initialize()
 	}
 }

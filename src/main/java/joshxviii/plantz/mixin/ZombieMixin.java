@@ -160,7 +160,7 @@ public class ZombieMixin implements ZombieRaider {
 
     @Unique
     private void promoteToLeader(Zombie entity, EntitySpawnReason spawnReason) {
-        entity.setItemSlot(EquipmentSlot.OFFHAND, PazBlocks.BRAINZ_FLAG.asItem().getDefaultInstance());
+        entity.setItemSlot(EquipmentSlot.OFFHAND, PazBlocks.BRAINZ_FLAG_BLOCK.asItem().getDefaultInstance());
         entity.setDropChance(EquipmentSlot.OFFHAND, 1.0F);
 
         if (spawnReason == EntitySpawnReason.NATURAL) PazZombie.Companion.spawnZombieGroup(entity, LEADER_GROUP_SIZE);

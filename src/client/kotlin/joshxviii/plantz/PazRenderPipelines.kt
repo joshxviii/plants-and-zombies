@@ -14,36 +14,28 @@ import net.minecraft.client.renderer.RenderPipelines
 
 object PazRenderPipelines {
 
-    @JvmField
-    val ELECTRIC_ARC = RenderPipelines.register(
-        RenderPipeline.builder(*arrayOf(RenderPipelines.MATRICES_FOG_SNIPPET))
-            .withLocation("pipeline/energy_swirl")
-            .withVertexShader("core/entity")
-            .withFragmentShader("core/entity")
-            .withShaderDefine("ALPHA_CUTOUT", 1.0f)
-            .withShaderDefine("EMISSIVE")
-            .withShaderDefine("NO_OVERLAY")
-            .withShaderDefine("NO_CARDINAL_LIGHTING")
-            .withShaderDefine("APPLY_TEXTURE_MATRIX")
-            .withBindGroupLayout(BindGroupLayouts.SAMPLER0)
-            .withColorTargetState(ColorTargetState(BlendFunction.ADDITIVE))
-            .withCull(false)
-            .withVertexBinding(0, DefaultVertexFormat.ENTITY)
-            .withPrimitiveTopology(PrimitiveTopology.QUADS)
-            .withDepthStencilState(DepthStencilState.DEFAULT)
-            .build())
+//    @JvmField
+//    val PAINT_OVERLAY: RenderPipeline = RenderPipelines.register(
+//        RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
+//            .withLocation(pazResource("pipeline/paint_overlay"))
+//            //.withFragmentShader(pazResource("core/paint_overlay"))
+//            //.withShaderDefine("ALPHA_CUTOUT", 0.1f)
+//            //.withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
+//            //.withBindGroupLayout(BindGroupLayouts.SAMPLER1)
+//            //.withCull(false)
+//            .build()
+//    )
 
-    @JvmField
-    val PAINT_OVERLAY: RenderPipeline = RenderPipelines.register(
-        RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
-            //.withLocation(pazResource("pipeline/paint_overlay"))
-            //.withFragmentShader(pazResource("core/paint_overlay"))
-            //.withShaderDefine("ALPHA_CUTOUT", 0.1f)
-            //.withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
-            //.withBindGroupLayout(BindGroupLayouts.SAMPLER1)
-            //.withCull(false)
-            .build()
-    )
+//    @JvmField
+//    val PAINT_OVERLAY: RenderPipeline = RenderPipelines.register(
+//        RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
+//            .withLocation(pazResource("pipeline/paint_overlay"))
+//            .withFragmentShader(pazResource("core/paint_overlay"))
+//            .withShaderDefine("ALPHA_CUTOUT", 0.1f)
+//            .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
+//            .withCull(false)
+//            .build()
+//    )
 
     //TODO Use this for taking a screenshot of the zombie models
     @JvmField
@@ -59,13 +51,6 @@ object PazRenderPipelines {
             .build()
     )
 
-    //TODO use these two for rendering the image on the HUD
-    @JvmField
-    val HEAD_MARKER: RenderPipeline = RenderPipelines.register(
-        RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
-            .withLocation(pazResource("pipeline/head_marker"))
-            .build()
-    )
     @JvmField
     val HEAD_MARKER_OUTLINE: RenderPipeline = RenderPipelines.register(
         RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
@@ -74,23 +59,23 @@ object PazRenderPipelines {
             .build()
     )
 
-    fun initialize() {
-        if (FabricLoader.getInstance().isModLoaded("iris")) {
-            registerIrisCompat()
-        }
-    }
+//    fun initialize() {
+//        if (FabricLoader.getInstance().isModLoaded("iris")) {
+//            registerIrisCompat()
+//        }
+//    }
 
-    private fun registerIrisCompat() {
-        try {
-            IrisApi.getInstance().let{
-                it.assignPipeline(
-                    PAINT_OVERLAY,
-                    IrisProgram.ENTITIES
-                )
-            }
-
-        } catch (t: Throwable) {
-            PazMain.LOGGER.warn("Iris present but assignPipeline failed", t)
-        }
-    }
+//    private fun registerIrisCompat() {
+//        try {
+//            IrisApi.getInstance().let{
+////                it.assignPipeline(
+////                    PAINT_OVERLAY,
+////                    IrisProgram.ENTITIES
+////                )
+//            }
+//
+//        } catch (t: Throwable) {
+//            PazMain.LOGGER.warn("Iris present but assignPipeline failed", t)
+//        }
+//    }
 }

@@ -252,7 +252,7 @@ class ZombieRaid(
             return
         }
         // lose condition (flag destroyed)
-        else if (!level.getBlockState(center).`is`(PazBlocks.PLANTZ_FLAG)) {
+        else if (!level.getBlockState(center).`is`(PazBlocks.PLANTZ_FLAG_BLOCK)) {
             status = ZombieRaidStatus.LOSS
             postRaidTicks = POST_RAID_TICKS
             zombieRaidEvent.players.forEach { player ->
@@ -559,7 +559,7 @@ class ZombieRaid(
 
     fun setLeader(zombie: Zombie) {
         (zombie as? ZombieRaider)?.`plantz$setIsLeader`(true)
-        zombie.setItemSlot(EquipmentSlot.OFFHAND, PazBlocks.BRAINZ_FLAG.asItem().defaultInstance)
+        zombie.setItemSlot(EquipmentSlot.OFFHAND, PazBlocks.BRAINZ_FLAG_BLOCK.asItem().defaultInstance)
         zombie.setDropChance(EquipmentSlot.OFFHAND, 0.0f)
     }
 

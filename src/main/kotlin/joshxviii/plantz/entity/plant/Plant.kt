@@ -2,6 +2,7 @@ package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.*
 import joshxviii.plantz.PazDataSerializers.DATA_PLANT_STATE
+import joshxviii.plantz.PazPoiTypes.PLANTZ_FLAG
 import joshxviii.plantz.PazTags.BlockTags.PLANTABLE
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.ai.goal.SleepGoal
@@ -798,13 +799,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     private fun hasNearbyPlantzFlag(level: ServerLevel): Boolean {
         val flagPos = level.poiManager.findClosest(
-            { it.value() == PazBlocks.PLANTZ_FLAG_POI },
+            { it.`is`(PLANTZ_FLAG) },
             blockPosition(),
             FlagBlockEntity.FLAG_POWER_RANGE.toInt(),
             PoiManager.Occupancy.ANY
         ).orElse(null) ?: return false
 
-        return level.getBlockState(flagPos).`is`(PazBlocks.PLANTZ_FLAG)
+        return level.getBlockState(flagPos).`is`(PazBlocks.PLANTZ_FLAG_BLOCK)
     }
 
     /** Safely get a block state by using [net.minecraft.world.level.chunk.ChunkSource]

@@ -16,8 +16,12 @@
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {
-          "type": "plantz:robo_zombie",
-          "nbt": "{\"variant\":\"general\"}"
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "plantz:all_star",
+            "minecraft:nbt": "{\"variant\":\"general\"}"
+          }
         }
       }
     },
@@ -25,7 +29,11 @@
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {
-          "type": "plantz:baron_von_bats"
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "plantz:baron_von_bats"
+          }
         }
       }
     },
@@ -33,7 +41,11 @@
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {
-          "type": "plantz:gargantuar"
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "plantz:gargantuar"
+          }
         }
       }
     }

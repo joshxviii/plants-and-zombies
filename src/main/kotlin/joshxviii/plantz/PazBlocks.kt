@@ -18,7 +18,6 @@ import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.ai.village.poi.PoiTypes
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.Item
@@ -85,7 +84,6 @@ object PazBlocks {
         ::SunBatteryBlockEntity,
         SUN_BATTERY_BLOCK
     )
-    @JvmField val SUN_BATTERY_POI = PoiTypes.register(BuiltInRegistries.POINT_OF_INTEREST_TYPE, ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, pazResource("sun_battery")), mutableSetOf(SUN_BATTERY_BLOCK.defaultBlockState()), 8, 16)
     @JvmField val TIME_MACHINE: Block = registerBlock(
         "time_machine",
         BlockBehaviour.Properties.of()
@@ -271,7 +269,7 @@ object PazBlocks {
         { TrapDoorBlock(BlockSetType.COPPER, it) },
     )
 
-    @JvmField val BRAINZ_FLAG: Block = registerBlock(
+    @JvmField val BRAINZ_FLAG_BLOCK: Block = registerBlock(
         "brainz_flag",
         BlockBehaviour.Properties.of()
             .sound(SoundType.WOOD)
@@ -297,7 +295,7 @@ object PazBlocks {
             ),
         ::FlagItem
     )
-    @JvmField val PLANTZ_FLAG: Block = registerBlock(
+    @JvmField val PLANTZ_FLAG_BLOCK: Block = registerBlock(
         "plantz_flag",
         BlockBehaviour.Properties.of()
             .sound(SoundType.WOOD)
@@ -326,9 +324,8 @@ object PazBlocks {
     val FLAG_BLOCK_ENTITY: BlockEntityType<FlagBlockEntity> = registerBlockEntity(
         "flag_block",
         ::FlagBlockEntity,
-        PLANTZ_FLAG, BRAINZ_FLAG
+        PLANTZ_FLAG_BLOCK, BRAINZ_FLAG_BLOCK
     )
-    @JvmField val PLANTZ_FLAG_POI = PoiTypes.register(BuiltInRegistries.POINT_OF_INTEREST_TYPE, ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, pazResource("plantz_flag")), mutableSetOf(PLANTZ_FLAG.defaultBlockState()), 8, 32)
 
     @JvmField val GRAVESTONE: Block = registerBlock(
         "gravestone",

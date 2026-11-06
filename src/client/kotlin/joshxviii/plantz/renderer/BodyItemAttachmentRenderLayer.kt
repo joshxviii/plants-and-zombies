@@ -7,9 +7,7 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazModels.HAS_BUTTER_KEY
 import joshxviii.plantz.PazModels.PAINT_COLORS_KEY
-import joshxviii.plantz.PazRenderPipelines.PAINT_OVERLAY
 import joshxviii.plantz.model.projectiles.ButterModel
-import joshxviii.plantz.pazResource
 import joshxviii.plantz.renderer.entity.ProjectileRenderState
 import net.minecraft.client.Minecraft
 import net.minecraft.client.model.EntityModel
@@ -38,19 +36,19 @@ class SpecialEffectsLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(pr
     renderer
 ) {
     companion object {
-        private val NOISE_TEXTURE = pazResource("textures/entity/paint_overlay.png")
-        fun paintOverlay(entityTexture: Identifier, amplifier: Int = 0, color: Int = 0): RenderType {
-            return RenderType.create(
-                "paint_overlay_${amplifier}",
-                RenderSetup.builder(PAINT_OVERLAY)
-                    .withTexture("Sampler0", entityTexture)
-                    .withTexture("Sampler1", NOISE_TEXTURE)
-                    .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
-                    .useOverlay()
-                    .sortOnUpload()
-                    .createRenderSetup()
-            )
-        }
+//        private val NOISE_TEXTURE = pazResource("textures/entity/paint_overlay.png")
+//        fun paintOverlay(entityTexture: Identifier, amplifier: Int = 0, color: Int = 0): RenderType {
+//            return RenderType.create(
+//                "paint_overlay_${amplifier}",
+//                RenderSetup.builder(PAINT_OVERLAY)
+//                    .withTexture("Sampler0", entityTexture)
+//                    .withTexture("Sampler1", NOISE_TEXTURE)
+//                    .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
+//                    .useOverlay()
+//                    .sortOnUpload()
+//                    .createRenderSetup()
+//            )
+//        }
         val BUTTER_MODEL = ButterModel(Minecraft.getInstance().modelManager.entityModels().get().bakeLayer(ButterModel.LAYER_LOCATION))
     }
 

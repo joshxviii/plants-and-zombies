@@ -1,17 +1,12 @@
 package joshxviii.plantz.effect
 
-import joshxviii.plantz.PazBlocks.PLANTZ_FLAG_POI
 import joshxviii.plantz.raid.getZombieRaids
-import net.minecraft.core.BlockPos
-import net.minecraft.core.Holder
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectCategory
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.ai.village.poi.PoiManager
-import net.minecraft.world.entity.ai.village.poi.PoiType
 
 class ZombieOmenMobEffect(
     category: MobEffectCategory,

@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "plantz:door_shield"
+        "recipes": ["plantz:door_shield"]
       },
       "trigger": "minecraft:recipe_unlocked"
     },

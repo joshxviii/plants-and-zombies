@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
-import joshxviii.plantz.PazBlocks.PLANTZ_FLAG_POI
+import joshxviii.plantz.PazPoiTypes.PLANTZ_FLAG
 import joshxviii.plantz.block.entity.FlagBlockEntity
 import joshxviii.plantz.effect.ZombieOmenMobEffect.Companion.MAX_FLAG_DISTANCE
 import joshxviii.plantz.pazResource
@@ -20,7 +20,6 @@ import net.minecraft.util.datafix.DataFixTypes
 import net.minecraft.world.Difficulty
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.entity.ai.village.poi.PoiManager
-import net.minecraft.world.entity.ai.village.poi.PoiType
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.Level
@@ -94,7 +93,7 @@ class ZombieRaids(
         if (player.isSpectator) return null
         val level = player.level()
         val flagPosition = level.poiManager.findClosest(
-            { p: Holder<PoiType> -> p.value() == PLANTZ_FLAG_POI },
+            { it.`is`(PLANTZ_FLAG) },
             player.blockPosition(),
             MAX_FLAG_DISTANCE,
             PoiManager.Occupancy.HAS_SPACE

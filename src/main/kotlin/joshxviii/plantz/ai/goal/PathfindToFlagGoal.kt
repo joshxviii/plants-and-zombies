@@ -1,6 +1,6 @@
 package joshxviii.plantz.ai.goal
 
-import joshxviii.plantz.PazBlocks.PLANTZ_FLAG
+import joshxviii.plantz.PazBlocks.PLANTZ_FLAG_BLOCK
 import joshxviii.plantz.PazEffects
 import joshxviii.plantz.lookAtBlockPos
 import joshxviii.plantz.raid.ZombieRaid
@@ -45,7 +45,7 @@ class PathfindToFlagGoal(
         }
 
         val target = targetFlagPos ?: return false
-        return mob.level().getBlockState(target).`is`(PLANTZ_FLAG) && target.distSqr(mob.blockPosition()) > minimumDistance * minimumDistance
+        return mob.level().getBlockState(target).`is`(PLANTZ_FLAG_BLOCK) && target.distSqr(mob.blockPosition()) > minimumDistance * minimumDistance
     }
 
     override fun canContinueToUse(): Boolean {
@@ -53,7 +53,7 @@ class PathfindToFlagGoal(
             if (it.isAlive && mob.withinAttackRange(it)) return false
         }
         val target = targetFlagPos ?: return false
-        if (!mob.level().getBlockState(target).`is`(PLANTZ_FLAG)) return false
+        if (!mob.level().getBlockState(target).`is`(PLANTZ_FLAG_BLOCK)) return false
         if (mob.isAggressive || mob.hasEffect(PazEffects.HYPNOTIZE)) return false
 
         return target.distSqr(mob.blockPosition()) > minimumDistance * minimumDistance

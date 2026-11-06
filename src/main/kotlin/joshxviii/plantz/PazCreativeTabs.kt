@@ -112,8 +112,8 @@ object PazCreativeTabs {
         output.accept(PazItems.BARON_STAFF)
         if (PazConfig.SPLIT_ITEM_TABS) BuiltInRegistries.BLOCK.forEach { if (it.defaultBlockState().`is`(BlockTags.DOORS)) output.accept(stackFor(it)) }
         else output.accept(PazItems.DOOR_SHIELD)
-        output.accept(PazBlocks.BRAINZ_FLAG)
-        output.accept(PazBlocks.PLANTZ_FLAG)
+        output.accept(PazBlocks.BRAINZ_FLAG_BLOCK)
+        output.accept(PazBlocks.PLANTZ_FLAG_BLOCK)
         output.accept(PazItems.TACO)
         output.accept(PazItems.BRAINZ_ALLOY)
         if (PazConfig.SPLIT_ITEM_TABS) {

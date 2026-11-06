@@ -55,9 +55,6 @@ import net.minecraft.world.entity.npc.villager.AbstractVillager
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
-import net.minecraft.world.item.enchantment.EnchantmentHelper
-import net.minecraft.world.item.enchantment.providers.VanillaEnchantmentProviders
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.ServerLevelAccessor
@@ -65,7 +62,6 @@ import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
-import java.net.IDN
 import java.util.*
 import kotlin.jvm.optionals.getOrElse
 import kotlin.math.max
@@ -242,6 +238,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     }
 
     override fun onEquipItem(slot: EquipmentSlot, oldStack: ItemStack, stack: ItemStack) {
+        super.onEquipItem(slot, oldStack, stack)
         if (stack.`is`(PazItems.DUCKY_TUBE) && slot == EquipmentSlot.LEGS) {
             this.getNavigation().setCanFloat(true)
             this.getNavigation().recomputePath()
@@ -250,7 +247,6 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             this.getNavigation().setCanFloat(false)
             this.getNavigation().recomputePath()
         };
-        super.onEquipItem(slot, oldStack, stack)
     }
 
     fun useItems() {
@@ -517,7 +513,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     protected open fun ignoreZombieDamage(): Boolean = true
 
     override fun wantsToPickUp(level: ServerLevel, itemStack: ItemStack): Boolean {
-        if (itemStack.`is`(PazBlocks.PLANTZ_FLAG.asItem())) return false
+        if (itemStack.`is`(PazBlocks.PLANTZ_FLAG_BLOCK.asItem())) return false
         return super.wantsToPickUp(level, itemStack)
     }
 

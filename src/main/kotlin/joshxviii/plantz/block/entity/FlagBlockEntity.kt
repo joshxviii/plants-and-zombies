@@ -52,7 +52,7 @@ class FlagBlockEntity(
     override fun setChanged() {
         super.setChanged()
         if (tickCount== 0) {
-            if (this.blockState.`is`(PazBlocks.PLANTZ_FLAG)) {
+            if (this.blockState.`is`(PazBlocks.PLANTZ_FLAG_BLOCK)) {
                 (level as? ServerLevel)?.let { level ->
                     val nearbyPlants = level.getEntitiesOfClass(Plant::class.java, AABB(worldPosition).inflate(FLAG_POWER_RANGE))
                     nearbyPlants.forEach { it.updatePlantPower(level, true) }
@@ -78,8 +78,8 @@ class FlagBlockEntity(
 
         if (health <= 0) {
             level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, pos, getId(state))
-            if (blockState.`is`(PazBlocks.PLANTZ_FLAG)) {
-                val item = ItemEntity(level, pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(), PazBlocks.BRAINZ_FLAG.asItem().defaultInstance)
+            if (blockState.`is`(PazBlocks.PLANTZ_FLAG_BLOCK)) {
+                val item = ItemEntity(level, pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(), PazBlocks.BRAINZ_FLAG_BLOCK.asItem().defaultInstance)
                 level.addFreshEntity(item)
             }
             level.destroyBlock(pos, false)
@@ -89,7 +89,7 @@ class FlagBlockEntity(
         }
 
         if (level.difficulty == Difficulty.PEACEFUL) return
-        if (blockState.`is`(PazBlocks.PLANTZ_FLAG)) replaceBadOmenEffect()
+        if (blockState.`is`(PazBlocks.PLANTZ_FLAG_BLOCK)) replaceBadOmenEffect()
     }
 
     fun replaceBadOmenEffect(distance: Double = MAX_FLAG_OMEN_DISTANCE) {

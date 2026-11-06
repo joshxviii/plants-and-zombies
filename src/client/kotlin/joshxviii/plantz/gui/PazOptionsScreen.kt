@@ -64,7 +64,7 @@ class PazOptionsScreen(private val parent: Screen? = null) : Screen(Component.tr
     }
 
     private inner class OptionList(listWidth: Int, listHeight: Int) :
-        ContainerObjectSelectionList<OptionList.Row>(minecraft!!, listWidth, listHeight, HEADER_HEIGHT, BUTTON_HEIGHT + 6) {
+        ContainerObjectSelectionList<OptionList.Row>(minecraft, listWidth, listHeight, HEADER_HEIGHT, BUTTON_HEIGHT + 6) {
 
         init {
             for (option in PazClientOptions.ALL) addEntry(Row(option))

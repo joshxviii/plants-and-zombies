@@ -16,7 +16,11 @@
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {
-          "type": "plantz:robo_zombie"
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "plantz:robo_zombie"
+          }
         }
       }
     },
@@ -24,7 +28,11 @@
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {
-          "type": "plantz:pirate_captain"
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "plantz:pirate_captain"
+          }
         }
       }
     },
@@ -32,7 +40,11 @@
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {
-          "type": "plantz:super_brainz"
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "plantz:super_brainz"
+          }
         }
       }
     }
