@@ -435,7 +435,7 @@ enum class WaveType(
         fun configureWinterWonderland(zombie: Zombie) {
             if (zombie is Imp) zombie.variant = ImpVariant.YETI
             if (zombie is BrownCoat) {
-                zombie.variant = BrownCoatVariant.SNOW
+                zombie.variant = BrownCoatVariant.SNOWCOAT
                 val boots = Items.LEATHER_BOOTS.defaultInstance
                 boots.set(DataComponents.DYED_COLOR, DyedItemColor(0xFFFFFF))
                 if (zombie.random.nextFloat() < 0.65f) {

@@ -16,6 +16,7 @@ import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.component.CustomModelData
 import net.minecraft.world.item.component.TypedEntityData
 
 object ZombieSpawnEggs {
@@ -25,12 +26,14 @@ object ZombieSpawnEggs {
         private val tag = CompoundTag()
         private val equipment = CompoundTag()
         private var name: Component? = null
+        private var customModelDataStrings = listOf<String>()
 
         private val typeKey get() = EntityType.getKey(type).path
 
         fun variant(variant: StringRepresentable) {
             tag.putString("variant", variant.serializedName)
             name = Component.translatable("entity.plantz.$typeKey.variant.${variant.serializedName}")
+            customModelDataStrings = listOf(variant.serializedName)
         }
 
         fun nbt(block: CompoundTag.() -> Unit) = tag.block()
@@ -47,6 +50,7 @@ object ZombieSpawnEggs {
             val egg = item.defaultInstance
             egg.set(DataComponents.ENTITY_DATA, TypedEntityData.of(type, tag))
             name?.let { egg.set(DataComponents.ITEM_NAME, it) }
+            egg.set(DataComponents.CUSTOM_MODEL_DATA, CustomModelData(listOf(), listOf(), customModelDataStrings, listOf()))
             return egg
         }
     }

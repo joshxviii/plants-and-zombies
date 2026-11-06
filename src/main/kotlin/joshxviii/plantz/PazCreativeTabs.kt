@@ -74,20 +74,20 @@ object PazCreativeTabs {
         output.accept(PazItems.ROBO_ZOMBIE_SPAWN_EGG)
         if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.roboZombie())
         output.accept(PazItems.PIRATE_CAPTAIN_SPAWN_EGG)
+        if (PazConfig.SPLIT_ITEM_TABS) output.accept(PazItems.PIRATE_CAPTAIN_GHOST_SPAWN_EGG)
         output.accept(PazItems.SUPER_BRAINZ_SPAWN_EGG)
         if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.superBrainz())
         output.accept(PazItems.BARON_VON_BATS_SPAWN_EGG)
         output.accept(PazItems.GARGANTUAR_SPAWN_EGG)
-        customEggs(output, ZombieSpawnEggs.gargantuar())
+        if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.gargantuar())
         output.accept(PazItems.ZOMBAT_SPAWN_EGG)
-        if (PazConfig.SPLIT_ITEM_TABS) output.accept(PazItems.ZOMBIE_GOAT_SPAWN_EGG)
 
-        // machine blueprints
+        // Robots
         if (PazConfig.SPLIT_ITEM_TABS) {
-            output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_TURRET))
-            output.accept(BlueprintItem.stackFor(PazEntities.ELECTRO_TURRET))
-            output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_DRONE))
-            output.accept(BlueprintItem.stackFor(PazEntities.LAWN_MOWER))
+            output.accept(PazItems.ZOMBIE_GOAT_SPAWN_EGG)
+            output.accept(PazItems.ZOMBIE_TURRET_SPAWN_EGG)
+            output.accept(PazItems.ZOMBIE_DRONE_SPAWN_EGG)
+            output.accept(PazItems.ELECTRO_TURRET_SPAWN_EGG)
         }
     }
 
@@ -149,6 +149,14 @@ object PazCreativeTabs {
 
         // gnome
         if (PazConfig.SPLIT_ITEM_TABS) output.accept(PazItems.GNOME_SPAWN_EGG)
+
+        // blueprints
+        if (PazConfig.SPLIT_ITEM_TABS) {
+            output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_TURRET))
+            output.accept(BlueprintItem.stackFor(PazEntities.ELECTRO_TURRET))
+            output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_DRONE))
+            output.accept(BlueprintItem.stackFor(PazEntities.LAWN_MOWER))
+        }
     }
 
     private val PAZ_TAB_KEY: ResourceKey<CreativeModeTab> = ResourceKey.create(Registries.CREATIVE_MODE_TAB, pazResource("plantz_tab"))

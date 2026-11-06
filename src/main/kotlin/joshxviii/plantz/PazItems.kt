@@ -7,6 +7,7 @@ import joshxviii.plantz.PazEntities.BARON_VON_BATS
 import joshxviii.plantz.PazEntities.BROWN_COAT
 import joshxviii.plantz.PazEntities.DIGGER_ZOMBIE
 import joshxviii.plantz.PazEntities.DISCO_ZOMBIE
+import joshxviii.plantz.PazEntities.ELECTRO_TURRET
 import joshxviii.plantz.PazEntities.ENGINEER_ZOMBIE
 import joshxviii.plantz.PazEntities.GARGANTUAR
 import joshxviii.plantz.PazEntities.GNOME
@@ -14,11 +15,14 @@ import joshxviii.plantz.PazEntities.GRAVE_DIGGER
 import joshxviii.plantz.PazEntities.IMP
 import joshxviii.plantz.PazEntities.NEWSPAPER_ZOMBIE
 import joshxviii.plantz.PazEntities.PIRATE_CAPTAIN
+import joshxviii.plantz.PazEntities.PIRATE_CAPTAIN_GHOST
 import joshxviii.plantz.PazEntities.ROBO_ZOMBIE
 import joshxviii.plantz.PazEntities.SOLDIER_ZOMBIE
 import joshxviii.plantz.PazEntities.SUPER_BRAINZ
 import joshxviii.plantz.PazEntities.ZOMBAT
+import joshxviii.plantz.PazEntities.ZOMBIE_DRONE
 import joshxviii.plantz.PazEntities.ZOMBIE_GOAT
+import joshxviii.plantz.PazEntities.ZOMBIE_TURRET
 import joshxviii.plantz.PazEntities.ZOMBIE_YETI
 import joshxviii.plantz.PazTags.ItemTags.BUCKET_WEARABLE
 import joshxviii.plantz.entity.zombie.PazZombie
@@ -347,6 +351,9 @@ object PazItems {
     @JvmField val NEWSPAPER_ZOMBIE_SPAWN_EGG: Item = registerSpawnEgg(NEWSPAPER_ZOMBIE)
     @JvmField val DIGGER_ZOMBIE_SPAWN_EGG: Item = registerSpawnEgg(DIGGER_ZOMBIE)
     @JvmField val ENGINEER_ZOMBIE_SPAWN_EGG: Item = registerSpawnEgg(ENGINEER_ZOMBIE)
+    @JvmField val ZOMBIE_DRONE_SPAWN_EGG: Item = registerSpawnEgg(ZOMBIE_DRONE)
+    @JvmField val ZOMBIE_TURRET_SPAWN_EGG: Item = registerSpawnEgg(ZOMBIE_TURRET)
+    @JvmField val ELECTRO_TURRET_SPAWN_EGG: Item = registerSpawnEgg(ELECTRO_TURRET)
     @JvmField val ZOMBIE_YETI_SPAWN_EGG: Item = registerSpawnEgg(ZOMBIE_YETI)
     @JvmField val DISCO_ZOMBIE_SPAWN_EGG: Item = registerSpawnEgg(DISCO_ZOMBIE)
     @JvmField val BACKUP_DANCER_SPAWN_EGG: Item = registerSpawnEgg(BACKUP_DANCER)
@@ -355,6 +362,7 @@ object PazItems {
     @JvmField val SOLDIER_ZOMBIE_SPAWN_EGG: Item = registerSpawnEgg(SOLDIER_ZOMBIE)
     @JvmField val ROBO_ZOMBIE_SPAWN_EGG: Item = registerSpawnEgg(ROBO_ZOMBIE)
     @JvmField val PIRATE_CAPTAIN_SPAWN_EGG: Item = registerSpawnEgg(PIRATE_CAPTAIN)
+    @JvmField val PIRATE_CAPTAIN_GHOST_SPAWN_EGG: Item = registerSpawnEgg(PIRATE_CAPTAIN_GHOST)
     @JvmField val SUPER_BRAINZ_SPAWN_EGG: Item = registerSpawnEgg(SUPER_BRAINZ)
     @JvmField val IMP_SPAWN_EGG: Item = registerSpawnEgg(IMP)
     @JvmField val GARGANTUAR_SPAWN_EGG: Item = registerSpawnEgg(GARGANTUAR)

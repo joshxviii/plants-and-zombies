@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "plantz:item/newspaper_zombie_spawn_egg"
+    "model": "plantz:item/spawn_egg/newspaper_zombie"
   }
 }

@@ -38,7 +38,7 @@
 - Added a new enchantment, "Lobbing".
   - This enchantment applies to the Gardening Glove and allows the player to toss the held plant.
 - Dye Blasters now store dye ammo. Dye Blaster can only be fired after being loaded with dye. Each shot has a chance to consume the stored dye.
-- Added a new options menu accessible with `/pz options`
+- Added a client-side options menu accessible with `/pz options`
 ### Fixes / Technical Changes
 - Pumpkins are no longer duplicated when using a Gardening Glove.
 - Leader zombies no longer spawn a bunch of other zombies that do not despawn.

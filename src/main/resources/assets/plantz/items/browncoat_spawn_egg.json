@@ -1,6 +1,48 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "plantz:item/browncoat_spawn_egg"
+    "type": "minecraft:select",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "cases": [
+      {
+        "when": "balloon",
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/spawn_egg/browncoat/balloon"
+        }
+      },
+      {
+        "when": "snowcoat",
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/spawn_egg/browncoat/snowcoat"
+        }
+      },
+      {
+        "when": "desert",
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/spawn_egg/browncoat/desert"
+        }
+      },
+      {
+        "when": "buccaneer",
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/spawn_egg/browncoat/buccaneer"
+        }
+      },
+      {
+        "when": "vampire",
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/spawn_egg/browncoat/vampire"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "plantz:item/spawn_egg/browncoat/browncoat"
+    }
   }
 }

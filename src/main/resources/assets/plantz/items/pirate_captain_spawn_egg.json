@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "plantz:item/pirate_captain_spawn_egg"
+    "model": "plantz:item/spawn_egg/pirate_captain"
   }
 }
