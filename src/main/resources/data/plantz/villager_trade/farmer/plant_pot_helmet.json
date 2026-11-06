@@ -13,6 +13,7 @@
   "reputation_discount": 0.1,
   "wants": {
     "count": {
+      "type": "minecraft:uniform",
       "min": 20,
       "max": 32
     },

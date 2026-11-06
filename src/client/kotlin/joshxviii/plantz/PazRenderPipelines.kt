@@ -6,7 +6,6 @@ import com.mojang.renderpearl.api.pipeline.ColorTargetState
 import com.mojang.renderpearl.api.pipeline.DepthStencilState
 import com.mojang.renderpearl.api.pipeline.PrimitiveTopology
 import com.mojang.renderpearl.api.pipeline.RenderPipeline
-import com.mojang.renderpearl.api.pipeline.UniformType
 import net.fabricmc.loader.api.FabricLoader
 import net.irisshaders.iris.api.v0.IrisApi
 import net.irisshaders.iris.api.v0.IrisProgram
@@ -37,12 +36,10 @@ object PazRenderPipelines {
     @JvmField
     val PAINT_OVERLAY: RenderPipeline = RenderPipelines.register(
         RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
-            .withShaderDefine("PaintInfo", UniformType.UNIFORM_BUFFER.ordinal)
             .withLocation(pazResource("pipeline/paint_overlay"))
             .withFragmentShader(pazResource("core/paint_overlay"))
             .withShaderDefine("ALPHA_CUTOUT", 0.1f)
             .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
-            .withBindGroupLayout(BindGroupLayouts.SAMPLER0)
             .withBindGroupLayout(BindGroupLayouts.SAMPLER1)
             .withCull(false)
             .build()

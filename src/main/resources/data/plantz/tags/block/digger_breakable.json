@@ -10,8 +10,7 @@
     "#minecraft:sand",
     "#minecraft:terracotta",
     "#minecraft:sculk_replaceable",
-    "#minecraft:overworld_carver_replaceables",
-    "#minecraft:nether_carver_replaceables",
+
     {
       "id": "#c:glass_blocks",
       "required": false
