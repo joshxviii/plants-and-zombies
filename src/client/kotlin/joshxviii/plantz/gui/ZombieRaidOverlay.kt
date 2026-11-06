@@ -118,7 +118,7 @@ object ZombieRaidOverlay {
         val flagBarWidth = Mth.floor(BAR_WIDTH * raidEvent.plantProgressBar)
         val flagHealthX = x+17 + (BAR_WIDTH - flagBarWidth)
         val flagHealthY = y+15
-        val guiTicks = mc.gui.guiTicks
+        val guiTicks = mc.gui.hud.guiTicks
         val flagFrame = Mth.ceil(guiTicks / 10.0) % 2
         val flash = isDamageFlashActive(guiTicks, flagDamageFlashUntil)
         graphics.blit(RenderPipelines.GUI_TEXTURED, if (flash) HEALTH_BAR_PLANT_FLASH else HEALTH_BAR_PLANT, flagHealthX, flagHealthY, 0f, 0f, flagBarWidth, BAR_HEIGHT, BAR_WIDTH, BAR_HEIGHT)
@@ -162,7 +162,7 @@ object ZombieRaidOverlay {
 
         val bossBarWidth = 126
         val bossBarHeight = 8
-        val flash = isDamageFlashActive(mc.gui.guiTicks, bossDamageFlashUntil)
+        val flash = isDamageFlashActive(mc.gui.hud.guiTicks, bossDamageFlashUntil)
         graphics.blit(RenderPipelines.GUI_TEXTURED, if (flash) BOSS_BAR_FLASH else BOSS_BAR, barX+3, barY+3, 0f, 0f, Mth.floor(bossBarWidth * bossHealthPercent), bossBarHeight, bossBarWidth, bossBarHeight)
         graphics.blit(RenderPipelines.GUI_TEXTURED, BOSS_HEAD_SPRITE, barX+Mth.floor(bossBarWidth * bossHealthPercent)-10, barY-1, 0f, 0f, 16, 16, 16, 16)
 
@@ -184,7 +184,7 @@ object ZombieRaidOverlay {
     }
 
     fun flashingStatus(raidEvent: ZombieRaidClientData) {
-        val guiTicks = mc.gui.guiTicks
+        val guiTicks = mc.gui.hud.guiTicks
         if (lastRaidId != raidEvent.id) {
             lastRaidId = raidEvent.id
             lastFlagHealth = raidEvent.plantProgressBar
