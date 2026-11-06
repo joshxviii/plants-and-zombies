@@ -123,17 +123,17 @@ class SpecialEffectsLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(pr
         if (colorMix == -1) return
         poseStack.pushPose()
 
-        collector.order(0).submitModel(
-            parentModel,
-            state,
-            poseStack,
-            paintOverlay(texture, amplifier, colorMix),
-            lightCoords,
-            OverlayTexture.NO_OVERLAY,
-            alphaFromAmplifier(colorMix, amplifier),
-            null,
-            state.outlineColor,
-        )
+//        collector.order(0).submitModel(
+//            parentModel,
+//            state,
+//            poseStack,
+//            paintOverlay(texture, amplifier, colorMix),
+//            lightCoords,
+//            OverlayTexture.NO_OVERLAY,
+//            alphaFromAmplifier(colorMix, amplifier),
+//            null,
+//            state.outlineColor,
+//        )
         poseStack.popPose()
     }
 

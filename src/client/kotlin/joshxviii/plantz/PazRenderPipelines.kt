@@ -36,12 +36,12 @@ object PazRenderPipelines {
     @JvmField
     val PAINT_OVERLAY: RenderPipeline = RenderPipelines.register(
         RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
-            .withLocation(pazResource("pipeline/paint_overlay"))
-            .withFragmentShader(pazResource("core/paint_overlay"))
-            .withShaderDefine("ALPHA_CUTOUT", 0.1f)
-            .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
-            .withBindGroupLayout(BindGroupLayouts.SAMPLER1)
-            .withCull(false)
+            //.withLocation(pazResource("pipeline/paint_overlay"))
+            //.withFragmentShader(pazResource("core/paint_overlay"))
+            //.withShaderDefine("ALPHA_CUTOUT", 0.1f)
+            //.withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
+            //.withBindGroupLayout(BindGroupLayouts.SAMPLER1)
+            //.withCull(false)
             .build()
     )
 
