@@ -155,6 +155,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             val stepHeight: Double = 0.0,
             val followRange: Double = 14.0,
             val armor: Double = 0.0,
+            val armorToughness: Double = 0.0,
             val scale: Double = 1.0,
         ) {
             fun apply(builder: AttributeSupplier.Builder): AttributeSupplier.Builder {
@@ -168,6 +169,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
                     .add(Attributes.MOVEMENT_SPEED, movementSpeed)
                     .add(Attributes.STEP_HEIGHT, stepHeight)
                     .add(Attributes.ARMOR, armor)
+                    .add(Attributes.ARMOR_TOUGHNESS, armorToughness)
                     .add(Attributes.SCALE, scale)
             }
         }
@@ -314,7 +316,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         super.onSyncedDataUpdated(accessor)
         if (level().isClientSide) when (accessor) {
             POWERED_UP -> if (poweredUp) funnyBounce()
-            RECEIVED_SUN, RECEIVED_WATER -> funnyBounce()
         }
         if (state == PlantState.INIT) initAnimationState.startIfStopped(tickCount)
     }
@@ -611,6 +612,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
      * State machine for plant animations
      */
     private fun updateAnimationState() {
+        if (state != PlantState.INIT && tickCount == 1) funnyBounce()
         when (state) {
             PlantState.INIT -> {
                 initAnimationState.startIfStopped(tickCount)
@@ -671,10 +673,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         funnyBounce()
     }
     fun applyPumpkinArmor(
-        amount: Int = PazConfig.PUMPKIN_ARMOR_AMOUNT,
+        amount: Float = PazConfig.PUMPKIN_ARMOR_AMOUNT.toFloat(),
         pumpkinData: TypedEntityData<EntityType<*>>? = null
     ) {
-        pumpkinArmor = amount.toFloat()
+        pumpkinArmor = amount
         pumpkinData?.let { pumpkinEntityData = it }
         playSound(SoundEvents.WOLF_ARMOR_REPAIR, 0.5f, 1f)
         funnyBounce()
@@ -737,21 +739,21 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val level = level() as? ServerLevel ?: return
         receivedSun = 0
         receivedWater = 0
-        val stack = SeedMutationManager.resolve(this)
-        val itemEntity = ItemEntity(level, x, y + 0.5, z, stack)
-        level.addFreshEntity(itemEntity)
+        SeedMutationManager.resolve(this).forEach { stack ->
+            level.addFreshEntity(ItemEntity(level, x, y + 0.5, z, stack))
+        }
         playSound(SoundEvents.ROOTED_DIRT_BREAK)
         if (player is ServerPlayer) PazCriteria.GROW_SEEDS.trigger(player, true)
     }
 
-    fun sunRequiredForSeeds(): Int {
+    open fun sunRequiredForSeeds(): Int {
         return Mth.floor(
             Mth.floor(PazConfig.getSunCost(type)*2f).coerceAtLeast(4) *
             if (receivedWater > 1) PazConfig.HYDRATION_SUN_REDUCTION.toFloat() else 1f// receive a bonus for larger water sources that reduces the sun needed by half.
         )
     }
 
-    fun timeRequiredForSeeds() : Int {
+    open fun timeRequiredForSeeds() : Int {
         val sunCost = PazConfig.getSunCost(type)
         val zenBuff = getBlockBelow().`is`(PazBlocks.ZEN_PLANT_POT)
         return PazConfig.getGrowTime(sunCost, zenBuff)
@@ -782,7 +784,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         deltaMovement = Vec3.ZERO
     }
     /** if on invalid ground plant should start to suffocate */
-    private fun onValidGround() : Boolean {
+    fun onValidGround() : Boolean {
         return (attachedEntity != null) || hasPumpkinArmor() || canSurviveOn(getBlockBelow()) || vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
     }
 
@@ -802,18 +804,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     open fun isRolling(): Boolean = false
     override fun shouldDiscardFriction(): Boolean {
         return isRolling() || super.shouldDiscardFriction()
-    }
-
-    fun hurtOnCollide(other: Entity?) {
-        if (other is Zombie && other.swingTime == 0 && !other.isHypnotized()) {// when colliding with a zombie, the zombie will attack the plant
-            val level = other.level() as? ServerLevel
-            if (level != null && other.isAlive) {
-                val damage = other.getAttribute(Attributes.ATTACK_DAMAGE)?.value?.toFloat() ?: 1f
-                if (hurtServer(level, other.damageSources().mobAttack(other), damage)) {
-                    other.swing(InteractionHand.MAIN_HAND)
-                }
-            }
-        }
     }
 
     fun updatePlantPower(level: ServerLevel, nearFlag: Boolean) {

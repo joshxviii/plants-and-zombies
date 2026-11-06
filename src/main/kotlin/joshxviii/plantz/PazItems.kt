@@ -1,11 +1,13 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.item.component.BlockBreakChanceComponent
 import joshxviii.plantz.PazEntities.ALL_STAR
 import joshxviii.plantz.PazEntities.BACKUP_DANCER
 import joshxviii.plantz.PazEntities.BARON_VON_BATS
 import joshxviii.plantz.PazEntities.BROWN_COAT
 import joshxviii.plantz.PazEntities.DIGGER_ZOMBIE
 import joshxviii.plantz.PazEntities.DISCO_ZOMBIE
+import joshxviii.plantz.PazEntities.ELECTRO_TURRET
 import joshxviii.plantz.PazEntities.ENGINEER_ZOMBIE
 import joshxviii.plantz.PazEntities.GARGANTUAR
 import joshxviii.plantz.PazEntities.GNOME
@@ -13,10 +15,14 @@ import joshxviii.plantz.PazEntities.GRAVE_DIGGER
 import joshxviii.plantz.PazEntities.IMP
 import joshxviii.plantz.PazEntities.NEWSPAPER_ZOMBIE
 import joshxviii.plantz.PazEntities.PIRATE_CAPTAIN
+import joshxviii.plantz.PazEntities.PIRATE_CAPTAIN_GHOST
 import joshxviii.plantz.PazEntities.ROBO_ZOMBIE
 import joshxviii.plantz.PazEntities.SOLDIER_ZOMBIE
 import joshxviii.plantz.PazEntities.SUPER_BRAINZ
 import joshxviii.plantz.PazEntities.ZOMBAT
+import joshxviii.plantz.PazEntities.ZOMBIE_DRONE
+import joshxviii.plantz.PazEntities.ZOMBIE_GOAT
+import joshxviii.plantz.PazEntities.ZOMBIE_TURRET
 import joshxviii.plantz.PazEntities.ZOMBIE_YETI
 import joshxviii.plantz.PazTags.ItemTags.BUCKET_WEARABLE
 import joshxviii.plantz.entity.zombie.PazZombie
@@ -38,6 +44,7 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.DamageTypeTags
+import net.minecraft.tags.ItemTags
 import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
@@ -62,6 +69,7 @@ import net.minecraft.world.level.block.DispenserBlock
 import net.minecraft.world.phys.AABB
 import java.util.*
 import java.util.function.Function
+import kotlin.jvm.java
 
 object PazItems {
     @JvmField
@@ -121,11 +129,12 @@ object PazItems {
     val NEWSPAPER: Item = registerItem(
         "newspaper", ::NewspaperItem,
         properties = Item.Properties()
+            .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
             .delayedComponent(DataComponents.BLOCKS_ATTACKS, {
                 BlocksAttacks(
                     0.25f,
                     1.0f,
-                    listOf(DamageReduction(80.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 0.9f)),
+                    listOf(DamageReduction(90.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 0.9f)),
                     ItemDamageFunction.DEFAULT,
                     Optional.of<HolderSet<DamageType>>(it.getOrThrow(DamageTypeTags.BYPASSES_SHIELD)),
                     Optional.of(PazSounds.PROJECTILE_HIT_PAPER),
@@ -133,8 +142,7 @@ object PazItems {
                 )
             }
             )
-            .component(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.08f)
-            .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
+            .component(PazComponents.BLOCK_BREAK_CHANCE, BlockBreakChanceComponent(0.08f))
     )
     @JvmField
     val TACO: Item = registerItem(
@@ -147,7 +155,14 @@ object PazItems {
         properties = Item.Properties()
             .durability(336)
             .equippableUnswappable(EquipmentSlot.OFFHAND)
-            .component(PazComponents.DOOR_SHIELD, DoorShield())
+            .component(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
+                .add(
+                    Attributes.ARMOR,
+                    AttributeModifier(pazResource("door_armor"), 2.0, AttributeModifier.Operation.ADD_VALUE),
+                    EquipmentSlotGroup.HAND
+                ).build())
+            .component(PazComponents.DOOR_SHIELD, DoorShieldComponent())
+            .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
             .delayedComponent(DataComponents.BLOCKS_ATTACKS, {
                 BlocksAttacks(
                     0.25f,
@@ -159,13 +174,12 @@ object PazItems {
                     Optional.of(SoundEvents.SHIELD_BREAK)
                 )
             })
-            .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
     )
     const val DUCKY_TUBE_DAMAGE_INTERVAL = 45
     val DUCKY_EQUIP_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, pazResource("ducky_tube"))
     @JvmField
     val DUCKY_TUBE: Item = registerItem(
-        "ducky_tube", ::DuckyTubeItem,
+        "ducky_tube", ::DuckTubeItem,
         properties = Item.Properties()
             .durability(200)
             .repairable(Items.PHANTOM_MEMBRANE)
@@ -181,6 +195,32 @@ object PazItems {
                 Equippable.builder(EquipmentSlot.LEGS)
                 .setAsset(DUCKY_EQUIP_ASSET)
                 .build())
+    )
+    val COFFIN_EQUIP_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, pazResource("coffin"))
+    @JvmField
+    val COFFIN: Item = registerItem(
+        "coffin",
+        properties = Item.Properties()
+            .durability(80)
+            .repairable(ItemTags.PLANKS)
+            .enchantable(1)
+            .component(DataComponents.EQUIPPABLE,
+                Equippable.builder(EquipmentSlot.CHEST)
+                    .setAsset(COFFIN_EQUIP_ASSET)
+                    .build())
+            .component(PazComponents.WORN_BODY_BLOCKER, WornBodyBlockerComponent)
+            .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
+            .delayedComponent(DataComponents.BLOCKS_ATTACKS, {
+                BlocksAttacks(
+                    0.0f,
+                    1.0f,
+                    listOf(DamageReduction(360.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 1.0f)),
+                    ItemDamageFunction.DEFAULT,
+                    Optional.of<HolderSet<DamageType>>(it.getOrThrow(DamageTypeTags.BYPASSES_SHIELD)),
+                    Optional.of(SoundEvents.SHIELD_BLOCK),
+                    Optional.of(SoundEvents.SHIELD_BREAK)
+                )
+            })
     )
     @JvmField val WHITE_BALLOON: Item = registerItem("white_balloon", {BalloonItem(it, DyeColor.WHITE)}, properties = Item.Properties())
     @JvmField val LIGHT_GRAY_BALLOON: Item = registerItem("light_gray_balloon", {BalloonItem(it, DyeColor.LIGHT_GRAY)}, properties = Item.Properties())
@@ -243,7 +283,6 @@ object PazItems {
             .humanoidArmor(ArmorMaterials.CHAINMAIL, ArmorType.HELMET)
             .component(PazComponents.PROTECTS_HEAD, ProtectsHeadDataComponent()
             )
-            .component(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.015f)
             .component(
                 DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
                     .setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)
@@ -253,15 +292,7 @@ object PazItems {
                 DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
                     .add(
                         Attributes.ARMOR,
-                        AttributeModifier(pazResource("football_armor"), 10.0, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.HEAD
-                    ).add(
-                        Attributes.ARMOR_TOUGHNESS,
-                        AttributeModifier(pazResource("football_armor_toughness"), 2.0, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.HEAD
-                    ).add(
-                        Attributes.KNOCKBACK_RESISTANCE,
-                        AttributeModifier(pazResource("football_knockback_resistance"), 0.15, AttributeModifier.Operation.ADD_VALUE),
+                        AttributeModifier(pazResource("football_armor"), 2.0, AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.HEAD
                     ).build()
             )
@@ -316,6 +347,9 @@ object PazItems {
     @JvmField val NEWSPAPER_ZOMBIE_SPAWN_EGG: Item = registerSpawnEgg(NEWSPAPER_ZOMBIE)
     @JvmField val DIGGER_ZOMBIE_SPAWN_EGG: Item = registerSpawnEgg(DIGGER_ZOMBIE)
     @JvmField val ENGINEER_ZOMBIE_SPAWN_EGG: Item = registerSpawnEgg(ENGINEER_ZOMBIE)
+    @JvmField val ZOMBIE_DRONE_SPAWN_EGG: Item = registerSpawnEgg(ZOMBIE_DRONE)
+    @JvmField val ZOMBIE_TURRET_SPAWN_EGG: Item = registerSpawnEgg(ZOMBIE_TURRET)
+    @JvmField val ELECTRO_TURRET_SPAWN_EGG: Item = registerSpawnEgg(ELECTRO_TURRET)
     @JvmField val ZOMBIE_YETI_SPAWN_EGG: Item = registerSpawnEgg(ZOMBIE_YETI)
     @JvmField val DISCO_ZOMBIE_SPAWN_EGG: Item = registerSpawnEgg(DISCO_ZOMBIE)
     @JvmField val BACKUP_DANCER_SPAWN_EGG: Item = registerSpawnEgg(BACKUP_DANCER)
@@ -324,11 +358,13 @@ object PazItems {
     @JvmField val SOLDIER_ZOMBIE_SPAWN_EGG: Item = registerSpawnEgg(SOLDIER_ZOMBIE)
     @JvmField val ROBO_ZOMBIE_SPAWN_EGG: Item = registerSpawnEgg(ROBO_ZOMBIE)
     @JvmField val PIRATE_CAPTAIN_SPAWN_EGG: Item = registerSpawnEgg(PIRATE_CAPTAIN)
+    @JvmField val PIRATE_CAPTAIN_GHOST_SPAWN_EGG: Item = registerSpawnEgg(PIRATE_CAPTAIN_GHOST)
     @JvmField val SUPER_BRAINZ_SPAWN_EGG: Item = registerSpawnEgg(SUPER_BRAINZ)
     @JvmField val IMP_SPAWN_EGG: Item = registerSpawnEgg(IMP)
-    @JvmField val ZOMBAT_SPAWN_EGG: Item = registerSpawnEgg(ZOMBAT)
-    @JvmField val BARON_VON_BATS_SPAWN_EGG: Item = registerSpawnEgg(BARON_VON_BATS)
     @JvmField val GARGANTUAR_SPAWN_EGG: Item = registerSpawnEgg(GARGANTUAR)
+    @JvmField val BARON_VON_BATS_SPAWN_EGG: Item = registerSpawnEgg(BARON_VON_BATS)
+    @JvmField val ZOMBAT_SPAWN_EGG: Item = registerSpawnEgg(ZOMBAT)
+    @JvmField val ZOMBIE_GOAT_SPAWN_EGG: Item = registerSpawnEgg(ZOMBIE_GOAT)
 
     @JvmField val GNOME_SPAWN_EGG: Item = registerSpawnEgg(GNOME)
 
@@ -358,7 +394,7 @@ object PazItems {
             blockSound = PazSounds.PROJECTILE_HIT_BUCKET
         ))
         builder.set(DataComponents.ENCHANTABLE, Enchantable(10))
-        builder.set(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.02f)
+        builder.set(PazComponents.BLOCK_BREAK_CHANCE, BlockBreakChanceComponent(0.05f))
         builder.set(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
             .setEquipSound(SoundEvents.ARMOR_EQUIP_IRON)
             .build()
@@ -366,31 +402,18 @@ object PazItems {
         builder.set(DataComponents.ATTRIBUTE_MODIFIERS, builder.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder().build())
             .withModifierAdded(
                 Attributes.ARMOR,
-                AttributeModifier(pazResource("bucket_armor"), 8.0, AttributeModifier.Operation.ADD_VALUE),
+                AttributeModifier(pazResource("bucket_armor"), 15.0, AttributeModifier.Operation.ADD_VALUE),
                 EquipmentSlotGroup.HEAD
             ).withModifierAdded(
                 Attributes.ARMOR_TOUGHNESS,
-                AttributeModifier(pazResource("bucket_armor_toughness"), 2.0, AttributeModifier.Operation.ADD_VALUE),
+                AttributeModifier(pazResource("bucket_armor_toughness"), 8.0, AttributeModifier.Operation.ADD_VALUE),
                 EquipmentSlotGroup.HEAD
             ).withModifierAdded(
                 Attributes.KNOCKBACK_RESISTANCE,
-                AttributeModifier(pazResource("bucket_knockback_resistance"), 0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL),
+                AttributeModifier(pazResource("bucket_knockback_resistance"), 0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL),
                 EquipmentSlotGroup.HEAD
             )
         )
-    }
-
-    fun doorShield(builder: DataComponentMap.Builder, item:  Item) {
-        builder.set(DataComponents.BLOCKS_ATTACKS, BlocksAttacks(
-            0.25f,
-            1.0f,
-            listOf(DamageReduction(90.0f, Optional.empty<HolderSet<DamageType>>(), 0.0f, 1.0f)),
-            ItemDamageFunction.DEFAULT,
-            Optional.empty<HolderSet<DamageType>>(),
-            Optional.of(SoundEvents.SHIELD_BLOCK),
-            Optional.of(SoundEvents.SHIELD_BREAK)
-        ))
-        builder.set(PazComponents.BLOCKING_ITEM_BREAK_CHANCE, 0.05f)
     }
 
     fun initialize() {
@@ -403,13 +426,16 @@ object PazItems {
         ComposterBlock.COMPOSTABLES.put(SEED_PACKET.asItem(), 1.0f)
 
         // Modify components
+        ItemComponentTooltipProviderRegistryImpl.addFirst(PazComponents.PROTECTS_HEAD)
+        ItemComponentTooltipProviderRegistryImpl.addFirst(PazComponents.WORN_BODY_BLOCKER)
+        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.DOOR_SHIELD)
+        ItemComponentTooltipProviderRegistryImpl.addFirst(PazComponents.BLOCK_BREAK_CHANCE)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_WATER)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_SUN)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BRAINZ_ALLOY_COST)
-        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.PROTECTS_HEAD)
         ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.LETTER_DATA)
-        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.DOOR_SHIELD)
+
 
         DefaultItemComponentEvents.MODIFY.register { ctx ->
             ctx.modify({ it.defaultInstance.`is`(BUCKET_WEARABLE)}, ::bucketHeadItem)

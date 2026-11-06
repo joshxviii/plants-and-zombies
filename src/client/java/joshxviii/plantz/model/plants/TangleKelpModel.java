@@ -126,7 +126,6 @@ public class TangleKelpModel extends PlantModel {
 
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
-		this.body.yRot = state.yRot;
 		super.setupAnim(state);
 	}
 }

@@ -3,14 +3,12 @@ package joshxviii.plantz.recipe
 import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazItems
-import joshxviii.plantz.PazMain
-import joshxviii.plantz.item.component.DoorShield
+import joshxviii.plantz.item.component.DoorShieldComponent
 import joshxviii.plantz.pazResource
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
-import net.minecraft.resources.Identifier
 import net.minecraft.tags.ItemTags
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemStack
@@ -18,7 +16,11 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.item.crafting.CraftingBookCategory
 import net.minecraft.world.item.crafting.CraftingInput
 import net.minecraft.world.item.crafting.CustomRecipe
+import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.item.crafting.RecipeSerializer
+import net.minecraft.world.item.crafting.display.RecipeDisplay
+import net.minecraft.world.item.crafting.display.ShapelessCraftingRecipeDisplay
+import net.minecraft.world.item.crafting.display.SlotDisplay
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.DoorBlock
@@ -32,11 +34,19 @@ class DoorShieldRecipe : CustomRecipe() {
     override fun assemble(input: CraftingInput): ItemStack {
         val door = doorBlock(input) ?: return ItemStack.EMPTY
         return ItemStack(PazItems.DOOR_SHIELD).also {
-            it.set(PazComponents.DOOR_SHIELD, DoorShield(door))
+            it.set(PazComponents.DOOR_SHIELD, DoorShieldComponent(door))
         }
     }
 
     override fun category(): CraftingBookCategory = CraftingBookCategory.EQUIPMENT
+
+    override fun display(): List<RecipeDisplay> = listOf(
+        ShapelessCraftingRecipeDisplay(
+            listOf(SlotDisplay.TagSlotDisplay(ItemTags.DOORS), Ingredient.of(Items.SHIELD).display()),
+            SlotDisplay.ItemSlotDisplay(PazItems.DOOR_SHIELD),
+            SlotDisplay.ItemSlotDisplay(Items.CRAFTING_TABLE)
+        )
+    )
 
     override fun getSerializer(): RecipeSerializer<DoorShieldRecipe> = SERIALIZER
 

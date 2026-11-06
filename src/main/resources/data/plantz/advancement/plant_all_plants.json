@@ -26,6 +26,14 @@
         }
       }
     },
+    "plantz:marigold": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "plantz:marigold"
+        }
+      }
+    },
     "plantz:peashooter": {
       "trigger": "minecraft:tame_animal",
       "conditions": {

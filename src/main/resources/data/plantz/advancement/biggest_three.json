@@ -1,0 +1,42 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:gargantuar_spawn_egg"
+    },
+    "title": {
+      "translate": "advancements.plantz.biggest_three"
+    },
+    "description": {
+      "translate": "advancements.plantz.biggest_three.description"
+    }
+  },
+  "parent": "plantz:bigger_three",
+  "criteria": {
+    "plantz:all_star": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "plantz:robo_zombie",
+          "nbt": "{\"variant\":\"general\"}"
+        }
+      }
+    },
+    "plantz:disco_zombie": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "plantz:baron_von_bats"
+        }
+      }
+    },
+    "plantz:zombie_yeti": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "plantz:gargantuar"
+        }
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

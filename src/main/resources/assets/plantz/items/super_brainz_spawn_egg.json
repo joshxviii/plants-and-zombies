@@ -1,6 +1,27 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "plantz:item/super_brainz_spawn_egg"
+    "type": "minecraft:select",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "cases": [
+      {
+        "when": "toxic",
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/spawn_egg/super_brainz/toxic"
+        }
+      },
+      {
+        "when": "electro",
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/spawn_egg/super_brainz/electro"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "plantz:item/spawn_egg/super_brainz/super_brainz"
+    }
   }
 }

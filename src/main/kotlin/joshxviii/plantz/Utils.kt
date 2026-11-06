@@ -1,9 +1,14 @@
 package joshxviii.plantz
 
+import com.mojang.datafixers.util.Either
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import io.netty.buffer.ByteBuf
 import joshxviii.plantz.PazMain.MODID
 import joshxviii.plantz.entity.Balloon
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.plant.saveAsCompoundTag
+import joshxviii.plantz.raid.BossType
 import joshxviii.plantz.raid.WaveType
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
@@ -20,6 +25,8 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.ARGB
 import net.minecraft.util.Mth
+import net.minecraft.network.codec.ByteBufCodecs
+import net.minecraft.network.codec.StreamCodec
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
@@ -76,20 +83,6 @@ object SeasonalEvents {
 
     fun isChristmas(): Boolean =
         isNear(MonthDay.of(Month.DECEMBER, 25))
-}
-
-interface GardenHeroRewards {
-    fun `plantz$getWaveList`(): MutableList<WaveType>
-    fun `plantz$setWaveList`(value: MutableList<WaveType>)
-    companion object {
-        fun collectRewards(player: ServerPlayer): MutableList<ResourceKey<LootTable>> {
-            player as GardenHeroRewards
-            val rewards = player.`plantz$getWaveList`().mapIndexed { waveNumber, type ->
-                type.lootTableFn(waveNumber, player.seenCredits)
-            }.toMutableList()
-            return rewards
-        }
-    }
 }
 
 interface PlantHeadAttachment {

@@ -5,6 +5,7 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.stats.Stats
+import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
@@ -12,15 +13,23 @@ import net.minecraft.world.level.Level
 
 object BlockingItemBreakChance {
     @JvmStatic
-    fun handle(level: Level, item: ItemStack, user: LivingEntity, damage: Float): Boolean {
-        val breakChance = item.get(PazComponents.BLOCKING_ITEM_BREAK_CHANCE) ?: return false
+    fun handle(level: Level, item: ItemStack, user: LivingEntity, damage: Float, slot: EquipmentSlot): Boolean {
+        val breakChance = item.get(PazComponents.BLOCK_BREAK_CHANCE)
+        if (breakChance == null && user is Player) return false
         if (level !is ServerLevel) return true
 
         if (user is Player) {
             user.awardStat(Stats.ITEM_USED.get(item.item))
         }
 
-        if (damage > 0.0f && user.random.nextFloat() < breakChance) {
+        if (item.isDamageableItem) {
+            val itemDamage = item.get(DataComponents.BLOCKS_ATTACKS)?.itemDamage()?.apply(damage) ?: 0
+            if (itemDamage > 0) {
+                item.hurtAndBreak(itemDamage, user, slot)
+            }
+        }
+
+        if (breakChance != null && damage > 0.0f && user.random.nextFloat() < breakChance.chance) {
             val breakSound = item.get(DataComponents.BREAK_SOUND) ?: SoundEvents.ITEM_BREAK
             item.shrink(1)
             if (!user.isSilent) {

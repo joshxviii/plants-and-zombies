@@ -1,12 +1,17 @@
 package joshxviii.plantz.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.serialization.Codec;
 import joshxviii.plantz.*;
 import joshxviii.plantz.effect.PaintedMobEffect;
 import joshxviii.plantz.entity.plant.Plant;
-import joshxviii.plantz.raid.WaveType;
+import joshxviii.plantz.raid.CompletedWave;
+import joshxviii.plantz.raid.GardenHeroRewards;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -36,6 +41,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -71,8 +77,7 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     private CompoundTag plantData = new CompoundTag();
 
     @Unique
-    private List<WaveType> completedRaidWaveList = List.of();
-
+    private List<CompletedWave> completedRaidWaveList = List.of();
     @Unique
     private @Nullable Plant plantEntity = null;
 
@@ -102,16 +107,14 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     }
 
     @Override
-    public @NotNull List<WaveType> plantz$getWaveList() {
+    public @NotNull List<CompletedWave> plantz$getWaveList() {
         return completedRaidWaveList;
     }
 
     @Override
-    public void plantz$setWaveList(@NotNull List<WaveType> value) {
+    public void plantz$setWaveList(@NotNull List<CompletedWave> value) {
         completedRaidWaveList = value;
     }
-
-
 
     @Unique
     public boolean plantz$getHypnoId() {
@@ -200,8 +203,7 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
         if (!this.plantz$getPlantData().isEmpty()) {
             output.store("plantz:AttachedPlant", CompoundTag.CODEC, this.plantz$getPlantData());
         }
-        if (self instanceof ServerPlayer) output.store("plantz:CompletedWaveList", Codec.list(WaveType.Companion.getCODEC()), this.plantz$getWaveList());
-
+        if (self instanceof ServerPlayer) output.store("plantz:CompletedWaveList", Codec.list(CompletedWave.Companion.getCODEC()), this.plantz$getWaveList());
     }
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     private void loadCustomFlags(ValueInput input, CallbackInfo ci) {
@@ -212,7 +214,9 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
         self.getEntityData().set(DATA_BUTTER_ID, input.getBooleanOr("plantz:IsButtered", false));
         self.getEntityData().set(DATA_PAINTED_COLORS, input.read("plantz:PaintedColor", Codec.unboundedMap(Codec.INT, Codec.INT)).orElseGet(HashMap::new));
         plantz$setPlantData(input.read("plantz:AttachedPlant", CompoundTag.CODEC).orElseGet(CompoundTag::new));
-        if (self instanceof ServerPlayer) plantz$setWaveList(input.read("plantz:CompletedWaveList", Codec.list(WaveType.Companion.getCODEC())).orElseGet(List::of));
+        if (self instanceof ServerPlayer) {
+            plantz$setWaveList(input.read("plantz:CompletedWaveList", Codec.list(CompletedWave.Companion.getCODEC())).orElseGet(List::of));
+        }
 
         if (self instanceof PathfinderMob mob) {
             prevFloatTag = mob.getNavigation().canFloat();
@@ -294,10 +298,73 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
         }
     }
 
+    @Inject(method = "getItemBlockingWith", at = @At("RETURN"), cancellable = true)
+    private void plantz$wornBodyBlockerAlwaysBlocks(CallbackInfoReturnable<ItemStack> cir) {
+        if (cir.getReturnValue() != null) return;
+        var chest = ((LivingEntity) (Object) this).getItemBySlot(EquipmentSlot.CHEST);
+        if (chest.has(PazComponents.WORN_BODY_BLOCKER) && chest.has(DataComponents.BLOCKS_ATTACKS)) cir.setReturnValue(chest);
+    }
+
+    @Inject(method = "applyItemBlocking", at = @At("RETURN"), cancellable = true)
+    private void plantz$applyWornBodyBlockerAfterHeldItem(ServerLevel level, DamageSource source, float damage, CallbackInfoReturnable<Float> cir) {
+        var self = (LivingEntity) (Object) this;
+        ItemStack chest = self.getItemBySlot(EquipmentSlot.CHEST);
+        if (!chest.has(PazComponents.WORN_BODY_BLOCKER)) return;
+        if (self.getItemBlockingWith() == chest) return;
+
+        var blocksAttacks = chest.get(DataComponents.BLOCKS_ATTACKS);
+        if (blocksAttacks == null) return;
+        if (blocksAttacks.bypassedBy().map(t -> t.contains(source.typeHolder())).orElse(false)) return;
+        if (source.getDirectEntity() instanceof net.minecraft.world.entity.projectile.arrow.AbstractArrow arrow && arrow.getPierceLevel() > 0) return;
+
+        float alreadyBlocked = cir.getReturnValue();
+        float remaining = damage - alreadyBlocked;
+        if (remaining <= 0.0F) return;
+
+        double angle;
+        Vec3 sourcePosition = source.getSourcePosition();
+        if (sourcePosition != null) {
+            Vec3 view = self.calculateViewVector(0.0F, self.getYHeadRot());
+            Vec3 to = sourcePosition.subtract(self.position());
+            to = new Vec3(to.x, 0.0, to.z).normalize();
+            angle = Math.acos(Math.max(-1.0, Math.min(1.0, to.dot(view))));
+        } else {
+            angle = Math.PI;
+        }
+
+        float blocked = blocksAttacks.resolveBlockedDamage(source, remaining, angle);
+        if (blocked <= 0.0F) return;
+        blocksAttacks.hurtBlockingItem(self.level(), chest, self, net.minecraft.world.InteractionHand.MAIN_HAND, blocked);
+        cir.setReturnValue(alreadyBlocked + blocked);
+    }
+
+    @ModifyVariable(method = "hurtServer", at = @At("STORE"), name = "itemInUse")
+    private ItemStack plantz$useWornBlockerForBlockFeedback(ItemStack itemInUse) {
+        if (itemInUse.has(DataComponents.BLOCKS_ATTACKS)) return itemInUse;
+        ItemStack chest = ((LivingEntity) (Object) this).getItemBySlot(EquipmentSlot.CHEST);
+        return chest.has(PazComponents.WORN_BODY_BLOCKER) ? chest : itemInUse;
+    }
+
+    @WrapOperation(
+        method = "hurtServer",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/entity/LivingEntity;playHurtSound(Lnet/minecraft/world/damagesource/DamageSource;)V"
+        )
+    )
+    private void plantz$suppressHurtSoundWhenFullyBlocked(
+        LivingEntity entity,
+        DamageSource source,
+        Operation<Void> original,
+        @Local(name = "damage", argsOnly = true) float damage,
+        @Local(name = "blocked") boolean blocked
+    ) {
+        if (!blocked || damage > 0.0F) original.call(entity, source);
+    }
+
     @Inject(method = "blockedByItem", at = @At("HEAD"), cancellable = true)
     private void plantz$preventKnockbackWhileBlocking(LivingEntity defender, CallbackInfo ci) {
         ci.cancel();
     }
-
 
 }

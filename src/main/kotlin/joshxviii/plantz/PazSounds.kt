@@ -101,7 +101,8 @@ object PazSounds {
     @JvmField val RAID_MUSIC_LEAGUE = registerForHolder("music.raid.league")
     @JvmField val RAID_MUSIC_ZOMBOSS = registerForHolder("music.raid.zomboss")
 
-    @JvmField val SPECIAL_WAVE = registerForHolder("event.raid.special_wave")
+    @JvmField val SPECIAL_WAVE = registerForHolder("event.raid.special_wave")// TODO: Custom sounds
+    @JvmField val BOSS_SPAWN = registerForHolder("event.raid.boss_spawn")// TODO: Custom sounds
     @JvmField val RAID_VICTORY = registerForHolder("event.raid.victory")
     @JvmField val RAID_DEFEAT = registerForHolder("event.raid.defeat")
 

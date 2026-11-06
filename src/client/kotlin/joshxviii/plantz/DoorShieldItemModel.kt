@@ -52,6 +52,8 @@ class DoorShieldItemModel(
         val tintGetter = level ?: BlockAndTintGetter.EMPTY
         val lowerState = door.defaultBlockState().setValue(DoorBlock.HALF, DoubleBlockHalf.LOWER)
         val upperState = lowerState.setValue(DoorBlock.HALF, DoubleBlockHalf.UPPER)
+        val blockStateModels = Minecraft.getInstance().modelManager.blockStateModelSet
+        layer.setParticleMaterial(blockStateModels.get(lowerState).particleMaterial())
         emitBlockModel(layer, lowerState, tintGetter, 0f, seed.toLong())
         emitBlockModel(layer, upperState, tintGetter, 1f, seed.toLong() + 1L)
     }

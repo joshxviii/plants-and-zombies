@@ -2,7 +2,8 @@
 	"texture_size": [64, 64],
 	"textures": {
 		"layer0": "plantz:block/dye_vat_liquid",
-		"layer1": "plantz:block/dye_vat"
+		"layer1": "plantz:block/dye_vat",
+		"particle": "plantz:block/dye_vat"
 	},
 	"elements": [
 		{

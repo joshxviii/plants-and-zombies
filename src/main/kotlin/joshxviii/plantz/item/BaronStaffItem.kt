@@ -25,7 +25,7 @@ class BaronStaffItem(properties: Properties) : Item(properties) {
         const val USE_DURATION = 8
         private const val BEAM_RANGE = 14.0
         private const val BEAM_WIDTH = 0.1
-        private const val BEAM_DAMAGE = 8.0f
+        private const val BEAM_DAMAGE = 7.0f
         private const val BEAM_COLOR = 0xaf5dfa
     }
 
@@ -50,7 +50,7 @@ class BaronStaffItem(properties: Properties) : Item(properties) {
         itemStack: ItemStack?,
         damage: Float
     ) {
-        level.playSound(livingEntity, livingEntity.blockPosition(), PazSounds.SUPER_BRAINZ_LAZER, livingEntity.soundSource, 1.0f, 1.2f)
+        level.playSound(livingEntity, livingEntity.blockPosition(), PazSounds.SUPER_BRAINZ_LAZER, livingEntity.soundSource, 0.6f, 1.2f)
         val serverLevel = level as? ServerLevel ?: return
         val startPos = livingEntity.eyePosition.add(livingEntity.lookAngle.subtract(Vec3.Y_AXIS).scale(0.05))
         val maxEndPos = startPos.add(livingEntity.headLookAngle.scale(BEAM_RANGE))
@@ -58,7 +58,7 @@ class BaronStaffItem(properties: Properties) : Item(properties) {
             ClipContext(startPos, maxEndPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, livingEntity)
         )
         val endPos = if (blockHit.type == HitResult.Type.MISS) maxEndPos else blockHit.location
-        val beamBounds = AABB(startPos, endPos).inflate(BEAM_WIDTH / 2.0)
+        val beamBounds = AABB(startPos, endPos).inflate(BEAM_WIDTH+0.5 / 2.0)
 
         serverLevel.sendParticles(
             ElectricArcParticleOptions(
@@ -77,7 +77,7 @@ class BaronStaffItem(properties: Properties) : Item(properties) {
 
         val damageSource = livingEntity.damageSources().source(PazDamageTypes.ENERGY, livingEntity, livingEntity)
         val entities = level.getEntities(livingEntity, beamBounds) { entity ->
-            entity.isAlive && entity.boundingBox.inflate(BEAM_WIDTH / 2.0)
+            entity.isAlive && entity.boundingBox.inflate(BEAM_WIDTH+0.5 / 2.0)
                 .clip(startPos, endPos).isPresent &&
                 (livingEntity !is Mob ||
                     entity !is LivingEntity || livingEntity.canAttack(entity))

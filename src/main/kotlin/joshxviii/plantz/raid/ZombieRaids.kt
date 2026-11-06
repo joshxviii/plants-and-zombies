@@ -4,7 +4,9 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
+import joshxviii.plantz.PazBlocks.PLANTZ_FLAG_POI
 import joshxviii.plantz.block.entity.FlagBlockEntity
+import joshxviii.plantz.effect.ZombieOmenMobEffect.Companion.MAX_FLAG_DISTANCE
 import joshxviii.plantz.pazResource
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
@@ -17,6 +19,8 @@ import net.minecraft.util.VisibleForDebug
 import net.minecraft.util.datafix.DataFixTypes
 import net.minecraft.world.Difficulty
 import net.minecraft.resources.ResourceKey
+import net.minecraft.world.entity.ai.village.poi.PoiManager
+import net.minecraft.world.entity.ai.village.poi.PoiType
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.Level
@@ -29,6 +33,7 @@ import net.minecraft.world.level.saveddata.SavedDataType
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Function
+import kotlin.jvm.optionals.getOrNull
 
 fun ServerLevel.getZombieRaids(): ZombieRaids {
     return dataStorage.computeIfAbsent(ZombieRaids.TYPE)
@@ -71,7 +76,7 @@ class ZombieRaids(
 
         while (raidIterator.hasNext()) {
             val raid = raidIterator.next()
-            if (!level.gameRules.get(GameRules.RAIDS) || level.difficulty == Difficulty.PEACEFUL) raid.stop()
+            if (!level.gameRules.get(GameRules.RAIDS) || level.difficulty == Difficulty.PEACEFUL) raid.stop(level)
 
             if (raid.isStopped()) {
                 (level.getBlockEntity(raid.center) as? FlagBlockEntity)?.setMaxHealth(refill = true)
@@ -85,35 +90,39 @@ class ZombieRaids(
         if (tick % 200 == 0) setDirty()
     }
 
-    fun createOrExtendZombieRaid(player: ServerPlayer, flagPosition: BlockPos?): ZombieRaid? {
+    fun createOrExtendZombieRaid(player: ServerPlayer, waveCount: Int = 0): ZombieRaid? {
         if (player.isSpectator) return null
-        if (flagPosition == null) return null
-        else {
-            val level = player.level()
-            if (!level.gameRules.get<Boolean>(GameRules.RAIDS) || level.difficulty == Difficulty.PEACEFUL) return null
+        val level = player.level()
+        val flagPosition = level.poiManager.findClosest(
+            { p: Holder<PoiType> -> p.value() == PLANTZ_FLAG_POI },
+            player.blockPosition(),
+            MAX_FLAG_DISTANCE,
+            PoiManager.Occupancy.HAS_SPACE
+        ).getOrNull() ?: return null
 
-            val raid = getOrCreateRaid(level, flagPosition)
+        if (!level.gameRules.get(GameRules.RAIDS) || level.difficulty == Difficulty.PEACEFUL) return null
 
-            if (raid.startedBy == null) raid.startedBy = player.uuid
+        val raid = getOrCreateRaid(level, flagPosition, waveCount)
 
-            if (raid.status == ZombieRaid.ZombieRaidStatus.INIT && !zombieRaidMap.containsValue(raid)) {
-                zombieRaidMap.put(uniqueId, raid)
-                level.players().filter { it.blockPosition().distSqr(flagPosition) < ZombieRaid.RAID_DISTANCE*ZombieRaid.RAID_DISTANCE } .forEach {
-                    it.sendSystemMessage(ZombieRaid.getStartMessage(player.seenCredits))
-                    raid.zombieRaidEvent.addPlayer(it)
-                }
-                raid.absorbRaidOmen(player)
+        if (raid.startedBy == null) raid.startedBy = player.uuid
+
+        if (raid.status == ZombieRaid.ZombieRaidStatus.INIT && !zombieRaidMap.containsValue(raid)) {
+            zombieRaidMap.put(uniqueId, raid)
+            level.players().filter { it.blockPosition().distSqr(flagPosition) < ZombieRaid.RAID_DISTANCE*ZombieRaid.RAID_DISTANCE } .forEach {
+                it.sendSystemMessage(ZombieRaid.getStartMessage(player.seenCredits))
+                raid.zombieRaidEvent.addPlayer(it)
             }
-
-            raid.starterHasSeenCredits = raid.starterHasSeenCredits || player.seenCredits
-            setDirty()
-            return raid
+            raid.absorbRaidOmen(player)
         }
+
+        raid.starterHasSeenCredits = raid.starterHasSeenCredits || player.seenCredits
+        setDirty()
+        return raid
     }
 
-    private fun getOrCreateRaid(level: ServerLevel, pos: BlockPos): ZombieRaid {
+    private fun getOrCreateRaid(level: ServerLevel, pos: BlockPos, waveCount: Int): ZombieRaid {
         val zombieRaid = level.getZombieRaids().getNearbyRaid(pos, 16)
-        return zombieRaid ?: ZombieRaid(center = pos)
+        return zombieRaid ?: ZombieRaid(center = pos, numWaves = waveCount)
     }
 
     private val uniqueId: Int

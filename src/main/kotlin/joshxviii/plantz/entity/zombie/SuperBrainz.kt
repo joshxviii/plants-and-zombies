@@ -190,7 +190,7 @@ class SuperBrainz(type: EntityType<out SuperBrainz>, level: Level) : PazZombie(t
             actionDelay = 25,
             doNotExtendPastTarget = true,
             damageType = PazDamageTypes.ZOMBIE_ENERGY,
-            damageMultiplier = 0.5f,
+            damageMultiplier = 0.25f,
             actionSuccessEffect = {
                 if (beamAttackTime<=0) beamAttackTime = 1
             },

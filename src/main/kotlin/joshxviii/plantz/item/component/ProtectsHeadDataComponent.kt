@@ -36,6 +36,7 @@ import net.minecraft.world.item.component.TooltipProvider
 import net.minecraft.world.level.Level
 import java.util.Optional
 import java.util.function.Consumer
+import kotlin.compareTo
 
 private const val BELOW_EYE_LEVEL_TOLERANCE = 0.25
 
@@ -52,13 +53,16 @@ class ProtectsHeadDataComponent(
         flag: TooltipFlag,
         components: DataComponentGetter
     ) {
-        consumer.accept(Component.translatable("component.blocks_damage.description").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC))
+        consumer.accept(Component.translatable("component.plantz.protects_head").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC))
     }
 
     fun canBlockFrom(source: DamageSource, user: LivingEntity): Boolean {
-        if (source.`is`(DamageTypeTags.DAMAGES_HELMET)) return true
+        return source.`is`(DamageTypeTags.DAMAGES_HELMET) || !source.`is`(PazTags.DamageTypes.BYPASSES_HEAD_PROTECTION)
+    }
+
+    fun isFromAbove(source: DamageSource, user: LivingEntity): Boolean {
         val sourcePosition = source.directEntity?.boundingBox?.center ?: source.sourcePosition ?: return false
-        return sourcePosition.y >= user.eyeY - BELOW_EYE_LEVEL_TOLERANCE && !source.`is`(PazTags.DamageTypes.BYPASSES_HEAD_PROTECTION)
+        return sourcePosition.y >= user.eyeY - BELOW_EYE_LEVEL_TOLERANCE
     }
 
     fun resolveBlockedDamage(source: DamageSource, dealtDamage: Float): Float {
@@ -69,7 +73,7 @@ class ProtectsHeadDataComponent(
 
     fun hurtBlockingItem(level: Level, item: ItemStack, user: LivingEntity, slot: EquipmentSlot, damage: Float) {
         if (damage<=0f) return
-        if (BlockingItemBreakChance.handle(level, item, user, damage)) return
+        if (BlockingItemBreakChance.handle(level, item, user, damage, slot)) return
 
         if (user is Player && !level.isClientSide) {
             user.awardStat(Stats.ITEM_USED.get(item.item))
@@ -113,7 +117,7 @@ class ProtectsHeadDataComponent(
     data class DamageReduction(
         val type: Optional<HolderSet<DamageType>> = Optional.empty(),
         val base: Float = 0.0f,
-        val factor: Float = 0.9f
+        val factor: Float = 1.0f
     ) {
         fun resolve(source: DamageSource, dealtDamage: Float): Float {
             if (type.isPresent && !type.get().contains(source.typeHolder())) return 0.0f

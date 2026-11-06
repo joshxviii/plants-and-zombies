@@ -10,7 +10,8 @@ import java.util.function.IntFunction
 
 enum class GargantuarVariant(val suffix: String, val id: Int) : StringRepresentable {
     GARG("", 0),
-    PIRATE("pirate", 1);
+    PIRATE("pirate", 1),
+    GIGA("giga", 2);
 
     override fun getSerializedName(): String = suffix
 

@@ -40,7 +40,7 @@ class LightningReed(type: EntityType<out Plant>, level: Level) : Plant(type, lev
         this.goalSelector.addGoal(2, MeleeAttackActionGoal(
             usingEntity = this,
             actionDelay = 6,
-            cooldownTime = 16,
+            cooldownTime = 20,
             damageType = PazDamageTypes.PLANT_ELECTRIC,
             beforeHitEntityEffect = {
                 it.addEffect(MobEffectInstance(PazEffects.ELECTRIFIED, 100, 1), this)

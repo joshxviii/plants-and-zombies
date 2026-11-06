@@ -53,7 +53,7 @@ class SunBatteryItem(properties: Properties) : BlockItem(PazBlocks.SUN_BATTERY_B
     }
     override fun getBarColor(stack: ItemStack): Int {
         stack.get(PazComponents.STORED_SUN)?.let {
-            return if (it.isFull()) 14369328 else 16768870
+            return if (it.isFull()) 0xDB4230 else 0xFFDF66
         }
         return super.getBarColor(stack)
     }

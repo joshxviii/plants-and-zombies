@@ -2,6 +2,7 @@ package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazDataSerializers.BROWN_COAT_VARIANT
 import joshxviii.plantz.PazTags
+import joshxviii.plantz.entity.ZombieEquipment.equipZombieEquipment
 import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
@@ -20,6 +21,10 @@ import kotlin.jvm.optionals.getOrDefault
 class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type, level) {
     companion object {
         val DATA_VARIANT_ID: EntityDataAccessor<BrownCoatVariant> = SynchedEntityData.defineId(BrownCoat::class.java, BROWN_COAT_VARIANT)
+    }
+
+    init {
+        xpReward = 3
     }
 
     var variant: BrownCoatVariant
@@ -52,27 +57,31 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
     }
 
     override fun canFreeze(): Boolean {
-        return if (variant == BrownCoatVariant.SNOW) false
+        return if (variant == BrownCoatVariant.SNOWCOAT) false
         else super.canFreeze()
     }
 
     fun spawnWithBalloons() {
         var balloonCount = random.nextIntBetweenInclusive(2,3)
-        if (variant == BrownCoatVariant.BROWN && random.nextFloat() < 0.33) {
+        if (variant == BrownCoatVariant.BROWNCOAT && random.nextFloat() < 0.33) {
             variant = BrownCoatVariant.BALLOON
             balloonCount+=2
         }
         val balloonColors = when (variant) {
             BrownCoatVariant.DESERT -> listOf(DyeColor.ORANGE, DyeColor.BROWN)
-            BrownCoatVariant.SNOW -> listOf(DyeColor.LIGHT_BLUE, DyeColor.WHITE)
+            BrownCoatVariant.SNOWCOAT -> listOf(DyeColor.LIGHT_BLUE, DyeColor.WHITE)
             BrownCoatVariant.BUCCANEER -> listOf(DyeColor.BLACK, DyeColor.RED)
             else -> listOf(DyeColor.RED, DyeColor.YELLOW, DyeColor.BLUE)
         }
         spawnBalloons(balloonCount, balloonColors)
     }
 
+    override fun onSpawnedFromItem() {
+        if (variant == BrownCoatVariant.BALLOON) spawnWithBalloons()
+    }
+
     override fun getTypeName(): Component {
-        return if (variant != BrownCoatVariant.BROWN) Component.translatable("entity.plantz.browncoat.variant.${variant.name.lowercase()}")
+        return if (variant != BrownCoatVariant.BROWNCOAT) Component.translatable("entity.plantz.browncoat.variant.${variant.name.lowercase()}")
         else super.getTypeName()
     }
 
@@ -83,7 +92,7 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
-
+        if (spawnReason == EntitySpawnReason.SPAWN_ITEM_USE) return data
         val random = level.random
         setCanBreakDoors(true)
         val structureManager = (level as ServerLevel).structureManager()
@@ -103,4 +112,6 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
 
         return data
     }
+
+
 }

@@ -39,10 +39,11 @@ public abstract class LivingEntityProtectsHeadMixin {
             if (!component.canBlockFrom(source, entity)) continue;
 
             float blocked = component.resolveBlockedDamage(source, remainingDamage);
-            if (blocked <= 0.0F) continue;
-
             component.hurtBlockingItem(entity.level(), item, entity, slot, blocked);
             component.onBlocked(level, entity);
+            if (!component.isFromAbove(source, entity)) continue;
+
+            if (blocked <= 0.0F) continue;
             totalBlocked += blocked;
             remainingDamage -= blocked;
             if (remainingDamage <= 0.0F) break;

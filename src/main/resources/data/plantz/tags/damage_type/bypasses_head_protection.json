@@ -2,6 +2,7 @@
   "values": [
     "#minecraft:bypasses_shield",
     "#minecraft:is_player_attack",
-    "minecraft:mob_attack"
+    "minecraft:mob_attack",
+    "plantz:piercing_projectile"
   ]
 }

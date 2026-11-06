@@ -1,16 +1,19 @@
 {
   "model": {
-    "type": "minecraft:condition",
-    "property": "minecraft:has_component",
-    "component": "plantz:stored_sun",
-    "ignore_default": true,
-    "on_true": {
+    "type": "minecraft:range_dispatch",
+    "property": "plantz:battery_fullness",
+    "entries": [
+      {
+        "threshold": 1.0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/sun_battery_empty"
+        }
+      }
+    ],
+    "fallback": {
       "type": "minecraft:model",
       "model": "plantz:item/sun_battery"
-    },
-    "on_false": {
-      "type": "minecraft:model",
-      "model": "plantz:item/sun_battery_empty"
     }
   }
 }

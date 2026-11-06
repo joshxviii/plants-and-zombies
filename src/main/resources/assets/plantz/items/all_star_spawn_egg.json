@@ -1,6 +1,20 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "plantz:item/all_star_spawn_egg"
+    "type": "minecraft:select",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "cases": [
+      {
+        "when": "giga",
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/spawn_egg/all_star/giga"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "plantz:item/spawn_egg/all_star/all_star"
+    }
   }
 }

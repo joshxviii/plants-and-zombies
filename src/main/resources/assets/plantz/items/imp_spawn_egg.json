@@ -1,6 +1,27 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "plantz:item/imp_spawn_egg"
+    "type": "minecraft:select",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "cases": [
+      {
+        "when": "yeti",
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/spawn_egg/imp/yeti"
+        }
+      },
+      {
+        "when": "pirate",
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/spawn_egg/imp/pirate"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "plantz:item/spawn_egg/imp/imp"
+    }
   }
 }

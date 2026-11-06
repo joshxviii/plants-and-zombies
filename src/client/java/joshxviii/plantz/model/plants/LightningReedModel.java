@@ -88,9 +88,8 @@ public class LightningReedModel extends PlantModel {
 
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
-		//this.body.zRot = Mth.sin(state.ageInTicks * 1.5f)*0.01f;
-		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
 		super.setupAnim(state);
+		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
 		this.stem.yRot = state.yRot * (float) (Math.PI / 180.0);
 	}
 }
