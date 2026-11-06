@@ -93,7 +93,7 @@ class FootballHelmetItem(properties: Properties) : Item(properties) {
             val awayZ = target.z - owner.z
             val length = sqrt(awayX * awayX + awayZ * awayZ).coerceAtLeast(0.001)
 
-            target.knockback(
+            target.push(
                 KNOCKBACK_STRENGTH,
                 -awayX / length,
                 -awayZ / length

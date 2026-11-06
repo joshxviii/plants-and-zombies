@@ -53,10 +53,10 @@ public class ImpModel<S extends PazZombieRenderState> extends PazZombieModel<S> 
     @Override
     public void setupAnim(@NotNull S state) {
         state.isBaby = true;
-        float tempAttackTime = state.attackTime;
-        state.attackTime = 0;
+        float tempAttackTime = state.swingAnimation;
+        state.swingAnimation = 0;
         super.setupAnim(state);
-        state.attackTime = tempAttackTime;
-        actionAnimation.applyWalk(state.attackTime*6f, 1.0f, 1.0f, 1.0f);
+        state.swingAnimation = tempAttackTime;
+        actionAnimation.applyWalk(state.swingAnimation*6f, 1.0f, 1.0f, 1.0f);
     }
 }

@@ -302,7 +302,7 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
     }
 
     override fun readAdditionalSaveData(input: ValueInput) {
-        age = input.getShortOr("Age", 0.toShort()).toInt()
-        value = input.getInt("Value").orElseGet { input.getShortOr("Value", 0.toShort()).toInt() }
+        age = input.getShortOr("Age", 0.toShort())
+        value = input.getInt("Value").orElseGet { input.getShortOr("Value", 0.toShort()) }
     }
 }

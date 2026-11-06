@@ -113,7 +113,7 @@ class WateringCanItem(properties: Properties) : BlockItem(PazBlocks.WATERING_CAN
                 level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
                 successAddedWater = true
             }
-            if (blockState.`is`(BlockTags.CONVERTABLE_TO_MUD)) {// mud conversion
+            if (blockState.`is`(BlockTags.CONVERTIBLE_TO_MUD)) {// mud conversion
                 level.playSound(null, pos, SoundEvents.GENERIC_SPLASH, SoundSource.BLOCKS, 1.0f, 1.0f)
                 level.gameEvent(null, GameEvent.FLUID_PLACE, pos)
                 level.setBlockAndUpdate(pos, Blocks.MUD.defaultBlockState())

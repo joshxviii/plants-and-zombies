@@ -3,7 +3,6 @@ package joshxviii.plantz.entity.plant
 import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazCriteria
 import joshxviii.plantz.PazDamageTypes
-import joshxviii.plantz.PazSounds
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.PazTags.EntityTypes.IGNORE_WALLNUT_COLLISION
 import joshxviii.plantz.PazTags.EntityTypes.WALLNUT_DEFLECTABLE
@@ -17,7 +16,6 @@ import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.sounds.SoundSource
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
@@ -26,8 +24,6 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.control.LookControl
-import net.minecraft.world.entity.monster.zombie.Zombie
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
@@ -175,8 +171,8 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
         return super.hurtServer(level, source, damage)
     }
 
-    override fun actuallyHurt(level: ServerLevel, source: DamageSource, damage: Float) {
-        super.actuallyHurt(level, source, damage)
+    override fun actuallyHurt(level: ServerLevel, source: DamageSource, dmg: Float) {
+        super.actuallyHurt(level, source, dmg)
     }
 
     override fun canSurviveOn(block: BlockState): Boolean {

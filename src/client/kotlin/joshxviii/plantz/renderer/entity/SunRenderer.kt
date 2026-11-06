@@ -11,14 +11,12 @@ import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.state.EntityRenderState
 import net.minecraft.client.renderer.rendertype.LayeringTransform
-import net.minecraft.client.renderer.rendertype.OutputTarget
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.core.BlockPos
 import net.minecraft.util.LightCoordsUtil
-import net.minecraft.util.Mth
 
 class SunRenderer(context: EntityRendererProvider.Context) :
     EntityRenderer<Sun, SunRenderState>(context) {
@@ -42,7 +40,7 @@ class SunRenderer(context: EntityRendererProvider.Context) :
             val scale = Sun.scaleForValue(state.value)
             poseStack.pushPose()
             poseStack.translate(0.0f, state.centerY, 0.0f)
-            poseStack.mulPose(camera.orientation)
+            poseStack.rotate(camera.orientation)
             poseStack.scale(scale, scale, scale)
             //poseStack.mulPose(Axis.YP.rotation(state.ageInTicks * SPIN_SPEED + state.phase))
             submitPlane(state, poseStack, submitNodeCollector)
@@ -88,7 +86,6 @@ class SunRenderer(context: EntityRendererProvider.Context) :
                 "sun",
                 RenderSetup.builder(RenderPipelines.BEACON_BEAM_TRANSLUCENT)
                     .withTexture("Sampler0", SUN_LOCATION)
-                    .setOutputTarget(OutputTarget.ITEM_ENTITY_TARGET)
                     .useLightmap()
                     .useOverlay()
                     .affectsCrumbling()

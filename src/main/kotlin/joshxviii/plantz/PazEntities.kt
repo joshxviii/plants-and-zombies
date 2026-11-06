@@ -764,11 +764,11 @@ object PazEntities {
         return type
     }
 
-    private fun <T : Gnome> registerGnome(
+    private fun registerGnome(
         name : String,
-        builder: EntityType.Builder<T> = EntityType.Builder.createNothing(MobCategory.MONSTER),
+        builder: EntityType.Builder<Gnome> = EntityType.Builder.createNothing(MobCategory.MONSTER),
         attributes: AttributeSupplier.Builder = createMobAttributes()
-    ): EntityType<T> {
+    ): EntityType<Gnome> {
         val type = register(name, builder)
         FabricDefaultAttributeRegistry.register(type, attributes)
         return type

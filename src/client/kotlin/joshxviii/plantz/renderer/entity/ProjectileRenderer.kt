@@ -46,8 +46,8 @@ class ProjectileRenderer<M: EntityModel<ProjectileRenderState>>(
     ) {
         poseStack.pushPose()
         poseStack.scale(state.scale, state.scale, state.scale)
-        poseStack.mulPose(Axis.YP.rotationDegrees(state.yRot - 90.0f))
-        poseStack.mulPose(Axis.ZP.rotationDegrees(state.xRot))
+        poseStack.rotate(Axis.YP.rotationDegrees(state.yRot - 90.0f))
+        poseStack.rotate(Axis.ZP.rotationDegrees(state.xRot))
         poseStack.translate(0.0, -1.5, 0.0)
 
         val tint = state.color?: -1
@@ -62,7 +62,6 @@ class ProjectileRenderer<M: EntityModel<ProjectileRenderState>>(
             tint,
             null,
             state.outlineColor,
-            null
         )
         model.setupAnim(state)
         for (layer in renderLayers) {
@@ -113,7 +112,6 @@ class EmissiveProjectileLayer<M : EntityModel<ProjectileRenderState>>(
             tint,
             null,
             state.outlineColor,
-            null
         );
     }
 

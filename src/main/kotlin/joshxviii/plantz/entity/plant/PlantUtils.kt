@@ -250,7 +250,6 @@ fun Entity.saveAsCompoundTag(discards: List<String> = listOf("Pos")): CompoundTa
 fun Entity.loadFromCompoundTag(data: CompoundTag) {
     ScopedCollector(problemPath(), LogUtils.getLogger()).use { reporter ->
         val newData = TagValueInput.create(reporter, registryAccess(), data)
-        newData
         this.load(newData)
     }
 }
