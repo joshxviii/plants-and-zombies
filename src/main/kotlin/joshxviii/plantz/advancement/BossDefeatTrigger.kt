@@ -4,13 +4,12 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import joshxviii.plantz.PazCriteria
 import joshxviii.plantz.pazResource
-import net.minecraft.advancements.Criterion
-import net.minecraft.advancements.criterion.ContextAwarePredicate
-import net.minecraft.advancements.criterion.EntityPredicate
-import net.minecraft.advancements.criterion.SimpleCriterionTrigger
-import net.minecraft.resources.Identifier
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
+import net.minecraft.advancements.triggers.Criterion
+import net.minecraft.advancements.triggers.SimpleCriterionTrigger
+import net.minecraft.core.Holder
 import net.minecraft.server.level.ServerPlayer
-import java.util.Optional
+import java.util.*
 
 class BossDefeatTrigger : SimpleCriterionTrigger<BossDefeatTrigger.TriggerInstance>() {
     override fun codec(): Codec<TriggerInstance> = TriggerInstance.CODEC
@@ -28,18 +27,18 @@ class BossDefeatTrigger : SimpleCriterionTrigger<BossDefeatTrigger.TriggerInstan
     }
 
     data class TriggerInstance(
-        val triggerPlayer: Optional<ContextAwarePredicate>,
+        val triggerPlayer: Optional<Holder<LootItemCondition>>,
         val targetBossDefeats: Optional<Int>,
     ) : SimpleInstance {
         fun matches(bossDefeats: Int): Boolean =
             targetBossDefeats.isEmpty || targetBossDefeats.get() == bossDefeats
 
-        override fun player(): Optional<ContextAwarePredicate> = triggerPlayer
+        override fun player(): Optional<Holder<LootItemCondition>> = triggerPlayer
 
         companion object {
             val CODEC: Codec<TriggerInstance> = RecordCodecBuilder.create { instance ->
                 instance.group(
-                    EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                    LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                     Codec.INT.optionalFieldOf("boss_defeats").forGetter(TriggerInstance::targetBossDefeats),
                 ).apply(instance, ::TriggerInstance)
             }

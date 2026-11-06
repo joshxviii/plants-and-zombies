@@ -6,14 +6,12 @@ import com.mojang.serialization.DataResult
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import joshxviii.plantz.PazRegistries
 import joshxviii.plantz.item.SeedPacketItem
-import joshxviii.plantz.pazResource
-import net.fabricmc.fabric.api.event.registry.DynamicRegistries
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.HolderSet
-import net.minecraft.core.RegistryCodecs
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
+import net.minecraft.core.registries.codec.RegistryCodecs
 import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
@@ -112,7 +110,7 @@ data class SeedMutationRule(
         val CODEC: Codec<SeedMutationRule> = RecordCodecBuilder.create { inst ->
             inst.group(
                 Codec.FLOAT.optionalFieldOf("chance", 1f).forGetter { it.chance },
-                RegistryCodecs.homogeneousList(Registries.BIOME).optionalFieldOf("biome").forGetter { it.biomes },
+                RegistryCodecs.holderSet(Registries.BIOME).optionalFieldOf("biome").forGetter { it.biomes },
                 WeatherPredicate.CODEC.optionalFieldOf("weather").forGetter { it.weather },
                 TimePredicate.CODEC.optionalFieldOf("time").forGetter { it.time },
                 SeedMutationResult.CODEC.fieldOf("result").forGetter { it.result },

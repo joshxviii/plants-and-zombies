@@ -62,7 +62,7 @@ open class MeleeAttackActionGoal(
 
         beforeHitEntityEffect(target)
         if (target.hurtServer(usingEntity.level() as ServerLevel, source, damage)) {
-            target.knockback(
+            target.push(
                 knockback,
                 usingEntity.x - target.x,
                 usingEntity.z - target.z

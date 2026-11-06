@@ -1,7 +1,7 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.advancement.*
-import net.minecraft.advancements.CriterionTrigger
+import net.minecraft.advancements.triggers.CriterionTrigger
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 

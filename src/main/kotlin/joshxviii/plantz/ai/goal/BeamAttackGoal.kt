@@ -79,7 +79,7 @@ class BeamAttackGoal(
 
                 if (target.hurtServer(usingEntity.level() as ServerLevel, source, damage)) {
                     afterHitEntityEffect(target)
-                    target.knockback(
+                    target.push(
                         knockback,
                         start.x - target.x,
                         start.z - target.z

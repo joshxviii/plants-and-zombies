@@ -13,6 +13,7 @@ import net.minecraft.world.entity.ai.village.poi.PoiManager.Occupancy
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.pathfinder.Path
 import net.minecraft.world.phys.HitResult
+import net.minecraft.world.phys.Vec3
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
@@ -62,8 +63,9 @@ class DestroyFlagGoal(
 
     override fun start() {
         mob.isAggressive = true
-        targetFlagPos?.center?.let {
-            mob.moveControl.setWantedPosition(it.x, it.y, it.z, 1.0)
+        targetFlagPos?.apply { Vec3.atCenterOf(this).let {
+                mob.moveControl.setWantedPosition(it.x, it.y, it.z, 1.0)
+            }
         }
         mob.navigation.moveTo(path, 1.0)
     }
@@ -87,12 +89,12 @@ class DestroyFlagGoal(
         }
 
         val reach = mob.attackRange()
-        if (flagPos.distSqr(mob.blockPosition()) > reach) flagPos.center.let { mob.moveControl.setWantedPosition(it.x, it.y, it.z, 1.0) }
+        if (flagPos.distSqr(mob.blockPosition()) > reach) Vec3.atCenterOf(flagPos).let { mob.moveControl.setWantedPosition(it.x, it.y, it.z, 1.0) }
         val canReach = mob.navigation.path?.canReachTarget(flagPos) == true
         if (flagPos.distSqr(mob.blockPosition()) < if (canReach) reach else reach*reach) {
-            if (!mob.swinging) {
+            if (!mob.isSwinging) {
                 damageFlag(flagPos)
-                mob.swing(mob.usedItemHand)
+                mob.swingForAttack(mob.usedItemHand)
             }
         }
     }
@@ -118,7 +120,7 @@ class DestroyFlagGoal(
 
     fun canSeeFlag(): Boolean {
         targetFlagPos?.let {
-            return mob.level().clip(ClipContext(mob.eyePosition, it.above().center, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, mob)).type == HitResult.Type.MISS
+            return mob.level().clip(ClipContext(mob.eyePosition, Vec3.atCenterOf(it.above()), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, mob)).type == HitResult.Type.MISS
         }
         return false
     }

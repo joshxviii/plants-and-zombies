@@ -2,20 +2,21 @@ package joshxviii.plantz.advancement
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.advancements.criterion.ContextAwarePredicate
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Holder
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import java.util.Optional
 
 class ZombieRaidContext(val pos: BlockPos)
 
 class ZombieRaidCriteria(
-    playerCtx: Optional<ContextAwarePredicate>
+    playerCtx: Optional<Holder<LootItemCondition>>
 ): SimpleCriterionCondition<ZombieRaidContext>(playerCtx) {
 
     companion object {
         val CODEC: Codec<ZombieRaidCriteria> = RecordCodecBuilder.create { it.group(
-            ContextAwarePredicate.CODEC.optionalFieldOf("player").forGetter(ZombieRaidCriteria::playerCtx),
+            LootItemCondition.CODEC.optionalFieldOf("player").forGetter(ZombieRaidCriteria::playerCtx),
         ).apply(it, ::ZombieRaidCriteria) }
     }
 

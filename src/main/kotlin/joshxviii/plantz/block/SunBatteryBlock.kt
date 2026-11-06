@@ -42,7 +42,6 @@ import java.util.function.ToIntFunction
 
 class SunBatteryBlock(properties: Properties) : BaseEntityBlock(properties), SimpleWaterloggedBlock  {
     companion object {
-        val CODEC: MapCodec<SunBatteryBlock> = simpleCodec(::SunBatteryBlock)
         val FACE: EnumProperty<AttachFace> = BlockStateProperties.ATTACH_FACE
         val FACING: EnumProperty<Direction> = HorizontalDirectionalBlock.FACING
         val WATERLOGGED: BooleanProperty = BlockStateProperties.WATERLOGGED
@@ -183,5 +182,4 @@ class SunBatteryBlock(properties: Properties) : BaseEntityBlock(properties), Sim
         super.getCloneItemStack(level, pos, state, includeData)
     }
 
-    override fun codec(): MapCodec<out SunBatteryBlock> { return CODEC }
 }
