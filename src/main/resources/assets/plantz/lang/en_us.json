@@ -398,13 +398,14 @@
   "entity.plantz.pirate_captain_ghost": "Pirate Captain Ghost",
   "entity.plantz.super_brainz": "Super Brainz",
   "entity.plantz.imp": "Imp",
-  "entity.plantz.zombat": "Zombat",
-  "entity.plantz.baron_von_bats": "Baron Von Bats",
   "entity.plantz.gargantuar": "Gargantuar",
-
+  "entity.plantz.baron_von_bats": "Baron Von Bats",
+  "entity.plantz.zombat": "Zombat",
+  "entity.plantz.zombie_goat": "Zombie Goat",
   "entity.plantz.zombie_turret": "Zombie Turret",
   "entity.plantz.electro_turret": "Electro Turret",
   "entity.plantz.zombie_drone": "Zombie Drone",
+
   "entity.plantz.lawn_mower": "Lawn Mower",
 
   "entity.plantz.gnome": "Garden Gnome",

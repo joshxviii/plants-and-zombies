@@ -16,7 +16,11 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.item.crafting.CraftingBookCategory
 import net.minecraft.world.item.crafting.CraftingInput
 import net.minecraft.world.item.crafting.CustomRecipe
+import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.item.crafting.RecipeSerializer
+import net.minecraft.world.item.crafting.display.RecipeDisplay
+import net.minecraft.world.item.crafting.display.ShapelessCraftingRecipeDisplay
+import net.minecraft.world.item.crafting.display.SlotDisplay
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.DoorBlock
@@ -35,6 +39,14 @@ class DoorShieldRecipe : CustomRecipe() {
     }
 
     override fun category(): CraftingBookCategory = CraftingBookCategory.EQUIPMENT
+
+    override fun display(): List<RecipeDisplay> = listOf(
+        ShapelessCraftingRecipeDisplay(
+            listOf(SlotDisplay.TagSlotDisplay(ItemTags.DOORS), Ingredient.of(Items.SHIELD).display()),
+            SlotDisplay.ItemSlotDisplay(PazItems.DOOR_SHIELD),
+            SlotDisplay.ItemSlotDisplay(Items.CRAFTING_TABLE)
+        )
+    )
 
     override fun getSerializer(): RecipeSerializer<DoorShieldRecipe> = SERIALIZER
 

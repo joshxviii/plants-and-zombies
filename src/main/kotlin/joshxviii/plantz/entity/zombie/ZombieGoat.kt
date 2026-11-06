@@ -34,6 +34,9 @@ class ZombieGoat(type: EntityType<out ZombieGoat>, level: Level) : PazZombie(typ
     override fun getDeathSound(): SoundEvent {
         return SoundEvents.GOAT_DEATH
     }
+    override fun getStepSound(): SoundEvent {
+        return SoundEvents.GOAT_STEP
+    }
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
