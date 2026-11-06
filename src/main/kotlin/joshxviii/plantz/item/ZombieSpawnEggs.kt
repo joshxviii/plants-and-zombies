@@ -1,5 +1,11 @@
-package joshxviii.plantz
+package joshxviii.plantz.item
 
+import joshxviii.plantz.PazEntities
+import joshxviii.plantz.PazItems
+import joshxviii.plantz.entity.ZombieEquipment.BUCKET
+import joshxviii.plantz.entity.ZombieEquipment.COFFIN
+import joshxviii.plantz.entity.ZombieEquipment.CONE
+import joshxviii.plantz.entity.ZombieEquipment.DOOR
 import joshxviii.plantz.entity.zombie.AllStarVariant
 import joshxviii.plantz.entity.zombie.BrownCoatVariant
 import joshxviii.plantz.entity.zombie.GargantuarVariant
@@ -15,7 +21,6 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.CustomModelData
 import net.minecraft.world.item.component.TypedEntityData
 
@@ -68,11 +73,6 @@ object ZombieSpawnEggs {
 
     fun loadoutEggs(type: EntityType<*>, item: Item, loadouts: List<Loadout>): List<ItemStack> =
         loadouts.map { l -> egg(type, item) { loadout(l) } }
-
-    private val CONE = { PazBlocks.CONE.asItem().defaultInstance }
-    private val BUCKET = { Items.BUCKET.defaultInstance }
-    private val DOOR = { PazItems.DOOR_SHIELD.defaultInstance }
-    private val COFFIN = { PazItems.COFFIN.defaultInstance }
 
     val BROWN_COAT_LOADOUTS = listOf(
         Loadout("cone", mapOf(EquipmentSlot.HEAD to CONE)),

@@ -5,7 +5,8 @@ import joshxviii.plantz.PazDataSerializers.GARGANTUAR_VARIANT
 import joshxviii.plantz.ai.ZombieState
 import joshxviii.plantz.ai.goal.MeleeAttackActionGoal
 import joshxviii.plantz.ai.goal.NavigateToTargetGoal
-import joshxviii.plantz.entity.isActiveInRaid
+import joshxviii.plantz.raid.PazZombieGroupData
+import joshxviii.plantz.raid.isActiveInRaid
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
@@ -21,7 +22,6 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.entity.ai.goal.FloatGoal
 import net.minecraft.world.entity.ai.goal.Goal
@@ -339,7 +339,9 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
             PazEntities.IMP.create(level, EntitySpawnReason.MOB_SUMMONED)?.let { imp ->
                 val lookDirection = gargantuar.calculateViewVector(0f, gargantuar.yRot)
                 imp.snapTo(spawnPos, gargantuar.yRot, 0.0f)
-                imp.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(spawnPos)), EntitySpawnReason.REINFORCEMENT, PazZombieGroupData(isRaider = gargantuar.isActiveInRaid()))
+                imp.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(spawnPos)), EntitySpawnReason.REINFORCEMENT,
+                    PazZombieGroupData(isRaider = gargantuar.isActiveInRaid())
+                )
                 imp.applyImpulse(lookDirection.x, lookDirection.y, lookDirection.z, 1.0f, 0f)
                 if (gargantuar.variant == GargantuarVariant.PIRATE) imp.variant = ImpVariant.PIRATE
                 gargantuar.target.let { if (it!=null) imp.setLastHurtMob(it) }

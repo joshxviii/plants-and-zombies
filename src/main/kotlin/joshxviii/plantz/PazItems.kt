@@ -158,11 +158,7 @@ object PazItems {
             .component(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
                 .add(
                     Attributes.ARMOR,
-                    AttributeModifier(pazResource("door_armor"), 3.0, AttributeModifier.Operation.ADD_VALUE),
-                    EquipmentSlotGroup.HAND
-                ).add(
-                    Attributes.KNOCKBACK_RESISTANCE,
-                    AttributeModifier(pazResource("door_armor_resistance"), 0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL),
+                    AttributeModifier(pazResource("door_armor"), 2.0, AttributeModifier.Operation.ADD_VALUE),
                     EquipmentSlotGroup.HAND
                 ).build())
             .component(PazComponents.DOOR_SHIELD, DoorShieldComponent())

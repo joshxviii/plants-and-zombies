@@ -5,25 +5,22 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.ai.goal.NavigateToTargetGoal
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
-import joshxviii.plantz.entity.isActiveInRaid
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup.level
+import joshxviii.plantz.raid.PazZombieGroupData
+import joshxviii.plantz.raid.isActiveInRaid
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
-import net.minecraft.server.jsonrpc.methods.ServerSettingsService.difficulty
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.DamageTypeTags
 import net.minecraft.world.DifficultyInstance
-import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.projectile.FireworkRocketEntity
 import net.minecraft.world.entity.projectile.ProjectileUtil
 import net.minecraft.world.item.CrossbowItem
-import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ChargedProjectiles
@@ -154,7 +151,9 @@ class PirateCaptain(type: EntityType<out PirateCaptain>, level: Level) : PazZomb
         convertTo(PazEntities.PIRATE_CAPTAIN_GHOST, ConversionParams.single(this, true, true)) {
             it.playSound(SoundEvents.ZOMBIE_VILLAGER_CONVERTED)
             (level() as? ServerLevel)?.let { level ->
-                it.finalizeSpawn(level, level.getCurrentDifficultyAt(blockPosition()), EntitySpawnReason.CONVERSION, PazZombieGroupData(isRaider = this.isActiveInRaid()))
+                it.finalizeSpawn(level, level.getCurrentDifficultyAt(blockPosition()), EntitySpawnReason.CONVERSION,
+                    PazZombieGroupData(isRaider = this.isActiveInRaid())
+                )
             }
         }
     }

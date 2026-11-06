@@ -7,6 +7,8 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazLootTables
 import joshxviii.plantz.SeasonalEvents
+import joshxviii.plantz.entity.ZombieEquipment.enchantZombieEquipment
+import joshxviii.plantz.entity.ZombieEquipment.equipZombieEquipment
 import joshxviii.plantz.entity.zombie.*
 import joshxviii.plantz.item.component.DoorShieldComponent
 import net.minecraft.core.component.DataComponents

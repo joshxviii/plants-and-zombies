@@ -2,6 +2,7 @@ package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazDataSerializers.BROWN_COAT_VARIANT
 import joshxviii.plantz.PazTags
+import joshxviii.plantz.entity.ZombieEquipment.equipZombieEquipment
 import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
@@ -106,7 +107,7 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
 
         if (spawnReason != EntitySpawnReason.EVENT) equipZombieEquipment(random, difficulty.specialMultiplier + 0.1f)
 
-        val spawnBalloons = (spawnReason != EntitySpawnReason.EVENT && spawnReason != EntitySpawnReason.REINFORCEMENT && spawnReason != EntitySpawnReason.SPAWN_ITEM_USE && y > level.seaLevel && random.nextFloat() < 0.02)
+        val spawnBalloons = (spawnReason != EntitySpawnReason.EVENT && spawnReason != EntitySpawnReason.REINFORCEMENT && y > level.seaLevel && random.nextFloat() < 0.02)
         if (spawnBalloons) spawnWithBalloons()
 
         return data

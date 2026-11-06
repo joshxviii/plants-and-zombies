@@ -8,11 +8,12 @@ import joshxviii.plantz.ai.control.PazMoveControl
 import joshxviii.plantz.ai.goal.FlyingPathfindingGoal
 import joshxviii.plantz.ai.pathfinding.PazFlyingPathNavigation
 import joshxviii.plantz.ai.pathfinding.PazGroundPathNavigation
-import joshxviii.plantz.entity.ZombieRaider
-import joshxviii.plantz.entity.setCountHealth
 import joshxviii.plantz.raid.BossType
+import joshxviii.plantz.raid.PazZombieGroupData
 import joshxviii.plantz.raid.ZombieRaid.Companion.RAID_DISTANCE
+import joshxviii.plantz.raid.ZombieRaider
 import joshxviii.plantz.raid.getZombieRaids
+import joshxviii.plantz.raid.setCountHealth
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
@@ -552,10 +553,10 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         val newData = PazZombieGroupData(
-            isRaider = (groupData as? PazZombieGroupData)?.isRaider?: false,
-            isCountedTowardRaidHealth = (groupData as? PazZombieGroupData)?.isCountedTowardRaidHealth?: false,
-            ignoreFlag = (groupData as? PazZombieGroupData)?.ignoreFlag?: false,
-            isBaby = isBaby && (groupData as? ZombieGroupData)?.isBaby?: false
+            isRaider = (groupData as? PazZombieGroupData)?.isRaider ?: false,
+            isCountedTowardRaidHealth = (groupData as? PazZombieGroupData)?.isCountedTowardRaidHealth ?: false,
+            ignoreFlag = (groupData as? PazZombieGroupData)?.ignoreFlag ?: false,
+            isBaby = isBaby && (groupData as? ZombieGroupData)?.isBaby ?: false
         )
         val level = level() as ServerLevel
         if (newData.isRaider) {
@@ -579,55 +580,3 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         return data
     }
 }
-
-fun Zombie.equipZombieEquipment(random: RandomSource, equipmentChance: Float) {
-    if (getItemBySlot(EquipmentSlot.HEAD).isEmpty) {
-        if (random.nextFloat() < 0.28f * equipmentChance) {
-            setItemSlot(EquipmentSlot.HEAD, PazBlocks.CONE.asItem().defaultInstance)
-            setDropChance(EquipmentSlot.HEAD, 0.02f)
-        } else if (random.nextFloat() < 0.11f * equipmentChance && getItemBySlot(EquipmentSlot.HEAD).isEmpty) {
-            val bucket = Items.BUCKET.defaultInstance
-            setItemSlot(EquipmentSlot.HEAD, bucket)
-            setDropChance(EquipmentSlot.HEAD, 0f)
-        }
-    }
-
-    if (getItemBySlot(EquipmentSlot.OFFHAND).isEmpty && random.nextFloat() < 0.07f * equipmentChance) {
-        val doorShield = PazItems.DOOR_SHIELD.defaultInstance
-        doorShield.damageValue = random.nextIntBetweenInclusive(250, 300)
-        setItemSlot(EquipmentSlot.OFFHAND, doorShield)
-        setDropChance(EquipmentSlot.OFFHAND, 0f)
-    }
-}
-
-fun Zombie.enchantZombieEquipment(
-    level: ServerLevel,
-    random: RandomSource,
-    difficulty: DifficultyInstance
-) {
-    val headItem = getItemBySlot(EquipmentSlot.HEAD)
-    if (
-        !headItem.isEmpty &&
-        (headItem.`is`(PazBlocks.CONE.asItem()) || headItem.`is`(Items.BUCKET)) &&
-        random.nextFloat() < 0.5f * difficulty.specialMultiplier
-    ) {
-        EnchantmentHelper.enchantItemFromProvider(
-            headItem,
-            level.registryAccess(),
-            VanillaEnchantmentProviders.MOB_SPAWN_EQUIPMENT,
-            difficulty,
-            random
-        )
-        setItemSlot(EquipmentSlot.HEAD, headItem)
-    }
-}
-
-class PazZombieGroupData(
-    val isRaider: Boolean = false,
-    val isCountedTowardRaidHealth: Boolean = true,
-    val ignoreFlag: Boolean = false,
-    isBaby: Boolean = false
-) : Zombie.ZombieGroupData(
-    isBaby,
-    false
-)

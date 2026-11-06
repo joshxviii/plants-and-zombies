@@ -3,6 +3,7 @@ package joshxviii.plantz
 import joshxviii.plantz.item.BlueprintItem
 import joshxviii.plantz.item.DoorShieldItem.Companion.stackFor
 import joshxviii.plantz.item.SeedPacketItem
+import joshxviii.plantz.item.ZombieSpawnEggs
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
@@ -94,8 +95,8 @@ object PazCreativeTabs {
     fun miscItems(output: CreativeModeTab.Output) {
         // items
         output.accept(PazItems.SUN)
-        output.accept(PazItems.SUN_BATTERY)
         output.accept(PazItems.SUN_BOTTLE)
+        output.accept(PazItems.SUN_BATTERY)
         output.accept(PazItems.WATERING_CAN)
         output.accept(PazItems.GARDENING_GLOVE)
         output.accept(PazBlocks.PLANT_POT)

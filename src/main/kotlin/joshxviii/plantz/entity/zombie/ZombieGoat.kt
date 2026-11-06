@@ -1,14 +1,7 @@
 package joshxviii.plantz.entity.zombie
-
-import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazTags
-import joshxviii.plantz.entity.setIgnoreFlag
-import net.minecraft.core.BlockPos
-import net.minecraft.core.UUIDUtil
-import net.minecraft.network.chat.Component
-import net.minecraft.network.syncher.EntityDataSerializers
+import joshxviii.plantz.raid.setIgnoreFlag
 import net.minecraft.network.syncher.SynchedEntityData
-import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.DifficultyInstance
@@ -19,11 +12,9 @@ import net.minecraft.world.entity.vehicle.boat.AbstractBoat
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
-import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import java.util.*
-import kotlin.jvm.optionals.getOrNull
 
 class ZombieGoat(type: EntityType<out ZombieGoat>, level: Level) : PazZombie(type, level) {
 

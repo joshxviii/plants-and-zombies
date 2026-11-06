@@ -1,3 +1,4 @@
 {
-  "type": "plantz:door_shield"
+  "type": "plantz:door_shield",
+  "category": "equipment"
 }

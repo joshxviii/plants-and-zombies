@@ -1,5 +1,8 @@
 package joshxviii.plantz.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.serialization.Codec;
 import joshxviii.plantz.*;
 import joshxviii.plantz.effect.PaintedMobEffect;
@@ -335,11 +338,28 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
         cir.setReturnValue(alreadyBlocked + blocked);
     }
 
-    @ModifyVariable(method = "hurtServer", at = @At("STORE"), ordinal = 0)
+    @ModifyVariable(method = "hurtServer", at = @At("STORE"), name = "itemInUse")
     private ItemStack plantz$useWornBlockerForBlockFeedback(ItemStack itemInUse) {
         if (itemInUse.has(DataComponents.BLOCKS_ATTACKS)) return itemInUse;
         ItemStack chest = ((LivingEntity) (Object) this).getItemBySlot(EquipmentSlot.CHEST);
         return chest.has(PazComponents.WORN_BODY_BLOCKER) ? chest : itemInUse;
+    }
+
+    @WrapOperation(
+        method = "hurtServer",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/entity/LivingEntity;playHurtSound(Lnet/minecraft/world/damagesource/DamageSource;)V"
+        )
+    )
+    private void plantz$suppressHurtSoundWhenFullyBlocked(
+        LivingEntity entity,
+        DamageSource source,
+        Operation<Void> original,
+        @Local(name = "damage", argsOnly = true) float damage,
+        @Local(name = "blocked") boolean blocked
+    ) {
+        if (!blocked || damage > 0.0F) original.call(entity, source);
     }
 
     @Inject(method = "blockedByItem", at = @At("HEAD"), cancellable = true)

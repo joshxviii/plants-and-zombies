@@ -9,11 +9,6 @@ import it.unimi.dsi.fastutil.ints.IntList
 import joshxviii.plantz.*
 import joshxviii.plantz.ai.ZombieState
 import joshxviii.plantz.block.entity.FlagBlockEntity
-import joshxviii.plantz.entity.RaiderRecord
-import joshxviii.plantz.entity.ZombieRaider
-import joshxviii.plantz.entity.getEffectiveRaidHealth
-import joshxviii.plantz.entity.isBoss
-import joshxviii.plantz.entity.isLeader
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.networking.ZombieRaidClientData
