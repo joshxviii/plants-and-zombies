@@ -37,15 +37,12 @@ class MailCollectionBoxBlock(
     properties: Properties,
 ) : BaseEntityBlock(properties) {
     companion object {
-        val CODEC: MapCodec<MailCollectionBoxBlock> = RecordCodecBuilder.mapCodec { it.group(propertiesCodec()).apply(it) { properties -> MailCollectionBoxBlock(properties) } }
-
         val STATE: EnumProperty<CollectionBoxState> = EnumProperty.create("state", CollectionBoxState::class.java)
         val FACING: EnumProperty<Direction> = HorizontalDirectionalBlock.FACING
         val WATERLOGGED: BooleanProperty = BlockStateProperties.WATERLOGGED
 
         val SHAPE: VoxelShape = column(14.0, 14.0, 0.0, 16.0)
     }
-    override fun codec(): MapCodec<out MailCollectionBoxBlock> { return CODEC }
 
     init {
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(STATE, CollectionBoxState.CLOSED))

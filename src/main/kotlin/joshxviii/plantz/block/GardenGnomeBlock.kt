@@ -40,7 +40,6 @@ class GardenGnomeBlock(
     color: GardenGnomeColor = GardenGnomeColor.BLUE
 ) : BaseEntityBlock(properties), SimpleWaterloggedBlock {
     companion object {
-        val CODEC: MapCodec<GardenGnomeBlock> = simpleCodec(::GardenGnomeBlock)
         val SHAPE: VoxelShape = Util.make {
             column(6.0, 0.0, 12.0)
         }
@@ -122,7 +121,6 @@ class GardenGnomeBlock(
         return canSupportCenter(level, pos.relative(direction), direction.opposite)
     }
 
-    override fun codec(): MapCodec<out GardenGnomeBlock> { return CODEC }
     override fun newBlockEntity(worldPosition: BlockPos, blockState: BlockState): BlockEntity = GardenGnomeBlockEntity(worldPosition, blockState)
 }
 

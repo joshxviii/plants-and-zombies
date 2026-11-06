@@ -29,8 +29,6 @@ import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.item.*
 import joshxviii.plantz.item.component.*
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
-import net.fabricmc.fabric.api.registry.FuelValueEvents
-import net.fabricmc.fabric.impl.item.ItemComponentTooltipProviderRegistryImpl
 import net.minecraft.core.Direction
 import net.minecraft.core.HolderSet
 import net.minecraft.core.Registry
@@ -57,6 +55,7 @@ import net.minecraft.world.item.Items.GLASS_BOTTLE
 import net.minecraft.world.item.component.BlocksAttacks
 import net.minecraft.world.item.component.BlocksAttacks.DamageReduction
 import net.minecraft.world.item.component.BlocksAttacks.ItemDamageFunction
+import net.minecraft.world.item.component.CookingFuel
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.item.component.UseCooldown
 import net.minecraft.world.item.enchantment.Enchantable
@@ -66,7 +65,11 @@ import net.minecraft.world.item.equipment.EquipmentAssets
 import net.minecraft.world.item.equipment.Equippable
 import net.minecraft.world.level.block.ComposterBlock
 import net.minecraft.world.level.block.DispenserBlock
+import net.minecraft.world.level.storage.loot.providers.number.floats.ContextFloatProviders
+import net.minecraft.world.level.storage.loot.providers.number.floats.ResolvableFloat
+import net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt
 import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
 import java.util.*
 import java.util.function.Function
 import kotlin.jvm.java
@@ -76,6 +79,11 @@ object PazItems {
     val SUN: Item = registerItem(
         "sun", ::SunItem,
         properties = Item.Properties()
+            .component(DataComponents.COOKING_FUEL,
+                CookingFuel(
+                    ResolvableInt.Constant(1),
+                    ResolvableFloat.fromKey(ContextFloatProviders.COOKING_DEFAULT_SPEED_MULTIPLIER)
+                ))
     )
     @JvmField
     val SUN_BOTTLE: Item = registerItem(
@@ -129,6 +137,11 @@ object PazItems {
     val NEWSPAPER: Item = registerItem(
         "newspaper", ::NewspaperItem,
         properties = Item.Properties()
+            .component(DataComponents.COOKING_FUEL,
+                CookingFuel(
+                    ResolvableInt.Constant(1),
+                    ResolvableFloat.fromKey(ContextFloatProviders.COOKING_DEFAULT_SPEED_MULTIPLIER)
+                ))
             .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
             .delayedComponent(DataComponents.BLOCKS_ATTACKS, {
                 BlocksAttacks(
@@ -417,24 +430,16 @@ object PazItems {
     }
 
     fun initialize() {
-
-        FuelValueEvents.BUILD.register { builder, context ->
-            builder.add(SUN, (context.baseSmeltTime()*0.5).toInt())
-            builder.add(NEWSPAPER, context.baseSmeltTime())
-        }
-
-        ComposterBlock.COMPOSTABLES.put(SEED_PACKET.asItem(), 1.0f)
-
         // Modify components
-        ItemComponentTooltipProviderRegistryImpl.addFirst(PazComponents.PROTECTS_HEAD)
-        ItemComponentTooltipProviderRegistryImpl.addFirst(PazComponents.WORN_BODY_BLOCKER)
-        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.DOOR_SHIELD)
-        ItemComponentTooltipProviderRegistryImpl.addFirst(PazComponents.BLOCK_BREAK_CHANCE)
-        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_WATER)
-        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_SUN)
-        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
-        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BRAINZ_ALLOY_COST)
-        ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.LETTER_DATA)
+        //ItemComponentTooltipProviderRegistryImpl.addFirst(PazComponents.PROTECTS_HEAD)
+        //ItemComponentTooltipProviderRegistryImpl.addFirst(PazComponents.WORN_BODY_BLOCKER)
+        //ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.DOOR_SHIELD)
+        //ItemComponentTooltipProviderRegistryImpl.addFirst(PazComponents.BLOCK_BREAK_CHANCE)
+        //ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_WATER)
+        //ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_SUN)
+        //ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
+        //ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BRAINZ_ALLOY_COST)
+        //ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.LETTER_DATA)
 
 
         DefaultItemComponentEvents.MODIFY.register { ctx ->
@@ -483,7 +488,7 @@ object PazItems {
                         val balloonItem = dispensed.item as? BalloonItem ?: return super.execute(source, dispensed)
                         val balloonEntity = PazEntities.BALLOON.create(level, EntitySpawnReason.DISPENSER)?: return dispensed
                         balloonEntity.dyeColor = balloonItem.color
-                        balloonEntity.snapTo(balloonPos.center)
+                        balloonEntity.snapTo(Vec3.atCenterOf(balloonPos))
                         balloonEntity.applyImpulse(facing.unitVec3, pow = 0.15f, uncertainty = 20.0f)
 
                         if (level.addFreshEntity(balloonEntity)) {
@@ -497,7 +502,7 @@ object PazItems {
                                 EntitySelector.NO_SPECTATORS
                             )) {
                                 if (entity is PazZombie && !entity.canEquipBalloons()) continue
-                                if (entity != null) balloonEntity.setLeashedTo(entity, true)
+                                balloonEntity.setLeashedTo(entity, true)
                                 break
                             }
 

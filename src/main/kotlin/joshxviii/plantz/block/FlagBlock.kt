@@ -28,9 +28,7 @@ class FlagBlock(properties: Properties) : BaseEntityBlock(properties) {
         val SHAPE: VoxelShape = column(8.0, 0.0, 16.0)
         //val FACING: EnumProperty<Direction> = HorizontalDirectionalBlock.FACING
         val ROTATION: IntegerProperty = BlockStateProperties.ROTATION_16
-        val CODEC: MapCodec<FlagBlock> = simpleCodec(::FlagBlock)
     }
-    override fun codec(): MapCodec<out FlagBlock> = CODEC
 
     override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
         return SHAPE

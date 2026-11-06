@@ -7,7 +7,6 @@ import joshxviii.plantz.item.component.BlockBreakChanceComponent
 import joshxviii.plantz.item.component.ProtectsHeadDataComponent
 import joshxviii.plantz.item.component.StoredWater.Companion.DEFAULT_CAPACITY
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
-import net.fabricmc.fabric.api.`object`.builder.v1.world.poi.PoiHelper
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponents
@@ -19,6 +18,7 @@ import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.village.poi.PoiTypes
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.Item
@@ -48,8 +48,7 @@ object PazBlocks {
         BlockBehaviour.Properties.of()
             .sound(SoundType.STONE)
             .strength(0.2F)
-            .noOcclusion()
-            .pushReaction(PushReaction.NORMAL),
+            .noOcclusion(),
         ::PlantPotBlock
     )
     @JvmField val ZEN_PLANT_POT: Block = registerBlock(
@@ -57,8 +56,7 @@ object PazBlocks {
         BlockBehaviour.Properties.of()
             .sound(SoundType.WOOD)
             .strength(0.2F)
-            .noOcclusion()
-            .pushReaction(PushReaction.NORMAL),
+            .noOcclusion(),
         ::ZenPlantPotBlock
     )
     @JvmField val WATERING_CAN_BLOCK: Block = registerBlock(
@@ -67,7 +65,7 @@ object PazBlocks {
             .sound(SoundType.LANTERN)
             .strength(0.18F)
             .noOcclusion()
-            .pushReaction(PushReaction.DESTROY),
+            .pushReaction(PushReaction.POPPED),
         ::WateringCanBlock,
         null
     )
@@ -77,7 +75,7 @@ object PazBlocks {
             .sound(SoundType.COPPER_BULB)
             .strength(0.25F)
             .noOcclusion()
-            .pushReaction(PushReaction.BLOCK)
+            .pushReaction(PushReaction.IMMOVEABLE)
             .lightLevel(SunBatteryBlock.LIGHT_EMISSION),
         ::SunBatteryBlock,
         null
@@ -87,14 +85,14 @@ object PazBlocks {
         ::SunBatteryBlockEntity,
         SUN_BATTERY_BLOCK
     )
-    @JvmField val SUN_BATTERY_POI = PoiHelper.register(pazResource("sun_battery"), 8, 16, SUN_BATTERY_BLOCK)
+    @JvmField val SUN_BATTERY_POI = PoiTypes.register(BuiltInRegistries.POINT_OF_INTEREST_TYPE, ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, pazResource("sun_battery")), mutableSetOf(SUN_BATTERY_BLOCK.defaultBlockState()), 8, 16)
     @JvmField val TIME_MACHINE: Block = registerBlock(
         "time_machine",
         BlockBehaviour.Properties.of()
             .sound(SoundType.COPPER_GRATE)
             .strength(0.7F)
             .noOcclusion()
-            .pushReaction(PushReaction.BLOCK)
+            .pushReaction(PushReaction.IMMOVEABLE)
             .lightLevel(TimeMachineBlock.LIGHT_EMISSION),
         ::TimeMachineBlock,
         Item.Properties()
@@ -185,7 +183,7 @@ object PazBlocks {
             .sound(SoundType.CANDLE)
             .instabreak()
             .noOcclusion()
-            .pushReaction(PushReaction.DESTROY),
+            .pushReaction(PushReaction.POPPED),
         ::ConeBlock,
         Item.Properties()
             .enchantable(10)
@@ -259,7 +257,7 @@ object PazBlocks {
             .mapColor(BRAINZ_ALLOY_BLOCK.defaultMapColor())
             .strength(5.0f)
             .noOcclusion()
-            .pushReaction(PushReaction.DESTROY),
+            .pushReaction(PushReaction.POPPED),
         { DoorBlock(BlockSetType.COPPER, it) },
     )
     @JvmField val BRAINZ_ALLOY_TRAPDOOR: Block = registerBlock(
@@ -279,7 +277,7 @@ object PazBlocks {
             .sound(SoundType.WOOD)
             .instabreak()
             .noCollision()
-            .pushReaction(PushReaction.DESTROY),
+            .pushReaction(PushReaction.POPPED),
         ::FlagBlock,
         Item.Properties()
             .stacksTo(16)
@@ -305,7 +303,7 @@ object PazBlocks {
             .sound(SoundType.WOOD)
             .instabreak()
             .noCollision()
-            .pushReaction(PushReaction.DESTROY),
+            .pushReaction(PushReaction.POPPED),
         ::FlagBlock,
         Item.Properties()
             .stacksTo(16)
@@ -330,14 +328,14 @@ object PazBlocks {
         ::FlagBlockEntity,
         PLANTZ_FLAG, BRAINZ_FLAG
     )
-    @JvmField val PLANTZ_FLAG_POI = PoiHelper.register(pazResource("plantz_flag"), 8, 32, PLANTZ_FLAG)
+    @JvmField val PLANTZ_FLAG_POI = PoiTypes.register(BuiltInRegistries.POINT_OF_INTEREST_TYPE, ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, pazResource("plantz_flag")), mutableSetOf(PLANTZ_FLAG.defaultBlockState()), 8, 32)
 
     @JvmField val GRAVESTONE: Block = registerBlock(
         "gravestone",
         BlockBehaviour.Properties.of()
             .sound(SoundType.TUFF_BRICKS)
             .strength(23.5F)
-            .pushReaction(PushReaction.BLOCK)
+            .pushReaction(PushReaction.IMMOVEABLE)
             .requiresCorrectToolForDrops(),
         ::GravestoneBlock,
     )
@@ -390,7 +388,7 @@ object PazBlocks {
             .sound(SoundType.DECORATED_POT)
             .strength(1.8F)
             .noOcclusion()
-            .pushReaction(PushReaction.DESTROY)
+            .pushReaction(PushReaction.POPPED)
     }
 
     private fun mailboxProperties(mapColor: MapColor = MapColor.SNOW): BlockBehaviour.Properties {
@@ -399,7 +397,7 @@ object PazBlocks {
             .sound(SoundType.LANTERN)
             .strength(1.3F)
             .noOcclusion()
-            .pushReaction(PushReaction.BLOCK)
+            .pushReaction(PushReaction.IMMOVEABLE)
     }
 
     fun initialize() {

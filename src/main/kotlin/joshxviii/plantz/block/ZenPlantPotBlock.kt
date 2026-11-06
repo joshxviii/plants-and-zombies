@@ -33,7 +33,6 @@ import net.minecraft.world.phys.shapes.VoxelShape
 
 class ZenPlantPotBlock(properties: Properties) : HorizontalDirectionalBlock(properties), SimpleWaterloggedBlock {
     companion object {
-        val CODEC: MapCodec<ZenPlantPotBlock> = simpleCodec(::ZenPlantPotBlock)
         val SHAPE_INSIDE = column(12.0, 7.0, 9.0)
         val SHAPE: VoxelShape = Util.make {
             Shapes.or(
@@ -107,6 +106,4 @@ class ZenPlantPotBlock(properties: Properties) : HorizontalDirectionalBlock(prop
         if (state.getValue(WATERLOGGED)) ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level))
         return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random)
     }
-
-    override fun codec(): MapCodec<out ZenPlantPotBlock> { return CODEC }
 }
