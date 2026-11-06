@@ -77,21 +77,17 @@ class FlagRenderer(
         if (PazNetwork.ZombieRaidClientCache.isActive() && state.maxHealth > 100) renderBeam(state, poseStack, submitNodeCollector, camera)
 
         val material = state.sprite?: return
-        val renderType = material.renderType { RenderTypes.entityCutout(it) }
+        val renderType = material.renderType { RenderTypes.entitySolid(it) }
         poseStack.translate(0.5f, 0.0f, 0.5f)
-        state.breakProgress?.let {
-            submitNodeCollector.submitCrumblingOverlay(
-                flagModel,
-                state,
-                poseStack,
-                renderType,
-                state.lightCoords,
-                OverlayTexture.NO_OVERLAY,
-                0,
-                it
-            )
-        }
-
+        submitNodeCollector.submitModel(
+            flagModel,
+            state,
+            poseStack,
+            renderType,
+            state.lightCoords,
+            OverlayTexture.NO_OVERLAY,
+            0,
+        )
     }
 
     fun renderBeam(

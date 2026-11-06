@@ -13,7 +13,7 @@ import java.util.function.IntFunction
 enum class BrownCoatVariant(val suffix: String, val id: Int) : StringRepresentable {
     BROWNCOAT("", 0),
     BALLOON("balloon", 1),
-    SNOWCOAT("snow", 2),
+    SNOWCOAT("snowcoat", 2),
     DESERT("desert", 3),
     BUCCANEER("buccaneer", 4),
     VAMPIRE("vampire", 5);

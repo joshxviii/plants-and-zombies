@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "plantz:entity/zombie/robo_zombie/general"
+    "layer0": "plantz:item/spawn_egg/robo_zombie/general"
   }
 }

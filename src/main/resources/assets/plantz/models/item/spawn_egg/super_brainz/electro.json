@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "plantz:entity/zombie/super_brainz/electro"
+    "layer0": "plantz:item/spawn_egg/super_brainz/electro"
   }
 }
