@@ -80,7 +80,7 @@ data class ServerConfig(
 )
 data class ClientConfig(
     var showDebugInfo: Boolean = false,
-    var showHiddenItemsInCreativeTab: Boolean = false,
+    var splitItemTabs: Boolean = false,
     var showRaidUi: Boolean = true,
     var showSunInfo: Boolean = false
 )
@@ -137,8 +137,8 @@ object PazConfig {
     val SHOW_DEBUG_INFO: Boolean
         get() = client.showDebugInfo
 
-    val SHOW_HIDDEN_ITEMS: Boolean
-        get() = client.showHiddenItemsInCreativeTab
+    val SPLIT_ITEM_TABS: Boolean
+        get() = client.splitItemTabs
 
     val SHOW_RAID_UI: Boolean
         get() = client.showRaidUi

@@ -16,8 +16,8 @@ class ConeBlock(properties: Properties) : Block(properties) {
         val SHAPE: VoxelShape = Util.make {
             Shapes.or(
                 column(12.0, 0.0, 2.0),
-                column(6.0, 2.0, 7.0),
-                column(4.0, 7.0, 12.0),
+                column(6.0, 2.0, 8.0),
+                column(4.0, 7.0, 13.0),
             )
         }
     }

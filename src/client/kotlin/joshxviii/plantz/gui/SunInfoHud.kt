@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.resources.Identifier
 import net.minecraft.util.ARGB
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.GameType
 
 object SunInfoHud {
     val SUN_ICON: Identifier = pazResource("textures/gui/hud/sun.png")
@@ -20,7 +21,7 @@ object SunInfoHud {
     private val mc = Minecraft.getInstance()
     private val font = mc.font
     fun extractRenderState(graphics: GuiGraphicsExtractor, deltaTracker: DeltaTracker, itemStack: ItemStack, highlightTimer: Int) {
-        if (!PazConfig.SHOW_SUN_INFO) return
+        if (!PazConfig.SHOW_SUN_INFO || mc.gameMode?.playerMode == GameType.SPECTATOR) return
         val hotbarWidth = 182
         val x = graphics.guiWidth() / 2
         val y = graphics.guiHeight()

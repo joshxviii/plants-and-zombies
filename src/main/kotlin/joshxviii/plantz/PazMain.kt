@@ -1,6 +1,5 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.api.SeedMutationManager
 import joshxviii.plantz.command.PazCommands
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.block.entity.MailboxManager
@@ -15,9 +14,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
-import net.minecraft.server.ReloadableServerResources
-import net.minecraft.server.packs.PackType
-import net.minecraft.server.packs.resources.ReloadableResourceManager
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
@@ -63,7 +59,7 @@ object PazMain : ModInitializer {
 		PazItems.initialize()
 		PazLootTables.initialize()
 		PazEffects.initialize()
-		PazCreativeTab.initialize()
+		PazCreativeTabs.initialize()
 		PazEntities.initialize()
 		PazDamageTypes.initialize()
 		PazCriteria.initialize()

@@ -37,6 +37,7 @@ data class StoredSun(
         components: DataComponentGetter
     ) {
         consumer.accept(Component.translatable("component.plantz.stored_sun.description").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC))
+        consumer.accept(Component.empty())
         consumer.accept(Component.translatable("component.plantz.stored_sun", storedSun, max).withStyle(ChatFormatting.YELLOW))
     }
 

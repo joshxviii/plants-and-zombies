@@ -3,9 +3,9 @@ package joshxviii.plantz.gui
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazNetwork
-import joshxviii.plantz.entity.isActiveInRaid
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.getHeldBalloons
+import joshxviii.plantz.raid.isActiveInRaid
 import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderState
 import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderer
 import net.minecraft.client.DeltaTracker

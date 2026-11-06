@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "plantz:item/pirate_captain_spawn_egg"
-  }
-}

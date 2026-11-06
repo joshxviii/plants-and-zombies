@@ -1,6 +1,8 @@
 package joshxviii.plantz.mixin;
 
+import joshxviii.plantz.PazComponents;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,6 +25,9 @@ public abstract class EntityProjectileDeflectionMixin {
         if (!((Object) this instanceof LivingEntity entity)) return;
 
         var blockingItem = entity.getItemBlockingWith();
+        var wornBlocker = entity.getItemBySlot(EquipmentSlot.CHEST);
+        if (!wornBlocker.has(PazComponents.WORN_BODY_BLOCKER)) wornBlocker = null;
+        if (blockingItem == null) blockingItem = wornBlocker;
         if (blockingItem == null) return;
 
         BlocksAttacks blocksAttacks = blockingItem.get(DataComponents.BLOCKS_ATTACKS);
@@ -34,10 +39,22 @@ public abstract class EntityProjectileDeflectionMixin {
         lookDirection = new Vec3(lookDirection.x, 0.0, lookDirection.z).normalize();
         double angle = Math.acos(Math.max(-1.0, Math.min(1.0, directionToProjectile.dot(lookDirection))));
 
+        final double finalAngle = angle;
         boolean canBlockFromDirection = blocksAttacks.damageReductions().stream().anyMatch(reduction ->
             (reduction.base() > 0.0F || reduction.factor() > 0.0F)
-                && angle <= Math.toRadians(reduction.horizontalBlockingAngle())
+                && finalAngle <= Math.toRadians(reduction.horizontalBlockingAngle())
         );
+        if (!canBlockFromDirection && wornBlocker != null && wornBlocker != blockingItem) {
+            BlocksAttacks wornAttacks = wornBlocker.get(DataComponents.BLOCKS_ATTACKS);
+            if (wornAttacks != null) {
+                blockingItem = wornBlocker;
+                blocksAttacks = wornAttacks;
+                canBlockFromDirection = wornAttacks.damageReductions().stream().anyMatch(reduction ->
+                    (reduction.base() > 0.0F || reduction.factor() > 0.0F)
+                        && finalAngle <= Math.toRadians(reduction.horizontalBlockingAngle())
+                );
+            }
+        }
         if (canBlockFromDirection) {
             if (entity.level() instanceof ServerLevel serverLevel) {
                 blocksAttacks.blockSound().ifPresent(sound ->

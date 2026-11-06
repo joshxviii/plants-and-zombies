@@ -9,17 +9,16 @@ import joshxviii.plantz.ai.goal.PathfindToFlagGoal
 import joshxviii.plantz.entity.Balloon
 import joshxviii.plantz.entity.PlantPotMinecart
 import joshxviii.plantz.entity.Sun
-import joshxviii.plantz.entity.ZombieRaider
 import joshxviii.plantz.entity.blueprint_machines.ElectroTurret
 import joshxviii.plantz.entity.blueprint_machines.LawnMower
 import joshxviii.plantz.entity.blueprint_machines.ZombieDrone
 import joshxviii.plantz.entity.blueprint_machines.ZombieTurret
 import joshxviii.plantz.entity.gnome.Gnome
-import joshxviii.plantz.entity.ignoresFlag
 import joshxviii.plantz.entity.plant.*
 import joshxviii.plantz.entity.projectile.*
 import joshxviii.plantz.entity.zombie.*
 import joshxviii.plantz.mixin.MobAccessor
+import joshxviii.plantz.raid.ignoresFlag
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.minecraft.core.Registry
@@ -628,8 +627,8 @@ object PazEntities {
     @JvmField val ZOMBIE_GOAT: EntityType<ZombieGoat> =  registerZombie(
         "zombie_goat",
         EntityType.Builder.of(::ZombieGoat, MobCategory.CREATURE)
-            .sized(0.9F, 1.3F)
-            .passengerAttachments(1.1125F)
+            .sized(0.68F, 0.84F)
+            .passengerAttachments(0.78F)
             .clientTrackingRange(10),
         attributes = PazZombie.Companion.PazZombieAttributes(
             attackDamage = 1.0,
@@ -735,7 +734,7 @@ object PazEntities {
             .noLootTable()
             .sized(0.3F, 0.3F)
             .clientTrackingRange(6)
-            .updateInterval(20)
+            .updateInterval(2)
     )
     // endregion
 

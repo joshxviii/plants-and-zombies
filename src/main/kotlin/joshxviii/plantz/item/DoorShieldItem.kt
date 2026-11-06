@@ -35,23 +35,6 @@ class DoorShieldItem(properties: Properties) : Item(properties) {
         return InteractionResult.CONSUME
     }
 
-    override fun releaseUsing(
-        itemStack: ItemStack,
-        level: Level,
-        entity: LivingEntity,
-        remainingTime: Int
-    ): Boolean {
-        return super.releaseUsing(itemStack, level, entity, remainingTime)
-    }
-
-    override fun getUseDuration(itemStack: ItemStack, user: LivingEntity): Int {
-        return 72000
-    }
-
-    override fun onUseTick(level: Level, livingEntity: LivingEntity, itemStack: ItemStack, ticksRemaining: Int) {
-        super.onUseTick(level, livingEntity, itemStack, ticksRemaining)
-    }
-
     override fun getUseAnimation(itemStack: ItemStack): ItemUseAnimation {
         return ItemUseAnimation.TOOT_HORN
     }

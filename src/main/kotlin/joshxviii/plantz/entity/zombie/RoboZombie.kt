@@ -1,5 +1,6 @@
 package joshxviii.plantz.entity.zombie
 
+import joshxviii.plantz.raid.BossType
 import joshxviii.plantz.PazDataSerializers.ROBO_ZOMBIE_VARIANT
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.ai.goal.MeleeAttackActionGoal
@@ -245,6 +246,10 @@ class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(typ
     override fun getTypeName(): Component {
         return if (variant != RoboZombieVariant.ROBO) Component.translatable("entity.plantz.robo_zombie.variant.${variant.name.lowercase()}")
         else super.getTypeName()
+    }
+
+    override fun onSpawnedFromItem() {
+        if (variant == RoboZombieVariant.GENERAL) BossType.bossify(this)
     }
 
     override fun finalizeSpawn(

@@ -53,7 +53,7 @@ class ProtectsHeadDataComponent(
         flag: TooltipFlag,
         components: DataComponentGetter
     ) {
-        consumer.accept(Component.translatable("component.plantz.blocks_damage.description").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC))
+        consumer.accept(Component.translatable("component.plantz.protects_head").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC))
     }
 
     fun canBlockFrom(source: DamageSource, user: LivingEntity): Boolean {
@@ -117,7 +117,7 @@ class ProtectsHeadDataComponent(
     data class DamageReduction(
         val type: Optional<HolderSet<DamageType>> = Optional.empty(),
         val base: Float = 0.0f,
-        val factor: Float = 0.9f
+        val factor: Float = 1.0f
     ) {
         fun resolve(source: DamageSource, dealtDamage: Float): Float {
             if (type.isPresent && !type.get().contains(source.typeHolder())) return 0.0f

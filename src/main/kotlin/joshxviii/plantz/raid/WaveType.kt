@@ -7,6 +7,8 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazLootTables
 import joshxviii.plantz.SeasonalEvents
+import joshxviii.plantz.entity.ZombieEquipment.enchantZombieEquipment
+import joshxviii.plantz.entity.ZombieEquipment.equipZombieEquipment
 import joshxviii.plantz.entity.zombie.*
 import joshxviii.plantz.item.component.DoorShieldComponent
 import net.minecraft.core.component.DataComponents
@@ -435,7 +437,7 @@ enum class WaveType(
         fun configureWinterWonderland(zombie: Zombie) {
             if (zombie is Imp) zombie.variant = ImpVariant.YETI
             if (zombie is BrownCoat) {
-                zombie.variant = BrownCoatVariant.SNOW
+                zombie.variant = BrownCoatVariant.SNOWCOAT
                 val boots = Items.LEATHER_BOOTS.defaultInstance
                 boots.set(DataComponents.DYED_COLOR, DyedItemColor(0xFFFFFF))
                 if (zombie.random.nextFloat() < 0.65f) {
