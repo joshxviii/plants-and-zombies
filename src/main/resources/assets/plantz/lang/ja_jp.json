@@ -89,6 +89,7 @@
   "options.plantz.title": "プラント & ゾンビ",
   "options.plantz.show_raid_ui": "レイドUI：%s",
   "options.plantz.show_sun_info": "太陽光表示：%s",
+  "options.plantz.split_item_tabs": "アイテムタブを分割：%s",
 
   "commands.plantz.help": "プラント & ゾンビ - Discord で質問する：%s",
   "commands.plantz.help.hover": "",
