@@ -69,7 +69,7 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : PazZombie(typ
             velocity = 1.0,
             inaccuracy = 1.2f,
             actionSuccessEffect = {
-                this.swing(this.usedItemHand)
+                this.swingForAttack(this.usedItemHand)
             },
             actionPredicate = { it.random.nextDouble() < 0.25
                                 && it.target!=null
@@ -99,7 +99,7 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : PazZombie(typ
 
     override fun tick() {
         super.tick()
-        if (bashTime>0 || swinging) {
+        if (bashTime>0 || isSwinging) {
             bashAnimation.startIfStopped(tickCount)
             if (bashTime++>20) {
                 bashAnimation.stop()
@@ -114,7 +114,7 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : PazZombie(typ
             if (entity is LivingEntity && entity !is Zombie) {
                 val level = level() as? ServerLevel?: return
                 entity.hurtServer(level, this.damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 2.5f)
-                entity.knockback(
+                entity.push(
                     0.2, position().x - entity.position().x, position().z - entity.position().z
                 )
             }
@@ -148,7 +148,7 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : PazZombie(typ
             }
 
             if (random.nextFloat() < 0.005) {
-                val polarBear = EntityType.POLAR_BEAR.create(level(), EntitySpawnReason.JOCKEY)
+                val polarBear = EntityTypes.POLAR_BEAR.create(level(), EntitySpawnReason.JOCKEY)
                 if (polarBear != null) {
                     polarBear.snapTo(x, y, z, yRot, 0.0f)
                     polarBear.finalizeSpawn(level, difficulty, EntitySpawnReason.JOCKEY, null)

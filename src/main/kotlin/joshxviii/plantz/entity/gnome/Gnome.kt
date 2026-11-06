@@ -318,7 +318,7 @@ class Gnome(type: EntityType<out Gnome>, level: Level) :Monster(type, level) {
         }
     }
 
-    private class GnomeMoveControl(private val gnome: Gnome) : MoveControl(gnome) {
+    private class GnomeMoveControl(private val gnome: Gnome) : MoveControl<Mob>(gnome) {
         private var nextJumpSpeed = 0.0
 
         override fun tick() {

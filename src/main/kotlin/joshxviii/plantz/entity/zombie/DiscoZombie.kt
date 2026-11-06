@@ -54,7 +54,7 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
         trackedBackupDancerIds.addAll(input.read("tracked_backup", UUIDUtil.CODEC_SET).getOrDefault(emptySet()))
     }
 
-    override fun getMoveControl(): MoveControl = if (summoningTime > 0) noMoveControl else super.getMoveControl()
+    override fun getMoveControl(): MoveControl<*> = if (summoningTime > 0) noMoveControl else super.getMoveControl()
 
     override fun tick() {
         super.tick()

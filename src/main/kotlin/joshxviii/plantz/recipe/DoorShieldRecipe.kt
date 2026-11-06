@@ -5,12 +5,17 @@ import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.item.component.DoorShieldComponent
 import joshxviii.plantz.pazResource
+import net.minecraft.core.HolderSet
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.core.registries.Registries
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
+import net.minecraft.tags.BlockItemTags
 import net.minecraft.tags.ItemTags
+import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.item.BlockItem
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.crafting.CraftingBookCategory
@@ -24,6 +29,7 @@ import net.minecraft.world.item.crafting.display.SlotDisplay
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.DoorBlock
+import java.util.Optional
 
 class DoorShieldRecipe : CustomRecipe() {
     override fun matches(input: CraftingInput, level: Level): Boolean {
@@ -41,11 +47,7 @@ class DoorShieldRecipe : CustomRecipe() {
     override fun category(): CraftingBookCategory = CraftingBookCategory.EQUIPMENT
 
     override fun display(): List<RecipeDisplay> = listOf(
-        ShapelessCraftingRecipeDisplay(
-            listOf(SlotDisplay.TagSlotDisplay(ItemTags.DOORS), Ingredient.of(Items.SHIELD).display()),
-            SlotDisplay.ItemSlotDisplay(PazItems.DOOR_SHIELD),
-            SlotDisplay.ItemSlotDisplay(Items.CRAFTING_TABLE)
-        )
+
     )
 
     override fun getSerializer(): RecipeSerializer<DoorShieldRecipe> = SERIALIZER
@@ -53,7 +55,7 @@ class DoorShieldRecipe : CustomRecipe() {
     private fun doorBlock(input: CraftingInput): Block? {
         if (input.ingredientCount() != 2) return null
 
-        val doorItem = input.items().singleOrNull { it.`is`(ItemTags.DOORS) } ?: return null
+        val doorItem = input.items().singleOrNull { it.`is`(BlockItemTags.DOORS.item()) } ?: return null
         val doorBlock = (doorItem.item as? BlockItem)?.block ?: return null
         return doorBlock.takeIf { it is DoorBlock }
     }

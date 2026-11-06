@@ -21,7 +21,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.client.resources.model.sprite.SpriteId
 import net.minecraft.network.chat.Component
 import net.minecraft.world.level.block.state.properties.RotationSegment
-import net.minecraft.world.level.levelgen.SurfaceRules.state
 import net.minecraft.world.phys.Vec3
 import kotlin.math.pow
 
@@ -59,7 +58,7 @@ class FlagRenderer(
         state.phase = (Math.floorMod((pos.x*7 + pos.y*9 + pos.z*13).toLong() + gameTime, 90L).toFloat() + partialTicks) / 90.0f
         state.angle = -RotationSegment.convertToDegrees(blockState.getValue(FlagBlock.ROTATION))
         state.beamAnimTime = Math.floorMod(gameTime, 40).toFloat() + partialTicks
-        state.beamDistance = cameraPosition.subtract(state.blockPos.center).horizontalDistance().toFloat()
+        state.beamDistance = cameraPosition.subtract(Vec3.atCenterOf(state.blockPos)).horizontalDistance().toFloat()
         if (blockState.`is`(PazBlocks.PLANTZ_FLAG)) state.sprite = PLANTZ_FLAG_MATERIAL
         else state.sprite = BRAINZ_FLAG_MATERIAL
     }
@@ -73,7 +72,7 @@ class FlagRenderer(
         if (PazConfig.SHOW_DEBUG_INFO) submitNodeCollector.submitNameTag(
             poseStack, Vec3(0.5,1.0,0.5), -20,
             Component.literal("${state.health} / ${state.maxHealth}").withColor(0xFFFFFFF),
-            true, -1, 20.0, camera
+            true, -1, camera
         )
 
         if (PazNetwork.ZombieRaidClientCache.isActive() && state.maxHealth > 100) renderBeam(state, poseStack, submitNodeCollector, camera)
@@ -81,17 +80,19 @@ class FlagRenderer(
         val material = state.sprite?: return
         val renderType = material.renderType { RenderTypes.entityCutout(it) }
         poseStack.translate(0.5f, 0.0f, 0.5f)
-        poseStack.mulPose(Axis.YP.rotationDegrees(state.angle+90f))
-        submitNodeCollector.submitModel(
-            flagModel,
-            state,
-            poseStack,
-            renderType,
-            state.lightCoords,
-            OverlayTexture.NO_OVERLAY,
-            0,
-            state.breakProgress
-        )
+        poseStack.rotate(Axis.YP.rotationDegrees(state.angle+90f))
+        state.breakProgress?.let {
+            submitNodeCollector.submitCrumblingOverlay(
+                flagModel,
+                state,
+                poseStack,
+                renderType,
+                state.lightCoords,
+                OverlayTexture.NO_OVERLAY,
+                0,
+                it
+            )
+        }
 
     }
 

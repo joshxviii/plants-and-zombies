@@ -30,7 +30,6 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
     private var age = 0
     private var followingEntity: LivingEntity? = null
     private var batteryPos: Vec3? = null
-    private val interpolation = InterpolationHandler(this, 2)
 
     companion object {
         val DATA_VALUE: EntityDataAccessor<Int> =
@@ -293,7 +292,9 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
 
     override fun getSoundSource(): SoundSource = SoundSource.AMBIENT
 
-    override fun getInterpolation(): InterpolationHandler = interpolation
+    override fun createInterpolationHandler(): InterpolationHandler {
+        return LinearInterpolationHandler.create(this, 2)
+    }
 
     override fun addAdditionalSaveData(output: ValueOutput) {
         output.putShort("Age", age.toShort())

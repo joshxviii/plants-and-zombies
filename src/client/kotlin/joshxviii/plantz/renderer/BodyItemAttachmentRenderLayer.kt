@@ -83,9 +83,9 @@ class SpecialEffectsLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(pr
         poseStack.pushPose()
         humanoidModel.root().translateAndRotate(poseStack)
         humanoidModel.head.translateAndRotate(poseStack)
-        poseStack.mulPose(Axis.YP.rotationDegrees(90f))
-        poseStack.mulPose(Axis.XP.rotationDegrees(25f))
-        poseStack.mulPose(Axis.ZP.rotationDegrees(90f))
+        poseStack.rotate(Axis.YP.rotationDegrees(90f))
+        poseStack.rotate(Axis.XP.rotationDegrees(25f))
+        poseStack.rotate(Axis.ZP.rotationDegrees(90f))
         poseStack.translate(-0.6,-1.4,0.2)
 
         collector.submitModel(
@@ -96,7 +96,6 @@ class SpecialEffectsLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(pr
             lightCoords,
             OverlayTexture.NO_OVERLAY,
             0,
-            null
         )
         poseStack.popPose()
     }
@@ -134,7 +133,6 @@ class SpecialEffectsLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(pr
             alphaFromAmplifier(colorMix, amplifier),
             null,
             state.outlineColor,
-            null
         )
         poseStack.popPose()
     }
@@ -202,7 +200,7 @@ abstract class BodyItemAttachmentRenderLayer<S : LivingEntityRenderState, M : En
 
         humanoidModel.root().translateAndRotate(poseStack)
         humanoidModel.body.translateAndRotate(poseStack)
-        poseStack.mulPose(Axis.ZP.rotationDegrees(180.0f))
+        poseStack.rotate(Axis.ZP.rotationDegrees(180.0f))
 
         if (itemStack.has(PazComponents.WORN_BODY_BLOCKER)) {
             poseStack.pushPose()

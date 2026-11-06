@@ -59,7 +59,7 @@ class EngineerZombie(type: EntityType<out EngineerZombie>, level: Level) : PazZo
         entityData.define(BUILD_TIME_ID, 0)
     }
 
-    override fun getMoveControl(): MoveControl = if (buildingTime>0) noMoveControl else super.getMoveControl()
+    override fun getMoveControl(): MoveControl<*> = if (buildingTime>0) noMoveControl else super.getMoveControl()
 
     override fun registerGoals() {
         super.registerGoals()
@@ -179,7 +179,7 @@ class EngineerZombie(type: EntityType<out EngineerZombie>, level: Level) : PazZo
                 )
                 bot.owner = engineerZombie
                 level.addFreshEntity(bot)
-                level.gameEvent(GameEvent.ENTITY_PLACE, buildPos.center, GameEvent.Context.of(engineerZombie))
+                level.gameEvent(GameEvent.ENTITY_PLACE, Vec3.atCenterOf(buildPos), GameEvent.Context.of(engineerZombie))
             }
         }
     }

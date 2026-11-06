@@ -118,13 +118,13 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
     override fun doPush(entity: Entity) {
         super.doPush(entity)
         if (chargingTime>=0 && this.isAlive) {
-            if (entity is Zombie) entity.knockback(
+            if (entity is Zombie) entity.push(
                 0.7, position().x - entity.position().x, position().z - entity.position().z
             )
             else if (entity is LivingEntity) {
                 val level = level() as? ServerLevel?: return
                 entity.hurtServer(level, this.damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 1.5f)
-                entity.knockback(
+                entity.push(
                     2.0, position().x - entity.position().x, position().z - entity.position().z
                 )
             }

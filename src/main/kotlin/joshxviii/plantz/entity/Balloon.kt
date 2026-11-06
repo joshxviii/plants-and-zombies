@@ -48,7 +48,6 @@ class Balloon(
 
     var clientTiltZ: Float = 0f
     var clientTiltX: Float = 0f
-    private val interpolation = InterpolationHandler(this)
 
     private var balloonLeashData: LeashData? = null
     var dyeColor: DyeColor
@@ -79,7 +78,7 @@ class Balloon(
         if (timeUnleashed > 2400) pop()
     }
 
-    override fun getInterpolation(): InterpolationHandler = interpolation
+    override fun createInterpolationHandler(): InterpolationHandler = LinearInterpolationHandler.create(this)
 
     override fun save(output: ValueOutput): Boolean {
         output.putInt("unleash_time", timeUnleashed)

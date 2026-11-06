@@ -28,7 +28,7 @@ object PazClientNetwork {
         }
 
         ClientPlayNetworking.registerGlobalReceiver(OpenOptionsScreenPayload.ID) { _, context ->
-            context.client().execute { context.client().setScreen(PazOptionsScreen()) }
+            context.client().execute { context.client().gui.setScreen(PazOptionsScreen()) }
         }
 
         ClientPlayNetworking.registerGlobalReceiver(SendMailResponsePayload.ID) { payload, context ->

@@ -185,7 +185,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
         this.goalSelector.setControlFlag(Goal.Flag.TARGET, noController)
     }
 
-    override fun getMoveControl(): MoveControl = if (smashAttackTime>0) noMoveControl else super.getMoveControl()
+    override fun getMoveControl(): MoveControl<*> = if (smashAttackTime>0) noMoveControl else super.getMoveControl()
 
     override fun tick() {
         super.tick()
@@ -223,7 +223,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
             }
         }
 
-        if (punchAttackTime>0 || swinging) {
+        if (punchAttackTime>0 || isSwinging) {
             punchAttackAnimation.startIfStopped(tickCount)
             if (punchAttackTime++>30) {
                 punchAttackAnimation.stop()
@@ -252,7 +252,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
             if (entity is LivingEntity && entity !is Zombie) {
                 val level = level() as? ServerLevel?: return
                 entity.hurtServer(level, this.damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 2.5f)
-                entity.knockback(
+                entity.push(
                     0.2, position().x - entity.position().x, position().z - entity.position().z
                 )
             }
@@ -330,14 +330,14 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
             gargantuar.hasImp = false
             val level = gargantuar.level() as ServerLevel
 
-            val spawnDirection = gargantuar.calculateViewVector(0f, gargantuar.yBodyRot+35).scale(2.4)
+            val spawnDirection = gargantuar.getViewVector(gargantuar.yBodyRot+35).scale(2.4)
             val spawnPos = Vec3(
                 spawnDirection.x + gargantuar.x,
                 spawnDirection.y + gargantuar.y+2.5f,
                 spawnDirection.z + gargantuar.z
             )
             PazEntities.IMP.create(level, EntitySpawnReason.MOB_SUMMONED)?.let { imp ->
-                val lookDirection = gargantuar.calculateViewVector(0f, gargantuar.yRot)
+                val lookDirection = gargantuar.getViewVector(0f)
                 imp.snapTo(spawnPos, gargantuar.yRot, 0.0f)
                 imp.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(spawnPos)), EntitySpawnReason.REINFORCEMENT,
                     PazZombieGroupData(isRaider = gargantuar.isActiveInRaid())

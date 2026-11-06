@@ -112,7 +112,7 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
 
     override fun tick() {
         super.tick()
-        if (mineBlockTime>0 || swinging) {
+        if (mineBlockTime>0 || isSwinging) {
             mineBlockAnimation.startIfStopped(tickCount)
             if (mineBlockTime++>20) {
                 mineBlockAnimation.stop()

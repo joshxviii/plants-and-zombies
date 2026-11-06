@@ -54,8 +54,8 @@ class GardenGnomeBlockRenderer(
     ) {
         poseStack.pushPose()
         poseStack.translate(0.5, 1.5, 0.5)
-        poseStack.mulPose(Axis.XP.rotationDegrees(180.0f))
-        poseStack.mulPose(Axis.YP.rotationDegrees(state.rotation))
+        poseStack.rotate(Axis.XP.rotationDegrees(180.0f))
+        poseStack.rotate(Axis.YP.rotationDegrees(state.rotation))
 
         collector.submitModel(
             gnomeModel,
@@ -65,7 +65,6 @@ class GardenGnomeBlockRenderer(
             state.lightCoords,
             OverlayTexture.NO_OVERLAY,
             0,
-            null
         )
         poseStack.popPose()
     }

@@ -12,7 +12,7 @@
     "AvatarRendererMixin",
     "BossHealthOverlayAccessor",
     "BossHealthOverlayMixin",
-    "GuiMixin",
+    "HudMixin",
     "HumanoidModelMixin",
     "LivingEntityRendererMixin",
     "NowPlayingToastMixin",

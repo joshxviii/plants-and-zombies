@@ -117,7 +117,7 @@ object RaidMusicManager {
             layer.volume = 0.0f
             activeLayers[it] = layer
             when (minecraft.soundManager.play(layer)) {
-                SoundEngine.PlayResult.STARTED -> minecraft.toastManager.showNowPlayingToast()
+                SoundEngine.PlayResult.STARTED -> minecraft.gui.toastManager().showNowPlayingToast()
                 SoundEngine.PlayResult.STARTED_SILENTLY -> {}
                 SoundEngine.PlayResult.NOT_STARTED -> {}
             }
@@ -130,7 +130,7 @@ object RaidMusicManager {
         activeLayers.forEach { (_, layer) ->
             layer.stopLayer()
         }
-        minecraft.toastManager.hideNowPlayingToast()
+        minecraft.gui.toastManager().hideNowPlayingToast()
         activeLayers.clear()
         targetMusicLayer = null
         targetPitch = 1.0f

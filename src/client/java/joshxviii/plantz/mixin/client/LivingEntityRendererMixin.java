@@ -13,14 +13,17 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.util.ARGB;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Coerce;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -46,34 +49,36 @@ abstract public class LivingEntityRendererMixin<T extends LivingEntity, S extend
     }
 
     @Inject(method = "extractRenderState*", at = @At("TAIL"))
-    private void checkForHypnoEffect(T entity, S state, float partialTicks, CallbackInfo ci) {
+    private void checkForHypnoEffect(@Coerce Entity entity, @Coerce EntityRenderState entityRenderState, float v, CallbackInfo ci) {
         boolean hasHypno = ((LivingEntityAccessor) entity).plantz$getHypnoId();
-        state.setData(HAS_HYPNO_KEY, hasHypno);
+        entityRenderState.setData(HAS_HYPNO_KEY, hasHypno);
         boolean hasChill = ((LivingEntityAccessor) entity).plantz$getChillId();
-        state.setData(HAS_CHILL_KEY, hasChill);
+        entityRenderState.setData(HAS_CHILL_KEY, hasChill);
         boolean hasFrozen = ((LivingEntityAccessor) entity).plantz$getFrozenId();
-        state.setData(HAS_FROZEN_KEY, hasFrozen);
+        entityRenderState.setData(HAS_FROZEN_KEY, hasFrozen);
         boolean hasButter = ((LivingEntityAccessor) entity).plantz$getButterId();
-        state.setData(HAS_BUTTER_KEY, hasButter);
+        entityRenderState.setData(HAS_BUTTER_KEY, hasButter);
         Map<Integer, Integer> paintColors = ((LivingEntityAccessor) entity).plantz$getPaintedColors();
-        state.setData(PAINT_COLORS_KEY, paintColors);
+        entityRenderState.setData(PAINT_COLORS_KEY, paintColors);
 
-        if (hasFrozen && plantz$hasPreviousState) {
-            state.ageInTicks = plantz$ageInTicks;
-            state.walkAnimationPos = plantz$walkAnimationPos;
-            state.walkAnimationSpeed = plantz$walkAnimationSpeed;
-            state.bodyRot = plantz$bodyRot;
-            state.yRot = plantz$yRot;
-            state.xRot = plantz$xRot;
-        } else {
-            plantz$ageInTicks = state.ageInTicks;
-            plantz$walkAnimationPos = state.walkAnimationPos;
-            plantz$walkAnimationSpeed = state.walkAnimationSpeed;
-            plantz$bodyRot = state.bodyRot;
-            plantz$yRot = state.yRot;
-            plantz$xRot = state.xRot;
+        if (entityRenderState instanceof LivingEntityRenderState state) {
+            if (hasFrozen && plantz$hasPreviousState) {
+                state.ageInTicks = plantz$ageInTicks;
+                state.walkAnimationPos = plantz$walkAnimationPos;
+                state.walkAnimationSpeed = plantz$walkAnimationSpeed;
+                state.bodyRot = plantz$bodyRot;
+                state.yRot = plantz$yRot;
+                state.xRot = plantz$xRot;
+            } else {
+                plantz$ageInTicks = state.ageInTicks;
+                plantz$walkAnimationPos = state.walkAnimationPos;
+                plantz$walkAnimationSpeed = state.walkAnimationSpeed;
+                plantz$bodyRot = state.bodyRot;
+                plantz$yRot = state.yRot;
+                plantz$xRot = state.xRot;
+            }
+            plantz$hasPreviousState = true;
         }
-        plantz$hasPreviousState = true;
     }
 
     @Unique private boolean plantz$hasPreviousState;

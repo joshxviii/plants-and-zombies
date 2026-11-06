@@ -68,9 +68,6 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     public abstract boolean hasEffect(Holder<MobEffect> effect);
 
     @Shadow
-    public int swingTime;
-
-    @Shadow
     public abstract @org.jspecify.annotations.Nullable MobEffectInstance getEffect(Holder<MobEffect> effect);
 
     @Unique
@@ -363,7 +360,7 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     }
 
     @Inject(method = "blockedByItem", at = @At("HEAD"), cancellable = true)
-    private void plantz$preventKnockbackWhileBlocking(LivingEntity defender, CallbackInfo ci) {
+    private void plantz$preventKnockbackWhileBlocking(LivingEntity defender, DamageSource source, float damage, boolean fullyBlocked, CallbackInfo ci) {
         ci.cancel();
     }
 

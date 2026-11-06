@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer
-import net.minecraft.client.renderer.rendertype.OutputTarget
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.state.level.CameraRenderState
@@ -32,7 +31,6 @@ class SunBatteryRenderer() : BlockEntityRenderer<SunBatteryBlockEntity, SunBatte
                 "sun",
                 RenderSetup.builder(RenderPipelines.BEACON_BEAM_TRANSLUCENT)
                     .withTexture("Sampler0", TEXTURE_LOCATION)
-                    .setOutputTarget(OutputTarget.ITEM_ENTITY_TARGET)
                     .useLightmap()
                     .useOverlay()
                     .affectsCrumbling()
@@ -94,11 +92,11 @@ class SunBatteryRenderer() : BlockEntityRenderer<SunBatteryBlockEntity, SunBatte
             poseStack.pushPose()
             poseStack.scale(scale, scale, scale)
 
-            poseStack.mulPose(camera.orientation)
-            poseStack.mulPose(Axis.YP.rotation(time*0.04f))
+            poseStack.rotate(camera.orientation)
+            poseStack.rotate(Axis.YP.rotation(time*0.04f))
 
             submitSunShine(state, poseStack, collector)
-            poseStack.mulPose(Axis.YP.rotation(Mth.PI*0.5f))
+            poseStack.rotate(Axis.YP.rotation(Mth.PI*0.5f))
             submitSunShine(state, poseStack, collector)
             poseStack.popPose()
         }

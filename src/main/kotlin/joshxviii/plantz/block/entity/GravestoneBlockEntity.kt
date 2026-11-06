@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
 import java.util.UUID
 import kotlin.jvm.optionals.getOrDefault
 
@@ -78,17 +79,17 @@ class GravestoneBlockEntity(
 
     private fun canSpawn(level: ServerLevel, pos: BlockPos): Boolean {
         if ( !isDarkEnough(level) && !level.getBiome(pos).`is`(PazTags.Biomes.GRAVESTONE_IGNORE_BRIGHTNESS) ) return false
-
+        val centerPos = Vec3.atCenterOf(pos)
         val nearbyPlayer = level.getNearestPlayer(
-            pos.center.x,
-            pos.center.y,
-            pos.center.z,
+            centerPos.x,
+            centerPos.y,
+            centerPos.z,
             PazConfig.GRAVESTONE_ACTIVATION_RANGE,
             true
         )
         if (nearbyPlayer == null) return false
 
-        val aabb = AABB.ofSize(pos.center, 32.0, 16.0, 32.0)
+        val aabb = AABB.ofSize(centerPos, 32.0, 16.0, 32.0)
         val nearbyZombies = level.getEntitiesOfClass(Zombie::class.java, aabb) { it.isAlive }
 
         return trackedZombieIds.size < MAX_ZOMBIES && nearbyZombies.size < MAX_ZOMBIES
@@ -111,6 +112,8 @@ class GravestoneBlockEntity(
         zombie.setPersistenceRequired()
 
         if (!level.addFreshEntity(zombie)) return
+        val centerPos = Vec3.atCenterOf(pos)
+        val spawnPosCenter = Vec3.atCenterOf(spawnPos)
         trackedZombieIds.add(zombie.uuid)
         setChanged()
 
@@ -118,16 +121,16 @@ class GravestoneBlockEntity(
         ticksSinceLastSpawn = 0
         level.sendParticles(
             PazServerParticles.ZOMBIE_OMEN,
-            pos.center.x,
-            pos.center.y,
-            pos.center.z,
+            centerPos.x,
+            centerPos.y,
+            centerPos.z,
             4, 0.25, 0.125, 0.25, 0.0
         )
         level.sendParticles(
             PazServerParticles.ZOMBIE_OMEN,
-            spawnPos.center.x,
-            spawnPos.center.y,
-            spawnPos.center.z,
+            spawnPosCenter.x,
+            spawnPosCenter.y,
+            spawnPosCenter.z,
             3, 0.15, 0.0, 0.15, 0.0
         )
         level.playSound(null, pos, PazSounds.APPLY_ZOMBIE_OMEN, SoundSource.BLOCKS, 0.75f, 2.0f)
