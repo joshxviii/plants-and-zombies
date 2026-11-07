@@ -43,7 +43,9 @@ class GravestoneBlockEntity(
     companion object {
         private const val SPAWN_DELAY_MIN = 400
         private const val SPAWN_DELAY_MAX = 600
-        private const val MAX_ZOMBIES = 4
+        private const val ZOMBIE_DETECTION_RADIUS = 32.0
+        private const val MAX_TRACKED_ZOMBIES = 2
+        private const val MAX_NEARBY_ZOMBIES = 3
 
         fun tick(level: Level, pos: BlockPos, state: BlockState, blockEntity: GravestoneBlockEntity) {
             if (level.isClientSide || level !is ServerLevel) return
@@ -89,10 +91,10 @@ class GravestoneBlockEntity(
         )
         if (nearbyPlayer == null) return false
 
-        val aabb = AABB.ofSize(centerPos, 32.0, 16.0, 32.0)
+        val aabb = AABB.ofSize(centerPos, ZOMBIE_DETECTION_RADIUS, 16.0, ZOMBIE_DETECTION_RADIUS)
         val nearbyZombies = level.getEntitiesOfClass(Zombie::class.java, aabb) { it.isAlive }
 
-        return trackedZombieIds.size < MAX_ZOMBIES && nearbyZombies.size < MAX_ZOMBIES
+        return trackedZombieIds.size < MAX_TRACKED_ZOMBIES && nearbyZombies.size < MAX_NEARBY_ZOMBIES
     }
 
     private fun trySpawnZombie(level: ServerLevel, pos: BlockPos) {
@@ -109,7 +111,6 @@ class GravestoneBlockEntity(
             true,
             false
         ) ?: return
-        zombie.setPersistenceRequired()
 
         if (!level.addFreshEntity(zombie)) return
         val centerPos = Vec3.atCenterOf(pos)

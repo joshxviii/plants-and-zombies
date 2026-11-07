@@ -67,6 +67,8 @@ import net.minecraft.world.level.block.ComposterBlock
 import net.minecraft.world.level.block.DispenserBlock
 import net.minecraft.world.level.storage.loot.providers.number.floats.ContextFloatProviders
 import net.minecraft.world.level.storage.loot.providers.number.floats.ResolvableFloat
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProvider
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders
 import net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
@@ -79,11 +81,7 @@ object PazItems {
     val SUN: Item = registerItem(
         "sun", ::SunItem,
         properties = Item.Properties()
-            .component(DataComponents.COOKING_FUEL,
-                CookingFuel(
-                    ResolvableInt.Constant(1),
-                    ResolvableFloat.fromKey(ContextFloatProviders.COOKING_DEFAULT_SPEED_MULTIPLIER)
-                ))
+            .cookingFuel(ContextIntProviders.COOKING_TIME_BAMBOO)
     )
     @JvmField
     val SUN_BOTTLE: Item = registerItem(

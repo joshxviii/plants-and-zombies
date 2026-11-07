@@ -141,7 +141,6 @@ class SummonMinionsGoal(
                 ignoreFlag = true
             )
         )
-        minion.setPersistenceRequired()
         summoner.activeEffects.find { it.effect.`is`(PazEffects.HYPNOTIZE.unwrapKey().orElseThrow()) }
             ?.let(minion::addEffect)
         configureMinion(minion)
