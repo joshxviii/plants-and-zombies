@@ -72,14 +72,9 @@ object ZombieHudMarkers {
         val cy = y + ICON_SIZE * 0.5
         val baseScale = ICON_SIZE * 2.0f
 
-        val w = mc.window.guiScaledWidth
-        val h = mc.window.guiScaledHeight
-
         // outline
-        //submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale * state.scale, outlinePad = 1.15f)
-
+        submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale * state.scale, outlinePad = 1.15f)
         // head icon
-
         // TODO I should probably take a screen shot when resources are loaded of each entity in the zombie raider tag list and save the head marker image to reuse here
         submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale * state.scale)
 

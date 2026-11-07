@@ -14,40 +14,23 @@ import net.minecraft.client.renderer.RenderPipelines
 
 object PazRenderPipelines {
 
-//    @JvmField
-//    val PAINT_OVERLAY: RenderPipeline = RenderPipelines.register(
-//        RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
-//            .withLocation(pazResource("pipeline/paint_overlay"))
-//            //.withFragmentShader(pazResource("core/paint_overlay"))
-//            //.withShaderDefine("ALPHA_CUTOUT", 0.1f)
-//            //.withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
-//            //.withBindGroupLayout(BindGroupLayouts.SAMPLER1)
-//            //.withCull(false)
-//            .build()
-//    )
-
     @JvmField
     val PAINT_OVERLAY: RenderPipeline = RenderPipelines.register(
         RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
             .withLocation(pazResource("pipeline/paint_overlay"))
             .withFragmentShader(pazResource("core/paint_overlay"))
-            .withShaderDefine("ALPHA_CUTOUT", 0.1f)
             .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
+            .withBindGroupLayout(BindGroupLayouts.SAMPLER1)
+            .withShaderDefine("ALPHA_CUTOUT", 0.1f)
             .withCull(false)
             .build()
     )
 
-    //TODO Use this for taking a screenshot of the zombie models
+    //TODO use these two for rendering the image on the HUD
     @JvmField
-    val HEAD_MARKER_BAKE: RenderPipeline = RenderPipelines.register(
-        RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
-            .withLocation(pazResource("pipeline/head_marker_bake"))
-            .withBindGroupLayout(BindGroupLayouts.SAMPLER1)
-            .withShaderDefine("ALPHA_CUTOUT", 0.1F)
-            .withShaderDefine("NO_CARDINAL_LIGHTING")
-            .withShaderDefine("EMISSIVE")
-            .withShaderDefine("NO_OVERLAY")
-            .withCull(false)
+    val HEAD_MARKER: RenderPipeline = RenderPipelines.register(
+        RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
+            .withLocation(pazResource("pipeline/head_marker"))
             .build()
     )
 

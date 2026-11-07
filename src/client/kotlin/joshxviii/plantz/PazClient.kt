@@ -26,7 +26,7 @@ object PazClient : ClientModInitializer {
 		PazParticles.registerAll()
 		PazScreens.registerAll()
 		PazClientNetwork.initialize()
-		//PazRenderPipelines.initialize()
+		PazRenderPipelines.initialize()
 
 		ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(
 			pazResource("server_data_reload"),
