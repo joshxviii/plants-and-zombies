@@ -4,14 +4,17 @@
 
 | Branch | Purpose |
 | --- | --- |
-| [`main`](https://github.com/Mikkelka/plants-and-zombies/tree/main) | Reserved for the upstream mirror (previous upstream source: `main`). Sync separately when requested; keep fork changes and port merges on the port branches. |
-| [`codex/fabric-26.2-v1.5`](https://github.com/Mikkelka/plants-and-zombies/tree/codex/fabric-26.2-v1.5) | Maintained Minecraft 26.2 port. Last observed baseline `afa14f39` (1.5.2), port commit `c083f699`; maintained by its own chat. |
+| [`main`](https://github.com/Mikkelka/plants-and-zombies/tree/main) | Exact mirror of upstream `26.3`, currently `fbc1a3b6` (2026-11-07). Keep fork changes and port merges on the port branches. |
+| [`codex/fabric-26.2-v1.5`](https://github.com/Mikkelka/plants-and-zombies/tree/codex/fabric-26.2-v1.5) | Preserved Minecraft 26.2 port. Baseline `afa14f39` (1.5.2), port commit `c083f699`; update only when explicitly requested through its maintenance chat. |
 | [`codex/fabric-26.3-upstream`](https://github.com/Mikkelka/plants-and-zombies/tree/codex/fabric-26.3-upstream) | Maintained Minecraft 26.3 port. Current upstream baseline: `26.3` at `fbc1a3b6` (2026-11-07), including 1.6 development. |
 
 Upstream has replaced `main` with version branches; its current default is
-`26.3`, and `26.1` remains separate. The fork's `main` was not changed by this
-26.3 import. Do not automatically repoint or reset the mirror when upstream
-renames branches; choose its intended source during a separately requested sync.
+`26.3`, and `26.1` remains separate. On 2026-11-07 the user selected upstream
+`26.3` as the source for the fork's `main`. It was fast-forwarded by 181 commits
+from `afa14f39` to `fbc1a3b6` and pushed, preserving exact upstream history and
+tree. Both version branches remain separate; the working 26.3 port includes
+compatibility fixes which are intentionally absent from the original mirror.
+Do not automatically repoint the mirror if upstream renames branches again.
 Keep historical archives, including the local `archive/26.3-compat3` tag.
 
 Use the two port branches for ongoing work, including later mod releases. The
@@ -24,7 +27,8 @@ or copy Minecraft-specific changes wholesale between the ports.
 Each Minecraft version has its own maintenance chat:
 
 - The 26.3 chat maintains `codex/fabric-26.3-upstream` and keeps Minecraft 26.3.
-- The 26.2 chat maintains `codex/fabric-26.2-v1.5` and keeps Minecraft 26.2.
+- The 26.2 chat owns the preserved `codex/fabric-26.2-v1.5` branch. Keep it
+  available and update it only if the user requests further 26.2 work.
 
 The current working baseline for this chat is
 `1.6-dev.fbc1a3b6.compat1+mc26.3`, with runtime source at `63415ad4` and upstream
@@ -111,9 +115,10 @@ git fetch origin
 git fetch upstream --tags
 ```
 
-Resolve the actual upstream branch first (`git ls-remote --symref upstream HEAD`).
-As of 2026-11-07 it is `26.3`; `upstream/main` no longer exists. The example
-mirror commands below apply only when upstream actually has a `main` branch.
+Resolve the upstream branches first (`git ls-remote --symref upstream HEAD`).
+The selected mirror source is `upstream/26.3`; `upstream/main` no longer exists.
+Keep the selected source until the user requests a change, even if upstream's
+default branch changes later.
 
 Import the selected upstream ref directly into the assigned port branch. Syncing
 the `main` mirror is a separate action when requested; it is not a prerequisite
@@ -122,7 +127,7 @@ using and verify `main` is still an upstream-only mirror:
 
 ```powershell
 git switch main
-git merge --ff-only upstream/main
+git merge --ff-only upstream/26.3
 git push origin main
 ```
 

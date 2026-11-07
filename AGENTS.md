@@ -2,13 +2,15 @@
 
 - Read `PORTING.md` before updating a Minecraft port. Inspect the current branch,
   working tree, remotes and upstream baseline before editing.
-- `main` is reserved for the upstream mirror. Upstream renamed its version
-  branches and now defaults to `26.3`; choose the mirror source only during an
-  explicitly requested sync. Add fork changes to a Minecraft port branch;
-  never merge port commits or fork-only docs into main.
+- `main` mirrors `joshxviii/plants-and-zombies:26.3` exactly. The user selected
+  that source on 2026-11-07; current mirror baseline is `fbc1a3b6`. Keep the same
+  upstream source unless the user requests a change. Add fork changes to a
+  Minecraft port branch; never merge port commits or fork-only docs into main.
 - Maintain `codex/fabric-26.2-v1.5` for Minecraft 26.2 and
   `codex/fabric-26.3-upstream` for Minecraft 26.3. Keep the existing branches
   when importing later mod releases, and update the documented baseline/version.
+- Keep 26.2 as a preserved version branch; update it only when explicitly asked.
+  The working version for this chat is 26.3.
 - Each port has its own maintenance chat. This branch belongs to the Minecraft
   26.3 chat; leave 26.2 maintenance to its chat unless the user asks otherwise.
   Import upstream changes when requested; do not automatically change targets.

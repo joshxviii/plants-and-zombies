@@ -10,8 +10,8 @@ maintenance. The user confirmed that it works after the TerraBlender startup
 fix on 2026-11-07. Continue updates on this same branch and preserve that fix.
 
 - **This port:** [`codex/fabric-26.3-upstream`](https://github.com/Mikkelka/plants-and-zombies/tree/codex/fabric-26.3-upstream)
-- **Minecraft 26.2 port:** [`codex/fabric-26.2-v1.5`](https://github.com/Mikkelka/plants-and-zombies/tree/codex/fabric-26.2-v1.5)
-- **Upstream mirror:** [`main`](https://github.com/Mikkelka/plants-and-zombies/tree/main)
+- **Preserved Minecraft 26.2 port:** [`codex/fabric-26.2-v1.5`](https://github.com/Mikkelka/plants-and-zombies/tree/codex/fabric-26.2-v1.5)
+- **Exact upstream 26.3 mirror:** [`main`](https://github.com/Mikkelka/plants-and-zombies/tree/main), synchronized to `fbc1a3b6` on 2026-11-07.
 
 Install Java 25, Fabric Loader, Fabric API for Minecraft 26.3 and Fabric
 Language Kotlin. TerraBlender is bundled. Build with
