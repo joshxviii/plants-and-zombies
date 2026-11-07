@@ -26,16 +26,16 @@ object PazRenderPipelines {
 //            .build()
 //    )
 
-//    @JvmField
-//    val PAINT_OVERLAY: RenderPipeline = RenderPipelines.register(
-//        RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
-//            .withLocation(pazResource("pipeline/paint_overlay"))
-//            .withFragmentShader(pazResource("core/paint_overlay"))
-//            .withShaderDefine("ALPHA_CUTOUT", 0.1f)
-//            .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
-//            .withCull(false)
-//            .build()
-//    )
+    @JvmField
+    val PAINT_OVERLAY: RenderPipeline = RenderPipelines.register(
+        RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
+            .withLocation(pazResource("pipeline/paint_overlay"))
+            .withFragmentShader(pazResource("core/paint_overlay"))
+            .withShaderDefine("ALPHA_CUTOUT", 0.1f)
+            .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
+            .withCull(false)
+            .build()
+    )
 
     //TODO Use this for taking a screenshot of the zombie models
     @JvmField
@@ -59,23 +59,23 @@ object PazRenderPipelines {
             .build()
     )
 
-//    fun initialize() {
-//        if (FabricLoader.getInstance().isModLoaded("iris")) {
-//            registerIrisCompat()
-//        }
-//    }
+    fun initialize() {
+        if (FabricLoader.getInstance().isModLoaded("iris")) {
+            registerIrisCompat()
+        }
+    }
 
-//    private fun registerIrisCompat() {
-//        try {
-//            IrisApi.getInstance().let{
-////                it.assignPipeline(
-////                    PAINT_OVERLAY,
-////                    IrisProgram.ENTITIES
-////                )
-//            }
-//
-//        } catch (t: Throwable) {
-//            PazMain.LOGGER.warn("Iris present but assignPipeline failed", t)
-//        }
-//    }
+    private fun registerIrisCompat() {
+        try {
+            IrisApi.getInstance().let{
+                it.assignPipeline(
+                    PAINT_OVERLAY,
+                    IrisProgram.ENTITIES
+                )
+            }
+
+        } catch (t: Throwable) {
+            PazMain.LOGGER.warn("Iris present but assignPipeline failed", t)
+        }
+    }
 }

@@ -2,31 +2,27 @@
   "type": "minecraft:block_interact",
   "pools": [
     {
+      "rolls": 1.0,
       "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
           "name": "plantz:seed_packet",
           "weight": 1,
-          "functions": [
-            {
-              "function": "minecraft:set_components",
-              "components": {
-                "minecraft:entity_data": {
-                  "id": "plantz:pumpkin"
-                }
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "minecraft:entity_data": {
+                "id": "plantz:pumpkin"
               }
             }
-          ]
+          }
         }
       ],
-      "rolls": 1.0,
-      "conditions": [
-        {
-          "condition": "minecraft:random_chance",
-          "chance": 0.055
-        }
-      ]
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.055
+      }
     }
   ],
   "random_sequence": "minecraft:carve/pumpkin"

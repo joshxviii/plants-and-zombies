@@ -12,9 +12,9 @@
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
               "weight": 20,
-              "functions": [
+              "modifier": [
                 {
-                  "function": "minecraft:set_count",
+                  "type": "minecraft:set_count",
                   "count": {
                     "type": "minecraft:uniform",
                     "min": 1,
@@ -22,7 +22,7 @@
                   }
                 },
                 {
-                  "function": "minecraft:set_components",
+                  "type": "minecraft:set_components",
                   "components": {
                     "minecraft:entity_data": {
                       "id": "plantz:cherrybomb"
@@ -35,9 +35,9 @@
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
               "weight": 15,
-              "functions": [
+              "modifier": [
                 {
-                  "function": "minecraft:set_count",
+                  "type": "minecraft:set_count",
                   "count": {
                     "type": "minecraft:uniform",
                     "min": 1,
@@ -45,7 +45,7 @@
                   }
                 },
                 {
-                  "function": "minecraft:set_components",
+                  "type": "minecraft:set_components",
                   "components": {
                     "minecraft:entity_data": {
                       "id": "plantz:doomshroom"
@@ -57,12 +57,10 @@
           ]
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:random_chance",
-          "chance": 0.35
-        }
-      ]
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.35
+      }
     }
   ]
 }

@@ -8,12 +8,12 @@
           "type": "minecraft:item",
           "functions": [
             {
+              "type": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 18,
                 "max": 25
-              },
-              "function": "minecraft:set_count"
+              }
             }
           ],
           "name": "plantz:brainz_alloy"

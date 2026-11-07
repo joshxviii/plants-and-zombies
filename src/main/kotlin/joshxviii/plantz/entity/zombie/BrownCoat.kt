@@ -3,6 +3,8 @@ package joshxviii.plantz.entity.zombie
 import joshxviii.plantz.PazDataSerializers.BROWN_COAT_VARIANT
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.entity.ZombieEquipment.equipZombieEquipment
+import joshxviii.plantz.raid.BossType
+import joshxviii.plantz.raid.WaveType
 import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
@@ -78,6 +80,7 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
 
     override fun onSpawnedFromItem() {
         if (variant == BrownCoatVariant.BALLOON) spawnWithBalloons()
+        if (variant == BrownCoatVariant.BUCCANEER) WaveType.configurePirateInvasion(this)
     }
 
     override fun getTypeName(): Component {

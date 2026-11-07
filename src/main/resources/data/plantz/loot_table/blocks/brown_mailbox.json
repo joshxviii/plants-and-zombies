@@ -3,27 +3,23 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ],
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      },
       "entries": [
         {
           "type": "minecraft:item",
           "name": "plantz:brown_mailbox",
-          "functions": [
-            {
-              "function": "minecraft:copy_components",
-              "source": "block_entity",
-              "include": [
-                "minecraft:custom_name",
-                "minecraft:item_name",
-                "minecraft:tooltip_display",
-                "minecraft:rarity"
-              ]
-            }
-          ]
+          "modifier": {
+            "type":  "minecraft:copy_components",
+            "source": "block_entity",
+            "include": [
+              "minecraft:custom_name",
+              "minecraft:item_name",
+              "minecraft:tooltip_display",
+              "minecraft:rarity"
+            ]
+          }
         }
       ],
       "rolls": 1.0

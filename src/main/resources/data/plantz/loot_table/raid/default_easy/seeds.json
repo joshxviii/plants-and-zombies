@@ -8,9 +8,9 @@
           "type": "minecraft:item",
           "name": "plantz:sun_bottle",
           "weight": 35,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
@@ -23,9 +23,9 @@
           "type": "minecraft:item",
           "name": "plantz:seed_packet",
           "weight": 14,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_components",
+              "type": "minecraft:set_components",
               "components": {
                 "minecraft:entity_data": {
                   "id": "plantz:potatomine"
@@ -33,7 +33,7 @@
               }
             },
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
@@ -46,9 +46,9 @@
           "type": "minecraft:item",
           "name": "plantz:seed_packet",
           "weight": 10,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_components",
+              "type": "minecraft:set_components",
               "components": {
                 "minecraft:entity_data": {
                   "id": "plantz:bonkchoy"
@@ -56,7 +56,7 @@
               }
             },
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
@@ -69,9 +69,9 @@
           "type": "minecraft:item",
           "name": "plantz:seed_packet",
           "weight": 5,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_components",
+              "type": "minecraft:set_components",
               "components": {
                 "minecraft:entity_data": {
                   "id": "plantz:repeater"
@@ -79,7 +79,7 @@
               }
             },
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
@@ -92,9 +92,9 @@
           "type": "minecraft:item",
           "name": "plantz:seed_packet",
           "weight": 2,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_components",
+              "type": "minecraft:set_components",
               "components": {
                 "minecraft:entity_data": {
                   "id": "plantz:hypnoshroom"
@@ -102,7 +102,7 @@
               }
             },
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": 1
             }
           ]

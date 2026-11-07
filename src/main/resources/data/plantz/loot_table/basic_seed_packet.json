@@ -11,9 +11,9 @@
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
               "weight": 1,
-              "functions": [
+              "modifier": [
                 {
-                  "function": "minecraft:set_components",
+                  "type": "minecraft:set_components",
                   "components": {
                     "minecraft:entity_data": {
                       "id": "plantz:sunflower"
@@ -26,9 +26,9 @@
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
               "weight": 1,
-              "functions": [
+              "modifier": [
                 {
-                  "function": "minecraft:set_components",
+                  "type": "minecraft:set_components",
                   "components": {
                     "minecraft:entity_data": {
                       "id": "plantz:peashooter"
@@ -41,9 +41,9 @@
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
               "weight": 1,
-              "functions": [
+              "modifier": [
                 {
-                  "function": "minecraft:set_components",
+                  "type": "minecraft:set_components",
                   "components": {
                     "minecraft:entity_data": {
                       "id": "plantz:wallnut"
@@ -55,11 +55,9 @@
           ]
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:killed_by_player"
-        }
-      ]
+      "condition": {
+        "type": "minecraft:killed_by_player"
+      }
     }
   ]
 }

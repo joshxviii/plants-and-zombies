@@ -6,39 +6,23 @@
       "bonus_rolls": 0,
       "entries": [
         {
-          "type": "minecraft:group",
-          "children": [
-            {
-              "type": "minecraft:item",
-              "name": "plantz:seed_packet",
-              "weight": 1,
-              "functions": [
-                {
-                  "function": "minecraft:set_components",
-                  "components": {
-                    "minecraft:entity_data": {
-                      "id": "plantz:seashroom"
-                    }
-                  }
-                }
-              ]
+          "type": "minecraft:item",
+          "name": "plantz:seed_packet",
+          "weight": 1,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "minecraft:entity_data": {
+                "id": "plantz:seashroom"
+              }
             }
-          ],
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": 1,
-              "add": false
-            }
-          ]
+          }
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:random_chance",
-          "chance": 0.075
-        }
-      ]
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.075
+      }
     }
   ]
 }

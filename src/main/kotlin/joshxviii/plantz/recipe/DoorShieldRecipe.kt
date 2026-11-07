@@ -5,6 +5,8 @@ import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.item.component.DoorShieldComponent
 import joshxviii.plantz.pazResource
+import net.minecraft.core.Holder
+import net.minecraft.core.HolderOwner
 import net.minecraft.core.HolderSet
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
@@ -47,7 +49,11 @@ class DoorShieldRecipe : CustomRecipe() {
     override fun category(): CraftingBookCategory = CraftingBookCategory.EQUIPMENT
 
     override fun display(): List<RecipeDisplay> = listOf(
-
+//        ShapelessCraftingRecipeDisplay(
+//            listOf(SlotDisplay.TagSlotDisplay(HolderSet.Named(BlockItemTags.DOORS.item())), Ingredient.of(Items.SHIELD).display()),
+//            SlotDisplay.ItemSlotDisplay(PazItems.DOOR_SHIELD),
+//            SlotDisplay.ItemSlotDisplay(Items.CRAFTING_TABLE)
+//        )
     )
 
     override fun getSerializer(): RecipeSerializer<DoorShieldRecipe> = SERIALIZER

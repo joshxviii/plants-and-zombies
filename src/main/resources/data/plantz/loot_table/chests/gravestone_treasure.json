@@ -9,22 +9,19 @@
           "type": "minecraft:item",
           "name": "minecraft:ominous_bottle",
           "weight": 65,
-          "functions": [
-            {
-              "function": "minecraft:set_ominous_bottle_amplifier",
-              "amplifier": {
-                "type": "minecraft:uniform",
-                "min": 0,
-                "max": 4
-              }
+          "modifier": {
+            "type": "minecraft:set_ominous_bottle_amplifier",
+            "amplifier": {
+              "type": "minecraft:uniform",
+              "min": 0,
+              "max": 4
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "name": "plantz:cone",
-          "weight": 40,
-          "conditions": []
+          "weight": 40
         },
         {
           "type": "minecraft:item",
@@ -37,9 +34,9 @@
           "weight": 5
         }
       ],
-      "functions": [
+      "modifier": [
         {
-          "function": "minecraft:set_damage",
+          "type": "minecraft:set_damage",
           "damage": {
             "type": "minecraft:uniform",
             "min": 0.2,
@@ -47,16 +44,14 @@
           }
         },
         {
-          "function": "minecraft:set_count",
+          "type": "minecraft:set_count",
           "count": 1
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:random_chance",
-          "chance": 0.33
-        }
-      ]
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.33
+      }
     },
     {
       "bonus_rolls": 0,
@@ -65,102 +60,88 @@
           "type": "minecraft:item",
           "name": "plantz:brainz_alloy",
           "weight": 1,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 2
-              }
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 2
             }
-          ]
-        }
-      ],
-      "rolls": 1,
-      "functions": [
-        {
-          "function": "minecraft:set_count",
-          "count": {
-            "type": "minecraft:uniform",
-            "min": 1,
-            "max": 2
           }
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:random_chance",
-          "chance": 0.25
+      "rolls": 1,
+      "modifier": {
+        "type": "minecraft:set_count",
+        "count": {
+          "type": "minecraft:uniform",
+          "min": 1,
+          "max": 2
         }
-      ]
+      },
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.25
+      }
     },
     {
       "bonus_rolls": 0,
       "entries": [
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "add": false,
-              "count": {
-                "type": "minecraft:uniform",
-                "max": 2,
-                "min": 1
-              },
-              "function": "minecraft:set_count"
+          "modifier": {
+            "type": "minecraft:set_count",
+            "add": false,
+            "count": {
+              "type": "minecraft:uniform",
+              "max": 2,
+              "min": 1
             }
-          ],
+          },
           "name": "minecraft:copper_ingot",
           "weight": 35
         },
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "add": false,
-              "count": {
-                "type": "minecraft:uniform",
-                "max": 2,
-                "min": 1
-              },
-              "function": "minecraft:set_count"
-            }
-          ],
           "name": "minecraft:iron_ingot",
-          "weight": 25
+          "weight": 25,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "add": false,
+            "count": {
+              "type": "minecraft:uniform",
+              "max": 2,
+              "min": 1
+            }
+          }
         },
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "add": false,
-              "count": {
-                "type": "minecraft:uniform",
-                "max": 2,
-                "min": 1
-              },
-              "function": "minecraft:set_count"
-            }
-          ],
           "name": "minecraft:gold_ingot",
-          "weight": 20
+          "weight": 20,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "add": false,
+            "count": {
+              "type": "minecraft:uniform",
+              "max": 2,
+              "min": 1
+            }
+          }
         },
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "add": false,
-              "count": {
-                "type": "minecraft:uniform",
-                "max": 3,
-                "min": 1
-              },
-              "function": "minecraft:set_count"
-            }
-          ],
           "name": "minecraft:emerald",
-          "weight": 30
+          "weight": 30,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "add": false,
+            "count": {
+              "type": "minecraft:uniform",
+              "max": 3,
+              "min": 1
+            }
+          }
         }
       ],
       "rolls": {
@@ -176,15 +157,14 @@
           "type": "minecraft:item",
           "name": "minecraft:rotten_flesh",
           "weight": 80,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 1,
-                "max": 3
-              }
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 3
             }
-          ]
+          }
         }
       ],
       "rolls": {

@@ -12,9 +12,9 @@
           "type": "minecraft:item",
           "name": "plantz:sun_bottle",
           "weight": 10,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 4,
@@ -27,9 +27,9 @@
           "type": "minecraft:item",
           "name": "plantz:seed_packet",
           "weight": 20,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_components",
+              "type": "minecraft:set_components",
               "components": {
                 "minecraft:entity_data": {
                   "id": "plantz:pumpkin"
@@ -37,7 +37,7 @@
               }
             },
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 2,
@@ -50,9 +50,9 @@
           "type": "minecraft:item",
           "name": "plantz:seed_packet",
           "weight": 9,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_components",
+              "type": "minecraft:set_components",
               "components": {
                 "minecraft:entity_data": {
                   "id": "plantz:grave_buster"
@@ -60,7 +60,7 @@
               }
             },
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 4,

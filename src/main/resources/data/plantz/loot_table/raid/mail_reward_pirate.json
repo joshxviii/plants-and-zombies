@@ -23,10 +23,8 @@
           "value": "plantz:raid/pirate/treasure",
           "weight": 10
         }
-      ],
-      "functions": []
+      ]
     }
   ],
-  "functions": [],
   "random_sequence": "plantz:raid/default_mail_rewards"
 }

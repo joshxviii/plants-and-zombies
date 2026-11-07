@@ -5,41 +5,35 @@
       "bonus_rolls": 0,
       "entries": [
         {
+          "name": "plantz:baron_staff",
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "condition": "minecraft:random_chance",
-              "chance": 0.08
+          "modifier": {
+            "type": "minecraft:set_damage",
+            "damage": {
+              "type": "minecraft:uniform",
+              "min": 0.6,
+              "max": 0.9
             }
-          ],
-          "functions": [
-            {
-              "count": 1,
-              "function": "minecraft:set_count"
-            },
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.6,
-                "max": 0.9
-              },
-              "add": false
-            }
-          ],
-          "name": "plantz:baron_staff"
+          }
         }
       ],
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "minecraft:entity_properties",
-          "entity": "attacker",
-          "predicate": {
-            "type": "#plantz:drop_loot_when_killed_by"
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "minecraft:entity_properties",
+            "entity": "attacker",
+            "predicate": {
+              "minecraft:entity_type": "#plantz:drop_loot_when_killed_by"
+            }
+          },
+          {
+            "type": "minecraft:random_chance",
+            "chance": 0.085
           }
-        }
-      ]
+        ]
+      }
     }
   ],
   "random_sequence": "minecraft:entities/baron_von_bats"

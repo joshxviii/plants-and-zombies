@@ -13,9 +13,9 @@
           "type": "minecraft:item",
           "name": "minecraft:diamond",
           "weight": 1,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
@@ -28,9 +28,9 @@
           "type": "minecraft:item",
           "name": "minecraft:emerald",
           "weight": 3,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 2,
@@ -43,9 +43,9 @@
           "type": "minecraft:item",
           "name": "minecraft:gold_ingot",
           "weight": 4,
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
@@ -71,12 +71,10 @@
           "weight": 1
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:random_chance",
-          "chance": 0.01
-        }
-      ]
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.01
+      }
     }
   ],
   "random_sequence": "plantz:seed_mutations"

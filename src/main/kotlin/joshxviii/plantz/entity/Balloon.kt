@@ -129,9 +129,7 @@ class Balloon(
         }
 
         if (isRemoved) return
-        if (isInterpolating) {
-            getInterpolation().interpolate()
-        } else if (canSimulateMovement()) {
+        if (canSimulateMovement()) {
             move(MoverType.SELF, deltaMovement)
             applyGravity()
             deltaMovement = deltaMovement.scale(0.98)

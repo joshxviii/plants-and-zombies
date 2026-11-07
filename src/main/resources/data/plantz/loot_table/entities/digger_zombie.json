@@ -1,5 +1,4 @@
 {
-  "type": "minecraft:entity",
   "pools": [
     {
       "rolls": 1,
@@ -8,32 +7,33 @@
         {
           "type": "minecraft:item",
           "name": "plantz:seed_packet",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "minecraft:set_components",
-              "components": {
-                "minecraft:entity_data": {
-                  "id": "plantz:cherrybomb"
-                }
+          "weight": 3,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "minecraft:entity_data": {
+                "id": "plantz:cherrybomb"
               }
             }
-          ]
+          }
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:entity_properties",
-          "entity": "attacker",
-          "predicate": {
-            "type": "#plantz:drop_loot_when_killed_by"
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "minecraft:entity_properties",
+            "entity": "attacker",
+            "predicate": {
+              "minecraft:entity_type": "#plantz:drop_loot_when_killed_by"
+            }
+          },
+          {
+            "type": "minecraft:random_chance",
+            "chance": 0.08
           }
-        },
-        {
-          "condition": "minecraft:random_chance",
-          "chance": 0.12
-        }
-      ]
+        ]
+      }
     }
   ],
   "random_sequence": "minecraft:entities/digger_zombie"
