@@ -42,6 +42,21 @@ object PazRenderPipelines {
             .build()
     )
 
+    @JvmField
+    val TIME_PORTAL: RenderPipeline = RenderPipelines.register(RenderPipeline.builder(*arrayOf(
+        RenderPipelines.MATRICES_FOG_SNIPPET,
+        RenderPipelines.GLOBALS_SNIPPET))
+        .withLocation(pazResource("pipeline/time_portal"))
+        .withVertexShader(pazResource("core/time_portal"))
+        .withFragmentShader(pazResource("core/time_portal"))
+        .withBindGroupLayout(BindGroupLayouts.SAMPLER0_SAMPLER1)
+        .withVertexBinding(0, DefaultVertexFormat.POSITION_TEX_COLOR)
+        .withPrimitiveTopology(PrimitiveTopology.QUADS)
+        .withDepthStencilState(DepthStencilState.DEFAULT)
+        .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
+        .build()
+    )
+
     fun initialize() {
         if (FabricLoader.getInstance().isModLoaded("iris")) {
             registerIrisCompat()

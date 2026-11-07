@@ -1,28 +1,28 @@
 {
   "type": "minecraft:interpolated",
-  "argument": {
+  "input": {
     "type": "minecraft:add",
-    "argument1": {
+    "left": {
       "type": "minecraft:max",
-      "argument1": "plantz:gnome_space/asteroids",
-      "argument2": "plantz:gnome_space/islands"
+      "left": "plantz:gnome_space/asteroids",
+      "right": "plantz:gnome_space/islands"
     },
-    "argument2": {
+    "right": {
       "type": "minecraft:min",
-      "argument1": {
-        "type": "minecraft:y_clamped_gradient",
-        "from_y": 0,
-        "to_y": 48,
-        "from_value": -3,
-        "to_value": 0
+      "left": {
+        "type": "minecraft:clamp",
+        "input": 0,
+        "min": -3,
+        "max": 48
       },
-      "argument2": {
-        "type": "minecraft:y_clamped_gradient",
-        "from_y": 176,
-        "to_y": 224,
-        "from_value": 0,
-        "to_value": -3
+      "right": {
+        "type": "minecraft:clamp",
+        "input": 0,
+        "min": -3,
+        "max": 224
       }
     }
-  }
+  },
+  "cell_size_xz": 1,
+  "cell_size_y": 1
 }

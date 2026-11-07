@@ -114,7 +114,7 @@ object PazBlocks {
             .strength(-1.0f)
             .sound(SoundType.GLASS)
             .lightLevel{ 15 }
-            .pushReaction(PushReaction.BLOCK)
+            .pushReaction(PushReaction.IMMOVEABLE)
             .randomTicks(),
         ::TimePortalBlock,
         null,

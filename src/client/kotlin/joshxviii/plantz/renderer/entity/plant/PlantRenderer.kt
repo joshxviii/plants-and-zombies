@@ -47,9 +47,9 @@ open class PlantRenderer(
 ) {
 
     companion object {
-        private fun updateClientRoll(entity: Plant) {
+        private fun updateClientRoll(entity: Plant, partialTick: Float) {
             if (Minecraft.getInstance().isPaused) return
-            val tickScale = entity.level().tickRateManager().tickrate() / 20f
+            val tickScale = entity.level().tickRateManager().tickrate() / 20f * partialTick
 
             if (!entity.isRolling()) {
                 entity.rollRotation.identity()
@@ -150,7 +150,7 @@ open class PlantRenderer(
         state.pumpkinArmor = entity.pumpkinArmor
         state.damagedAmount = entity.damagedPercent
 
-        updateClientRoll(entity)
+        updateClientRoll(entity, partialTick)
         state.isRolling = entity.isRolling()
         state.rollRotation.set(entity.rollRotation)
 

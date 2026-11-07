@@ -1,18 +1,18 @@
 #version 330
+#extension GL_ARB_separate_shader_objects : require
 
-#moj_import <minecraft:fog.glsl>
-#moj_import <minecraft:matrix.glsl>
-#moj_import <minecraft:globals.glsl>
+#include <minecraft:fog.glsl>
+#include <minecraft:globals.glsl>
 
 uniform sampler2D Sampler0;
 uniform sampler2D Sampler1;
 
-in vec2 texCoord0;
-in vec4 vertexColor;
-in float sphericalVertexDistance;
-in float cylindricalVertexDistance;
+layout(location = 0) in vec2 texCoord0;
+layout(location = 1) in vec4 vertexColor;
+layout(location = 2) in float sphericalVertexDistance;
+layout(location = 3) in float cylindricalVertexDistance;
 
-out vec4 fragColor;
+layout(location = 0) out vec4 fragColor;
 
 float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);

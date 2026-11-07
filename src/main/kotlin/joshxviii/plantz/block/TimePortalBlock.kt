@@ -39,7 +39,6 @@ import kotlin.math.max
 class TimePortalBlock(properties: Properties) : BaseEntityBlock(properties), SimpleWaterloggedBlock, Portal {
 
     companion object {
-        val CODEC: MapCodec<TimePortalBlock> = simpleCodec(::TimePortalBlock)
         val SHAPES = Shapes.rotateAll(column(16.0, 2.0, 0.0, 16.0))
 
         val FACING: EnumProperty<Direction> = DirectionalBlock.FACING
@@ -135,7 +134,5 @@ class TimePortalBlock(properties: Properties) : BaseEntityBlock(properties), Sim
     override fun canSurvive(state: BlockState, level: LevelReader, pos: BlockPos): Boolean {
         return super.canSurvive(state, level, pos)
     }
-
-    override fun codec(): MapCodec<out TimePortalBlock> = CODEC
 
 }
