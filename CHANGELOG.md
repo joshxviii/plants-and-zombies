@@ -6,6 +6,7 @@
 - Added Citron
 
 # Changelog 1.5.2
+- Plants & Zombies has migrated to 26.3!
 ### Changes / Additions
 - Added Marigold
   - Obtained through raid rewards.

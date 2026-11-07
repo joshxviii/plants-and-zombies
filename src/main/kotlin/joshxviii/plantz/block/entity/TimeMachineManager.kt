@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazComponents
+import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazWorldGen
 import joshxviii.plantz.block.TimeMachineBlock
 import joshxviii.plantz.block.TimeMachineState
@@ -11,6 +12,7 @@ import joshxviii.plantz.block.TimePortalBlock
 import joshxviii.plantz.pazResource
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.core.SectionPos
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.resources.ResourceKey
@@ -82,6 +84,7 @@ class TimeMachineManager private constructor(
     fun changed() = setDirty()
 
     fun tick(server: MinecraftServer) {
+        if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED)
         for (link in links.values.toList()) {
             val loaded = loadedMachines(server, link)
             if (loaded.isEmpty()) continue
@@ -113,8 +116,10 @@ class TimeMachineManager private constructor(
     private fun loadedMachines(server: MinecraftServer, link: TimeMachineLink): List<TimeMachineBlockEntity> =
         link.powered.keys.toList().mapNotNull { dimension ->
             val level = server.getLevel(dimension) ?: return@mapNotNull null
-            if (!level.hasChunkAt(link.pos)) return@mapNotNull null
-            (level.getBlockEntity(link.pos) as? TimeMachineBlockEntity)?.takeUnless { it.isRemoved }
+            val chunkX = SectionPos.blockToSectionCoord(link.pos.x)
+            val chunkZ = SectionPos.blockToSectionCoord(link.pos.z)
+            val chunk = level.chunkSource.getChunkNow(chunkX, chunkZ)
+            (chunk?.getBlockEntity(link.pos) as? TimeMachineBlockEntity)?.takeUnless { it.isRemoved }
         }
 
     private fun applyState(machine: TimeMachineBlockEntity, link: TimeMachineLink) {

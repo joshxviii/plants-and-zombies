@@ -50,6 +50,9 @@ object PazCreativeTabs {
         output.accept(SeedPacketItem.stackFor(PazEntities.COFFEE_BEAN))
         output.accept(SeedPacketItem.stackFor(PazEntities.GRAVE_BUSTER))
         output.accept(SeedPacketItem.stackFor(PazEntities.PUMPKIN))
+        if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) {
+            output.accept(SeedPacketItem.stackFor(PazEntities.CITRON))
+        }
     }
 
     private fun customEggs(output: CreativeModeTab.Output, stacks: List<ItemStack>) {
@@ -116,10 +119,8 @@ object PazCreativeTabs {
         output.accept(PazBlocks.PLANTZ_FLAG_BLOCK)
         output.accept(PazItems.TACO)
         output.accept(PazItems.BRAINZ_ALLOY)
-        if (PazConfig.SPLIT_ITEM_TABS) {
-            output.accept(PazItems.BRAINZIUM)
-            output.accept(PazItems.LETTER)
-        }
+        if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(PazItems.LETTER)
+
         // music
         output.accept(PazItems.MUSIC_DISC_GRASSY_GROOVE)
 
@@ -146,7 +147,10 @@ object PazCreativeTabs {
         output.accept(PazBlocks.YELLOW_GARDEN_GNOME)
         output.accept(PazBlocks.GOLDEN_GARDEN_GNOME)
         output.accept(PazBlocks.LAWN_FLAMINGO)
-        if (PazConfig.SPLIT_ITEM_TABS) output.accept(PazBlocks.TIME_MACHINE)
+        if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) {
+            output.accept(PazItems.BRAINZIUM)
+            output.accept(PazBlocks.TIME_MACHINE)
+        }
 
         // gnome
         if (PazConfig.SPLIT_ITEM_TABS) output.accept(PazItems.GNOME_SPAWN_EGG)

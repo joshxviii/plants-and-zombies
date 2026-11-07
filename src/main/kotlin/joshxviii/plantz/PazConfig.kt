@@ -76,7 +76,8 @@ data class ServerConfig(
         "plantz:grave_buster"           to 3,
         "plantz:pumpkin"                to 6,
     ),
-    var graveStoneActivationRange: Double = 24.0
+    var graveStoneActivationRange: Double = 24.0,
+    var enableExperimentalFeatures: Boolean = false
 )
 data class ClientConfig(
     var showDebugInfo: Boolean = false,
@@ -176,6 +177,9 @@ object PazConfig {
 
     val GRAVESTONE_ACTIVATION_RANGE: Double
         get() = server.graveStoneActivationRange
+
+    val EXPERIMENTAL_FEATURES_ENABLED: Boolean
+        get() = server.enableExperimentalFeatures
 
     fun getGrowTime(sunCost: Int, zenBuff: Boolean): Int {
         val time = server.seedGrowTime.coerceAtLeast(0) + (sunCost * server.extraGrowTimePerSun.coerceAtLeast(0))

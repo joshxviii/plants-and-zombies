@@ -2,7 +2,6 @@ package joshxviii.plantz.ai.goal
 
 import joshxviii.plantz.PazBlocks.PLANTZ_FLAG_BLOCK
 import joshxviii.plantz.PazEffects
-import joshxviii.plantz.lookAtBlockPos
 import joshxviii.plantz.raid.ZombieRaid
 import joshxviii.plantz.raid.getZombieRaids
 import joshxviii.plantz.withinAttackRange
@@ -97,7 +96,6 @@ class PathfindToFlagGoal(
 
     override fun tick() {
         val flagPos = targetFlagPos ?: return
-        if (mob.tickCount % 3 == 0) mob.lookControl.lookAtBlockPos(flagPos)
 
         if (repathCooldown > 0) {
             repathCooldown--

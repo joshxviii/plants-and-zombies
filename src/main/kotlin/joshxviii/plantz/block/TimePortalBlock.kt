@@ -2,6 +2,7 @@ package joshxviii.plantz.block
 
 import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PazBlocks
+import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazWorldGen
 import joshxviii.plantz.block.entity.TimeMachineBlockEntity
 import joshxviii.plantz.block.entity.getTimeMachineManager
@@ -92,6 +93,7 @@ class TimePortalBlock(properties: Properties) : BaseEntityBlock(properties), Sim
         entity: Entity,
         portalEntryPos: BlockPos
     ): TeleportTransition? {
+        if (!PazConfig.EXPERIMENTAL_FEATURES_ENABLED) return null
         val source = currentLevel.getBlockEntity(portalEntryPos.below(2)) as? TimeMachineBlockEntity ?: return null
         if (source.blockState.getValue(TimeMachineBlock.STATE) != TimeMachineState.ACTIVE) return null
         val newDimension = if (PazWorldGen.isTimeDimension(currentLevel.dimension())) Level.OVERWORLD else PazWorldGen.TIME_SPACE
