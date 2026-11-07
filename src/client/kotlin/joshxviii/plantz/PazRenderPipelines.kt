@@ -55,6 +55,10 @@ object PazRenderPipelines {
                     PAINT_OVERLAY,
                     IrisProgram.ENTITIES
                 )
+                it.assignPipeline(
+                    TIME_PORTAL,
+                    IrisProgram.PARTICLES_TRANSLUCENT
+                )
             }
 
         } catch (t: Throwable) {

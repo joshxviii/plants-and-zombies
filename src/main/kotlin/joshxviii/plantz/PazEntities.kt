@@ -365,6 +365,32 @@ object PazEntities {
             maxHealth = PazConfig.PUMPKIN_ARMOR_AMOUNT.toDouble(),
         )
     )
+    @JvmField val ROYAL_SUNFLOWER: EntityType<RoyalSunflower> = registerPlant(
+        "royal_sunflower", EntityType.Builder.of(::RoyalSunflower, MobCategory.CREATURE),
+        width = 2.25f,
+        height = 4.3f,
+        eyeHeight = 3.5f,
+        attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 450.0,
+            followRange = 48.0,
+            movementSpeed = 0.17,
+            attackDamage = 10.0,
+            knockbackResistance = 0.9
+        )
+    )
+    @JvmField val CITRON: EntityType<Citron> = registerPlant(
+        "citron", EntityType.Builder.of(::Citron, MobCategory.CREATURE),
+        width = 0.85f,
+        height = 0.76f,
+        eyeHeight = 0.6f,
+        attributes = Plant.Companion.PlantAttributes(
+            maxHealth = 50.0,
+            followRange = 32.0,
+            movementSpeed = 0.22,
+            attackDamage = 3.0,
+            knockbackResistance = 0.1
+        )
+    )
     // endregion
 
     // region Zombies

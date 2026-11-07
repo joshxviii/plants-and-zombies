@@ -1,20 +1,21 @@
 package joshxviii.plantz.gui
 
+import joshxviii.plantz.PazComponents
 import joshxviii.plantz.inventory.TimeMachineMenu
 import joshxviii.plantz.pazResource
+import joshxviii.plantz.renderer.Fonts
+import joshxviii.plantz.renderer.Fonts.withFont
 import joshxviii.plantz.renderer.outlineText
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
-import net.minecraft.client.gui.screens.inventory.LoomScreen
 import net.minecraft.client.input.KeyEvent
 import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.client.renderer.RenderPipelines
-import net.minecraft.client.renderer.texture.SpriteContents
-import net.minecraft.client.renderer.texture.TextureAtlasSprite
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.contents.objects.AtlasSprite
 import net.minecraft.resources.Identifier
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.ARGB
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.Slot
@@ -23,7 +24,9 @@ class TimeMachineScreen(
     val menu: TimeMachineMenu,
     val inventory: Inventory,
     title: Component,
-) : AbstractContainerScreen<TimeMachineMenu>(menu, inventory, title, 176, 180) {
+) : AbstractContainerScreen<TimeMachineMenu>(menu, inventory, title, 208, 183) {
+
+    var activeTime: Int = 0
 
     companion object {
         val BACKGROUND: Identifier = pazResource("textures/gui/time_machine/background.png")
@@ -34,7 +37,11 @@ class TimeMachineScreen(
         super.init()
         val xo = (width - imageWidth) / 2
         val yo = (height - imageHeight) / 2
+        this.leftPos = xo
+        this.topPos = yo
     }
+
+    override fun extractLabels(graphics: GuiGraphicsExtractor, xm: Int, ym: Int) {}
 
     override fun extractBackground(graphics: GuiGraphicsExtractor, xm: Int, ym: Int, a: Float) {
         val xo = leftPos
@@ -47,10 +54,66 @@ class TimeMachineScreen(
             graphics.blit(RenderPipelines.GUI_TEXTURED, SUN_BATTERY_SLOT, xo + batterySlot.x, yo + batterySlot.y, 0f, 0f, 16, 16, 16, 16)
         }
 
-        val wipText = Component.translatable("container.plantz.time_machine.wip").withStyle(ChatFormatting.BOLD)
-        val textWidth = font.width(wipText)
-        val textColor = 0xCC4444
-        graphics.outlineText(font, wipText, xo + (imageWidth / 2) - (textWidth / 2), yo + 64, color = textColor, outlineColor = ARGB.multiply(textColor, 0x333333))
+        val dimensionName = Component.translatable(minecraft.level?.dimensionTypeRegistration()?.registeredName ?: "").withStyle(ChatFormatting.GREEN)
+        val wipText = Component.translatable("container.plantz.time_machine.display", dimensionName).withoutShadow().withStyle(ChatFormatting.RED).withFont(Fonts.DOT_DISPLAY)
+
+        if (hasPower()) drawScrollingText(
+            graphics,
+            wipText,
+            x = xo + 119,
+            y = yo + 20,
+            displayWidth = 68
+        )
+    }
+
+    fun hasPower(): Boolean {
+        val batterySlot: Slot = this.menu.batterySlot
+        return batterySlot.item.get(PazComponents.STORED_SUN)?.hasSun() ?: false
+    }
+
+    fun drawScrollingText(
+        graphics: GuiGraphicsExtractor,
+        text: Component,
+        x: Int,
+        y: Int,
+        displayWidth: Int,
+        pixelsPerTick: Float = 0.75f,
+        gap: Int = 20,
+    ) {
+        val pixelInterval = 2
+        val textWidth = font.width(text)
+//FF4545
+        val textColor = ARGB.opaque(0xFFFFFF)
+        val outlineColor = 0
+
+        if (textWidth <= displayWidth) {
+            graphics.outlineText(font, text, x, y, textColor, outlineColor)
+            return
+        }
+
+        val loopWidth = textWidth + gap
+        val scroll = (((activeTime * pixelsPerTick * pixelInterval) % loopWidth) / pixelInterval).toInt() * pixelInterval
+
+        graphics.enableScissor(x, y - 1, x + displayWidth, y + font.lineHeight + 1)
+
+        val x1 = x - scroll
+        graphics.text(font, text, x1, y, textColor)
+        graphics.text(font, text, x1 + loopWidth, y, textColor)
+
+        graphics.disableScissor()
+    }
+
+    override fun containerTick() {
+        if (hasPower()) {
+            activeTime++
+            if (activeTime == 1) playPoweredSound()
+        }
+        else activeTime = 0
+    }
+
+    fun playPoweredSound() {
+        val sound = SoundEvents.COPPER_BULB_TURN_ON
+        minecraft.soundManager.play(SimpleSoundInstance.forUI(sound, 1.0f))
     }
 
     override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {

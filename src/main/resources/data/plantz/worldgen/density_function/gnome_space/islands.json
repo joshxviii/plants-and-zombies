@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:add",
+  "argument1": {
+    "type": "minecraft:noise",
+    "noise": "plantz:gnome_islands",
+    "xz_scale": 1.0,
+    "y_scale": 1.5
+  },
+  "argument2": -0.7
+}

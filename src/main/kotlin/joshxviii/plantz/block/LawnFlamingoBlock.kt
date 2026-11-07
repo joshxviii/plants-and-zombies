@@ -31,7 +31,7 @@ import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 
-class LawnFlamingo(properties: Properties) : HorizontalDirectionalBlock(properties), SimpleWaterloggedBlock {
+class LawnFlamingoBlock(properties: Properties) : HorizontalDirectionalBlock(properties), SimpleWaterloggedBlock {
     companion object {
         val SHAPE: VoxelShape = Util.make {
             Shapes.or(
