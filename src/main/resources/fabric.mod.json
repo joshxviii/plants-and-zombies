@@ -27,6 +27,12 @@
 				"adapter": "kotlin"
 			}
 		],
+		"terrablender": [
+			{
+				"value": "joshxviii.plantz.PazTerraBlender",
+				"adapter": "kotlin"
+			}
+		],
 		"modmenu": [
 			{
 				"value": "joshxviii.plantz.PazModMenu",

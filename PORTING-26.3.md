@@ -5,7 +5,7 @@ through `fbc1a3b6fc31a891e5aace3b19b03b9482bdff37` (2026-11-07).
 It imports 262 commits since the previous baseline `ddf05fb7`, including
 1.5.1/1.5.2 and ongoing 1.6 development (Citron and Time Machine/dimensions).
 Upstream still declares `mod_version=1.5.2`; the mixed development snapshot is
-explicitly named `1.6-dev.fbc1a3b6+mc26.3` here, rather than a stable 1.6 release.
+explicitly named `1.6-dev.fbc1a3b6.compat1+mc26.3` here, rather than a stable 1.6 release.
 
 ## Maintenance purpose
 
@@ -29,7 +29,7 @@ mod version and validation results after each requested update.
 - Optional Iris: compilation uses 1.11.7+26.3-fabric
 
 Run `./gradlew build --console=plain` (Windows: `./gradlew.bat build --console=plain`).
-The output is `build/libs/plants-and-zombies-1.6-dev.fbc1a3b6+mc26.3.jar`.
+The output is `build/libs/plants-and-zombies-1.6-dev.fbc1a3b6.compat1+mc26.3.jar`.
 
 TerraBlender's nested libraries and LGPLv3 metadata are preserved. Upstream source:
 https://github.com/Glitchfiend/TerraBlender. The single `include` dependency in
@@ -64,6 +64,11 @@ the existing Gradle/Loom/Kotlin/Fabric versions and bundled TerraBlender:
 - Keep Mod Menu optional (`compileOnly` 21.0.0) and its new entrypoint.
 - Extend validation for the custom door-shield recipe, boss-defeat criterion,
   door block-state stand-in and the unit-valued lobbing enchantment effect.
+- In `compat1`, run biome/material-rule registration from the `terrablender`
+  entrypoint implementing `TerraBlenderApi.onTerraBlenderInitialized`, rather
+  than the mod's `main` entrypoint. The first snapshot accessed `Regions`
+  before TerraBlender had set its configuration, crashing with a null config
+  and preventing other integrations (including Biomes O' Plenty) from loading.
 
 ## Validation
 
@@ -84,7 +89,9 @@ vanilla's effect registry lookup. These checks do not verify code-registered ite
 resolved tag contents, visual output, or gameplay.
 
 Client startup and world loading were manually confirmed for the v1.5-based port
-on Minecraft 26.3 with Loader 0.19.5 and API 0.162.0+26.3. The current upstream-based
-revision has passed the build and data checks, but has not been rerun in-game.
+on Minecraft 26.3 with Loader 0.19.5 and API 0.162.0+26.3. The user tested the first
+`fbc1a3b6` snapshot on 2026-11-07 and reported the TerraBlender startup crash
+described above. `compat1` has passed the build/data checks and packaged
+entrypoint/bytecode inspection, but has not yet been retested in game.
 Dedicated server, save/reload, world generation, raids, plant behavior, and
 rendering with/without Iris still need broader manual coverage.

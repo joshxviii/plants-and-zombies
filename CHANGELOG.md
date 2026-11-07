@@ -1,4 +1,15 @@
-# Fork 1.6-dev.fbc1a3b6+mc26.3 (2026-11-07)
+# Fork 1.6-dev.fbc1a3b6.compat1+mc26.3 (2026-11-07)
+
+- Fix the user's reported startup crash: biome registration from the main mod
+  initializer accessed `Regions` while `TerraBlender.CONFIG` was still null.
+- Register `PazTerraBlender` as a Kotlin `terrablender` entrypoint implementing
+  `TerraBlenderApi`; TerraBlender invokes it after setting its configuration.
+  Remove the premature call from `PazMain`/`PazWorldGen`.
+- Keep existing dependency versions and bundled TerraBlender. Build and 464
+  resource/criterion checks passed; inspect the packaged lifecycle wiring.
+  The corrected build still needs in-game confirmation.
+
+## Fork 1.6-dev.fbc1a3b6+mc26.3 (2026-11-07)
 
 - Merge upstream `26.3` at `fbc1a3b6`, importing 262 commits since `ddf05fb7`.
   Includes 1.5.1/1.5.2 content, raid bosses, Marigold, Pumpkin, door shields,

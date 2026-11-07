@@ -3,7 +3,7 @@
 This branch maintains an unofficial Fabric port of **Plants & Zombies** to
 **Minecraft 26.3**. Its upstream baseline is the original project's `26.3`
 branch at `fbc1a3b6` (2026-11-07). This includes 1.5.1/1.5.2 and ongoing 1.6
-development, so this snapshot is versioned `1.6-dev.fbc1a3b6+mc26.3`.
+development, so this snapshot is versioned `1.6-dev.fbc1a3b6.compat1+mc26.3`.
 
 - **This port:** [`codex/fabric-26.3-upstream`](https://github.com/Mikkelka/plants-and-zombies/tree/codex/fabric-26.3-upstream)
 - **Minecraft 26.2 port:** [`codex/fabric-26.2-v1.5`](https://github.com/Mikkelka/plants-and-zombies/tree/codex/fabric-26.2-v1.5)
@@ -12,11 +12,13 @@ development, so this snapshot is versioned `1.6-dev.fbc1a3b6+mc26.3`.
 Install Java 25, Fabric Loader, Fabric API for Minecraft 26.3 and Fabric
 Language Kotlin. TerraBlender is bundled. Build with
 `./gradlew.bat build --console=plain`; the mod JAR is
-`build/libs/plants-and-zombies-1.6-dev.fbc1a3b6+mc26.3.jar`.
+`build/libs/plants-and-zombies-1.6-dev.fbc1a3b6.compat1+mc26.3.jar`.
 
 This fork retains Loader 0.19.5, Fabric API 0.162.0+26.3, Kotlin runtime
 1.13.8+kotlin.2.3.0 and bundled TerraBlender. The imported build has passed
 compilation and data validation; it has not been tested in game.
+The `compat1` build fixes the reported startup crash by registering the
+graveyard through TerraBlender's initialization entrypoint after its config is ready.
 
 See [PORTING.md](PORTING.md) for version requirements, validation status,
 CI downloads and the workflow for importing future upstream updates.

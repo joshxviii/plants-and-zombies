@@ -46,7 +46,7 @@ existing upstream PR for that branch rather than opening a new PR for each fix.
 
 | | Minecraft 26.2 port | Minecraft 26.3 port |
 | --- | --- | --- |
-| Mod version | `1.5.2+mc26.2` (last observed) | `1.6-dev.fbc1a3b6+mc26.3` |
+| Mod version | `1.5.2+mc26.2` (last observed) | `1.6-dev.fbc1a3b6.compat1+mc26.3` |
 | Java | 25 | 25 |
 | Gradle wrapper / Loom | 9.6.1 / 1.17.17 | 9.8.0 / 1.19.3 |
 | Fabric Loader used to build | 0.19.3 | 0.19.5 |
@@ -64,6 +64,11 @@ The 26.3 branch was rebuilt on 2026-11-07 after importing upstream `26.3` at
 `fbc1a3b6`. The build, 464 resource/criterion checks and JAR inspection passed, with no Minecraft
 launch or gameplay test. Existing 26.2 artifacts were preserved. See
 `PORTING-26.3.md` for the snapshot contents and compatibility fixes.
+
+The user's subsequent startup test exposed premature TerraBlender registration
+in the first snapshot (`TerraBlender.CONFIG` was null). `compat1` moves it to the
+`terrablender` entrypoint. Its build/data checks passed; the corrected build
+still needs user startup/gameplay confirmation.
 
 The 26.2 branch was separately updated to 1.5.2 by its maintenance chat.
 This import changes only 26.3; updating either port does not update the other.
@@ -136,7 +141,7 @@ git diff --check
 On Linux use `./gradlew build --console=plain`. Outputs are in `build/libs/`:
 
 - 26.2: `plants-and-zombies-1.5.2+mc26.2.jar` (last observed)
-- 26.3: `plants-and-zombies-1.6-dev.fbc1a3b6+mc26.3.jar`
+- 26.3: `plants-and-zombies-1.6-dev.fbc1a3b6.compat1+mc26.3.jar`
 
 Names above describe the current versions. `build/libs/` may still contain older
 builds, so check the versioned filename and the embedded `fabric.mod.json`.

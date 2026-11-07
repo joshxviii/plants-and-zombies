@@ -9,9 +9,9 @@ import terrablender.api.*
 import terrablender.api.ParameterUtils.*
 import java.util.function.Consumer
 
-/** Only loaded when TerraBlender is present (see [PazWorldGen.initialize]). */
-internal object PazTerraBlender {
-    fun register() {
+/** Invoked by TerraBlender after its configuration and registries are ready. */
+object PazTerraBlender : TerraBlenderApi {
+    override fun onTerraBlenderInitialized() {
         Regions.register(OverworldRegion("graveyard"))
         MaterialRuleManager.addRules(MaterialRuleManager.RuleCategory.OVERWORLD, PazMain.MODID, PazWorldGen.GRAVEYARD_MATERIAL)
     }
