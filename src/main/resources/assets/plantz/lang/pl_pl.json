@@ -35,10 +35,12 @@
   "advancements.plantz.craft_plant_flag.description": "Stwórz Flagę Plantz z Flagi Brainz.",
   "advancements.plantz.taco_time": "Czas na Taco!",
   "advancements.plantz.taco_time.description": "Dotrzyj do Fali 10. Wyjątkowa przyjemność na ciebie czeka!",
+  "advancements.plantz.all_gnomes": "Jestem tylko Gnomem, Tylko Gnomem Ogrodowym",
+  "advancements.plantz.all_gnomes.description": "Zbierz każdy rodzaj Krasnala Ogrodowego",
   "advancements.plantz.win_zombie_raid": "Bezpieczeństwo Trawnika",
   "advancements.plantz.win_zombie_raid.description": "Odeprzyj najazd Zombie!",
+  "advancements.plantz.win_hardest_raid": "Armia Zombossa",
   "advancements.plantz.win_hardest_raid.description": "Rozpocznij najazd z najwyższym trybem trudności!",
-
   "message.plantz.too_damaged": "%s jest za bardzo zniszczony, żebym go przesadzić!",
   "message.plantz.empty_packet": "Ta saszetka z nasionami jest pusta!",
   "message.plantz.already_planted": "Tutaj już znajduje się roślina!",
@@ -50,7 +52,6 @@
   "message.plantz.growing": "Ta roślina właśnie kiełkuje nasiona!",
   "message.plantz.sleeping": "Ta roślina obecnie śpi!",
   "message.plantz.glove_full": "Twoje ręce są pełne!",
-
   "death.attack.zombie_eat": "%1$s został/a zjedzony/a przez %2$s",
   "death.attack.zombie_smash": "%1$s został/a zmiażdżony/a przez %2$s",
   "death.attack.zombie_trample": "%1$s został/a stratowany/a przez %2$s",
@@ -75,17 +76,18 @@
   "death.attack.toxic": "%1$s został zatruty",
   "death.attack.toxic.player": "%1$s został zatruty przez %2$s",
   "death.attack.paint": "%1$s został/a zamieniony/a w dzieło sztuki przez %2$s",
-
   "event.plantz.zombie_raid": "Najazd Zombie",
   "event.plantz.zombie_raid.start": "Zombie nadciągają...",
   "event.plantz.zombie_raid.start.after_credits": "Zombie powracają silniejsze...",
   "event.plantz.zombie_raid.huge_wave": "Zbliża się ogromna fala Zombie!",
   "event.plantz.zombie_raid.special_wave": "Specjalna Fala:",
   "event.plantz.zombie_raid.boss_wave": "Fala z Bossem:",
-  "event.plantz.zombie_raid.boss_title": "%s",
+  "event.plantz.zombie_raid.boss": "%s",
+  "event.plantz.zombie_raid.boss.spawn": "Pojawił się Boss: %s",
   "event.plantz.zombie_raid.special_wave.bucket_brigade": "Brygada Wiader!",
   "event.plantz.zombie_raid.special_wave.halftime_showdown": "Występ w połowie czasu!",
   "event.plantz.zombie_raid.special_wave.winter_wonderland": "Zimowa Kraina!",
+  "event.plantz.zombie_raid.special_wave.zomboween": "Zomboween!",
   "event.plantz.zombie_raid.special_wave.pirate_invasion": "Inwazja Piratów!",
   "event.plantz.zombie_raid.special_wave.league_of_awesome": "Liga Wspaniałości!",
   "event.plantz.zombie_raid.special_wave.robo_army": "Robo Armia!",
@@ -93,7 +95,6 @@
   "event.plantz.zombie_raid.victory_title": "ZWYCIĘSTWO!",
   "event.plantz.zombie_raid.defeat": "Flaga została zniszczona...",
   "event.plantz.zombie_raid.defeat_title": "PRZEGRANA",
-
   "effect.plantz.zombie_omen": "Omen Zombie",
   "effect.plantz.toxic": "Toksyczny",
   "effect.plantz.frozen": "Zamrożony",
@@ -119,7 +120,6 @@
   "effect.plantz.painted.purple": "Pomalowany na Fioletowo",
   "effect.plantz.painted.magenta": "Pomalowany na Magentowo",
   "effect.plantz.painted.pink": "Pomalowany na Różowo",
-
   "component.stored_sun.description": "Przechowuje i zużywa zebrane Słońca",
   "component.stored_sun": "%s / %s",
   "component.stored_water.description": "Używany do nawadniania roślin",
@@ -128,7 +128,6 @@
   "component.blocks_damage.description": "Blokuje pociski:",
   "component.blocks_damage": "Szansa na zniszczenie: %s%%",
   "item.plantz.zombie_banner": "Sztandar Brainz",
-
   "item.plantz.sun": "Słońce",
   "item.plantz.sun_bottle": "Butelka ze Słońcem",
   "item.plantz.sun_battery": "Bateria Słoneczna",
@@ -160,7 +159,6 @@
   "item.plantz.seed_packet.entity": "%s Nasion",
   "item.plantz.blueprint": "Plan Wehikułu",
   "item.plantz.blueprint.entity": "%s Plan",
-
   "item.plantz.white_balloon": "Biały Balon",
   "item.plantz.light_gray_balloon": "Jasno Szary Balon",
   "item.plantz.gray_balloon": "Szary Balon",
@@ -177,7 +175,6 @@
   "item.plantz.purple_balloon": "Fioletowy Balon",
   "item.plantz.magenta_balloon": "Magentowy Balon",
   "item.plantz.pink_balloon": "Różowy Balon",
-
   "item.plantz.mail_collection_box": "Pudełko na pocztę",
   "item.plantz.mailbox": "Skrzynka Pocztowa",
   "item.plantz.light_gray_mailbox": "Jasnoszara Skrzynka Pocztowa",
@@ -195,14 +192,12 @@
   "item.plantz.purple_mailbox": "Fioletowa Skrzynka Pocztowa",
   "item.plantz.magenta_mailbox": "Magentowa Skrzynka Pocztowa",
   "item.plantz.pink_mailbox": "Różowa Skrzynka Pocztowa",
-
   "item.plantz.blue_garden_gnome": "Niebieski Krasnal Ogrodowy",
   "item.plantz.green_garden_gnome": "Zielony Krasnal Ogrodowy",
   "item.plantz.red_garden_gnome": "Czerwony Krasnal Ogrodowy",
   "item.plantz.yellow_garden_gnome": "Żółty Krasnal Ogrodowy",
-
+  "item.plantz.golden_garden_gnome": "Złoty Krasnal Ogrodowy",
   "item.plantz.lawn_flamingo": "Flaming Ogrodowy",
-
   "item.plantz.brainz_alloy_block": "Blok Brainz Alloy",
   "item.plantz.brainz_alloy_stairs": "Schody Brainz Alloy",
   "item.plantz.brainz_alloy_slab": "Brainz Alloy płyta",
@@ -210,7 +205,6 @@
   "item.plantz.reinforced_brainz_alloy_block": "Wzmocniony Brainz Alloy",
   "item.plantz.brainz_alloy_fence": "Płot Brainz Alloy",
   "item.plantz.gravestone": "Nagrobek",
-
   "item.minecraft.potion.effect.hypnotize": "Mikstura Hipnozy",
   "item.minecraft.splash_potion.effect.hypnotize": "Miotana Mikstura Hipnozy",
   "item.minecraft.lingering_potion.effect.hypnotize": "Trwała Mikstura Hipnozy",
@@ -220,7 +214,6 @@
   "item.minecraft.potion.effect.electrified": "Mikstura Elektryczności",
   "item.minecraft.splash_potion.effect.electrified": "Miotana Mikstura Elektryczności",
   "item.minecraft.lingering_potion.effect.electrified": "Trwała Mikstura Elektryczności",
-
   "item.plantz.browncoat_spawn_egg": "Jajo Przyzywania Zombiaka w Płaszczu",
   "item.plantz.newspaper_zombie_spawn_egg": "Jajo Przyzywania Zombiaka z Gazetą",
   "item.plantz.digger_zombie_spawn_egg": "Jajo Przyzywania Zombiaka Kopacza",
@@ -236,13 +229,9 @@
   "item.plantz.super_brainz_spawn_egg": "Jajo Przyzywania Supermózga",
   "item.plantz.imp_spawn_egg": "Jajo Przyzywania Impa",
   "item.plantz.gargantuar_spawn_egg": "Jajo Przyzywania Gargantuara",
-
   "item.plantz.gnome_spawn_egg": "Jajo Przyzywania Gnoma",
-
   "item.plantz.music_disc_grassy_groove": "Płyta Muzyczna",
-
   "jukebox_song.plantz.grassy_groove": "joshxviii - Grassy Groove",
-
   "music.plantz.raid.low": "Patrika - Loon Griefers",
   "music.plantz.raid.medium": "Patrika - Loon Griefers",
   "music.plantz.raid.high": "Patrika - Loon Griefers",
@@ -253,13 +242,11 @@
   "music.plantz.raid.army": "Patrika - Loon Griefers",
   "music.plantz.raid.league": "Patrika - Loon Griefers",
   "music.plantz.raid.zomboss": "Patrika - [Zomboss]",
-
   "block.plantz.time_machine": "Wehikuł Czasu",
   "block.plantz.blue_garden_gnome": "Niebieski Krasnal Ogrodowy",
   "block.plantz.green_garden_gnome": "Zielony Krasnal Ogrodowy",
   "block.plantz.red_garden_gnome": "Czerwony Krasnal Ogrodowy",
   "block.plantz.yellow_garden_gnome": "Żółty Krasnal Ogrodowy",
-
   "block.plantz.mail_collection_box": "Pudełko na pocztę",
   "block.plantz.mailbox": "Skrzynka Pocztowa",
   "block.plantz.light_gray_mailbox": "Jasnoszara Skrzynka Pocztowa",
@@ -277,7 +264,6 @@
   "block.plantz.purple_mailbox": "Fioletowa Skrzynka Pocztowa",
   "block.plantz.magenta_mailbox": "Magentowa Skrzynka Pocztowa",
   "block.plantz.pink_mailbox": "Różowa Skrzynka Pocztowa",
-
   "entity.plantz.empty": "Pusta",
   "entity.plantz.sunflower": "Słonecznik",
   "entity.plantz.peashooter": "Groszkostrzelec",
@@ -308,7 +294,7 @@
   "entity.plantz.seashroom": "Grzybek Morski",
   "entity.plantz.coffeebean": "Ziarenko Kawy",
   "entity.plantz.grave_buster": "Grobojad",
-
+  "entity.plantz.pumpkin": "Dynia",
   "entity.plantz.browncoat": "Zombiak w Płaszczu",
   "entity.plantz.newspaper_zombie": "Zombiak z Gazetą",
   "entity.plantz.digger_zombie": "Zombiak Kopacz",
@@ -325,17 +311,13 @@
   "entity.plantz.super_brainz": "Supermózg",
   "entity.plantz.imp": "Imp",
   "entity.plantz.gargantuar": "Gargantuar",
-
   "entity.plantz.zombie_turret": "Wieżyczka Zombie",
   "entity.plantz.electro_turret": "Elektryczna Wieżyczka",
   "entity.plantz.zombie_drone": "Dron Zombie",
   "entity.plantz.lawn_mower": "Kosiarka",
-
   "entity.plantz.gnome": "Gnom Ogrodowy",
   "entity.plantz.plant_pot_minecart": "Wagonik z Doniczką",
-
   "itemGroup.plantz.plantz_tab": "Rośliny i Zombie",
-
   "container.plantz.send_mail": "Wyślij Przesyłkę",
   "container.plantz.mailbox_coords": "%d, %d, %d",
   "container.plantz.mailbox_coords_mini": "%s (%s)",
@@ -344,21 +326,16 @@
   "container.plantz.mailbox_full": "Ta skrzynka pocztowa jest pełna!",
   "container.plantz.mailbox_success": "Wysłano!",
   "container.plantz.time_machine.wip": "???",
-
   "plantz.subtitles.projectile.deflected": "Pocisk odbity",
   "plantz.subtitles.projectile.shoot": "Pocisk wystrzelony",
-
   "plantz.subtitles.entity.chomper.attack": "Pożeracz gryzie",
   "plantz.subtitles.entity.zombie.eat": "Zombiak gryzie",
-
   "plantz.subtitles.entity.gnome.ambient": "Gnom pohukuje",
   "plantz.subtitles.entity.gnome.death": "Gnom umiera",
   "plantz.subtitles.entity.gnome.hurt": "Gnom jest ranny",
-
   "plantz.subtitles.entity.zombie_yeti.ambient": "Zombie Yeti stęka",
   "plantz.subtitles.entity.zombie_yeti.death": "Zombie Yeti umiera",
   "plantz.subtitles.entity.zombie_yeti.hurt": "Zombie Yeti jest ranny",
-
   "plantz.subtitles.entity.newspaper_zombie.ambient": "Zombie z Gazetą stęka",
   "plantz.subtitles.entity.newspaper_zombie.death": "Zombie z Gazetą umiera",
   "plantz.subtitles.entity.newspaper_zombie.hurt": "Zombie z Gazetą jest ranny",
@@ -377,7 +354,6 @@
   "plantz.subtitles.entity.gargantuar.ambient": "Gargantuar stęka",
   "plantz.subtitles.entity.gargantuar.death": "Gargantuar umiera",
   "plantz.subtitles.entity.gargantuar.hurt": "Gargantuar jest ranny",
-
   "plantz.subtitles.event.mob_effect.hypnotized": "Zahipnotyzowany mob",
   "plantz.subtitles.event.mob_effect.zombie_omen": "Omen najazdu zombie"
 }

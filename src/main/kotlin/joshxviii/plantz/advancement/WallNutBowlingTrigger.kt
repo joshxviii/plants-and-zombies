@@ -2,12 +2,9 @@ package joshxviii.plantz.advancement
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import joshxviii.plantz.PazCriteria
-import net.minecraft.advancements.triggers.Criterion
-import net.minecraft.advancements.predicates.entity.EntityPredicate
-import net.minecraft.core.Holder
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger
+import net.minecraft.core.Holder
 import net.minecraft.server.level.ServerPlayer
 import java.util.*
 

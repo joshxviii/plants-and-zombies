@@ -62,16 +62,14 @@
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
               "weight": 4,
-              "modifier": [
-                {
-                  "type": "minecraft:set_components",
-                  "components": {
-                    "minecraft:entity_data": {
-                      "id": "plantz:cherrybomb"
-                    }
+              "modifier": {
+                "type": "minecraft:set_components",
+                "components": {
+                  "minecraft:entity_data": {
+                    "id": "plantz:cherrybomb"
                   }
                 }
-              ]
+              }
             }
           ]
         }

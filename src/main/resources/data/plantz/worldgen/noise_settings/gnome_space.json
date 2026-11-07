@@ -1,0 +1,32 @@
+{
+  "default_block": {
+    "id": "minecraft:smooth_basalt"
+  },
+  "default_fluid": {
+    "id": "minecraft:air"
+  },
+  "disable_mob_generation": true,
+  "legacy_random_source": false,
+  "noise": {
+    "min_y": -64,
+    "height": 384
+  },
+  "noise_router": {
+    "continents": 0,
+    "depth": 0,
+    "erosion": 0,
+    "chunk_surface_level": 0,
+    "final_density": "plantz:gnome_space/final_density",
+    "ridges": 0,
+    "temperature": 0,
+    "vegetation": 0
+  },
+  "sea_level": 0,
+  "spawn_target": [],
+  "material_rule": {
+    "type": "minecraft:block",
+    "result_state": {
+      "id": "minecraft:andesite"
+    }
+  }
+}

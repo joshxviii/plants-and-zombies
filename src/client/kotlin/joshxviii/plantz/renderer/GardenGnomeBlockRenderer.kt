@@ -64,7 +64,8 @@ class GardenGnomeBlockRenderer(
             getTextureLocation(state),
             state.lightCoords,
             OverlayTexture.NO_OVERLAY,
-            0)
+            0,
+        )
         poseStack.popPose()
     }
 }

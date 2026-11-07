@@ -6,7 +6,7 @@ import net.minecraft.world.entity.ai.control.MoveControl
 
 private const val MIN_TURN_DISTANCE_SQR = 0.0625 // 0.25 blocks
 
-private fun MoveControl<*>.isWantedPosVertical(mob: Mob): Boolean {
+private fun MoveControl<Mob>.isWantedPosVertical(mob: Mob): Boolean {
     if (!hasWanted()) return false
     val xd = wantedX - mob.x
     val zd = wantedZ - mob.z

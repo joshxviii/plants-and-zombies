@@ -31,8 +31,8 @@ class PeaShooter(type: EntityType<out Plant>, level: Level) : Plant(type, level)
         })
     }
 
-    override fun actuallyHurt(level: ServerLevel, source: DamageSource, damage: Float) {
-        super.actuallyHurt(level, source, damage)
+    override fun actuallyHurt(level: ServerLevel, source: DamageSource, dmg: Float) {
+        super.actuallyHurt(level, source, dmg)
         if (source.`is`(DamageTypes.LIGHTNING_BOLT)) {
             convertToPlantType(PazEntities.ELECTRIC_PEA_SHOOTER)
         }

@@ -23,16 +23,17 @@ data class ServerConfig(
     var plantPotDamageReduction: Double = 0.5,
     var poweredUpCooldownReduction: Double = 0.2,
     var coffeeBuffDuration: Int = 48_000,
+    var pumpkinArmorAmount: Int = 35,
     var sunCostTamingThreshold: Int = 30,
     var plantCooldownEnabled: Boolean = false,
     var plantCooldownTime: Double = 4.0,
     var plantCooldownTimePerSun: Double = 2.5,
     var solarBatteryMax: Int = 512,
-    var defaultPlantEntityLimit: Int = 25,
+    var defaultPlantEntityLimit: Int = 30,
     var customPlantEntityLimits: MutableMap<String, Int> = mutableMapOf(
-        "plantz:melonpult"              to 15,
-        "plantz:winter_melon"           to 15,
-        "plantz:doomshroom"             to 15,
+        "plantz:melonpult"              to 20,
+        "plantz:winter_melon"           to 20,
+        "plantz:doomshroom"             to 20,
         "plantz:coffeebean"             to -1,
         "plantz:grave_buster"           to -1,
     ),
@@ -44,6 +45,7 @@ data class ServerConfig(
     ),
     var sunCosts: MutableMap<String, Int> = mutableMapOf(
         "plantz:sunflower"              to 5,
+        "plantz:marigold"               to 5,
         "plantz:peashooter"             to 5,
         "plantz:wallnut"                to 5,
         "plantz:explode_o_nut"          to 5,
@@ -65,20 +67,22 @@ data class ServerConfig(
         "plantz:puffshroom"             to 0,
         "plantz:scaredyshroom"          to 3,
         "plantz:fumeshroom"             to 6,
-        "plantz:sunshroom"              to 4,
+        "plantz:sunshroom"              to 6,
         "plantz:hypnoshroom"            to 7,
         "plantz:iceshroom"              to 5,
         "plantz:doomshroom"             to 14,
         "plantz:seashroom"              to 0,
         "plantz:coffeebean"             to 2,
         "plantz:grave_buster"           to 3,
+        "plantz:pumpkin"                to 6,
     ),
+    var graveStoneActivationRange: Double = 24.0
 )
 data class ClientConfig(
     var showDebugInfo: Boolean = false,
-    var alwaysShowHeadMarkers: Boolean = false,
-    var showHiddenItemsInCreativeTab: Boolean = false,
-    var hideRaidUi: Boolean = false
+    var splitItemTabs: Boolean = false,
+    var showRaidUi: Boolean = true,
+    var showSunInfo: Boolean = false
 )
 
 object PazConfig {
@@ -107,6 +111,9 @@ object PazConfig {
         server = loadConfig(serverConfigPath, ServerConfig())
     }
 
+    fun saveClient() = saveConfig(clientConfigPath, client)
+    fun saveServer() = saveConfig(serverConfigPath, server)
+
     private inline fun <reified T> loadConfig(path: Path, default: T): T {
         return if (path.exists()) {
             try {
@@ -130,17 +137,21 @@ object PazConfig {
     val SHOW_DEBUG_INFO: Boolean
         get() = client.showDebugInfo
 
-    val ALWAYS_SHOW_HEAD_MARKERS: Boolean
-        get() = client.alwaysShowHeadMarkers
+    val SPLIT_ITEM_TABS: Boolean
+        get() = client.splitItemTabs
 
-    val SHOW_HIDDEN_ITEMS: Boolean
-        get() = client.showHiddenItemsInCreativeTab
+    val SHOW_RAID_UI: Boolean
+        get() = client.showRaidUi
 
-    val HIDE_RAID_UI: Boolean
-        get() = client.hideRaidUi
+    val SHOW_SUN_INFO: Boolean
+        get() = client.showSunInfo
+
 
     val COFFEE_BUFF_DURATION: Int
         get() = server.coffeeBuffDuration.coerceAtLeast(0)
+
+    val PUMPKIN_ARMOR_AMOUNT: Int
+        get() = server.pumpkinArmorAmount.coerceAtLeast(0)
 
     val SUN_BATTERY_MAX: Int
         get() = server.solarBatteryMax.coerceAtLeast(0)
@@ -162,6 +173,9 @@ object PazConfig {
 
     val PLANT_COOLDOWN_ENABLED: Boolean
         get() = server.plantCooldownEnabled
+
+    val GRAVESTONE_ACTIVATION_RANGE: Double
+        get() = server.graveStoneActivationRange
 
     fun getGrowTime(sunCost: Int, zenBuff: Boolean): Int {
         val time = server.seedGrowTime.coerceAtLeast(0) + (sunCost * server.extraGrowTimePerSun.coerceAtLeast(0))
@@ -217,11 +231,11 @@ object PazConfig {
 
     fun putDefaultSunCost(entityId: Identifier, sunCost: Int) {
         server.sunCosts.putIfAbsent(entityId.toString(), sunCost.coerceAtLeast(0))
-        saveConfig(serverConfigPath, server)
+        saveServer()
     }
 
     fun putDefaultAlloyCost(entityId: Identifier, alloyCost: Int) {
         server.alloyCosts.putIfAbsent(entityId.toString(), alloyCost.coerceAtLeast(0))
-        saveConfig(serverConfigPath, server)
+        saveServer()
     }
 }

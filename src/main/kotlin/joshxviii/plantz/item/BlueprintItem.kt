@@ -2,7 +2,6 @@ package joshxviii.plantz.item
 
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazItems
-import joshxviii.plantz.entity.zombie.ZombieRobot
 import joshxviii.plantz.getItemCount
 import joshxviii.plantz.name
 import joshxviii.plantz.removeItemFromInventory
@@ -22,7 +21,6 @@ import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.TypedEntityData
@@ -31,10 +29,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.AABB
 
-class BlueprintItem(
-    properties: Properties,
-    val color: DyeColor = DyeColor.WHITE
-) : Item(properties) {
+class BlueprintItem(properties: Properties) : Item(properties) {
 
     override fun getName(itemStack: ItemStack): Component {
         val entityData = itemStack.get(DataComponents.ENTITY_DATA) ?: return super.getName(itemStack)

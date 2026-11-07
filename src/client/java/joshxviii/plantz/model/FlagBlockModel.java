@@ -35,6 +35,6 @@ public class FlagBlockModel extends Model<FlagRenderState> {
     @Override
     public void setupAnim(FlagRenderState state) {
         super.setupAnim(state);
-        this.flag.yRot = (0.075F * Mth.cos(((float)Math.PI * 2F) * state.getPhase())) * (float)Math.PI;
+        this.flag.yRot += (0.075F * Mth.cos(((float)Math.PI * 2F) * state.getPhase())) * (float)Math.PI;
     }
 }

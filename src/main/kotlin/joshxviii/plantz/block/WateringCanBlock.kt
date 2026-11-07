@@ -1,5 +1,6 @@
 package joshxviii.plantz.block
 
+import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazItems
@@ -30,7 +31,6 @@ import net.minecraft.world.phys.shapes.VoxelShape
 
 class WateringCanBlock(properties: Properties) : HorizontalDirectionalBlock(properties), SimpleWaterloggedBlock  {
     companion object {
-
         val SHAPE: VoxelShape = Util.make {
             Shapes.or(
                 column(6.0, 0.0, 6.0),

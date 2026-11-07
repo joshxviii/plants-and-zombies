@@ -70,7 +70,7 @@ class GnomeRenderer(
 
     fun getArmPose(mob: Gnome, arm: HumanoidArm): ArmPose {
         val itemHeldByArm: ItemStack = mob.getItemHeldByArm(arm)
-        val anim = itemHeldByArm.get<SwingAnimation>(DataComponents.ATTACK_ANIMATION)
+        val anim = itemHeldByArm.get(DataComponents.ATTACK_ANIMATION)
         return if (anim != null && anim.type() == SwingAnimationType.STAB && mob.isSwinging) ArmPose.SPEAR
         else if (itemHeldByArm.`is`(ItemTags.SPEARS)) ArmPose.SPEAR
         else if (itemHeldByArm.`is`(Items.BOW) && mob.isAggressive) ArmPose.BOW_AND_ARROW else ArmPose.EMPTY

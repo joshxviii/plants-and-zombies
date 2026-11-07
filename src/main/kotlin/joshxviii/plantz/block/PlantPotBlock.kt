@@ -1,9 +1,9 @@
 package joshxviii.plantz.block
 
+import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PlantHeadAttachment
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.RandomSource
 import net.minecraft.util.Util
 import net.minecraft.world.InteractionResult
@@ -33,7 +33,6 @@ import net.minecraft.world.phys.shapes.VoxelShape
 
 class PlantPotBlock(properties: Properties) : HorizontalDirectionalBlock(properties), SimpleWaterloggedBlock {
     companion object {
-
         val SHAPE_INSIDE = column(12.0, 6.0, 8.0)
         val SHAPE: VoxelShape = Util.make {
             Shapes.or(
@@ -60,7 +59,7 @@ class PlantPotBlock(properties: Properties) : HorizontalDirectionalBlock(propert
         player: Player,
         hitResult: BlockHitResult
     ): InteractionResult {
-        val result = PlantHeadAttachment.potBlockInteraction(state, level, pos, player)
+        val result = PlantHeadAttachment.potHelmetPlaceInteraction(level, pos, player)
         return if (result == InteractionResult.PASS) super.useWithoutItem(state, level, pos, player, hitResult) else result
     }
 
@@ -106,5 +105,4 @@ class PlantPotBlock(properties: Properties) : HorizontalDirectionalBlock(propert
         if (state.getValue(WATERLOGGED)) ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level))
         return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random)
     }
-
 }

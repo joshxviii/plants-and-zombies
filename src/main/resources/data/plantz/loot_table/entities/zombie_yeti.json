@@ -43,6 +43,7 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "name": "minecraft:diamond",
           "modifier": [
             {
               "add": false,
@@ -62,8 +63,7 @@
               "enchantment": "minecraft:looting",
               "type": "minecraft:enchanted_count_increase"
             }
-          ],
-          "name": "minecraft:diamond"
+          ]
         }
       ],
       "rolls": 1,
@@ -79,39 +79,10 @@
           },
           {
             "type": "minecraft:random_chance",
-            "chance": 0.2
+            "chance": 0.15
           }
         ]
       }
-    },
-    {
-      "rolls": 1,
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "modifier": [
-            {
-              "add": false,
-              "count": {
-                "type": "minecraft:uniform",
-                "max": 2,
-                "min": 0
-              },
-              "type": "minecraft:set_count"
-            },
-            {
-              "count": {
-                "type": "minecraft:uniform",
-                "max": 1,
-                "min": 0
-              },
-              "enchantment": "minecraft:looting",
-              "type": "minecraft:enchanted_count_increase"
-            }
-          ],
-          "name": "minecraft:snowball"
-        }
-      ]
     }
   ],
   "random_sequence": "minecraft:entities/zombie_yeti"

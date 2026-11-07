@@ -23,21 +23,20 @@
     },
     "minecraft:visual/sky_light_factor": 0.7,
     "minecraft:gameplay/natural_mob_spawns": {
-      "modifier": "override",
-      "argument": {
-        "spawn_costs": {},
-        "spawns_by_category": {
-          "ambient": [
-            {
-              "type": "minecraft:bat",
-              "weight": 10,
-              "count": 8
+      "spawns_by_category": {
+        "ambient": [
+          {
+            "weight": 10,
+            "type": "plantz:zombat",
+            "count": {
+              "type": "minecraft:uniform",
+              "min_inclusive": 4,
+              "max_inclusive": 8
             }
-          ],
-          "monster": [],
-          "creature": []
-        }
-      }
+          }
+        ]
+      },
+      "spawn_costs": {}
     }
   },
   "carvers": [

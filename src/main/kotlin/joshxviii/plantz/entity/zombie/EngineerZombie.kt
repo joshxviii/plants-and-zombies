@@ -4,6 +4,7 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.raid.PazZombieGroupData
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.Vec3i
@@ -59,8 +60,6 @@ class EngineerZombie(type: EntityType<out EngineerZombie>, level: Level) : PazZo
     }
 
     override fun getMoveControl(): MoveControl<*> = if (buildingTime>0) noMoveControl else super.getMoveControl()
-    override fun getLookControl(): LookControl = if (buildingTime>0) noLookControl else super.getLookControl()
-    override fun isWithinMeleeAttackRange(target: LivingEntity): Boolean = if (buildingTime>0) false else super.isWithinMeleeAttackRange(target)
 
     override fun registerGoals() {
         super.registerGoals()
@@ -175,10 +174,12 @@ class EngineerZombie(type: EntityType<out EngineerZombie>, level: Level) : PazZo
                 buildTime = BUILD_DELAY_TIME + engineerZombie.random.nextInt(40)
                 val bot : ZombieRobot = ZOMBIE_BOTS.random().create(level, EntitySpawnReason.MOB_SUMMONED)?: return
                 bot.snapTo(buildPos, engineerZombie.yRot, 0.0f)
-                bot.finalizeSpawn(level, level.getCurrentDifficultyAt(buildPos), EntitySpawnReason.REINFORCEMENT, PazZombieGroupData(isRaider = true, isCountedTowardRaidHealth = false))
+                bot.finalizeSpawn(level, level.getCurrentDifficultyAt(buildPos), EntitySpawnReason.REINFORCEMENT,
+                    PazZombieGroupData(isRaider = true, isCountedTowardRaidHealth = false)
+                )
                 bot.owner = engineerZombie
                 level.addFreshEntity(bot)
-                level.gameEvent(GameEvent.ENTITY_PLACE, net.minecraft.world.phys.Vec3.atCenterOf(buildPos), GameEvent.Context.of(engineerZombie))
+                level.gameEvent(GameEvent.ENTITY_PLACE, Vec3.atCenterOf(buildPos), GameEvent.Context.of(engineerZombie))
             }
         }
     }

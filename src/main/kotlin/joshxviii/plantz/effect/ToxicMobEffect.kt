@@ -9,13 +9,16 @@ import net.minecraft.world.entity.LivingEntity
 
 class ToxicMobEffect(category: MobEffectCategory, color: Int) : MobEffect(category, color) {
     companion object {
+        const val BASE_DAMAGE: Float = 4f
         const val DAMAGE_INTERVAL: Int = 15
         const val HURT_PERCENT: Float = 0.25f
     }
 
     override fun applyEffectTick(level: ServerLevel, mob: LivingEntity, amplification: Int): Boolean {
         if (mob.health > 0) {
-            mob.hurtServer(level, mob.damageSources().source(PazDamageTypes.TOXIC), (mob.health*HURT_PERCENT).coerceAtLeast(0.25f))
+            val percent = (mob.health/mob.maxHealth).coerceIn(0.1f, 1f)
+            val damage = percent * BASE_DAMAGE * (amplification+1)
+            mob.hurtServer(level, mob.damageSources().source(PazDamageTypes.TOXIC), damage)
         }
         return true
     }

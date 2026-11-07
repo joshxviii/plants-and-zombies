@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "condition": {
+            "blocks": "plantz:brainz_alloy_door",
+            "type": "minecraft:match_block",
+            "state": {
+              "half": "lower"
+            }
+          },
+          "name": "plantz:brainz_alloy_door"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "plantz:blocks/brainz_alloy_trapdoor"
+}

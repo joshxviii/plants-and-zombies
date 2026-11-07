@@ -23,14 +23,12 @@ class BeamParticleGroup(engine: ParticleEngine) : ParticleGroup<BeamParticle>(en
             "outer_beam",
             RenderSetup.builder(RenderPipelines.BEACON_BEAM_TRANSLUCENT)
                 .withTexture("Sampler0", pazResource("textures/particle/beam_outer.png"))
-
                 .createRenderSetup()
         )
         val INNER_BEAM = RenderType.create(
             "beam",
             RenderSetup.builder(RenderPipelines.BEACON_BEAM_TRANSLUCENT)
                 .withTexture("Sampler0", pazResource("textures/particle/beam.png"))
-
                 .createRenderSetup()
         )
     }

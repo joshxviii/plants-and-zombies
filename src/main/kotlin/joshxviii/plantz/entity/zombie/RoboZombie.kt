@@ -1,11 +1,14 @@
 package joshxviii.plantz.entity.zombie
 
+import joshxviii.plantz.raid.BossType
+import joshxviii.plantz.PazDataSerializers.ROBO_ZOMBIE_VARIANT
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.ai.goal.MeleeAttackActionGoal
 import joshxviii.plantz.ai.goal.NavigateToTargetGoal
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.entity.projectile.Missile
 import joshxviii.plantz.pazResource
+import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
@@ -13,6 +16,7 @@ import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.util.Mth
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
@@ -25,6 +29,10 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
+import net.minecraft.world.phys.Vec3
+import kotlin.jvm.optionals.getOrDefault
+import kotlin.math.cos
+import kotlin.math.sin
 
 class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(type, level) {
 
@@ -36,6 +44,7 @@ class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(typ
         val MISSILE_COOLDOWN_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(RoboZombie::class.java, EntityDataSerializers.INT)
         val BASH_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(RoboZombie::class.java, EntityDataSerializers.INT)
         val TRANSFORMED_ID: Identifier = pazResource("transformed")
+        val DATA_VARIANT_ID: EntityDataAccessor<RoboZombieVariant> = SynchedEntityData.defineId(RoboZombie::class.java, ROBO_ZOMBIE_VARIANT)
 
         private val SPEED_MODIFIER = AttributeModifier(TRANSFORMED_ID, 0.15, AttributeModifier.Operation.ADD_VALUE)
         private val STEP_HEIGHT_MODIFIER = AttributeModifier(TRANSFORMED_ID, 0.0, AttributeModifier.Operation.ADD_VALUE)
@@ -71,6 +80,10 @@ class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(typ
             reassessNavigation()
         }
 
+    var variant: RoboZombieVariant
+        get() = this.entityData.get(DATA_VARIANT_ID)
+        set(value) = this.entityData.set(DATA_VARIANT_ID, value)
+
     var missileTime: Int
         get() = this.entityData.get(MISSILE_TIME_ID)
         set(value) = this.entityData.set(MISSILE_TIME_ID, value)
@@ -104,18 +117,20 @@ class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(typ
         entityData.define(MISSILE_COOLDOWN_ID, MISSILE_COOLDOWN_TIME)
         entityData.define(MISSILE_TIME_ID, 0)
         entityData.define(BASH_TIME_ID, 0)
+        entityData.define(DATA_VARIANT_ID, RoboZombieVariant.getDefault())
     }
 
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
         output.putBoolean("is_transformed", isTransformed)
         output.putInt("missile_cooldown", missileCooldown)
-    }
+        output.store("variant", RoboZombieVariant.CODEC, variant)    }
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
         isTransformed = input.getBooleanOr("is_transformed", false)
         missileCooldown = input.getIntOr("missile_cooldown", MISSILE_COOLDOWN_TIME)
+        variant = input.read("variant", RoboZombieVariant.CODEC).getOrDefault(RoboZombieVariant.getDefault())
         reassessNavigation()
     }
 
@@ -157,16 +172,18 @@ class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(typ
         ))
         goalSelector.addGoal(4, ProjectileAttackGoal(
             usingEntity = this,
-            projectileFactory =  { Missile(level(), this) },
-            velocity = 1.0,
+            projectileFactory =  {
+                Missile(level(), this)
+            },
+            velocity = 0.9,
+            attackRadius = 30f,
             leadShots = false,
             actionDelay = 19,
-            soundEvent = null,
+            soundEvent = PazSounds.ROBO_ZOMBIE_SHOOT,
             usePredicate = {
                 missileTime<=0 && missileCooldown<=0
             },
             actionStartEffect = {
-                playSound(PazSounds.ROBO_ZOMBIE_SHOOT)
                 missileTime=1
             },
             actionSuccessEffect = {
@@ -185,6 +202,14 @@ class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(typ
     override fun canClimbWalls(): Boolean = isTransformed || super.canClimbWalls()
 
     override fun getMoveControl(): MoveControl<*> = if (missileTime>0) noMoveControl else super.getMoveControl()
+
+    override fun getPassengerRidingPosition(passenger: Entity): Vec3 {
+        val vec3 = super.getPassengerRidingPosition(passenger)
+        val scale = 0.25
+        val rx = cos((yBodyRot - 90) * Mth.DEG_TO_RAD).toDouble() * scale
+        val rz = sin((yBodyRot - 90) * Mth.DEG_TO_RAD).toDouble() * scale
+        return if (isTransformed) vec3.add(rx, -0.45, rz) else vec3
+    }
 
     override fun tick() {
         super.tick()
@@ -216,6 +241,15 @@ class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(typ
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         val result = super.doHurtTarget(level, target)
         return result
+    }
+
+    override fun getTypeName(): Component {
+        return if (variant != RoboZombieVariant.ROBO) Component.translatable("entity.plantz.robo_zombie.variant.${variant.name.lowercase()}")
+        else super.getTypeName()
+    }
+
+    override fun onSpawnedFromItem() {
+        if (variant == RoboZombieVariant.GENERAL) BossType.bossify(this)
     }
 
     override fun finalizeSpawn(

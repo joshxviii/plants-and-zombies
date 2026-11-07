@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "plantz:block/time_portal"
+    }
+  }
+}

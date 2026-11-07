@@ -41,7 +41,7 @@ class RoboZombieRenderer(
         state.transformAnimationState.copyFrom(entity.transformAnimation)
         state.idleAnimationState.copyFrom(entity.idleAnimation)
         state.shootAnimationState.copyFrom(entity.shootAnimation)
-        state.bashAnimationState.copyFrom(entity.bashAnimation)
+        state.actionAnimationState.copyFrom(entity.bashAnimation)
 
         state.treadYaw = entity.treadYaw
         state.treadPitch = entity.treadPitch
@@ -80,5 +80,4 @@ class RoboZombieRenderState: PazZombieRenderState() {
     val transformAnimationState: AnimationState = AnimationState()
     val idleAnimationState: AnimationState = AnimationState()
     val shootAnimationState: AnimationState = AnimationState()
-    val bashAnimationState: AnimationState = AnimationState()
 }

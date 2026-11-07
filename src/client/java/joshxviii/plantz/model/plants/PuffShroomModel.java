@@ -51,6 +51,6 @@ public class PuffShroomModel extends PlantModel {
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
-		this.body.yRot = state.yRot * (float) (Math.PI / 180.0);
+		this.body.yRot += state.yRot * (float) (Math.PI / 180.0);
 	}
 }

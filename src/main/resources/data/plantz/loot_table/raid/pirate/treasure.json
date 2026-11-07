@@ -61,11 +61,13 @@
           "name": "minecraft:map",
           "modifier": [
             {
+              "destination": [
+                "minecraft:buried_treasure"
+              ],
               "decoration": "minecraft:red_x",
               "type": "minecraft:exploration_map",
               "skip_existing_chunks": false,
-              "zoom": 1,
-              "destination": "#minecraft:on_treasure_maps"
+              "zoom": 1
             },
             {
               "type": "minecraft:set_name",

@@ -1,5 +1,8 @@
 {
   "values": [
+    "minecraft:zombie",
+    "minecraft:husk",
+    "minecraft:drowned",
     "plantz:browncoat",
     "plantz:newspaper_zombie",
     "plantz:soldier_zombie",

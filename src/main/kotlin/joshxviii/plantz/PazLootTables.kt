@@ -1,6 +1,7 @@
 package joshxviii.plantz
 
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents
+import net.minecraft.core.HolderLookup
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
@@ -45,7 +46,7 @@ object PazLootTables {
 
     fun initialize() {
         LootTableEvents.MODIFY.register { key, builder, source, provider ->
-            LootInjector.attemptInjection(key.identifier(), builder::withPool, provider)
+            LootInjector.attemptInjection(key.identifier(), provider, builder::withPool)
         }
     }
 
@@ -62,6 +63,7 @@ object LootInjector {
         BuiltInLootTables.VILLAGE_TAIGA_HOUSE,
     )
     private val injections = hashSetOf(
+        BuiltInLootTables.CARVE_PUMPKIN,
         BuiltInLootTables.FISHING_FISH,
         BuiltInLootTables.FISHING_TREASURE,
         BuiltInLootTables.BASTION_TREASURE,
@@ -71,13 +73,13 @@ object LootInjector {
     private val injectionIds = injections.map {it.identifier()}.toSet()
     private val villageInjectionIds = villageHouseBuiltInLootTables.map { it.identifier() }.toSet()
 
-    fun attemptInjection(key: Identifier, provider: (LootPool.Builder) -> Unit, registries: net.minecraft.core.HolderLookup.Provider): Boolean {
+    fun attemptInjection(key: Identifier, provider: HolderLookup.Provider, builder: (LootPool.Builder) -> Unit): Boolean {
         if (!this.injectionIds.contains(key)) {
             return false
         }
         val resulting = convertToPotentialInjected(key)
         PazMain.LOGGER.debug("{}: Injected {} to {}", this::class.simpleName, resulting, key)
-        provider(this.injectLootPool(resulting, registries))
+        builder(this.injectLootPool(resulting, provider))
         return true
     }
 
@@ -88,12 +90,16 @@ object LootInjector {
             pazResource("${PREFIX}${key.path}")
     }
 
-    private fun injectLootPool(resulting: Identifier, registries: net.minecraft.core.HolderLookup.Provider): LootPool.Builder {
+    private fun injectLootPool(
+        resulting: Identifier,
+        registries: HolderLookup.Provider
+    ): LootPool.Builder {
+        val tableKey = ResourceKey.create(Registries.LOOT_TABLE, resulting)
+        val holder = registries.lookupOrThrow(Registries.LOOT_TABLE).getOrThrow(tableKey)
+
         return LootPool.lootPool()
             .add(
-                NestedLootTable
-                    .lootTableReference(registries.lookupOrThrow(Registries.LOOT_TABLE).getOrThrow(ResourceKey.create(Registries.LOOT_TABLE, resulting)))
-                    .setWeight(1)
+                NestedLootTable.lootTableReference(holder).setWeight(1)
             )
             .setBonusRolls(ContextFloatProviders.between(0F, 1F))
     }

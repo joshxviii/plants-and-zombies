@@ -1,11 +1,10 @@
 package joshxviii.plantz.gui
 
 import joshxviii.plantz.PazBlocks
-import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazNetwork
-import joshxviii.plantz.entity.isActiveInRaid
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.getHeldBalloons
+import joshxviii.plantz.raid.isActiveInRaid
 import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderState
 import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderer
 import net.minecraft.client.DeltaTracker
@@ -34,8 +33,7 @@ object ZombieHudMarkers {
     fun renderIcons(graphics: GuiGraphicsExtractor, deltaTracker: DeltaTracker) {
         val mc = Minecraft.getInstance()
         if (mc.level == null || mc.player == null) return
-        if (!PazConfig.ALWAYS_SHOW_HEAD_MARKERS) PazNetwork.ZombieRaidClientCache.get()
-            ?: return
+        PazNetwork.ZombieRaidClientCache.get() ?: return
 
         for ((worldPos, zombie) in collect(mc)) {
             val screen = project(worldPos) ?: continue
@@ -74,21 +72,14 @@ object ZombieHudMarkers {
         val cy = y + ICON_SIZE * 0.5
         val baseScale = ICON_SIZE * 2.0f
 
-        val w = mc.window.guiScaledWidth
-        val h = mc.window.guiScaledHeight
-
         // outline
-        //submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale * state.scale, outlinePad = 1.15f)
-
+        submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale * state.scale, outlinePad = 1.15f)
         // head icon
-        // TODO [use3dIcon] uses a copied render of the entity model with everything except the head removed.
-        //  it definitely has an impact on performance, but I can't find a better way to render worn head items like the cones/football helmets.
-
         // TODO I should probably take a screen shot when resources are loaded of each entity in the zombie raider tag list and save the head marker image to reuse here
         submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale * state.scale)
 
-        if (zombie.mainHandItem.`is`(PazBlocks.BRAINZ_FLAG.asItem()) || zombie.offhandItem.`is`(PazBlocks.BRAINZ_FLAG.asItem())) submitItem(graphics,
-            PazBlocks.BRAINZ_FLAG.asItem().defaultInstance, cx, cy, baseScale)
+        if (zombie.mainHandItem.`is`(PazBlocks.BRAINZ_FLAG_BLOCK.asItem()) || zombie.offhandItem.`is`(PazBlocks.BRAINZ_FLAG_BLOCK.asItem())) submitItem(graphics,
+            PazBlocks.BRAINZ_FLAG_BLOCK.asItem().defaultInstance, cx, cy, baseScale)
 
         val balloon = (zombie as? PazZombie)?.getHeldBalloons()?.firstOrNull()
         if (balloon != null) submitItem(graphics, balloon.pickResult, cx, cy-8, baseScale)
@@ -132,9 +123,8 @@ object ZombieHudMarkers {
             for (entity in level.entitiesForRendering()) {
                 if (entity !is Zombie) continue
 
-                if (!PazConfig.ALWAYS_SHOW_HEAD_MARKERS) {
-                    if (!entity.isActiveInRaid()) continue
-                }
+                if (!entity.isActiveInRaid()) continue
+
                 if (!isViewObscured(cam, entity)) continue
 
                 val pos = entity.getPosition(client.deltaTracker.getGameTimeDeltaPartialTick(false)).add(0.0, entity.eyeHeight.toDouble(), 0.0)

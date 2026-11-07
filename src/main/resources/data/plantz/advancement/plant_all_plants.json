@@ -30,6 +30,18 @@
         }
       }
     },
+    "plantz:marigold": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "plantz:marigold"
+          }
+        }
+      }
+    },
     "plantz:peashooter": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
@@ -362,6 +374,18 @@
           "entity": "this",
           "predicate": {
             "minecraft:entity_type": "plantz:grave_buster"
+          }
+        }
+      }
+    },
+    "plantz:pumpkin": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "plantz:pumpkin"
           }
         }
       }

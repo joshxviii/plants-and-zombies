@@ -2,6 +2,7 @@ package joshxviii.plantz.gui
 
 import joshxviii.plantz.MailboxData
 import joshxviii.plantz.pazResource
+import joshxviii.plantz.renderer.PazButton
 import joshxviii.plantz.renderer.outlineText
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft

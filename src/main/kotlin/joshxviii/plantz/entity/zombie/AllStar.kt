@@ -1,11 +1,15 @@
 package joshxviii.plantz.entity.zombie
 
+import joshxviii.plantz.raid.BossType
 import joshxviii.plantz.PazDamageTypes
+import joshxviii.plantz.PazDataSerializers.ALL_STAR_VARIANT
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
+import joshxviii.plantz.knockback
 import joshxviii.plantz.pazResource
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
@@ -20,14 +24,20 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.entity.monster.zombie.Zombie
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
+import kotlin.jvm.optionals.getOrDefault
 
 class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, level) {
     companion object {
         val CHARGE_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(AllStar::class.java, EntityDataSerializers.INT)
         val CHARGE_BOOST_ID: Identifier = pazResource("charge_boost")
+        val GIGA_EFFECTS_ID: Identifier = pazResource("giga_effects")
+        val DATA_VARIANT_ID: EntityDataAccessor<AllStarVariant> = SynchedEntityData.defineId(AllStar::class.java, ALL_STAR_VARIANT)
     }
 
     init {
@@ -52,9 +62,34 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
         get() = this.entityData.get(CHARGE_TIME_ID)
         set(value) = this.entityData.set(CHARGE_TIME_ID, value)
 
+    var variant: AllStarVariant
+        get() = this.entityData.get(DATA_VARIANT_ID)
+        set(value) = this.entityData.set(DATA_VARIANT_ID, value)
+
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
         entityData.define(CHARGE_TIME_ID, -1)
+        entityData.define(DATA_VARIANT_ID, AllStarVariant.getDefault())
+    }
+
+    override fun onSyncedDataUpdated(accessor: EntityDataAccessor<*>) {
+        super.onSyncedDataUpdated(accessor)
+        if (accessor == DATA_VARIANT_ID) {
+            if (variant == AllStarVariant.GIGA) {
+                if (getItemBySlot(EquipmentSlot.HEAD).`is`(PazItems.FOOTBALL_HELMET)) setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY)
+                getAttribute(Attributes.ARMOR)!!.let { if (!it.hasModifier(GIGA_EFFECTS_ID)) it.addTransientModifier(AttributeModifier(GIGA_EFFECTS_ID, 4.0, AttributeModifier.Operation.ADD_VALUE)) }
+            }
+        }
+    }
+
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+        output.store("variant", AllStarVariant.CODEC, variant)
+    }
+
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+        variant = input.read("variant", AllStarVariant.CODEC).getOrDefault(AllStarVariant.getDefault())
     }
 
     override fun tick() {
@@ -85,12 +120,13 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
         super.doPush(entity)
         if (chargingTime>=0 && this.isAlive) {
             if (entity is Zombie) entity.knockback(
-                0.7, position().x - entity.position().x, position().z - entity.position().z, damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 0f)
+                0.7, position().x - entity.position().x, position().z - entity.position().z
+            )
             else if (entity is LivingEntity) {
-                val level = level() as? ServerLevel?: return
-                entity.hurtServer(level, this.damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 1.5f)
                 entity.knockback(
-                    2.0, position().x - entity.position().x, position().z - entity.position().z, damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 1.5f)
+                    2.0, position().x - entity.position().x, position().z - entity.position().z,
+                    this.damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 1.5f
+                )
             }
         }
     }
@@ -121,6 +157,15 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
         return result
     }
 
+    override fun getTypeName(): Component {
+        return if (variant != AllStarVariant.ALL_STAR) Component.translatable("entity.plantz.all_star.variant.${variant.name.lowercase()}")
+        else super.getTypeName()
+    }
+
+    override fun onSpawnedFromItem() {
+        if (variant == AllStarVariant.GIGA) BossType.bossify(this)
+    }
+
     override fun finalizeSpawn(
         level: ServerLevelAccessor,
         difficulty: DifficultyInstance,
@@ -131,9 +176,11 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
         val random = level.random
         val difficultyModifier = difficulty.specialMultiplier
         setCanBreakDoors(true)
+        if (getItemBySlot(EquipmentSlot.HEAD).isEmpty && variant != AllStarVariant.GIGA) {
+            setItemSlot(EquipmentSlot.HEAD, PazItems.FOOTBALL_HELMET.asItem().defaultInstance)
+            setDropChance(EquipmentSlot.HEAD, 0.0f)
+        }
 
-        setItemSlot(EquipmentSlot.HEAD, PazItems.FOOTBALL_HELMET.asItem().defaultInstance)
-        setDropChance(EquipmentSlot.HEAD, 0.0f)
         return data
     }
 
@@ -141,7 +188,7 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
         val allStar: AllStar,
     ) : Goal() {
         companion object {
-            const val CHARGE_DELAY_TIME = 85
+            const val CHARGE_DELAY_TIME = 125
             const val CHARGING_DURATION = 40
         }
         var chargeDelayTime = allStar.random.nextInt(40,50)
@@ -161,7 +208,7 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
             if (--chargeDelayTime == 0) {
                 allStar.applyChargeBoost()
                 allStar.playSound(SoundEvents.WIND_CHARGE_BURST.value(), 1.5f, 1.3f)
-                allStar.playSound(PazSounds.ALL_STAR_WHISTLE)
+                allStar.playSound(PazSounds.ALL_STAR_WHISTLE, 0.5f, allStar.voicePitch)
                 allStar.chargingTime = CHARGING_DURATION
                 chargeDelayTime = CHARGE_DELAY_TIME + allStar.random.nextInt(50)
             }

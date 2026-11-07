@@ -21,9 +21,7 @@
           "predicate": {
             "minecraft:equipment": {
               "head": {
-                "items": [
-                  "plantz:cone"
-                ]
+                "items": "plantz:cone"
               }
             }
           }

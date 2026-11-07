@@ -11,46 +11,40 @@
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
               "weight": 3,
-              "modifier": [
-                {
-                  "type": "minecraft:set_components",
-                  "components": {
-                    "minecraft:entity_data": {
-                      "id": "plantz:sunflower"
-                    }
+              "modifier": {
+                "type": "minecraft:set_components",
+                "components": {
+                  "minecraft:entity_data": {
+                    "id": "plantz:sunflower"
                   }
                 }
-              ]
+              }
             },
             {
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
               "weight": 3,
-              "modifier": [
-                {
-                  "type": "minecraft:set_components",
-                  "components": {
-                    "minecraft:entity_data": {
-                      "id": "plantz:peashooter"
-                    }
+              "modifier": {
+                "type": "minecraft:set_components",
+                "components": {
+                  "minecraft:entity_data": {
+                    "id": "plantz:peashooter"
                   }
                 }
-              ]
+              }
             },
             {
               "type": "minecraft:item",
               "name": "plantz:seed_packet",
               "weight": 2,
-              "modifier": [
-                {
-                  "type": "minecraft:set_components",
-                  "components": {
-                    "minecraft:entity_data": {
-                      "id": "plantz:wallnut"
-                    }
+              "modifier": {
+                "type": "minecraft:set_components",
+                "components": {
+                  "minecraft:entity_data": {
+                    "id": "plantz:wallnut"
                   }
                 }
-              ]
+              }
             }
           ]
         }
@@ -67,7 +61,7 @@
           },
           {
             "type": "minecraft:random_chance",
-            "chance": 0.02
+            "chance": 0.01
           }
         ]
       }
@@ -86,7 +80,7 @@
             "type": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "minecraft:nbt": "{\"variant\":\"balloon\"}"
+              "nbt": "{\"variant\":\"balloon\"}"
             }
           }
         }

@@ -35,6 +35,7 @@ class NewspaperItem(properties: Properties) : Item(properties) {
         super.onUseTick(level, livingEntity, itemStack, ticksRemaining)
     }
 
+
     override fun getUseAnimation(itemStack: ItemStack): ItemUseAnimation {
         return ItemUseAnimation.TOOT_HORN
     }

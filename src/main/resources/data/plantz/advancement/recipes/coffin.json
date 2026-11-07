@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": ["plantz:coffin"]
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_wooden_trapdoor": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#minecraft:wooden_trapdoors"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_wooden_trapdoor"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "plantz:coffin"
+    ]
+  }
+}

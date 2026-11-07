@@ -1,6 +1,7 @@
 package joshxviii.plantz.block
 
 import com.mojang.math.OctahedralGroup
+import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazConfig
@@ -41,7 +42,6 @@ import java.util.function.ToIntFunction
 
 class SunBatteryBlock(properties: Properties) : BaseEntityBlock(properties), SimpleWaterloggedBlock  {
     companion object {
-
         val FACE: EnumProperty<AttachFace> = BlockStateProperties.ATTACH_FACE
         val FACING: EnumProperty<Direction> = HorizontalDirectionalBlock.FACING
         val WATERLOGGED: BooleanProperty = BlockStateProperties.WATERLOGGED
@@ -108,7 +108,7 @@ class SunBatteryBlock(properties: Properties) : BaseEntityBlock(properties), Sim
             val state = if (dir.axis === Direction.Axis.Y) {
                 defaultBlockState()
                     .setValue(FACE, if (dir == Direction.UP) AttachFace.CEILING else AttachFace.FLOOR)
-                    .setValue(FACING, context.horizontalDirection)
+                    .setValue(FACING, context.horizontalDirection.opposite)
             } else {
                 defaultBlockState()
                     .setValue(FACE, AttachFace.WALL)
@@ -173,9 +173,7 @@ class SunBatteryBlock(properties: Properties) : BaseEntityBlock(properties), Sim
     }
 
     override fun hasAnalogOutputSignal(state: BlockState): Boolean = state.getValue(LEVEL) > 0
-    override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos, direction: Direction): Int {
-        return state.getValue(LEVEL)
-    }
+    override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos, direction: Direction): Int = state.getValue(LEVEL)
 
     override fun getCloneItemStack(level: LevelReader, pos: BlockPos, state: BlockState, includeData: Boolean): ItemStack {
         return (level.getBlockEntity(pos) as? SunBatteryBlockEntity)?.theItem?:

@@ -2,8 +2,6 @@ package joshxviii.plantz.model.plants;
 
 import joshxviii.plantz.animation.plants.WallNutAnimation;
 import joshxviii.plantz.renderer.entity.plant.PlantRenderState;
-import joshxviii.plantz.renderer.entity.plant.WallNutRenderState;
-import joshxviii.plantz.renderer.entity.zombie.RoboZombieRenderState;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -52,17 +50,16 @@ public class WallNutModel extends PlantModel {
 
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
-		if (!(state instanceof WallNutRenderState wallNutState)) return;
 		super.setupAnim(state);
 
 		roll.xRot = 0.0F;
 		roll.yRot = 0.0F;
 		roll.zRot = 0.0F;
 
-		Quaternionf q = wallNutState.getRollRotation();
+		Quaternionf q = state.getRollRotation();
 
-		if (wallNutState.isRolling()) roll.rotateBy(q);
+		if (state.isRolling()) roll.rotateBy(q);
 
-		body.yRot = wallNutState.yRot * Mth.DEG_TO_RAD;
+		body.yRot += state.yRot * Mth.DEG_TO_RAD;
 	}
 }

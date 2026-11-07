@@ -11,6 +11,9 @@ object PazCriteria {
     val RAID_WAVE_TRIGGER: RaidWaveTrigger = registerTrigger("raid_wave", RaidWaveTrigger())
 
     @JvmField
+    val BOSS_DEFEAT_TRIGGER: BossDefeatTrigger = registerTrigger("boss_defeat", BossDefeatTrigger())
+
+    @JvmField
     val BOWLING_TRIGGER: WallNutBowlingTrigger = registerTrigger("wallnut_bowling", WallNutBowlingTrigger())
 
     @JvmField

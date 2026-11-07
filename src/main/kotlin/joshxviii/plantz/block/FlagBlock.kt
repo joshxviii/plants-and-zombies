@@ -1,5 +1,6 @@
 package joshxviii.plantz.block
 
+import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.block.entity.FlagBlockEntity
 import net.minecraft.core.BlockPos
@@ -27,9 +28,7 @@ class FlagBlock(properties: Properties) : BaseEntityBlock(properties) {
         val SHAPE: VoxelShape = column(8.0, 0.0, 16.0)
         //val FACING: EnumProperty<Direction> = HorizontalDirectionalBlock.FACING
         val ROTATION: IntegerProperty = BlockStateProperties.ROTATION_16
-
     }
-
 
     override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
         return SHAPE

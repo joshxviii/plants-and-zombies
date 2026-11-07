@@ -2,13 +2,12 @@ package joshxviii.plantz.block.entity
 
 import com.mojang.serialization.Codec
 import joshxviii.plantz.*
-import joshxviii.plantz.block.CollectionBoxState
 import joshxviii.plantz.block.MailboxBlock.Companion.FACING
 import joshxviii.plantz.block.MailboxBlock.Companion.STATE
 import joshxviii.plantz.block.MailboxState
-import joshxviii.plantz.inventory.MailCollectionBoxMenu
 import joshxviii.plantz.inventory.MailboxMenu
-import joshxviii.plantz.raid.ZombieRaid.Companion.BONUS_REWARD_INTERVAL
+import joshxviii.plantz.raid.CompletedWave
+import joshxviii.plantz.raid.GardenHeroRewards
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
@@ -59,7 +58,7 @@ class MailboxBlockEntity(
     private var name: Component? = null
     private var ejectTimer: Int = 0
     private var tickCount : Int = 0
-    private var heroMailBuffer: MutableList<ResourceKey<LootTable>> = mutableListOf()
+    private var heroMailBuffer: MutableList<CompletedWave> = mutableListOf()
     private var heroMailIndex: Int = 0
 
     companion object {
@@ -80,10 +79,10 @@ class MailboxBlockEntity(
             if (blockEntity.ejectTimer > 0) {
                 val buffer = blockEntity.heroMailBuffer
                 if (buffer.isNotEmpty()) {// Hero Mail Rewards
-                    if (blockEntity.ejectTimer % Mth.floor((HERO_MAIL_EJECT_DELAY+buffer.size)/buffer.size.toFloat()) == 0) buffer.getOrNull(blockEntity.heroMailIndex)?.let {
-                        blockEntity.getHeroMail(it).forEach { item -> blockEntity.ejectItem(item) }
+                    if (blockEntity.ejectTimer % Mth.floor((HERO_MAIL_EJECT_DELAY+buffer.size)/buffer.size.toFloat()) == 0) buffer.getOrNull(blockEntity.heroMailIndex)?.let { reward ->
+                        blockEntity.getHeroMail(reward.type.lootTableFn(blockEntity.heroMailIndex)).forEach { item -> blockEntity.ejectItem(item) }
 
-                        if ((blockEntity.heroMailIndex+1) % BONUS_REWARD_INTERVAL==0) {// Add bonus reward every 5 waves
+                        if (reward.boss!=null) {
                             blockEntity.getHeroMail(PazLootTables.MAIL_REWARDS_BONUS).forEach { item -> blockEntity.ejectItem(item) }
                             blockEntity.confetti()
                         }
@@ -176,14 +175,14 @@ class MailboxBlockEntity(
     fun getHeroMail(lootTable: ResourceKey<LootTable>): List<ItemStack> {
         val level = level as? ServerLevel ?: return emptyList()
         val params: LootParams = LootParams.Builder(level)
-            .withParameter(LootContextParams.ORIGIN, net.minecraft.world.phys.Vec3.atCenterOf(blockPos))
+            .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockPos))
             .create(LootContextParamSets.CHEST)
         val lootTable: LootTable = level.server.reloadableRegistries().getLootTable(lootTable)
         val items = lootTable.getRandomItems(params)
         return items
     }
 
-    private fun getDropPos(): Vec3 = blockState.getValue(FACING).unitVec3.scale(0.6).add(net.minecraft.world.phys.Vec3.atCenterOf(blockPos))
+    private fun getDropPos(): Vec3 = blockState.getValue(FACING).unitVec3.scale(0.6).add(Vec3.atCenterOf(blockPos))
     private fun ejectItem(item: ItemStack, glow: Boolean = false) {
         val level = level as? ServerLevel ?: return
         val random = level.getRandom()

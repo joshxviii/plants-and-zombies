@@ -10,18 +10,16 @@
         {
           "type": "minecraft:item",
           "name": "plantz:magenta_mailbox",
-          "modifier": [
-            {
-              "type": "minecraft:copy_components",
-              "source": "block_entity",
-              "include": [
-                "minecraft:custom_name",
-                "minecraft:item_name",
-                "minecraft:tooltip_display",
-                "minecraft:rarity"
-              ]
-            }
-          ]
+          "modifier": {
+            "type":  "minecraft:copy_components",
+            "source": "block_entity",
+            "include": [
+              "minecraft:custom_name",
+              "minecraft:item_name",
+              "minecraft:tooltip_display",
+              "minecraft:rarity"
+            ]
+          }
         }
       ],
       "rolls": 1.0

@@ -1,0 +1,10 @@
+{
+  "mutations": [
+    {
+      "chance": 1.0,
+      "result": {
+        "loot_table": "plantz:seed_mutations/marigold"
+      }
+    }
+  ]
+}

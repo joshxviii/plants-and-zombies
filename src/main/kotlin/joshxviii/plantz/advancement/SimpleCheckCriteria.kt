@@ -3,8 +3,8 @@ package joshxviii.plantz.advancement
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.core.Holder
-import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import java.util.Optional
 
 class SimpleCheckCriteria(

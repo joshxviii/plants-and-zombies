@@ -1,7 +1,6 @@
 package joshxviii.plantz.effect
 
 import joshxviii.plantz.PazEffects.HYPNOTIZED_GOAL_ATTACHMENT
-import joshxviii.plantz.PazTags
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.mixin.MobAccessor
 import net.minecraft.server.level.ServerLevel
@@ -12,11 +11,10 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
-import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.entity.monster.Enemy
 
 /**
- * A [MobEffect] that causes the user to attack [PazTags.EntityTypes.ZOMBIE_RAIDERS].
+ * A [MobEffect] that causes the user to attack entities of the same type.
  */
 class HypnotizedMobEffect(category: MobEffectCategory, color: Int) : MobEffect(category, color) {
     companion object {
@@ -55,8 +53,9 @@ class HypnotizedMobEffect(category: MobEffectCategory, color: Int) : MobEffect(c
                 val oldGoal = entity.getAttached<Goal>(HYPNOTIZED_GOAL_ATTACHMENT)
                 if (oldGoal != null) return
 
-                val goal = NearestAttackableTargetGoal(entity, LivingEntity::class.java, true) { target, level ->
-                    target.`is`(PazTags.EntityTypes.ZOMBIE_RAIDERS) || (target is Enemy && target !is Creeper) }
+                val goal = NearestAttackableTargetGoal(entity, LivingEntity::class.java, true) { target, _ ->
+                    target.type == entity.type || (entity is Enemy && target is Enemy)
+                }
 
                 (entity as MobAccessor).targetSelector.addGoal(0, goal)
                 entity.setAttached(HYPNOTIZED_GOAL_ATTACHMENT,goal)

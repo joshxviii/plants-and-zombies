@@ -1,6 +1,7 @@
 package joshxviii.plantz.item
 
 import joshxviii.plantz.entity.zombie.AllStar.Companion.CHARGE_BOOST_ID
+import joshxviii.plantz.knockback
 import net.minecraft.ChatFormatting
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
@@ -21,8 +22,8 @@ import kotlin.math.sqrt
 
 class FootballHelmetItem(properties: Properties) : Item(properties) {
     companion object {
-        fun addToTooltip(consumer: MutableList<Component>, sprintKey: Component) {
-            consumer.add(1, Component.translatable("item.plantz.football_helmet.description", sprintKey)
+        fun addToTooltip(consumer: MutableList<Component>) {
+            consumer.add(1, Component.translatable("item.plantz.football_helmet.description")
                 .withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC))
         }
 
@@ -96,7 +97,8 @@ class FootballHelmetItem(properties: Properties) : Item(properties) {
             target.knockback(
                 KNOCKBACK_STRENGTH,
                 -awayX / length,
-                -awayZ / length, owner.damageSources().mobAttack(owner), 0f)
+                -awayZ / length
+            )
         }
     }
 }

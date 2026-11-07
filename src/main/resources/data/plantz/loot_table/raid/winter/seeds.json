@@ -84,8 +84,10 @@
             }
           ]
         }
-      ]
+      ],
+      "modifier": []
     }
   ],
+  "modifier": [],
   "random_sequence": "plantz:raid/default_mail_rewards"
 }

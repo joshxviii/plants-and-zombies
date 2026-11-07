@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:ore",
+  "targets": [
+    {
+      "target": {
+        "predicate_type": "minecraft:tag_match",
+        "tag": "plantz:gnome_space_rocks"
+      },
+      "state": "minecraft:amethyst_block"
+    }
+  ],
+  "size": 20,
+  "discard_chance_on_air_exposure": 0.1
+}

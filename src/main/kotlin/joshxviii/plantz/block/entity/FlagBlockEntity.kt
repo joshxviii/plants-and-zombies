@@ -2,8 +2,8 @@ package joshxviii.plantz.block.entity
 
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazEffects
+import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.raid.ZombieRaid
-import joshxviii.plantz.raid.ZombieRaid.Companion.FLAG_MAX_HEALTH
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
@@ -18,10 +18,12 @@ import net.minecraft.world.level.block.LevelEvent
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.Difficulty
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.AABB
+import kotlin.jvm.java
 import kotlin.math.floor
 
 class FlagBlockEntity(
@@ -35,6 +37,7 @@ class FlagBlockEntity(
         const val HEAL_TIME = 60
 
         const val MAX_FLAG_OMEN_DISTANCE = 24.0
+        const val FLAG_POWER_RANGE = 5.0
     }
 
     var maxHealth : Float = MAX_HEALTH
@@ -43,9 +46,23 @@ class FlagBlockEntity(
         private set(value) {
             field = value.coerceAtMost(maxHealth)
         }
+    var tickCount : Int = 0
     private var resetTime : Int = 0
 
+    override fun setChanged() {
+        super.setChanged()
+        if (tickCount== 0) {
+            if (this.blockState.`is`(PazBlocks.PLANTZ_FLAG_BLOCK)) {
+                (level as? ServerLevel)?.let { level ->
+                    val nearbyPlants = level.getEntitiesOfClass(Plant::class.java, AABB(worldPosition).inflate(FLAG_POWER_RANGE))
+                    nearbyPlants.forEach { it.updatePlantPower(level, true) }
+                }
+            }
+        }
+    }
+
     fun tick(level: Level, pos: BlockPos, state: BlockState) {
+        tickCount++
         if (level.isClientSide) return
         if (resetTime > 0) {
             resetTime--
@@ -61,8 +78,8 @@ class FlagBlockEntity(
 
         if (health <= 0) {
             level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, pos, getId(state))
-            if (blockState.`is`(PazBlocks.PLANTZ_FLAG)) {
-                val item = ItemEntity(level, pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(), PazBlocks.BRAINZ_FLAG.asItem().defaultInstance)
+            if (blockState.`is`(PazBlocks.PLANTZ_FLAG_BLOCK)) {
+                val item = ItemEntity(level, pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(), PazBlocks.BRAINZ_FLAG_BLOCK.asItem().defaultInstance)
                 level.addFreshEntity(item)
             }
             level.destroyBlock(pos, false)
@@ -72,7 +89,7 @@ class FlagBlockEntity(
         }
 
         if (level.difficulty == Difficulty.PEACEFUL) return
-        if (blockState.`is`(PazBlocks.PLANTZ_FLAG)) replaceBadOmenEffect()
+        if (blockState.`is`(PazBlocks.PLANTZ_FLAG_BLOCK)) replaceBadOmenEffect()
     }
 
     fun replaceBadOmenEffect(distance: Double = MAX_FLAG_OMEN_DISTANCE) {

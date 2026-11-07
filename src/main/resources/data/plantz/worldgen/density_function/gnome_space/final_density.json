@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:interpolated",
+  "input": {
+    "type": "minecraft:add",
+    "left": {
+      "type": "minecraft:max",
+      "left": "plantz:gnome_space/asteroids",
+      "right": "plantz:gnome_space/islands"
+    },
+    "right": {
+      "type": "minecraft:min",
+      "left": {
+        "type": "minecraft:clamp",
+        "input": 0,
+        "min": -3,
+        "max": 48
+      },
+      "right": {
+        "type": "minecraft:clamp",
+        "input": 0,
+        "min": -3,
+        "max": 224
+      }
+    }
+  },
+  "cell_size_xz": 1,
+  "cell_size_y": 1
+}

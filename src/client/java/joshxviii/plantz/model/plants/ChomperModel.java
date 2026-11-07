@@ -167,8 +167,8 @@ public class ChomperModel extends PlantModel {
 
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
-		this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
 		super.setupAnim(state);
-		this.stem.yRot = state.yRot * (float) (Math.PI / 180.0);
+		this.head.xRot += state.xRot * (float) (Math.PI / 180.0);
+		this.stem.yRot += state.yRot * (float) (Math.PI / 180.0);
 	}
 }

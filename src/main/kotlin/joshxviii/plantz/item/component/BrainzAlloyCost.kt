@@ -25,7 +25,7 @@ data class BrainzAlloyCost(
         components: DataComponentGetter
     ) {
         val type = components.get(DataComponents.ENTITY_DATA)?.type()
-        consumer.accept(Component.translatable("component.item_cost", PazItems.BRAINZ_ALLOY.name(), getAlloyCost(type)).withColor(0x7B44A3))
+        consumer.accept(Component.translatable("component.plantz.item_cost", PazItems.BRAINZ_ALLOY.name(), getAlloyCost(type)).withColor(0x7B44A3))
     }
 
     fun getAlloyCost(forType: EntityType<*>?): Int {

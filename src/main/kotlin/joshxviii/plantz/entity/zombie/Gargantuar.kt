@@ -5,6 +5,8 @@ import joshxviii.plantz.PazDataSerializers.GARGANTUAR_VARIANT
 import joshxviii.plantz.ai.ZombieState
 import joshxviii.plantz.ai.goal.MeleeAttackActionGoal
 import joshxviii.plantz.ai.goal.NavigateToTargetGoal
+import joshxviii.plantz.raid.PazZombieGroupData
+import joshxviii.plantz.raid.isActiveInRaid
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
@@ -20,7 +22,6 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.control.MoveControl
 import net.minecraft.world.entity.ai.goal.FloatGoal
 import net.minecraft.world.entity.ai.goal.Goal
@@ -53,7 +54,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
     }
 
     init {
-        xpReward = 200
+        xpReward = 120
     }
 
     val smashAttackAnimation : AnimationState = AnimationState()
@@ -184,9 +185,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
         this.goalSelector.setControlFlag(Goal.Flag.TARGET, noController)
     }
 
-    override fun getLookControl(): LookControl =  if (smashAttackTime>0) noLookControl else super.getLookControl()
     override fun getMoveControl(): MoveControl<*> = if (smashAttackTime>0) noMoveControl else super.getMoveControl()
-    override fun isWithinMeleeAttackRange(target: LivingEntity): Boolean = if (smashAttackTime>0) false else super.isWithinMeleeAttackRange(target)
 
     override fun tick() {
         super.tick()
@@ -254,7 +253,8 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
                 val level = level() as? ServerLevel?: return
                 entity.hurtServer(level, this.damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 2.5f)
                 entity.knockback(
-                    0.2, position().x - entity.position().x, position().z - entity.position().z, damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 2.5f)
+                    0.2, position().x - entity.position().x, position().z - entity.position().z
+                )
             }
         }
     }
@@ -330,15 +330,18 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
             gargantuar.hasImp = false
             val level = gargantuar.level() as ServerLevel
 
-            val spawnDirection = Entity.calculateViewVector(0f, gargantuar.yBodyRot+35).scale(2.4)
+            val spawnDirection = gargantuar.getViewVector(gargantuar.yBodyRot+35).scale(2.4)
             val spawnPos = Vec3(
                 spawnDirection.x + gargantuar.x,
                 spawnDirection.y + gargantuar.y+2.5f,
                 spawnDirection.z + gargantuar.z
             )
-           PazEntities.IMP.create(level, EntitySpawnReason.MOB_SUMMONED)?.let { imp ->
-                val lookDirection = Entity.calculateViewVector(0f, gargantuar.yRot)
+            PazEntities.IMP.create(level, EntitySpawnReason.MOB_SUMMONED)?.let { imp ->
+                val lookDirection = gargantuar.getViewVector(0f)
                 imp.snapTo(spawnPos, gargantuar.yRot, 0.0f)
+                imp.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(spawnPos)), EntitySpawnReason.REINFORCEMENT,
+                    PazZombieGroupData(isRaider = gargantuar.isActiveInRaid())
+                )
                 imp.applyImpulse(lookDirection.x, lookDirection.y, lookDirection.z, 1.0f, 0f)
                 if (gargantuar.variant == GargantuarVariant.PIRATE) imp.variant = ImpVariant.PIRATE
                 gargantuar.target.let { if (it!=null) imp.setLastHurtMob(it) }

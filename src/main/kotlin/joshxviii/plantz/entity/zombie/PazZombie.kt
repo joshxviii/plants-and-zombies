@@ -8,11 +8,12 @@ import joshxviii.plantz.ai.control.PazMoveControl
 import joshxviii.plantz.ai.goal.FlyingPathfindingGoal
 import joshxviii.plantz.ai.pathfinding.PazFlyingPathNavigation
 import joshxviii.plantz.ai.pathfinding.PazGroundPathNavigation
-import joshxviii.plantz.entity.Balloon
-import joshxviii.plantz.entity.ZombieRaider
-import joshxviii.plantz.item.BalloonItem
+import joshxviii.plantz.raid.BossType
+import joshxviii.plantz.raid.PazZombieGroupData
 import joshxviii.plantz.raid.ZombieRaid.Companion.RAID_DISTANCE
+import joshxviii.plantz.raid.ZombieRaider
 import joshxviii.plantz.raid.getZombieRaids
+import joshxviii.plantz.raid.setCountHealth
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
@@ -28,6 +29,7 @@ import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
 import net.minecraft.world.Difficulty
 import net.minecraft.world.DifficultyInstance
+import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeInstance
@@ -61,7 +63,6 @@ import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
 import java.util.*
-import kotlin.collections.getValue
 import kotlin.jvm.optionals.getOrElse
 import kotlin.math.max
 
@@ -123,8 +124,6 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
                     true,
                     false
                 ) ?: return
-                zombie.setPersistenceRequired()
-
                 level.addFreshEntity(zombie)
             }
         }
@@ -157,25 +156,30 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         }
 
         fun isBornLeader(zombie: Zombie): Boolean {
-            return Objects.requireNonNull<AttributeInstance>(zombie.getAttribute(Attributes.MAX_HEALTH)).hasModifier(Identifier.withDefaultNamespace(LEADER_MODIFIER_ID))
+            return Objects.requireNonNull<AttributeInstance>(zombie.getAttribute(Attributes.MAX_HEALTH)).hasModifier(LEADER_MODIFIER_ID)
+        }
+
+        fun removeLeaderModifiers(zombie: Zombie) {
+            Objects.requireNonNull<AttributeInstance>(zombie.getAttribute(Attributes.MAX_HEALTH)).removeModifier(LEADER_MODIFIER_ID)
+            Objects.requireNonNull<AttributeInstance>(zombie.getAttribute(Attributes.SPAWN_REINFORCEMENTS_CHANCE)).removeModifier(LEADER_MODIFIER_ID)
         }
 
         // for group spawning and gravestone spawning
         val SPAWN_TABLE_WEIGHTS = mapOf(
-            PazEntities.BROWN_COAT          to 20,
-            PazEntities.NEWSPAPER_ZOMBIE    to 7,
-            PazEntities.DIGGER_ZOMBIE       to 1,
-            PazEntities.DISCO_ZOMBIE        to 1,
+            PazEntities.BROWN_COAT          to 40,
+            PazEntities.NEWSPAPER_ZOMBIE    to 8,
+            PazEntities.DIGGER_ZOMBIE       to 2,
+            PazEntities.DISCO_ZOMBIE        to 2,
             PazEntities.ALL_STAR            to 1,
         )
 
         const val ZOMBIE_SPEED = 0.23
         const val MAX_EQUIPPABLE_BALLOONS = 4
-        const val LEADER_MODIFIER_ID: String = "leader_zombie_bonus"
+        val LEADER_MODIFIER_ID: Identifier = Identifier.withDefaultNamespace("leader_zombie_bonus")
 
         data class PazZombieAttributes(
             val maxHealth: Double = 20.0,
-            val attackDamage: Double = 1.0,
+            val attackDamage: Double = 2.0,
             val attackKnockback: Double = 0.4,
             val attackRange: Double = 1.5,
             val movementSpeed: Double = ZOMBIE_SPEED,
@@ -183,6 +187,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             val jumpStrength: Double = 0.42,
             val followRange: Double = 50.0,
             val armor: Double = 0.0,
+            val armorToughness: Double = 0.0,
             val spawnReinforcementsChance: Double = 0.0,
             val explosionKnockbackResistance: Double = 0.0,
             val knockbackResistance: Double = 0.2,
@@ -226,8 +231,14 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     override fun getStepSound(): SoundEvent {
         return SoundEvents.ZOMBIE_STEP
     }
+    override fun getVoicePitch(): Float {
+        val bossified = this.getAttribute(Attributes.SCALE)!!.hasModifier(BossType.BOSSIFY)
+        val pitch = super.getVoicePitch()
+        return if (bossified) pitch * 0.65f else pitch
+    }
 
     override fun onEquipItem(slot: EquipmentSlot, oldStack: ItemStack, stack: ItemStack) {
+        super.onEquipItem(slot, oldStack, stack)
         if (stack.`is`(PazItems.DUCKY_TUBE) && slot == EquipmentSlot.LEGS) {
             this.getNavigation().setCanFloat(true)
             this.getNavigation().recomputePath()
@@ -236,19 +247,20 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             this.getNavigation().setCanFloat(false)
             this.getNavigation().recomputePath()
         };
+    }
 
-        super.onEquipItem(slot, oldStack, stack)
+    fun useItems() {
+        if (isUsingItem) return
+
+        val hand = when {
+            getItemInHand(InteractionHand.MAIN_HAND).`is`(PazTags.ItemTags.ZOMBIE_CAN_USE) -> InteractionHand.MAIN_HAND
+            getItemInHand(InteractionHand.OFF_HAND).`is`(PazTags.ItemTags.ZOMBIE_CAN_USE) -> InteractionHand.OFF_HAND
+            else -> return
+        }
+        startUsingItem(hand)
     }
 
     override fun pickUpItem(level: ServerLevel, entity: ItemEntity) {
-        if (isBaby) return super.pickUpItem(level, entity)
-        val balloonItem = entity.item.item as? BalloonItem ?: return super.pickUpItem(level, entity)
-
-        val balloonsMissing = (MAX_EQUIPPABLE_BALLOONS - getHeldBalloons().size).coerceIn(0, MAX_EQUIPPABLE_BALLOONS)
-        val count = entity.item.count.coerceAtMost(balloonsMissing)
-        spawnBalloons(count, balloonItem.color)
-        entity.item.shrink(count)
-
         super.pickUpItem(level, entity)
     }
 
@@ -276,7 +288,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
 
     protected val groundMoveControl: MoveControl<*> by lazy { PazMoveControl(this) }
     protected val flyingMoveControl: FlyingMoveControl<*> by lazy { PazFlyingMoveControl(this, 20, true) }
-    protected val noMoveControl = object : MoveControl<PazZombie>(this) { override fun getSpeedModifier(): Double = 0.0 }
+    protected val noMoveControl = object : MoveControl<Mob>(this) { override fun getSpeedModifier(): Double = 0.0 }
     protected val noLookControl = object : LookControl(this) {}
 
     fun updateNavigation() {
@@ -314,6 +326,11 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         return super.getMoveControl()
     }
 
+    override fun getLookControl(): LookControl {
+        if (isImmobile) return noLookControl
+        return super.getLookControl()
+    }
+
     override fun registerGoals() {
         super.registerGoals()
         this.goalSelector.addGoal(7, FlyingPathfindingGoal(this, hoverGroundHeight = 1.5))
@@ -332,8 +349,18 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
 
     var waterTime = -1
     var retreatTime = -1
+    var emergeTime = -1
+    private var spawnedFromItem = false
+
+    protected open fun onSpawnedFromItem() {}
+
     override fun tick() {
         super.tick()
+        if (spawnedFromItem && !level().isClientSide) {
+            spawnedFromItem = false
+            onSpawnedFromItem()
+        }
+        useItems()
         moveDirO = moveDir
         val delta = deltaMovement
 
@@ -374,10 +401,13 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
                 emergeAnimation.startIfStopped(tickCount)
                 retreatAnimation.stop()
                 floatAnimation.stop()
-                if (tickCount > emergingTime()) state = ZombieState.IDLE
+                if (emergeTime++ > emergingTime()) {
+                    state = ZombieState.IDLE
+                    emergeTime = -1
+                }
 
-                if (tickCount < 15) {
-                    if(tickCount==1) playSound(SoundEvents.ROOTED_DIRT_HIT, 1.0f, 0.2f)
+                if (emergeTime < 15) {
+                    if(emergeTime%8==0) playSound(SoundEvents.ROOTED_DIRT_HIT, 1.0f, 0.2f)
                     serverLevel?.sendParticles(
                         BlockParticleOption(ParticleTypes.BLOCK, serverLevel.getBlockState(blockPosition().below())),
                         x, y + 0.05, z, 8, 0.25, 0.0, 0.25, 0.4
@@ -420,9 +450,8 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         }
     }
 
-    override fun isImmobile(): Boolean {
-        return if (state==ZombieState.EMERGING || state==ZombieState.RETREATING) true else super.isImmobile()
-    }
+    override fun isImmobile(): Boolean = state==ZombieState.EMERGING || state==ZombieState.RETREATING || super.isImmobile()
+    override fun isWithinMeleeAttackRange(target: LivingEntity): Boolean = !isImmobile && super.isWithinMeleeAttackRange(target)
 
     override fun travel(travelVector: Vec3) {
         if (isFlying && this.isEffectiveAi) {
@@ -484,7 +513,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     protected open fun ignoreZombieDamage(): Boolean = true
 
     override fun wantsToPickUp(level: ServerLevel, itemStack: ItemStack): Boolean {
-        if (itemStack.`is`(PazBlocks.PLANTZ_FLAG.asItem())) return false
+        if (itemStack.`is`(PazBlocks.PLANTZ_FLAG_BLOCK.asItem())) return false
         return super.wantsToPickUp(level, itemStack)
     }
 
@@ -493,6 +522,10 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     open fun canEquipBalloons() = true
     open fun canClimbWalls(): Boolean = false
 
+    override fun canAttack(target: LivingEntity): Boolean {
+        if (!target.isHypnotized() && target is Zombie) return false
+        else return super.canAttack(target)
+    }
     override fun maxUpStep(): Float = if (isInWater) 0.5f else super.maxUpStep()
     override fun isSunSensitive(): Boolean = false
     override fun convertsInWater(): Boolean = false
@@ -508,7 +541,6 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     fun randomEquip(random: RandomSource, difficulty: DifficultyInstance) {
         super.populateDefaultEquipmentSlots(random, difficulty)
     }
-    fun isRaider() = (this as? ZombieRaider)?.`plantz$getIsFromRaid`()?: false
 
     override fun finalizeSpawn(
         level: ServerLevelAccessor,
@@ -517,17 +549,21 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         val newData = PazZombieGroupData(
-            isRaider = (groupData as? PazZombieGroupData)?.isRaider?: false,
-            isCountedTowardRaidHealth = (groupData as? PazZombieGroupData)?.isCountedTowardRaidHealth?: false,
-            isBaby = isBaby && (groupData as? ZombieGroupData)?.isBaby?: false
+            isRaider = (groupData as? PazZombieGroupData)?.isRaider ?: false,
+            isCountedTowardRaidHealth = (groupData as? PazZombieGroupData)?.isCountedTowardRaidHealth ?: false,
+            ignoreFlag = (groupData as? PazZombieGroupData)?.ignoreFlag ?: false,
+            isBaby = isBaby && (groupData as? ZombieGroupData)?.isBaby ?: false
         )
         val level = level() as ServerLevel
         if (newData.isRaider) {
             val raid = level.getZombieRaids().getNearbyRaid(blockPosition(), RAID_DISTANCE)
-            raid?.joinRaid(level, this, newData.isCountedTowardRaidHealth)
+            this.setCountHealth(newData.isCountedTowardRaidHealth)
+            raid?.joinRaid(level, this)
         }
+        (this as? ZombieRaider)?.`plantz$setIgnoreFlag`(newData.ignoreFlag)
 
         val data = super.finalizeSpawn(level, difficulty, spawnReason, newData)
+        spawnedFromItem = spawnReason == EntitySpawnReason.SPAWN_ITEM_USE
 
         if (spawnReason == EntitySpawnReason.REINFORCEMENT || spawnReason == EntitySpawnReason.EVENT) state = ZombieState.EMERGING
 
@@ -536,16 +572,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             if (spawnReason != EntitySpawnReason.NATURAL) setDropChance(EquipmentSlot.LEGS, 0.0f)
             else setDropChance(EquipmentSlot.LEGS, 0.15f)
         }
-        
+        useItems()
         return data
     }
 }
-
-class PazZombieGroupData(
-    val isRaider: Boolean = false,
-    val isCountedTowardRaidHealth: Boolean = true,
-    isBaby: Boolean = false
-) : Zombie.ZombieGroupData(
-    isBaby,
-    false
-)

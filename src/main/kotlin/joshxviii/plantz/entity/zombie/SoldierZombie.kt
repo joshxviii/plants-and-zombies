@@ -20,6 +20,13 @@ import net.minecraft.world.level.storage.ValueOutput
 class SoldierZombie(type: EntityType<out SoldierZombie>, level: Level) : PazZombie(type, level) {
 
     companion object {
+        val potentialDyes = listOf(
+            DyeColor.GREEN,
+            DyeColor.PURPLE,
+            DyeColor.ORANGE,
+            DyeColor.BLUE,
+        )
+
         val DYE_COLOR: EntityDataAccessor<DyeColor> = SynchedEntityData.defineId<DyeColor>(SoldierZombie::class.java, DATA_DYE_COLOR)
     }
 
@@ -53,7 +60,7 @@ class SoldierZombie(type: EntityType<out SoldierZombie>, level: Level) : PazZomb
             usingEntity = this,
             projectileFactory =  { PaintBall(level(), this, color = dyeColor, damage = 1f) },
             velocity = 1.1,
-            actionDelay = 22,
+            actionDelay = 40,
             soundEvent = PazSounds.DYE_BLASTER,
             actionEndEffect = {
 
@@ -78,7 +85,7 @@ class SoldierZombie(type: EntityType<out SoldierZombie>, level: Level) : PazZomb
         val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
 
         setItemSlot(EquipmentSlot.MAINHAND, PazItems.DYE_BLASTER.defaultInstance)
-        dyeColor = DyeColor.VALUES.filter { it != DyeColor.WHITE && it != DyeColor.BLACK }.random()
+        dyeColor = potentialDyes.random()
         setDropChance(EquipmentSlot.MAINHAND, 0.0f)
         if (spawnReason != EntitySpawnReason.CONVERSION) {
             setCanBreakDoors(true)

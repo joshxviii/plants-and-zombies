@@ -1,5 +1,6 @@
 package joshxviii.plantz.block
 
+import com.mojang.serialization.MapCodec
 import joshxviii.plantz.block.entity.GardenGnomeBlockEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -39,7 +40,6 @@ class GardenGnomeBlock(
     color: GardenGnomeColor = GardenGnomeColor.BLUE
 ) : BaseEntityBlock(properties), SimpleWaterloggedBlock {
     companion object {
-
         val SHAPE: VoxelShape = Util.make {
             column(6.0, 0.0, 12.0)
         }
@@ -128,7 +128,8 @@ enum class GardenGnomeColor: StringRepresentable {
     RED,
     GREEN,
     BLUE,
-    YELLOW;
+    YELLOW,
+    GOLDEN;
     override fun getSerializedName(): String = this.name.lowercase()
 }
 

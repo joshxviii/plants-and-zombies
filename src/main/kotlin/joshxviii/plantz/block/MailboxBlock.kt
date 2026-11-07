@@ -1,5 +1,7 @@
 package joshxviii.plantz.block
 
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.block.entity.MailboxManager
@@ -43,8 +45,6 @@ class MailboxBlock(
     val color: DyeColor = DyeColor.WHITE
 ) : BaseEntityBlock(properties) {
     companion object {
-
-
         val STATE: EnumProperty<MailboxState> = EnumProperty.create<MailboxState>("mailbox_state", MailboxState::class.java)
         val FACING: EnumProperty<Direction> = HorizontalDirectionalBlock.FACING
         val FACE: EnumProperty<AttachFace> = BlockStateProperties.ATTACH_FACE
@@ -54,7 +54,6 @@ class MailboxBlock(
         var SHAPES: MutableMap<Direction.Axis, VoxelShape> = Shapes.rotateHorizontalAxis(SHAPE)
         var SHAPES_WALL: MutableMap<Direction, VoxelShape> = Shapes.rotateHorizontal(SHAPE.move(0.0,0.25,0.125))
     }
-
 
     init {
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(FACE, AttachFace.FLOOR).setValue(WATERLOGGED, false).setValue(STATE, MailboxState.INACTIVE))

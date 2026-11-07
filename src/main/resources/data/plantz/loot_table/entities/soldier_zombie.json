@@ -5,38 +5,36 @@
       "bonus_rolls": 0,
       "entries": [
         {
+          "name": "plantz:baron_staff",
           "type": "minecraft:item",
-          "condition": {
-            "type": "minecraft:random_chance",
-            "chance": 0.015
-          },
-          "modifier": [
-            {
-              "count": 1,
-              "type": "minecraft:set_count"
-            },
-            {
-              "type": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.2,
-                "max": 0.9
-              },
-              "add": false
+          "modifier": {
+            "type": "minecraft:set_damage",
+            "damage": {
+              "type": "minecraft:uniform",
+              "min": 0.6,
+              "max": 0.9
             }
-          ],
-          "name": "plantz:dye_blaster"
+          }
         }
       ],
       "rolls": 1,
       "condition": {
-        "type": "minecraft:entity_properties",
-        "entity": "attacker",
-        "predicate": {
-          "minecraft:entity_type": "#plantz:drop_loot_when_killed_by"
-        }
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "minecraft:entity_properties",
+            "entity": "attacker",
+            "predicate": {
+              "minecraft:entity_type": "#plantz:drop_loot_when_killed_by"
+            }
+          },
+          {
+            "type": "minecraft:random_chance",
+            "chance": 0.035
+          }
+        ]
       }
     }
   ],
-  "random_sequence": "minecraft:entities/all_star"
+  "random_sequence": "minecraft:entities/baron_von_bats"
 }

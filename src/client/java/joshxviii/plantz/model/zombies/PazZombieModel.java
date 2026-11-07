@@ -104,6 +104,7 @@ public class PazZombieModel<S extends PazZombieRenderState> extends ZombieModel<
             this.rightLeg.visible = true;
         }
         super.setupAnim(state);
+        if (this.propeller != null) this.propeller.visible = (state.headItem.isEmpty() && state.headEquipment.isEmpty());
         if (state.isFlying()) {
             var animationPos = state.walkAnimationPos;
             var animationSpeed = state.walkAnimationSpeed + 0.2f;

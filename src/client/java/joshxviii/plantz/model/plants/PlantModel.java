@@ -51,6 +51,6 @@ public class PlantModel extends EntityModel<@NotNull PlantRenderState> {
         if (sleepAnimation!=null) getProcessedSleep(state).apply(state.getSleepAnimationState(), state.ageInTicks);
         this.bounceAnimation.apply(state.getBounceAnimationState(), state.ageInTicks);
 
-        if (walkAnimation!=null) walkAnimation.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 1f, 1f);
+        if (walkAnimation!=null) walkAnimation.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 4f, 4f);
     }
 }

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
 import joshxviii.plantz.entity.projectile.LaserBullet
 import joshxviii.plantz.entity.projectile.PaintBall
+import joshxviii.plantz.entity.projectile.PazProjectile
 import joshxviii.plantz.renderer.getProjectileTextureLocation
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.renderer.SubmitNodeCollector
@@ -44,9 +45,11 @@ class ProjectileRenderer<M: EntityModel<ProjectileRenderState>>(
         camera: CameraRenderState
     ) {
         poseStack.pushPose()
+        poseStack.scale(state.scale, state.scale, state.scale)
         poseStack.rotate(Axis.YP.rotationDegrees(state.yRot - 90.0f))
         poseStack.rotate(Axis.ZP.rotationDegrees(state.xRot))
         poseStack.translate(0.0, -1.5, 0.0)
+
         val tint = state.color?: -1
         val texture = state.getProjectileTextureLocation()
         if (texture!=null) collector.submitModel(
@@ -58,7 +61,8 @@ class ProjectileRenderer<M: EntityModel<ProjectileRenderState>>(
             OverlayTexture.NO_OVERLAY,
             tint,
             null,
-            state.outlineColor)
+            state.outlineColor,
+        )
         model.setupAnim(state)
         for (layer in renderLayers) {
             layer.submit(poseStack, collector, state.lightCoords, state, state.yRot, state.xRot)
@@ -76,6 +80,7 @@ class ProjectileRenderer<M: EntityModel<ProjectileRenderState>>(
         super.extractRenderState(entity, state, partialTick)
         if (entity is PaintBall) state.color = entity.dyeColor.fireworkColor
         if (entity is LaserBullet) state.color = entity.laserColor
+        if (entity is PazProjectile) state.scale = entity.scale
         state.xRot = entity.getXRot(partialTick)
         state.yRot = entity.getYRot(partialTick)
         state.texturePath = BuiltInRegistries.ENTITY_TYPE.getKey(entity.type).path
@@ -106,7 +111,8 @@ class EmissiveProjectileLayer<M : EntityModel<ProjectileRenderState>>(
             OverlayTexture.NO_OVERLAY,
             tint,
             null,
-            state.outlineColor);
+            state.outlineColor,
+        );
     }
 
     override fun renderType(): RenderType = RenderTypes.lines()
@@ -120,4 +126,5 @@ class ProjectileRenderState : EntityRenderState() {
     var yRot: Float = 0f
     var texturePath: String = "default"
     var color: Int? = null
+    var scale: Float = 1f
 }

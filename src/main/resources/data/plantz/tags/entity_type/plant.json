@@ -3,6 +3,7 @@
   "values": [
     "plantz:peashooter",
     "plantz:sunflower",
+    "plantz:marigold",
     "plantz:chomper",
     "plantz:wallnut",
     "plantz:explode_o_nut",
@@ -22,6 +23,8 @@
     "plantz:bonkchoy",
     "plantz:tanglekelp",
     "plantz:grave_buster",
+    "plantz:pumpkin",
+    "plantz:citron",
     "#plantz:mushroom"
   ]
 }

@@ -1,6 +1,7 @@
 package joshxviii.plantz.model.zombies;
 
 import joshxviii.plantz.animation.zombies.PirateCaptainGhostAnimation;
+import joshxviii.plantz.renderer.RenderingUtilsKt;
 import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -14,10 +15,12 @@ import static joshxviii.plantz.UtilsKt.pazResource;
 public class PirateCaptainGhostModel<S extends PazZombieRenderState> extends PazZombieModel<S> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("pirate_captain_ghost"), "main");
     private final KeyframeAnimation idleAnimation;
+    ModelPart pirate_hat;
 
     public PirateCaptainGhostModel(final ModelPart root) {
         super(null, root);
         this.idleAnimation = PirateCaptainGhostAnimation.idle.bake(root.getChild("root"));
+        this.pirate_hat = RenderingUtilsKt.getChildOrNull(this.getHead(), "pirate_hat");
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -62,6 +65,7 @@ public class PirateCaptainGhostModel<S extends PazZombieRenderState> extends Paz
     public void setupAnim(@NotNull S state) {
         super.setupAnim(state);
         this.resetPose();
+        if (this.pirate_hat != null) this.pirate_hat.visible = (state.headItem.isEmpty() && state.headEquipment.isEmpty());
         this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
         this.head.yRot = state.yRot * (float) (Math.PI / 180.0);
 

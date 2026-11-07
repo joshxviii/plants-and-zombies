@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "#plantz:ignored_by_plants",
+    "#plantz:plant_damage",
     "#plantz:is_electric",
     "plantz:zombie_energy",
     "plantz:toxic"

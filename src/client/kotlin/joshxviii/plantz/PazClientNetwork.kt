@@ -3,7 +3,9 @@ package joshxviii.plantz
 import joshxviii.plantz.PazNetwork.ZombieRaidClientCache
 import joshxviii.plantz.inventory.AbstractMailboxMenu
 import joshxviii.plantz.inventory.MailCollectionBoxMenu
+import joshxviii.plantz.gui.PazOptionsScreen
 import joshxviii.plantz.networking.MailboxListResponsePayload
+import joshxviii.plantz.networking.OpenOptionsScreenPayload
 import joshxviii.plantz.networking.SendMailResponsePayload
 import joshxviii.plantz.networking.ServerConfigResponsePayload
 import joshxviii.plantz.networking.ZombieRaidResponsePayload
@@ -23,6 +25,10 @@ object PazClientNetwork {
             if (!ZombieRaidClientCache.isActive()) RaidMusicManager.restart()
             ZombieRaidClientCache.put(payload.data)
             if (payload.data.status == ZombieRaid.ZombieRaidStatus.TERMINATE) ZombieRaidClientCache.remove(payload.data.id)
+        }
+
+        ClientPlayNetworking.registerGlobalReceiver(OpenOptionsScreenPayload.ID) { _, context ->
+            context.client().execute { context.client().gui.setScreen(PazOptionsScreen()) }
         }
 
         ClientPlayNetworking.registerGlobalReceiver(SendMailResponsePayload.ID) { payload, context ->

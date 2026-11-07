@@ -1,0 +1,27 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:context_entity_type",
+    "cases": [
+      {
+        "when": "minecraft:player",
+        "model": {
+          "type": "minecraft:condition",
+          "property": "minecraft:using_item",
+          "on_false": {
+            "type": "plantz:door_shield_model",
+            "model": "plantz:item/door_shield/door_shield"
+          },
+          "on_true": {
+            "type": "plantz:door_shield_model",
+            "model": "plantz:item/door_shield/door_shield_blocking"
+          }
+        }
+      }
+    ],
+    "fallback": {
+      "type": "plantz:door_shield_model",
+      "model": "plantz:item/door_shield/door_shield_blocking"
+    }
+  }
+}

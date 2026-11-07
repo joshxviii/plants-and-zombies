@@ -1,15 +1,16 @@
 package joshxviii.plantz.gui
 
-import com.mojang.renderpearl.api.pipeline.RenderPipeline
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
+import com.mojang.renderpearl.api.pipeline.RenderPipeline
 import joshxviii.plantz.PazRenderPipelines
 import joshxviii.plantz.gui.ZombieHudMarkers.ICON_SIZE
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.render.TextureSetup
 import net.minecraft.client.model.HumanoidModel
+import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.item.ItemStackRenderState
 import net.minecraft.client.renderer.state.gui.GuiElementRenderState
 import net.minecraft.client.renderer.texture.OverlayTexture
@@ -37,7 +38,6 @@ class HeadHudMarker(
         pose.pushPose()
         pose.translate(cx, cy, if (outlinePad>0f) 149.0 else 150.0)
         pose.translate(0.0, (ICON_SIZE + outlinePad)*0.5, 0.0)
-        pose.rotate(Axis.YP.rotationDegrees(180.0f))
         pose.scale(scale, scale, scale)
         if (outlinePad>0f) pose.scale(outlinePad, outlinePad, outlinePad)
         model.head.setPos(0f, 0f, 0f)
@@ -47,7 +47,7 @@ class HeadHudMarker(
         pose.popPose()
     }
 
-    override fun pipeline(): RenderPipeline = if (outlinePad>0f) PazRenderPipelines.HEAD_MARKER_OUTLINE else PazRenderPipelines.HEAD_MARKER_BAKE
+    override fun pipeline(): RenderPipeline = if (outlinePad>0f) PazRenderPipelines.HEAD_MARKER_OUTLINE else PazRenderPipelines.HEAD_MARKER
 
     override fun textureSetup(): TextureSetup {
         val t = mc.textureManager.getTexture(texture)

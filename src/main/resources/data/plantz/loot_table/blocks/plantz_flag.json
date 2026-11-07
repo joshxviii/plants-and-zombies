@@ -15,18 +15,5 @@
       "rolls": 1
     }
   ],
-  "modifier": [
-    {
-      "type": "minecraft:set_item",
-      "item": "plantz:brainz_flag",
-      "condition": {
-        "type": "minecraft:entity_properties",
-        "entity": "attacker",
-        "predicate": {
-          "minecraft:entity_type": "#minecraft:zombies"
-        }
-      }
-    }
-  ],
   "random_sequence": "plantz:blocks/plantz_flag"
 }

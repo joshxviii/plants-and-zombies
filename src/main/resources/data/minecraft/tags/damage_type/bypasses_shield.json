@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "plantz:plant_fume",
-    "#plantz:is_electric"
+    "#plantz:is_electric",
+    "#plantz:is_energy"
   ]
 }

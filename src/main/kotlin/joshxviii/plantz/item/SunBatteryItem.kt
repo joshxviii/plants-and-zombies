@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.state.BlockState
 
 class SunBatteryItem(properties: Properties) : BlockItem(PazBlocks.SUN_BATTERY_BLOCK, properties) {
 
-
     override fun useOn(context: UseOnContext): InteractionResult {
         val player = context.player
         val blockState = context.level.getBlockState(context.clickedPos)
@@ -35,8 +34,10 @@ class SunBatteryItem(properties: Properties) : BlockItem(PazBlocks.SUN_BATTERY_B
             val blockEntity = context.level.getBlockEntity(context.clickedPos)
             (blockEntity as? TimeMachineBlockEntity)?.let {
                 if (!it.item.isEmpty) return InteractionResult.FAIL
-                it.item = context.itemInHand.copy()
-                context.itemInHand.shrink(1)
+                if (!context.level.isClientSide) {
+                    it.setTheItem(context.itemInHand.copyWithCount(1))
+                    context.itemInHand.shrink(1)
+                }
                 return InteractionResult.SUCCESS_SERVER
             }
         }
@@ -52,7 +53,7 @@ class SunBatteryItem(properties: Properties) : BlockItem(PazBlocks.SUN_BATTERY_B
     }
     override fun getBarColor(stack: ItemStack): Int {
         stack.get(PazComponents.STORED_SUN)?.let {
-            return if (it.isFull()) 14369328 else 16768870
+            return if (it.isFull()) 0xDB4230 else 0xFFDF66
         }
         return super.getBarColor(stack)
     }

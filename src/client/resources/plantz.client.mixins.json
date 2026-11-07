@@ -10,12 +10,12 @@
   },
   "mixins": [
     "AvatarRendererMixin",
-    "BossHealthOverlayAccessor",
     "BossHealthOverlayMixin",
-    "GuiMixin",
+    "HudMixin",
     "HumanoidModelMixin",
     "LivingEntityRendererMixin",
     "NowPlayingToastMixin",
+    "RangeSelectItemModelPropertiesMixin",
     "SoundManagerMixin"
   ]
 }

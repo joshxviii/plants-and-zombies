@@ -1,7 +1,7 @@
 {
   "mutations": [
     {
-      "chance": 0.4,
+      "chance": 0.2,
       "result": "plantz:wallnut"
     }
   ]

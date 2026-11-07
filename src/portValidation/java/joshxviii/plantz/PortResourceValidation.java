@@ -77,7 +77,11 @@ public final class PortResourceValidation {
                 if (worldCodec.isPresent()) decode(path, worldCodec.get().getValue(), json, ops);
                 else if (relative.contains("/loot_table/")) decode(path, LootTable.DIRECT_CODEC, json, ops);
                 else if (relative.contains("/villager_trade/")) decode(path, VillagerTrade.CODEC, json, ops);
-                else if (relative.contains("/recipe/")) decode(path, Recipe.CODEC, json, ops);
+                else if (relative.contains("/recipe/")) {
+                    if (json.getAsJsonObject().get("type").getAsString().equals("plantz:door_shield"))
+                        decode(path, joshxviii.plantz.recipe.DoorShieldRecipe.Companion.getCODEC().codec(), json, ops);
+                    else decode(path, Recipe.CODEC, json, ops);
+                }
                 else if (relative.contains("/predicate/")) decode(path, LootItemCondition.DIRECT_CODEC, json, ops);
                 else if (relative.contains("/advancement/")) {
                     for (var entry : json.getAsJsonObject().getAsJsonObject("criteria").entrySet()) {
@@ -93,6 +97,7 @@ public final class PortResourceValidation {
                             Codec<?> codec = switch (id.getPath()) {
                                 case "raid_wave" -> new joshxviii.plantz.advancement.RaidWaveTrigger().codec();
                                 case "wallnut_bowling" -> new joshxviii.plantz.advancement.WallNutBowlingTrigger().codec();
+                                case "boss_defeat" -> new joshxviii.plantz.advancement.BossDefeatTrigger().codec();
                                 default -> joshxviii.plantz.advancement.SimpleCheckCriteria.Companion.getCODEC();
                             };
                             decode(path, codec, conditions, ops);
@@ -200,6 +205,7 @@ public final class PortResourceValidation {
             if (input.isJsonPrimitive() && input.getAsJsonPrimitive().isString()) {
                 String value = input.getAsString();
                 if (value.startsWith("plantz:")) {
+                    if (field.equals("blocks") && value.equals("plantz:brainz_alloy_door")) return new JsonPrimitive("minecraft:oak_door");
                     if (field.equals("entity_id") || field.equals("minecraft:entity_type")) return new JsonPrimitive("minecraft:zombie");
                     if (field.equals("id") && worldgen) return new JsonPrimitive("minecraft:oak_stairs");
                     if (field.equals("id") || field.equals("name") || field.equals("items") || field.equals("item") || field.equals("ingredients") || field.length() == 1) return new JsonPrimitive("minecraft:stick");
@@ -210,6 +216,13 @@ public final class PortResourceValidation {
         var output = new JsonObject();
         for (var entry : input.getAsJsonObject().entrySet()) {
             if (field.equals("components") && entry.getKey().startsWith("plantz:")) continue;
+            // Validate the custom unit effect directly; vanilla's effect registry
+            // does not contain mod registrations in this standalone validator.
+            if (field.equals("effects") && entry.getKey().equals("plantz:lob_plant")) {
+                net.minecraft.util.Unit.CODEC.parse(JsonOps.INSTANCE, entry.getValue()).error()
+                    .ifPresent(error -> errors.add("plantz:lob_plant: " + error.message()));
+                continue;
+            }
             String childField = field.equals("minecraft:entity_data") && entry.getKey().equals("id") ? "entity_id" : entry.getKey();
             if (entry.getKey().equals("type") && input.getAsJsonObject().has("weight")) childField = "entity_id";
             output.add(entry.getKey(), substituteModReferences(entry.getValue(), childField, worldgen));

@@ -27,9 +27,9 @@
 				"adapter": "kotlin"
 			}
 		],
-		"terrablender": [
+		"modmenu": [
 			{
-				"value": "joshxviii.plantz.PazWorldGen",
+				"value": "joshxviii.plantz.PazModMenu",
 				"adapter": "kotlin"
 			}
 		]

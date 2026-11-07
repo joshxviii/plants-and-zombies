@@ -23,7 +23,6 @@ class ElectricArcParticleGroup(engine: ParticleEngine) : ParticleGroup<ElectricA
             "electric_arc",
             RenderSetup.builder(RenderPipelines.BEACON_BEAM_TRANSLUCENT)
                 .withTexture("Sampler0", pazResource("textures/particle/electric_arc.png"))
-
                 .createRenderSetup()
         )
     }

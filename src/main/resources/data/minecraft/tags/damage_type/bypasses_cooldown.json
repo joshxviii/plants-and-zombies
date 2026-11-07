@@ -2,7 +2,7 @@
   "replace": false,
   "values": [
     "plantz:paint",
-    "#plantz:ignored_by_plants",
+    "#plantz:plant_damage",
     "#plantz:is_electric"
   ]
 }

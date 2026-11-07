@@ -5,9 +5,14 @@
 | Branch | Purpose |
 | --- | --- |
 | [`main`](https://github.com/Mikkelka/plants-and-zombies/tree/main) | Exact mirror of [`joshxviii/plants-and-zombies:main`](https://github.com/joshxviii/plants-and-zombies/tree/main). No fork-specific commits or port merges. |
-| [`codex/fabric-26.2-v1.5`](https://github.com/Mikkelka/plants-and-zombies/tree/codex/fabric-26.2-v1.5) | Maintained Minecraft 26.2 port. Starts from the official `v1.5` release, `7e89d925`. |
-| [`codex/fabric-26.3-upstream`](https://github.com/Mikkelka/plants-and-zombies/tree/codex/fabric-26.3-upstream) | Maintained Minecraft 26.3 port. Its initial upstream baseline is `ddf05fb7`, including fixes after `v1.5`. |
-| [`codex/archive-main-before-upstream-sync-2026-10-25`](https://github.com/Mikkelka/plants-and-zombies/tree/codex/archive-main-before-upstream-sync-2026-10-25) | Historical 26.2 fork at `1ed273d3`, preserved before replacing fork main with upstream. Not an active port. |
+| [`codex/fabric-26.2-v1.5`](https://github.com/Mikkelka/plants-and-zombies/tree/codex/fabric-26.2-v1.5) | Maintained Minecraft 26.2 port. Last observed baseline `afa14f39` (1.5.2), port commit `c083f699`; maintained by its own chat. |
+| [`codex/fabric-26.3-upstream`](https://github.com/Mikkelka/plants-and-zombies/tree/codex/fabric-26.3-upstream) | Maintained Minecraft 26.3 port. Current upstream baseline: `26.3` at `fbc1a3b6` (2026-11-07), including 1.6 development. |
+
+Upstream has replaced `main` with version branches; its current default is
+`26.3`, and `26.1` remains separate. The fork's `main` was not changed by this
+26.3 import. Do not automatically repoint or reset the mirror when upstream
+renames branches; choose its intended source during a separately requested sync.
+Keep historical archives, including the local `archive/26.3-compat3` tag.
 
 Use the two port branches for ongoing work, including later mod releases. The
 `v1.5` suffix in the 26.2 branch name records its starting point; the current mod
@@ -41,7 +46,7 @@ existing upstream PR for that branch rather than opening a new PR for each fix.
 
 | | Minecraft 26.2 port | Minecraft 26.3 port |
 | --- | --- | --- |
-| Mod version | `1.5+mc26.2` | `1.5+mc26.3` |
+| Mod version | `1.5.2+mc26.2` (last observed) | `1.6-dev.fbc1a3b6+mc26.3` |
 | Java | 25 | 25 |
 | Gradle wrapper / Loom | 9.6.1 / 1.17.17 | 9.8.0 / 1.19.3 |
 | Fabric Loader used to build | 0.19.3 | 0.19.5 |
@@ -55,14 +60,13 @@ multiplayer or saved-world migration scenarios were not separately recorded.
 This report applies to the 26.2 port; it does not establish gameplay validation
 for the independently maintained 26.3 port.
 
-The 26.3 branch was rebuilt on 2026-10-25 from its own source in an isolated
-temporary directory. The build and 381 resource/criterion checks passed. Its
-latest runtime/source JARs were placed alongside the 26.2 JARs in `build/libs`,
-and the old 26.3 compatibility builds were removed from that folder. See
-`PORTING-26.3.md` for the 26.3-specific adaptations and gameplay-testing limits.
+The 26.3 branch was rebuilt on 2026-11-07 after importing upstream `26.3` at
+`fbc1a3b6`. The build, 464 resource/criterion checks and JAR inspection passed, with no Minecraft
+launch or gameplay test. Existing 26.2 artifacts were preserved. See
+`PORTING-26.3.md` for the snapshot contents and compatibility fixes.
 
-The 26.2 port currently contains the released `v1.5` content, not the later
-1.5.1 work on upstream main. Updating main does not automatically update a port.
+The 26.2 branch was separately updated to 1.5.2 by its maintenance chat.
+This import changes only 26.3; updating either port does not update the other.
 
 ## Installing a port
 
@@ -86,6 +90,10 @@ user files. Fetch the available updates:
 git fetch origin
 git fetch upstream --tags
 ```
+
+Resolve the actual upstream branch first (`git ls-remote --symref upstream HEAD`).
+As of 2026-11-07 it is `26.3`; `upstream/main` no longer exists. The example
+mirror commands below apply only when upstream actually has a `main` branch.
 
 Import the selected upstream ref directly into the assigned port branch. Syncing
 the `main` mirror is a separate action when requested; it is not a prerequisite
@@ -127,8 +135,8 @@ git diff --check
 
 On Linux use `./gradlew build --console=plain`. Outputs are in `build/libs/`:
 
-- 26.2: `plants-and-zombies-1.5+mc26.2.jar`
-- 26.3: `plants-and-zombies-1.5+mc26.3.jar`
+- 26.2: `plants-and-zombies-1.5.2+mc26.2.jar` (last observed)
+- 26.3: `plants-and-zombies-1.6-dev.fbc1a3b6+mc26.3.jar`
 
 Names above describe the current versions. `build/libs/` may still contain older
 builds, so check the versioned filename and the embedded `fabric.mod.json`.

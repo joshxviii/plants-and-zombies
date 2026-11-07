@@ -1,22 +1,31 @@
 package joshxviii.plantz.item
 
+import joshxviii.plantz.PlantHeadAttachment
+import joshxviii.plantz.PazEnchantments
+import joshxviii.plantz.applyImpulse
+import joshxviii.plantz.entity.plant.WallNut
+import joshxviii.plantz.pazResource
 import joshxviii.plantz.removeItemFromInventory
 import net.minecraft.ChatFormatting
 import net.minecraft.core.component.DataComponentGetter
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
-import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.BlockTags
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.item.ItemEntity
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ItemUseAnimation
 import net.minecraft.world.item.component.Tool
 import net.minecraft.world.item.context.UseOnContext
+import net.minecraft.world.item.enchantment.ItemEnchantments
+import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.CropBlock
 
 class GardeningGloveItem(properties: Properties) : Item(properties) {
@@ -30,11 +39,11 @@ class GardeningGloveItem(properties: Properties) : Item(properties) {
             )
         }
 
-        fun addToTooltip(consumer: MutableList<Component>, components: DataComponentGetter, shiftKey: Component) {
+        fun addToTooltip(consumer: MutableList<Component>, components: DataComponentGetter) {
             val data = components.get(DataComponents.ENTITY_DATA)
 
             if (data == null) {
-                consumer.add(1, Component.translatable("item.plantz.gardening_glove.description", shiftKey)
+                consumer.add(1, Component.translatable("item.plantz.gardening_glove.description")
                     .withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC))
                 return
             }
@@ -58,10 +67,13 @@ class GardeningGloveItem(properties: Properties) : Item(properties) {
             }
             item.hurtAndBreak(1, owner, hand)
         }
-    }
 
-    override fun getUseAnimation(itemStack: ItemStack): ItemUseAnimation {
-        return ItemUseAnimation.BRUSH
+        fun removePlant(item: ItemStack, owner: LivingEntity?, hand: InteractionHand) {
+            item.remove(DataComponents.ENTITY_DATA)
+            owner?.let{
+                hurtAndDropPlant(item, owner, hand)
+            }
+        }
     }
 
     override fun useOn(context: UseOnContext): InteractionResult {
@@ -88,9 +100,15 @@ class GardeningGloveItem(properties: Properties) : Item(properties) {
             }
             return InteractionResult.SUCCESS
         }
-        if (!isHolding) return InteractionResult.TRY_WITH_EMPTY_HAND
+        if (!isHolding) {
+            player?.let{
+                return PlantHeadAttachment.potHelmetPlaceInteraction(level, context.clickedPos, player)
+            }
+            return InteractionResult.TRY_WITH_EMPTY_HAND
+        }
 
-        if (level !is ServerLevel) return InteractionResult.SUCCESS
+        // Match SeedPacketItem.useOn: predict the interaction as handled on the client.
+        if (level.isClientSide) return InteractionResult.SUCCESS
 
         val result = SeedPacketItem.tryPlant(
             level = level,
@@ -104,12 +122,49 @@ class GardeningGloveItem(properties: Properties) : Item(properties) {
         )
 
         if (result == InteractionResult.SUCCESS) {
-            stack.remove(DataComponents.ENTITY_DATA)
-            player?.let {
-                hurtAndDropPlant(stack, it, context.hand)
-            }
+            removePlant(stack, context.player, context.hand)
         }
         return result
+    }
+
+    override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResult {
+        val item = player.getItemInHand(hand)
+        val hasLobbing = item.enchantments.keySet().any { it.`is`(pazResource("lobbing")) }
+        if (item.has(DataComponents.ENTITY_DATA) && hasLobbing) player.startUsingItem(hand)
+        return super.use(level, player, hand)
+    }
+
+    override fun getUseDuration(itemStack: ItemStack, user: LivingEntity): Int = 0
+
+    override fun getUseAnimation(itemStack: ItemStack): ItemUseAnimation {
+        return ItemUseAnimation.BRUSH
+    }
+
+    override fun onUseTick(level: Level, livingEntity: LivingEntity, itemStack: ItemStack, ticksRemaining: Int) {
+        if (ticksRemaining>1) return
+        if (level.isClientSide || livingEntity !is Player) return
+
+        val stack = livingEntity.getItemInHand(livingEntity.usedItemHand)
+        val plantData = stack.get(DataComponents.ENTITY_DATA) ?: return
+        val lobbingLevel = stack.enchantments
+            .entrySet()
+            .firstOrNull { it.key.value().effects().has(PazEnchantments.LOBBING) }
+            ?.intValue ?: 0
+        if (lobbingLevel == 0) return
+
+        val lookAngle = livingEntity.lookAngle
+        val pos = livingEntity.eyePosition.add(lookAngle)
+        val plantEntity = plantData.type().create(level, EntitySpawnReason.SPAWN_ITEM_USE) ?: return
+        plantData.loadInto(plantEntity)
+        plantEntity.snapTo(pos)
+        plantEntity.playSound(SoundEvents.SNOWBALL_THROW,  0.4f, 0.6f)
+        if (plantEntity is WallNut) plantEntity.roll(lookAngle, power = 0.7f * lobbingLevel)
+        else plantEntity.applyImpulse(lookAngle.scale(0.65 + 0.5 * lobbingLevel))
+        if (!level.addFreshEntity(plantEntity)) {
+            plantEntity.discard()
+            return
+        }
+        removePlant(stack, livingEntity, livingEntity.usedItemHand)
     }
 
 }

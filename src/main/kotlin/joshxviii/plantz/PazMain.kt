@@ -1,10 +1,13 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.api.SeedMutationManager
+import joshxviii.plantz.command.PazCommands
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.block.entity.MailboxManager
 import joshxviii.plantz.block.entity.getMailboxMailQueue
+import joshxviii.plantz.block.entity.getTimeMachineManager
+import joshxviii.plantz.block.entity.TimeMachineBlockEntity
 import joshxviii.plantz.networking.ServerConfigResponsePayload
+import joshxviii.plantz.recipe.DoorShieldRecipe
 import joshxviii.plantz.raid.ZombieRaids
 import joshxviii.plantz.raid.getZombieRaids
 import net.fabricmc.api.ModInitializer
@@ -13,9 +16,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
-import net.minecraft.server.ReloadableServerResources
-import net.minecraft.server.packs.PackType
-import net.minecraft.server.packs.resources.ReloadableResourceManager
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
@@ -27,10 +27,11 @@ object PazMain : ModInitializer {
 
 	override fun onInitialize() {
 		PazRegistries.initialize()
+		DoorShieldRecipe.register()
+		PazEnchantments.initialize()
 		PazConfig.load()
 		// clear client raid cache + load config
 		ServerLifecycleEvents.SERVER_STARTING.register {
-			PazNetwork.ZombieRaidClientCache.clear()
 			ZombieRaids.clearActiveRaidCenters()
 			PazConfig.load()
 		}
@@ -44,9 +45,11 @@ object PazMain : ModInitializer {
 		}
 		// raid ticking
 		ServerTickEvents.END_LEVEL_TICK.register { it.getZombieRaids().tick(it) }
+		ServerTickEvents.END_SERVER_TICK.register { it.overworld().getTimeMachineManager().tick(it) }
 
 		// mailbox managing
 		ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register { blockEntity, level ->
+			(blockEntity as? TimeMachineBlockEntity)?.let { level.getTimeMachineManager().register(it) }
 			(blockEntity as? MailboxBlockEntity)?.let {
 				MailboxManager.registerMailbox(level, it)
 				level.getMailboxMailQueue().deliverTo(it)
@@ -54,12 +57,13 @@ object PazMain : ModInitializer {
 		}
 		ServerBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register { blockEntity, level -> }
 
+		PazCommands.initialize()
 		PazServerParticles.initialize()
 		PazBlocks.initialize()
 		PazItems.initialize()
 		PazLootTables.initialize()
 		PazEffects.initialize()
-		PazCreativeTab.initialize()
+		PazCreativeTabs.initialize()
 		PazEntities.initialize()
 		PazDamageTypes.initialize()
 		PazCriteria.initialize()
@@ -70,5 +74,7 @@ object PazMain : ModInitializer {
 		PazMenus.initialize()
 		PazNetwork.initialize()
 		PazJukeboxSongs.initialize()
+		PazPoiTypes.initialize()
+		PazWorldGen.initialize()
 	}
 }

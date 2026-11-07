@@ -43,7 +43,8 @@ class BalloonRenderer(
             getTextureLocation(state),
             state.lightCoords,
             OverlayTexture.NO_OVERLAY,
-            state.outlineColor)
+            state.outlineColor,
+        )
         poseStack.popPose()
         super.submit(state, poseStack, collector, camera)
     }

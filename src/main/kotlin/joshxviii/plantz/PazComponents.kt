@@ -1,10 +1,14 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.item.component.BrainzAlloyCost
-import joshxviii.plantz.item.component.BlocksProjectileDamage
+import joshxviii.plantz.item.component.BlockBreakChanceComponent
+import joshxviii.plantz.item.component.DoorShieldComponent
+import joshxviii.plantz.item.component.LetterDataComponent
+import joshxviii.plantz.item.component.ProtectsHeadDataComponent
 import joshxviii.plantz.item.component.StoredSun
 import joshxviii.plantz.item.component.StoredWater
 import joshxviii.plantz.item.component.SunCost
+import joshxviii.plantz.item.component.WornBodyBlockerComponent
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.registries.BuiltInRegistries
@@ -47,10 +51,42 @@ object PazComponents {
     }
 
     @JvmField
-    val BLOCKS_PROJECTILE_DAMAGE: DataComponentType<BlocksProjectileDamage> = register(
-        "blocks_projectile_damage"
-    ) { it.persistent(BlocksProjectileDamage.CODEC)
-        .networkSynchronized(BlocksProjectileDamage.STREAM_CODEC)
+    val PROTECTS_HEAD: DataComponentType<ProtectsHeadDataComponent> = register(
+        "protects_head"
+    ) { it.persistent(ProtectsHeadDataComponent.CODEC)
+        .networkSynchronized(ProtectsHeadDataComponent.STREAM_CODEC)
+        .cacheEncoding()
+    }
+
+    @JvmField
+    val BLOCK_BREAK_CHANCE: DataComponentType<BlockBreakChanceComponent> = register(
+        "block_break_chance"
+    ) { it.persistent(BlockBreakChanceComponent.CODEC)
+        .networkSynchronized(BlockBreakChanceComponent.STREAM_CODEC)
+        .cacheEncoding()
+    }
+
+    @JvmField
+    val LETTER_DATA: DataComponentType<LetterDataComponent> = register(
+        "letter_data"
+    ) { it.persistent(LetterDataComponent.CODEC)
+        .networkSynchronized(LetterDataComponent.STREAM_CODEC)
+        .cacheEncoding()
+    }
+
+    @JvmField
+    val WORN_BODY_BLOCKER: DataComponentType<WornBodyBlockerComponent> = register(
+        "worn_body_blocker"
+    ) { it.persistent(WornBodyBlockerComponent.CODEC)
+        .networkSynchronized(WornBodyBlockerComponent.STREAM_CODEC)
+        .cacheEncoding()
+    }
+
+    @JvmField
+    val DOOR_SHIELD: DataComponentType<DoorShieldComponent> = register(
+        "door_shield"
+    ) { it.persistent(DoorShieldComponent.CODEC)
+        .networkSynchronized(DoorShieldComponent.STREAM_CODEC)
         .cacheEncoding()
     }
 

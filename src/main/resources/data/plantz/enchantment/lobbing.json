@@ -1,0 +1,23 @@
+{
+  "anvil_cost": 5,
+  "description": {
+    "translate": "enchantment.plantz.lobbing"
+  },
+  "effects": {
+    "plantz:lob_plant": {}
+  },
+  "max_cost": {
+    "base": 45,
+    "per_level_above_first": 14
+  },
+  "max_level": 2,
+  "min_cost": {
+    "base": 15,
+    "per_level_above_first": 16
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#plantz:enchantable/gardening_glove",
+  "weight": 3
+}

@@ -2,37 +2,31 @@
   "type": "minecraft:entity",
   "pools": [
     {
+      "rolls": 1,
       "bonus_rolls": 0,
       "entries": [
         {
           "type": "minecraft:item",
-          "condition": {
-            "type": "minecraft:all_of",
-            "terms": [
-              {
-                "type": "minecraft:entity_properties",
-                "entity": "attacker",
-                "predicate": {
-                  "minecraft:entity_type": "#plantz:drop_loot_when_killed_by"
-                }
-              },
-              {
-                "type": "minecraft:random_chance",
-                "chance": 0.05
-              }
-            ]
-          },
-          "modifier": [
-            {
-              "count": 1,
-              "type": "minecraft:set_count"
-            }
-          ],
           "name": "plantz:newspaper"
         }
       ],
-      "rolls": 1
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "minecraft:entity_properties",
+            "entity": "attacker",
+            "predicate": {
+              "minecraft:entity_type": "#plantz:drop_loot_when_killed_by"
+            }
+          },
+          {
+            "type": "minecraft:random_chance",
+            "chance": 0.05
+          }
+        ]
+      }
     }
   ],
-  "random_sequence": "minecraft:entities/newspaper_zombie"
+  "random_sequence": "minecraft:entities/baron_von_bats"
 }

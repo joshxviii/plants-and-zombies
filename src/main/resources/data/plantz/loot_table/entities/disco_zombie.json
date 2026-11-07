@@ -8,16 +8,14 @@
           "type": "minecraft:item",
           "name": "plantz:seed_packet",
           "weight": 1,
-          "modifier": [
-            {
-              "type": "minecraft:set_components",
-              "components": {
-                "minecraft:entity_data": {
-                  "id": "plantz:hypnoshroom"
-                }
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "minecraft:entity_data": {
+                "id": "plantz:hypnoshroom"
               }
             }
-          ]
+          }
         }
       ],
       "condition": {

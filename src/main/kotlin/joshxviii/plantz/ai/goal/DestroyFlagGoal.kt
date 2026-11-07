@@ -1,8 +1,8 @@
 package joshxviii.plantz.ai.goal
 
 import joshxviii.plantz.*
-import joshxviii.plantz.PazBlocks.PLANTZ_FLAG
-import joshxviii.plantz.PazBlocks.PLANTZ_FLAG_POI
+import joshxviii.plantz.PazBlocks.PLANTZ_FLAG_BLOCK
+import joshxviii.plantz.PazPoiTypes.PLANTZ_FLAG
 import joshxviii.plantz.block.entity.FlagBlockEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
@@ -13,6 +13,7 @@ import net.minecraft.world.entity.ai.village.poi.PoiManager.Occupancy
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.pathfinder.Path
 import net.minecraft.world.phys.HitResult
+import net.minecraft.world.phys.Vec3
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
@@ -50,7 +51,7 @@ class DestroyFlagGoal(
     override fun canContinueToUse(): Boolean {
         mob.target?.let { if(it.isAlive && mob.withinAttackRange(it)) return false }
         val flagPos = targetFlagPos?: return false
-        val isValid = mob.level().getBlockState(flagPos).`is`(PLANTZ_FLAG)
+        val isValid = mob.level().getBlockState(flagPos).`is`(PLANTZ_FLAG_BLOCK)
         return isValid && canSeeFlag()
     }
 
@@ -62,8 +63,9 @@ class DestroyFlagGoal(
 
     override fun start() {
         mob.isAggressive = true
-        targetFlagPos?.let(net.minecraft.world.phys.Vec3::atCenterOf)?.let {
-            mob.moveControl.setWantedPosition(it.x, it.y, it.z, 1.0)
+        targetFlagPos?.apply { Vec3.atCenterOf(this).let {
+                mob.moveControl.setWantedPosition(it.x, it.y, it.z, 1.0)
+            }
         }
         mob.navigation.moveTo(path, 1.0)
     }
@@ -87,12 +89,12 @@ class DestroyFlagGoal(
         }
 
         val reach = mob.attackRange()
-        if (flagPos.distSqr(mob.blockPosition()) > reach) net.minecraft.world.phys.Vec3.atCenterOf(flagPos).let { mob.moveControl.setWantedPosition(it.x, it.y, it.z, 1.0) }
+        if (flagPos.distSqr(mob.blockPosition()) > reach) Vec3.atCenterOf(flagPos).let { mob.moveControl.setWantedPosition(it.x, it.y, it.z, 1.0) }
         val canReach = mob.navigation.path?.canReachTarget(flagPos) == true
         if (flagPos.distSqr(mob.blockPosition()) < if (canReach) reach else reach*reach) {
             if (!mob.isSwinging) {
                 damageFlag(flagPos)
-                mob.swing(mob.usedItemHand, net.minecraft.world.item.component.SwingAnimation.DEFAULT)
+                mob.swingForAttack(mob.usedItemHand)
             }
         }
     }
@@ -108,7 +110,7 @@ class DestroyFlagGoal(
         val followRange = mob.getAttribute(Attributes.FOLLOW_RANGE)?.value?.toInt()
         val poiManager = (mob.level() as ServerLevel).poiManager
         val flagPoi: BlockPos? = poiManager.findClosest(
-            { it.value() == PLANTZ_FLAG_POI },
+            { it.`is`(PLANTZ_FLAG) },
             mob.blockPosition(),
             min(searchRange, followRange?:8),
             Occupancy.ANY
@@ -118,7 +120,7 @@ class DestroyFlagGoal(
 
     fun canSeeFlag(): Boolean {
         targetFlagPos?.let {
-            return mob.level().clip(ClipContext(mob.eyePosition, net.minecraft.world.phys.Vec3.atCenterOf(it.above()), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, mob)).type == HitResult.Type.MISS
+            return mob.level().clip(ClipContext(mob.eyePosition, Vec3.atCenterOf(it.above()), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, mob)).type == HitResult.Type.MISS
         }
         return false
     }

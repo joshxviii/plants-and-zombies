@@ -1,5 +1,7 @@
 package joshxviii.plantz.block
 
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.block.entity.MailCollectionBoxEntity
 import joshxviii.plantz.block.entity.MailboxManager
@@ -35,15 +37,12 @@ class MailCollectionBoxBlock(
     properties: Properties,
 ) : BaseEntityBlock(properties) {
     companion object {
-
-
         val STATE: EnumProperty<CollectionBoxState> = EnumProperty.create("state", CollectionBoxState::class.java)
         val FACING: EnumProperty<Direction> = HorizontalDirectionalBlock.FACING
         val WATERLOGGED: BooleanProperty = BlockStateProperties.WATERLOGGED
 
         val SHAPE: VoxelShape = column(14.0, 14.0, 0.0, 16.0)
     }
-
 
     init {
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(STATE, CollectionBoxState.CLOSED))

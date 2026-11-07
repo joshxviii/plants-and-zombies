@@ -1,7 +1,11 @@
 # Minecraft 26.3 (Fabric)
 
-This port targets Minecraft Java Edition 26.3 and is based on upstream `main`
-through `ddf05fb7`. It retains the current raid, spawning, loot, and save fixes.
+This port targets Minecraft Java Edition 26.3 and is based on upstream `26.3`
+through `fbc1a3b6fc31a891e5aace3b19b03b9482bdff37` (2026-11-07).
+It imports 262 commits since the previous baseline `ddf05fb7`, including
+1.5.1/1.5.2 and ongoing 1.6 development (Citron and Time Machine/dimensions).
+Upstream still declares `mod_version=1.5.2`; the mixed development snapshot is
+explicitly named `1.6-dev.fbc1a3b6+mc26.3` here, rather than a stable 1.6 release.
 
 ## Maintenance purpose
 
@@ -25,7 +29,7 @@ mod version and validation results after each requested update.
 - Optional Iris: compilation uses 1.11.7+26.3-fabric
 
 Run `./gradlew build --console=plain` (Windows: `./gradlew.bat build --console=plain`).
-The output is `build/libs/plants-and-zombies-1.5+mc26.3.jar`.
+The output is `build/libs/plants-and-zombies-1.6-dev.fbc1a3b6+mc26.3.jar`.
 
 TerraBlender's nested libraries and LGPLv3 metadata are preserved. Upstream source:
 https://github.com/Glitchfiend/TerraBlender. The single `include` dependency in
@@ -47,20 +51,36 @@ https://github.com/Glitchfiend/TerraBlender. The single `include` dependency in
 - Fix the Brainzium advancement's reference to a nonexistent recipe. It now checks
   `plantz:brainz_alloy` and retains its inventory criterion and both recipe rewards.
 
+The latest import uses the original project's own 26.3 source/rendering
+adaptations in place of our earlier equivalents. Fork-specific changes retain
+the existing Gradle/Loom/Kotlin/Fabric versions and bundled TerraBlender:
+
+- Register flag/battery points of interest with Fabric `PoiHelper`, avoiding
+  upstream's call to a private Minecraft method.
+- Migrate residual legacy loot keys in six tables, including the door's
+  `match_block` condition, preserving drop quantities and probabilities.
+- Move natural spawns/costs into biome attributes and convert spawn counts in
+  the five new time-travel/gnome biomes.
+- Keep Mod Menu optional (`compileOnly` 21.0.0) and its new entrypoint.
+- Extend validation for the custom door-shield recipe, boss-defeat criterion,
+  door block-state stand-in and the unit-valued lobbing enchantment effect.
+
 ## Validation
 
 `validatePortResources` runs as part of `check` and `build`, without starting a
 client/server or loading a world. It checks Minecraft 26.3 resource codecs,
 required nested tag references, local dynamic-registry resource references,
 advancement parents/rewards, and obsolete loot/spawn keys. It currently checks
-381 resources/advancement criteria, including all four structure overrides.
+464 resources/advancement criteria. Upstream removed the old four
+vanilla structure overrides; those obsolete overrides are no longer bundled.
 
-Latest local rebuild: 2026-10-25, using an isolated export of this branch.
-The build, 381 data checks and packaged-JAR inspection passed. This documentation
-update changes no runtime code and does not require another build.
+Latest local rebuild: 2026-11-07, Java 25, using this branch without `clean`.
+The build, data checks and packaged-JAR inspection passed. Existing 26.2 JARs
+were preserved. See `PORTING.md` for the validation count.
 
 Vanilla stand-ins are used for mod values, and custom item components are excluded.
-These checks do not verify code-registered item/block/entity identities, complete
+The custom lobbing effect's unit payload is checked directly and excluded from
+vanilla's effect registry lookup. These checks do not verify code-registered item/block/entity identities, complete
 resolved tag contents, visual output, or gameplay.
 
 Client startup and world loading were manually confirmed for the v1.5-based port

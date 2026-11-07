@@ -1,9 +1,11 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.PazItems.DUCKY_TUBE
 import joshxviii.plantz.PazItems.DYE_BLASTER
 import joshxviii.plantz.PazItems.FOOTBALL_HELMET
 import joshxviii.plantz.PazItems.GARDENING_GLOVE
 import joshxviii.plantz.PazItems.PLANT_POT_HELMET
+import joshxviii.plantz.item.DuckTubeItem
 import joshxviii.plantz.item.DyeBlasterItem
 import joshxviii.plantz.item.FootballHelmetItem
 import joshxviii.plantz.item.GardeningGloveItem
@@ -26,13 +28,13 @@ object PazClient : ClientModInitializer {
 		PazClientNetwork.initialize()
 		PazRenderPipelines.initialize()
 
+		ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(
+			pazResource("server_data_reload"),
+			ResourceManagerReloadListener({ PazNetwork.ZombieRaidClientCache.clear() })
+		)
 		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(
 			pazResource("client_reload"),
-			ResourceManagerReloadListener({
-				if (PazNetwork.ZombieRaidClientCache.isActive()) {
-					RaidMusicManager.restart()
-				}
-			})
+			ResourceManagerReloadListener({ if (PazNetwork.ZombieRaidClientCache.isActive()) { RaidMusicManager.restart() } })
 		)
 
 		// custom tooltips
@@ -43,10 +45,10 @@ object PazClient : ClientModInitializer {
 			val rightClick = keybindFormat(minecraft.options.keyAttack)
 			val leftClick = keybindFormat(minecraft.options.keyUse)
 
-			if (stack.`is`(GARDENING_GLOVE)) GardeningGloveItem.addToTooltip(lines, stack, sneakKey)
-			if (stack.`is`(PLANT_POT_HELMET)) PlantPotHelmetItem.addToTooltip(lines, sneakKey)
+			if (stack.`is`(GARDENING_GLOVE)) GardeningGloveItem.addToTooltip(lines, stack)
+			if (stack.`is`(PLANT_POT_HELMET)) PlantPotHelmetItem.addToTooltip(lines)
 			if (stack.`is`(DYE_BLASTER)) DyeBlasterItem.addToTooltip(lines)
-			if (stack.`is`(FOOTBALL_HELMET)) FootballHelmetItem.addToTooltip(lines, sprintKey)
+			if (stack.`is`(DUCKY_TUBE)) DuckTubeItem.addToTooltip(lines)
 		}
 	}
 	fun keybindFormat(keybind: KeyMapping): Component {

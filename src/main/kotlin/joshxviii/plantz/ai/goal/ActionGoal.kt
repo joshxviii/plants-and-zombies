@@ -50,13 +50,13 @@ abstract class ActionGoal(
             && !(usingEntity is Plant && usingEntity.cooldown > 0)
             && actionTimer == -1
         ) {
-            actionTimer = actionDelay.coerceAtLeast(0)
+            actionTimer = actionDelay.coerceAtLeast(2)
             actionStartEffect()
             isDoingAction = true
+            (usingEntity as? Plant)?.cooldown = -1 // set -1 for action animation state
         }
 
         if (actionTimer > 0) {
-            (usingEntity as? Plant)?.cooldown = -1 // set -1 for action animation state
             --actionTimer
         }
         if (actionTimer == delayedEffectDelay) delayedEffect()

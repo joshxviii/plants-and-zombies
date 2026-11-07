@@ -1,14 +1,11 @@
 package joshxviii.plantz.mixin;
 
 import joshxviii.plantz.*;
-import joshxviii.plantz.entity.ZombieRaider;
-import joshxviii.plantz.entity.zombie.Gargantuar;
 import joshxviii.plantz.entity.zombie.PazZombie;
-import joshxviii.plantz.entity.zombie.ZombieYeti;
+import joshxviii.plantz.raid.ZombieRaider;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
@@ -16,7 +13,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.SpawnGroupData;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.ValueInput;
@@ -29,10 +25,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
-
-import java.util.Objects;
-
-import static joshxviii.plantz.entity.zombie.PazZombie.LEADER_MODIFIER_ID;
 
 /**
  * @author Josh
@@ -48,6 +40,8 @@ public class ZombieMixin implements ZombieRaider {
     static private final EntityDataAccessor<Boolean> IS_LEADER  = SynchedEntityData.defineId(Zombie.class, EntityDataSerializers.BOOLEAN);
     @Unique
     static private final EntityDataAccessor<Boolean> IS_BOSS  = SynchedEntityData.defineId(Zombie.class, EntityDataSerializers.BOOLEAN);
+    @Unique
+    static private final EntityDataAccessor<Boolean> IGNORE_FLAG  = SynchedEntityData.defineId(Zombie.class, EntityDataSerializers.BOOLEAN);
 
     @Override
     public boolean plantz$getIsFromRaid() {
@@ -89,12 +83,23 @@ public class ZombieMixin implements ZombieRaider {
         ((Entity) (Object) this).getEntityData().set(IS_BOSS, value);
     }
 
+    @Override
+    public boolean plantz$getIgnoreFlag() {
+        return ((Entity) (Object) this).getEntityData().get(IGNORE_FLAG);
+    }
+
+    @Override
+    public void plantz$setIgnoreFlag(boolean value) {
+        ((Entity) (Object) this).getEntityData().set(IGNORE_FLAG, value);
+    }
+
     @Inject(method = "defineSynchedData", at = @At("TAIL"))
     public void syncedData(SynchedEntityData.Builder entityData, CallbackInfo ci) {
         entityData.define(IS_FROM_RAID, false);
         entityData.define(ADDS_HEALTH_TO_RAID, true);
         entityData.define(IS_LEADER, false);
         entityData.define(IS_BOSS, false);
+        entityData.define(IGNORE_FLAG, false);
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
@@ -103,6 +108,7 @@ public class ZombieMixin implements ZombieRaider {
         output.putBoolean("plantz:AddsHealthToRaid", this.plantz$getAddsHealthToRaid());
         output.putBoolean("plantz:IsLeader", this.plantz$getIsLeader());
         output.putBoolean("plantz:IsBoss", this.plantz$getIsBoss());
+        output.putBoolean("plantz:IgnoreFlag", this.plantz$getIgnoreFlag());
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
@@ -111,6 +117,7 @@ public class ZombieMixin implements ZombieRaider {
         this.plantz$setAddsHealthToRaid(input.getBooleanOr("plantz:AddsHealthToRaid", true));
         this.plantz$setIsLeader(input.getBooleanOr("plantz:IsLeader", false));
         this.plantz$setIsBoss(input.getBooleanOr("plantz:IsBoss", false));
+        this.plantz$setIgnoreFlag(input.getBooleanOr("plantz:IgnoreFlag", false));
     }
 
     @ModifyArgs(method = "hurtServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Monster;hurtServer(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
@@ -140,7 +147,10 @@ public class ZombieMixin implements ZombieRaider {
         if (spawnReason == EntitySpawnReason.REINFORCEMENT || spawnReason == EntitySpawnReason.EVENT) return;
 
         Zombie entity = (Zombie) (Object) this;
-        if (!entity.is(PazTags.EntityTypes.CAN_BE_LEADER)) return;
+        if (!entity.is(PazTags.EntityTypes.CAN_BE_LEADER)) {
+            PazZombie.Companion.removeLeaderModifiers(entity);
+            return;
+        }
 
         boolean isBornLeader = PazZombie.Companion.isBornLeader(entity);
         boolean bonusPromotionChance = level.getRandom().nextFloat() < BONUS_LEADER_CHANCE;
@@ -150,7 +160,7 @@ public class ZombieMixin implements ZombieRaider {
 
     @Unique
     private void promoteToLeader(Zombie entity, EntitySpawnReason spawnReason) {
-        entity.setItemSlot(EquipmentSlot.OFFHAND, PazBlocks.BRAINZ_FLAG.asItem().getDefaultInstance());
+        entity.setItemSlot(EquipmentSlot.OFFHAND, PazBlocks.BRAINZ_FLAG_BLOCK.asItem().getDefaultInstance());
         entity.setDropChance(EquipmentSlot.OFFHAND, 1.0F);
 
         if (spawnReason == EntitySpawnReason.NATURAL) PazZombie.Companion.spawnZombieGroup(entity, LEADER_GROUP_SIZE);

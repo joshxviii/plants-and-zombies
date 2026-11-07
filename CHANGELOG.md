@@ -1,4 +1,21 @@
-# Fork 1.5+mc26.3
+# Fork 1.6-dev.fbc1a3b6+mc26.3 (2026-11-07)
+
+- Merge upstream `26.3` at `fbc1a3b6`, importing 262 commits since `ddf05fb7`.
+  Includes 1.5.1/1.5.2 content, raid bosses, Marigold, Pumpkin, door shields,
+  enchantments, translations and fixes, plus ongoing 1.6 development (Citron,
+  Time Machine and dimensions). This is a development snapshot, not stable 1.6.
+- Use upstream's current 26.3 implementation; retain Java 25, Gradle 9.8.0,
+  Loom 1.19.3, Loader 0.19.5, Fabric API 0.162.0+26.3 and Kotlin 2.3.0/runtime
+  1.13.8+kotlin.2.3.0. Keep TerraBlender 26.3.0.0.9 bundled unmodified.
+- Replace private POI registration with Fabric `PoiHelper`; migrate remaining
+  old loot keys in six tables and spawn data in five new biomes.
+- Extend standalone validation for door-shield crafting, boss criteria and the
+  lobbing effect. Build and 464 resource/criterion checks passed. Inspect packaged
+  Minecraft/dependency metadata and nested TerraBlender; no in-game test run.
+- Preserve the 26.2 branch and its existing JARs. Keep this update local until a
+  push is requested. See `PORTING-26.3.md` for validation limits.
+
+## Previous fork 1.5+mc26.3
 
 - Port upstream `ddf05fb7` to Minecraft 26.3 on Fabric, including upstream fixes
   after the official `v1.5` release.
@@ -29,17 +46,171 @@ baseline and validation record; see `PORTING.md`.
 #### General:
 - Added Time Machine.
   - ***Currently not obtainable outside of Creative mode.***
+- Added Citron
+
+# Changelog 1.5.2
+### Changes / Additions
+- Added Marigold
+  - Obtained through raid rewards.
+  - Marigold will drop treasure instead of seed packets from zen gardening.
+- Zombie Raids now have "Boss Chance"
+  - Boss Chance represents the odds that the next wave will spawn a boss.
+  - The chance increases exponentially every wave.
+  - Once a boss spawns, the chance is reset.
+  - Pressing "Tab" will display the Boss Chance and other details about the raid.
+- Added Giga variant for All Star, which can spawn as a Boss
+- Added General variant for Robo-Zombie, which can spawn as a Boss
+- Added Baron Von Bats
+  - Baron Von Bats has a chance to spawn as a Boss.
+- Added Zombat
+  - Heals itself when hurting other mobs.
+- Added Brainz Alloy Door and Trapdoor
+- Added Door Shields
+  - Can be crafted from any Door and a Shield.
+  - Browncoats can now spawn with Door Shields.
+- Added Coffin
+  - Blocks incoming damage from all directions.
+- Added Baron's Staff
+  - Has a rare chance to drop from defeating Baron Von Bats.
+- During the final wave at the 1-minute mark, all remaining zombies will teleport closer to the flag.
+- Hero Bonus rewards are now given for each Boss Wave rather than every 5 waves.
+- Cones, Buckets, and Football helmets now only block damage from above.
+  - They have also been given a buff to armor and armor toughness.
+- Newspapers now work like Shields and only block damage from the front.
+- While a plant is equipped with the Plant Pot Helmet, The Gardening Glove can be used to place the plant back on the ground.
+- Dye Blaster, Gardening Glove, Plant Pot Helmet, and Ducky Tube can now be enchanted.
+- Added a new enchantment, "Lobbing".
+  - This enchantment applies to the Gardening Glove and allows the player to toss the held plant.
+- Dye Blasters now store dye ammo. Dye Blaster can only be fired after being loaded with dye. Each shot has a chance to consume the stored dye.
+- Added a client-side options menu accessible with `/pz options`
+### Fixes / Technical Changes
+- Pumpkins are no longer duplicated when using a Gardening Glove.
+- Leader zombies no longer spawn a bunch of other zombies that do not despawn.
+- Added a new client config option: `showSunInfo`.
+  - When enabled, sun cost for seed packets and your total held sun is displayed on the HUD.
+- Added new commands:
+  - `/pz help`
+    - Prompts a link in chat to the discord server
+  - `/pz options`
+    - Opens the options menu
+  - `/pz raid start [<wave_count>]`
+    - Requires "op" privileges
+    - Attempts to start a raid near the player.
+    - The command will fail when a flag isn't nearby.
+    - Has an optional field, `[<wave_count>]` which controls the number of waves the raid will have.
+  - `/pz raid stop`
+    - Requires "op" privileges
+    - Stops whatever raid the player is currently near.
+    - Command fails when no active raid is nearby.
+  - `/pz raid wave_start [<wave_type|wave_type>] [<boss_type|boss_type>]`
+    - Requires "op" privileges
+    - Starts the next wave immediately.
+    - Has optional field `[<wave_type|wave_type>]` , a valid wave type from the available selection.
+    - Also has optional field `[<boss_type|boss_type>]` , a valid boss type from the available selection.
+- The `plantz:stored_sun` item component has a new field `capacity:[<amount>]`.
+  - Example stick with 999 sun capacity:
+  <br/>`/give @s stick[minecraft:item_model="plantz:sun",plantz:stored_sun={capacity:999,stored_sun:0},minecraft:max_stack_size=1]`
+- Seed mutation files now accept a loot table as a valid result, Example:
+  ```
+  {
+    "mutations": [
+      {
+        "chance": 0.5,
+        "result": {
+          "loot_table": "plantz:seed_mutations/marigold"
+        }
+      }
+    ]
+  }
+  ```
+- Various other bug fixes and improvements
 
 # Changelog 1.5.1
-### Fixes
-- Reduced Grave Digger spawn chance during raids.
-- Zombie Robots built by the Engineer will vanish at the end of the raid.
+### Changes / Additions
+- Added Pumpkin Plant.
+  - Can be obtained as rewards for the Zomboween special wave or from carving pumpkins.
+  - When applied to a plant, it will completely tank any given damage until destroyed.
+- Updated Seed Mutation chances:
+```
+  - Peashooter: 50% Electric Peashooter seeds during Thunderstorms.
+  - Peashooter: 50% Fire Peashooter seeds while in hot biomes.
+  - Peashooter: 10% Repeater seeds anywhere.
+  - Electric Peashooter: 15% Peashooter seeds during Clear/Rainy weather.
+  - Fire Peashooter: 15% Peashooter seeds while NOT in hot biomes.
+  - Repeater: No longer has a mutation (always drops repeater).
+  - Melon Pult: 33.3% Winter Melon seeds in cold biomes.
+  - Winter Melon: 15% Melon Pult while NOT in cold biomes.
+  - Wallnut: 8% Explode-o-Nut seeds anywhere.
+  - Explode-o-Nut: 20% Wallnut seeds anywhere.
+```
+- Added "Zomboween" special wave.
+  - Has a chance to occur 2 weeks before and 1 day after October 31st.
+  - Can happen within waves 4–11.
+- Added a Boss Bar during boss waves.
+  - If a Boss is not defeated by the end of a boss wave, the raid will be lost.
+- Reworked the Digger Zombie's behavior.
+  - When 16–40 blocks away from its target, The Digger Zombie will attempt to tunnel into the ground closer to its target.
+- Added Vampire Browncoat variant.
+  - Has a chance to appear during Halloween season.
 - Balloon Zombies can drop balloons when killed.
+- Unleashed Balloons will pop after 2 minutes.
+- Hypnotized mobs will now target non-hypnotized mobs of the same type as well as other enemies.
+- Reduced how often and how many graves the grave digger will dig.
+- During a raid, the center flag will display a beacon beam while far away.
+- Plants will now only snap onto blocks that they can survive on.
+- Plant and Brainz Flags can only be placed while holding shift.
+- Plant and Zombie projectiles are now ignored by:
+  - Armor Stands
+  - Boats
+  - Minecarts
+  - Item Frames
+- The Skillet item from [Farmer's Delight](https://modrinth.com/mod/farmers-delight-refabricated) can now be equipped on your head.
+- Added nametag ester eggs for the Sunflower (Vampire) and Fire Peashooter (Blaze).
+### Fixes / Technical Changes
+- Reduced Grave Digger spawn chance during raids.
+- Plants and Zombies no longer pop their own balloons.
+- Zombie Robots built by the Engineer will vanish at the end of the raid.
+- Reduced the range for Robo Zombie.
+- Raid zombies will no longer spawn on top of trees.
+- Optimized zombie pathfinding during raids.
+- Optimized some checks on idle plants.
 - Puff Shrooms, Sun Shrooms, and Scaredy Shrooms now spawn again. :,)
-- Fixed a bug that caused the game to hang when processing certain plants when saving.
+- Fixed a bug that caused the game to hang when processing certain plants while saving.
+- Added a new server config option: `graveStoneActivationRange`.
+  - Sets the range at which Gravestone can spawn zombies. The default value is 24.0
+- Added a new server config option: `pumpkinArmorAmount`.
+  - Sets the amount of pumpkin armor gets applied. The default value is 35.
+- Updated seed packet mutations to accept an item as a result:
+  - The `result` field either accept and `entity_type` or and object:
+    - `item` - an item id
+    - `count` - a value range. Defaults to `{ "min": 1, "max": 1 }` (optional)
+#### Example files:
+```
+{
+  "mutations": [
+    {
+      "biome": "minecraft:forest",
+      "chance": 1.0,
+      "result": {
+        "item": "minecraft:apple"
+      }
+    },
+    {
+      "chance": 0.5,
+      "result": {
+        "item": "minecraft:emerald",
+        "count": {
+          "min": 2,
+          "max": 8
+        }
+      }
+    }
+  ]
+}
+```
 
 # Changelog 1.5
-### General:   
+### General:
 - Plantz Flag will now power-up nearby plants, reducing their cooldown by 20%. This effect does not stack.
 - When placing plants in plant pots, their initial rotation will be orientated the same as the pot.
 - While a plant is equipped using the Plant Pot Helmet, you can place them back in plant pots by shift clicking.
@@ -155,7 +326,7 @@ baseline and validation record; see `PORTING.md`.
 - Added Robo Zombie
   - Spawns during the "Robo Army" special wave.
 - Added Pirate Captain Zombie
-  - Spawns during the "Pirate Invasion" special wave. 
+  - Spawns during the "Pirate Invasion" special wave.
 - Added Super Brainz
   - Spawns during the "League of Awesome" special wave.
 - Zombies will now attack Wall Nuts when walking into them.
@@ -167,8 +338,8 @@ baseline and validation record; see `PORTING.md`.
     - `poweredUpCooldownReduction` – This value will reduce the cooldown for powered up plants. (default is a 20% reduction)
     - `alloyCost` – A list of entity ids paired with an integer.
   - `paz-client.json`:
-    - `showHiddenItemsInCreativeTab` – Enables some W.I.P items in the creative tab.
-    - `hideRaidUi` – Hides the zombie raid UI.
+    - `splitItemTabs` – Enables some W.I.P items in the creative tab.
+    - `showRaidUi` – Hides the zombie raid UI.
 - Added `seed_mutation` data directory.
   - The path for editing Seed Mutations is: `data/<namespace>/seed_mutation/<entity_name>.json`
   - Entry Format:
@@ -179,7 +350,7 @@ baseline and validation record; see `PORTING.md`.
       - `chance` - value between 0-1. (defaults to 1.0)
       - `result` - An entity id. (Required)
   - Mutation objects are evaluated from top to bottom, the first mutation that matches the conditions will be accepted.
-  #### Example file: 
+  #### Example file:
   ```
   {
     "mutations": [
@@ -216,7 +387,7 @@ baseline and validation record; see `PORTING.md`.
   }
   ```
   - Icon png: `assets/minecraft/models/plant_icon/pig.png`
-  
+
 
 # Changelog 1.4.2
 ### Hotfix
@@ -273,7 +444,7 @@ baseline and validation record; see `PORTING.md`.
     - Found in oceans and rivers and from fishing.
 - Added Ducky Tube
 	- Makes the user float in water while equipped.
-    - Browncoats and Newspaper Zombies can spawn in lakes and oceans with the Ducky Tube. 
+    - Browncoats and Newspaper Zombies can spawn in lakes and oceans with the Ducky Tube.
     - Zombies with Ducky Tubes spawn more often while it's raining.
 - Added Watering Can
   - Can be obtained from a level 3 farmer or from fishing.

@@ -12,7 +12,10 @@
           }
         },
         "then": {
-          "id": "minecraft:dirt"
+          "type": "minecraft:simple",
+          "state": {
+            "id": "minecraft:dirt"
+          }
         }
       }
     ]
@@ -339,7 +342,15 @@
     "leaf_placement_attempts": 1
   },
   "foliage_provider": {
-    "id": "minecraft:air"
+    "type": "minecraft:simple",
+    "state": {
+      "id": "minecraft:air",
+      "properties": {
+        "distance": "7",
+        "persistent": "false",
+        "waterlogged": "false"
+      }
+    }
   },
   "ignore_vines": true,
   "minimum_size": {
@@ -355,9 +366,12 @@
     "height_rand_b": 6
   },
   "trunk_provider": {
-    "id": "minecraft:pale_oak_wood",
-    "properties": {
-      "axis": "y"
+    "type": "minecraft:simple",
+    "state": {
+      "id": "minecraft:pale_oak_wood",
+      "properties": {
+        "axis": "y"
+      }
     }
   }
 }

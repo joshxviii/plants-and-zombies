@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "plantz:item/letter"
+    "layer0": "plantz:item/letter_overlay",
+    "layer1": "plantz:item/letter"
   }
 }

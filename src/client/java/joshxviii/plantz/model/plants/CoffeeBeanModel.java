@@ -45,8 +45,8 @@ public class CoffeeBeanModel extends PlantModel {
 
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
-		this.body.zRot = Mth.sin(state.ageInTicks * 1.5f)*0.01f;
 		super.setupAnim(state);
-		this.body.yRot = state.yRot * (float) (Mth.PI / 180.0);
+		this.body.zRot += Mth.sin(state.ageInTicks * 1.5f)*0.01f;
+		this.body.yRot += state.yRot * (float) (Mth.PI / 180.0);
 	}
 }

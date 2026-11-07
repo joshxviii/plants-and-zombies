@@ -1,12 +1,18 @@
 package joshxviii.plantz
 
+import com.mojang.datafixers.util.Either
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import io.netty.buffer.ByteBuf
 import joshxviii.plantz.PazMain.MODID
 import joshxviii.plantz.entity.Balloon
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.plant.saveAsCompoundTag
+import joshxviii.plantz.raid.BossType
 import joshxviii.plantz.raid.WaveType
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.core.Vec3i
 import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
@@ -19,6 +25,8 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.ARGB
 import net.minecraft.util.Mth
+import net.minecraft.network.codec.ByteBufCodecs
+import net.minecraft.network.codec.StreamCodec
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
@@ -29,7 +37,6 @@ import net.minecraft.world.entity.ai.control.LookControl
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.item.FallingBlockEntity
-import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.DyeColor
@@ -60,7 +67,7 @@ object SeasonalEvents {
     fun isNear(
         monthDay: MonthDay,
         daysBefore: Long = 14,
-        daysAfter: Long = 7,
+        daysAfter: Long = 1,
         today: LocalDate = dayNow(),
     ): Boolean {
         for (yearOffset in -1..1) {
@@ -78,20 +85,6 @@ object SeasonalEvents {
         isNear(MonthDay.of(Month.DECEMBER, 25))
 }
 
-interface GardenHeroRewards {
-    fun `plantz$getWaveList`(): MutableList<WaveType>
-    fun `plantz$setWaveList`(value: MutableList<WaveType>)
-    companion object {
-        fun collectRewards(player: ServerPlayer): MutableList<ResourceKey<LootTable>> {
-            player as GardenHeroRewards
-            val rewards = player.`plantz$getWaveList`().mapIndexed { waveNumber, type ->
-                type.lootTableFn(waveNumber, player.seenCredits)
-            }.toMutableList()
-            return rewards
-        }
-    }
-}
-
 interface PlantHeadAttachment {
     fun `plantz$hasPlantOnHead`(): Boolean
     fun `plantz$getPlant`(): Plant?
@@ -99,7 +92,7 @@ interface PlantHeadAttachment {
     fun `plantz$getPlantData`(): CompoundTag
     fun `plantz$setPlantData`(value: CompoundTag)
     companion object {
-        fun potBlockInteraction(state: BlockState, level: Level, pos: BlockPos, player: Player) : InteractionResult {
+        fun potHelmetPlaceInteraction(level: Level, pos: BlockPos, player: Player) : InteractionResult {
             if (level !is ServerLevel) return InteractionResult.PASS
             val hasPlant = (player as PlantHeadAttachment).`plantz$hasPlantOnHead`()
             if (hasPlant && player.isShiftKeyDown) {
@@ -237,7 +230,7 @@ fun Entity.positionPlant(plant: Plant) {
         position.y - offset.y,
         position.z - offset.z
     )
-    plant.yBodyRot = this.yHeadRot
+    plant.yRot = this.yHeadRot
 }
 
 fun Player.hasSpaceForSun(item: ItemStack): Boolean {
@@ -292,6 +285,8 @@ fun Player.removeItemFromInventory(itemType: Item?, amount: Int = 1): Int {
     if(itemType == null || itemType == Items.AIR) return 0
     return inventory.clearOrCountMatchingItems({ it.`is`(itemType) }, false, amount, inventoryMenu.getCraftSlots())
 }
+
+fun clampYRot(yaw: Float): Float = Direction.fromYRot(yaw.toDouble()).toYRot()
 
 fun Float.percentFormat(): String = "%.0f%%".format(this * 100)
 
@@ -396,8 +391,12 @@ fun LivingEntity.attackRange(): Double {
     return hitboxWidth + attackRange
 }
 
-fun LivingEntity.withinAttackRange(entity: Entity): Boolean {
-    return entity.distanceToSqr(this) <= this.attackRange().pow(2)
+fun LivingEntity.withinAttackRange(entity: Entity, plus: Double = 0.0): Boolean {
+    return entity.distanceToSqr(this) <= this.attackRange().plus(plus).pow(2)
+}
+
+fun LivingEntity.knockback(power: Double, xd: Double, zd: Double) {
+    this.knockback(power, xd, zd, this.damageSources().generic(), 0f)
 }
 
 fun Path?.getEndPos(): BlockPos? = this?.endNode?.let { BlockPos(it.x, it.y, it.z) }

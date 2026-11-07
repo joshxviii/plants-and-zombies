@@ -1,28 +1,35 @@
 package joshxviii.plantz.api
 
+import com.mojang.datafixers.util.Either
 import com.mojang.serialization.Codec
+import com.mojang.serialization.DataResult
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import joshxviii.plantz.PazRegistries
-import joshxviii.plantz.pazResource
-import net.fabricmc.fabric.api.event.registry.DynamicRegistries
+import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.HolderSet
-import net.minecraft.core.registries.codec.RegistryCodecs
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
+import net.minecraft.core.registries.codec.RegistryCodecs
+import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.biome.Biome
+import net.minecraft.world.level.storage.loot.LootParams
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Data driven seed mutation manager.
+ * Data-driven seed mutation manager.
  */
 object SeedMutationManager {
     fun get(level: ServerLevel, type: EntityType<*>): SeedMutationData? {
@@ -34,18 +41,30 @@ object SeedMutationManager {
         return p
     }
 
-    fun resolve(entity: Entity): EntityType<*> {
-        val level = entity.level() as? ServerLevel ?: return entity.type
-        val data = get(level, entity.type) ?: return entity.type
+    fun resolve(entity: Entity): List<ItemStack> {
+        val default = listOf(SeedPacketItem.stackFor(entity.type))
+        val level = entity.level() as? ServerLevel ?: return default
+        val data = get(level, entity.type) ?: return default
         val pos = entity.blockPosition()
         val random = entity.random
 
         for (rule in data.mutations) {
             if (rule.matches(level, pos, random)) {
-                return rule.result.value()
+                return when (val result = rule.result) {
+                    is SeedMutationResult.EntityTypeResult -> listOf(SeedPacketItem.stackFor(result.entityType.value()))
+                    is SeedMutationResult.ItemStackResult ->
+                        listOf(ItemStack(result.item.value(), result.count.roll(random)))
+                    is SeedMutationResult.LootTableResult -> {
+                        val params = LootParams.Builder(level)
+                            .withParameter(LootContextParams.ORIGIN, entity.position())
+                            .create(LootContextParamSets.CHEST)
+                        val key = ResourceKey.create(Registries.LOOT_TABLE, result.lootTable)
+                        level.server.reloadableRegistries().getLootTable(key).getRandomItems(params)
+                    }
+                }
             }
         }
-        return entity.type
+        return default
     }
 }
 
@@ -66,7 +85,7 @@ data class SeedMutationRule(
     val biomes: Optional<HolderSet<Biome>> = Optional.empty(),
     val weather: Optional<WeatherPredicate> = Optional.empty(),
     val time: Optional<TimePredicate> = Optional.empty(),
-    val result: Holder<EntityType<*>>,
+    val result: SeedMutationResult,
 ) {
     fun matches(level: ServerLevel, pos: BlockPos, random: RandomSource): Boolean {
         if (random.nextFloat() >= chance) return false
@@ -91,12 +110,88 @@ data class SeedMutationRule(
         val CODEC: Codec<SeedMutationRule> = RecordCodecBuilder.create { inst ->
             inst.group(
                 Codec.FLOAT.optionalFieldOf("chance", 1f).forGetter { it.chance },
-                Biome.LIST_CODEC.optionalFieldOf("biome").forGetter { it.biomes },
+                RegistryCodecs.holderSet(Registries.BIOME).optionalFieldOf("biome").forGetter { it.biomes },
                 WeatherPredicate.CODEC.optionalFieldOf("weather").forGetter { it.weather },
                 TimePredicate.CODEC.optionalFieldOf("time").forGetter { it.time },
-                BuiltInRegistries.ENTITY_TYPE.holderByNameCodec().fieldOf("result").forGetter { it.result },
+                SeedMutationResult.CODEC.fieldOf("result").forGetter { it.result },
             ).apply(inst, ::SeedMutationRule)
         }
+    }
+}
+
+sealed interface SeedMutationResult {
+    data class EntityTypeResult(val entityType: Holder<EntityType<*>>) : SeedMutationResult
+    data class ItemStackResult(val item: Holder<Item>, val count: CountRange) : SeedMutationResult {
+        companion object {
+            val CODEC: Codec<ItemStackResult> = RecordCodecBuilder.create { inst ->
+                inst.group(
+                    BuiltInRegistries.ITEM.holderByNameCodec().fieldOf("item").forGetter(ItemStackResult::item),
+                    CountRange.CODEC.optionalFieldOf("count", CountRange(1, 1)).forGetter(ItemStackResult::count),
+                ).apply(inst, ::ItemStackResult)
+            }
+        }
+    }
+    data class LootTableResult(val lootTable: Identifier) : SeedMutationResult {
+        companion object {
+            val CODEC: Codec<LootTableResult> = Identifier.CODEC.fieldOf("loot_table").xmap(::LootTableResult, LootTableResult::lootTable).codec()
+        }
+    }
+
+    companion object {
+        private val OBJECT_CODEC: Codec<SeedMutationResult> = Codec.either(ItemStackResult.CODEC, LootTableResult.CODEC).xmap(
+            { it.map({ r -> r as SeedMutationResult }, { r -> r as SeedMutationResult }) },
+            { result ->
+                when (result) {
+                    is ItemStackResult -> Either.left(result)
+                    is LootTableResult -> Either.right(result)
+                    is EntityTypeResult -> throw IllegalStateException("Entity type results are not objects")
+                }
+            }
+        )
+
+        val CODEC: Codec<SeedMutationResult> = Codec.either(
+            BuiltInRegistries.ENTITY_TYPE.holderByNameCodec(),
+            OBJECT_CODEC,
+        ).xmap(
+            { it.map({ e -> EntityTypeResult(e) as SeedMutationResult }, { r -> r }) },
+            { result ->
+                when (result) {
+                    is EntityTypeResult -> Either.left(result.entityType)
+                    else -> Either.right(result)
+                }
+            }
+        )
+    }
+}
+
+@JvmRecord
+data class CountRange(val min: Int, val max: Int) {
+    fun roll(random: RandomSource): Int = random.nextIntBetweenInclusive(min, max)
+
+    companion object {
+        private val RANGE_CODEC: Codec<CountRange> = RecordCodecBuilder.create { inst ->
+            inst.group(
+                Codec.intRange(1, Int.MAX_VALUE).fieldOf("min").forGetter(CountRange::min),
+                Codec.intRange(1, Int.MAX_VALUE).fieldOf("max").forGetter(CountRange::max),
+            ).apply(inst, ::CountRange)
+        }.flatXmap(
+            { range ->
+                if (range.min <= range.max) DataResult.success(range)
+                else DataResult.error { "Count range minimum must not exceed maximum" }
+            },
+            { DataResult.success(it) },
+        )
+
+        val CODEC: Codec<CountRange> = Codec.either(
+            Codec.intRange(1, Int.MAX_VALUE),
+            RANGE_CODEC,
+        ).xmap(
+            { count -> count.map({ CountRange(it, it) }, { it }) },
+            { count ->
+                if (count.min == count.max) com.mojang.datafixers.util.Either.left(count.min)
+                else com.mojang.datafixers.util.Either.right(count)
+            },
+        )
     }
 }
 

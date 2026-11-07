@@ -6,7 +6,7 @@
       "result": "plantz:electric_peashooter"
     },
     {
-      "chance": 0.7,
+      "chance": 0.15,
       "result": "plantz:peashooter"
     }
   ]

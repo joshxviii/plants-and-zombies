@@ -40,9 +40,9 @@
               "type": "minecraft:set_enchantments",
               "enchantments": {
                 "minecraft:smite": {
+                  "type": "minecraft:uniform",
                   "min": 1,
-                  "max": 4,
-                  "type": "minecraft:uniform"
+                  "max": 4
                 }
               }
             }

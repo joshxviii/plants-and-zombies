@@ -7,13 +7,35 @@
         "when": "head",
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:block/dye_vat"
+          "model": "plantz:block/dye_vat",
+          "tints": [
+            {
+              "type": "minecraft:dye",
+              "default": 16777215
+            }
+          ]
         }
       }
     ],
     "fallback": {
-      "type": "minecraft:model",
-      "model": "plantz:item/dye_blaster"
+      "type": "minecraft:condition",
+      "property": "minecraft:has_component",
+      "component": "minecraft:dyed_color",
+      "ignore_default": true,
+      "on_true": {
+        "type": "minecraft:model",
+        "model": "plantz:item/dye_blaster",
+        "tints": [
+          {
+            "type": "minecraft:dye",
+            "default": 16777215
+          }
+        ]
+      },
+      "on_false": {
+        "type": "minecraft:model",
+        "model": "plantz:item/dye_blaster_empty"
+      }
     }
   }
 }

@@ -86,6 +86,7 @@ open class PazZombieRenderer(
         if (entity is EngineerZombie) state.actionAnimationState.copyFrom(entity.buildAnimation)
         if (entity is GraveDigger) state.actionAnimationState.copyFrom(entity.digAnimation)
         if (entity is AllStar) state.actionAnimationState.copyFrom(entity.chargeAnimation)
+        if (entity is ZombieYeti) state.actionAnimationState.copyFrom(entity.bashAnimation)
         if (entity is NewspaperZombie) state.isAngry = entity.isAngry()
         state.customName = entity.customName?.string ?: ""
         state.textureExtra = mutableListOf<String>().apply {
@@ -100,6 +101,8 @@ open class PazZombieRenderer(
                     add(entity.variant.suffix)
                     if (entity.hasBarrel) add("barrel")
                 }
+                is AllStar -> add(entity.variant.suffix)
+                is RoboZombie -> add(entity.variant.suffix)
                 is SuperBrainz -> add(entity.variant.suffix)
                 else -> {}
             }

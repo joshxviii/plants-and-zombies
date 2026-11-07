@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:noise",
+  "noise": "plantz:gnome_asteroids",
+  "xz_scale": 0.25,
+  "y_scale": 1
+}
