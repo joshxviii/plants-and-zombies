@@ -75,5 +75,6 @@ object PazMain : ModInitializer {
 		PazNetwork.initialize()
 		PazJukeboxSongs.initialize()
 		PazPoiTypes.initialize()
+		PazWorldGen.initialize()
 	}
 }

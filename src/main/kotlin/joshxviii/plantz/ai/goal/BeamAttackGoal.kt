@@ -3,6 +3,7 @@ package joshxviii.plantz.ai.goal
 import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.knockback
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.Mth
@@ -79,7 +80,7 @@ class BeamAttackGoal(
 
                 if (target.hurtServer(usingEntity.level() as ServerLevel, source, damage)) {
                     afterHitEntityEffect(target)
-                    target.push(
+                    target.knockback(
                         knockback,
                         start.x - target.x,
                         start.z - target.z

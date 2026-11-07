@@ -7,6 +7,7 @@ import joshxviii.plantz.PazTags
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.canReachTarget
 import joshxviii.plantz.entity.projectile.PowderSnowChunk
+import joshxviii.plantz.knockback
 import net.minecraft.core.BlockPos
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -112,10 +113,10 @@ class ZombieYeti(type: EntityType<out ZombieYeti>, level: Level) : PazZombie(typ
         super.doPush(entity)
         if (isPathFinding && this.target!=null) {
             if (entity is LivingEntity && entity !is Zombie) {
-                val level = level() as? ServerLevel?: return
-                entity.hurtServer(level, this.damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 2.5f)
-                entity.push(
-                    0.2, position().x - entity.position().x, position().z - entity.position().z
+                entity.knockback(
+                    0.2, position().x - entity.position().x, position().z - entity.position().z,
+                    this.damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this),
+                    2.5f
                 )
             }
         }

@@ -32,12 +32,6 @@
 				"value": "joshxviii.plantz.PazModMenu",
 				"adapter": "kotlin"
 			}
-		],
-		"terrablender": [
-			{
-				"value": "joshxviii.plantz.PazWorldGen",
-				"adapter": "kotlin"
-			}
 		]
 	},
 	"mixins": [

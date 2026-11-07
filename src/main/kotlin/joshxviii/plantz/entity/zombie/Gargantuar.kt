@@ -252,7 +252,7 @@ class Gargantuar(type: EntityType<out Gargantuar>, level: Level) : PazZombie(typ
             if (entity is LivingEntity && entity !is Zombie) {
                 val level = level() as? ServerLevel?: return
                 entity.hurtServer(level, this.damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 2.5f)
-                entity.push(
+                entity.knockback(
                     0.2, position().x - entity.position().x, position().z - entity.position().z
                 )
             }

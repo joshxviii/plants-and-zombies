@@ -5,6 +5,7 @@ import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazDataSerializers.ALL_STAR_VARIANT
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
+import joshxviii.plantz.knockback
 import joshxviii.plantz.pazResource
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
@@ -118,14 +119,13 @@ class AllStar(type: EntityType<out AllStar>, level: Level) : PazZombie(type, lev
     override fun doPush(entity: Entity) {
         super.doPush(entity)
         if (chargingTime>=0 && this.isAlive) {
-            if (entity is Zombie) entity.push(
+            if (entity is Zombie) entity.knockback(
                 0.7, position().x - entity.position().x, position().z - entity.position().z
             )
             else if (entity is LivingEntity) {
-                val level = level() as? ServerLevel?: return
-                entity.hurtServer(level, this.damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 1.5f)
-                entity.push(
-                    2.0, position().x - entity.position().x, position().z - entity.position().z
+                entity.knockback(
+                    2.0, position().x - entity.position().x, position().z - entity.position().z,
+                    this.damageSources().source(PazDamageTypes.ZOMBIE_TRAMPLE, this), 1.5f
                 )
             }
         }

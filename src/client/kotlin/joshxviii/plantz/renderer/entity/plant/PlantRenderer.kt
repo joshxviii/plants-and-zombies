@@ -49,7 +49,7 @@ open class PlantRenderer(
     companion object {
         private fun updateClientRoll(entity: Plant, partialTick: Float) {
             if (Minecraft.getInstance().isPaused) return
-            val tickScale = entity.level().tickRateManager().tickrate() / 20f * partialTick
+            val tickScale = entity.level().tickRateManager().tickrate() / 20f
 
             if (!entity.isRolling()) {
                 entity.rollRotation.identity()

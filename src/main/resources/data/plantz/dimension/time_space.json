@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:overworld",
+  "type": "plantz:time_space",
   "generator": {
     "type": "minecraft:noise",
     "settings": "plantz:time_space",

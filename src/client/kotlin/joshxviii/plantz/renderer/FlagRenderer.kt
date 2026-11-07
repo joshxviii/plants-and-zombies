@@ -1,6 +1,7 @@
 package joshxviii.plantz.renderer
 
 import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.math.Axis
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazNetwork
@@ -79,6 +80,7 @@ class FlagRenderer(
         val material = state.sprite?: return
         val renderType = material.renderType { RenderTypes.entitySolid(it) }
         poseStack.translate(0.5f, 0.0f, 0.5f)
+        poseStack.rotate(Axis.YP.rotationDegrees(state.angle+90f))
         submitNodeCollector.submitModel(
             flagModel,
             state,
@@ -121,7 +123,6 @@ class FlagRenderer(
     }
 
     override fun shouldRender(blockEntity: FlagBlockEntity, cameraPosition: Vec3): Boolean {
-        return true
         val flagPos = Vec3.atCenterOf(blockEntity.blockPos).multiply(1.0, 0.0, 1.0)
         val cameraPos = cameraPosition.multiply(1.0, 0.0, 1.0)
 

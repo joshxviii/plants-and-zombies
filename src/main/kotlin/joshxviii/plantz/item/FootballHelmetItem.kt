@@ -1,6 +1,7 @@
 package joshxviii.plantz.item
 
 import joshxviii.plantz.entity.zombie.AllStar.Companion.CHARGE_BOOST_ID
+import joshxviii.plantz.knockback
 import net.minecraft.ChatFormatting
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
@@ -93,7 +94,7 @@ class FootballHelmetItem(properties: Properties) : Item(properties) {
             val awayZ = target.z - owner.z
             val length = sqrt(awayX * awayX + awayZ * awayZ).coerceAtLeast(0.001)
 
-            target.push(
+            target.knockback(
                 KNOCKBACK_STRENGTH,
                 -awayX / length,
                 -awayZ / length

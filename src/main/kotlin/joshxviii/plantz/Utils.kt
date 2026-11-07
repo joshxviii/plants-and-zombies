@@ -395,6 +395,10 @@ fun LivingEntity.withinAttackRange(entity: Entity, plus: Double = 0.0): Boolean 
     return entity.distanceToSqr(this) <= this.attackRange().plus(plus).pow(2)
 }
 
+fun LivingEntity.knockback(power: Double, xd: Double, zd: Double) {
+    this.knockback(power, xd, zd, this.damageSources().generic(), 0f)
+}
+
 fun Path?.getEndPos(): BlockPos? = this?.endNode?.let { BlockPos(it.x, it.y, it.z) }
 
 fun PathNavigation.moveToBlockPos(blockPos: BlockPos, speedModifier: Double) = this.moveTo(blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble(), speedModifier)
