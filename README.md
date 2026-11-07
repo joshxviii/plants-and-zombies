@@ -5,6 +5,10 @@ This branch maintains an unofficial Fabric port of **Plants & Zombies** to
 branch at `fbc1a3b6` (2026-11-07). This includes 1.5.1/1.5.2 and ongoing 1.6
 development, so this snapshot is versioned `1.6-dev.fbc1a3b6.compat1+mc26.3`.
 
+**Current 26.3 baseline:** use the `compat1` build for normal use and future
+maintenance. The user confirmed that it works after the TerraBlender startup
+fix on 2026-11-07. Continue updates on this same branch and preserve that fix.
+
 - **This port:** [`codex/fabric-26.3-upstream`](https://github.com/Mikkelka/plants-and-zombies/tree/codex/fabric-26.3-upstream)
 - **Minecraft 26.2 port:** [`codex/fabric-26.2-v1.5`](https://github.com/Mikkelka/plants-and-zombies/tree/codex/fabric-26.2-v1.5)
 - **Upstream mirror:** [`main`](https://github.com/Mikkelka/plants-and-zombies/tree/main)
@@ -16,7 +20,8 @@ Language Kotlin. TerraBlender is bundled. Build with
 
 This fork retains Loader 0.19.5, Fabric API 0.162.0+26.3, Kotlin runtime
 1.13.8+kotlin.2.3.0 and bundled TerraBlender. The imported build has passed
-compilation and data validation; it has not been tested in game.
+compilation, 464 data checks and packaged-JAR inspection. The user confirmed
+successful startup/use of `compat1`; broader gameplay scenarios remain unverified.
 The `compat1` build fixes the reported startup crash by registering the
 graveyard through TerraBlender's initialization entrypoint after its config is ready.
 

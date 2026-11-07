@@ -4,7 +4,7 @@
 
 | Branch | Purpose |
 | --- | --- |
-| [`main`](https://github.com/Mikkelka/plants-and-zombies/tree/main) | Exact mirror of [`joshxviii/plants-and-zombies:main`](https://github.com/joshxviii/plants-and-zombies/tree/main). No fork-specific commits or port merges. |
+| [`main`](https://github.com/Mikkelka/plants-and-zombies/tree/main) | Reserved for the upstream mirror (previous upstream source: `main`). Sync separately when requested; keep fork changes and port merges on the port branches. |
 | [`codex/fabric-26.2-v1.5`](https://github.com/Mikkelka/plants-and-zombies/tree/codex/fabric-26.2-v1.5) | Maintained Minecraft 26.2 port. Last observed baseline `afa14f39` (1.5.2), port commit `c083f699`; maintained by its own chat. |
 | [`codex/fabric-26.3-upstream`](https://github.com/Mikkelka/plants-and-zombies/tree/codex/fabric-26.3-upstream) | Maintained Minecraft 26.3 port. Current upstream baseline: `26.3` at `fbc1a3b6` (2026-11-07), including 1.6 development. |
 
@@ -25,6 +25,13 @@ Each Minecraft version has its own maintenance chat:
 
 - The 26.3 chat maintains `codex/fabric-26.3-upstream` and keeps Minecraft 26.3.
 - The 26.2 chat maintains `codex/fabric-26.2-v1.5` and keeps Minecraft 26.2.
+
+The current working baseline for this chat is
+`1.6-dev.fbc1a3b6.compat1+mc26.3`, with runtime source at `63415ad4` and upstream
+baseline `fbc1a3b6`. The user selected this as the ongoing 26.3 version on
+2026-11-07 after confirming that it works. Future updates continue from this
+branch and preserve its compatibility changes, especially the TerraBlender
+callback. This designation does not rename the branch or change Git's `main`.
 
 When the original project publishes changes, the user asks each chat separately
 to import the selected update into its existing branch. Upstream changes do not
@@ -68,7 +75,15 @@ launch or gameplay test. Existing 26.2 artifacts were preserved. See
 The user's subsequent startup test exposed premature TerraBlender registration
 in the first snapshot (`TerraBlender.CONFIG` was null). `compat1` moves it to the
 `terrablender` entrypoint. Its build/data checks passed; the corrected build
-still needs user startup/gameplay confirmation.
+was then confirmed working by the user on 2026-11-07 in the Modrinth test
+profile with Minecraft 26.3, Loader 0.19.5 and Fabric API 0.162.0+26.3.
+This confirms the reported startup problem is resolved. Dedicated-server,
+save migration, raids and other broad gameplay coverage were not separately
+reported. `compat1` is the current working 26.3 baseline.
+
+Upstream's imported translations still contain missing/unused keys relative to
+the 449-key English file. The separate language check reports these differences;
+they are not a failure of the build/resource validation. See `PORTING-26.3.md`.
 
 The 26.2 branch was separately updated to 1.5.2 by its maintenance chat.
 This import changes only 26.3; updating either port does not update the other.

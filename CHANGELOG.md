@@ -7,7 +7,9 @@
   Remove the premature call from `PazMain`/`PazWorldGen`.
 - Keep existing dependency versions and bundled TerraBlender. Build and 464
   resource/criterion checks passed; inspect the packaged lifecycle wiring.
-  The corrected build still needs in-game confirmation.
+  The user confirmed the corrected build works on 2026-11-07 after the startup
+  fix and selected it as the current 26.3 baseline for future maintenance.
+  Runtime source: `63415ad4`. Broader gameplay scenarios remain unverified.
 
 ## Fork 1.6-dev.fbc1a3b6+mc26.3 (2026-11-07)
 
@@ -23,8 +25,8 @@
 - Extend standalone validation for door-shield crafting, boss criteria and the
   lobbing effect. Build and 464 resource/criterion checks passed. Inspect packaged
   Minecraft/dependency metadata and nested TerraBlender; no in-game test run.
-- Preserve the 26.2 branch and its existing JARs. Keep this update local until a
-  push is requested. See `PORTING-26.3.md` for validation limits.
+- Preserve the 26.2 branch and its existing JARs. See `PORTING-26.3.md` for
+  validation limits and the subsequent `compat1` startup fix.
 
 ## Previous fork 1.5+mc26.3
 

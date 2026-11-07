@@ -10,6 +10,10 @@ explicitly named `1.6-dev.fbc1a3b6.compat1+mc26.3` here, rather than a stable 1.
 ## Maintenance purpose
 
 `codex/fabric-26.3-upstream` is the ongoing Minecraft 26.3 maintenance branch.
+The current working baseline is `1.6-dev.fbc1a3b6.compat1+mc26.3`, whose runtime
+source is commit `63415ad4`. The user confirmed it works and selected it for
+continued maintenance on 2026-11-07. Use it in preference to the initial
+`fbc1a3b6` snapshot and the older v1.5 port; keep the versioned branch name.
 The chat assigned to 26.3 imports requested updates from the original project
 while preserving this Minecraft target and its compatible dependencies. The
 26.2 chat independently maintains `codex/fabric-26.2-v1.5`.
@@ -92,6 +96,14 @@ Client startup and world loading were manually confirmed for the v1.5-based port
 on Minecraft 26.3 with Loader 0.19.5 and API 0.162.0+26.3. The user tested the first
 `fbc1a3b6` snapshot on 2026-11-07 and reported the TerraBlender startup crash
 described above. `compat1` has passed the build/data checks and packaged
-entrypoint/bytecode inspection, but has not yet been retested in game.
+entrypoint/bytecode inspection. The user then confirmed that `compat1` works
+in the Modrinth test profile with Loader 0.19.5 and API 0.162.0+26.3 on
+2026-11-07, resolving the reported startup crash. This is user-reported
+successful startup/use; no additional gameplay coverage was specified.
 Dedicated server, save/reload, world generation, raids, plant behavior, and
 rendering with/without Iris still need broader manual coverage.
+
+The imported translation files match upstream `fbc1a3b6` unchanged. Their keys
+are not fully synchronized with the 449-key English file; the separate language
+CI check reports missing/unused keys. This inherited translation limitation is
+independent of the passing build/resource checks and the user's startup report.
