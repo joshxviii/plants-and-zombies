@@ -1,3 +1,63 @@
+# Fork 1.6-dev.fbc1a3b6.compat1+mc26.3 (2026-11-07)
+
+- Fix the user's reported startup crash: biome registration from the main mod
+  initializer accessed `Regions` while `TerraBlender.CONFIG` was still null.
+- Register `PazTerraBlender` as a Kotlin `terrablender` entrypoint implementing
+  `TerraBlenderApi`; TerraBlender invokes it after setting its configuration.
+  Remove the premature call from `PazMain`/`PazWorldGen`.
+- Keep existing dependency versions and bundled TerraBlender. Build and 464
+  resource/criterion checks passed; inspect the packaged lifecycle wiring.
+  The user confirmed the corrected build works on 2026-11-07 after the startup
+  fix and selected it as the current 26.3 baseline for future maintenance.
+  Runtime source: `63415ad4`. Broader gameplay scenarios remain unverified.
+- Record the user's branch arrangement: `main` now mirrors upstream `26.3`
+  exactly at `fbc1a3b6` (181-commit fast-forward), the corrected 26.3 port remains
+  the working version, and the 26.2 branch is preserved for possible later use.
+  Fork documentation stays on the port branch; no fork changes were added to main.
+
+## Fork 1.6-dev.fbc1a3b6+mc26.3 (2026-11-07)
+
+- Merge upstream `26.3` at `fbc1a3b6`, importing 262 commits since `ddf05fb7`.
+  Includes 1.5.1/1.5.2 content, raid bosses, Marigold, Pumpkin, door shields,
+  enchantments, translations and fixes, plus ongoing 1.6 development (Citron,
+  Time Machine and dimensions). This is a development snapshot, not stable 1.6.
+- Use upstream's current 26.3 implementation; retain Java 25, Gradle 9.8.0,
+  Loom 1.19.3, Loader 0.19.5, Fabric API 0.162.0+26.3 and Kotlin 2.3.0/runtime
+  1.13.8+kotlin.2.3.0. Keep TerraBlender 26.3.0.0.9 bundled unmodified.
+- Replace private POI registration with Fabric `PoiHelper`; migrate remaining
+  old loot keys in six tables and spawn data in five new biomes.
+- Extend standalone validation for door-shield crafting, boss criteria and the
+  lobbing effect. Build and 464 resource/criterion checks passed. Inspect packaged
+  Minecraft/dependency metadata and nested TerraBlender; no in-game test run.
+- Preserve the 26.2 branch and its existing JARs. See `PORTING-26.3.md` for
+  validation limits and the subsequent `compat1` startup fix.
+
+## Previous fork 1.5+mc26.3
+
+- Port upstream `ddf05fb7` to Minecraft 26.3 on Fabric, including upstream fixes
+  after the official `v1.5` release.
+- Adapt APIs and resource formats for Minecraft 26.3, bundle the original
+  TerraBlender JAR, and validate resources using the target Minecraft codecs.
+- Document the upstream mirror, the two maintained Minecraft branches and the
+  workflow for future updates (2026-10-25).
+- Record separate chat ownership, updates on request, shared-checkout precautions
+  and preservation of both versions' local JARs. The 26.3 rebuild and 381 data
+  checks passed on 2026-10-25; no rebuild is needed for these documentation changes.
+- Extend CI coverage to data files, the port validator and build configuration.
+
+The original upstream changelog follows. The 26.2 port has a separate upstream
+baseline and validation record; see `PORTING.md`.
+
+---
+
+# Minecraft 26.3 (Fabric)
+### Compatibility
+- Port gameplay, rendering, world generation, registries, and data formats to Minecraft 26.3.
+- Build against Fabric Loader 0.19.5 and Fabric API 0.162.0+26.3; update TerraBlender and optional Iris compatibility.
+- Include TerraBlender as an unmodified nested dependency.
+- Validate resource schemas, required tags, and local data references during the build.
+- See `PORTING-26.3.md` for requirements and validation coverage.
+
 # Changelog 1.6
 ### Additions
 #### General:
@@ -114,7 +174,7 @@
 - Hypnotized mobs will now target non-hypnotized mobs of the same type as well as other enemies.
 - Reduced how often and how many graves the grave digger will dig.
 - During a raid, the center flag will display a beacon beam while far away.
-- Plants will now only snap onto blocks that they can survive on. 
+- Plants will now only snap onto blocks that they can survive on.
 - Plant and Brainz Flags can only be placed while holding shift.
 - Plant and Zombie projectiles are now ignored by:
   - Armor Stands
@@ -125,7 +185,7 @@
 - Added nametag ester eggs for the Sunflower (Vampire) and Fire Peashooter (Blaze).
 ### Fixes / Technical Changes
 - Reduced Grave Digger spawn chance during raids.
-- Plants and Zombies no longer pop their own balloons. 
+- Plants and Zombies no longer pop their own balloons.
 - Zombie Robots built by the Engineer will vanish at the end of the raid.
 - Reduced the range for Robo Zombie.
 - Raid zombies will no longer spawn on top of trees.
@@ -167,7 +227,7 @@
 ```
 
 # Changelog 1.5
-### General:   
+### General:
 - Plantz Flag will now power-up nearby plants, reducing their cooldown by 20%. This effect does not stack.
 - When placing plants in plant pots, their initial rotation will be orientated the same as the pot.
 - While a plant is equipped using the Plant Pot Helmet, you can place them back in plant pots by shift clicking.
@@ -283,7 +343,7 @@
 - Added Robo Zombie
   - Spawns during the "Robo Army" special wave.
 - Added Pirate Captain Zombie
-  - Spawns during the "Pirate Invasion" special wave. 
+  - Spawns during the "Pirate Invasion" special wave.
 - Added Super Brainz
   - Spawns during the "League of Awesome" special wave.
 - Zombies will now attack Wall Nuts when walking into them.
@@ -307,7 +367,7 @@
       - `chance` - value between 0-1. (defaults to 1.0)
       - `result` - An entity id. (Required)
   - Mutation objects are evaluated from top to bottom, the first mutation that matches the conditions will be accepted.
-  #### Example file: 
+  #### Example file:
   ```
   {
     "mutations": [
@@ -344,7 +404,7 @@
   }
   ```
   - Icon png: `assets/minecraft/models/plant_icon/pig.png`
-  
+
 
 # Changelog 1.4.2
 ### Hotfix
@@ -401,7 +461,7 @@
     - Found in oceans and rivers and from fishing.
 - Added Ducky Tube
 	- Makes the user float in water while equipped.
-    - Browncoats and Newspaper Zombies can spawn in lakes and oceans with the Ducky Tube. 
+    - Browncoats and Newspaper Zombies can spawn in lakes and oceans with the Ducky Tube.
     - Zombies with Ducky Tubes spawn more often while it's raining.
 - Added Watering Can
   - Can be obtained from a level 3 farmer or from fishing.

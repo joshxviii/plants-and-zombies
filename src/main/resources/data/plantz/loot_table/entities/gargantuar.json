@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "functions": [
+          "modifier": [
             {
               "type": "minecraft:set_count",
               "count": {
