@@ -38,6 +38,11 @@ object PazClientOptions {
             set = { PazConfig.client.showSunInfo = it },
         ),
         ToggleOption(
+            "options.plantz.show_raid_ui",
+            get = { PazConfig.client.showRaidUi },
+            set = { PazConfig.client.showRaidUi = it },
+        ),
+        ToggleOption(
             "options.plantz.split_item_tabs",
             get = { PazConfig.client.splitItemTabs },
             set = { PazConfig.client.splitItemTabs = it },
@@ -45,11 +50,6 @@ object PazClientOptions {
                 val mc = Minecraft.getInstance()
                 PazCreativeTabs.rebuildTabs(mc.level, mc.player)
             },
-        ),
-        ToggleOption(
-            "options.plantz.show_raid_ui",
-            get = { PazConfig.client.showRaidUi },
-            set = { PazConfig.client.showRaidUi = it },
         ),
     )
 }

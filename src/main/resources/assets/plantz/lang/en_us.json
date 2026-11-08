@@ -92,6 +92,7 @@
   "options.plantz.split_item_tabs": "Split Item Tabs: %s",
 
   "commands.plantz.help": "Plants & Zombies - ask a question in the Discord: %s",
+  "commands.plantz.help.url": "https://discord.gg/xxUrJuFJUz",
   "commands.plantz.help.hover": "",
   "commands.plantz.raid.no_raid_nearby": "There is no active raid nearby",
   "commands.plantz.raid.start.success": "Started a raid at %s, %s, %s",
