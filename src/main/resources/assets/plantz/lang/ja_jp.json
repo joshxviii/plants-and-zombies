@@ -92,6 +92,7 @@
   "options.plantz.split_item_tabs": "アイテムタブを分割：%s",
 
   "commands.plantz.help": "プラント & ゾンビ - Discord で質問する：%s",
+  "commands.plantz.help.url": "https://discord.gg/xxUrJuFJUz",
   "commands.plantz.help.hover": "",
   "commands.plantz.raid.no_raid_nearby": "近くに進行中の襲撃はありません",
   "commands.plantz.raid.start.success": "%s, %s, %s で襲撃を開始しました",
@@ -282,6 +283,7 @@
   "item.plantz.soldier_zombie_spawn_egg": "兵士ゾンビのスポーンエッグ",
   "item.plantz.robo_zombie_spawn_egg": "ロボゾンビのスポーンエッグ",
   "item.plantz.pirate_captain_spawn_egg": "海賊船長ゾンビのスポーンエッグ",
+  "item.plantz.pirate_captain_ghost_spawn_egg": "海賊船長ゾンビの亡霊のスポーンエッグ",
   "item.plantz.super_brainz_spawn_egg": "スーパーブレインズのスポーンエッグ",
   "item.plantz.imp_spawn_egg": "インプのスポーンエッグ",
   "item.plantz.gargantuar_spawn_egg": "ガルガンチュアのスポーンエッグ",
@@ -367,7 +369,7 @@
 
   "entity.plantz.browncoat": "ゾンビ",
   "entity.plantz.browncoat.variant.balloon": "風船ゾンビ",
-  "entity.plantz.browncoat.variant.snow": "スノーコートゾンビ",
+  "entity.plantz.browncoat.variant.snowcoat": "スノーコートゾンビ",
   "entity.plantz.browncoat.variant.desert": "砂漠ゾンビ",
   "entity.plantz.browncoat.variant.buccaneer": "海賊ゾンビ",
   "entity.plantz.browncoat.variant.vampire": "バンパイアゾンビ",
@@ -395,7 +397,7 @@
   "entity.plantz.robo_zombie": "ロボゾンビ",
   "entity.plantz.robo_zombie.variant.general": "ロボジェネラル",
   "entity.plantz.pirate_captain": "海賊船長ゾンビ",
-  "entity.plantz.pirate_captain_ghost": "海賊船長ゾンビの幽霊",
+  "entity.plantz.pirate_captain_ghost": "海賊船長ゾンビの亡霊",
   "entity.plantz.super_brainz": "スーパーブレインズ",
   "entity.plantz.imp": "インプ",
   "entity.plantz.gargantuar": "ガルガンチュア",
@@ -422,7 +424,9 @@
   "container.plantz.no_address": "他の郵便箱は見つかりませんでした。",
   "container.plantz.mailbox_full": "郵便箱がいっぱいです！",
   "container.plantz.mailbox_success": "送信完了！",
+
   "container.plantz.time_machine.wip": "???",
+  "container.plantz.time_machine.display": "次は：%s",
 
   "gui.plantz.letter": "手紙",
   "gui.plantz.letter.font": "フォント：%s",
@@ -479,5 +483,10 @@
   "plantz.subtitles.event.mob_effect.hypnotized": "Mobが魅惑される",
   "plantz.subtitles.event.mob_effect.zombie_omen": "ゾンビ襲撃が差し迫る",
 
-  "biome.plantz.graveyard": "墓地"
+  "biome.plantz.graveyard": "墓地",
+  "biome.plantz.ancient_egypt": "古代エジプト",
+  "biome.plantz.jurassic_period": "ジュラ紀",
+  "biome.plantz.dark_ages": "暗黒時代",
+  "biome.plantz.far_future": "遥かな未来",
+  "biome.plantz.gnome_space": "ノームスペース"
 }

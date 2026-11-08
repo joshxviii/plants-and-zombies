@@ -4,7 +4,7 @@
   "advancements.plantz.bigger_three": "墓園大戰",
   "advancements.plantz.bigger_three.description": "擊敗機器人殭屍，海盜船長和超級腦袋各一隻",
   "advancements.plantz.biggest_three": "頭號人物",
-  "advancements.plantz.biggest_three.description": "Defeat a Robo-General, Baron Von Bats, and Gargantuar",
+  "advancements.plantz.biggest_three.description": "擊敗機器人將軍，男爵蝙蝠和巨人殭屍各一隻",
   "advancements.plantz.cone_head": "你是個巫師！",
   "advancements.plantz.cone_head.description": "在頭上戴一個路障",
   "advancements.plantz.disco_hypno": "迪斯可不死",
@@ -23,7 +23,7 @@
   "advancements.plantz.wallnut_bowling.description": "用滾動的牆果擊中 10 個生物",
   "advancements.plantz.solar_power": "太陽能驅動",
   "advancements.plantz.solar_power.description": "將太陽能電池充滿電",
-  "advancements.plantz.time_machine": "時光機",
+  "advancements.plantz.time_machine": "舊夢重温",
   "advancements.plantz.time_machine.description": "獲得一台時光機",
   "advancements.plantz.read_newspaper": "今天的新聞是？",
   "advancements.plantz.read_newspaper.description": "取得並閱讀報紙",
@@ -92,6 +92,7 @@
   "options.plantz.split_item_tabs": "拆分物品欄頁籤：%s",
 
   "commands.plantz.help": "植物與殭屍 - 在 Discord 中提問：%s",
+  "commands.plantz.help.url": "https://discord.gg/xxUrJuFJUz",
   "commands.plantz.help.hover": "",
   "commands.plantz.raid.no_raid_nearby": "附近沒有進行中的襲擊",
   "commands.plantz.raid.start.success": "已在 %s, %s, %s 發起襲擊",
@@ -282,6 +283,7 @@
   "item.plantz.soldier_zombie_spawn_egg": "士兵殭屍生怪蛋",
   "item.plantz.robo_zombie_spawn_egg": "機器人殭屍生怪蛋",
   "item.plantz.pirate_captain_spawn_egg": "海盜船長生怪蛋",
+  "item.plantz.pirate_captain_ghost_spawn_egg": "海盜船長幽靈生怪蛋",
   "item.plantz.super_brainz_spawn_egg": "超級腦袋生怪蛋",
   "item.plantz.imp_spawn_egg": "小殭屍生怪蛋",
   "item.plantz.baron_von_bats_spawn_egg": "男爵蝙蝠生怪蛋",
@@ -367,7 +369,7 @@
 
   "entity.plantz.browncoat": "殭屍",
   "entity.plantz.browncoat.variant.balloon": "氣球殭屍",
-  "entity.plantz.browncoat.variant.snow": "雪衣殭屍",
+  "entity.plantz.browncoat.variant.snowcoat": "雪衣殭屍",
   "entity.plantz.browncoat.variant.desert": "沙漠殭屍",
   "entity.plantz.browncoat.variant.buccaneer": "海盜殭屍",
   "entity.plantz.browncoat.variant.vampire": "吸血鬼殭屍",
@@ -393,7 +395,7 @@
   "entity.plantz.grave_digger": "掘墓殭屍",
   "entity.plantz.soldier_zombie": "士兵殭屍",
   "entity.plantz.robo_zombie": "機器人殭屍",
-    "entity.plantz.robo_zombie.variant.general": "機器人將軍",
+  "entity.plantz.robo_zombie.variant.general": "機器人將軍",
   "entity.plantz.pirate_captain": "海盜船長",
   "entity.plantz.pirate_captain_ghost": "海盜船長幽靈",
   "entity.plantz.super_brainz": "超級腦袋",
@@ -422,7 +424,9 @@
   "container.plantz.no_address": "未發現其他信箱。",
   "container.plantz.mailbox_full": "信箱已滿！",
   "container.plantz.mailbox_success": "發送成功！",
+
   "container.plantz.time_machine.wip": "???",
+  "container.plantz.time_machine.display": "下一站：%s",
 
   "gui.plantz.letter": "信",
   "gui.plantz.letter.font": "字體：%s",
@@ -479,5 +483,10 @@
   "plantz.subtitles.event.mob_effect.hypnotized": "生物被催眠",
   "plantz.subtitles.event.mob_effect.zombie_omen": "殭屍襲擊逼近",
 
-  "biome.plantz.graveyard": "墓地"
+  "biome.plantz.graveyard": "墓地",
+  "biome.plantz.ancient_egypt": "古代埃及",
+  "biome.plantz.jurassic_period": "侏羅紀期",
+  "biome.plantz.dark_ages": "黑暗時代",
+  "biome.plantz.far_future": "遙遠未來",
+  "biome.plantz.gnome_space": "地精空間"
 }
