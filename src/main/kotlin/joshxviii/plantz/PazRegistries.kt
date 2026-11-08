@@ -15,7 +15,7 @@ object PazRegistries {
     @JvmField val SEED_MUTATION: ResourceKey<Registry<SeedMutationData>> = register("seed_mutation")
 
     fun <T : Any> register(name: String): ResourceKey<Registry<T>> {
-        return ResourceKey.createRegistryKey(pazResource(name))
+        return ResourceKey.createRegistryKey(Identifier.withDefaultNamespace(name))
     }
 
     fun initialize() {
