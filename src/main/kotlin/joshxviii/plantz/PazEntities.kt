@@ -645,9 +645,10 @@ object PazEntities {
             .eyeHeight(0.45F)
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
+            followRange = 24.0,
             attackDamage = 2.0,
             maxHealth = 20.0,
-            flyingSpeed = 0.40,
+            flyingSpeed = 0.39,
         )
     )
     @JvmField val ZOMBIE_GOAT: EntityType<ZombieGoat> =  registerZombie(

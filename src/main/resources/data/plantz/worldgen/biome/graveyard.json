@@ -24,19 +24,19 @@
     "minecraft:visual/sky_light_factor": 0.7,
     "minecraft:gameplay/natural_mob_spawns": {
       "spawns_by_category": {
-        "ambient": [
+        "monster": [
           {
-            "weight": 10,
+            "weight": 1,
             "type": "plantz:zombat",
             "count": {
               "type": "minecraft:uniform",
-              "min_inclusive": 4,
-              "max_inclusive": 8
+              "min_inclusive": 1,
+              "max_inclusive": 1
             }
           }
         ]
       },
-      "spawn_costs": {}
+      "spawn_costs": {"plantz:zombat": {"energy_budget": 1.0, "charge": 4.25}}
     }
   },
   "carvers": [
