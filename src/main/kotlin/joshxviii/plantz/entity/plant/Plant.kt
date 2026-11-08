@@ -614,7 +614,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }?.let { level.addParticle(it, x, y+eyeHeight+0.55, z, 0.0, 0.0, 0.0) }
         }
 
-        if (rolling) calculateRollFriction()
+        if (rolling && level is ServerLevel) calculateRollFriction()
     }
 
     /**

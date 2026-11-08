@@ -56,6 +56,7 @@ class Citron(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
     override fun attackedWithGlove(attacker: LivingEntity, item: ItemStack, hand: InteractionHand) {
         if (!rolling) return
         funnyBounce()
+        if (level().isClientSide) return
         val direction = attacker.lookAngle.horizontal()
         applyImpulse(direction, pow = 0.35f, uncertainty = 0.1f, ignoreResistance = true)
         GardeningGloveItem.hurtAndDropPlant(item, attacker, hand)
