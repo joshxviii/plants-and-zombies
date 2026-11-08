@@ -28,7 +28,7 @@ import net.minecraft.world.entity.ai.village.poi.PoiManager
 import java.net.URI
 
 object PazCommands {
-    const val HELP_URL = "https://discord.gg/xxUrJuFJUz"
+    val HELP_URL = Component.translatable("commands.plantz.help.url")
 
     private val NO_FLAG = SimpleCommandExceptionType(Component.translatable("commands.plantz.raid.start.no_flag"))
     private val RAID_NOT_STARTED = SimpleCommandExceptionType(Component.translatable("commands.plantz.raid.start.failed"))
@@ -79,11 +79,11 @@ object PazCommands {
     }
 
     private fun help(ctx: CommandContext<CommandSourceStack>): Int {
-        val link = Component.literal(HELP_URL).withStyle(
+        val link = HELP_URL.withStyle(
             Style.EMPTY
                 .withColor(ChatFormatting.AQUA)
                 .withUnderlined(true)
-                .withClickEvent(ClickEvent.OpenUrl(URI.create(HELP_URL)))
+                .withClickEvent(ClickEvent.OpenUrl(URI.create(HELP_URL.string)))
                 .withHoverEvent(HoverEvent.ShowText(Component.translatable("commands.plantz.help.hover")))
         )
         ctx.source.sendSuccess({ Component.translatable("commands.plantz.help", link) }, false)

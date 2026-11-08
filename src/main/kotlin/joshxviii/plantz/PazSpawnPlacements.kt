@@ -3,6 +3,7 @@ package joshxviii.plantz
 import joshxviii.plantz.entity.plant.*
 import joshxviii.plantz.entity.zombie.DiggerZombie
 import joshxviii.plantz.entity.zombie.PazZombie
+import joshxviii.plantz.entity.zombie.Zombat
 import joshxviii.plantz.entity.zombie.ZombieYeti
 import joshxviii.plantz.mixin.SpawnPlacementsInvoker
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications
@@ -157,6 +158,9 @@ object PazSpawnPlacements {
         addBiomeSpawn(PazTags.Biomes.HAS_IMP, PazEntities.IMP, category = MobCategory.MONSTER,
             weight = 7, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.IMP, PazZombie::checkPazZombieSpawnRules)
+        addBiomeSpawn(PazTags.Biomes.DAY_SPAWNS, PazEntities.ZOMBAT, category = MobCategory.MONSTER,
+            weight = 20, minGroupSize = 1, maxGroupSize = 2)
+        registerSpawnPlacement(PazEntities.ZOMBAT, Zombat::checkZombatSpawnRules)
         // endregion
     }
 

@@ -10,6 +10,9 @@ import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.tags.FluidTags
+import net.minecraft.util.RandomSource
+import net.minecraft.world.Difficulty
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
@@ -17,6 +20,7 @@ import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.entity.vehicle.boat.AbstractBoat
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.ValueInput
@@ -27,6 +31,17 @@ import kotlin.jvm.optionals.getOrNull
 class Zombat(type: EntityType<out Zombat>, level: Level) : PazZombie(type, level) {
 
     companion object {
+        fun checkZombatSpawnRules(
+            type: EntityType<out Mob>,
+            level: ServerLevelAccessor,
+            spawnReason: EntitySpawnReason,
+            pos: BlockPos,
+            random: RandomSource
+        ): Boolean {
+            if (level.difficulty == Difficulty.PEACEFUL) return false
+            return checkMobSpawnRules(type, level, spawnReason, pos, random)
+        }
+
         val BARON_BAT_ID = SynchedEntityData.defineId(Zombat::class.java, EntityDataSerializers.BOOLEAN)
     }
 

@@ -225,9 +225,8 @@ fun Entity.positionPlant(plant: Plant) {
     val living = this as? LivingEntity
     val scale = living?.scale ?: 1.0f
 
-    val headLocked = living?.getItemBySlot(EquipmentSlot.CHEST)?.has(PazComponents.WORN_BODY_BLOCKER) == true
-    val yawDeg = if (headLocked) living.yBodyRot else living?.yHeadRot ?: this.yRot
-    val pitchDeg = if (headLocked) (if (this.isCrouching) 25f else 0f) else this.xRot
+    val yawDeg = this.yRot
+    val pitchDeg = this.xRot
     val pitch = pitchDeg * Mth.DEG_TO_RAD
     val yaw = yawDeg * Mth.DEG_TO_RAD
 
