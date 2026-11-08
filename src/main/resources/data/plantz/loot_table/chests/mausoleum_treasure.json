@@ -2,9 +2,14 @@
   "type": "minecraft:chest",
   "pools": [
     {
-      "type": "minecraft:item",
-      "name": "plantz:brainz_flag",
-      "weight": 1
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "plantz:brainz_flag",
+          "weight": 1
+        }
+      ]
     },
     {
       "rolls": {
@@ -16,20 +21,33 @@
         {
           "type": "minecraft:item",
           "name": "plantz:coffin",
-          "weight": 2
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:iron_shovel",
           "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:ominous_bottle",
+          "weight": 2,
+          "modifier": {
+            "type": "minecraft:set_ominous_bottle_amplifier",
+            "amplifier": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 2
+            }
+          }
         }
       ]
     },
     {
       "rolls": {
         "type": "minecraft:uniform",
-        "min": 3,
-        "max": 5
+        "min": 6,
+        "max": 8
       },
       "bonus_rolls": 0,
       "entries": [
@@ -41,7 +59,7 @@
             "type": "minecraft:set_count",
             "count": {
               "type": "minecraft:uniform",
-              "min": 1,
+              "min": 2,
               "max": 4
             }
           }
@@ -64,7 +82,7 @@
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
-                "max": 4
+                "max": 2
               }
             }
           ]
@@ -87,7 +105,7 @@
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
-                "max": 4
+                "max": 3
               }
             }
           ]
@@ -101,7 +119,7 @@
             "count": {
               "type": "minecraft:uniform",
               "min": 1,
-              "max": 2
+              "max": 3
             }
           }
         },
@@ -114,7 +132,7 @@
             "count": {
               "type": "minecraft:uniform",
               "min": 5,
-              "max": 9
+              "max": 10
             }
           }
         }

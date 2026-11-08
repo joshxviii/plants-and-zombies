@@ -21,7 +21,7 @@ object SunInfoHud {
     private val mc = Minecraft.getInstance()
     private val font = mc.font
     fun extractRenderState(graphics: GuiGraphicsExtractor, deltaTracker: DeltaTracker, itemStack: ItemStack, highlightTimer: Int) {
-        if (!PazConfig.SHOW_SUN_INFO || mc.gameMode?.playerMode == GameType.SPECTATOR) return
+        if (!PazConfig.SHOW_SUN_INFO || mc.gui.hud.isHidden || mc.gameMode?.playerMode == GameType.SPECTATOR) return
         val hotbarWidth = 182
         val x = graphics.guiWidth() / 2
         val y = graphics.guiHeight()

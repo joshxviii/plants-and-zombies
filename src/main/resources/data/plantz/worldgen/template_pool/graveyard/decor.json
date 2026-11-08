@@ -2,13 +2,13 @@
   "fallback": "minecraft:empty",
   "elements": [
     {
-      "weight": 6,
+      "weight": 7,
       "element": {
         "element_type": "minecraft:empty_pool_element"
       }
     },
     {
-      "weight": 3,
+      "weight": 2,
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "plantz:graveyard/decor/candle",
@@ -17,7 +17,7 @@
       }
     },
     {
-      "weight": 3,
+      "weight": 2,
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "plantz:graveyard/decor/candles",

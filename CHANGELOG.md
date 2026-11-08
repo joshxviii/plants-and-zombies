@@ -18,6 +18,8 @@
   - Holding "Tab" will display the Boss Chance and other details about the raid.
 - Added Giga variant for All Star, which can spawn as a Boss
 - Added General variant for Robo-Zombie, which can spawn as a Boss
+- The Graveyard Biome now properly generates.
+- Added a Mausoleum Structure to the Graveyard Biome.
 - Added Baron Von Bats
   - Baron Von Bats has a chance to spawn as a Boss.
 - Added Zombat
