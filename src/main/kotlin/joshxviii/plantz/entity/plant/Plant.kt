@@ -140,8 +140,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val SEED_GROW_COOLDOWN: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Plant::class.java, EntityDataSerializers.INT)
         val SLEEPING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, EntityDataSerializers.BOOLEAN)
         val POWERED_UP: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, EntityDataSerializers.BOOLEAN)
+        val ROLLING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, EntityDataSerializers.BOOLEAN)
 
-        val ON_PLAYER_HEAD_EFFECTS: Identifier = pazResource("on_player_head_effects")
+        private val LEGACY_ON_HEAD_SCALE: Identifier = pazResource("on_player_head_effects")
         private const val ROLL_FRICTION = 0.99
 
         const val PLANT_DAMAGE = 1.0
@@ -183,6 +184,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     val isGrowingSeeds: Boolean
         get() = testGrowConditions() != PlantGrowNeeds.SOIL
+
+    var rolling: Boolean
+        get() = this.entityData.get(ROLLING)
+        set(value) { this.entityData.set(ROLLING, value) }
 
     var isAsleep: Boolean
         get() = this.entityData.get(SLEEPING)
@@ -243,12 +248,12 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
 
     fun applyOnHeadEffects() {
-        if(getAttribute(Attributes.SCALE)?.hasModifier(ON_PLAYER_HEAD_EFFECTS)==false) getAttribute(Attributes.SCALE)!!.addPermanentModifier(
-            AttributeModifier(ON_PLAYER_HEAD_EFFECTS, -0.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+        getAttribute(Attributes.SCALE)?.removeModifier(LEGACY_ON_HEAD_SCALE)
         noPhysics = true
     }
+
     fun removeOnHeadEffects() {
-        if(getAttribute(Attributes.SCALE)?.hasModifier(ON_PLAYER_HEAD_EFFECTS)==true) getAttribute(Attributes.SCALE)!!.removeModifier(ON_PLAYER_HEAD_EFFECTS)
+        getAttribute(Attributes.SCALE)?.removeModifier(LEGACY_ON_HEAD_SCALE)
         noPhysics = false
     }
 
@@ -311,6 +316,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         entityData.define(SLEEPING, false)
         entityData.define(POWERED_UP, false)
         entityData.define(ATTACHED_PLAYER, Optional.empty())
+        entityData.define(ROLLING, false)
     }
 
     override fun onSyncedDataUpdated(accessor: EntityDataAccessor<*>) {
@@ -325,6 +331,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         super.addAdditionalSaveData(output)
         plantSaveData(output)
         output.putBoolean("plantz:IsPoweredUp", poweredUp)
+        output.putBoolean("plantz:IsRolling", rolling)
         attachedPlayerReference.let { EntityReference.store(it, output, "plantz:AttachedPlayer") }
     }
 
@@ -352,6 +359,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         state = PlantState.entries[input.getInt("plantz:State").getOrElse { 1 }].takeIf { it != PlantState.ACTION }?: PlantState.IDLE
         isAsleep = input.getBooleanOr("plantz:IsAsleep", false)
         poweredUp = input.getBooleanOr("plantz:IsPoweredUp", false)
+        rolling = input.getBooleanOr("plantz:IsRolling", false)
         attachedPlayerReference = Optional.ofNullable((EntityReference.read<LivingEntity>(input, "plantz:AttachedPlayer"))).getOrNull()
         loadedFromSave = true
     }
@@ -606,7 +614,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }?.let { level.addParticle(it, x, y+eyeHeight+0.55, z, 0.0, 0.0, 0.0) }
         }
 
-        if (isRolling()) calculateRollFriction()
+        if (rolling) calculateRollFriction()
     }
 
     /**
@@ -793,18 +801,17 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return level().isBrightOutside && level().getBrightness(LightLayer.SKY, BlockPos.containing(x, eyeY, z)) >= 7
     }
     fun exposedToRain(): Boolean = level().isRainingAt(blockPosition().above())
-    open fun canLookAround(): Boolean = !isRolling()
+    open fun canLookAround(): Boolean = !rolling
     open fun canWalk(): Boolean = false
     open fun sleepsDuringNight(): Boolean = false
     open fun sleepsDuringDay(): Boolean = this.`is`(PazTags.EntityTypes.MUSHROOM)
     open fun canSurviveOn(block: BlockState) : Boolean = canWalk() || block.`is`(PLANTABLE)
     open fun canPlaceOn(block: BlockState) : Boolean = canSurviveOn(block)
     open fun canProduceSeeds(): Boolean = true
-    open fun clampToGrid() = !canWalk() && !isRolling() && onValidGround()
+    open fun clampToGrid() = !canWalk() && !rolling && onValidGround()
     open fun cooldownFinished() {}
-    open fun isRolling(): Boolean = false
     override fun shouldDiscardFriction(): Boolean {
-        return isRolling() || super.shouldDiscardFriction()
+        return rolling || super.shouldDiscardFriction()
     }
 
     fun updatePlantPower(level: ServerLevel, nearFlag: Boolean) {

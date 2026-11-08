@@ -5,6 +5,15 @@ import com.mojang.math.Axis
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
+import joshxviii.plantz.PazModels
+import joshxviii.plantz.PlantHeadAttachment
+import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.renderer.entity.plant.PlantRenderState
+import joshxviii.plantz.renderer.entity.plant.PlantRenderer
+import net.minecraft.client.model.Model
+import net.minecraft.client.renderer.state.level.CameraRenderState
+import net.minecraft.world.entity.LivingEntity
+import org.joml.Quaternionf
 import joshxviii.plantz.PazModels.HAS_BUTTER_KEY
 import joshxviii.plantz.PazModels.PAINT_COLORS_KEY
 import joshxviii.plantz.PazRenderPipelines.PAINT_OVERLAY
@@ -14,6 +23,7 @@ import joshxviii.plantz.renderer.entity.ProjectileRenderState
 import net.minecraft.client.Minecraft
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.HumanoidModel
+import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.LivingEntityRenderer
 import net.minecraft.client.renderer.entity.RenderLayerParent
@@ -173,6 +183,149 @@ class BodyBlockerRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>
     stackSelector = { it.chestEquipment },
     matches = { it.has(PazComponents.WORN_BODY_BLOCKER) },
 )
+
+class WornPlantRenderData(val state: PlantRenderState, val renderer: PlantRenderer)
+/**
+ * Renders the plant worn on an entity's head [ModelPart].
+ */
+class PlantHeadAttachmentRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
+    parent: RenderLayerParent<S, M>,
+) : RenderLayer<S, M>(parent) {
+
+    companion object {
+        const val HEAD_TOP_SINK = 0.08f
+        private const val HEAD_HALF_HEIGHT = 0.5f
+        private const val MAX_LOOK_YAW = 75f
+        private const val MAX_LOOK_PITCH = 45f
+
+        fun findHeadPart(model: Model<*>): ModelPart? = when {
+            model is HumanoidModel<*> -> model.head
+            model.root().hasChild("head") -> model.root().getChild("head")
+            else -> null
+        }
+
+        fun findWornPlant(entity: LivingEntity): Plant? {
+            val id = (entity as PlantHeadAttachment).`plantz$getPlantId`()
+            if (id < 0) return null
+            val plant = entity.level().getEntity(id) as? Plant ?: return null
+            return plant.takeIf { it.isAlive && it.attachedEntity === entity }
+        }
+
+        fun wearerRendersPlant(wearer: LivingEntity): Boolean {
+            val renderer = Minecraft.getInstance().entityRenderDispatcher.getRenderer(wearer) as? RenderLayerParent<*, *> ?: return false
+            return findHeadPart(renderer.model) != null
+        }
+
+        @JvmStatic
+        fun extractWornPlant(entity: LivingEntity, state: LivingEntityRenderState, partialTick: Float, model: Model<*>) {
+            if (findHeadPart(model) == null) return
+            val plant = findWornPlant(entity) ?: return
+            val renderer = Minecraft.getInstance().entityRenderDispatcher.getRenderer(plant) as? PlantRenderer ?: return
+            val plantState = renderer.createRenderState()
+            renderer.extractRenderState(plant, plantState, partialTick)
+            val humanoidState = state as? HumanoidRenderState
+            val headLocked = humanoidState?.chestEquipment?.has(PazComponents.WORN_BODY_BLOCKER) == true
+            val wearerYaw = if (headLocked) state.bodyRot else state.bodyRot + state.yRot
+            val wearerPitch = when {
+                !headLocked -> state.xRot
+                humanoidState.isCrouching -> 25f
+                else -> 0f
+            }
+            val plantYaw = plantState.bodyRot + plantState.yRot
+            plantState.renderedByWearer = false
+            plantState.embeddedOnWearer = true
+            plantState.rotations = Quaternionf()
+            plantState.bodyRot = 180f
+            plantState.yRot = Mth.wrapDegrees(plantYaw - wearerYaw).coerceIn(-MAX_LOOK_YAW, MAX_LOOK_YAW)
+            plantState.xRot = (plantState.xRot - wearerPitch).coerceIn(-MAX_LOOK_PITCH, MAX_LOOK_PITCH)
+            plantState.walkAnimationPos = 0f
+            plantState.walkAnimationSpeed = 0f
+            state.setData(PazModels.HEAD_PLANT_KEY, WornPlantRenderData(plantState, renderer))
+        }
+    }
+
+    override fun submit(
+        poseStack: PoseStack,
+        collector: SubmitNodeCollector,
+        lightCoords: Int,
+        state: S,
+        yRot: Float,
+        xRot: Float
+    ) {
+        val data = state.getData(PazModels.HEAD_PLANT_KEY) ?: return
+        val head = findHeadPart(parentModel) ?: return
+        if (!head.visible) return
+
+        poseStack.pushPose()
+        parentModel.root().translateAndRotate(poseStack)
+        head.translateAndRotate(poseStack)
+        // Head space is y-down (the renderer already applied scale(-1,-1,1)). Go to the top of the head, then flip
+        // upright so the plant renderer's own scale(-1,-1,1) puts it the right way up with its feet at the origin.
+        poseStack.translate(0f, -(HEAD_HALF_HEIGHT - HEAD_TOP_SINK), 0f)
+        poseStack.rotate(Axis.ZP.rotationDegrees(180f))
+
+        data.state.lightCoords = lightCoords
+        data.renderer.submit(data.state, poseStack, collector, CameraRenderState())
+        poseStack.popPose()
+    }
+}
+
+
+abstract class FeetItemAttachmentRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
+    parent: RenderLayerParent<S, M>,
+    private val stackSelector: (HumanoidRenderState) -> ItemStack,
+    private val matches: (ItemStack) -> Boolean,
+) : RenderLayer<S, M>(parent) {
+    private val itemRenderState = ItemStackRenderState()
+    override fun submit(
+        poseStack: PoseStack,
+        collector: SubmitNodeCollector,
+        lightCoords: Int,
+        state: S,
+        yRot: Float,
+        xRot: Float
+    ) {
+        val humanoidModel = parentModel as? HumanoidModel<*> ?: return
+        val humanState = state as? HumanoidRenderState ?: return
+        val itemStack = stackSelector(humanState)
+
+        if (!matches(itemStack)) return
+        renderLegItem(poseStack, collector, itemStack, lightCoords, humanoidModel.leftLeg, false)
+        renderLegItem(poseStack, collector, itemStack, lightCoords, humanoidModel.rightLeg, true)
+    }
+
+    fun renderLegItem(
+        poseStack: PoseStack,
+        collector: SubmitNodeCollector,
+        itemStack: ItemStack,
+        lightCoords: Int,
+        leg: ModelPart,
+        flipped: Boolean,
+    ) {
+        poseStack.pushPose()
+
+        leg.translateAndRotate(poseStack)
+
+        val minecraft = Minecraft.getInstance()
+        itemRenderState.clear()
+        minecraft.itemModelResolver.updateForTopItem(
+            itemRenderState,
+            itemStack,
+            ItemDisplayContext.HEAD,
+            minecraft.level,
+            null,
+            0
+        )
+        itemRenderState.submit(
+            poseStack,
+            collector,
+            lightCoords,
+            OverlayTexture.NO_OVERLAY,
+            0
+        )
+        poseStack.popPose()
+    }
+}
 
 abstract class BodyItemAttachmentRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
     parent: RenderLayerParent<S, M>,

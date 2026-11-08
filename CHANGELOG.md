@@ -15,7 +15,7 @@
   - Boss Chance represents the odds that the next wave will spawn a boss.
   - The chance increases exponentially every wave.
   - Once a boss spawns, the chance is reset.
-  - Pressing "Tab" will display the Boss Chance and other details about the raid.
+  - Holding "Tab" will display the Boss Chance and other details about the raid.
 - Added Giga variant for All Star, which can spawn as a Boss
 - Added General variant for Robo-Zombie, which can spawn as a Boss
 - Added Baron Von Bats
@@ -39,6 +39,7 @@
 - Dye Blaster, Gardening Glove, Plant Pot Helmet, and Ducky Tube can now be enchanted.
 - Added a new enchantment, "Lobbing".
   - This enchantment applies to the Gardening Glove and allows the player to toss the held plant.
+- Worn plants with the Plant Pot Helmet can be placed back down by shift-clicking.
 - Dye Blasters now store dye ammo. Dye Blaster can only be fired after being loaded with dye. Each shot has a chance to consume the stored dye.
 - Added a client-side options menu accessible with `/pz options`
 ### Fixes / Technical Changes

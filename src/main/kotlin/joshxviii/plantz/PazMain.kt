@@ -76,5 +76,6 @@ object PazMain : ModInitializer {
 		PazJukeboxSongs.initialize()
 		PazPoiTypes.initialize()
 		PazWorldGen.initialize()
+		PlantHeadAttachment.register()
 	}
 }

@@ -1,32 +1,25 @@
 package joshxviii.plantz
 
-import com.mojang.datafixers.util.Either
-import com.mojang.serialization.Codec
-import com.mojang.serialization.codecs.RecordCodecBuilder
-import io.netty.buffer.ByteBuf
 import joshxviii.plantz.PazMain.MODID
 import joshxviii.plantz.entity.Balloon
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.plant.saveAsCompoundTag
-import joshxviii.plantz.raid.BossType
-import joshxviii.plantz.raid.WaveType
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.world.InteractionHand
+import net.fabricmc.fabric.api.event.player.UseBlockCallback
 import net.minecraft.core.Vec3i
 import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
-import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerEntityGetter
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.ARGB
 import net.minecraft.util.Mth
-import net.minecraft.network.codec.ByteBufCodecs
-import net.minecraft.network.codec.StreamCodec
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
@@ -47,7 +40,6 @@ import net.minecraft.world.item.component.TypedEntityData
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.pathfinder.Path
-import net.minecraft.world.level.storage.loot.LootTable
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import java.time.LocalDate
@@ -88,29 +80,44 @@ object SeasonalEvents {
 interface PlantHeadAttachment {
     fun `plantz$hasPlantOnHead`(): Boolean
     fun `plantz$getPlant`(): Plant?
+    /** Synced entity id of the worn plant, or -1. Valid on both sides. */
+    fun `plantz$getPlantId`(): Int
+
     fun `plantz$setPlant`(value: Plant?)
     fun `plantz$getPlantData`(): CompoundTag
     fun `plantz$setPlantData`(value: CompoundTag)
     companion object {
-        fun potHelmetPlaceInteraction(level: Level, pos: BlockPos, player: Player) : InteractionResult {
-            if (level !is ServerLevel) return InteractionResult.PASS
-            val hasPlant = (player as PlantHeadAttachment).`plantz$hasPlantOnHead`()
-            if (hasPlant && player.isShiftKeyDown) {
-                val plant = player.`plantz$getPlant`()?: return InteractionResult.FAIL
-                val plantBox = plant.boundingBox.move(pos.multiply(-1))
-                val placePos = pos.above()
-
-                if (level.getEntitiesOfClass(Plant::class.java, AABB(placePos)).isNotEmpty()) {
-                    player.sendOverlayMessage(Component.translatable("message.plantz.already_planted").withStyle(ChatFormatting.RED))
-                    return InteractionResult.FAIL
-                }
-
-                plant.detachFromEntity()
-                plant.setPos(placePos.x.toDouble(), placePos.y.toDouble(), placePos.z.toDouble())
-                plant.playSound(SoundEvents.HARNESS_UNEQUIP)// TODO custom sounds
-                return InteractionResult.SUCCESS
+        fun register() {
+            UseBlockCallback.EVENT.register { player, level, hand, hitResult ->
+                if (hand != InteractionHand.MAIN_HAND || !player.mainHandItem.isEmpty) InteractionResult.PASS
+                else placeWornPlant(player, level, hitResult.blockPos, hitResult.direction)
             }
-            return InteractionResult.PASS
+        }
+
+        fun wornPlant(player: Player): Plant? =
+            player.level().getEntity((player as PlantHeadAttachment).`plantz$getPlantId`()) as? Plant
+
+        fun placeWornPlant(player: Player, level: Level, clickedPos: BlockPos, face: Direction): InteractionResult {
+            if (!player.isSecondaryUseActive || player.isSpectator || face != Direction.UP) return InteractionResult.PASS
+            val plant = wornPlant(player) ?: return InteractionResult.PASS
+            if (!plant.canPlaceOn(level.getBlockState(clickedPos))) return InteractionResult.PASS
+
+            val placePos = clickedPos.above()
+            val spaceFree = level.getBlockState(placePos).getCollisionShape(level, placePos).isEmpty
+            if (!spaceFree) return InteractionResult.FAIL
+            if (level.getEntitiesOfClass(Plant::class.java, AABB(placePos)).any { it !== plant }) {
+                if (!level.isClientSide) {
+                    player.sendOverlayMessage(Component.translatable("message.plantz.already_planted").withStyle(ChatFormatting.RED))
+                }
+                return InteractionResult.FAIL
+            }
+            if (level.isClientSide) return InteractionResult.SUCCESS
+
+            plant.detachFromEntity()
+            plant.deltaMovement = Vec3.ZERO
+            plant.setPos(Vec3.atBottomCenterOf(placePos))
+            plant.playSound(SoundEvents.HARNESS_UNEQUIP)// TODO custom sounds
+            return InteractionResult.SUCCESS_SERVER
         }
     }
 }
@@ -212,11 +219,17 @@ fun Entity.tryToSetPlantOnHead(entityTag: CompoundTag): Boolean {
     }
     return false
 }
+
 fun Entity.positionPlant(plant: Plant) {
     val moveFunction: MoveFunction = { entity: Entity, x: Double, y: Double, z: Double -> entity.setPos(x, y, z) }
-    val scale = (this as? LivingEntity)?.scale ?: 1.0f
-    val pitch = this.xRot * Mth.DEG_TO_RAD
-    val yaw = this.yRot * Mth.DEG_TO_RAD
+    val living = this as? LivingEntity
+    val scale = living?.scale ?: 1.0f
+
+    val headLocked = living?.getItemBySlot(EquipmentSlot.CHEST)?.has(PazComponents.WORN_BODY_BLOCKER) == true
+    val yawDeg = if (headLocked) living.yBodyRot else living?.yHeadRot ?: this.yRot
+    val pitchDeg = if (headLocked) (if (this.isCrouching) 25f else 0f) else this.xRot
+    val pitch = pitchDeg * Mth.DEG_TO_RAD
+    val yaw = yawDeg * Mth.DEG_TO_RAD
 
     val rotated = Vec3(0.0, 0.55 * scale, 0.0).xRot(-pitch).yRot(-yaw)
     val position = this.position().add(
@@ -230,7 +243,11 @@ fun Entity.positionPlant(plant: Plant) {
         position.y - offset.y,
         position.z - offset.z
     )
-    plant.yRot = this.yHeadRot
+    if (plant.level() is ServerLevel && plant.target == null) {
+        plant.yRot = yawDeg
+        plant.yHeadRot = yawDeg
+        plant.xRot = 0f
+    }
 }
 
 fun Player.hasSpaceForSun(item: ItemStack): Boolean {

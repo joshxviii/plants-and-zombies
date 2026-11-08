@@ -30,6 +30,7 @@ import joshxviii.plantz.item.*
 import joshxviii.plantz.item.component.*
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
 import net.minecraft.core.Direction
+import net.minecraft.core.Holder
 import net.minecraft.core.HolderSet
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponentMap
@@ -217,6 +218,7 @@ object PazItems {
             .enchantable(1)
             .component(DataComponents.EQUIPPABLE,
                 Equippable.builder(EquipmentSlot.CHEST)
+                    .setEquipSound(SoundEvents.ARMOR_EQUIP_TURTLE)
                     .setAsset(COFFIN_EQUIP_ASSET)
                     .build())
             .component(PazComponents.WORN_BODY_BLOCKER, WornBodyBlockerComponent)
@@ -229,7 +231,7 @@ object PazItems {
                     ItemDamageFunction.DEFAULT,
                     Optional.of<HolderSet<DamageType>>(it.getOrThrow(DamageTypeTags.BYPASSES_SHIELD)),
                     Optional.of(SoundEvents.SHIELD_BLOCK),
-                    Optional.of(SoundEvents.SHIELD_BREAK)
+                    Optional.of(Holder.direct(SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR))
                 )
             })
     )

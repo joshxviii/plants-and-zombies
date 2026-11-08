@@ -6,6 +6,7 @@ import joshxviii.plantz.PazConfig
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.entity.plant.*
 import joshxviii.plantz.renderer.entity.plant.PlantRenderState.Companion.TEXTURE_PATH
+import joshxviii.plantz.renderer.PlantHeadAttachmentRenderLayer
 import joshxviii.plantz.renderer.getEmissiveTextureLocation
 import joshxviii.plantz.renderer.getTextureLocation
 import joshxviii.plantz.renderer.validMagicName
@@ -51,7 +52,7 @@ open class PlantRenderer(
             if (Minecraft.getInstance().isPaused) return
             val tickScale = entity.level().tickRateManager().tickrate() / 20f
 
-            if (!entity.isRolling()) {
+            if (!entity.rolling) {
                 entity.rollRotation.identity()
                 return
             }
@@ -96,6 +97,8 @@ open class PlantRenderer(
         collector: SubmitNodeCollector,
         camera: CameraRenderState
     ) {
+        // drawn by the wearer's PlantHeadAttachmentRenderLayer instead
+        if (state.renderedByWearer) return
         // debug info text
         if (PazConfig.SHOW_DEBUG_INFO) collector.submitNameTag(
             poseStack, Vec3(0.0,state.eyeHeight.toDouble(),0.0), -20,
@@ -110,7 +113,7 @@ open class PlantRenderer(
     override fun getFlipDegrees(): Float = 0f
 
     override fun getShadowRadius(state: PlantRenderState): Float {
-        return if (state.rotations == Quaternionf()) super.getShadowRadius(state) * (0.9f) else 0f
+        return if (!state.embeddedOnWearer && state.rotations == Quaternionf()) super.getShadowRadius(state) * (0.9f) else 0f
     }
 
     override fun scale(state: PlantRenderState, poseStack: PoseStack) {
@@ -136,6 +139,7 @@ open class PlantRenderer(
     override fun extractRenderState(entity: Plant, state: PlantRenderState, partialTick: Float) {
         super.extractRenderState(entity, state, partialTick)
         val attached = entity.attachedEntity
+        state.renderedByWearer = attached != null && PlantHeadAttachmentRenderLayer.wearerRendersPlant(attached)
         state.rotations = if (attached != null) {// plant pot helmet (unused rn)
             val pitch = -Mth.lerp(partialTick, attached.xRotO, attached.xRot)
             val yaw = Mth.lerp(partialTick, attached.yRotO, attached.yRot)
@@ -151,7 +155,7 @@ open class PlantRenderer(
         state.damagedAmount = entity.damagedPercent
 
         updateClientRoll(entity, partialTick)
-        state.isRolling = entity.isRolling()
+        state.isRolling = entity.rolling
         state.rollRotation.set(entity.rollRotation)
 
         state.initAnimationState.copyFrom(entity.initAnimationState)
@@ -166,7 +170,7 @@ open class PlantRenderer(
             when (entity) {
                 is BonkChoy -> entity.useUppercut
                 is Chomper -> entity.isChewing
-                is Citron -> entity.isTransformed
+                is Citron -> entity.rolling
                 else -> false
             }
         state.textureExtra = mutableListOf<String>().apply {
@@ -273,6 +277,8 @@ open class PlantRenderState : LivingEntityRenderState() {
     }
 
     var pumpkinArmor: Float = 0f
+    var renderedByWearer: Boolean = false
+    var embeddedOnWearer: Boolean = false
     var rotations: Quaternionf = Quaternionf()
     var swelling: Float = 0f
     var partialTick: Float = 0f

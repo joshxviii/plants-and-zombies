@@ -35,19 +35,12 @@ import org.joml.Quaternionf
 open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
     companion object {
-        val ROLLING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(WallNut::class.java, EntityDataSerializers.BOOLEAN)
         val ROLLING_ID: Identifier = pazResource("rolling")
         private val KNOCK_BACK_MODIFIER = AttributeModifier(ROLLING_ID, 99.0, AttributeModifier.Operation.ADD_VALUE)
         private val STEP_HEIGHT_MODIFIER = AttributeModifier(ROLLING_ID, 0.75, AttributeModifier.Operation.ADD_VALUE)
     }
 
     private var rolledOverEntities: MutableSet<Int> = mutableSetOf()
-
-    var rolling: Boolean
-        get() = this.entityData.get(ROLLING)
-        set(value) { this.entityData.set(ROLLING, value) }
-
-    override fun isRolling(): Boolean = rolling
 
     fun roll(direction: Vec3 = Direction.fromYRot(yRot.toDouble()).unitVec3, power: Float = 0.51f) {
         rolling = true
@@ -113,21 +106,6 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
                 }
             }
         }
-    }
-
-    override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
-        super.defineSynchedData(entityData)
-        entityData.define(ROLLING, false)
-    }
-
-    override fun addAdditionalSaveData(output: ValueOutput) {
-        super.addAdditionalSaveData(output)
-        output.putBoolean("plantz:IsRolling", rolling)
-    }
-
-    override fun readAdditionalSaveData(input: ValueInput) {
-        super.readAdditionalSaveData(input)
-        rolling = input.getBooleanOr("plantz:IsRolling", false)
     }
 
     override fun attackGoals() {}

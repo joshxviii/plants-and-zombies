@@ -42,13 +42,6 @@ class Citron(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
         const val BEAM_COLOR = 0xEE9933
     }
 
-    var isTransformed: Boolean
-        get() = this.entityData.get(BALL_TRANSFORMATION)
-        set(value) {
-            this.entityData.set(BALL_TRANSFORMATION, value)
-            reassessNavigation()
-        }
-
     val transformAnimation : AnimationState = AnimationState()
 
     val walkGoal = NavigateToTargetGoal(this)
@@ -58,11 +51,10 @@ class Citron(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
         alwaysFaceTarget = false
     )
 
-    override fun isRolling(): Boolean = isTransformed
     override fun canWalk(): Boolean = true
 
     override fun attackedWithGlove(attacker: LivingEntity, item: ItemStack, hand: InteractionHand) {
-        if (!isTransformed) return
+        if (!rolling) return
         funnyBounce()
         val direction = attacker.lookAngle.horizontal()
         applyImpulse(direction, pow = 0.35f, uncertainty = 0.1f, ignoreResistance = true)
@@ -118,12 +110,10 @@ class Citron(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
-        output.putBoolean("is_transformed", isTransformed)
     }
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
-        isTransformed = input.getBooleanOr("is_transformed", false)
         reassessNavigation()
     }
 
@@ -131,7 +121,7 @@ class Citron(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
         transformAnimation.start(tickCount)
         goalSelector.removeGoal(walkGoal)
         goalSelector.removeGoal(ballGoal)
-        if (isTransformed) {
+        if (rolling) {
             getAttribute(Attributes.MOVEMENT_SPEED)!!.let { if (!it.hasModifier(TRANSFORMED_ID)) it.addTransientModifier(
                 SPEED_MODIFIER
             ) }

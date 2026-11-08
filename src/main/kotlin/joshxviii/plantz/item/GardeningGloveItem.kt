@@ -102,7 +102,7 @@ class GardeningGloveItem(properties: Properties) : Item(properties) {
         }
         if (!isHolding) {
             player?.let{
-                return PlantHeadAttachment.potHelmetPlaceInteraction(level, context.clickedPos, player)
+                return PlantHeadAttachment.placeWornPlant(player, level, context.clickedPos, context.clickedFace)
             }
             return InteractionResult.TRY_WITH_EMPTY_HAND
         }

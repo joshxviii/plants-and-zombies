@@ -64,6 +64,9 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     @Unique
     private static final EntityDataAccessor<Map<Integer, Integer>> DATA_PAINTED_COLORS = SynchedEntityData.defineId(LivingEntity.class, DATA_PAINT_COLORS);
 
+    @Unique
+    private static final EntityDataAccessor<Integer> DATA_HEAD_PLANT_ID = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.INT);
+
     @Shadow
     public abstract boolean hasEffect(Holder<MobEffect> effect);
 
@@ -86,6 +89,12 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     @Override
     public void plantz$setPlant(@Nullable Plant value) {
         plantEntity = value;
+        ((Entity) (Object) this).getEntityData().set(DATA_HEAD_PLANT_ID, value == null ? -1 : value.getId());
+    }
+
+    @Override
+    public int plantz$getPlantId() {
+        return ((Entity) (Object) this).getEntityData().get(DATA_HEAD_PLANT_ID);
     }
 
     @Override
@@ -183,6 +192,7 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
 
     @Inject(method = "defineSynchedData", at = @At(value = "TAIL"))
     public void defineData(SynchedEntityData.Builder entityData, CallbackInfo ci) {
+        entityData.define(DATA_HEAD_PLANT_ID, -1);
         entityData.define(DATA_HYPNO_ID, false);
         entityData.define(DATA_CHILL_ID, false);
         entityData.define(DATA_FROZEN_ID, false);

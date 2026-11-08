@@ -1,7 +1,6 @@
 package joshxviii.plantz.block
 
 import com.mojang.serialization.MapCodec
-import joshxviii.plantz.PlantHeadAttachment
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.util.RandomSource
@@ -50,17 +49,6 @@ class PlantPotBlock(properties: Properties) : HorizontalDirectionalBlock(propert
 
     init {
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false))
-    }
-
-    override fun useWithoutItem(
-        state: BlockState,
-        level: Level,
-        pos: BlockPos,
-        player: Player,
-        hitResult: BlockHitResult
-    ): InteractionResult {
-        val result = PlantHeadAttachment.potHelmetPlaceInteraction(level, pos, player)
-        return if (result == InteractionResult.PASS) super.useWithoutItem(state, level, pos, player, hitResult) else result
     }
 
     override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {

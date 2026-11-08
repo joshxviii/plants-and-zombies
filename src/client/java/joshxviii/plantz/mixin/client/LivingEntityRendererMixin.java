@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import joshxviii.plantz.renderer.BodyBlockerRenderLayer;
 import joshxviii.plantz.renderer.DuckyTubeRenderLayer;
 import joshxviii.plantz.renderer.DyeVatRenderLayer;
+import joshxviii.plantz.renderer.PlantHeadAttachmentRenderLayer;
 import joshxviii.plantz.renderer.SpecialEffectsLayer;
 import joshxviii.plantz.mixin.LivingEntityAccessor;
 import net.minecraft.client.model.EntityModel;
@@ -44,6 +45,7 @@ abstract public class LivingEntityRendererMixin<T extends LivingEntity, S extend
         this.addLayer(new DuckyTubeRenderLayer<>(this));
         this.addLayer(new DyeVatRenderLayer<>(this));
         this.addLayer(new BodyBlockerRenderLayer<>(this));
+        this.addLayer(new PlantHeadAttachmentRenderLayer<>(this));
 
         this.addLayer(new SpecialEffectsLayer<>(this));
     }
@@ -60,6 +62,10 @@ abstract public class LivingEntityRendererMixin<T extends LivingEntity, S extend
         entityRenderState.setData(HAS_BUTTER_KEY, hasButter);
         Map<Integer, Integer> paintColors = ((LivingEntityAccessor) entity).plantz$getPaintedColors();
         entityRenderState.setData(PAINT_COLORS_KEY, paintColors);
+
+        if (entity instanceof LivingEntity living && entityRenderState instanceof LivingEntityRenderState livingState) {
+            PlantHeadAttachmentRenderLayer.extractWornPlant(living, livingState, v, this.getModel());
+        }
 
         if (entityRenderState instanceof LivingEntityRenderState state) {
             if (hasFrozen && plantz$hasPreviousState) {
