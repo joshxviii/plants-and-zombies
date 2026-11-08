@@ -5,7 +5,7 @@
         "particle": {
           "type": "minecraft:warped_spore"
         },
-        "probability": 0.005
+        "probability": 0.004
       }
     ],
     "minecraft:visual/fog_color": "#654673",
@@ -31,12 +31,12 @@
             "count": {
               "type": "minecraft:uniform",
               "min_inclusive": 1,
-              "max_inclusive": 1
+              "max_inclusive": 2
             }
           }
         ]
       },
-      "spawn_costs": {"plantz:zombat": {"energy_budget": 1.0, "charge": 4.25}}
+      "spawn_costs": {"plantz:zombat": {"energy_budget": 1.0, "charge": 0.1}}
     }
   },
   "carvers": [
