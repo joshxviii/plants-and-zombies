@@ -92,6 +92,7 @@
   "options.plantz.split_item_tabs": "拆分物品欄頁籤：%s",
 
   "commands.plantz.help": "植物與殭屍 - 在 Discord 中提問：%s",
+  "commands.plantz.help.url": "https://discord.gg/xxUrJuFJUz",
   "commands.plantz.help.hover": "",
   "commands.plantz.raid.no_raid_nearby": "附近沒有進行中的襲擊",
   "commands.plantz.raid.start.success": "已在 %s, %s, %s 發起襲擊",

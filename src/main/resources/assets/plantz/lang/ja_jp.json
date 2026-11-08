@@ -92,6 +92,7 @@
   "options.plantz.split_item_tabs": "アイテムタブを分割：%s",
 
   "commands.plantz.help": "プラント & ゾンビ - Discord で質問する：%s",
+  "commands.plantz.help.url": "https://discord.gg/xxUrJuFJUz",
   "commands.plantz.help.hover": "",
   "commands.plantz.raid.no_raid_nearby": "近くに進行中の襲撃はありません",
   "commands.plantz.raid.start.success": "%s, %s, %s で襲撃を開始しました",

@@ -91,7 +91,8 @@
   "options.plantz.show_sun_info": "阳光信息显示: %s",
   "options.plantz.split_item_tabs": "拆分物品栏标签页：%s",
 
-  "commands.plantz.help": "植物与僵尸 - 在 Discord 中提问：%s",
+  "commands.plantz.help": "植物与僵尸 - 可通过 QQ群 或 Discord 提问：%s",
+  "commands.plantz.help.url": "https://qm.qq.com/q/pMy6ZWdCPQ\nhttps://discord.gg/xxUrJuFJUz",
   "commands.plantz.help.hover": "",
   "commands.plantz.raid.no_raid_nearby": "附近没有进行中的袭击",
   "commands.plantz.raid.start.success": "已在 %s, %s, %s 发起袭击",
