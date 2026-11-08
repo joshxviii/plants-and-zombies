@@ -282,6 +282,7 @@
   "item.plantz.soldier_zombie_spawn_egg": "士兵僵尸刷怪蛋",
   "item.plantz.robo_zombie_spawn_egg": "机器人僵尸刷怪蛋",
   "item.plantz.pirate_captain_spawn_egg": "海盗船长刷怪蛋",
+  "item.plantz.pirate_captain_ghost_spawn_egg": "海盗船长幽灵刷怪蛋",
   "item.plantz.super_brainz_spawn_egg": "超尸刷怪蛋",
   "item.plantz.imp_spawn_egg": "小鬼僵尸刷怪蛋",
   "item.plantz.baron_von_bats_spawn_egg": "蝙蝠男爵刷怪蛋",
@@ -367,7 +368,7 @@
 
   "entity.plantz.browncoat": "僵尸",
   "entity.plantz.browncoat.variant.balloon": "气球僵尸",
-  "entity.plantz.browncoat.variant.snow": "雪衣僵尸",
+  "entity.plantz.browncoat.variant.snowcoat": "雪衣僵尸",
   "entity.plantz.browncoat.variant.desert": "沙漠僵尸",
   "entity.plantz.browncoat.variant.buccaneer": "海盗僵尸",
   "entity.plantz.browncoat.variant.vampire": "吸血鬼僵尸",
@@ -422,7 +423,9 @@
   "container.plantz.no_address": "未发现其他信箱。",
   "container.plantz.mailbox_full": "信箱已满！",
   "container.plantz.mailbox_success": "发送成功！",
+
   "container.plantz.time_machine.wip": "???",
+  "container.plantz.time_machine.display": "下一站：%s",
 
   "gui.plantz.letter": "信",
   "gui.plantz.letter.font": "字体：%s",
@@ -479,5 +482,10 @@
   "plantz.subtitles.event.mob_effect.hypnotized": "生物：被魅惑",
   "plantz.subtitles.event.mob_effect.zombie_omen": "僵尸袭击：迫在眉睫",
 
-  "biome.plantz.graveyard": "墓地"
+  "biome.plantz.graveyard": "墓地",
+  "biome.plantz.ancient_egypt": "神秘埃及",
+  "biome.plantz.jurassic_period": "恐龙危机",
+  "biome.plantz.dark_ages": "黑暗时代",
+  "biome.plantz.far_future": "未来世界",
+  "biome.plantz.gnome_space": "地精领地"
 }
