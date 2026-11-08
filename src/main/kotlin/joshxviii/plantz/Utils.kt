@@ -90,7 +90,7 @@ interface PlantHeadAttachment {
         fun register() {
             UseBlockCallback.EVENT.register { player, level, hand, hitResult ->
                 if (hand != InteractionHand.MAIN_HAND || !player.mainHandItem.isEmpty) InteractionResult.PASS
-                else placeWornPlant(player, level, hitResult.blockPos, hitResult.direction)
+                else placeWornPlant(player, level, hitResult.blockPos, hitResult.direction.opposite)
             }
         }
 

@@ -26,6 +26,9 @@ import net.minecraft.world.phys.Vec3
 import kotlin.math.atan2
 import kotlin.math.sqrt
 
+
+//TODO players can get kicked for flying when using balloons
+// gotta find out how to not let that happen
 class Balloon(
     type: EntityType<out Entity>,
     level: Level

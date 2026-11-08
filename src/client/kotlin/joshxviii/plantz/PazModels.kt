@@ -162,6 +162,7 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(ImpModel.LAYER_LOCATION) { ImpModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(GargantuarModel.LAYER_LOCATION) { GargantuarModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(BaronVonBatsModel.LAYER_LOCATION) { BaronVonBatsModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(ElectricSlideModel.LAYER_LOCATION) { ElectricSlideModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(ZombatModel.LAYER_LOCATION) { ZombatModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(ZombieGoatModel.LAYER_LOCATION) { ZombieGoatModel.createBodyLayer() }
 
@@ -250,6 +251,7 @@ object PazModels {
         EntityRenderers.register(PazEntities.IMP) { PazZombieRenderer(it, ImpModel(it.bakeLayer(ImpModel.LAYER_LOCATION)), ImpModel(it.bakeLayer(ImpModel.LAYER_LOCATION))) }
         EntityRenderers.register(PazEntities.GARGANTUAR) { GargantuarRenderer(it) }
         EntityRenderers.register(PazEntities.BARON_VON_BATS) { BaronVonBatsRenderer(it) }
+        EntityRenderers.register(PazEntities.ELECTRIC_SLIDE) { PazZombieRenderer(it, ElectricSlideModel(it.bakeLayer(ElectricSlideModel.LAYER_LOCATION))) }
         EntityRenderers.register(PazEntities.ZOMBAT) { ZombatRenderer(it) }
         EntityRenderers.register(PazEntities.ZOMBIE_GOAT) { ZombieGoatRenderer(it) }
 

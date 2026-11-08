@@ -289,6 +289,27 @@ object PazItems {
             .enchantable(1)
             .stacksTo(1)
     )
+    val ROLLER_SKATES_EQUIP_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, pazResource("roller_skates"))
+    @JvmField
+    val ROLLER_SKATES: Item = registerItem(
+        "roller_skates",
+        properties = Item.Properties()
+            .rarity(Rarity.EPIC)
+            .durability(350)
+            .repairable(Items.PHANTOM_MEMBRANE)
+            .enchantable(1)
+            .attributes(
+                ItemAttributeModifiers.builder()
+                    .add(
+                        Attributes.MOVEMENT_EFFICIENCY,
+                        AttributeModifier(pazResource("roller_skates"), 1.5, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.LEGS
+                    ).build())
+            .component(DataComponents.EQUIPPABLE,
+                Equippable.builder(EquipmentSlot.FEET)
+                    .setAsset(ROLLER_SKATES_EQUIP_ASSET)
+                    .build())
+    )
     @JvmField
     val FOOTBALL_HELMET: Item = registerItem(
         "football_helmet", ::FootballHelmetItem,

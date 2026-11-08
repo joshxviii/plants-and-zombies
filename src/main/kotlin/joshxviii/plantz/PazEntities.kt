@@ -627,9 +627,27 @@ object PazEntities {
             .sized(0.6f, 1.95f)
             .clientTrackingRange(8),
         attributes = PazZombie.Companion.PazZombieAttributes(
-            armor = 8.0,
+            armor = 10.0,
             attackDamage = 7.0,
             maxHealth = 450.0,
+            movementSpeed = 0.21,
+            knockbackResistance = 0.3,
+            explosionKnockbackResistance = 0.2,
+            stepHeight = 1.0,
+            attackRange = 2.0,
+            spawnReinforcementsChance = 0.0,
+        )
+    )
+    @JvmField val ELECTRIC_SLIDE: EntityType<ElectricSlide> = registerZombie(
+        "electric_slide",
+        EntityType.Builder.of(::ElectricSlide, MobCategory.MONSTER)
+            .sized(0.64f, 1.96f)
+            .eyeHeight(1.74f)
+            .clientTrackingRange(8),
+        attributes = PazZombie.Companion.PazZombieAttributes(
+            armor = 8.0,
+            attackDamage = 8.0,
+            maxHealth = 550.0,
             movementSpeed = 0.21,
             knockbackResistance = 0.3,
             explosionKnockbackResistance = 0.2,

@@ -1,0 +1,19 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:display_context",
+    "cases": [
+      {
+        "when": "head",
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:block/roller_skate"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "plantz:item/roller_skates"
+    }
+  }
+}

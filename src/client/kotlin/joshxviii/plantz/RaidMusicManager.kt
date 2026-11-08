@@ -26,7 +26,7 @@ import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundSource
 import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
-
+//TODO Create a client setting to enable raid music on a different channel than MC music (everyone has the default music muted)
 enum class RaidMusicLayer(
     val music: Holder.Reference<SoundEvent>,
     val layerIndex: Int,
