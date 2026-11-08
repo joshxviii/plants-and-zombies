@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "plantz:graveyard_fence",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 4,
+    "separation": 1,
+    "salt": 1649204713,
+    "frequency": 0.7
+  }
+}
