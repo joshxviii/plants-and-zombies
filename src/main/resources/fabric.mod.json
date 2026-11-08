@@ -8,8 +8,9 @@
 		"joshxviii"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://modrinth.com/mod/plants-and-zombies",
+		"sources": "https://github.com/joshxviii/plants-and-zombies",
+		"discord": "https://discord.gg/xxUrJuFJUz"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/plantz/icon.png",
