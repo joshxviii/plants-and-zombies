@@ -4,10 +4,17 @@
     "property": "minecraft:display_context",
     "cases": [
       {
-        "when": "head",
+        "when": "thirdperson_righthand",
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:block/roller_skate"
+          "model": "plantz:block/roller_skate_right"
+        }
+      },
+      {
+        "when": "thirdperson_lefthand",
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:block/roller_skate_left"
         }
       }
     ],

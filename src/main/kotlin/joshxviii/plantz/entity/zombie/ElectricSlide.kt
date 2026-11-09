@@ -27,6 +27,10 @@ class ElectricSlide(type: EntityType<out ElectricSlide>, level: Level) : PazZomb
         xpReward = 120
     }
 
+    override fun shouldDiscardFriction(): Boolean {
+        return true
+    }
+
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
     }
@@ -44,7 +48,7 @@ class ElectricSlide(type: EntityType<out ElectricSlide>, level: Level) : PazZomb
     }
 
     override fun addBehaviourGoals() {
-        addBehaviourGoalsNoMelee()
+        super.addBehaviourGoals()
     }
 
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {

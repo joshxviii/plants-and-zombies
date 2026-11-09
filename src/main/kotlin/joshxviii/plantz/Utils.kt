@@ -90,7 +90,7 @@ interface PlantHeadAttachment {
         fun register() {
             UseBlockCallback.EVENT.register { player, level, hand, hitResult ->
                 if (hand != InteractionHand.MAIN_HAND || !player.mainHandItem.isEmpty) InteractionResult.PASS
-                else placeWornPlant(player, level, hitResult.blockPos, hitResult.direction.opposite)
+                else placeWornPlant(player, level, hitResult.blockPos, hitResult.direction)
             }
         }
 
@@ -115,7 +115,7 @@ interface PlantHeadAttachment {
 
             plant.detachFromEntity()
             plant.deltaMovement = Vec3.ZERO
-            plant.setPos(Vec3.atBottomCenterOf(placePos))
+            plant.snapTo(Vec3.atBottomCenterOf(placePos))
             plant.playSound(SoundEvents.HARNESS_UNEQUIP)// TODO custom sounds
             return InteractionResult.SUCCESS_SERVER
         }

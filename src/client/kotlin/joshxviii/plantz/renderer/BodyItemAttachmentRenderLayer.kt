@@ -2,6 +2,7 @@ package joshxviii.plantz.renderer
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
+import com.mojang.math.Transformation
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
@@ -41,6 +42,7 @@ import net.minecraft.util.ARGB
 import net.minecraft.util.Mth
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
+import org.joml.Matrix4f
 import org.joml.Vector3f
 import kotlin.math.pow
 
@@ -184,6 +186,14 @@ class BodyBlockerRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>
     matches = { it.has(PazComponents.WORN_BODY_BLOCKER) },
 )
 
+class RollerSkateRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
+    parent: RenderLayerParent<S, M>
+) : FeetItemAttachmentRenderLayer<S, M>(
+    parent = parent,
+    stackSelector = { it.feetEquipment },
+    matches = { it.`is`(PazItems.ROLLER_SKATES) },
+)
+
 class WornPlantRenderData(val state: PlantRenderState, val renderer: PlantRenderer)
 /**
  * Renders the plant worn on an entity's head [ModelPart].
@@ -259,8 +269,6 @@ class PlantHeadAttachmentRenderLayer<S : LivingEntityRenderState, M : EntityMode
         poseStack.pushPose()
         parentModel.root().translateAndRotate(poseStack)
         head.translateAndRotate(poseStack)
-        // Head space is y-down (the renderer already applied scale(-1,-1,1)). Go to the top of the head, then flip
-        // upright so the plant renderer's own scale(-1,-1,1) puts it the right way up with its feet at the origin.
         poseStack.translate(0f, -(HEAD_HALF_HEIGHT - HEAD_TOP_SINK), 0f)
         poseStack.rotate(Axis.ZP.rotationDegrees(180f))
 
@@ -290,8 +298,11 @@ abstract class FeetItemAttachmentRenderLayer<S : LivingEntityRenderState, M : En
         val itemStack = stackSelector(humanState)
 
         if (!matches(itemStack)) return
+        poseStack.pushPose()
+        humanoidModel.root().translateAndRotate(poseStack)
         renderLegItem(poseStack, collector, itemStack, lightCoords, humanoidModel.leftLeg, false)
         renderLegItem(poseStack, collector, itemStack, lightCoords, humanoidModel.rightLeg, true)
+        poseStack.popPose()
     }
 
     fun renderLegItem(
@@ -305,13 +316,14 @@ abstract class FeetItemAttachmentRenderLayer<S : LivingEntityRenderState, M : En
         poseStack.pushPose()
 
         leg.translateAndRotate(poseStack)
+        poseStack.rotate(Axis.ZP.rotationDegrees(180.0f))
 
         val minecraft = Minecraft.getInstance()
         itemRenderState.clear()
         minecraft.itemModelResolver.updateForTopItem(
             itemRenderState,
             itemStack,
-            ItemDisplayContext.HEAD,
+            if (flipped) ItemDisplayContext.THIRD_PERSON_RIGHT_HAND else ItemDisplayContext.THIRD_PERSON_LEFT_HAND,
             minecraft.level,
             null,
             0

@@ -7,6 +7,7 @@ import joshxviii.plantz.PazEntities.BARON_VON_BATS
 import joshxviii.plantz.PazEntities.BROWN_COAT
 import joshxviii.plantz.PazEntities.DIGGER_ZOMBIE
 import joshxviii.plantz.PazEntities.DISCO_ZOMBIE
+import joshxviii.plantz.PazEntities.ELECTRIC_SLIDE
 import joshxviii.plantz.PazEntities.ELECTRO_TURRET
 import joshxviii.plantz.PazEntities.ENGINEER_ZOMBIE
 import joshxviii.plantz.PazEntities.GARGANTUAR
@@ -303,7 +304,15 @@ object PazItems {
                     .add(
                         Attributes.MOVEMENT_EFFICIENCY,
                         AttributeModifier(pazResource("roller_skates"), 1.5, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.LEGS
+                        EquipmentSlotGroup.FEET
+                    ).add(
+                        Attributes.MOVEMENT_SPEED,
+                        AttributeModifier(pazResource("roller_skates"), 0.1, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.FEET
+                    ).add(
+                        Attributes.STEP_HEIGHT,
+                        AttributeModifier(pazResource("roller_skates"), 1.0, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.FEET
                     ).build())
             .component(DataComponents.EQUIPPABLE,
                 Equippable.builder(EquipmentSlot.FEET)
@@ -396,6 +405,7 @@ object PazItems {
     @JvmField val SUPER_BRAINZ_SPAWN_EGG: Item = registerSpawnEgg(SUPER_BRAINZ)
     @JvmField val IMP_SPAWN_EGG: Item = registerSpawnEgg(IMP)
     @JvmField val GARGANTUAR_SPAWN_EGG: Item = registerSpawnEgg(GARGANTUAR)
+    @JvmField val ELECTRIC_SLIDE_SPAWN_EGG: Item = registerSpawnEgg(ELECTRIC_SLIDE)
     @JvmField val BARON_VON_BATS_SPAWN_EGG: Item = registerSpawnEgg(BARON_VON_BATS)
     @JvmField val ZOMBAT_SPAWN_EGG: Item = registerSpawnEgg(ZOMBAT)
     @JvmField val ZOMBIE_GOAT_SPAWN_EGG: Item = registerSpawnEgg(ZOMBIE_GOAT)

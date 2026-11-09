@@ -2,11 +2,7 @@ package joshxviii.plantz.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.vertex.PoseStack;
-import joshxviii.plantz.renderer.BodyBlockerRenderLayer;
-import joshxviii.plantz.renderer.DuckyTubeRenderLayer;
-import joshxviii.plantz.renderer.DyeVatRenderLayer;
-import joshxviii.plantz.renderer.PlantHeadAttachmentRenderLayer;
-import joshxviii.plantz.renderer.SpecialEffectsLayer;
+import joshxviii.plantz.renderer.*;
 import joshxviii.plantz.mixin.LivingEntityAccessor;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -45,6 +41,7 @@ abstract public class LivingEntityRendererMixin<T extends LivingEntity, S extend
         this.addLayer(new DuckyTubeRenderLayer<>(this));
         this.addLayer(new DyeVatRenderLayer<>(this));
         this.addLayer(new BodyBlockerRenderLayer<>(this));
+        this.addLayer(new RollerSkateRenderLayer<>(this));
         this.addLayer(new PlantHeadAttachmentRenderLayer<>(this));
 
         this.addLayer(new SpecialEffectsLayer<>(this));

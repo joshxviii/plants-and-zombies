@@ -2,8 +2,8 @@
 	"format_version": "26.3",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "plants-and-zombies-assets:item_textures/roller_skate",
-		"particle": "plants-and-zombies-assets:item_textures/roller_skate"
+		"0": "plantz:block/roller_skate",
+		"particle": "plantz:block/roller_skate"
 	},
 	"elements": [
 		{
@@ -129,6 +129,10 @@
 		}
 	],
 	"display": {
+		"thirdperson_lefthand": {
+			"translation": [0, -10, 0],
+			"scale": [1.04, 1.04, 1.04]
+		},
 		"firstperson_righthand": {
 			"rotation": [0, 17, 0],
 			"translation": [0, 6.25, 0]
@@ -138,8 +142,8 @@
 			"translation": [0, 6.25, 0]
 		},
 		"head": {
-			"translation": [0, -16.25, 0],
-			"scale": [1.99, 1.99, 1.99]
+			"translation": [0, -10, 0],
+			"scale": [1.04, 1.04, 1.04]
 		}
 	},
 	"groups": [
