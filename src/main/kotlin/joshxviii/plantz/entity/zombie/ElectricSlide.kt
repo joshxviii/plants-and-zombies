@@ -28,7 +28,7 @@ class ElectricSlide(type: EntityType<out ElectricSlide>, level: Level) : PazZomb
     }
 
     override fun shouldDiscardFriction(): Boolean {
-        return true
+        return super.shouldDiscardFriction()
     }
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {

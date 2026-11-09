@@ -58,6 +58,8 @@ object PazModels {
     val HEAD_PLANT_KEY: RenderStateDataKey<joshxviii.plantz.renderer.WornPlantRenderData> = RenderStateDataKey.create { "plantz:head_plant" }
     @JvmField
     val PAINT_COLORS_KEY: RenderStateDataKey<Map<Int, Int>> = RenderStateDataKey.create { "plantz:painted" }
+    @JvmField
+    val IS_SKATING: RenderStateDataKey<Boolean> = RenderStateDataKey.create { "plantz:skating" }
 
     private val PAINT_OVERLAY_TEXTURE_1: Identifier = pazResource("textures/gui/overlay/paint1.png")
     private val PAINT_OVERLAY_TEXTURE_2: Identifier = pazResource("textures/gui/overlay/paint2.png")

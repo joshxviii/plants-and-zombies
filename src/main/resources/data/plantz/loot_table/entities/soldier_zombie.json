@@ -5,7 +5,7 @@
       "bonus_rolls": 0,
       "entries": [
         {
-          "name": "plantz:baron_staff",
+          "name": "plantz:dye_blaster",
           "type": "minecraft:item",
           "modifier": {
             "type": "minecraft:set_damage",
@@ -30,11 +30,11 @@
           },
           {
             "type": "minecraft:random_chance",
-            "chance": 0.035
+            "chance": 0.02
           }
         ]
       }
     }
   ],
-  "random_sequence": "minecraft:entities/baron_von_bats"
+  "random_sequence": "minecraft:entities/soldier_zombie"
 }

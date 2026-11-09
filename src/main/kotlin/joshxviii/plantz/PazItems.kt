@@ -294,7 +294,7 @@ object PazItems {
     val ROLLER_SKATES: Item = registerItem(
         "roller_skates", ::RollerSkatesItem,
         properties = Item.Properties()
-            .rarity(Rarity.EPIC)
+            .rarity(Rarity.RARE)
             .durability(350)
             .repairable(Items.PHANTOM_MEMBRANE)
             .enchantable(1)
@@ -302,11 +302,7 @@ object PazItems {
                 ItemAttributeModifiers.builder()
                     .add(
                         Attributes.MOVEMENT_SPEED,
-                        AttributeModifier(pazResource("roller_skates"), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
-                        EquipmentSlotGroup.FEET
-                    ).add(
-                        Attributes.STEP_HEIGHT,
-                        AttributeModifier(pazResource("roller_skates"), 0.9, AttributeModifier.Operation.ADD_VALUE),
+                        AttributeModifier(pazResource("roller_skates"), 0.66, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
                         EquipmentSlotGroup.FEET
                     ).build())
             .component(DataComponents.EQUIPPABLE,

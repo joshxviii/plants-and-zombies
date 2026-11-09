@@ -29,11 +29,13 @@ class FootballHelmetItem(properties: Properties) : Item(properties) {
 
         private const val DAMAGE_INTERVAL = 35
         private const val KNOCKBACK_STRENGTH = 0.8
+
+        fun isWearingFootballHelmet(entity: LivingEntity): Boolean {
+            return entity.getItemBySlot(EquipmentSlot.HEAD).item is FootballHelmetItem
+        }
     }
 
-    private fun isWearingFootballHelmet(entity: LivingEntity): Boolean {
-        return entity.getItemBySlot(EquipmentSlot.HEAD).item is FootballHelmetItem
-    }
+
 
     fun removeModifiers(entity: LivingEntity?) {
         if (entity == null) return

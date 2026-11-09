@@ -82,9 +82,7 @@ public class ElectricSlideModel<S extends PazZombieRenderState> extends PazZombi
 	@Override
 	public void setupAnim(@NotNull S state) {
 		super.setupAnim(state);
-		resetPose();
 		if (afro != null) afro.visible = (state.headItem.isEmpty() && state.headEquipment.isEmpty());
 		actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
-		skateAnimation.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 4.0f, 3.5f);
 	}
 }

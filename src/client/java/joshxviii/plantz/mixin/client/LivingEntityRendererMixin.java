@@ -2,6 +2,7 @@ package joshxviii.plantz.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.vertex.PoseStack;
+import joshxviii.plantz.item.RollerSkatesItem;
 import joshxviii.plantz.renderer.*;
 import joshxviii.plantz.mixin.LivingEntityAccessor;
 import net.minecraft.client.model.EntityModel;
@@ -62,6 +63,7 @@ abstract public class LivingEntityRendererMixin<T extends LivingEntity, S extend
 
         if (entity instanceof LivingEntity living && entityRenderState instanceof LivingEntityRenderState livingState) {
             PlantHeadAttachmentRenderLayer.extractWornPlant(living, livingState, v, this.getModel());
+            entityRenderState.setData(IS_SKATING, RollerSkatesItem.Companion.isSkating(living));
         }
 
         if (entityRenderState instanceof LivingEntityRenderState state) {

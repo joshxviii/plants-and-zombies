@@ -9,8 +9,6 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
-import net.minecraft.client.gui.components.Button.DEFAULT_NARRATION
-import net.minecraft.client.gui.components.Button.OnPress
 import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.client.renderer.RenderPipelines
@@ -25,10 +23,7 @@ import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.ARGB
 import net.minecraft.util.FormattedCharSequence
 import net.minecraft.world.entity.EntityType
-import kotlin.String
-import kotlin.collections.List
-import kotlin.collections.component1
-import kotlin.collections.component2
+import org.spongepowered.asm.mixin.Unique
 
 // GUI
 
@@ -140,6 +135,13 @@ open class PazButton(
 
 // MODEL RENDERING
 fun ModelPart.getChildOrNull(name: String): ModelPart? = if (this.hasChild(name)) this.getChild(name) else null
+
+@Unique
+fun ModelPart.scaleDownRotation(scale: Float) {
+    xRot *= scale
+    yRot *= scale
+    zRot *= scale
+}
 
 fun List<String>.permutationsDescending(): List<String> = buildList {
     add(this@permutationsDescending.joinToString("_"))
