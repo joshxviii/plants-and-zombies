@@ -10,7 +10,7 @@
       "translate": "advancements.plantz.bigger_three.description"
     }
   },
-  "parent": "plantz:big_three",
+  "parent": "plantz:robo_zombie",
   "criteria": {
     "plantz:all_star": {
       "trigger": "minecraft:player_killed_entity",
@@ -24,7 +24,7 @@
         }
       }
     },
-    "plantz:disco_zombie": {
+    "plantz:pirate_captain": {
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {
@@ -36,7 +36,7 @@
         }
       }
     },
-    "plantz:zombie_yeti": {
+    "plantz:super_brainz": {
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {

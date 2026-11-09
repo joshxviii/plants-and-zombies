@@ -10,10 +10,6 @@
     "spacing": 10,
     "separation": 5,
     "salt": 1649204714,
-    "frequency": 1.0,
-    "exclusion_zone": {
-      "chunk_count": 1,
-      "other_set": "plantz:graveyard_fences"
-    }
+    "frequency": 1.0
   }
 }

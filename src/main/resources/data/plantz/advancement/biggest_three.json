@@ -12,20 +12,7 @@
   },
   "parent": "plantz:bigger_three",
   "criteria": {
-    "plantz:all_star": {
-      "trigger": "minecraft:player_killed_entity",
-      "conditions": {
-        "entity": {
-          "type": "minecraft:entity_properties",
-          "entity": "this",
-          "predicate": {
-            "minecraft:entity_type": "plantz:all_star",
-            "minecraft:nbt": "{\"variant\":\"general\"}"
-          }
-        }
-      }
-    },
-    "plantz:disco_zombie": {
+    "plantz:baron_von_bats": {
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {
@@ -37,7 +24,19 @@
         }
       }
     },
-    "plantz:zombie_yeti": {
+    "plantz:electric_slide": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "plantz:electric_slide"
+          }
+        }
+      }
+    },
+    "plantz:gargantuar": {
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {
