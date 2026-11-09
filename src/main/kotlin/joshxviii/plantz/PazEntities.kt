@@ -485,7 +485,7 @@ object PazEntities {
         attributes = PazZombie.Companion.PazZombieAttributes(
             attackDamage = 3.5,
             maxHealth = 12.0,
-            movementSpeed = 0.3,
+            movementSpeed = 0.285,
             followRange = 24.0,
             spawnReinforcementsChance = 0.0,
         )
@@ -655,7 +655,7 @@ object PazEntities {
             armor = 8.0,
             attackDamage = 8.0,
             maxHealth = 120.0,
-            movementSpeed = 0.33,
+            movementSpeed = 0.31,
             knockbackResistance = 0.3,
             explosionKnockbackResistance = 0.2,
             attackRange = 2.0,

@@ -405,6 +405,7 @@
   "entity.plantz.imp": "Imp",
   "entity.plantz.gargantuar": "Gargantuar",
   "entity.plantz.electric_slide": "Electric Slide",
+  "entity.plantz.electric_slide.variant.boogaloo": "Electric Boogaloo",
   "entity.plantz.baron_von_bats": "Baron Von Bats",
   "entity.plantz.zombat": "Zombat",
   "entity.plantz.zombie_goat": "Zombie Goat",

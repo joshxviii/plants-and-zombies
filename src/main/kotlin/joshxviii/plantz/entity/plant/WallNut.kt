@@ -42,8 +42,7 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
     }
 
     override fun stopRoll() {
-        rolling = false
-        deltaMovement = Vec3.ZERO
+        super.stopRoll()
         applyGridClamp()
         resetRolledOverEntities()
     }

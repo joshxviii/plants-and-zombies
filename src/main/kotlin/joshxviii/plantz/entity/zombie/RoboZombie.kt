@@ -124,7 +124,8 @@ class RoboZombie(type: EntityType<out RoboZombie>, level: Level) : PazZombie(typ
         super.addAdditionalSaveData(output)
         output.putBoolean("is_transformed", isTransformed)
         output.putInt("missile_cooldown", missileCooldown)
-        output.store("variant", RoboZombieVariant.CODEC, variant)    }
+        output.store("variant", RoboZombieVariant.CODEC, variant)
+    }
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)

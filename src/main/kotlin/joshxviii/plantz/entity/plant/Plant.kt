@@ -144,6 +144,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
         private val LEGACY_ON_HEAD_SCALE: Identifier = pazResource("on_player_head_effects")
         val ROLLING_ID: Identifier = pazResource("rolling")
+        private const val ROLL_FRICTION = 0.99
         private val BOUNCINESS_MODIFIER = AttributeModifier(ROLLING_ID, 0.5, AttributeModifier.Operation.ADD_VALUE)
         private val KNOCK_BACK_MODIFIER = AttributeModifier(ROLLING_ID, 99.0, AttributeModifier.Operation.ADD_VALUE)
         private val STEP_HEIGHT_MODIFIER = AttributeModifier(ROLLING_ID, 0.75, AttributeModifier.Operation.ADD_VALUE)
@@ -620,7 +621,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }?.let { level.addParticle(it, x, y+eyeHeight+0.55, z, 0.0, 0.0, 0.0) }
         }
 
-        if (rolling && !level().isClientSide) if (deltaMovement.horizontalDistance() < 0.085 && leashHolder==null) stopRoll()
+        if (rolling && !level().isClientSide) calculateRollFriction()
     }
 
     /**
@@ -790,22 +791,30 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return PlantGrowNeeds.SUN
     }
 
+    fun calculateRollFriction() {
+        val motion = deltaMovement
+        if (motion.horizontalDistance() > 1.0e-4) {
+            setDeltaMovement(motion.x * ROLL_FRICTION, motion.y, motion.z * ROLL_FRICTION)
+        }
+        if (deltaMovement.length() < 0.085 && leashHolder == null) stopRoll()
+    }
     fun updateRollModifiers() {
         if (rolling) {
-            val friction = AttributeModifier(ROLLING_ID, -100.0, AttributeModifier.Operation.ADD_VALUE)
-            getAttribute(Attributes.FRICTION_MODIFIER)?.let { if (!it.hasModifier(ROLLING_ID)) it.addTransientModifier(friction) }
+            //val friction = AttributeModifier(ROLLING_ID, -100.0, AttributeModifier.Operation.ADD_VALUE)
+            //getAttribute(Attributes.FRICTION_MODIFIER)?.let { if (!it.hasModifier(ROLLING_ID)) it.addTransientModifier(friction) }
             getAttribute(Attributes.BOUNCINESS)?.let { if (!it.hasModifier(ROLLING_ID)) it.addTransientModifier(BOUNCINESS_MODIFIER) }
             getAttribute(Attributes.KNOCKBACK_RESISTANCE)?.let { if (!it.hasModifier(ROLLING_ID)) it.addTransientModifier(KNOCK_BACK_MODIFIER) }
             getAttribute(Attributes.STEP_HEIGHT)?.let { if (!it.hasModifier(ROLLING_ID)) it.addTransientModifier(STEP_HEIGHT_MODIFIER) }
         }
         else {
-            getAttribute(Attributes.FRICTION_MODIFIER)?.removeModifier(ROLLING_ID)
+            //getAttribute(Attributes.FRICTION_MODIFIER)?.removeModifier(ROLLING_ID)
             getAttribute(Attributes.BOUNCINESS)?.removeModifier(ROLLING_ID)
             getAttribute(Attributes.KNOCKBACK_RESISTANCE)?.removeModifier(ROLLING_ID)
             getAttribute(Attributes.STEP_HEIGHT)?.removeModifier(ROLLING_ID)
         }
     }
     open fun stopRoll() {
+        rolling = false
         deltaMovement = Vec3.ZERO
     }
     /** if on invalid ground plant should start to suffocate */
@@ -827,6 +836,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     open fun clampToGrid() = !canWalk() && !rolling && onValidGround()
     open fun cooldownFinished() {}
     open fun rollingFriction(): Float = 0.5f
+    override fun shouldDiscardFriction(): Boolean {
+        return rolling || super.shouldDiscardFriction()
+    }
 
     fun updatePlantPower(level: ServerLevel, nearFlag: Boolean) {
         if (nearFlag != poweredUp) {

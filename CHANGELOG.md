@@ -16,14 +16,17 @@
   - The chance increases exponentially every wave.
   - Once a boss spawns, the chance is reset.
   - Holding "Tab" will display the Boss Chance and other details about the raid.
-- Added Giga variant for All Star, which can spawn as a Boss
-- Added General variant for Robo-Zombie, which can spawn as a Boss
-- The Graveyard Biome now properly generates.
-- Added a Mausoleum Structure to the Graveyard Biome.
 - Added Baron Von Bats
   - Baron Von Bats has a chance to spawn as a Boss.
 - Added Zombat
   - Heals itself when hurting other mobs.
+- Added Electric Slide
+  - A Roller Skating Zombie that spawns during the "Party Time".
+  - Has a variant "Electric Boogaloo", which can spawn as a Boss.
+- Added Giga variant for All Star, which can spawn as a Boss
+- Added General variant for Robo-Zombie, which can spawn as a Boss
+- The Graveyard Biome now properly generates.
+- Added a Mausoleum Structure to the Graveyard Biome.
 - Added Brainz Alloy Door and Trapdoor
 - Added Door Shields
   - Can be crafted from any Door and a Shield.
@@ -32,6 +35,8 @@
   - Blocks incoming damage from all directions.
 - Added Baron's Staff
   - Has a rare chance to drop from defeating Baron Von Bats.
+- Added Roller Skates
+  - A drop from Electric Slide.
 - During the final wave at the 1-minute mark, all remaining zombies will teleport closer to the flag.
 - Hero Bonus rewards are now given for each Boss Wave rather than every 5 waves.
 - Cones, Buckets, and Football helmets now only block damage from above.

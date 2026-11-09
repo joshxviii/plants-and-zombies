@@ -32,8 +32,8 @@ class SummonMinionsGoal(
 ) : Goal() {
     companion object {
         const val DEFAULT_AMOUNT = 3
-        const val MAX_TRACKED_MINIONS = 5
-        const val MAX_NEARBY_MINIONS = 8
+        const val MAX_TRACKED_MINIONS = 3
+        const val MAX_NEARBY_MINIONS = 7
         const val SUMMON_DISTANCE = 2
         const val SUMMON_DELAY_TIME = 255
     }

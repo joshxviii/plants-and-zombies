@@ -7,6 +7,7 @@ import joshxviii.plantz.entity.gnome.GnomeSoundVariant
 import joshxviii.plantz.entity.gnome.GnomeVariant
 import joshxviii.plantz.entity.zombie.AllStarVariant
 import joshxviii.plantz.entity.zombie.BrownCoatVariant
+import joshxviii.plantz.entity.zombie.ElectricSlideVariant
 import joshxviii.plantz.entity.zombie.GargantuarVariant
 import joshxviii.plantz.entity.zombie.ImpVariant
 import joshxviii.plantz.entity.zombie.RoboZombieVariant
@@ -27,6 +28,7 @@ object PazDataSerializers {
     @JvmField val ALL_STAR_VARIANT = EntityDataSerializer.forValueType<AllStarVariant>(AllStarVariant.STREAM_CODEC)
     @JvmField val ROBO_ZOMBIE_VARIANT = EntityDataSerializer.forValueType<RoboZombieVariant>(RoboZombieVariant.STREAM_CODEC)
     @JvmField val SUPER_BRAINZ_VARIANT = EntityDataSerializer.forValueType<SuperBrainzVariant>(SuperBrainzVariant.STREAM_CODEC)
+    @JvmField val ELECTRIC_SLIDE_VARIANT = EntityDataSerializer.forValueType<ElectricSlideVariant>(ElectricSlideVariant.STREAM_CODEC)
     @JvmField val GARGANTUAR_VARIANT = EntityDataSerializer.forValueType<GargantuarVariant>(GargantuarVariant.STREAM_CODEC)
     @JvmField val GNOME_VARIANT = EntityDataSerializer.forValueType<GnomeVariant>(GnomeVariant.STREAM_CODEC)
     @JvmField val GNOME_SOUND_VARIANT = EntityDataSerializer.forValueType<GnomeSoundVariant>(GnomeSoundVariant.STREAM_CODEC)
@@ -41,6 +43,7 @@ object PazDataSerializers {
         FabricEntityDataRegistry.register(pazResource("all_star_variant"), ALL_STAR_VARIANT)
         FabricEntityDataRegistry.register(pazResource("robo_zombie_variant"), ROBO_ZOMBIE_VARIANT)
         FabricEntityDataRegistry.register(pazResource("super_brainz_variant"), SUPER_BRAINZ_VARIANT)
+        FabricEntityDataRegistry.register(pazResource("electric_slide_variant"), ELECTRIC_SLIDE_VARIANT)
         FabricEntityDataRegistry.register(pazResource("gargantuar_variant"), GARGANTUAR_VARIANT)
         FabricEntityDataRegistry.register(pazResource("gnome_variant"), GNOME_VARIANT)
         FabricEntityDataRegistry.register(pazResource("gnome_sound_variant"), GNOME_SOUND_VARIANT)

@@ -302,7 +302,7 @@ object PazItems {
                 ItemAttributeModifiers.builder()
                     .add(
                         Attributes.MOVEMENT_SPEED,
-                        AttributeModifier(pazResource("roller_skates"), 0.66, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+                        AttributeModifier(pazResource("roller_skates"), 0.75, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
                         EquipmentSlotGroup.FEET
                     ).build())
             .component(DataComponents.EQUIPPABLE,

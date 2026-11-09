@@ -1,9 +1,10 @@
 {
+	"format_version": "26.3",
 	"texture_size": [64, 64],
 	"textures": {
 		"layer0": "plantz:block/dye_vat_liquid",
-		"layer1": "plantz:block/dye_vat",
-		"particle": "plantz:block/dye_vat"
+		"particle": "plantz:block/dye_vat",
+		"layer1": "plantz:block/dye_vat"
 	},
 	"elements": [
 		{
@@ -108,6 +109,19 @@
 				"west": {"uv": [3.25, 1.25, 4.5, 2.75], "texture": "#layer1"},
 				"up": {"uv": [3.25, 1.25, 1.25, 0], "texture": "#layer1"},
 				"down": {"uv": [5.25, 0, 3.25, 1.25], "texture": "#layer1"}
+			}
+		},
+		{
+			"from": [6, 0.5, 11],
+			"to": [10, 6.5, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [6, 0.5, 11]},
+			"faces": {
+				"north": {"uv": [7.5, 4, 8.5, 5.5], "texture": "#layer0", "tintindex": 0},
+				"east": {"uv": [6.5, 4, 7.5, 5.5], "texture": "#layer0", "tintindex": 0},
+				"south": {"uv": [9.5, 4, 10.5, 5.5], "texture": "#layer0", "tintindex": 0},
+				"west": {"uv": [8.5, 4, 9.5, 5.5], "texture": "#layer0", "tintindex": 0},
+				"up": {"uv": [8.5, 4, 7.5, 3], "texture": "#layer0", "tintindex": 0},
+				"down": {"uv": [9.5, 3, 8.5, 4], "texture": "#layer0", "tintindex": 0}
 			}
 		}
 	],

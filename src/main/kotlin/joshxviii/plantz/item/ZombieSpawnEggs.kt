@@ -8,6 +8,7 @@ import joshxviii.plantz.entity.ZombieEquipment.CONE
 import joshxviii.plantz.entity.ZombieEquipment.DOOR
 import joshxviii.plantz.entity.zombie.AllStarVariant
 import joshxviii.plantz.entity.zombie.BrownCoatVariant
+import joshxviii.plantz.entity.zombie.ElectricSlideVariant
 import joshxviii.plantz.entity.zombie.GargantuarVariant
 import joshxviii.plantz.entity.zombie.ImpVariant
 import joshxviii.plantz.entity.zombie.RoboZombieVariant
@@ -89,4 +90,5 @@ object ZombieSpawnEggs {
     fun superBrainz() = variantEggs(PazEntities.SUPER_BRAINZ, PazItems.SUPER_BRAINZ_SPAWN_EGG, SuperBrainzVariant.entries)
     fun allStar() = variantEggs(PazEntities.ALL_STAR, PazItems.ALL_STAR_SPAWN_EGG, AllStarVariant.entries)
     fun roboZombie() = variantEggs(PazEntities.ROBO_ZOMBIE, PazItems.ROBO_ZOMBIE_SPAWN_EGG, RoboZombieVariant.entries)
+    fun electricSlide() = variantEggs(PazEntities.ELECTRIC_SLIDE, PazItems.ELECTRIC_SLIDE_SPAWN_EGG, ElectricSlideVariant.entries)
 }

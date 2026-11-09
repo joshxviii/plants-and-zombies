@@ -85,6 +85,7 @@ object PazCreativeTabs {
         if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.superBrainz())
         output.accept(PazItems.BARON_VON_BATS_SPAWN_EGG)
         output.accept(PazItems.ELECTRIC_SLIDE_SPAWN_EGG)
+        if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.electricSlide())
         output.accept(PazItems.GARGANTUAR_SPAWN_EGG)
         if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.gargantuar())
         output.accept(PazItems.ZOMBAT_SPAWN_EGG)
@@ -115,8 +116,8 @@ object PazCreativeTabs {
         output.accept(PazItems.NEWSPAPER)
         output.accept(PazItems.FOOTBALL_HELMET)
         output.accept(PazItems.DYE_BLASTER)
-        output.accept(PazItems.BARON_STAFF)
         output.accept(PazItems.ROLLER_SKATES)
+        output.accept(PazItems.BARON_STAFF)
         if (PazConfig.SPLIT_ITEM_TABS) BuiltInRegistries.BLOCK.forEach { if (it.defaultBlockState().`is`(BlockTags.DOORS)) output.accept(stackFor(it)) }
         else output.accept(PazItems.DOOR_SHIELD)
         output.accept(PazBlocks.BRAINZ_FLAG_BLOCK)
