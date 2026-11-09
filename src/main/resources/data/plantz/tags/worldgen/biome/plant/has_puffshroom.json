@@ -14,6 +14,10 @@
     {
       "id": "#c:is_underground",
       "required": false
+    },
+    {
+      "id": "#c:primary_wood_type/poplar",
+      "required": false
     }
   ]
 }

@@ -1,6 +1,10 @@
 {
   "values": [
     "plantz:graveyard",
-    "minecraft:pale_garden"
+    "minecraft:pale_garden",
+    {
+      "id": "#c:is_spooky",
+      "required": false
+    }
   ]
 }

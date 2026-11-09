@@ -365,6 +365,13 @@ object PazEntities {
             maxHealth = PazConfig.PUMPKIN_ARMOR_AMOUNT.toDouble(),
         )
     )
+    @JvmField val SQUASH: EntityType<Squash> = registerPlant(
+        "squash", EntityType.Builder.of(::Squash, MobCategory.CREATURE),
+        width = 0.8f,
+        height = 0.9f,
+        attributes = Plant.Companion.PlantAttributes(
+        )
+    )
     @JvmField val ROYAL_SUNFLOWER: EntityType<RoyalSunflower> = registerPlant(
         "royal_sunflower", EntityType.Builder.of(::RoyalSunflower, MobCategory.CREATURE),
         width = 2.25f,

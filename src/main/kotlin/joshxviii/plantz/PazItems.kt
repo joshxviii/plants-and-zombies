@@ -171,7 +171,7 @@ object PazItems {
             .component(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
                 .add(
                     Attributes.ARMOR,
-                    AttributeModifier(pazResource("door_armor"), 2.0, AttributeModifier.Operation.ADD_VALUE),
+                    AttributeModifier(pazResource("door_shield"), 2.0, AttributeModifier.Operation.ADD_VALUE),
                     EquipmentSlotGroup.HAND
                 ).build())
             .component(PazComponents.DOOR_SHIELD, DoorShieldComponent())
@@ -335,7 +335,7 @@ object PazItems {
                 DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
                     .add(
                         Attributes.ARMOR,
-                        AttributeModifier(pazResource("football_armor"), 2.0, AttributeModifier.Operation.ADD_VALUE),
+                        AttributeModifier(pazResource("football_helmet"), 2.0, AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.HEAD
                     ).build()
             )
@@ -446,15 +446,15 @@ object PazItems {
         builder.set(DataComponents.ATTRIBUTE_MODIFIERS, builder.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder().build())
             .withModifierAdded(
                 Attributes.ARMOR,
-                AttributeModifier(pazResource("bucket_armor"), 15.0, AttributeModifier.Operation.ADD_VALUE),
+                AttributeModifier(pazResource("bucket"), 15.0, AttributeModifier.Operation.ADD_VALUE),
                 EquipmentSlotGroup.HEAD
             ).withModifierAdded(
                 Attributes.ARMOR_TOUGHNESS,
-                AttributeModifier(pazResource("bucket_armor_toughness"), 8.0, AttributeModifier.Operation.ADD_VALUE),
+                AttributeModifier(pazResource("bucket"), 8.0, AttributeModifier.Operation.ADD_VALUE),
                 EquipmentSlotGroup.HEAD
             ).withModifierAdded(
                 Attributes.KNOCKBACK_RESISTANCE,
-                AttributeModifier(pazResource("bucket_knockback_resistance"), 0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL),
+                AttributeModifier(pazResource("bucket"), 0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL),
                 EquipmentSlotGroup.HEAD
             )
         )

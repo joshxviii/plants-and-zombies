@@ -50,8 +50,10 @@ object PazCreativeTabs {
         output.accept(SeedPacketItem.stackFor(PazEntities.COFFEE_BEAN))
         output.accept(SeedPacketItem.stackFor(PazEntities.GRAVE_BUSTER))
         output.accept(SeedPacketItem.stackFor(PazEntities.PUMPKIN))
+        output.accept(SeedPacketItem.stackFor(PazEntities.SQUASH))
         if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) {
             output.accept(SeedPacketItem.stackFor(PazEntities.CITRON))
+            output.accept(SeedPacketItem.stackFor(PazEntities.ROYAL_SUNFLOWER))
         }
     }
 

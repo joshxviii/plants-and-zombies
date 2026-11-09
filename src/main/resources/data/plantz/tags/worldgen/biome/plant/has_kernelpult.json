@@ -1,6 +1,5 @@
 {
   "values": [
-    "minecraft:flower_forest",
     "minecraft:plains",
     "minecraft:sunflower_plains",
     {
@@ -12,7 +11,7 @@
       "required": false
     },
     {
-      "id": "#c:is_forest",
+      "id": "#c:primary_wood_type/poplar",
       "required": false
     }
   ]

@@ -1,0 +1,13 @@
+{
+  "values": [
+    "minecraft:plains",
+    {
+      "id": "#c:is_savanna",
+      "required": false
+    },
+    {
+      "id": "#c:primary_wood_type/poplar",
+      "required": false
+    }
+  ]
+}

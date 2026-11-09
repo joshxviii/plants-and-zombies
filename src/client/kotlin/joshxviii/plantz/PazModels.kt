@@ -133,6 +133,7 @@ object PazModels {
         ModelLayerRegistry.registerModelLayer(CoffeeBeanModel.LAYER_LOCATION) { CoffeeBeanModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(GraveBusterModel.LAYER_LOCATION) { GraveBusterModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(PumpkinModel.LAYER_LOCATION) { PumpkinModel.createBodyLayer() }
+        ModelLayerRegistry.registerModelLayer(SquashModel.LAYER_LOCATION) { SquashModel.createBodyLayer() }
 
         ModelLayerRegistry.registerModelLayer(CitronModel.LAYER_LOCATION) { CitronModel.createBodyLayer() }
         ModelLayerRegistry.registerModelLayer(RoyalSunflowerModel.LAYER_LOCATION) { RoyalSunflowerModel.createBodyLayer() }
@@ -212,6 +213,7 @@ object PazModels {
         EntityRenderers.register(PazEntities.COFFEE_BEAN) { PlantRenderer(CoffeeBeanModel(it.bakeLayer(CoffeeBeanModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.GRAVE_BUSTER) { PlantRenderer(GraveBusterModel(it.bakeLayer(GraveBusterModel.LAYER_LOCATION)), it) }
         EntityRenderers.register(PazEntities.PUMPKIN) { PumpkinRenderer(it) }
+        EntityRenderers.register(PazEntities.SQUASH) { PlantRenderer(SquashModel(it.bakeLayer(SquashModel.LAYER_LOCATION)), it) }
 
         EntityRenderers.register(PazEntities.SUN_SHROOM) { PlantRenderer(SunShroomModel(it.bakeLayer(SunShroomModel.LAYER_LOCATION)), it, SunShroomBabyModel(it.bakeLayer(SunShroomBabyModel.LAYER_LOCATION))) }
 

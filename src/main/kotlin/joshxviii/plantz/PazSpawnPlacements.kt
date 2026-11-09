@@ -121,6 +121,10 @@ object PazSpawnPlacements {
         addBiomeSpawn(PazTags.Biomes.HAS_GRAVE_BUSTER, PazEntities.GRAVE_BUSTER,
             weight = 15, minGroupSize = 1, maxGroupSize = 3)
         registerSpawnPlacement(PazEntities.GRAVE_BUSTER, Plant::checkPlantSpawnRules)
+
+        addBiomeSpawn(PazTags.Biomes.HAS_SQUASH, PazEntities.SQUASH,
+            weight = 4, minGroupSize = 1, maxGroupSize = 1)
+        registerSpawnPlacement(PazEntities.SQUASH, Plant::checkPlantSpawnRules)
         // endregion
 
         // region ZOMBIES

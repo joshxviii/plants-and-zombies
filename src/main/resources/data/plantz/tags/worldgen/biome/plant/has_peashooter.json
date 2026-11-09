@@ -8,7 +8,7 @@
       "required": false
     },
     {
-      "id": "#c:is_forest",
+      "id": "#c:primary_wood_type/oak",
       "required": false
     }
   ]

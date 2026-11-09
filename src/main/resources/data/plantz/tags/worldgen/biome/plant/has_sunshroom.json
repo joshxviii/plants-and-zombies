@@ -12,6 +12,10 @@
     {
       "id": "#c:is_magical",
       "required": false
+    },
+    {
+      "id": "#c:primary_wood_type/poplar",
+      "required": false
     }
   ]
 }
