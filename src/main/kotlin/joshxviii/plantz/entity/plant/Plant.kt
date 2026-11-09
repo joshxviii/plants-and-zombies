@@ -143,7 +143,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val ROLLING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, EntityDataSerializers.BOOLEAN)
 
         private val LEGACY_ON_HEAD_SCALE: Identifier = pazResource("on_player_head_effects")
-        private const val ROLL_FRICTION = 0.99
+        val ROLLING_ID: Identifier = pazResource("rolling")
+        private val BOUNCINESS_MODIFIER = AttributeModifier(ROLLING_ID, 0.5, AttributeModifier.Operation.ADD_VALUE)
+        private val KNOCK_BACK_MODIFIER = AttributeModifier(ROLLING_ID, 99.0, AttributeModifier.Operation.ADD_VALUE)
+        private val STEP_HEIGHT_MODIFIER = AttributeModifier(ROLLING_ID, 0.75, AttributeModifier.Operation.ADD_VALUE)
 
         const val PLANT_DAMAGE = 1.0
 
@@ -187,7 +190,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     var rolling: Boolean
         get() = this.entityData.get(ROLLING)
-        set(value) { this.entityData.set(ROLLING, value) }
+        set(value) {
+            this.entityData.set(ROLLING, value)
+            updateRollModifiers()
+        }
 
     var isAsleep: Boolean
         get() = this.entityData.get(SLEEPING)
@@ -614,7 +620,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             }?.let { level.addParticle(it, x, y+eyeHeight+0.55, z, 0.0, 0.0, 0.0) }
         }
 
-        if (rolling && level is ServerLevel) calculateRollFriction()
+        if (rolling && !level().isClientSide) if (deltaMovement.horizontalDistance() < 0.085 && leashHolder==null) stopRoll()
     }
 
     /**
@@ -784,10 +790,20 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return PlantGrowNeeds.SUN
     }
 
-    fun calculateRollFriction() {
-        val motion = deltaMovement
-        if (motion.horizontalDistance() > 1.0e-4) { setDeltaMovement(motion.x * ROLL_FRICTION, motion.y, motion.z * ROLL_FRICTION) }
-        if (deltaMovement.horizontalDistance() < 0.085 && leashHolder==null) stopRoll()
+    fun updateRollModifiers() {
+        if (rolling) {
+            val friction = AttributeModifier(ROLLING_ID, -100.0, AttributeModifier.Operation.ADD_VALUE)
+            getAttribute(Attributes.FRICTION_MODIFIER)?.let { if (!it.hasModifier(ROLLING_ID)) it.addTransientModifier(friction) }
+            getAttribute(Attributes.BOUNCINESS)?.let { if (!it.hasModifier(ROLLING_ID)) it.addTransientModifier(BOUNCINESS_MODIFIER) }
+            getAttribute(Attributes.KNOCKBACK_RESISTANCE)?.let { if (!it.hasModifier(ROLLING_ID)) it.addTransientModifier(KNOCK_BACK_MODIFIER) }
+            getAttribute(Attributes.STEP_HEIGHT)?.let { if (!it.hasModifier(ROLLING_ID)) it.addTransientModifier(STEP_HEIGHT_MODIFIER) }
+        }
+        else {
+            getAttribute(Attributes.FRICTION_MODIFIER)?.removeModifier(ROLLING_ID)
+            getAttribute(Attributes.BOUNCINESS)?.removeModifier(ROLLING_ID)
+            getAttribute(Attributes.KNOCKBACK_RESISTANCE)?.removeModifier(ROLLING_ID)
+            getAttribute(Attributes.STEP_HEIGHT)?.removeModifier(ROLLING_ID)
+        }
     }
     open fun stopRoll() {
         deltaMovement = Vec3.ZERO
@@ -810,9 +826,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     open fun canProduceSeeds(): Boolean = true
     open fun clampToGrid() = !canWalk() && !rolling && onValidGround()
     open fun cooldownFinished() {}
-    override fun shouldDiscardFriction(): Boolean {
-        return rolling || super.shouldDiscardFriction()
-    }
+    open fun rollingFriction(): Float = 0.5f
 
     fun updatePlantPower(level: ServerLevel, nearFlag: Boolean) {
         if (nearFlag != poweredUp) {
@@ -888,7 +902,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun checkDespawn() {
         super.checkDespawn()
     }
-    open fun attackedWithGlove(attacker: LivingEntity, item: ItemStack, hand: InteractionHand) {}
+    open fun attackedWithGlove(attacker: LivingEntity, item: ItemStack, hand: InteractionHand) {
+        funnyBounce()
+    }
     override fun skipAttackInteraction(source: Entity): Boolean {
         val item = source.weaponItem ?: ItemStack.EMPTY
         if (source is Player && this.hasSameRootOwner(source) && item.`is`(PazItems.GARDENING_GLOVE)) {

@@ -314,6 +314,10 @@ object PazBlocks {
                         Attributes.FOLLOW_RANGE,
                         AttributeModifier(pazResource("zombie_leader_flag"), 0.2, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
                         EquipmentSlotGroup.HAND
+                    ).add(
+                        Attributes.TEMPT_RANGE,
+                        AttributeModifier(pazResource("zombie_leader_flag"), 0.2, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+                        EquipmentSlotGroup.HAND
                     ).build()
             ),
         ::FlagItem

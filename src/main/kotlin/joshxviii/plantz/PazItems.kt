@@ -188,7 +188,6 @@ object PazItems {
                 )
             })
     )
-    const val DUCKY_TUBE_DAMAGE_INTERVAL = 45
     val DUCKY_EQUIP_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, pazResource("ducky_tube"))
     @JvmField
     val DUCKY_TUBE: Item = registerItem(
@@ -293,7 +292,7 @@ object PazItems {
     val ROLLER_SKATES_EQUIP_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, pazResource("roller_skates"))
     @JvmField
     val ROLLER_SKATES: Item = registerItem(
-        "roller_skates",
+        "roller_skates", ::RollerSkatesItem,
         properties = Item.Properties()
             .rarity(Rarity.EPIC)
             .durability(350)
@@ -302,16 +301,12 @@ object PazItems {
             .attributes(
                 ItemAttributeModifiers.builder()
                     .add(
-                        Attributes.MOVEMENT_EFFICIENCY,
-                        AttributeModifier(pazResource("roller_skates"), 1.5, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.FEET
-                    ).add(
                         Attributes.MOVEMENT_SPEED,
-                        AttributeModifier(pazResource("roller_skates"), 0.1, AttributeModifier.Operation.ADD_VALUE),
+                        AttributeModifier(pazResource("roller_skates"), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
                         EquipmentSlotGroup.FEET
                     ).add(
                         Attributes.STEP_HEIGHT,
-                        AttributeModifier(pazResource("roller_skates"), 1.0, AttributeModifier.Operation.ADD_VALUE),
+                        AttributeModifier(pazResource("roller_skates"), 0.9, AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.FEET
                     ).build())
             .component(DataComponents.EQUIPPABLE,

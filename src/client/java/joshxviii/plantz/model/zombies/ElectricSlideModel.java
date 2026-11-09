@@ -5,6 +5,7 @@
 
 package joshxviii.plantz.model.zombies;
 
+import joshxviii.plantz.animation.HumanoidModelAnimation;
 import joshxviii.plantz.animation.zombies.DiscoZombieAnimation;
 import joshxviii.plantz.animation.zombies.ElectricSlideAnimation;
 import joshxviii.plantz.renderer.RenderingUtilsKt;
@@ -31,7 +32,7 @@ public class ElectricSlideModel<S extends PazZombieRenderState> extends PazZombi
 		);
 		this.afro = RenderingUtilsKt.getChildOrNull(this.getHead(), "afro");;
 		this.actionAnimation = ElectricSlideAnimation.dance.bake(root);
-		this.skateAnimation = ElectricSlideAnimation.roller_skate.bake(root);
+		this.skateAnimation = HumanoidModelAnimation.roller_skate.bake(root);
 	}
 
 	@Override

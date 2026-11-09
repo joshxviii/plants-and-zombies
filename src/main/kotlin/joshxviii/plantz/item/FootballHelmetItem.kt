@@ -57,9 +57,6 @@ class FootballHelmetItem(properties: Properties) : Item(properties) {
             owner.getAttribute(Attributes.MOVEMENT_SPEED)?.addTransientModifier(
                 AttributeModifier(CHARGE_BOOST_ID, 0.025, AttributeModifier.Operation.ADD_VALUE)
             )
-            owner.getAttribute(Attributes.STEP_HEIGHT)?.addTransientModifier(
-                AttributeModifier(CHARGE_BOOST_ID, 0.5, AttributeModifier.Operation.ADD_VALUE)
-            )
         }
         if (!level.isClientSide && owner.tickCount % DAMAGE_INTERVAL == 0 && owner.getRandom().nextFloat() > 0.5f) {
             if (slot != null) itemStack.hurtAndBreak(1, owner, slot)

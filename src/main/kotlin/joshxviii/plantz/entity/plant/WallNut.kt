@@ -34,35 +34,18 @@ import org.joml.Quaternionf
 
 open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
-    companion object {
-        val ROLLING_ID: Identifier = pazResource("rolling")
-        private val KNOCK_BACK_MODIFIER = AttributeModifier(ROLLING_ID, 99.0, AttributeModifier.Operation.ADD_VALUE)
-        private val STEP_HEIGHT_MODIFIER = AttributeModifier(ROLLING_ID, 0.75, AttributeModifier.Operation.ADD_VALUE)
-    }
-
     private var rolledOverEntities: MutableSet<Int> = mutableSetOf()
 
     fun roll(direction: Vec3 = Direction.fromYRot(yRot.toDouble()).unitVec3, power: Float = 0.51f) {
         rolling = true
         applyImpulse(direction, pow = power, uncertainty = 0.1f, ignoreResistance = true)
-        getAttribute(Attributes.KNOCKBACK_RESISTANCE)!!.let { if (!it.hasModifier(ROLLING_ID)) it.addTransientModifier(KNOCK_BACK_MODIFIER) }
-        getAttribute(Attributes.STEP_HEIGHT)!!.let { if (!it.hasModifier(ROLLING_ID)) it.addTransientModifier(STEP_HEIGHT_MODIFIER) }
     }
 
     override fun stopRoll() {
         rolling = false
-        //yBodyRot = Direction.getApproximateNearest(Vec3(cos(yBodyRot.toDouble() * Mth.DEG_TO_RAD), 0.0, sin(yBodyRot.toDouble() * Mth.DEG_TO_RAD))).unitVec3.toAngle()
         deltaMovement = Vec3.ZERO
         applyGridClamp()
         resetRolledOverEntities()
-
-        getAttribute(Attributes.KNOCKBACK_RESISTANCE)!!.let {
-            if (it.hasModifier(ROLLING_ID)) it.removeModifier(ROLLING_ID)
-        }
-        getAttribute(Attributes.STEP_HEIGHT)!!.let {
-            if (it.hasModifier(ROLLING_ID)) it.removeModifier(ROLLING_ID)
-        }
-
     }
 
     fun resetRolledOverEntities() {
@@ -83,9 +66,8 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
     }
 
     override fun attackedWithGlove(attacker: LivingEntity, item: ItemStack, hand: InteractionHand) {
+        super.attackedWithGlove(attacker, item, hand)
         if (hasPumpkinArmor()) return
-        funnyBounce()
-        if (level().isClientSide) return
         val direction = attacker.lookAngle.horizontal()
         roll(direction, power = 0.35f)
         GardeningGloveItem.hurtAndDropPlant(item, attacker, hand)

@@ -7,9 +7,9 @@ import com.mojang.serialization.Codec;
 import joshxviii.plantz.*;
 import joshxviii.plantz.effect.PaintedMobEffect;
 import joshxviii.plantz.entity.plant.Plant;
+import joshxviii.plantz.item.DuckTubeItem;
 import joshxviii.plantz.raid.CompletedWave;
 import joshxviii.plantz.raid.GardenHeroRewards;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -18,7 +18,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
@@ -29,7 +28,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -48,7 +46,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.*;
 
 import static joshxviii.plantz.PazDataSerializers.DATA_PAINT_COLORS;
-import static joshxviii.plantz.PazItems.DUCKY_TUBE_DAMAGE_INTERVAL;
 
 @Mixin(LivingEntity.class)
 abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHeroRewards {
@@ -165,29 +162,7 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
 
     @Inject(method = "aiStep", at = @At("HEAD"))
     private void plantz$applyDuckyTubeBuoyancy(CallbackInfo ci) {
-        LivingEntity entity = (LivingEntity) (Object) this;
-
-        //Duck tube floating
-        var item = entity.getItemBySlot(EquipmentSlot.LEGS);
-        if (!item.is(PazItems.DUCKY_TUBE) && !entity.is(PazTags.EntityTypes.PLANTABLE_ON_WATER)) return;
-        if (entity instanceof Player player && player.getAbilities().flying) return;
-        var fluidType = entity.level().getBlockState(BlockPos.containing(entity.position().add(0.0, entity.getBbHeight() * 0.5, 0.0))).getFluidState().getType();
-        if (fluidType == Fluids.EMPTY ) return;
-
-        //base
-        double upwardForce = fluidType == Fluids.LAVA ? 0.1 : 0.015;
-        // submerged
-        if (entity.isEyeInFluid(FluidTags.WATER)) upwardForce = 0.135;
-        if (entity.isEyeInFluid(FluidTags.LAVA)) upwardForce = 0.15;
-        // sneaking
-        if (entity.isShiftKeyDown()) upwardForce *= fluidType == Fluids.LAVA? 0.0 : 0.2;
-
-        entity.addDeltaMovement(new Vec3(0.0, upwardForce, 0.0));
-
-        entity.fallDistance = 0.0F;
-
-        if (!entity.level().isClientSide() && entity.tickCount % DUCKY_TUBE_DAMAGE_INTERVAL==0 && entity.getRandom().nextFloat() > 0.5f)
-            item.hurtAndBreak(1, entity, EquipmentSlot.LEGS);
+        DuckTubeItem.Companion.floatOnWater((LivingEntity) (Object) this);
     }
 
     @Inject(method = "defineSynchedData", at = @At(value = "TAIL"))
