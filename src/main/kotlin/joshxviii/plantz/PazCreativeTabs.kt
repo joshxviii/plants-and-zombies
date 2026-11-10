@@ -115,6 +115,7 @@ object PazCreativeTabs {
         output.accept(PazBlocks.CONE)
         output.accept(PazItems.NEWSPAPER)
         output.accept(PazItems.FOOTBALL_HELMET)
+        output.accept(PazItems.PARTY_HAT)
         output.accept(PazItems.DYE_BLASTER)
         output.accept(PazItems.ROLLER_SKATES)
         output.accept(PazItems.BARON_STAFF)

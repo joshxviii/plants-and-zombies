@@ -23,7 +23,7 @@ class PaintBall(
     owner: LivingEntity? = null,
     spawnOffset: Vec2 = Vec2.ZERO,
     color: DyeColor = DyeColor.WHITE,
-    damage: Float = 1.25f,
+    damage: Float = 1.5f,
 ) : PazProjectile(PazEntities.PAINT_BALL, level, owner, spawnOffset,
     PazDamageTypes.PAINT, damage, knockback = 0.01
 ) {

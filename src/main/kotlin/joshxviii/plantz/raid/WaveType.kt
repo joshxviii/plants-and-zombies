@@ -138,7 +138,7 @@ enum class WaveType(
         maxWave = 6,
         creditsRequired = false,
         weightFn = { raid, credits ->
-            0.11f + (raid.zombieRaidOmenLevel * 0.04f) + if (credits) 0.04f else 0f
+            0.11f + (raid.zombieRaidOmenLevel * 0.04f)
         },
         spawnFn = { raid, credits ->
             val wave = raid.currentWaveNumber()
@@ -171,7 +171,7 @@ enum class WaveType(
         maxWave = 9,
         creditsRequired = false,
         weightFn = { raid, credits ->
-            0.12f + (raid.zombieRaidOmenLevel * 0.04f) + if (credits) 0.05f else 0f
+            0.12f + (raid.zombieRaidOmenLevel * 0.04f) + if (credits) 0.03f else 0f
         },
         spawnFn = { raid, credits ->
             val wave = raid.currentWaveNumber()
@@ -199,6 +199,39 @@ enum class WaveType(
             )
         },
         lootTableFn = { PazLootTables.MAIL_REWARD_WINTER }
+    ),
+    DISCO_PARTY(
+        minWave = 4,
+        maxWave = 15,
+        creditsRequired = false,
+        weightFn = { raid, credits ->
+            0.13f + (raid.zombieRaidOmenLevel * 0.04f)
+        },
+        spawnFn = { raid, credits ->
+            val wave = raid.currentWaveNumber()
+            val omen = raid.zombieRaidOmenLevel
+            listOf(
+                WaveSpawnEntry(
+                    PazEntities.BROWN_COAT,
+                    scaled(6.5f + wave * 1.4f, omen, credits, min = 5), {
+                        configureDiscoParty(it)
+                    }),
+                WaveSpawnEntry(
+                    PazEntities.IMP,
+                    scaled(3f + wave * 0.6f, omen, credits, min = 2), {
+                        configureDiscoParty(it)
+                    }),
+                WaveSpawnEntry(
+                    PazEntities.DISCO_ZOMBIE,
+                    if (wave > 2) scaled(0.4f + (wave - 2) * 0.35f, omen, credits) else 0
+                ),
+                WaveSpawnEntry(
+                    PazEntities.ELECTRIC_SLIDE,
+                    if (wave > 7) scaled(0.3f + wave * 0.2f, omen, credits, min = 0, max = 3) else 0,
+                ),
+            )
+        },
+        lootTableFn = { PazLootTables.MAIL_REWARD_DEFAULT_HARD }
     ),
     ZOMBOWEEN(
         minWave = 4,
@@ -450,6 +483,23 @@ enum class WaveType(
                     zombie.setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_SHOVEL.defaultInstance)
                     zombie.setDropChance(EquipmentSlot.MAINHAND, 0.0f)
                 }
+            }
+        }
+
+        fun configureDiscoParty(zombie: Zombie) {
+            if (zombie is Imp || zombie is BrownCoat) {
+                if (zombie.random.nextFloat() < 0.45f) {
+                    zombie.setItemSlot(EquipmentSlot.HEAD, PazItems.PARTY_HAT.defaultInstance)
+                    zombie.setDropChance(EquipmentSlot.HEAD, 0.0f)
+                }
+            }
+            val balloonCount = when (zombie) {
+                is BrownCoat -> zombie.random.nextIntBetweenInclusive(2,3)
+                is Imp -> 1
+                else -> 0
+            }
+            if (balloonCount > 0) {
+                if (zombie.random.nextFloat() < 0.18 && zombie is PazZombie) zombie.spawnBalloons(balloonCount, listOf(DyeColor.LIME, DyeColor.YELLOW, DyeColor.PURPLE, DyeColor.LIGHT_BLUE))
             }
         }
 

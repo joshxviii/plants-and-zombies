@@ -2,7 +2,6 @@ package joshxviii.plantz.renderer
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
-import com.mojang.math.Transformation
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
@@ -40,9 +39,9 @@ import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.Identifier
 import net.minecraft.util.ARGB
 import net.minecraft.util.Mth
+import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
-import org.joml.Matrix4f
 import org.joml.Vector3f
 import kotlin.math.pow
 
@@ -166,7 +165,7 @@ class DuckyTubeRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
     parent: RenderLayerParent<S, M>
 ) : BodyItemAttachmentRenderLayer<S, M>(
     parent = parent,
-    stackSelector = { it.legsEquipment },
+    stackSelector = { listOf(it.legsEquipment) },
     matches = { it.`is`(PazItems.DUCKY_TUBE) },
 )
 
@@ -174,7 +173,7 @@ class DyeVatRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
     parent: RenderLayerParent<S, M>
 ) : BodyItemAttachmentRenderLayer<S, M>(
     parent = parent,
-    stackSelector = { it.mainHandItemStack },
+    stackSelector = { listOf(it.rightHandItemStack, it.leftHandItemStack) },
     matches = { it.`is`(PazItems.DYE_BLASTER) },
 )
 
@@ -182,7 +181,7 @@ class BodyBlockerRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>
     parent: RenderLayerParent<S, M>
 ) : BodyItemAttachmentRenderLayer<S, M>(
     parent = parent,
-    stackSelector = { it.chestEquipment },
+    stackSelector = { listOf(it.chestEquipment) },
     matches = { it.has(PazComponents.WORN_BODY_BLOCKER) },
 )
 
@@ -190,7 +189,7 @@ class RollerSkateRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>
     parent: RenderLayerParent<S, M>
 ) : FeetItemAttachmentRenderLayer<S, M>(
     parent = parent,
-    stackSelector = { it.feetEquipment },
+    stackSelector = { listOf(it.feetEquipment) },
     matches = { it.`is`(PazItems.ROLLER_SKATES) },
 )
 
@@ -281,7 +280,7 @@ class PlantHeadAttachmentRenderLayer<S : LivingEntityRenderState, M : EntityMode
 
 abstract class FeetItemAttachmentRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
     parent: RenderLayerParent<S, M>,
-    private val stackSelector: (HumanoidRenderState) -> ItemStack,
+    private val stackSelector: (HumanoidRenderState) -> List<ItemStack>,
     private val matches: (ItemStack) -> Boolean,
 ) : RenderLayer<S, M>(parent) {
     private val itemRenderState = ItemStackRenderState()
@@ -295,9 +294,8 @@ abstract class FeetItemAttachmentRenderLayer<S : LivingEntityRenderState, M : En
     ) {
         val humanoidModel = parentModel as? HumanoidModel<*> ?: return
         val humanState = state as? HumanoidRenderState ?: return
-        val itemStack = stackSelector(humanState)
+        val itemStack = stackSelector(humanState).firstOrNull { matches(it) } ?: return
 
-        if (!matches(itemStack)) return
         poseStack.pushPose()
         humanoidModel.root().translateAndRotate(poseStack)
         renderLegItem(poseStack, collector, itemStack, lightCoords, humanoidModel.leftLeg, false)
@@ -341,7 +339,7 @@ abstract class FeetItemAttachmentRenderLayer<S : LivingEntityRenderState, M : En
 
 abstract class BodyItemAttachmentRenderLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(
     parent: RenderLayerParent<S, M>,
-    private val stackSelector: (HumanoidRenderState) -> ItemStack,
+    private val stackSelector: (HumanoidRenderState) -> List<ItemStack>,
     private val matches: (ItemStack) -> Boolean,
 ) : RenderLayer<S, M>(parent) {
 
@@ -357,9 +355,7 @@ abstract class BodyItemAttachmentRenderLayer<S : LivingEntityRenderState, M : En
     ) {
         val humanoidModel = parentModel as? HumanoidModel<*> ?: return
         val humanState = state as? HumanoidRenderState ?: return
-        val itemStack = stackSelector(humanState)
-
-        if (!matches(itemStack)) return
+        val itemStack = stackSelector(humanState).firstOrNull { matches(it) } ?: return
 
         poseStack.pushPose()
 

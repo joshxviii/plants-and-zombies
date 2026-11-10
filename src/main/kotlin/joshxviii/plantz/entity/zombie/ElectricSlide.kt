@@ -5,6 +5,7 @@ import joshxviii.plantz.PazDataSerializers.ROBO_ZOMBIE_VARIANT
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
 import net.minecraft.core.component.DataComponents
+import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
@@ -76,6 +77,11 @@ class ElectricSlide(type: EntityType<out ElectricSlide>, level: Level) : PazZomb
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         val result = super.doHurtTarget(level, target)
         return result
+    }
+
+    override fun getTypeName(): Component {
+        return if (variant != ElectricSlideVariant.SLIDE) Component.translatable("entity.plantz.electric_slide.variant.${variant.name.lowercase()}")
+        else super.getTypeName()
     }
 
     override fun finalizeSpawn(

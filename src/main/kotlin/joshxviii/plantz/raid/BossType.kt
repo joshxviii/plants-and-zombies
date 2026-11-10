@@ -9,6 +9,7 @@ import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.resources.Identifier
 import net.minecraft.util.ByIdMap
+import net.minecraft.util.Mth
 import net.minecraft.util.StringRepresentable
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
@@ -34,11 +35,12 @@ enum class BossType(
         maxWave = 7,
         weightFn = { raid, wave -> 1f },
         bossSpawns = { raid, wave ->
-            listOf(
-                BossEntry(
-                    PazEntities.ALL_STAR, ::bossify
-                ),
-            )
+            mutableListOf<BossEntry>().let {
+                val waveCount = raid.currentWaveNumber()
+                val count = Mth.floor(waveCount/3.0)
+                for (i in 0 until count) it.add(BossEntry(PazEntities.ALL_STAR, ::bossify))
+                it
+            }
         }
     ),
     BARON_VON_BATS(
@@ -46,11 +48,25 @@ enum class BossType(
         maxWave = 18,
         weightFn = { _, wave -> if (wave == WaveType.DEFAULT || wave == WaveType.ZOMBOWEEN) 2f else 0f },
         bossSpawns = { raid, wave ->
-            listOf(
-                BossEntry(
-                    PazEntities.BARON_VON_BATS,
-                ),
-            )
+            mutableListOf<BossEntry>().let {
+                val waveCount = raid.currentWaveNumber()
+                val count = Mth.floor(waveCount/7.0)
+                for (i in 0 until count) it.add(BossEntry(PazEntities.BARON_VON_BATS))
+                it
+            }
+        }
+    ),
+    ELECTRIC_BOOGALOO(
+        minWave = 6,
+        maxWave = 18,
+        weightFn = { _, wave -> if (wave == WaveType.DEFAULT || wave == WaveType.DISCO_PARTY) 1.5f else 0f },
+        bossSpawns = { raid, wave ->
+            mutableListOf<BossEntry>().let {
+                val waveCount = raid.currentWaveNumber()
+                val count = Mth.floor(waveCount/6.0)
+                for (i in 0 until count) it.add(BossEntry(PazEntities.ELECTRIC_SLIDE, ::bossify))
+                it
+            }
         }
     ),
     GARGANTUAR(
@@ -58,12 +74,15 @@ enum class BossType(
         maxWave = 20,
         weightFn = { _, wave -> if (wave == WaveType.DEFAULT || wave == WaveType.PIRATE_INVASION) 3f else 0f },
         bossSpawns = { raid, wave ->
-            listOf(
-                BossEntry(
-                    PazEntities.GARGANTUAR,
+            mutableListOf<BossEntry>().let {
+                val waveCount = raid.currentWaveNumber()
+                val count = Mth.floor(waveCount/7.0)
+                for (i in 0 until count) it.add(
+                    BossEntry(PazEntities.GARGANTUAR,
                     { if (it is Gargantuar && wave == WaveType.PIRATE_INVASION) it.variant = GargantuarVariant.PIRATE }
-                ),
-            )
+                ),)
+                it
+            }
         }
     ),
     ROBO_GENERAL(
@@ -71,11 +90,12 @@ enum class BossType(
         maxWave = 20,
         weightFn = { _, wave -> if (wave == WaveType.DEFAULT || wave == WaveType.ROBO_ARMY) 1f else 0f },
         bossSpawns = { raid, wave ->
-            listOf(
-                BossEntry(
-                    PazEntities.ROBO_ZOMBIE, ::bossify
-                ),
-            )
+            mutableListOf<BossEntry>().let {
+                val waveCount = raid.currentWaveNumber()
+                val count = Mth.floor(waveCount/7.0)
+                for (i in 0 until count) it.add(BossEntry(PazEntities.ROBO_ZOMBIE, ::bossify))
+                it
+            }
         }
     ),
     ZOMBOSS(
@@ -116,6 +136,7 @@ enum class BossType(
             zombie.getAttribute(Attributes.MAX_HEALTH)?.let { if (!it.hasModifier(BOSSIFY)) it.addPermanentModifier(BOSS_HEALTH) }
             zombie.getAttribute(Attributes.ATTACK_DAMAGE)?.let { if (!it.hasModifier(BOSSIFY)) it.addPermanentModifier(BOSS_DAMAGE) }
             zombie.health = zombie.maxHealth
+            if (zombie is ElectricSlide) zombie.variant = ElectricSlideVariant.BOOGALOO
             if (zombie is RoboZombie) {
                 zombie.isTransformed = true
                 zombie.variant = RoboZombieVariant.GENERAL
