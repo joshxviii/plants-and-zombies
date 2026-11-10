@@ -92,6 +92,7 @@
   "options.plantz.split_item_tabs": "Separar Aba de Itens: %s",
 
   "commands.plantz.help": "Plantas e Zumbis - faça uma pergunta no Discord: %s",
+  "commands.plantz.help.url": "https://discord.gg/xxUrJuFJUz",
   "commands.plantz.help.hover": "",
   "commands.plantz.raid.no_raid_nearby": "Não há uma invasão ativa por perto",
   "commands.plantz.raid.start.success": "Invasão iniciada em %s, %s, %s",
@@ -178,6 +179,7 @@
   "item.plantz.cone": "Cone",
   "item.plantz.football_helmet": "Capacete de Futebol Americano",
   "item.plantz.football_helmet.description": "Realize um encontrão ao correr",
+  "item.plantz.party_hat": "Chapéu de Festa",
   "item.plantz.ducky_tube": "Boia-de-pato",
   "item.plantz.ducky_tube.description": "Flutua na água",
   "item.plantz.coffin": "Caixão",
@@ -186,6 +188,7 @@
   "item.plantz.dye_blaster": "Pistola de Corante",
   "item.plantz.dye_blaster.description": "%s de chance de consumir corante",
   "item.plantz.baron_staff": "Cajado do Barão",
+  "item.plantz.roller_skates": "Patins",
   "item.plantz.taco": "Taco",
   "item.plantz.door_shield": "Porta-com-Tela",
   "item.plantz.door_shield.type": "Escudo de %s",
@@ -282,10 +285,12 @@
   "item.plantz.soldier_zombie_spawn_egg": "Ovo Gerador de Zumbi Soldado",
   "item.plantz.robo_zombie_spawn_egg": "Ovo Gerador de Zumbi-Robô",
   "item.plantz.pirate_captain_spawn_egg": "Ovo Gerador de Capitão Pirata",
+  "item.plantz.pirate_captain_ghost_spawn_egg": "Ovo Gerador de Capitão Pirata Fantasma",
   "item.plantz.super_brainz_spawn_egg": "Ovo Gerador de Supermioloz",
   "item.plantz.imp_spawn_egg": "Ovo Gerador de Zumbinho",
   "item.plantz.baron_von_bats_spawn_egg": "Ovo Gerador de Barão Von Morcego",
   "item.plantz.gargantuar_spawn_egg": "Ovo Gerador de Zumbi Devorador",
+  "item.plantz.electric_slide_spawn_egg": "Ovo Gerador de Patinadora Elétrica",
   "item.plantz.zombat_spawn_egg": "Ovo Gerador de Morzego",
   "item.plantz.zombie_goat_spawn_egg": "Ovo Gerador de Cabra Zumbi",
 
@@ -364,10 +369,11 @@
   "entity.plantz.coffeebean": "Grão de Café",
   "entity.plantz.grave_buster": "Come-cova",
   "entity.plantz.pumpkin": "Abóbora",
+  "entity.plantz.squash": "Chuchu",
 
   "entity.plantz.browncoat": "Casaco-Marrom",
   "entity.plantz.browncoat.variant.balloon": "Zumbalão",
-  "entity.plantz.browncoat.variant.snow": "Casaco-Gelado",
+  "entity.plantz.browncoat.variant.snowcoat": "Casaco-Gelado",
   "entity.plantz.browncoat.variant.desert": "Zumbi do Deserto",
   "entity.plantz.browncoat.variant.buccaneer": "Bucaneiro",
   "entity.plantz.browncoat.variant.vampire": "Zumbi Vampiro",
@@ -399,12 +405,15 @@
   "entity.plantz.super_brainz": "Supermioloz",
   "entity.plantz.imp": "Zumbinho",
   "entity.plantz.gargantuar": "Zumbi Devorador",
+  "entity.plantz.electric_slide": "Patinadora Elétrica",
+  "entity.plantz.electric_slide.variant.boogaloo": "Dança Imortal",
   "entity.plantz.baron_von_bats": "Barão Von Morcego",
   "entity.plantz.zombat": "Morzego",
   "entity.plantz.zombie_goat": "Cabra Zumbi",
   "entity.plantz.zombie_turret": "Zumbô",
   "entity.plantz.electro_turret": "Elétro-zumbô",
   "entity.plantz.zombie_drone": "Drone Zumbô",
+
   "entity.plantz.lawn_mower": "Cortador de Grama",
 
   "entity.plantz.gnome": "Gnomo de Jardim",
@@ -421,7 +430,9 @@
   "container.plantz.no_address": "Nenhuma Caixa de Correio encontrada.",
   "container.plantz.mailbox_full": "Essa Caixa de Correio está cheia!",
   "container.plantz.mailbox_success": "Enviado!",
+
   "container.plantz.time_machine.wip": "???",
+  "container.plantz.time_machine.display": "PRÓXIMA PARADA: %s",
 
   "gui.plantz.letter": "Carta",
   "gui.plantz.letter.font": "Fonte: %s",
@@ -440,6 +451,7 @@
   "letter_background.plantz.hearts": "Corações",
   "letter_background.plantz.fancy": "Elegante",
   "letter_background.plantz.torn": "Rasgado",
+
 
   "plantz.subtitles.projectile.deflected": "Projétil defletido",
   "plantz.subtitles.projectile.shoot": "Projétil disparado",
@@ -477,5 +489,10 @@
   "plantz.subtitles.event.mob_effect.hypnotized": "Criatura é hipnotizada",
   "plantz.subtitles.event.mob_effect.zombie_omen": "Presságio de Invasão Zumbi",
 
-  "biome.plantz.graveyard": "Cemitério"
+  "biome.plantz.graveyard": "Cemitério",
+  "biome.plantz.ancient_egypt": "Egito Antigo",
+  "biome.plantz.jurassic_period": "Período Jurássico",
+  "biome.plantz.dark_ages": "Idade das Trevas",
+  "biome.plantz.far_future": "Futuro Distante",
+  "biome.plantz.gnome_space": "Espaço Gnômico"
 }
