@@ -241,21 +241,21 @@ object PazModels {
         EntityRenderers.register(PazEntities.BROWN_COAT) { PazZombieRenderer(it) }
         EntityRenderers.register(PazEntities.NEWSPAPER_ZOMBIE) { PazZombieRenderer(it) }
         EntityRenderers.register(PazEntities.DIGGER_ZOMBIE) { DiggerZombieRenderer(it) }
-        EntityRenderers.register(PazEntities.ENGINEER_ZOMBIE) { PazZombieRenderer(it, EngineerZombieModel(it.bakeLayer(EngineerZombieModel.LAYER_LOCATION))) }
-        EntityRenderers.register(PazEntities.ZOMBIE_YETI) { PazZombieRenderer(it, ZombieYetiModel(it.bakeLayer(ZombieYetiModel.LAYER_LOCATION))) }
-        EntityRenderers.register(PazEntities.BACKUP_DANCER) { PazZombieRenderer(it, DiscoZombieModel(it.bakeLayer(DiscoZombieModel.LAYER_LOCATION))) }
-        EntityRenderers.register(PazEntities.DISCO_ZOMBIE) { PazZombieRenderer(it, DiscoZombieModel(it.bakeLayer(DiscoZombieModel.LAYER_LOCATION))) }
-        EntityRenderers.register(PazEntities.ALL_STAR) { PazZombieRenderer(it, AllStarModel(it.bakeLayer(AllStarModel.LAYER_LOCATION)), AllStarModel(it.bakeLayer(AllStarModel.LAYER_LOCATION))) }
-        EntityRenderers.register(PazEntities.GRAVE_DIGGER) { PazZombieRenderer(it, GraveDiggerModel(it.bakeLayer(GraveDiggerModel.LAYER_LOCATION))) }
-        EntityRenderers.register(PazEntities.SOLDIER_ZOMBIE) { PazZombieRenderer(it, SoldierZombieModel(it.bakeLayer(SoldierZombieModel.LAYER_LOCATION)), SoldierZombieModel(it.bakeLayer(SoldierZombieModel.LAYER_LOCATION))) }
+        EntityRenderers.register(PazEntities.ENGINEER_ZOMBIE) { PazZombieRenderer(it, EngineerZombieModel(it.bakeLayer(EngineerZombieModel.LAYER_LOCATION)), null) }
+        EntityRenderers.register(PazEntities.ZOMBIE_YETI) { PazZombieRenderer(it, ZombieYetiModel(it.bakeLayer(ZombieYetiModel.LAYER_LOCATION)), null) }
+        EntityRenderers.register(PazEntities.BACKUP_DANCER) { PazZombieRenderer(it, DiscoZombieModel(it.bakeLayer(DiscoZombieModel.LAYER_LOCATION)), null) }
+        EntityRenderers.register(PazEntities.DISCO_ZOMBIE) { PazZombieRenderer(it, DiscoZombieModel(it.bakeLayer(DiscoZombieModel.LAYER_LOCATION)), null) }
+        EntityRenderers.register(PazEntities.ALL_STAR) { PazZombieRenderer(it, AllStarModel(it.bakeLayer(AllStarModel.LAYER_LOCATION)), null) }
+        EntityRenderers.register(PazEntities.GRAVE_DIGGER) { PazZombieRenderer(it, GraveDiggerModel(it.bakeLayer(GraveDiggerModel.LAYER_LOCATION)), null) }
+        EntityRenderers.register(PazEntities.SOLDIER_ZOMBIE) { PazZombieRenderer(it, SoldierZombieModel(it.bakeLayer(SoldierZombieModel.LAYER_LOCATION)), null) }
         EntityRenderers.register(PazEntities.PIRATE_CAPTAIN) { PirateCaptainRenderer(it) }
         EntityRenderers.register(PazEntities.PIRATE_CAPTAIN_GHOST) { PirateCaptainRenderer(it, PirateCaptainGhostModel(it.bakeLayer(PirateCaptainGhostModel.LAYER_LOCATION))) }
         EntityRenderers.register(PazEntities.ROBO_ZOMBIE) { RoboZombieRenderer(it) }
         EntityRenderers.register(PazEntities.SUPER_BRAINZ) { SuperBrainzRenderer(it) }
-        EntityRenderers.register(PazEntities.IMP) { PazZombieRenderer(it, ImpModel(it.bakeLayer(ImpModel.LAYER_LOCATION)), ImpModel(it.bakeLayer(ImpModel.LAYER_LOCATION))) }
+        EntityRenderers.register(PazEntities.IMP) { PazZombieRenderer(it, ImpModel(it.bakeLayer(ImpModel.LAYER_LOCATION)), null) }
         EntityRenderers.register(PazEntities.GARGANTUAR) { GargantuarRenderer(it) }
         EntityRenderers.register(PazEntities.BARON_VON_BATS) { BaronVonBatsRenderer(it) }
-        EntityRenderers.register(PazEntities.ELECTRIC_SLIDE) { PazZombieRenderer(it, ElectricSlideModel(it.bakeLayer(ElectricSlideModel.LAYER_LOCATION))) }
+        EntityRenderers.register(PazEntities.ELECTRIC_SLIDE) { PazZombieRenderer(it, ElectricSlideModel(it.bakeLayer(ElectricSlideModel.LAYER_LOCATION)), null) }
         EntityRenderers.register(PazEntities.ZOMBAT) { ZombatRenderer(it) }
         EntityRenderers.register(PazEntities.ZOMBIE_GOAT) { ZombieGoatRenderer(it) }
 

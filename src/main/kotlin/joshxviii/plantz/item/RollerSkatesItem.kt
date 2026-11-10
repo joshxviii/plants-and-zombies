@@ -51,7 +51,7 @@ class RollerSkatesItem(properties: Properties) : Item(properties) {
             }
             owner.getAttribute(Attributes.STEP_HEIGHT)?.let {
                 if (!it.hasModifier(ROLLER_SKATES_ID)) it.addTransientModifier(
-                    AttributeModifier(ROLLER_SKATES_ID, 0.85, AttributeModifier.Operation.ADD_VALUE)
+                    AttributeModifier(ROLLER_SKATES_ID, 0.5, AttributeModifier.Operation.ADD_VALUE)
                 )
             }
         }

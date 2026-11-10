@@ -9,6 +9,7 @@ import joshxviii.plantz.withinAttackRange
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.damagesource.DamageType
+import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.OwnableEntity
 import net.minecraft.world.entity.PathfinderMob
@@ -29,7 +30,7 @@ open class MeleeAttackActionGoal(
     val usePredicate: Predicate<PathfinderMob> = actionPredicate,
     val rangeMultiplier: Float = 1.0f,
     val damageMultiplier: Float = 1.0f,
-    val damageType: ResourceKey<DamageType> = PazDamageTypes.PLANT,
+    val damageType: ResourceKey<DamageType> = DamageTypes.MOB_ATTACK,
     val beforeHitEntityEffect: (target: LivingEntity) -> Unit = {},
     val afterHitEntityEffect: (target: LivingEntity) -> Unit = {},
 ) : ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionSuccessEffect, actionEndEffect, actionPredicate, delayedEffectDelay, delayedEffect) {

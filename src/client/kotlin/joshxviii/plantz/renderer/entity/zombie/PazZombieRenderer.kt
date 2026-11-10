@@ -31,15 +31,15 @@ import net.minecraft.world.phys.Vec3
 open class PazZombieRenderer(
     context: EntityRendererProvider.Context,
     val defaultModel: PazZombieModel<PazZombieRenderState> = PazZombieModel(null, context.bakeLayer(PazZombieModel.LAYER_LOCATION)),
-    val babyModel: PazZombieModel<PazZombieRenderState> = PazZombieModel(null, context.bakeLayer(ModelLayers.ZOMBIE_BABY)),
+    val babyModel: PazZombieModel<PazZombieRenderState>? = PazZombieModel(null, context.bakeLayer(ModelLayers.ZOMBIE_BABY)),
     armorSet: ArmorModelSet<ModelLayerLocation> = ModelLayers.ZOMBIE_ARMOR,
     babyArmorSet: ArmorModelSet<ModelLayerLocation> = ModelLayers.ZOMBIE_BABY_ARMOR
 ) : AbstractZombieRenderer<PazZombie, PazZombieRenderState, PazZombieModel<PazZombieRenderState>>(
     context,
     defaultModel,
-    babyModel,
+    babyModel?: defaultModel,
     ArmorModelSet.bake(armorSet, context.modelSet) { defaultModel.forArmor(it) },
-    ArmorModelSet.bake(babyArmorSet, context.modelSet) { babyModel.forArmor(it) }
+    ArmorModelSet.bake(babyArmorSet, context.modelSet) { babyModel?.forArmor(it) ?: defaultModel.forArmor(it) }
 ) {
 
     init {
@@ -87,6 +87,7 @@ open class PazZombieRenderer(
         if (entity is GraveDigger) state.actionAnimationState.copyFrom(entity.digAnimation)
         if (entity is AllStar) state.actionAnimationState.copyFrom(entity.chargeAnimation)
         if (entity is ZombieYeti) state.actionAnimationState.copyFrom(entity.bashAnimation)
+        if (entity is ElectricSlide) state.actionAnimationState.copyFrom(entity.tornadoAnimation)
         if (entity is NewspaperZombie) state.isAngry = entity.isAngry()
         state.customName = entity.customName?.string ?: ""
         state.textureExtra = mutableListOf<String>().apply {

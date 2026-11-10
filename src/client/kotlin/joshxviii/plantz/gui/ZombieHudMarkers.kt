@@ -65,7 +65,7 @@ object ZombieHudMarkers {
         }?: return
 
         val renderer = mc.entityRenderDispatcher.getRenderer(state) as? PazZombieRenderer ?: return
-        val model = if(state.isBaby) renderer.babyModel else renderer.defaultModel
+        val model = if(state.isBaby) renderer.babyModel ?: renderer.defaultModel else renderer.defaultModel
         val texture = renderer.getTextureLocation(state)
 
         val cx = x + ICON_SIZE * 0.5

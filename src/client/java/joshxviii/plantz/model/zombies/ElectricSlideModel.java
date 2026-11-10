@@ -23,26 +23,17 @@ import static joshxviii.plantz.UtilsKt.pazResource;
 public class ElectricSlideModel<S extends PazZombieRenderState> extends PazZombieModel<S> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("electric_slide"), "main");
 	private final ModelPart afro;
-	private final ModelPart body;
 	private final ModelPart cape;
 	private final KeyframeAnimation actionAnimation;
-	private final KeyframeAnimation skateAnimation;
 
 	public ElectricSlideModel(final ModelPart root) {
 		super(
 			DiscoZombieAnimation.init,
 			root
 		);
-		this.afro = RenderingUtilsKt.getChildOrNull(this.getHead(), "afro");
-		this.body = RenderingUtilsKt.getChildOrNull(this.root(), "body");
-		this.cape = RenderingUtilsKt.getChildOrNull(this.body, "cape");
-		this.actionAnimation = ElectricSlideAnimation.dance.bake(root);
-		this.skateAnimation = HumanoidModelAnimation.roller_skate.bake(root);
-	}
-
-	@Override
-	public <T extends PazZombieRenderState> PazZombieModel<T> forArmor(ModelPart root) {
-		return new ElectricSlideModel<>(root);
+		this.afro = root.getChild("root").getChild("head").getChild("afro");
+		this.cape = root.getChild("root").getChild("body").getChild("cape");
+		this.actionAnimation = ElectricSlideAnimation.spin.bake(root.getChild("root"));
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -90,8 +81,6 @@ public class ElectricSlideModel<S extends PazZombieRenderState> extends PazZombi
 	public void setupAnim(@NotNull S state) {
 		super.setupAnim(state);
 		if (afro != null) afro.visible = (state.headItem.isEmpty() && state.headEquipment.isEmpty());
-		actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
-
 		if (cape != null) {
 			cape.resetPose();
 			cape.rotateBy(
@@ -102,5 +91,6 @@ public class ElectricSlideModel<S extends PazZombieRenderState> extends PazZombi
 							.rotateY((180.0F - state.getCapeLean2() / 3.0F) * (float) -(Math.PI / 180.0))
 			);
 		}
+		actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
 	}
 }
