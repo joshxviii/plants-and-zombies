@@ -9,9 +9,9 @@ import net.minecraft.util.RandomSource
 import net.minecraft.util.StringRepresentable
 import java.util.function.IntFunction
 
-enum class ElectricSlideVariant(val suffix: String, val id: Int) : StringRepresentable {
-    SLIDE("", 0),
-    BOOGALOO("boogaloo", 1);
+enum class ElectricSlideVariant(val suffix: String, val id: Int, val color: Int) : StringRepresentable {
+    SLIDE("", 0, 0xBDFDF5),
+    BOOGALOO("boogaloo", 1, 0xE9C52C);
 
     override fun getSerializedName(): String = suffix
 

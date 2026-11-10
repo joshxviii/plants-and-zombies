@@ -365,16 +365,11 @@ abstract class BodyItemAttachmentRenderLayer<S : LivingEntityRenderState, M : En
 
         if (itemStack.has(PazComponents.WORN_BODY_BLOCKER)) {
             poseStack.pushPose()
-            state.xRot = if (state.isCrouching) 25f else 0f
-            state.yRot = 0f
-            humanoidModel.head.resetPose()
-            val hatTranslateY = -4f
-            humanoidModel.head.y = humanoidModel.body.y + Mth.cos(state.xRot * Mth.DEG_TO_RAD.toDouble()) * hatTranslateY
-            humanoidModel.head.z = Mth.sin(state.xRot * Mth.DEG_TO_RAD.toDouble()) * hatTranslateY
-            humanoidModel.head.rotateBy(Axis.XP.rotationDegrees(state.xRot))
-            humanoidModel.head.offsetScale(Vector3f(0.05f,0.05f,0.05f))
+            //this moves worn headgear up a bit
+            humanoidModel.head.y -= 3f
             poseStack.popPose()
         }
+
         if (state.isBaby) {
             poseStack.scale(0.5f, 0.5f, 0.5f)
             poseStack.translate(0.0, 0.5, 0.0)

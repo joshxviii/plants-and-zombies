@@ -75,6 +75,7 @@ data class ServerConfig(
         "plantz:coffeebean"             to 2,
         "plantz:grave_buster"           to 3,
         "plantz:pumpkin"                to 6,
+        "plantz:squash"                 to 4
     ),
     var graveStoneActivationRange: Double = 24.0,
     var enableExperimentalFeatures: Boolean = false

@@ -73,6 +73,12 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     val floatAnimation : AnimationState = AnimationState()
     var moveDir = Vec3.ZERO
     var moveDirO = Vec3.ZERO
+    var xCape = 0.0f
+    var yCape = 0.0f
+    var zCape = 0.0f
+    var xCapeO = 0.0f
+    var yCapeO = 0.0f
+    var zCapeO = 0.0f
 
     companion object {
         fun checkPazZombieSpawnRules(
@@ -364,6 +370,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         moveDirO = moveDir
         val delta = deltaMovement
 
+        updateCapeState()
         val serverLevel = level() as? ServerLevel
 
         if (canEquipBalloons()) {
@@ -431,6 +438,29 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             }
         }
         moveDir = moveDir.add(delta)
+    }
+
+    fun updateCapeState() {
+        xCapeO = xCape
+        yCapeO = yCape
+        zCapeO = zCape
+
+        val dx = (x - xCape).toFloat()
+        val dy = (y - yCape).toFloat()
+        val dz = (z - zCape).toFloat()
+
+        if (dx * dx + dy * dy + dz * dz > 100.0) {
+            xCape = x.toFloat()
+            yCape = y.toFloat()
+            zCape = z.toFloat()
+            xCapeO = xCape
+            yCapeO = yCape
+            zCapeO = zCape
+        } else {
+            xCape += dx * 0.25f
+            yCape += dy * 0.25f
+            zCape += dz * 0.25f
+        }
     }
 
     fun spawnBalloons(count: Int = 2, color: DyeColor = DyeColor.RED) {

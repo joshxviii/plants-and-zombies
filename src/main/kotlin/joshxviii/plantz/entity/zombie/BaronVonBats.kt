@@ -5,6 +5,8 @@ import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.ai.goal.SummonMinionsGoal
 import joshxviii.plantz.ai.goal.NavigateToTargetGoal
+import joshxviii.plantz.entity.ZombieEquipment.COFFIN
+import joshxviii.plantz.entity.ZombieEquipment.equipZombieEquipment
 import net.minecraft.core.UUIDUtil
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -156,7 +158,13 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
                 trackedVampireIds,
                 isSummoning = { summoningTime > 0 },
                 beginSummoning = { summoningTime = 1 },
-                configureMinion = { if (it is BrownCoat) it.variant = BrownCoatVariant.VAMPIRE },
+                configureMinion = { if (it is BrownCoat) {
+                    it.variant = BrownCoatVariant.VAMPIRE
+                    if (it.getItemBySlot(EquipmentSlot.CHEST).isEmpty && random.nextFloat() < 0.2f) {
+                        it.setItemSlot(EquipmentSlot.CHEST, COFFIN())
+                        it.setDropChance(EquipmentSlot.CHEST, 0f)
+                    }
+                } },
                 canSummon = {
                     teleportTime <= 0 && transformDelay <= 0 && beamAttackTime <= 0 && !isTransformed
                 }

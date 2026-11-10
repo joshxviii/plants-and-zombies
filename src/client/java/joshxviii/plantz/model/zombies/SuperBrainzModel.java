@@ -134,9 +134,9 @@ public class SuperBrainzModel<S extends PazZombieRenderState> extends PazZombieM
         cape.rotateBy(
                 new Quaternionf()
                         .rotateY((float) -Math.PI)
-                        .rotateX((6.0F + superBrainzState.getCapeLean() / 2.0F + superBrainzState.getCapeFlap()) * (float) -(Math.PI / 180.0))
-                        .rotateZ(superBrainzState.getCapeLean2() / 2.0F * (float) -(Math.PI / 180.0))
-                        .rotateY((180.0F - superBrainzState.getCapeLean2() / 2.0F) * (float) -(Math.PI / 180.0))
+                        .rotateX((6.0F + state.getCapeLean() / 2.0F + state.getCapeFlap()) * (float) -(Math.PI / 180.0))
+                        .rotateZ(state.getCapeLean2() / 2.0F * (float) -(Math.PI / 180.0))
+                        .rotateY((180.0F - state.getCapeLean2() / 2.0F) * (float) -(Math.PI / 180.0))
         );
     }
 }

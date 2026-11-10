@@ -408,7 +408,7 @@ fun LivingEntity.attackRange(): Double {
 }
 
 fun LivingEntity.withinAttackRange(entity: Entity, plus: Double = 0.0): Boolean {
-    return entity.distanceToSqr(this) <= (this.attackRange().plus(plus)).pow(3)
+    return entity.distanceToSqr(this) <= (this.attackRange().plus(plus)).pow(2)
 }
 
 fun LivingEntity.knockback(power: Double, xd: Double, zd: Double) {

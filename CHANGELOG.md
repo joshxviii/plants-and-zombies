@@ -11,6 +11,8 @@
 - Added Marigold
   - Obtained through raid rewards.
   - Marigold will drop treasure instead of seed packets from zen gardening.
+- Added Squash
+- Can be found in Dappled Forests and Savannas
 - Zombie Raids now have "Boss Chance"
   - Boss Chance represents the odds that the next wave will spawn a boss.
   - The chance increases exponentially every wave.
@@ -25,8 +27,9 @@
   - Has a variant "Electric Boogaloo", which can spawn as a Boss.
 - Added Giga variant for All Star, which can spawn as a Boss
 - Added General variant for Robo-Zombie, which can spawn as a Boss
-- The Graveyard Biome now properly generates.
-- Added a Mausoleum Structure to the Graveyard Biome.
+- The Graveyard Biome now properly generates
+- Added a Mausoleum Structure to the Graveyard Biome
+  - The Mausoleum will also generate with a Brainz Flag as loot.
 - Added Brainz Alloy Door and Trapdoor
 - Added Door Shields
   - Can be crafted from any Door and a Shield.

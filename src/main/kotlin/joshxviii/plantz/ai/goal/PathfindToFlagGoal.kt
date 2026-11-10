@@ -49,7 +49,7 @@ class PathfindToFlagGoal(
 
     override fun canContinueToUse(): Boolean {
         mob.target?.let {
-            if (it.isAlive && mob.withinAttackRange(it)) return false
+            if (it.isAlive && mob.withinAttackRange(it, 4.0)) return false
         }
         val target = targetFlagPos ?: return false
         if (!mob.level().getBlockState(target).`is`(PLANTZ_FLAG_BLOCK)) return false

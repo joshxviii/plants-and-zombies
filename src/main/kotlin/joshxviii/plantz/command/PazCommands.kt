@@ -55,7 +55,7 @@ object PazCommands {
                         Commands.literal("start")
                             .executes { startRaid(it, 0) }
                             .then(
-                                Commands.argument("wave_count", IntegerArgumentType.integer(1, ZombieRaid.MAXIMUM_WAVE_COUNT))
+                                Commands.argument("wave_count", IntegerArgumentType.integer(1, 99))
                                     .executes { startRaid(it, IntegerArgumentType.getInteger(it, "wave_count")) }
                             )
                     )

@@ -42,7 +42,6 @@ class BeamAttackGoal(
 
     override fun canDoAction(): Boolean {
         val target = usingEntity.target?: return false
-        usingEntity.lookControl.setLookAt(target, 30f, 30f)
 
         return isInReach(target);
     }

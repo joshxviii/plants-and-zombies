@@ -134,7 +134,7 @@ open class PazButton(
 }
 
 // MODEL RENDERING
-fun ModelPart.getChildOrNull(name: String): ModelPart? = if (this.hasChild(name)) this.getChild(name) else null
+fun ModelPart?.getChildOrNull(name: String): ModelPart? = if (this?.hasChild(name) == true) this.getChild(name) else null
 
 @Unique
 fun ModelPart.scaleDownRotation(scale: Float) {

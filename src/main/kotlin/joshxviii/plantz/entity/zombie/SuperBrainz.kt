@@ -49,13 +49,6 @@ class SuperBrainz(type: EntityType<out SuperBrainz>, level: Level) : PazZombie(t
         xpReward = 40
     }
 
-    var xCape = 0.0f
-    var yCape = 0.0f
-    var zCape = 0.0f
-    var xCapeO = 0.0f
-    var yCapeO = 0.0f
-    var zCapeO = 0.0f
-
     val laserAttackAnimation : AnimationState = AnimationState()
     val rightPunchAnimation : AnimationState = AnimationState()
     val leftPunchAnimation : AnimationState = AnimationState()
@@ -112,7 +105,6 @@ class SuperBrainz(type: EntityType<out SuperBrainz>, level: Level) : PazZombie(t
             }
         }
 
-        updateCapeState()
         val level = level() as? ServerLevel?: return
         if (tickCount % 60 == 0)
             if (isFlying) {
@@ -273,29 +265,6 @@ class SuperBrainz(type: EntityType<out SuperBrainz>, level: Level) : PazZombie(t
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         val result = super.doHurtTarget(level, target)
         return result
-    }
-
-    fun updateCapeState() {
-        xCapeO = xCape
-        yCapeO = yCape
-        zCapeO = zCape
-
-        val dx = (x - xCape).toFloat()
-        val dy = (y - yCape).toFloat()
-        val dz = (z - zCape).toFloat()
-
-        if (dx * dx + dy * dy + dz * dz > 100.0) {
-            xCape = x.toFloat()
-            yCape = y.toFloat()
-            zCape = z.toFloat()
-            xCapeO = xCape
-            yCapeO = yCape
-            zCapeO = zCape
-        } else {
-            xCape += dx * 0.25f
-            yCape += dy * 0.25f
-            zCape += dz * 0.25f
-        }
     }
 
     override fun finalizeSpawn(

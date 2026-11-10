@@ -1,6 +1,20 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "plantz:item/spawn_egg/electric_slide"
+    "type": "minecraft:select",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "cases": [
+      {
+        "when": "boogaloo",
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/spawn_egg/electric_slide/boogaloo"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "plantz:item/spawn_egg/electric_slide/electric_slide"
+    }
   }
 }

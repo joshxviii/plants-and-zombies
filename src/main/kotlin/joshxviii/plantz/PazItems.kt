@@ -30,6 +30,7 @@ import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.item.*
 import joshxviii.plantz.item.component.*
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents
+import net.fabricmc.fabric.api.item.v1.ItemComponentTooltipProviderRegistry
 import net.minecraft.core.Direction
 import net.minecraft.core.Holder
 import net.minecraft.core.HolderSet
@@ -471,15 +472,15 @@ object PazItems {
 
     fun initialize() {
         // Modify components
-        //ItemComponentTooltipProviderRegistryImpl.addFirst(PazComponents.PROTECTS_HEAD)
-        //ItemComponentTooltipProviderRegistryImpl.addFirst(PazComponents.WORN_BODY_BLOCKER)
-        //ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.DOOR_SHIELD)
-        //ItemComponentTooltipProviderRegistryImpl.addFirst(PazComponents.BLOCK_BREAK_CHANCE)
-        //ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_WATER)
-        //ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.STORED_SUN)
-        //ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.SUN_COST)
-        //ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.BRAINZ_ALLOY_COST)
-        //ItemComponentTooltipProviderRegistryImpl.addLast(PazComponents.LETTER_DATA)
+        ItemComponentTooltipProviderRegistry.addFirst(PazComponents.PROTECTS_HEAD)
+        ItemComponentTooltipProviderRegistry.addFirst(PazComponents.WORN_BODY_BLOCKER)
+        ItemComponentTooltipProviderRegistry.addLast(PazComponents.DOOR_SHIELD)
+        ItemComponentTooltipProviderRegistry.addFirst(PazComponents.BLOCK_BREAK_CHANCE)
+        ItemComponentTooltipProviderRegistry.addLast(PazComponents.STORED_WATER)
+        ItemComponentTooltipProviderRegistry.addLast(PazComponents.STORED_SUN)
+        ItemComponentTooltipProviderRegistry.addLast(PazComponents.SUN_COST)
+        ItemComponentTooltipProviderRegistry.addLast(PazComponents.BRAINZ_ALLOY_COST)
+        ItemComponentTooltipProviderRegistry.addLast(PazComponents.LETTER_DATA)
 
 
         DefaultItemComponentEvents.MODIFY.register { ctx ->

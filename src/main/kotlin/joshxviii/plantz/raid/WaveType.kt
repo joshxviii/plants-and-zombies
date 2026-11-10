@@ -499,7 +499,7 @@ enum class WaveType(
                 else -> 0
             }
             if (balloonCount > 0) {
-                if (zombie.random.nextFloat() < 0.18 && zombie is PazZombie) zombie.spawnBalloons(balloonCount, listOf(DyeColor.LIME, DyeColor.YELLOW, DyeColor.PURPLE, DyeColor.LIGHT_BLUE))
+                if (zombie.random.nextFloat() < 0.18 && zombie is PazZombie) zombie.spawnBalloons(balloonCount, listOf(DyeColor.LIME, DyeColor.YELLOW, DyeColor.MAGENTA, DyeColor.LIGHT_BLUE))
             }
         }
 

@@ -31,7 +31,8 @@
           "type": "minecraft:entity_properties",
           "entity": "this",
           "predicate": {
-            "minecraft:entity_type": "plantz:electric_slide"
+            "minecraft:entity_type": "plantz:electric_slide",
+            "minecraft:nbt": "{\"variant\":\"boogaloo\"}"
           }
         }
       }

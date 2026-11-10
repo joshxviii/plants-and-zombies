@@ -16,12 +16,15 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Quaternionf;
 
 import static joshxviii.plantz.UtilsKt.pazResource;
 
 public class ElectricSlideModel<S extends PazZombieRenderState> extends PazZombieModel<S> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("electric_slide"), "main");
 	private final ModelPart afro;
+	private final ModelPart body;
+	private final ModelPart cape;
 	private final KeyframeAnimation actionAnimation;
 	private final KeyframeAnimation skateAnimation;
 
@@ -30,7 +33,9 @@ public class ElectricSlideModel<S extends PazZombieRenderState> extends PazZombi
 			DiscoZombieAnimation.init,
 			root
 		);
-		this.afro = RenderingUtilsKt.getChildOrNull(this.getHead(), "afro");;
+		this.afro = RenderingUtilsKt.getChildOrNull(this.getHead(), "afro");
+		this.body = RenderingUtilsKt.getChildOrNull(this.root(), "body");
+		this.cape = RenderingUtilsKt.getChildOrNull(this.body, "cape");
 		this.actionAnimation = ElectricSlideAnimation.dance.bake(root);
 		this.skateAnimation = HumanoidModelAnimation.roller_skate.bake(root);
 	}
@@ -64,6 +69,8 @@ public class ElectricSlideModel<S extends PazZombieRenderState> extends PazZombi
 				.texOffs(16, 32).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.25F))
 				.texOffs(63, 48).addBox(0.0F, -1.0F, 2.0F, 0.0F, 10.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -4.0F, 0.0F));
 
+		PartDefinition cape = body.addOrReplaceChild("cape", CubeListBuilder.create().texOffs(62, 43).addBox(-4.0F, 0.0F, 0.0F, 8.0F, 12.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 2.0F));
+
 		PartDefinition right_arm = root.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(40, 16).addBox(-3.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
 				.texOffs(48, 48).addBox(-3.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.25F)), PartPose.offset(-4.0F, -2.0F, 0.0F));
 
@@ -84,5 +91,16 @@ public class ElectricSlideModel<S extends PazZombieRenderState> extends PazZombi
 		super.setupAnim(state);
 		if (afro != null) afro.visible = (state.headItem.isEmpty() && state.headEquipment.isEmpty());
 		actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
+
+		if (cape != null) {
+			cape.resetPose();
+			cape.rotateBy(
+					new Quaternionf()
+							.rotateY((float) -Math.PI)
+							.rotateX((6.0F + state.getCapeLean() / 3.0F + state.getCapeFlap()) * (float) -(Math.PI / 180.0))
+							.rotateZ(state.getCapeLean2() / 3.0F * (float) -(Math.PI / 180.0))
+							.rotateY((180.0F - state.getCapeLean2() / 3.0F) * (float) -(Math.PI / 180.0))
+			);
+		}
 	}
 }

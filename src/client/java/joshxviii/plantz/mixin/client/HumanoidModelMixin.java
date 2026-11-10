@@ -1,5 +1,6 @@
 package joshxviii.plantz.mixin.client;
 
+import joshxviii.plantz.PazComponents;
 import joshxviii.plantz.animation.HumanoidModelAnimation;
 import joshxviii.plantz.renderer.RenderingUtilsKt;
 import net.minecraft.client.animation.KeyframeAnimation;
@@ -53,6 +54,7 @@ public class HumanoidModelMixin {
     @Inject(method = "setupAnim*", at = @At("TAIL"))
     public void setupAnim(@Coerce Object o, CallbackInfo ci) {
         if (!(o instanceof HumanoidRenderState state)) return;
+
         var isSkating = state.getDataOrDefault(IS_SKATING, false);
         if (isSkating){
             var pos = state.walkAnimationPos;
@@ -63,6 +65,15 @@ public class HumanoidModelMixin {
             RenderingUtilsKt.scaleDownRotation(leftLeg, f);
             RenderingUtilsKt.scaleDownRotation(rightLeg, f);
             skateAnimation.applyWalk(pos, speed, 2f, 1f);
+        }
+
+        var hasBodyBlocker = state.chestEquipment.has(PazComponents.WORN_BODY_BLOCKER);
+        if (hasBodyBlocker) {
+            head.x = 0f;
+            head.z = 0f;
+            head.xRot = body.xRot;
+            head.yRot = body.yRot;
+            head.zRot = body.zRot;
         }
     }
 }

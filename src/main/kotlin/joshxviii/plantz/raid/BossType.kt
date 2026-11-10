@@ -5,6 +5,9 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.entity.zombie.*
 import joshxviii.plantz.pazResource
 import io.netty.buffer.ByteBuf
+import joshxviii.plantz.PazItems
+import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperBakedItemModel
+import net.minecraft.core.component.DataComponents
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.resources.Identifier
@@ -12,6 +15,7 @@ import net.minecraft.util.ByIdMap
 import net.minecraft.util.Mth
 import net.minecraft.util.StringRepresentable
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.monster.zombie.Zombie
@@ -37,7 +41,7 @@ enum class BossType(
         bossSpawns = { raid, wave ->
             mutableListOf<BossEntry>().let {
                 val waveCount = raid.currentWaveNumber()
-                val count = Mth.floor(waveCount/3.0)
+                val count = Mth.floor(waveCount/3.0).coerceAtLeast(1)
                 for (i in 0 until count) it.add(BossEntry(PazEntities.ALL_STAR, ::bossify))
                 it
             }
@@ -50,7 +54,7 @@ enum class BossType(
         bossSpawns = { raid, wave ->
             mutableListOf<BossEntry>().let {
                 val waveCount = raid.currentWaveNumber()
-                val count = Mth.floor(waveCount/7.0)
+                val count = Mth.floor(waveCount/7.0).coerceAtLeast(1)
                 for (i in 0 until count) it.add(BossEntry(PazEntities.BARON_VON_BATS))
                 it
             }
@@ -63,7 +67,7 @@ enum class BossType(
         bossSpawns = { raid, wave ->
             mutableListOf<BossEntry>().let {
                 val waveCount = raid.currentWaveNumber()
-                val count = Mth.floor(waveCount/6.0)
+                val count = Mth.floor(waveCount/6.0).coerceAtLeast(1)
                 for (i in 0 until count) it.add(BossEntry(PazEntities.ELECTRIC_SLIDE, ::bossify))
                 it
             }
@@ -76,7 +80,7 @@ enum class BossType(
         bossSpawns = { raid, wave ->
             mutableListOf<BossEntry>().let {
                 val waveCount = raid.currentWaveNumber()
-                val count = Mth.floor(waveCount/7.0)
+                val count = Mth.floor(waveCount/7.0).coerceAtLeast(1)
                 for (i in 0 until count) it.add(
                     BossEntry(PazEntities.GARGANTUAR,
                     { if (it is Gargantuar && wave == WaveType.PIRATE_INVASION) it.variant = GargantuarVariant.PIRATE }
@@ -92,7 +96,7 @@ enum class BossType(
         bossSpawns = { raid, wave ->
             mutableListOf<BossEntry>().let {
                 val waveCount = raid.currentWaveNumber()
-                val count = Mth.floor(waveCount/7.0)
+                val count = Mth.floor(waveCount/7.0).coerceAtLeast(1)
                 for (i in 0 until count) it.add(BossEntry(PazEntities.ROBO_ZOMBIE, ::bossify))
                 it
             }
@@ -136,7 +140,10 @@ enum class BossType(
             zombie.getAttribute(Attributes.MAX_HEALTH)?.let { if (!it.hasModifier(BOSSIFY)) it.addPermanentModifier(BOSS_HEALTH) }
             zombie.getAttribute(Attributes.ATTACK_DAMAGE)?.let { if (!it.hasModifier(BOSSIFY)) it.addPermanentModifier(BOSS_DAMAGE) }
             zombie.health = zombie.maxHealth
-            if (zombie is ElectricSlide) zombie.variant = ElectricSlideVariant.BOOGALOO
+            if (zombie is ElectricSlide) {
+                zombie.variant = ElectricSlideVariant.BOOGALOO
+                zombie.getItemBySlot(EquipmentSlot.FEET).takeIf { it.`is`(PazItems.ROLLER_SKATES) } ?.set(DataComponents.ITEM_MODEL, Identifier.withDefaultNamespace("air"))
+            }
             if (zombie is RoboZombie) {
                 zombie.isTransformed = true
                 zombie.variant = RoboZombieVariant.GENERAL
