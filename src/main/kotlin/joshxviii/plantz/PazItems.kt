@@ -332,6 +332,24 @@ object PazItems {
             )
     )
     @JvmField
+    val PARTY_HAT: Item = registerItem(
+        "party_hat",
+        properties = Item.Properties()
+            .component(
+                DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
+                    .setEquipSound(SoundEvents.ARMOR_EQUIP_LEATHER)
+                    .build()
+            )
+            .component(
+                DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
+                    .add(
+                        Attributes.ARMOR,
+                        AttributeModifier(pazResource("party_hat"), 1.0, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.HEAD
+                    ).build()
+            )
+    )
+    @JvmField
     val BLUEPRINT: Item = registerItem(
         "blueprint", ::BlueprintItem,
         properties = Item.Properties()

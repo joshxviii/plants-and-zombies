@@ -35,8 +35,6 @@ class FootballHelmetItem(properties: Properties) : Item(properties) {
         }
     }
 
-
-
     fun removeModifiers(entity: LivingEntity?) {
         if (entity == null) return
         entity.getAttribute(Attributes.MOVEMENT_SPEED)?.removeModifier(CHARGE_BOOST_ID)

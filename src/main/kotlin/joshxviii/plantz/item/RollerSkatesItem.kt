@@ -28,8 +28,6 @@ class RollerSkatesItem(properties: Properties) : Item(properties) {
         }
     }
 
-
-
     fun removeModifiers(entity: LivingEntity?) {
         if (entity == null) return
         entity.getAttribute(Attributes.FRICTION_MODIFIER)?.removeModifier(ROLLER_SKATES_ID)
