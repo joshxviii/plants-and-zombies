@@ -833,7 +833,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     open fun canSurviveOn(block: BlockState) : Boolean = canWalk() || block.`is`(PLANTABLE)
     open fun canPlaceOn(block: BlockState) : Boolean = canSurviveOn(block)
     open fun canProduceSeeds(): Boolean = true
-    open fun clampToGrid() = !canWalk() && !rolling && onValidGround()
+    open fun clampToGrid() = !canWalk() && !rolling && onValidGround() && !isOverlappingWithOther(blockPosition())
     open fun cooldownFinished() {}
     open fun rollingFriction(): Float = 0.5f
     override fun shouldDiscardFriction(): Boolean {

@@ -8,7 +8,6 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.projectile.Projectile
@@ -102,7 +101,7 @@ class ProjectileAttackGoal(
         val finalVel = if(useHighArc) Mth.lerp(distanceRatio, velocity * 0.45, velocity) else velocity
 
         val targetPos = calculateMovingTargetPosition(target, projectile, finalVel)
-        val arcs = calculateProjectileArcs(targetPos, projectile.gravity.coerceAtLeast(0.000001), finalVel)
+        val arcs = calculateMotionArcs(targetPos, projectile.gravity, finalVel)
         if (arcs==null) {// lose target if unreachable
             projectile.discard()
             usingEntity.target = null
@@ -143,7 +142,7 @@ class ProjectileAttackGoal(
         var predicted = basePos
 
         repeat(4) {
-            val arcs = calculateProjectileArcs(predicted, g, v) ?: return predicted
+            val arcs = calculateMotionArcs(predicted, g, v) ?: return predicted
             val angle = if (useHighArc) arcs.first else arcs.second
 
             val horizontalSpeed = v * Mth.cos(angle)
@@ -157,38 +156,40 @@ class ProjectileAttackGoal(
 
         return predicted
     }
+    companion object {
+        /**
+         * Calculates the high-arc (φ₁, steeper) and low-arc (φ₂, flatter) elevation angles (radians)
+         * for a projectile to hit the target position with given initial velocity and gravity.
+         *
+         * @param targetPos Relative target position from launch point (Vec3)
+         * @param g Projectile's gravity
+         * @param velocity Initial projectile speed (blocks/tick)
+         * @return Pair(highArcAngle, lowArcAngle)
+         */
+        fun calculateMotionArcs(targetPos: Vec3, grav: Double, velocity: Double): Pair<Double, Double>? {
+            val g = grav.coerceAtLeast(0.000001)
+            val dx = targetPos.x
+            val dy = targetPos.y
+            val dz = targetPos.z
 
-    /**
-     * Calculates the high-arc (φ₁, steeper) and low-arc (φ₂, flatter) elevation angles (radians)
-     * for a projectile to hit the target position with given initial velocity and gravity.
-     *
-     * @param targetPos Relative target position from launch point (Vec3)
-     * @param g Projectile's gravity
-     * @param velocity Initial projectile speed (blocks/tick)
-     * @return Pair(highArcAngle, lowArcAngle)
-     */
-    private fun calculateProjectileArcs(targetPos: Vec3, g: Double, velocity: Double): Pair<Double, Double>? {
-        val dx = targetPos.x
-        val dy = targetPos.y
-        val dz = targetPos.z
+            val horizDist = sqrt(dx * dx + dz * dz)
+            if (horizDist <= 0f) return null
 
-        val horizDist = sqrt(dx * dx + dz * dz)
-        if (horizDist <= 0f) return null
+            val v2: Double = velocity*velocity
+            val v4 = v2 * v2
+            val horiz2_d = horizDist * horizDist
+            var discriminant = v4 - g * (g * horiz2_d + 2.0 * v2 * dy)
 
-        val v2: Double = velocity*velocity
-        val v4 = v2 * v2
-        val horiz2_d = horizDist * horizDist
-        var discriminant = v4 - g * (g * horiz2_d + 2.0 * v2 * dy)
+            //impossible shot
+            if (discriminant < 0.0) discriminant = 0.0
 
-        //impossible shot
-        if (discriminant < 0.0) discriminant = 0.0
+            val sqrtDisc = sqrt(discriminant)
+            val denom = g * horizDist
 
-        val sqrtDisc = sqrt(discriminant)
-        val denom = g * horizDist
+            val phi1 = atan((v2 + sqrtDisc) / denom)
+            val phi2 = atan((v2 - sqrtDisc) / denom)
 
-        val phi1 = atan((v2 + sqrtDisc) / denom)
-        val phi2 = atan((v2 - sqrtDisc) / denom)
-
-        return phi1 to phi2
+            return phi1 to phi2
+        }
     }
 }

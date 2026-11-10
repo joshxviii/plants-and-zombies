@@ -79,18 +79,17 @@ public class ElectricSlideModel<S extends PazZombieRenderState> extends PazZombi
 
 	@Override
 	public void setupAnim(@NotNull S state) {
+		state.isAggressive = false;
 		super.setupAnim(state);
 		if (afro != null) afro.visible = (state.headItem.isEmpty() && state.headEquipment.isEmpty());
-		if (cape != null) {
-			cape.resetPose();
-			cape.rotateBy(
-					new Quaternionf()
-							.rotateY((float) -Math.PI)
-							.rotateX((6.0F + state.getCapeLean() / 3.0F + state.getCapeFlap()) * (float) -(Math.PI / 180.0))
-							.rotateZ(state.getCapeLean2() / 3.0F * (float) -(Math.PI / 180.0))
-							.rotateY((180.0F - state.getCapeLean2() / 3.0F) * (float) -(Math.PI / 180.0))
-			);
-		}
+		cape.resetPose();
+		cape.rotateBy(
+				new Quaternionf()
+						.rotateY((float) -Math.PI)
+						.rotateX((6.0F + state.getCapeLean() / 3.0F + state.getCapeFlap()) * (float) -(Math.PI / 180.0))
+						.rotateZ(state.getCapeLean2() / 3.0F * (float) -(Math.PI / 180.0))
+						.rotateY((180.0F - state.getCapeLean2() / 3.0F) * (float) -(Math.PI / 180.0))
+		);
 		actionAnimation.apply(state.getActionAnimationState(), state.ageInTicks);
 	}
 }

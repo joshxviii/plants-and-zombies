@@ -367,9 +367,12 @@ object PazEntities {
     )
     @JvmField val SQUASH: EntityType<Squash> = registerPlant(
         "squash", EntityType.Builder.of(::Squash, MobCategory.CREATURE),
-        width = 0.8f,
-        height = 0.9f,
+        width = 1.0f,
+        height = 1.15f,
         attributes = Plant.Companion.PlantAttributes(
+            attackDamage = 10.0,
+            maxHealth = 25.0,
+            attackRange = 7.25,
         )
     )
     @JvmField val ROYAL_SUNFLOWER: EntityType<RoyalSunflower> = registerPlant(
