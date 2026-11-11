@@ -134,11 +134,13 @@ enum class BossType(
         private val BOSS_SCALE = AttributeModifier(BOSSIFY, 0.33, AttributeModifier.Operation.ADD_VALUE)
         private val BOSS_HEALTH = AttributeModifier(BOSSIFY, 2.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
         private val BOSS_DAMAGE = AttributeModifier(BOSSIFY, 2.0, AttributeModifier.Operation.ADD_MULTIPLIED_BASE)
+        private val BOSS_STEP = AttributeModifier(BOSSIFY, 2.0, AttributeModifier.Operation.ADD_MULTIPLIED_BASE)
 
         fun bossify(zombie: Zombie) {
             zombie.getAttribute(Attributes.SCALE)?.let { if (!it.hasModifier(BOSSIFY)) it.addPermanentModifier(BOSS_SCALE) }
             zombie.getAttribute(Attributes.MAX_HEALTH)?.let { if (!it.hasModifier(BOSSIFY)) it.addPermanentModifier(BOSS_HEALTH) }
             zombie.getAttribute(Attributes.ATTACK_DAMAGE)?.let { if (!it.hasModifier(BOSSIFY)) it.addPermanentModifier(BOSS_DAMAGE) }
+            zombie.getAttribute(Attributes.STEP_HEIGHT)?.let { if (!it.hasModifier(BOSSIFY)) it.addPermanentModifier(BOSS_STEP) }
             zombie.health = zombie.maxHealth
             if (zombie is ElectricSlide) {
                 zombie.variant = ElectricSlideVariant.BOOGALOO

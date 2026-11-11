@@ -1,20 +1,21 @@
 {
   "model": {
     "type": "minecraft:select",
-    "property": "minecraft:display_context",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
     "cases": [
       {
-        "when": "thirdperson_righthand",
-        "model": {
-          "type": "minecraft:model",
-          "model": "plantz:block/roller_skate_right"
-        }
-      },
-      {
-        "when": "thirdperson_lefthand",
+        "when": "left",
         "model": {
           "type": "minecraft:model",
           "model": "plantz:block/roller_skate_left"
+        }
+      },
+      {
+        "when": "right",
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:block/roller_skate_right"
         }
       }
     ],

@@ -50,7 +50,5 @@ class CoffeeBean(type: EntityType<out Plant>, level: Level) : Plant(type, level)
     }
     override fun attackGoals() {}
 
-    override fun canSurviveOn(block: BlockState): Boolean {
-        return super.canSurviveOn(block) || !block.getCollisionShape(level(), blockPosition().below()).isEmpty
-    }
+    override fun canSurviveOn(block: BlockState): Boolean = true
 }

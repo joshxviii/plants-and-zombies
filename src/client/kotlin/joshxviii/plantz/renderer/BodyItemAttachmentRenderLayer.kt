@@ -36,13 +36,13 @@ import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.core.component.DataComponents
 import net.minecraft.resources.Identifier
 import net.minecraft.util.ARGB
 import net.minecraft.util.Mth
-import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
-import org.joml.Vector3f
+import net.minecraft.world.item.component.CustomModelData
 import kotlin.math.pow
 
 class SpecialEffectsLayer<S : LivingEntityRenderState, M : EntityModel<in S>>(private val renderer: RenderLayerParent<S, M>) : RenderLayer<S, M>(
@@ -298,8 +298,8 @@ abstract class FeetItemAttachmentRenderLayer<S : LivingEntityRenderState, M : En
 
         poseStack.pushPose()
         humanoidModel.root().translateAndRotate(poseStack)
-        renderLegItem(poseStack, collector, itemStack, lightCoords, humanoidModel.leftLeg, false)
-        renderLegItem(poseStack, collector, itemStack, lightCoords, humanoidModel.rightLeg, true)
+        renderLegItem(poseStack, collector, itemStack, lightCoords, humanoidModel.leftLeg, true)
+        renderLegItem(poseStack, collector, itemStack, lightCoords, humanoidModel.rightLeg, false)
         poseStack.popPose()
     }
 
@@ -309,7 +309,7 @@ abstract class FeetItemAttachmentRenderLayer<S : LivingEntityRenderState, M : En
         itemStack: ItemStack,
         lightCoords: Int,
         leg: ModelPart,
-        flipped: Boolean,
+        left: Boolean,
     ) {
         poseStack.pushPose()
 
@@ -320,8 +320,14 @@ abstract class FeetItemAttachmentRenderLayer<S : LivingEntityRenderState, M : En
         itemRenderState.clear()
         minecraft.itemModelResolver.updateForTopItem(
             itemRenderState,
-            itemStack,
-            if (flipped) ItemDisplayContext.THIRD_PERSON_RIGHT_HAND else ItemDisplayContext.THIRD_PERSON_LEFT_HAND,
+            itemStack.copy().apply { set(DataComponents.CUSTOM_MODEL_DATA, CustomModelData(
+                listOf(),
+                listOf(),
+                listOf(if (left) "left" else "right"),
+                listOf()
+            )
+            )},
+            ItemDisplayContext.HEAD,
             minecraft.level,
             null,
             0

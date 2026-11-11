@@ -110,7 +110,5 @@ open class WallNut(type: EntityType<out Plant>, level: Level) : Plant(type, leve
         super.actuallyHurt(level, source, dmg)
     }
 
-    override fun canSurviveOn(block: BlockState): Boolean {
-        return true //super.canSurviveOn(block) || !block.getCollisionShape(level(), blockPosition().below()).isEmpty
-    }
+    override fun canSurviveOn(block: BlockState): Boolean = true
 }

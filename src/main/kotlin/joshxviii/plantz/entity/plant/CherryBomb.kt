@@ -54,7 +54,5 @@ class CherryBomb(type: EntityType<out ExplosivePlant>, level: Level) : Explosive
         })
     }
 
-    override fun canSurviveOn(block: BlockState): Boolean {
-        return super.canSurviveOn(block) || !block.getCollisionShape(level(), blockPosition().below()).isEmpty
-    }
+    override fun canSurviveOn(block: BlockState): Boolean = true
 }

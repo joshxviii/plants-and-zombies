@@ -31,7 +31,7 @@ class DuckTubeItem(properties: Properties) : Item(properties) {
             if (!item.`is`(PazItems.DUCKY_TUBE) && !entity.`is`(PazTags.EntityTypes.PLANTABLE_ON_WATER)) return
             if (entity is Player && entity.abilities.flying) return
             val fluidType: Fluid = entity.level()
-                .getBlockState(BlockPos.containing(entity.position().add(0.0, entity.bbHeight * 0.5, 0.0)))
+                .getBlockState(BlockPos.containing(entity.position().add(0.0, entity.bbHeight * 0.45, 0.0)))
                 .fluidState.type
             if (fluidType === Fluids.EMPTY) return
 

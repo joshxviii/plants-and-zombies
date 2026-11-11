@@ -10,9 +10,17 @@
 	"contact": {
 		"homepage": "https://modrinth.com/mod/plants-and-zombies",
 		"sources": "https://github.com/joshxviii/plants-and-zombies",
-		"discord": "https://discord.gg/xxUrJuFJUz"
+		"issues": "https://github.com/joshxviii/plants-and-zombies/issues/new?template=bug-report.md"
 	},
-	"license": "CC0-1.0",
+	"custom": {
+		"modmenu": {
+			"links": {
+				"modmenu.discord": "https://discord.gg/xxUrJuFJUz"
+			},
+			"update_checker": true
+		}
+	},
+	"license": "MPL-2.0",
 	"icon": "assets/plantz/icon.png",
 	"environment": "*",
 	"entrypoints": {

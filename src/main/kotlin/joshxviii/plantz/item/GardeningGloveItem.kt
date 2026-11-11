@@ -158,12 +158,12 @@ class GardeningGloveItem(properties: Properties) : Item(properties) {
         plantData.loadInto(plantEntity)
         plantEntity.snapTo(pos)
         plantEntity.playSound(SoundEvents.SNOWBALL_THROW,  0.4f, 0.6f)
-        if (plantEntity is WallNut) plantEntity.roll(lookAngle, power = 0.7f * lobbingLevel)
-        else plantEntity.applyImpulse(lookAngle.scale(0.65 + 0.5 * lobbingLevel))
         if (!level.addFreshEntity(plantEntity)) {
             plantEntity.discard()
             return
         }
+        if (plantEntity is WallNut) plantEntity.roll(lookAngle, power = 0.7f * lobbingLevel)
+        else plantEntity.applyImpulse(lookAngle.scale(0.65 + 0.5 * lobbingLevel))
         removePlant(stack, livingEntity, livingEntity.usedItemHand)
     }
 
