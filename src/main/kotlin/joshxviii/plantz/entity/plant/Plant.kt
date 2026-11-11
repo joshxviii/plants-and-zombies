@@ -243,16 +243,24 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     private var attachedPlayerReference: EntityReference<LivingEntity>?
         get() = this.entityData.get(ATTACHED_PLAYER).getOrNull()
-        set(value) = this.entityData.set(ATTACHED_PLAYER, Optional.ofNullable(value))
-
-    var attachedEntity: LivingEntity?
-        get() = EntityReference.getLivingEntity(attachedPlayerReference, this.level())
-        private set(value) {
-            val current = attachedEntity
-            if (value == null && current != null) removeOnHeadEffects()
-            else if (value != null && current == null) applyOnHeadEffects()
-            attachedPlayerReference = EntityReference.of(value)
+        set(value) {
+            this.entityData.set(ATTACHED_PLAYER, Optional.ofNullable(value))
+            if (value != null) applyOnHeadEffects() else removeOnHeadEffects()
         }
+
+    val attachedEntity: LivingEntity?
+        get() = EntityReference.getLivingEntity(attachedPlayerReference, this.level())?.takeIf { it.level() === this.level() }
+
+    fun isAttachedTo(entity: Entity): Boolean = attachedPlayerReference?.uuid == entity.uuid
+
+    fun saveWithId(): CompoundTag {
+        ScopedCollector(this.problemPath(), LOGGER).use { reporter ->
+            val output = TagValueOutput.createWithContext(reporter, this.registryAccess())
+            this.saveWithoutId(output)
+            output.putString("id", this.encodeId ?: return CompoundTag())
+            return output.buildResult()
+        }
+    }
 
     fun applyOnHeadEffects() {
         getAttribute(Attributes.SCALE)?.removeModifier(LEGACY_ON_HEAD_SCALE)
@@ -426,7 +434,8 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
     override fun canAttack(target: LivingEntity): Boolean = super.canAttack(target) && !this.hasSameOwner(target)
     override fun canUsePortal(ignorePassenger: Boolean): Boolean = super.canUsePortal(ignorePassenger) && !isAttached()
-    fun isAttached(): Boolean = attachedEntity!=null
+    fun isAttached(): Boolean = attachedPlayerReference != null
+    override fun shouldBeSaved(): Boolean = !isAttached() && super.shouldBeSaved()
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
         if (source.`is`(PazTags.DamageTypes.IGNORED_BY_PLANTS)) return false
@@ -545,11 +554,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun tick() {
         super.tick()
-        attachedEntity?.positionPlant(this)
-        if (attachedEntity?.canWearPlant() == false) {
-            if(dropAsSeedPacketItem(force = true, dropPumpkin = true)) playSound(SoundEvents.ROOTED_DIRT_BREAK)
-        }
         val level = this.level()
+        if (level is ServerLevel && isAttached() && !tickAttachment(level)) return
+        attachedEntity?.positionPlant(this)
 
         if (level is ServerLevel) {
             // wild plants that were in unloaded chunks when a raid started get vanished once they load back in
@@ -999,29 +1006,63 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     fun attachToEntity(entity: LivingEntity): Boolean {
-        if (level().isClientSide) return false
-        ScopedCollector(this.problemPath(), LOGGER).use { reporter ->
-            val output = TagValueOutput.createWithContext(reporter, this.registryAccess())
-            this.saveWithoutId(output)
-            output.putString("id", this.encodeId!!)
-            if (entity.tryToSetPlantOnHead(output.buildResult())) {
-                (entity as PlantHeadAttachment).`plantz$setPlant`(this)
-                attachedEntity = entity
-                return true
-            }
-        }
-        return false
+        if (level().isClientSide || isRemoved || isAttached()) return false
+        if (entity.level() !== level() || !entity.canWearPlant() || PlantHeadAttachment.hasWornPlant(entity)) return false
+        stopRiding()
+        restoreAttachment(entity)
+        entity.positionPlant(this)
+        return true
+    }
+
+    fun restoreAttachment(wearer: LivingEntity) {
+        attachedPlayerReference = EntityReference.of(wearer)
+        PlantHeadAttachment.link(wearer, this)
     }
 
     fun detachFromEntity() {
-        if (attachedEntity!=null) {
-            (attachedEntity as PlantHeadAttachment).`plantz$setPlantData`(CompoundTag())
-            (attachedEntity as PlantHeadAttachment).`plantz$setPlant`(null)
-            attachedEntity = null
-            yRot = clampYRot(yRot)
-            yHeadRot = clampYRot(yHeadRot)
-            yBodyRot = clampYRot(yBodyRot)
+        if (level().isClientSide) return
+        val reference = attachedPlayerReference ?: return
+        EntityReference.getLivingEntity(reference, level())?.let { wearer ->
+            if ((wearer as PlantHeadAttachment).`plantz$getPlantPointer`() === this) PlantHeadAttachment.link(wearer, null)
         }
+        attachedPlayerReference = null
+        yRot = clampYRot(yRot, true)
+        yHeadRot = clampYRot(yHeadRot, true)
+        yBodyRot = clampYRot(yBodyRot, true)
+    }
+
+    private fun tickAttachment(level: ServerLevel): Boolean {
+        val wearer = EntityReference.getLivingEntity(attachedPlayerReference, level)// searches all levels
+        if (wearer == null) {
+            remove(RemovalReason.UNLOADED_WITH_PLAYER)
+            return false
+        }
+        val worn = PlantHeadAttachment.wornPlant(wearer)
+        if (wearer.level() !== level) {
+            when {
+                worn === this -> PlantHeadAttachment.stash(wearer)
+                worn == null && !PlantHeadAttachment.hasWornPlant(wearer) -> {
+                    (wearer as PlantHeadAttachment).`plantz$setPendingPlant`(PlantHeadAttachment.serializePlant(this))
+                    remove(RemovalReason.UNLOADED_WITH_PLAYER)
+                }
+                else -> remove(RemovalReason.UNLOADED_WITH_PLAYER)// wearer already carries a copy of us
+            }
+            return false
+        }
+        when {
+            worn == null -> PlantHeadAttachment.link(wearer, this)
+            worn !== this -> {
+                attachedPlayerReference = null
+                dropAsSeedPacketItem(force = true, dropPumpkin = true)
+                return false
+            }
+        }
+        if (!wearer.canWearPlant()) {
+            detachFromEntity()
+            if (dropAsSeedPacketItem(force = true, dropPumpkin = true)) playSound(SoundEvents.ROOTED_DIRT_BREAK)
+            return false
+        }
+        return true
     }
 
     override fun shouldTryTeleportToOwner(): Boolean = false

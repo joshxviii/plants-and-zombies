@@ -42,6 +42,9 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.pathfinder.Path
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
+import com.mojang.logging.LogUtils
+import net.minecraft.util.ProblemReporter
+import net.minecraft.world.level.storage.TagValueInput
 import java.time.LocalDate
 import java.time.Month
 import java.time.MonthDay
@@ -75,51 +78,6 @@ object SeasonalEvents {
 
     fun isChristmas(): Boolean =
         isNear(MonthDay.of(Month.DECEMBER, 25))
-}
-
-interface PlantHeadAttachment {
-    fun `plantz$hasPlantOnHead`(): Boolean
-    fun `plantz$getPlant`(): Plant?
-    /** Synced entity id of the worn plant, or -1. Valid on both sides. */
-    fun `plantz$getPlantId`(): Int
-
-    fun `plantz$setPlant`(value: Plant?)
-    fun `plantz$getPlantData`(): CompoundTag
-    fun `plantz$setPlantData`(value: CompoundTag)
-    companion object {
-        fun register() {
-            UseBlockCallback.EVENT.register { player, level, hand, hitResult ->
-                if (hand != InteractionHand.MAIN_HAND || !player.mainHandItem.isEmpty) InteractionResult.PASS
-                else placeWornPlant(player, level, hitResult.blockPos, hitResult.direction)
-            }
-        }
-
-        fun wornPlant(player: Player): Plant? =
-            player.level().getEntity((player as PlantHeadAttachment).`plantz$getPlantId`()) as? Plant
-
-        fun placeWornPlant(player: Player, level: Level, clickedPos: BlockPos, face: Direction): InteractionResult {
-            if (!player.isSecondaryUseActive || player.isSpectator || face != Direction.UP) return InteractionResult.PASS
-            val plant = wornPlant(player) ?: return InteractionResult.PASS
-            if (!plant.canPlaceOn(level.getBlockState(clickedPos))) return InteractionResult.PASS
-
-            val placePos = clickedPos.above()
-            val spaceFree = level.getBlockState(placePos).getCollisionShape(level, placePos).isEmpty
-            if (!spaceFree) return InteractionResult.FAIL
-            if (level.getEntitiesOfClass(Plant::class.java, AABB(placePos)).any { it !== plant }) {
-                if (!level.isClientSide) {
-                    player.sendOverlayMessage(Component.translatable("message.plantz.already_planted").withStyle(ChatFormatting.RED))
-                }
-                return InteractionResult.FAIL
-            }
-            if (level.isClientSide) return InteractionResult.SUCCESS
-
-            plant.detachFromEntity()
-            plant.deltaMovement = Vec3.ZERO
-            plant.snapTo(Vec3.atBottomCenterOf(placePos))
-            plant.playSound(SoundEvents.HARNESS_UNEQUIP)// TODO custom sounds
-            return InteractionResult.SUCCESS_SERVER
-        }
-    }
 }
 
 data class HSV(
@@ -212,14 +170,6 @@ fun Entity.canWearPlant(): Boolean {
             && this.isAlive && !this.isDeadOrDying && !this.isRemoved
             && !(this is ServerPlayer && (this.isSpectator))
 }
-fun Entity.tryToSetPlantOnHead(entityTag: CompoundTag): Boolean {
-    if (this.canWearPlant() && !(this as PlantHeadAttachment).`plantz$hasPlantOnHead`()) {
-        this.`plantz$setPlantData`(entityTag)
-        return true
-    }
-    return false
-}
-
 fun Entity.positionPlant(plant: Plant) {
     val moveFunction: MoveFunction = { entity: Entity, x: Double, y: Double, z: Double -> entity.setPos(x, y, z) }
     val living = this as? LivingEntity
@@ -302,7 +252,7 @@ fun Player.removeItemFromInventory(itemType: Item?, amount: Int = 1): Int {
     return inventory.clearOrCountMatchingItems({ it.`is`(itemType) }, false, amount, inventoryMenu.getCraftSlots())
 }
 
-fun clampYRot(yaw: Float): Float = Direction.fromYRot(yaw.toDouble()).toYRot()
+fun clampYRot(yaw: Float, flip: Boolean = false): Float = Direction.fromYRot(yaw.toDouble()).apply { if(flip) opposite }.toYRot()
 
 fun Float.percentFormat(): String = "%.0f%%".format(this * 100)
 

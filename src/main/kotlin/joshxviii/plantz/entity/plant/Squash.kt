@@ -6,10 +6,12 @@ import joshxviii.plantz.PazTags.EntityTypes.CANNOT_CHOMP
 import joshxviii.plantz.ai.goal.MeleeAttackActionGoal
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.applyImpulse
+import joshxviii.plantz.clampYRot
 import joshxviii.plantz.entity.zombie.Gargantuar.Companion.SMASH_DAMAGE_CALCULATOR
 import joshxviii.plantz.hasSameRootOwner
 import joshxviii.plantz.knockback
 import joshxviii.plantz.pazResource
+import net.minecraft.commands.arguments.EntityAnchorArgument
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
@@ -77,10 +79,11 @@ class Squash(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
                 val drop = (1.0 - (distance / (range*range))).toFloat()
                 val dmg = damage * drop
                 if(entity.hurtServer(level, damageSources().source(PazDamageTypes.PLANT, this, this), dmg)) {
-                    entity.applyImpulse(entity.position().subtract(this.position()).normalize().add(0.0, 0.5, 0.0), pow = drop * 0.5f)
+                    entity.applyImpulse(entity.position().subtract(this.position()).normalize().add(0.0, 0.5, 0.0), pow = drop * 0.75f)
                 }
             }
         }
+        snapTo(position(), clampYRot(yRot), xRot)
     }
 
     override fun registerGoals() {
@@ -116,6 +119,7 @@ class Squash(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
                 val targetPos = target.position().subtract(squash.position())
                 val vel = 1.9f
                 ProjectileAttackGoal.calculateMotionArcs(targetPos, squash.gravity, vel.toDouble())?.let {
+                    squash.lookAt(target, 360f, 0f)
                     val horizDist = targetPos.horizontalDistance()
 
                     val horizUnitX = targetPos.x / horizDist

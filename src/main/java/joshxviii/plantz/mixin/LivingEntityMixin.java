@@ -70,22 +70,24 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     @Shadow
     public abstract @org.jspecify.annotations.Nullable MobEffectInstance getEffect(Holder<MobEffect> effect);
 
+    /** Transient, non-authoritative pointer to the worn plant; see {@link PlantHeadAttachment}. */
     @Unique
-    private CompoundTag plantData = new CompoundTag();
+    private @Nullable Plant plantz$wornPlant = null;
+    /** Serialized worn plant waiting to be spawned (after loading, dimension change, ...). */
+    @Unique
+    private CompoundTag plantz$pendingPlant = new CompoundTag();
 
     @Unique
     private List<CompletedWave> completedRaidWaveList = List.of();
-    @Unique
-    private @Nullable Plant plantEntity = null;
 
     @Override
-    public @Nullable Plant plantz$getPlant() {
-        return plantEntity;
+    public @Nullable Plant plantz$getPlantPointer() {
+        return plantz$wornPlant;
     }
 
     @Override
-    public void plantz$setPlant(@Nullable Plant value) {
-        plantEntity = value;
+    public void plantz$setPlantPointer(@Nullable Plant value) {
+        plantz$wornPlant = value;
         ((Entity) (Object) this).getEntityData().set(DATA_HEAD_PLANT_ID, value == null ? -1 : value.getId());
     }
 
@@ -95,18 +97,13 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     }
 
     @Override
-    public @NotNull CompoundTag plantz$getPlantData() {
-        return plantData;
+    public @NotNull CompoundTag plantz$getPendingPlant() {
+        return plantz$pendingPlant;
     }
 
     @Override
-    public void plantz$setPlantData(@NotNull CompoundTag value) {
-        plantData = value;
-    }
-
-    @Override
-    public boolean plantz$hasPlantOnHead() {
-        return plantEntity != null &&  plantEntity.isAlive() && !plantEntity.isRemoved();
+    public void plantz$setPendingPlant(@NotNull CompoundTag value) {
+        plantz$pendingPlant = value;
     }
 
     @Override
@@ -160,6 +157,16 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
         }
     }
 
+    @Inject(method = "tick", at = @At("TAIL"))
+    private void plantz$tickWornPlant(CallbackInfo ci) {
+        PlantHeadAttachment.tickWearer((LivingEntity) (Object) this);
+    }
+
+    @Inject(method = "onRemoval", at = @At("HEAD"))
+    private void plantz$onWearerRemoved(Entity.RemovalReason reason, CallbackInfo ci) {
+        PlantHeadAttachment.onWearerRemoved((LivingEntity) (Object) this, reason);
+    }
+
     @Inject(method = "aiStep", at = @At("HEAD"))
     private void plantz$applyDuckyTubeBuoyancy(CallbackInfo ci) {
         DuckTubeItem.Companion.floatOnWater((LivingEntity) (Object) this);
@@ -182,9 +189,8 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
         output.putBoolean("plantz:IsFrozen", self.getEntityData().get(DATA_FROZEN_ID));
         output.putBoolean("plantz:IsButtered", self.getEntityData().get(DATA_BUTTER_ID));
         output.store("plantz:PaintedColor", Codec.unboundedMap(Codec.INT, Codec.INT), self.getEntityData().get(DATA_PAINTED_COLORS));
-        if (!this.plantz$getPlantData().isEmpty()) {
-            output.store("plantz:AttachedPlant", CompoundTag.CODEC, this.plantz$getPlantData());
-        }
+        CompoundTag wornPlant = PlantHeadAttachment.dataToSave(self);
+        if (wornPlant != null) output.store("plantz:AttachedPlant", CompoundTag.CODEC, wornPlant);
         if (self instanceof ServerPlayer) output.store("plantz:CompletedWaveList", Codec.list(CompletedWave.Companion.getCODEC()), this.plantz$getWaveList());
     }
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
@@ -195,7 +201,8 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
         self.getEntityData().set(DATA_FROZEN_ID, input.getBooleanOr("plantz:IsFrozen", false));
         self.getEntityData().set(DATA_BUTTER_ID, input.getBooleanOr("plantz:IsButtered", false));
         self.getEntityData().set(DATA_PAINTED_COLORS, input.read("plantz:PaintedColor", Codec.unboundedMap(Codec.INT, Codec.INT)).orElseGet(HashMap::new));
-        plantz$setPlantData(input.read("plantz:AttachedPlant", CompoundTag.CODEC).orElseGet(CompoundTag::new));
+        // spawned on the next server tick by PlantHeadAttachment.tickWearer
+        plantz$setPendingPlant(input.read("plantz:AttachedPlant", CompoundTag.CODEC).orElseGet(CompoundTag::new));
         if (self instanceof ServerPlayer) {
             plantz$setWaveList(input.read("plantz:CompletedWaveList", Codec.list(CompletedWave.Companion.getCODEC())).orElseGet(List::of));
         }

@@ -217,7 +217,7 @@ class PlantHeadAttachmentRenderLayer<S : LivingEntityRenderState, M : EntityMode
             val id = (entity as PlantHeadAttachment).`plantz$getPlantId`()
             if (id < 0) return null
             val plant = entity.level().getEntity(id) as? Plant ?: return null
-            return plant.takeIf { it.isAlive && it.attachedEntity === entity }
+            return plant.takeIf { it.attachedEntity === entity }
         }
 
         fun wearerRendersPlant(wearer: LivingEntity): Boolean {
