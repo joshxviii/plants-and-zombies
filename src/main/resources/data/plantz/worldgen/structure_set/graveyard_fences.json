@@ -7,9 +7,13 @@
   ],
   "placement": {
     "type": "minecraft:random_spread",
+    "exclusion_zone": {
+      "other_set": "plantz:graveyard_mausoleum",
+      "chunk_count": 1
+    },
     "spacing": 2,
     "separation": 0,
     "salt": 1649204713,
-    "frequency": 1.0
+    "frequency": 1
   }
 }

@@ -367,10 +367,11 @@ object PazEntities {
     )
     @JvmField val SQUASH: EntityType<Squash> = registerPlant(
         "squash", EntityType.Builder.of(::Squash, MobCategory.CREATURE),
-        width = 1.0f,
-        height = 1.15f,
+        width = 0.98f,
+        height = 1.1f,
+        eyeHeight = 0.68f,
         attributes = Plant.Companion.PlantAttributes(
-            attackDamage = 10.0,
+            attackDamage = 8.0,
             maxHealth = 25.0,
             attackRange = 7.25,
         )

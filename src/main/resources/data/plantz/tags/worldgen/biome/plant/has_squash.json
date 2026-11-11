@@ -1,6 +1,5 @@
 {
   "values": [
-    "minecraft:plains",
     {
       "id": "#c:is_savanna",
       "required": false

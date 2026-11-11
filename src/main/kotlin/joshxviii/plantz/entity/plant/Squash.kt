@@ -108,26 +108,26 @@ class Squash(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
         val squash: Squash,
     ) : MeleeAttackActionGoal(
         usingEntity = squash,
-        cooldownTime = 80,
-        actionDelay = 75,
+        cooldownTime = 75,
+        actionDelay = 0,
         damageType = PazDamageTypes.PLANT,
         actionStartEffect = {
             squash.target?.let { target ->
                 val targetPos = target.position().subtract(squash.position())
-                val vel = 1.4f
+                val vel = 1.9f
                 ProjectileAttackGoal.calculateMotionArcs(targetPos, squash.gravity, vel.toDouble())?.let {
                     val horizDist = targetPos.horizontalDistance()
 
                     val horizUnitX = targetPos.x / horizDist
                     val horizUnitZ = targetPos.z / horizDist
-                    val horizComp = Mth.cos(it.first) * 2
+                    val horizComp = Mth.cos(it.first) * 5
 
                     val shootX = (horizUnitX * horizComp)
                     val shootY = Mth.sin(it.first).toDouble()
                     val shootZ = (horizUnitZ * horizComp)
                     squash.squashTime = 1
                     squash.playSound(SoundEvents.SULFUR_CUBE_JUMP)// TODO Custom sounds
-                    squash.applyImpulse(shootX, shootY, shootZ, vel)
+                    squash.applyImpulse(shootX, shootY*0.5, shootZ, vel)
                 }
             }
         },

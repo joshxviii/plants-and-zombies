@@ -13,6 +13,7 @@ import joshxviii.plantz.PazSounds.RAID_MUSIC_WINTER
 import joshxviii.plantz.PazSounds.RAID_MUSIC_ZOMBOSS
 import joshxviii.plantz.PazSounds.RAID_MUSIC_ZOMBOWEEN
 import joshxviii.plantz.networking.ZombieRaidClientData
+import joshxviii.plantz.raid.BossType
 import joshxviii.plantz.raid.WaveType
 import joshxviii.plantz.raid.ZombieRaid
 import net.minecraft.client.Minecraft
@@ -142,7 +143,15 @@ object RaidMusicManager {
         val totalWaves = raidEvent.numWaves
         val currentWave = raidEvent.currentWaveNumber()
         val waveType = raidEvent.currentWaveType()?.type
+        val bossType = raidEvent.currentWaveType()?.boss
 
+        //Boss music
+        if (bossType != null) when (bossType) {
+            BossType.BARON_VON_BATS -> RaidMusicLayer.ZOMBOWEEN
+            else -> RaidMusicLayer.HIGH
+        }
+
+        //Wave music
         return when (waveType) {
             WaveType.DEFAULT -> when {
                 (currentWave == 10 || currentWave == totalWaves || currentWave in 12..ZombieRaid.MAXIMUM_WAVE_COUNT) ->

@@ -296,7 +296,7 @@ object PazItems {
         "roller_skates", ::RollerSkatesItem,
         properties = Item.Properties()
             .rarity(Rarity.RARE)
-            .durability(350)
+            .durability(750)
             .repairable(Items.PHANTOM_MEMBRANE)
             .enchantable(1)
             .attributes(
@@ -381,7 +381,7 @@ object PazItems {
     val PLANT_POT_HELMET: Item = registerItem(
         "plant_pot_helmet", ::PlantPotHelmetItem,
         properties = Item.Properties()
-            .durability(185)
+            .durability(385)
             .enchantable(1)
             .rarity(Rarity.UNCOMMON)
             .repairable(Items.BRICK)

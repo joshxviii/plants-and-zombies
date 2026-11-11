@@ -61,14 +61,6 @@ class ZombieRaids(
 
     fun get(raidId: Int): ZombieRaid = zombieRaidMap.get(raidId)
 
-    fun getId(raid: ZombieRaid): OptionalInt {
-        for (entry in zombieRaidMap.int2ObjectEntrySet()) {
-            if (entry.value === raid) return OptionalInt.of(entry.intKey)
-        }
-
-        return OptionalInt.empty()
-    }
-
     fun tick(level: ServerLevel) {
         tick++
         val raidIterator: MutableIterator<ZombieRaid> = zombieRaidMap.values.iterator()
@@ -143,12 +135,6 @@ class ZombieRaids(
         return closest
     }
 
-    @VisibleForDebug
-    fun getRaidCentersInChunk(chunkPos: ChunkPos): MutableList<BlockPos> {
-        return zombieRaidMap.values.stream().map<BlockPos> { obj: ZombieRaid -> obj.center }
-            .filter { chunkPos.contains(it) }.toList()
-    }
-
     @JvmRecord
     private data class ZombieRaidWithId(val id: Int, val raid: ZombieRaid) {
         companion object {
@@ -193,17 +179,5 @@ class ZombieRaids(
         }
 
         fun clearActiveRaidCenters() = activeRaidCenters.clear()
-
-        fun getType(type: Holder<DimensionType>): SavedDataType<ZombieRaids> {
-            return TYPE
-        }
-
-        fun canJoinRaid(zombie: Zombie): Boolean {
-            return zombie.isAlive && zombie.getNoActionTime() <= 2400
-        }
-
-        fun load(tag: CompoundTag): ZombieRaids {
-            return CODEC.parse<Tag>(NbtOps.INSTANCE, tag).resultOrPartial().orElseGet(::ZombieRaids) as ZombieRaids
-        }
     }
 }

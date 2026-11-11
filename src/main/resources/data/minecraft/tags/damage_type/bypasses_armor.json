@@ -3,7 +3,6 @@
   "values": [
     "plantz:plant_fume",
     "plantz:toxic",
-    "#plantz:is_electric",
     "#plantz:is_energy"
   ]
 }
