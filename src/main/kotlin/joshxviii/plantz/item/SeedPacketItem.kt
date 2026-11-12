@@ -2,10 +2,9 @@ package joshxviii.plantz.item
 
 import joshxviii.plantz.*
 import joshxviii.plantz.block.entity.SunBatteryBlockEntity
+import joshxviii.plantz.entity.PlantPotMinecart
 import joshxviii.plantz.entity.plant.GraveBuster
-import joshxviii.plantz.entity.plant.PacketInteractionResult
 import joshxviii.plantz.entity.plant.Plant
-import joshxviii.plantz.entity.plant.processSeedPacketInteraction
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -18,9 +17,9 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.stats.Stats
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.entity.EntitySelector
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.TamableAnimal
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
@@ -36,15 +35,18 @@ import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.HitResult
 import java.util.*
-import kotlin.compareTo
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ *TODO: create a centralized way to place / use plants
+ * Should work for [PlantHeadAttachment], [GardeningGloveItem], and [SeedPacketItem]
+ * Should work with Plant Interactions, Plant Pot Helmet.
+**/
 class SeedPacketItem(properties: Properties) : Item(properties) {
 
     override fun getName(itemStack: ItemStack): Component {
         val entityData = itemStack.get(DataComponents.ENTITY_DATA) ?: return super.getName(itemStack)
         val entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entityData.type())
-
         val entityName = Component.translatable("entity.${entityId.namespace}.${entityId.path}")
         return Component.translatable("item.plantz.seed_packet.entity", entityName)
     }
@@ -225,10 +227,11 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
 
             entityData.loadInto(entity)
 
-            if (entity is Plant) {
+            val plantPotCart = level.getEntitiesOfClass(PlantPotMinecart::class.java, AABB(spawnPos), EntitySelector.NO_SPECTATORS).firstOrNull()
+            if (plantPotCart != null) plantPotCart.addPlant(entity)
+            else if (entity is Plant) {
                 val blockBelow = level.getBlockState(spawnPos.below())
                 if (!entity.canPlaceOn(blockBelow)) return false
-
                 if (level.getEntitiesOfClass(Plant::class.java, AABB(spawnPos)).isNotEmpty()) return false
                 val yaw = horizontalDir.toYRot()
                 entity.yRot = yaw

@@ -40,7 +40,7 @@ class ThrownSunBottle(
     protected override fun onHit(hitResult: HitResult) {
         super.onHit(hitResult)
         val level = this.level()
-        playSound(PazSounds.PLANT_GENERATE_SUN, 0.15f, 1.5f)
+        playSound(PazSounds.PLANT_GENERATE_SUN, 0.2f, 1.5f)
         if (level is ServerLevel) {
             level.levelEvent(LevelEvent.PARTICLES_SPELL_POTION_SPLASH, blockPosition(), -79907)
             if (hitResult is BlockHitResult) {

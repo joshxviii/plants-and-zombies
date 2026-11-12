@@ -4,15 +4,19 @@ import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazCriteria
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.block.PlantPotBlock
+import joshxviii.plantz.entity.plant.PacketInteractionResult
 import joshxviii.plantz.entity.plant.Plant
+import joshxviii.plantz.item.GardeningGloveItem
 import joshxviii.plantz.item.SeedPacketItem
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.core.component.DataComponents
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.TamableAnimal
@@ -32,34 +36,38 @@ class PlantPotMinecart(type: EntityType<out AbstractMinecart>, level: Level) : A
         val serverLevel = this.level()
 
         if (passengers.isNotEmpty()) return InteractionResult.PASS
-
-        if (itemStack.`is`(PazItems.SEED_PACKET)) {
+        if (itemStack.has(DataComponents.ENTITY_DATA)) {
             val plantType = SeedPacketItem.typeFromStack(itemStack)
 
             val entity = if (serverLevel is ServerLevel) plantType?.create(serverLevel, null, BlockPos.containing(this.position()), EntitySpawnReason.SPAWN_ITEM_USE, true, false) else null
 
-            // snap rotation
-            if (entity is Plant) {
-                entity.startRiding(this, true, true)
-                entity.snapTo(this.position())
-                val yaw = this.yRot
-                entity.yHeadRot = yaw
-                entity.yBodyRot = yaw
-                entity.yRot = yaw
-            }
+            addPlant(entity)
 
             if (entity != null && !serverLevel.addFreshEntity(entity)) {
                 entity.discard()
                 return InteractionResult.FAIL
             }
 
-            itemStack.consume(1, player)
+            if (itemStack.`is`(PazItems.GARDENING_GLOVE)) GardeningGloveItem.removePlant(itemStack, player, hand)
+            else itemStack.consume(1, player)
+
             entity?.playSound(SoundEvents.BIG_DRIPLEAF_PLACE, 1.0f, 1.0f)
             if (entity is TamableAnimal) entity.tame(player)
             serverLevel.gameEvent(player, GameEvent.ENTITY_PLACE, this.position())
             if (player is ServerPlayer) PazCriteria.PLANT_POT_MINECRAFT.trigger(player, entity !=null && hasPassenger(entity))
         }
         return InteractionResult.SUCCESS_SERVER
+    }
+
+    fun addPlant(entity: Entity?) {
+        if (entity is Plant) {
+            entity.startRiding(this, true, true)
+            entity.snapTo(this.position())
+            val yaw = this.yRot
+            entity.yHeadRot = yaw
+            entity.yBodyRot = yaw
+            entity.yRot = yaw
+        }
     }
 
     override fun isRideable(): Boolean = false

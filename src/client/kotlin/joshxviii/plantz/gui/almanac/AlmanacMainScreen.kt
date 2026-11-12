@@ -1,5 +1,6 @@
 package joshxviii.plantz.gui.almanac
 
+import joshxviii.plantz.PazConfig
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.gui.PazButton
 import joshxviii.plantz.inventory.AlmanacMenu
@@ -23,6 +24,7 @@ import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Inventory
 import org.joml.Quaternionf
 import org.joml.Vector3f
@@ -45,14 +47,6 @@ class AlmanacMainScreen(
         private const val PAGE_BUTTON_WIDTH = 18
         private const val PAGE_BUTTON_HEIGHT = 11
 
-        private const val INFO_CENTER_X = 150
-        private const val INFO_WIDTH = 80
-        private const val NAME_Y = 14
-        private const val MODEL_TOP = 28
-        private const val MODEL_BOTTOM = 88
-        private const val DESCRIPTION_TOP = 94
-        private const val TEXT_COLOR = 0xFF3F2A14.toInt()
-
         private val BACKGROUND = pazResource("textures/gui/almanac/background.png")
         private val PAPER_BACKGROUND = pazResource("textures/gui/almanac/paper_background.png")
         private val PLANT_SLOT = pazResource("textures/gui/almanac/plant_slot.png")
@@ -65,7 +59,6 @@ class AlmanacMainScreen(
     private val tabButtons = ArrayList<PazButton>()
     private lateinit var backButton: PazButton
     private lateinit var forwardButton: PazButton
-    private val previewEntities = HashMap<EntityType<*>, Entity?>()
 
     override fun init() {
         super.init()
@@ -162,49 +155,12 @@ class AlmanacMainScreen(
             val y = topPos + slot.y - 2
             blit(graphics, if (slot.index == menu.selected) PLANT_SLOT_SELECTED else PLANT_SLOT, x, y, PLANT_SLOT_SIZE, PLANT_SLOT_SIZE)
         }
-        menu.selectedType()?.let { extractPlantInfo(graphics, it) }
+        menu.selectedType()?.let {
+            PlantProfile.extractProfile(graphics, it, menu.selectedItem(), leftPos, topPos, BACKGROUND_WIDTH, BACKGROUND_HEIGHT)
+        }
     }
 
     private fun blit(graphics: GuiGraphicsExtractor, texture: Identifier, x: Int, y: Int, width: Int, height: Int) {
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, 0f, 0f, width, height, width, height)
-    }
-
-    private fun extractPlantInfo(graphics: GuiGraphicsExtractor, type: EntityType<*>) {
-        val centerX = leftPos + INFO_CENTER_X
-        val name = type.description
-        graphics.text(font, name.visualOrderText, centerX - font.width(name) / 2, topPos + NAME_Y, TEXT_COLOR, false)
-
-        extractPlantModel(graphics, type)
-
-        val key = "almanac.plantz.description.${BuiltInRegistries.ENTITY_TYPE.getKey(type).path}"
-        if (!Language.getInstance().has(key)) return
-        font.split(Component.translatable(key), INFO_WIDTH).forEachIndexed { line, text ->
-            graphics.text(font, text, centerX - INFO_WIDTH / 2, topPos + DESCRIPTION_TOP + line * 9, TEXT_COLOR, false)
-        }
-    }
-
-    private fun extractPlantModel(graphics: GuiGraphicsExtractor, type: EntityType<*>) {
-        val mc = Minecraft.getInstance()
-        val level = mc.level ?: return
-        val name =  menu.selectedItem()?.get(DataComponents.CUSTOM_NAME)?.string ?: ""
-        val entity = previewEntities.getOrPut(type) { type.create(level, EntitySpawnReason.LOAD)?.also { it.id = -1 } } ?: return
-        val partial = mc.deltaTracker.getGameTimeDeltaPartialTick(true)
-        val state = mc.entityRenderDispatcher.extractEntity(entity, 1f)
-
-        state.shadowPieces.clear()
-        state.outlineColor = 0
-        if (state is PlantRenderState) {
-            state.plantState = PlantState.IDLE
-            state.idleAnimationState.copyFrom(idleAnimationState)
-            state.ageInTicks = mc.gui.hud.guiTicks + partial
-            state.customName = name
-        }
-        val size = max(max(state.boundingBoxHeight, state.boundingBoxWidth), 0.1f)
-        val scale = (MODEL_BOTTOM - MODEL_TOP) * 0.7f / size
-        val flip = Quaternionf().rotateX(Math.PI.toFloat() * 0.15f).rotateY(Math.PI.toFloat() * -0.75f).rotateZ(Math.PI.toFloat())
-
-        graphics.guiRenderState.addPicturesInPictureState(
-            GuiEntityRenderState(state, Vector3f(), flip, null, 93, -65, width, height, scale, ScreenRectangle(leftPos, topPos+30, BACKGROUND_WIDTH-20, BACKGROUND_HEIGHT))
-        )
     }
 }

@@ -25,16 +25,15 @@ object SunInfoHud {
         val x = graphics.guiWidth() / 2
         val y = graphics.guiHeight()
 
-        displayHeldSun((x - hotbarWidth / 2) - 2, y - 14, graphics)
-        displaySeedCost(x, y - 34, graphics, itemStack, highlightTimer)
+        displayHeldSun(graphics, (x - hotbarWidth / 2) - 2, y - 14, )
+        displaySeedCost(graphics, itemStack, highlightTimer, x, y - 34, )
     }
 
-    fun displaySeedCost(x: Int , y: Int, graphics: GuiGraphicsExtractor, seedPacket: ItemStack, highlightTimer: Int) {
-        if (!seedPacket.`is`(PazItems.SEED_PACKET)) return
+    fun displaySeedCost(graphics: GuiGraphicsExtractor, seedPacket: ItemStack?, highlightTimer: Int, x: Int , y: Int) {
+        if (seedPacket == null || !seedPacket.`is`(PazItems.SEED_PACKET)) return
         val alpha = (highlightTimer.toFloat() * 0xFF / 10).toInt().coerceAtMost(0xFF)
         if (alpha <= 0) return
-        val sunCost = SunCost.getSunCost(seedPacket)
-        val text = "${sunCost}"
+        val text = "${SunCost.getSunCost(seedPacket)}"
         val iconWidth = 10
         val textWidth = font.width(text)
         val offsetX = (textWidth + iconWidth + 1) / 2
@@ -43,10 +42,10 @@ object SunInfoHud {
         sunIcon(x - offsetX + textWidth + 1, offsetY-1, graphics, iconWidth, true, alpha)
     }
 
-    fun displayHeldSun(x: Int, y: Int, graphics: GuiGraphicsExtractor) {
+    fun displayHeldSun(graphics: GuiGraphicsExtractor, x: Int, y: Int) {
         val sunTotal = mc.player?.getTotalSun()?: return
         if (sunTotal <= 0) return
-        val text = "${sunTotal}"
+        val text = "$sunTotal"
         val offsetX = font.width(text) + if (mc.player?.offhandItem?.isEmpty == true) 0 else 29
 
         graphics.outlineText(font, text, x - offsetX, y, ARGB.opaque(0xFFF000))

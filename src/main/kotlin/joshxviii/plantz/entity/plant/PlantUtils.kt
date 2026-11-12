@@ -151,7 +151,7 @@ fun Plant.processSeedPacketInteraction(player: Player, itemStack: ItemStack, han
     if (!itemStack.has(DataComponents.ENTITY_DATA)) return PacketInteractionResult.FAIL
     if (player.cooldowns.isOnCooldown(itemStack)) return PacketInteractionResult.FAIL
     if (!verifyOwner(player)) return PacketInteractionResult.FAIL
-    val type = itemStack.get(DataComponents.ENTITY_DATA)?.type()
+    val type = SeedPacketItem.typeFromStack(itemStack)
     val availableSun = player.getTotalSun()
     val sunCost = itemStack.get(PazComponents.SUN_COST)?.getSunCost(type)?: 0
     val cantAfford = sunCost > availableSun && !player.hasInfiniteMaterials()
@@ -214,11 +214,14 @@ fun Plant.pumpkinSeedInteraction(itemStack: ItemStack, cantAfford: Boolean, play
         )?.let {
             val pumpkinData = this.saveAsCompoundTag()
 
+            //TODO pumpkin gets received sun / water
             val filteredData = pumpkinData.copy().apply {
                 remove("Health")
                 remove("CustomName")
                 remove("plantz:State")
                 remove("plantz:Cooldown")
+                remove("plantz:ReceivedSun")
+                remove("plantz:ReceivedWater")
             }
             val mergedData = TypedEntityData.of(seedType, seedData.copyTagWithoutId().merge(filteredData))
             mergedData.loadInto(it)
@@ -240,6 +243,7 @@ fun Entity.saveAsCompoundTag(discards: List<String> = listOf("Pos")): CompoundTa
         if (this is Plant) plantSaveData(output)
         discards.forEach { output.discard(it) }
         output.discard("plantz:PumpkinArmor")
+        output.discard("plantz:IsAsleep")
         output.discard("Motion")
         output.discard("leash")
         output.discard("UUID")

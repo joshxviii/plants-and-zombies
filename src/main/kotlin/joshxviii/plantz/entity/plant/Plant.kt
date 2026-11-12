@@ -252,6 +252,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         get() = EntityReference.getLivingEntity(attachedPlayerReference, this.level())?.takeIf { it.level() === this.level() }
 
     fun isAttachedTo(entity: Entity): Boolean = attachedPlayerReference?.uuid == entity.uuid
+    fun isAttached(): Boolean = attachedPlayerReference != null
 
     fun saveWithId(): CompoundTag {
         ScopedCollector(this.problemPath(), LOGGER).use { reporter ->
@@ -434,7 +435,6 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
     override fun canAttack(target: LivingEntity): Boolean = super.canAttack(target) && !this.hasSameOwner(target)
     override fun canUsePortal(ignorePassenger: Boolean): Boolean = super.canUsePortal(ignorePassenger) && !isAttached()
-    fun isAttached(): Boolean = attachedPlayerReference != null
     override fun shouldBeSaved(): Boolean = !isAttached() && super.shouldBeSaved()
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
@@ -549,7 +549,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     override fun getDefaultGravity(): Double = if (isAttached()) 0.0 else super.getDefaultGravity()
-    override fun doPush(entity: Entity) { if (!clampToGrid()) super.doPush(entity) }
+    override fun doPush(entity: Entity) { if (!clampToGrid() && !isAttached()) super.doPush(entity) }
     override fun isAffectedByBlocks(): Boolean = if (isAttached()) !isRemoved else super.isAffectedByBlocks()
 
     override fun tick() {
