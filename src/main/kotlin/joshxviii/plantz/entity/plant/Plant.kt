@@ -388,9 +388,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun getHurtSound(source: DamageSource): SoundEvent? {
         if (source.`is`(PazDamageTypes.ZOMBIE_EAT)) return PazSounds.ZOMBIE_EATS
         if (canPumpkinProtect(source)) return null
-        return SoundEvents.ROOTED_DIRT_HIT// TODO make custom sounds
+        return PazSounds.PLANT_HURT
     }
-    override fun getDeathSound(): SoundEvent? = SoundEvents.ROOTED_DIRT_BREAK// TODO make custom sounds
+    override fun getDeathSound(): SoundEvent? = PazSounds.PLANT_HURT
     open fun getActionSound(): SoundEvent? = null// TODO make custom sounds
 
     override fun registerGoals() {

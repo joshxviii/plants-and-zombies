@@ -71,6 +71,48 @@
     ], "subtitle": "plantz.subtitles.projectile.missile.explode"
   },
 
+  "entity.sun.pickup": {
+    "sounds": [
+      { "name": "plantz:entity/sun/pickup_01", "volume": 1.0},
+      { "name": "plantz:entity/sun/pickup_02", "volume": 1.0},
+      { "name": "plantz:entity/sun/pickup_03", "volume": 1.0}
+    ], "subtitle": "plantz.subtitles.entity.sun.pickup"
+  },
+
+  "entity.plant.glow": {
+    "sounds": [
+      { "name": "plantz:entity/plant/shine_01", "volume": 1.0},
+      { "name": "plantz:entity/plant/shine_02", "volume": 1.0},
+      { "name": "plantz:entity/plant/shine_03", "volume": 1.0},
+      { "name": "plantz:entity/plant/shine_04", "volume": 1.0},
+      { "name": "plantz:entity/plant/shine_05", "volume": 1.0},
+      { "name": "plantz:entity/plant/shine_06", "volume": 1.0},
+      { "name": "plantz:entity/plant/shine_07", "volume": 1.0}
+    ], "subtitle": "plantz.subtitles.entity.plant.glow"
+  },
+
+  "entity.plant.generate_sun": {
+    "sounds": [
+      { "name": "plantz:entity/plant/generate_sun_01", "volume": 1.0},
+      { "name": "plantz:entity/plant/generate_sun_02", "volume": 1.0},
+      { "name": "plantz:entity/plant/generate_sun_03", "volume": 1.0},
+      { "name": "plantz:entity/plant/generate_sun_04", "volume": 1.0}
+    ], "subtitle": "plantz.subtitles.entity.plant.generate_sun"
+  },
+
+  "entity.plant.hurt": {
+    "sounds": [
+      { "name": "plantz:entity/plant/hurt_01", "volume": 1.0 },
+      { "name": "plantz:entity/plant/hurt_02", "volume": 1.0 },
+      { "name": "plantz:entity/plant/hurt_03", "volume": 1.0 },
+      { "name": "plantz:entity/plant/hurt_04", "volume": 1.0 }
+    ], "subtitle": "plantz.subtitles.entity.plant.hurt"
+  },
+
+  "entity.plant.create_sun": {
+    "sounds": [{ "name": "plantz:entity/plant/shine1", "volume": 1.0, "pitch": 1.0 }], "subtitle": "plantz.subtitles.entity.plant.create_sun"
+  },
+
   "entity.chomper.attack": {
     "sounds": [{ "name": "mob/evocation_illager/fangs", "volume": 1.0, "pitch": 0.8 }], "subtitle": "plantz.subtitles.entity.chomper.attack"
   },
@@ -461,4 +503,4 @@
   "music.raid.zomboss": {
     "sounds": [{ "name": "plantz:music/raid/loon_griefers_high", "volume": 1.0, "pitch": 1.0 }], "subtitle": "plantz.subtitles.music.raid.zomboss"
   }
-}
+},

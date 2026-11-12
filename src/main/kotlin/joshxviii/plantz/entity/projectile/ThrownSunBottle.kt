@@ -2,6 +2,7 @@ package joshxviii.plantz.entity.projectile
 
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
+import joshxviii.plantz.PazSounds
 import joshxviii.plantz.entity.Sun
 import net.minecraft.core.Position
 import net.minecraft.server.level.ServerLevel
@@ -39,6 +40,7 @@ class ThrownSunBottle(
     protected override fun onHit(hitResult: HitResult) {
         super.onHit(hitResult)
         val level = this.level()
+        playSound(PazSounds.PLANT_GENERATE_SUN, 0.15f, 1.5f)
         if (level is ServerLevel) {
             level.levelEvent(LevelEvent.PARTICLES_SPELL_POTION_SPLASH, blockPosition(), -79907)
             if (hitResult is BlockHitResult) {

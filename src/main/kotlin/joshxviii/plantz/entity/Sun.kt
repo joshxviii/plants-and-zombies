@@ -258,9 +258,12 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
     }
 
     private fun playPickupSound() {
-        playSound(SoundEvents.ITEM_PICKUP, 0.2F, ((random.nextFloat() - random.nextFloat()) * 0.7F + 1.0F) * 2.0F)
+        val pitch = ((random.nextFloat() - random.nextFloat()) * 0.7F + 1.0F) * 2.0F
+        playSound(PazSounds.SUN_PICKUP, 0.1F, pitch)
+        playSound(SoundEvents.ITEM_PICKUP, 0.2F, pitch)
     }
 
+    override fun maxUpStep(): Float = 1f
     override fun getBlockPosBelowThatAffectsMyMovement(): BlockPos = getOnPos(0.999999f)
 
     private fun canAbsorb(amount: Int): Boolean = !isRemoved && value + amount <= MAX_VALUE

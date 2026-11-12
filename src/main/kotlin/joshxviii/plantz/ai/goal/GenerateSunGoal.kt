@@ -1,10 +1,12 @@
 package joshxviii.plantz.ai.goal
 
+import joshxviii.plantz.PazSounds
 import joshxviii.plantz.entity.Sun
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.PathfinderMob
+import net.minecraft.world.level.block.entity.BeaconBlockEntity.playSound
 import java.util.function.Predicate
 
 class GenerateSunGoal(
@@ -15,11 +17,18 @@ class GenerateSunGoal(
     actionSuccessEffect: () -> Unit = {},
     actionEndEffect: () -> Unit = {},
     actionPredicate: Predicate<PathfinderMob> = Predicate { true },
-    delayedEffectDelay: Int = 0,
-    delayedEffect: () -> Unit = {},
     val sunAmount: Int = 1,
     val generatesAtNight : Boolean = false,
-): ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionSuccessEffect, actionEndEffect, actionPredicate, delayedEffectDelay, delayedEffect, -10..20) {
+): ActionGoal(usingEntity, cooldownTime, actionDelay, actionStartEffect, actionSuccessEffect, actionEndEffect, actionPredicate,
+    cooldownVariationRange = -10..20) {
+
+    override fun tick() {
+        super.tick()
+        if (usingEntity !is Plant) return
+        if (usingEntity.cooldown < 100 && usingEntity.tickCount % 20 == 0) {
+            if (usingEntity.random.nextFloat() < 0.3f) usingEntity.playSound(PazSounds.PLANT_GLOW, 0.2f, 1.8f)
+        }
+    }
 
     override fun canUse(): Boolean = (
         usingEntity.isAlive
@@ -31,7 +40,7 @@ class GenerateSunGoal(
     override fun doAction() : Boolean {
         val serverLevel = usingEntity.level() as? ServerLevel ?: return false
         Sun.award(serverLevel, usingEntity.position(), if (usingEntity.isBaby) (sunAmount/2).coerceAtLeast(1) else sunAmount )
-        usingEntity.playSound(SoundEvents.CHICKEN_EGG, 1.0f, 0.5f)// TODO custom sounds
+        usingEntity.playSound(PazSounds.PLANT_GENERATE_SUN, 0.3f, 1.0f)
         return true
     }
 }

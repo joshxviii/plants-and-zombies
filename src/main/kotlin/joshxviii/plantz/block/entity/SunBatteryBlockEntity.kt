@@ -3,6 +3,7 @@ package joshxviii.plantz.block.entity
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazItems
+import joshxviii.plantz.PazSounds
 import joshxviii.plantz.block.SunBatteryBlock
 import joshxviii.plantz.item.component.StoredSun
 import net.minecraft.core.BlockPos
@@ -55,7 +56,7 @@ class SunBatteryBlockEntity(
         val newStoredSun = batteryItem.get(PazComponents.STORED_SUN)?.addSun(amount) ?: StoredSun(amount)
         batteryItem.set(PazComponents.STORED_SUN, newStoredSun)
         level?.let {
-            it.playSound(null, blockPos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, SoundSource.BLOCKS, 0.6f, getStoredSunPercent()+0.5f+(it.random.nextFloat()*0.1f))
+            it.playSound(null, blockPos, PazSounds.SUN_PICKUP, SoundSource.BLOCKS, 0.1f, getStoredSunPercent()+1.3f+(it.random.nextFloat()*0.3f))
         }
         updateLevel(newStoredSun.getLevel())
     }
