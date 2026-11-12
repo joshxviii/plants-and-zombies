@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
 class AlmanacItem(properties: Properties) : Item(properties) {
@@ -32,5 +33,9 @@ class AlmanacItem(properties: Properties) : Item(properties) {
         }
         player.awardStat(Stats.ITEM_USED.get(this))
         return InteractionResult.SUCCESS
+    }
+
+    override fun onCraftedBy(itemStack: ItemStack, player: Player) {
+        super.onCraftedBy(itemStack, player)
     }
 }

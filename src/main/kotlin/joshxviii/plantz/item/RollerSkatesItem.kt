@@ -24,8 +24,9 @@ class RollerSkatesItem(properties: Properties) : Item(properties) {
         private const val DAMAGE_INTERVAL = 35
 
         fun isSkating(entity: LivingEntity): Boolean {
-            if (entity is Player && (!entity.isSprinting || entity.isFallFlying || entity.isSwimming)) return false
-            return entity.getItemBySlot(EquipmentSlot.FEET).`is`(PazItems.ROLLER_SKATES)
+            val hasSkates = entity.getItemBySlot(EquipmentSlot.FEET).`is`(PazItems.ROLLER_SKATES)
+            if (!hasSkates) removeModifiers(entity)
+            return !(entity is Player && (!entity.isSprinting || entity.isFallFlying || entity.isSwimming)) && hasSkates
         }
 
         fun removeModifiers(entity: LivingEntity?) {

@@ -146,7 +146,7 @@ object RaidMusicManager {
         val bossType = raidEvent.currentWaveType()?.boss
 
         //Boss music
-        if (bossType != null) when (bossType) {
+        if (bossType != null) return when (bossType) {
             BossType.BARON_VON_BATS -> RaidMusicLayer.ZOMBOWEEN
             else -> RaidMusicLayer.HIGH
         }
