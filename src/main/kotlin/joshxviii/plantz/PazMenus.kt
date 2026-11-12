@@ -1,5 +1,6 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.inventory.AlmanacMenu
 import joshxviii.plantz.inventory.LetterMenu
 import joshxviii.plantz.inventory.MailCollectionBoxMenu
 import joshxviii.plantz.inventory.MailboxMenu
@@ -24,6 +25,11 @@ object PazMenus {
         ByteBufCodecs.INT
     )
 
+    @JvmField val ALMANAC_MENU: ExtendedMenuType<AlmanacMenu, Int> = ExtendedMenuType(
+        { containerId, inventory, data -> AlmanacMenu(containerId, inventory, data) },
+        ByteBufCodecs.INT
+    )
+
     @JvmField val MAILBOX_MENU: ExtendedMenuType<MailboxMenu, MailboxData> = ExtendedMenuType(
         { containerId, inventory, data -> MailboxMenu(containerId, inventory, data) },
         MailboxData.STREAM_CODEC
@@ -41,6 +47,7 @@ object PazMenus {
 
     fun initialize() {
         Registry.register(BuiltInRegistries.MENU, pazResource("letter"), LETTER_MENU)
+        Registry.register(BuiltInRegistries.MENU, pazResource("almanac"), ALMANAC_MENU)
         Registry.register(BuiltInRegistries.MENU, pazResource("mailbox"), MAILBOX_MENU)
         Registry.register(BuiltInRegistries.MENU, pazResource("collection_box"), MAIL_COLLECTION_BOX_MENU)
         Registry.register(BuiltInRegistries.MENU, pazResource("time_machine"), TIME_MACHINE_MENU)

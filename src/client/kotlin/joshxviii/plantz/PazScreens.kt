@@ -1,6 +1,7 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.gui.LetterScreen
+import joshxviii.plantz.gui.almanac.AlmanacMainScreen
 import joshxviii.plantz.gui.MailCollectionBoxScreen
 import joshxviii.plantz.gui.MailboxScreen
 import joshxviii.plantz.gui.TimeMachineScreen
@@ -13,6 +14,7 @@ object PazScreens {
 
     fun registerAll() {
         MenuScreens.register(PazMenus.LETTER_MENU, ::LetterScreen)
+        MenuScreens.register(PazMenus.ALMANAC_MENU, ::AlmanacMainScreen)
         MenuScreens.register(PazMenus.MAILBOX_MENU, ::MailboxScreen)
         MenuScreens.register(PazMenus.MAIL_COLLECTION_BOX_MENU, ::MailCollectionBoxScreen)
         MenuScreens.register(PazMenus.TIME_MACHINE_MENU, ::TimeMachineScreen)

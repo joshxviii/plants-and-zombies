@@ -2,12 +2,8 @@ package joshxviii.plantz.gui
 
 import joshxviii.plantz.MailboxData
 import joshxviii.plantz.pazResource
-import joshxviii.plantz.renderer.PazButton
-import joshxviii.plantz.renderer.outlineText
-import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
-import net.minecraft.client.gui.components.ChatComponent
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
@@ -26,6 +22,12 @@ class MiniAddressButton(
     enabledRequirement: ((button: PazButton) -> Boolean) = { true },
     clickRequirement: ((button: PazButton) -> Boolean) = enabledRequirement,
 ) : PazButton(buttonX, buttonY, 8, 8, clickAction, ADDRESS, ADDRESS_HIGHLIGHTED, ADDRESS_SELECTED, enabledRequirement, clickRequirement, Component.empty(), menuData?.let { ARGB.addRgb(it.color, 0x333333) }?: -1) {
+    companion object {
+        val ADDRESS: Identifier = pazResource("textures/gui/mail_collection_box/unselected.png")
+        val ADDRESS_HIGHLIGHTED: Identifier = pazResource("textures/gui/mail_collection_box/highlighted.png")
+        val ADDRESS_SELECTED: Identifier = pazResource("textures/gui/mail_collection_box/selected.png")
+    }
+
     val posText = Component.translatable("container.plantz.mailbox_coords", mailboxData.blockPos.x, mailboxData.blockPos.y, mailboxData.blockPos.z).withColor(0xFFFFFFF)
     val toolTipText: MutableComponent = Component.translatable("container.plantz.mailbox_coords_mini",
         mailboxData.name.copy().withColor(ARGB.multiply(mailboxData.color, 0xFFFFFF)),
@@ -34,12 +36,6 @@ class MiniAddressButton(
 
     init {
         setTooltip(Tooltip.create(toolTipText))
-    }
-
-    companion object {
-        val ADDRESS: Identifier = pazResource("textures/gui/mail_collection_box/unselected.png")
-        val ADDRESS_HIGHLIGHTED: Identifier = pazResource("textures/gui/mail_collection_box/highlighted.png")
-        val ADDRESS_SELECTED: Identifier = pazResource("textures/gui/mail_collection_box/selected.png")
     }
 
     override fun extractContents(graphics: GuiGraphicsExtractor, mx: Int, my: Int, a: Float) {

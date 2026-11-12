@@ -3,7 +3,6 @@ package joshxviii.plantz.gui
 import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazCreativeTabs
 import net.minecraft.ChatFormatting
-import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button

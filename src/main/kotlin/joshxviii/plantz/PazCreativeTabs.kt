@@ -126,6 +126,7 @@ object PazCreativeTabs {
         output.accept(PazItems.TACO)
         output.accept(PazItems.BRAINZ_ALLOY)
         if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(PazItems.LETTER)
+        if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(PazItems.ALMANAC)
 
         // music
         output.accept(PazItems.MUSIC_DISC_GRASSY_GROOVE)

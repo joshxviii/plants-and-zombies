@@ -297,7 +297,7 @@ object PazItems {
         properties = Item.Properties()
             .rarity(Rarity.RARE)
             .durability(750)
-            .repairable(Items.PHANTOM_MEMBRANE)
+            .repairable(BRAINZ_ALLOY)
             .enchantable(1)
             .attributes(
                 ItemAttributeModifiers.builder()
@@ -364,6 +364,12 @@ object PazItems {
         "letter", ::LetterItem,
         properties = Item.Properties().stacksTo(1)
             .component(PazComponents.LETTER_DATA, LetterDataComponent())
+    )
+    @JvmField
+    val ALMANAC: Item = registerItem(
+        "almanac", ::AlmanacItem,
+        properties = Item.Properties().stacksTo(1)
+            .component(PazComponents.ALMANAC_DATA, AlmanacDataComponent())
     )
     @JvmField
     val SEED_PACKET: Item = registerItem(

@@ -108,9 +108,6 @@ enum class LetterFont(val id: Int) : StringRepresentable {
 
     override fun getSerializedName(): String = this.name.lowercase()
 
-    val translationKey: String
-        get() = "letter_font.plantz.${name.lowercase()}"
-
     fun getFont(): Identifier = Identifier.withDefaultNamespace(
         when (this) {
             BASIC -> "default"

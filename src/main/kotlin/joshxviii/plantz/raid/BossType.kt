@@ -134,7 +134,7 @@ enum class BossType(
         private val BOSS_SCALE = AttributeModifier(BOSSIFY, 0.33, AttributeModifier.Operation.ADD_VALUE)
         private val BOSS_HEALTH = AttributeModifier(BOSSIFY, 2.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
         private val BOSS_DAMAGE = AttributeModifier(BOSSIFY, 2.0, AttributeModifier.Operation.ADD_MULTIPLIED_BASE)
-        private val BOSS_STEP = AttributeModifier(BOSSIFY, 2.0, AttributeModifier.Operation.ADD_MULTIPLIED_BASE)
+        private val BOSS_STEP = AttributeModifier(BOSSIFY, 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE)
 
         fun bossify(zombie: Zombie) {
             zombie.getAttribute(Attributes.SCALE)?.let { if (!it.hasModifier(BOSSIFY)) it.addPermanentModifier(BOSS_SCALE) }

@@ -74,11 +74,11 @@ class TimePortalRenderer() : BlockEntityRenderer<TimePortalBlockEntity, TimePort
         poseStack.scale(s, s, s)
         poseStack.rotate(Axis.YP.rotation(cos(Math.PI * state.portalTime/40f).toFloat() * 0.01f))
         collector.submitCustomGeometry(poseStack, TIME_PORTAL) { pose, buffer ->
-            GuiUtil.plane(pose, buffer, state.lightCoords, color = color)
+            RenderingUtils.plane(pose, buffer, state.lightCoords, color = color)
         }
         poseStack.rotate(Axis.YP.rotationDegrees(180.0f))
         collector.submitCustomGeometry(poseStack, TIME_PORTAL) { pose, buffer ->
-            GuiUtil.plane(pose, buffer, state.lightCoords, color = color)
+            RenderingUtils.plane(pose, buffer, state.lightCoords, color = color)
         }
 
         poseStack.popPose()

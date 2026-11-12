@@ -572,7 +572,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
             if (cooldown > 0 && !isAsleep) cooldown--
             if (cooldown == 0) cooldownFinished()
-            if (!onValidGround() || isOverlappingWithOther(blockPosition())) {
+            if (!onValidGround() || isOverlappingWithOther()) {
                 if (--nutrientSupply <= 0) {
                     if (tickCount % 20 == 0) hurtServer(level, damageSources().dryOut(), 2.0f)
                 }
@@ -840,7 +840,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     open fun canSurviveOn(block: BlockState) : Boolean = canWalk() || block.`is`(PLANTABLE)
     open fun canPlaceOn(block: BlockState) : Boolean = canSurviveOn(block)
     open fun canProduceSeeds(): Boolean = true
-    open fun clampToGrid() = !getBlockBelow().isAir && !canWalk() && !rolling && onValidGround() && !isOverlappingWithOther(blockPosition())
+    open fun clampToGrid() = !getBlockBelow().isAir && !canWalk() && !rolling && onValidGround() && !isOverlappingWithOther()
     open fun cooldownFinished() {}
     open fun rollingFriction(): Float = 0.5f
     override fun shouldDiscardFriction(): Boolean {
@@ -893,14 +893,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return false
     }
 
-    // whether another plant is overlapping with this one
-    private fun isOverlappingWithOther(pos: BlockPos): Boolean {
-        val otherPlantsAtPos = level().getEntitiesOfClass(Plant::class.java, AABB(pos)) { it != this }
-        otherPlantsAtPos.forEach {
-            if (!it.isAlive || it.isDeadOrDying) return false
-            if(boundingBox.intersects(it.boundingBox)) return true
-        }
-        return false
+    // whether another plant is in the same block space as this one
+    private fun isOverlappingWithOther(): Boolean {
+        val otherPlantsAtPos = level().getEntitiesOfClass(Plant::class.java, AABB(blockPosition())) { it != this }
+        return otherPlantsAtPos.any { it.isAlive && !it.isDeadOrDying }
     }
 
     override fun finalizeSpawn(

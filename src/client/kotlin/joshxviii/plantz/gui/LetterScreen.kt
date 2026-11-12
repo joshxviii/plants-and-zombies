@@ -3,13 +3,11 @@ package joshxviii.plantz.gui
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.inventory.LetterMenu
 import joshxviii.plantz.item.component.LetterBackground
-import joshxviii.plantz.item.component.LetterFont
 import joshxviii.plantz.networking.UpdateLetterPayload
 import joshxviii.plantz.pazResource
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
-import net.minecraft.client.gui.TextAlignment
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.MultiLineEditBox
 import net.minecraft.client.gui.screens.ConfirmScreen
@@ -34,7 +32,7 @@ class LetterScreen(
         private const val LETTER_WIDTH = 185
         private const val LETTER_HEIGHT = 133
         private const val BACKGROUND_TEXTURE_SIZE = 256
-        private const val CONTROL_WIDTH = 90
+        private const val BUTTON_WIDTH = 12
         private const val SLOT_SIZE = 18
         private const val INVENTORY_WIDTH = 176
         private const val INVENTORY_HEIGHT = 89
@@ -46,6 +44,7 @@ class LetterScreen(
 
         private val INVENTORY_BACKGROUND = pazResource("textures/gui/letter/inventory.png")
         private val ATTACHMENT_SLOT = pazResource("textures/gui/letter/attachment_slot.png")
+        private val CYCLE_BACKGROUND = pazResource("textures/gui/letter/cycle_background.png")
     }
 
     private val itemStack = menu.letterStack
@@ -86,17 +85,14 @@ class LetterScreen(
 
             // TODO add some cool fonts
 //            addRenderableWidget(
-//                Button.builder(fontButtonLabel()) {
+//                 PazButton(leftPos, topPos, 12, 12, {
 //                    selectedFont = LetterFont.entries[(selectedFont.ordinal + 1) % LetterFont.entries.size]
-//                    it.setMessage(fontButtonLabel())
-//                }.pos(leftPos + LETTER_WIDTH + 4, topPos + 27).width(CONTROL_WIDTH).build()
+//                }, CYCLE_BACKGROUND)
 //            )
             addRenderableWidget(
-                Button.builder(backgroundButtonLabel()) {
-                    selectedBackground =
-                        LetterBackground.entries[(selectedBackground.ordinal + 1) % LetterBackground.entries.size]
-                    it.setMessage(backgroundButtonLabel())
-                }.pos(leftPos + LETTER_WIDTH + 4, topPos + 51).width(CONTROL_WIDTH).build()
+                PazButton(backgroundLeft() + LETTER_WIDTH - BUTTON_WIDTH - 2, topPos + 2, BUTTON_WIDTH, BUTTON_WIDTH, {
+                    selectedBackground = LetterBackground.entries[(selectedBackground.ordinal + 1) % LetterBackground.entries.size]
+                }, CYCLE_BACKGROUND)
             )
             addRenderableWidget(
                 Button.builder(Component.translatable("gui.plantz.letter.sign")) {
@@ -231,15 +227,7 @@ class LetterScreen(
         saved = true
     }
 
-    private fun fontButtonLabel() = Component.translatable(
-        "gui.plantz.letter.font", Component.translatable(selectedFont.translationKey)
-    )
-
-    private fun backgroundButtonLabel() = Component.translatable(
-        "gui.plantz.letter.background", Component.translatable(selectedBackground.translationKey)
-    )
-
-    fun backgroundLeft() = if (editable) leftPos else (width - LETTER_WIDTH) / 2
+    fun backgroundLeft() = (width - LETTER_WIDTH) / 2
     fun backgroundTop() = topPos
 
     fun textLeft() = backgroundLeft() - (TEXT_WIDTH - LETTER_WIDTH) / 2

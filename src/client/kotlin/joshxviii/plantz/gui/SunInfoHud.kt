@@ -5,7 +5,6 @@ import joshxviii.plantz.PazItems
 import joshxviii.plantz.getTotalSun
 import joshxviii.plantz.item.component.SunCost
 import joshxviii.plantz.pazResource
-import joshxviii.plantz.renderer.outlineText
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor

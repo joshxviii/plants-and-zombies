@@ -1,6 +1,7 @@
 package joshxviii.plantz
 
 import joshxviii.plantz.item.component.BrainzAlloyCost
+import joshxviii.plantz.item.component.AlmanacDataComponent
 import joshxviii.plantz.item.component.BlockBreakChanceComponent
 import joshxviii.plantz.item.component.DoorShieldComponent
 import joshxviii.plantz.item.component.LetterDataComponent
@@ -71,6 +72,14 @@ object PazComponents {
         "letter_data"
     ) { it.persistent(LetterDataComponent.CODEC)
         .networkSynchronized(LetterDataComponent.STREAM_CODEC)
+        .cacheEncoding()
+    }
+
+    @JvmField
+    val ALMANAC_DATA: DataComponentType<AlmanacDataComponent> = register(
+        "almanac_data"
+    ) { it.persistent(AlmanacDataComponent.CODEC)
+        .networkSynchronized(AlmanacDataComponent.STREAM_CODEC)
         .cacheEncoding()
     }
 
