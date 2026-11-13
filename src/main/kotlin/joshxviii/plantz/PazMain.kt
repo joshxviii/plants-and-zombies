@@ -2,9 +2,9 @@ package joshxviii.plantz
 
 import joshxviii.plantz.command.PazCommands
 import joshxviii.plantz.block.entity.MailboxBlockEntity
-import joshxviii.plantz.block.entity.MailboxManager
-import joshxviii.plantz.block.entity.getMailboxMailQueue
-import joshxviii.plantz.block.entity.getTimeMachineManager
+import joshxviii.plantz.api.MailboxManager
+import joshxviii.plantz.api.getMailboxMailQueue
+import joshxviii.plantz.api.getTimeMachineManager
 import joshxviii.plantz.block.entity.TimeMachineBlockEntity
 import joshxviii.plantz.networking.ServerConfigResponsePayload
 import joshxviii.plantz.recipe.DoorShieldRecipe

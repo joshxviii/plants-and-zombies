@@ -503,4 +503,4 @@
   "music.raid.zomboss": {
     "sounds": [{ "name": "plantz:music/raid/loon_griefers_high", "volume": 1.0, "pitch": 1.0 }], "subtitle": "plantz.subtitles.music.raid.zomboss"
   }
-},
+}

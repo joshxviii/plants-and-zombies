@@ -1,7 +1,7 @@
 package joshxviii.plantz.inventory
 
 import joshxviii.plantz.MailboxData
-import joshxviii.plantz.block.entity.MailboxManager
+import joshxviii.plantz.api.MailboxManager
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuType
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component

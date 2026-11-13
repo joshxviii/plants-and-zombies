@@ -1,10 +1,8 @@
 package joshxviii.plantz.block
 
-import com.mojang.serialization.MapCodec
-import com.mojang.serialization.codecs.RecordCodecBuilder
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.block.entity.MailCollectionBoxEntity
-import joshxviii.plantz.block.entity.MailboxManager
+import joshxviii.plantz.api.MailboxManager
 import joshxviii.plantz.inventory.MailCollectionBoxMenu
 import joshxviii.plantz.networking.MailboxListResponsePayload
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking

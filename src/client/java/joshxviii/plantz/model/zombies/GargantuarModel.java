@@ -77,11 +77,27 @@ public class GargantuarModel<S extends PazZombieRenderState> extends PazZombieMo
 
 		PartDefinition pole_r1 = pole.addOrReplaceChild("pole_r1", CubeListBuilder.create().texOffs(0, 118).addBox(-23.0F, -2.5F, -2.5F, 47.0F, 5.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-3.0F, 0.0F, -10.7857F, 0.0F, 1.5708F, 0.0F));
 
+		PartDefinition dolphin = pole.addOrReplaceChild("dolphin", CubeListBuilder.create().texOffs(128, 13).addBox(-4.0F, -7.0F, 0.0F, 8.0F, 7.0F, 13.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.5F, 1.5F, -20.2857F, 0.0F, 0.0F, 1.5708F));
+
+		PartDefinition head3 = dolphin.addOrReplaceChild("head3", CubeListBuilder.create().texOffs(128, 0).addBox(-4.0F, -7.0F, -6.0F, 8.0F, 7.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition nose = head3.addOrReplaceChild("nose", CubeListBuilder.create().texOffs(128, 13).addBox(-1.0F, -2.0F, 0.0F, 2.0F, 2.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -10.0F));
+
+		PartDefinition tail = dolphin.addOrReplaceChild("tail", CubeListBuilder.create().texOffs(128, 33).addBox(-2.0F, -2.5F, -1.0F, 4.0F, 5.0F, 11.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -2.5F, 14.0F));
+
+		PartDefinition tail_fin = tail.addOrReplaceChild("tail_fin", CubeListBuilder.create().texOffs(128, 49).addBox(-5.0F, -0.5F, -1.0F, 10.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 9.0F));
+
+		PartDefinition back_fin = dolphin.addOrReplaceChild("back_fin", CubeListBuilder.create().texOffs(157, 0).addBox(-0.5F, -4.25F, -1.0F, 1.0F, 5.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -7.0F, 5.0F, -0.5236F, 0.0F, 0.0F));
+
+		PartDefinition left_fin = dolphin.addOrReplaceChild("left_fin", CubeListBuilder.create().texOffs(168, 0).addBox(0.0F, -1.0F, -1.5F, 8.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(3.0F, -1.0F, 2.0F, 0.0F, -0.4363F, 0.3491F));
+
+		PartDefinition right_fin = dolphin.addOrReplaceChild("right_fin", CubeListBuilder.create().texOffs(168, 6).addBox(-8.0F, -1.0F, -1.5F, 8.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-3.0F, -1.0F, 2.0F, 0.0F, 0.4363F, -0.3491F));
+
 		PartDefinition right_leg = root.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(0, 80).addBox(-4.0F, 0.0F, -3.0F, 6.0F, 13.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(-3.0F, 0.0F, 2.0F));
 
 		PartDefinition left_leg = root.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(72, 34).addBox(-2.0F, 0.0F, -3.0F, 6.0F, 13.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(3.0F, 0.0F, 2.0F));
 
-		return LayerDefinition.create(meshdefinition, 128, 128);
+		return LayerDefinition.create(meshdefinition, 192, 192);
 	}
 
 	@Override

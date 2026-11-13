@@ -176,7 +176,7 @@ class SunBatteryBlock(properties: Properties) : BaseEntityBlock(properties), Sim
     override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos, direction: Direction): Int = state.getValue(LEVEL)
 
     override fun getCloneItemStack(level: LevelReader, pos: BlockPos, state: BlockState, includeData: Boolean): ItemStack {
-        return (level.getBlockEntity(pos) as? SunBatteryBlockEntity)?.theItem?:
+        return (level.getBlockEntity(pos) as? SunBatteryBlockEntity)?.theItem?.copy()?:
         super.getCloneItemStack(level, pos, state, includeData)
     }
 

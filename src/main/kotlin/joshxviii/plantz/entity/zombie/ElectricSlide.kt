@@ -47,7 +47,7 @@ class ElectricSlide(type: EntityType<out ElectricSlide>, level: Level) : PazZomb
         private val MELEE_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(ElectricSlide::class.java, EntityDataSerializers.INT)
 
         private const val TORNADO_DURATION = 80
-        private const val TORNADO_COOLDOWN = 280
+        private const val TORNADO_COOLDOWN = 380
         private const val ZAP_DURATION = 4
         private const val ZAP_COOLDOWN = 150
         private const val ZAP_RANGE = 8.0

@@ -1,11 +1,10 @@
 package joshxviii.plantz.block
 
-import com.mojang.serialization.MapCodec
 import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazWorldGen
 import joshxviii.plantz.block.entity.TimeMachineBlockEntity
-import joshxviii.plantz.block.entity.getTimeMachineManager
+import joshxviii.plantz.api.getTimeMachineManager
 import joshxviii.plantz.block.entity.TimePortalBlockEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction

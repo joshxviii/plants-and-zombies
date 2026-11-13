@@ -30,6 +30,7 @@ import net.minecraft.world.ticks.ContainerSingleItem.BlockContainerSingleItem
 import net.minecraft.core.Direction
 import net.minecraft.world.Containers
 import joshxviii.plantz.PazItems
+import joshxviii.plantz.api.getTimeMachineManager
 import kotlin.jvm.optionals.getOrDefault
 
 class TimeMachineBlockEntity(

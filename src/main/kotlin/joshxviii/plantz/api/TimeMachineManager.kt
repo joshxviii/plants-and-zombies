@@ -1,4 +1,4 @@
-package joshxviii.plantz.block.entity
+package joshxviii.plantz.api
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
@@ -9,6 +9,7 @@ import joshxviii.plantz.PazWorldGen
 import joshxviii.plantz.block.TimeMachineBlock
 import joshxviii.plantz.block.TimeMachineState
 import joshxviii.plantz.block.TimePortalBlock
+import joshxviii.plantz.block.entity.TimeMachineBlockEntity
 import joshxviii.plantz.pazResource
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -24,6 +25,7 @@ import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.saveddata.SavedData
 import net.minecraft.world.level.saveddata.SavedDataType
 import java.util.function.Function
+import kotlin.collections.forEach
 
 fun ServerLevel.getTimeMachineManager(): TimeMachineManager =
     server.overworld().dataStorage.computeIfAbsent(TimeMachineManager.TYPE)

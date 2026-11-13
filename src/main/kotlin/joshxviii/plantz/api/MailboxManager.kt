@@ -1,15 +1,20 @@
-package joshxviii.plantz.block.entity
+package joshxviii.plantz.api
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import joshxviii.plantz.MailboxData
 import joshxviii.plantz.block.MailboxState
+import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.pazResource
 import net.minecraft.core.BlockPos
+import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.datafix.DataFixTypes
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.Level
 import net.minecraft.world.level.saveddata.SavedData
 import net.minecraft.world.level.saveddata.SavedDataType
+import java.util.Locale
 import java.util.function.Function
 
 fun ServerLevel.getMailboxMailQueue(): MailboxMailQueue {
@@ -130,4 +135,41 @@ class MailboxMailQueue private constructor(
     }
 
     private data class QueuedMail(val targetPos: BlockPos, val stack: ItemStack)
+}
+
+object MailboxManager {
+
+    private val mailboxes: MutableMap<ResourceKey<Level>, MutableSet<BlockPos>> = mutableMapOf()
+
+    fun clearMailboxes() {
+        mailboxes.clear()
+    }
+
+    fun registerMailbox(level: Level, blockEntity: MailboxBlockEntity) {
+        val levelKey = level.dimension()
+        val pos = blockEntity.blockPos
+        mailboxes.getOrPut(levelKey) { mutableSetOf() }.add(pos)
+    }
+
+    fun unregisterMailbox(level: Level, pos: BlockPos) {
+        val levelKey = level.dimension()
+        mailboxes[levelKey]?.remove(pos)
+    }
+
+    fun getMailboxesInLevel(level: Level): List<MailboxData> {
+        val levelKey = level.dimension()
+
+        return mailboxes[levelKey]?.mapNotNull { pos ->
+            (level.getBlockEntity(pos) as? MailboxBlockEntity)?.asMailBoxData()
+        } ?: emptyList()
+    }
+
+    fun searchMailboxes(mailboxes: List<MailboxData>, search: String): List<MailboxData> {
+        if (search.isEmpty()) return mailboxes
+
+        return mailboxes.filter { mailbox ->
+            mailbox.name.string.lowercase(Locale.getDefault())
+                .contains(search.lowercase(Locale.getDefault()))
+        }
+    }
 }

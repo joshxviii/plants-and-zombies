@@ -3,9 +3,9 @@ package joshxviii.plantz.networking
 import joshxviii.plantz.PazCriteria
 import joshxviii.plantz.block.MailboxState
 import joshxviii.plantz.block.entity.MailboxBlockEntity
-import joshxviii.plantz.block.entity.MailboxMailQueue
-import joshxviii.plantz.block.entity.MailboxManager
-import joshxviii.plantz.block.entity.getMailboxMailQueue
+import joshxviii.plantz.api.MailboxMailQueue
+import joshxviii.plantz.api.MailboxManager
+import joshxviii.plantz.api.getMailboxMailQueue
 import joshxviii.plantz.inventory.MailboxMenu
 import joshxviii.plantz.pazResource
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
@@ -15,11 +15,9 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.level.block.entity.BlockEntity
 
 data class SendMailRequestPayload(val targetPos: BlockPos) : CustomPacketPayload {
 

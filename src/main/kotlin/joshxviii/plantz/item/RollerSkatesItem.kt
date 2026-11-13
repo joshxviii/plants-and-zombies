@@ -35,7 +35,6 @@ class RollerSkatesItem(properties: Properties) : Item(properties) {
             entity?.getAttribute(Attributes.STEP_HEIGHT)?.removeModifier(ROLLER_SKATES_ID)
         }
     }
-    //TODO find a better way to remove modifiers
     override fun inventoryTick(itemStack: ItemStack, level: ServerLevel, owner: Entity, slot: EquipmentSlot?) {
         super.inventoryTick(itemStack, level, owner, slot)
         if (level.isClientSide || owner !is LivingEntity) return

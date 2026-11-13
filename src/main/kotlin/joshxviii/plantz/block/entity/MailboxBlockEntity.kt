@@ -2,6 +2,7 @@ package joshxviii.plantz.block.entity
 
 import com.mojang.serialization.Codec
 import joshxviii.plantz.*
+import joshxviii.plantz.api.getMailboxMailQueue
 import joshxviii.plantz.block.MailboxBlock.Companion.FACING
 import joshxviii.plantz.block.MailboxBlock.Companion.STATE
 import joshxviii.plantz.block.MailboxState
