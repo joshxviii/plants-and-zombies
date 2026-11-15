@@ -129,6 +129,9 @@ open class PlantRenderer(
         poseStack.scale(deathScale, deathScale, deathScale)
     }
 
+    override fun getModelTint(state: PlantRenderState): Int =
+        if (state.silhouette) 0xFF000000.toInt() else super.getModelTint(state)
+
     override fun getWhiteOverlayProgress(state: PlantRenderState): Float {
         val step = state.swelling
         return if ((step * 10.0f).toInt() % 2 == 0) 0.0f else Mth.clamp(step, 0.5f, 1.0f)
@@ -210,6 +213,7 @@ class EmissivePlantLayer<M : EntityModel<PlantRenderState>>(
         yRot: Float,
         xRot: Float
     ) {
+        if (state.silhouette) return
         val textureLocation = state.getEmissiveTextureLocation(TEXTURE_PATH, state.getSuffixes()) ?: return
         submitNodeCollector.order(1).submitModel(this.parentModel, state, poseStack, RenderTypes.eyes(textureLocation), lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor);
     }
@@ -228,6 +232,7 @@ class SunGlowLayer<M : EntityModel<PlantRenderState>>(
         yRot: Float,
         xRot: Float
     ) {
+        if (state.silhouette) return
         val alphaPercent = state.glowPercent
         if (alphaPercent <= 0f) return
         val color = ARGB.color(Mth.floor(alphaPercent * 0xFF), 0xFFFFFF)
@@ -251,7 +256,7 @@ class PumpkinArmorLayer<M : EntityModel<PlantRenderState>>(
         yRot: Float,
         xRot: Float
     ) {
-        if (state.pumpkinArmor <= 0) return
+        if (state.pumpkinArmor <= 0 || state.silhouette) return
 
         poseStack.pushPose()
         poseStack.scale(-1.0f, -1.0f, 1.0f)
@@ -277,6 +282,7 @@ open class PlantRenderState : LivingEntityRenderState() {
     }
 
     var pumpkinArmor: Float = 0f
+    var silhouette: Boolean = false
     var renderedByWearer: Boolean = false
     var embeddedOnWearer: Boolean = false
     var rotations: Quaternionf = Quaternionf()

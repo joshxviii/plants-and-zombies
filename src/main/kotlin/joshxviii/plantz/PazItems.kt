@@ -487,7 +487,7 @@ object PazItems {
         ItemComponentTooltipProviderRegistry.addLast(PazComponents.SUN_COST)
         ItemComponentTooltipProviderRegistry.addLast(PazComponents.BRAINZ_ALLOY_COST)
         ItemComponentTooltipProviderRegistry.addLast(PazComponents.LETTER_DATA)
-
+        ItemComponentTooltipProviderRegistry.addLast(PazComponents.ALMANAC_DATA)
 
         DefaultItemComponentEvents.MODIFY.register { ctx ->
             ctx.modify({ it.defaultInstance.`is`(BUCKET_WEARABLE)}, ::bucketHeadItem)

@@ -37,7 +37,6 @@ class AlmanacMainScreen(
     title: Component = Component.translatable("gui.plantz.almanac")
 ) : AbstractContainerScreen<AlmanacMenu>(menu, inventory, title, MENU_WIDTH, MENU_HEIGHT) {
     companion object {
-        val idleAnimationState = AnimationState()
         private const val BACKGROUND_WIDTH = 201
         private const val BACKGROUND_HEIGHT = 145
         private const val MENU_WIDTH = BACKGROUND_WIDTH
@@ -52,6 +51,7 @@ class AlmanacMainScreen(
 
         private val BACKGROUND = pazResource("textures/gui/almanac/background.png")
         private val PAPER_BACKGROUND = pazResource("textures/gui/almanac/paper_background.png")
+        private val PAPER_DETAILS_BACKGROUND = pazResource("textures/gui/almanac/paper_details_background.png")
         private val INVENTORY_BACKGROUND = pazResource("textures/gui/letter/inventory.png")
         private val PLANT_SLOT = pazResource("textures/gui/almanac/plant_slot.png")
         private val PLANT_SLOT_SELECTED = pazResource("textures/gui/almanac/plant_slot_selected.png")
@@ -69,7 +69,6 @@ class AlmanacMainScreen(
 
     override fun init() {
         super.init()
-        idleAnimationState.startIfStopped(0)
         tabButtons.clear()
         AlmanacTab.entries.forEach { tab ->
             val button = AlmanacTabButton(
@@ -98,7 +97,7 @@ class AlmanacMainScreen(
             PazButton(
                 leftPos + BACKGROUND_WIDTH - DETAILS_BUTTON_WIDTH - 9, topPos + 23,
                 DETAILS_BUTTON_WIDTH, DETAILS_BUTTON_HEIGHT,
-                { menu.detailedView != menu.detailedView }, DETAILS_BUTTON, DETAILS_BUTTON_HOVER
+                { menu.detailedView = !menu.detailedView; PlantProfile.scroll = 0f }, DETAILS_BUTTON, DETAILS_BUTTON_HOVER
             )
         )
     }
@@ -116,8 +115,10 @@ class AlmanacMainScreen(
         detailsButton.visible = seedTab
     }
 
+    private var lastSelected = -1
     override fun containerTick() {
         super.containerTick()
+        if (menu.selected != lastSelected) { lastSelected = menu.selected; PlantProfile.scroll = 0f }
         if (menu.responseTimeout > 0) --menu.responseTimeout
     }
 
@@ -125,6 +126,7 @@ class AlmanacMainScreen(
 
     private var skipRelease = false
     override fun mouseReleased(event: MouseButtonEvent): Boolean {
+        draggingScroll = false
         if (skipRelease) {
             skipRelease = false
             return true
@@ -132,13 +134,35 @@ class AlmanacMainScreen(
         return super.mouseReleased(event)
     }
 
+    private var draggingScroll = false
+    override fun mouseScrolled(x: Double, y: Double, scrollX: Double, scrollY: Double): Boolean {
+        if (menu.detailedView && menu.tab == AlmanacTab.SEED_PACKETS.ordinal && x >= leftPos + BACKGROUND_WIDTH / 2) {
+            PlantProfile.scrollBy((-scrollY * 9).toFloat())
+            return true
+        }
+        return super.mouseScrolled(x, y, scrollX, scrollY)
+    }
+
+    override fun mouseDragged(event: MouseButtonEvent, dx: Double, dy: Double): Boolean {
+        if (draggingScroll) {
+            PlantProfile.scrollToMouse(event.y)
+            return true
+        }
+        return super.mouseDragged(event, dx, dy)
+    }
+
     override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {
+        if (menu.detailedView && PlantProfile.overScrollTrack(event.x, event.y)) {
+            draggingScroll = true
+            PlantProfile.scrollToMouse(event.y)
+            return true
+        }
         val slot = hoveredSlot
-        if (slot != null && slot.index < menu.plantCount && slot.isActive && slot.hasItem()
+        if (slot != null && slot.index < menu.plantCount && slot.isActive
             && menu.carried.isEmpty && !event.hasShiftDown()
         ) {
             skipRelease = true
-            sendButton((if (doubleClick) AlmanacMenu.TAKE_BASE else AlmanacMenu.SELECT_BASE) + slot.index)
+            sendButton((if (doubleClick && slot.hasItem()) AlmanacMenu.TAKE_BASE else AlmanacMenu.SELECT_BASE) + slot.index)
             return true
         }
         return super.mouseClicked(event, doubleClick)
@@ -158,7 +182,7 @@ class AlmanacMainScreen(
     override fun extractBackground(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, a: Float) {
         super.extractBackground(graphics, mouseX, mouseY, a)
         blit(graphics, BACKGROUND, leftPos, topPos, BACKGROUND_WIDTH, BACKGROUND_HEIGHT)
-        blit(graphics, PAPER_BACKGROUND, leftPos, topPos, BACKGROUND_WIDTH, BACKGROUND_HEIGHT)
+        blit(graphics, if (menu.detailedView && menu.tab == AlmanacTab.SEED_PACKETS.ordinal) PAPER_DETAILS_BACKGROUND else PAPER_BACKGROUND, leftPos, topPos, BACKGROUND_WIDTH, BACKGROUND_HEIGHT)
         blit(
             graphics, INVENTORY_BACKGROUND,
             leftPos + AlmanacMenu.INVENTORY_X - 8, topPos + AlmanacMenu.INVENTORY_Y - 7,

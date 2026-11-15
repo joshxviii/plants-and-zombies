@@ -7,7 +7,10 @@ import joshxviii.plantz.PazTags
 import joshxviii.plantz.item.SeedPacketItem
 import joshxviii.plantz.item.component.AlmanacDataComponent
 import joshxviii.plantz.item.component.AlmanacTab
+import joshxviii.plantz.api.getAlmanacManager
 import net.minecraft.ChatFormatting
+import net.minecraft.server.level.ServerPlayer
+import java.util.UUID
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.world.InteractionHand
@@ -65,6 +68,8 @@ class AlmanacMenu(
     val almanacData: AlmanacDataComponent
         get() = almanacStack.get(PazComponents.ALMANAC_DATA) ?: AlmanacDataComponent()
 
+    val ownerId: UUID get() = almanacData.owner ?: inventory.player.uuid
+
     private val tabData = addDataSlot(DataSlot.standalone())
     private val pageData = addDataSlot(DataSlot.standalone())
     private val selectedData = addDataSlot(DataSlot.standalone())
@@ -96,13 +101,15 @@ class AlmanacMenu(
 
     init {
         val data = almanacData
+        val savedPackets = (inventory.player as? ServerPlayer)?.level()?.server
+            ?.getAlmanacManager()?.get(ownerId)?.seedPackets ?: emptyList()
         tabData.set(data.tab.coerceIn(0, AlmanacTab.entries.lastIndex))
         pageData.set(data.page.coerceIn(0, pageCount - 1))
         selectedData.set(0)
 
         for (index in 0 until plantCount) {
             addSlot(PlantSlot(index))
-            collection.setItem(index, data.seedPackets.getOrNull(index)?.copy() ?: ItemStack.EMPTY)
+            collection.setItem(index, savedPackets.getOrNull(index)?.copy() ?: ItemStack.EMPTY)
         }
         loading = false
 
@@ -123,42 +130,31 @@ class AlmanacMenu(
     fun plantTypeOf(stack: ItemStack?): EntityType<*>? =
         if (stack == null || !stack.`is`(PazItems.SEED_PACKET)) null else SeedPacketItem.typeFromStack(stack)
 
-    private fun duplicateWarning(type: EntityType<*>) {
-        responseMessage = Component.translatable("gui.plantz.almanac.duplicate", type.description).withStyle(ChatFormatting.RED)
-        responseTimeout = 50
-    }
-
     fun canHold(stack: ItemStack, index: Int): Boolean {
         val type = plantTypeOf(stack) ?: return false
-        if (type !in plantTypes) return false
-        val result = (0 until plantCount).none { it != index && plantTypeOf(collection.getItem(it)) == type }
-        if (!result) duplicateWarning(type)
-        return result
+        return plantTypes.getOrNull(index) == type
     }
 
-    fun selectedType(): EntityType<*>? = plantTypeOf(selectedItem()) ?: return null
+    fun selectedType(): EntityType<*>? = plantTypes.getOrNull(selected)
 
     fun selectedItem(index: Int = selected): ItemStack? =
         if (index in 0 until plantCount) collection.getItem(index) else null
 
     private fun save() {
         if (inventory.player.level().isClientSide) return
-        val almanac = almanacStack
-        if (almanac.isEmpty) return
+        val server = (inventory.player as? ServerPlayer)?.level()?.server ?: return
         val stacks = (0 until plantCount).map { collection.getItem(it).copy() }.dropLastWhile { it.isEmpty }
-        almanac.set(PazComponents.ALMANAC_DATA, almanacData.copy(seedPackets = stacks))
-        inventory.setChanged()
+        server.getAlmanacManager().setSeedPackets(ownerId, stacks)
     }
 
     private fun tryInsert(stack: ItemStack): Boolean {
-        for (index in 0 until plantCount) {
-            if (!collection.getItem(index).isEmpty || !canHold(stack, index)) continue
-            collection.setItem(index, stack.copyWithCount(1))
-            stack.shrink(1)
-            selectedData.set(index)
-            return true
-        }
-        return false
+        val index = plantTypes.indexOf(plantTypeOf(stack) ?: return false)
+        if (index < 0 || !collection.getItem(index).isEmpty) return false
+        collection.setItem(index, stack.copyWithCount(1))
+        stack.shrink(1)
+        selectedData.set(index)
+        setTabAndPage(AlmanacTab.SEED_PACKETS.ordinal, index / SLOTS_PER_PAGE)
+        return true
     }
 
     private fun setTabAndPage(newTab: Int, newPage: Int) {

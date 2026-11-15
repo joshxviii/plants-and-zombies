@@ -124,8 +124,9 @@ object PazEntities {
     @JvmField val CHERRY_BOMB: EntityType<CherryBomb> = registerPlant(
         "cherrybomb",
         EntityType.Builder.of(::CherryBomb, MobCategory.CREATURE),
-        width = 0.625f,
-        height = 0.75f,
+        width = 0.68f,
+        height = 0.78f,
+        eyeHeight = 0.35f,
         attributes = Plant.Companion.PlantAttributes(
             followRange = 3.75,
         )

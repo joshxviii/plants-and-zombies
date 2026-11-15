@@ -1,6 +1,8 @@
 package joshxviii.plantz.item
 
+import joshxviii.plantz.PazComponents
 import joshxviii.plantz.inventory.AlmanacMenu
+import joshxviii.plantz.item.component.AlmanacDataComponent
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
@@ -18,6 +20,13 @@ class AlmanacItem(properties: Properties) : Item(properties) {
 
     override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResult {
         if (!level.isClientSide && player is ServerPlayer) {
+            val stack = player.getItemInHand(hand)
+            val data = stack.get(PazComponents.ALMANAC_DATA) ?: AlmanacDataComponent()
+            if (data.owner == null) stack.set(PazComponents.ALMANAC_DATA, data.copy(owner = player.uuid))
+            else if (data.owner != player.uuid) {
+                player.sendSystemMessage(Component.translatable("gui.plantz.almanac.not_owner"), true)
+                return InteractionResult.FAIL
+            }
             val handIndex = if (hand == InteractionHand.MAIN_HAND) 0 else 1
             player.openMenu(object : ExtendedMenuProvider<Int> {
                 override fun getDisplayName(): Component = Component.translatable("gui.plantz.almanac")
@@ -37,5 +46,7 @@ class AlmanacItem(properties: Properties) : Item(properties) {
 
     override fun onCraftedBy(itemStack: ItemStack, player: Player) {
         super.onCraftedBy(itemStack, player)
+        val data = itemStack.get(PazComponents.ALMANAC_DATA) ?: AlmanacDataComponent()
+        itemStack.set(PazComponents.ALMANAC_DATA, data.copy(owner = player.uuid))
     }
 }

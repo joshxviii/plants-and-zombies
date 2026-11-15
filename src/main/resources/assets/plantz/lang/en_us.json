@@ -160,6 +160,7 @@
   "component.plantz.stored_sun.description": "Stores collected Sun",
   "component.plantz.stored_sun": "%s / %s",
   "component.plantz.stored_water.description": "Used to hydrate plants",
+  "component.plantz.almanac": "Owned by %s",
   "component.plantz.stored_water": "Water: %s / %s",
   "component.plantz.item_cost": "%s Cost: %s",
   "component.plantz.protects_head": "Blocks damage from above",
@@ -439,6 +440,7 @@
   "container.plantz.time_machine.display": "NEXT STOP: %s",
 
   "gui.plantz.almanac": "Almanac",
+  "gui.plantz.almanac.not_owner": "This almanac belongs to someone else",
   "gui.plantz.almanac.duplicate": "%s is already in the Almanac",
   "gui.plantz.almanac.tab.seed_packets": "Seed Packets",
   "gui.plantz.almanac.tab.zombies": "Zombie Bestiary",
