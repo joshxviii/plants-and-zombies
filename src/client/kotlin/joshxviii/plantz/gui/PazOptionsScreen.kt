@@ -2,6 +2,7 @@ package joshxviii.plantz.gui
 
 import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazCreativeTabs
+import joshxviii.plantz.RaidMusicManager
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
@@ -13,24 +14,51 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 
+interface ClientOption {
+    fun label(): Component
+    fun click()
+}
+
+class CycleOption(
+    val labelKey: String,
+    val values: List<String>,
+    val get: () -> String,
+    val set: (String) -> Unit,
+    val onChange: () -> Unit = {},
+) : ClientOption {
+    override fun label(): Component = Component.translatable(
+        labelKey,
+        Component.translatable("$labelKey.${get().lowercase()}").withStyle(ChatFormatting.YELLOW)
+    )
+    override fun click() {
+        set(values[(values.indexOf(get()) + 1).mod(values.size)])
+        onChange()
+    }
+}
+
 class ToggleOption(
     val labelKey: String,
     val get: () -> Boolean,
     val set: (Boolean) -> Unit,
     val onChange: () -> Unit = {},
-) {
+) : ClientOption {
+    override fun click() {
+        set(!get())
+        onChange()
+    }
+
     companion object {
         val ON = CommonComponents.OPTION_ON.copy().withStyle(ChatFormatting.GREEN)
         val OFF = CommonComponents.OPTION_OFF.copy().withStyle(ChatFormatting.RED)
     }
-    fun label(): Component = Component.translatable(
+    override fun label(): Component = Component.translatable(
         labelKey,
         if (get()) ON else OFF
     )
 }
 
 object PazClientOptions {
-    val ALL: List<ToggleOption> = listOf(
+    val ALL: List<ClientOption> = listOf(
         ToggleOption(
             "options.plantz.show_sun_info",
             get = { PazConfig.client.showSunInfo },
@@ -40,6 +68,13 @@ object PazClientOptions {
             "options.plantz.show_raid_ui",
             get = { PazConfig.client.showRaidUi },
             set = { PazConfig.client.showRaidUi = it },
+        ),
+        CycleOption(
+            "options.plantz.raid_music_channel",
+            values = listOf("MUSIC", "AMBIENT", "UI"),
+            get = { PazConfig.client.raidMusicChannel },
+            set = { PazConfig.client.raidMusicChannel = it },
+            onChange = { RaidMusicManager.onChannelChanged() },
         ),
         ToggleOption(
             "options.plantz.split_item_tabs",
@@ -71,10 +106,9 @@ class PazOptionsScreen(private val parent: Screen? = null) : Screen(Component.tr
 
         override fun getRowWidth(): Int = this.width - 24
 
-        inner class Row(option: ToggleOption) : Entry<Row>() {
+        inner class Row(option: ClientOption) : Entry<Row>() {
             private val button: Button = Button.builder(option.label()) { b ->
-                option.set(!option.get())
-                option.onChange()
+                option.click()
                 b.message = option.label()
                 PazConfig.saveClient()
             }.bounds(0, 0, 160, BUTTON_HEIGHT).build()

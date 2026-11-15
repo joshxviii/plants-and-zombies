@@ -20,6 +20,7 @@ data class AlmanacDataComponent(
     val tab: Int = 0,
     val page: Int = 0,
     val owner: UUID? = null,
+    val ownerName: String = "",
 ) : TooltipProvider {
     override fun addToTooltip(
         context: Item.TooltipContext,
@@ -28,9 +29,9 @@ data class AlmanacDataComponent(
         components: DataComponentGetter
     ) {
         consumer.accept(
-            owner?.let {
-                Component.translatable("component.plantz.almanac", it).withStyle(ChatFormatting.DARK_GRAY)
-            }?: Component.empty()
+            if (owner != null && ownerName.isNotEmpty())
+                Component.translatable("component.plantz.almanac", ownerName).withStyle(ChatFormatting.DARK_GRAY)
+            else Component.empty()
         )
     }
 
@@ -39,9 +40,10 @@ data class AlmanacDataComponent(
             instance.group(
                 Codec.intRange(0, 255).optionalFieldOf("tab", 0).forGetter(AlmanacDataComponent::tab),
                 Codec.intRange(0, 255).optionalFieldOf("page", 0).forGetter(AlmanacDataComponent::page),
-                UUIDUtil.CODEC.optionalFieldOf("owner").forGetter { Optional.ofNullable(it.owner) }
-            ).apply(instance) { tab, page, owner ->
-                AlmanacDataComponent(tab, page, owner.orElse(null))
+                UUIDUtil.CODEC.optionalFieldOf("owner").forGetter { Optional.ofNullable(it.owner) },
+                Codec.STRING.optionalFieldOf("owner_name", "").forGetter(AlmanacDataComponent::ownerName)
+            ).apply(instance) { tab, page, owner, name ->
+                AlmanacDataComponent(tab, page, owner.orElse(null), name)
             }
         }
 
@@ -52,7 +54,9 @@ data class AlmanacDataComponent(
             AlmanacDataComponent::page,
             UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs::optional),
             { data: AlmanacDataComponent -> Optional.ofNullable(data.owner) },
-            { tab, page, owner -> AlmanacDataComponent(tab, page, owner.orElse(null)) }
+            ByteBufCodecs.STRING_UTF8,
+            AlmanacDataComponent::ownerName,
+            { tab, page, owner, name -> AlmanacDataComponent(tab, page, owner.orElse(null), name) }
         )
     }
 }

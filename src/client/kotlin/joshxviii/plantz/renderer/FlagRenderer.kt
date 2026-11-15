@@ -9,6 +9,7 @@ import joshxviii.plantz.block.FlagBlock
 import joshxviii.plantz.block.entity.FlagBlockEntity
 import joshxviii.plantz.model.FlagBlockModel
 import joshxviii.plantz.pazResource
+import joshxviii.plantz.renderer.FlagRenderer.Companion.PLANTZ_FLAG_MATERIAL
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.blockentity.BeaconRenderer
@@ -50,8 +51,10 @@ class FlagRenderer(
         breakProgress: ModelFeatureRenderer.CrumblingOverlay?
     ) {
         super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress)
-        val pos = blockEntity.blockPos
         val blockState = blockEntity.blockState
+        if (blockState.`is`(PazBlocks.PLANTZ_FLAG_BLOCK)) state.sprite = PLANTZ_FLAG_MATERIAL
+        else state.sprite = BRAINZ_FLAG_MATERIAL
+        val pos = blockEntity.blockPos
         val gameTime = blockEntity.getLevel()?.gameTime ?: 0L
         state.health = blockEntity.health
         state.maxHealth = blockEntity.maxHealth
@@ -59,8 +62,6 @@ class FlagRenderer(
         state.angle = -RotationSegment.convertToDegrees(blockState.getValue(FlagBlock.ROTATION))
         state.beamAnimTime = Math.floorMod(gameTime, 40).toFloat() + partialTicks
         state.beamDistance = cameraPosition.subtract(Vec3.atCenterOf(state.blockPos)).horizontalDistance().toFloat()
-        if (blockState.`is`(PazBlocks.PLANTZ_FLAG_BLOCK)) state.sprite = PLANTZ_FLAG_MATERIAL
-        else state.sprite = BRAINZ_FLAG_MATERIAL
     }
 
     override fun submit(
@@ -69,6 +70,7 @@ class FlagRenderer(
         submitNodeCollector: SubmitNodeCollector,
         camera: CameraRenderState
     ) {
+        poseStack.pushPose()
         if (PazConfig.SHOW_DEBUG_INFO) submitNodeCollector.submitNameTag(
             poseStack, Vec3(0.5,1.0,0.5), -20,
             Component.literal("${state.health} / ${state.maxHealth}").withColor(0xFFFFFFF),
@@ -77,7 +79,7 @@ class FlagRenderer(
 
         if (PazNetwork.ZombieRaidClientCache.isActive() && state.maxHealth > 100) renderBeam(state, poseStack, submitNodeCollector, camera)
 
-        val material = state.sprite?: return
+        val material = state.sprite
         val renderType = material.renderType { RenderTypes.entitySolid(it) }
         poseStack.translate(0.5f, 0.0f, 0.5f)
         poseStack.rotate(Axis.YP.rotationDegrees(state.angle+90f))
@@ -90,6 +92,7 @@ class FlagRenderer(
             OverlayTexture.NO_OVERLAY,
             0,
         )
+        poseStack.popPose()
     }
 
     fun renderBeam(
@@ -134,7 +137,7 @@ class FlagRenderState : BlockEntityRenderState() {
     var health: Float = 0f
     var maxHealth: Float = 0f
     var phase: Float = 0f
-    var sprite: SpriteId? = null
+    var sprite: SpriteId = PLANTZ_FLAG_MATERIAL
     var angle: Float = 0f
     var beamAnimTime: Float = 0f
     var beamDistance: Float = 0f

@@ -21,13 +21,11 @@ import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance
 import net.minecraft.client.resources.sounds.SoundInstance
 import net.minecraft.client.resources.sounds.SoundInstance.Attenuation
 import net.minecraft.client.sounds.MusicManager
-import net.minecraft.client.sounds.SoundEngine
 import net.minecraft.core.Holder
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundSource
 import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
-//TODO Create a client setting to enable raid music on a different channel than MC music (everyone has the default music muted)
 enum class RaidMusicLayer(
     val music: Holder.Reference<SoundEvent>,
     val layerIndex: Int,
@@ -104,6 +102,16 @@ object RaidMusicManager {
         if (tick >0) tick++
     }
 
+    fun channel(): SoundSource = when (PazConfig.RAID_MUSIC_CHANNEL.uppercase()) {
+        "AMBIENT" -> SoundSource.AMBIENT
+        "UI" -> SoundSource.UI
+        else -> SoundSource.MUSIC
+    }
+
+    fun onChannelChanged() {
+        if (activeLayers.isNotEmpty()) restart()
+    }
+
     fun restart() {
         stop()
         start()
@@ -113,16 +121,14 @@ object RaidMusicManager {
         // to avoid resetting the music, only start if there are no active layers already
         if (activeLayers.isNotEmpty()) return
         stop()
+        val source = channel()
         RaidMusicLayer.entries.forEach {
-            val layer = RaidMusicSoundInstance(it.music.value())
+            val layer = RaidMusicSoundInstance(it.music.value(), source)
             layer.volume = 0.0f
             activeLayers[it] = layer
-            when (minecraft.soundManager.play(layer)) {
-                SoundEngine.PlayResult.STARTED -> minecraft.gui.toastManager().showNowPlayingToast()
-                SoundEngine.PlayResult.STARTED_SILENTLY -> {}
-                SoundEngine.PlayResult.NOT_STARTED -> {}
-            }
+            minecraft.soundManager.play(layer)
         }
+        if (minecraft.options.getFinalSoundSourceVolume(source) > 0f) minecraft.gui.toastManager().showNowPlayingToast()
         tick = 1
     }
 
@@ -200,7 +206,8 @@ object RaidMusicManager {
 
 class RaidMusicSoundInstance(
     val layer: SoundEvent,
-): AbstractTickableSoundInstance(layer, SoundSource.MUSIC, SoundInstance.createUnseededRandom()) {
+    source: SoundSource = SoundSource.MUSIC,
+): AbstractTickableSoundInstance(layer, source, SoundInstance.createUnseededRandom()) {
 
     init {
         volume = 0.0f
@@ -209,6 +216,8 @@ class RaidMusicSoundInstance(
         attenuation = Attenuation.NONE
         relative = true
     }
+
+    override fun canStartSilent(): Boolean = true
 
     override fun getPitch(): Float {
         return RaidMusicManager.pitch

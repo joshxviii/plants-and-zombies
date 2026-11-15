@@ -69,6 +69,7 @@ class AlmanacMenu(
         get() = almanacStack.get(PazComponents.ALMANAC_DATA) ?: AlmanacDataComponent()
 
     val ownerId: UUID get() = almanacData.owner ?: inventory.player.uuid
+    val readOnly: Boolean get() = ownerId != inventory.player.uuid
 
     private val tabData = addDataSlot(DataSlot.standalone())
     private val pageData = addDataSlot(DataSlot.standalone())
@@ -89,7 +90,8 @@ class AlmanacMenu(
 
     inner class PlantSlot(private val plantIndex: Int) :
         Slot(collection, plantIndex, slotX(plantIndex), slotY(plantIndex)) {
-        override fun mayPlace(itemStack: ItemStack): Boolean = canHold(itemStack, plantIndex)
+        override fun mayPlace(itemStack: ItemStack): Boolean = !readOnly && canHold(itemStack, plantIndex)
+        override fun mayPickup(player: Player): Boolean = !readOnly
         override fun set(itemStack: ItemStack) {
             super.set(itemStack)
             if (!itemStack.isEmpty && !loading) selectedData.set(plantIndex)
@@ -174,7 +176,7 @@ class AlmanacMenu(
         if (buttonId < 0) return false
         if (buttonId >= TAKE_BASE) {
             val slot = slots.getOrNull(buttonId - TAKE_BASE) as? PlantSlot ?: return false
-            if (!carried.isEmpty || !slot.hasItem() || !slot.isActive) return false
+            if (readOnly || !carried.isEmpty || !slot.hasItem() || !slot.isActive) return false
             setCarried(slot.item.copy())
             slot.set(ItemStack.EMPTY)
             return true
@@ -195,13 +197,14 @@ class AlmanacMenu(
         if (slotIndex !in slots.indices) return ItemStack.EMPTY
         val slot = slots[slotIndex]
         if (!slot.hasItem()) return ItemStack.EMPTY
+        if (readOnly && slotIndex < plantCount) return ItemStack.EMPTY
         if (slotIndex >= plantCount && slot.containerSlot == heldInventorySlot) return ItemStack.EMPTY
 
         val stack = slot.item
         val original = stack.copy()
         val moved = when {
             slotIndex < plantCount -> moveItemStackTo(stack, plantCount, slots.size, true)
-            tryInsert(stack) -> true
+            !readOnly && tryInsert(stack) -> true
             slotIndex < plantCount + 27 -> moveItemStackTo(stack, plantCount + 27, slots.size, false)
             else -> moveItemStackTo(stack, plantCount, plantCount + 27, false)
         }

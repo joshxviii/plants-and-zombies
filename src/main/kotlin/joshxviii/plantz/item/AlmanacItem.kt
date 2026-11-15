@@ -22,11 +22,13 @@ class AlmanacItem(properties: Properties) : Item(properties) {
         if (!level.isClientSide && player is ServerPlayer) {
             val stack = player.getItemInHand(hand)
             val data = stack.get(PazComponents.ALMANAC_DATA) ?: AlmanacDataComponent()
-            if (data.owner == null) stack.set(PazComponents.ALMANAC_DATA, data.copy(owner = player.uuid))
-            else if (data.owner != player.uuid) {
-                player.sendSystemMessage(Component.translatable("gui.plantz.almanac.not_owner"), true)
-                return InteractionResult.FAIL
-            }
+            if (data.owner == null) stack.set(
+                PazComponents.ALMANAC_DATA,
+                data.copy(owner = player.uuid, ownerName = player.gameProfile.name)
+            )
+            else if (data.owner == player.uuid && data.ownerName != player.gameProfile.name) stack.set(
+                PazComponents.ALMANAC_DATA, data.copy(ownerName = player.gameProfile.name)
+            )
             val handIndex = if (hand == InteractionHand.MAIN_HAND) 0 else 1
             player.openMenu(object : ExtendedMenuProvider<Int> {
                 override fun getDisplayName(): Component = Component.translatable("gui.plantz.almanac")
@@ -47,6 +49,6 @@ class AlmanacItem(properties: Properties) : Item(properties) {
     override fun onCraftedBy(itemStack: ItemStack, player: Player) {
         super.onCraftedBy(itemStack, player)
         val data = itemStack.get(PazComponents.ALMANAC_DATA) ?: AlmanacDataComponent()
-        itemStack.set(PazComponents.ALMANAC_DATA, data.copy(owner = player.uuid))
+        itemStack.set(PazComponents.ALMANAC_DATA, data.copy(owner = player.uuid, ownerName = player.gameProfile.name))
     }
 }

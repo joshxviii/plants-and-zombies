@@ -84,7 +84,8 @@ data class ClientConfig(
     var showDebugInfo: Boolean = false,
     var splitItemTabs: Boolean = false,
     var showRaidUi: Boolean = true,
-    var showSunInfo: Boolean = false
+    var showSunInfo: Boolean = false,
+    var raidMusicChannel: String = "MUSIC"
 )
 
 object PazConfig {
@@ -147,6 +148,9 @@ object PazConfig {
 
     val SHOW_SUN_INFO: Boolean
         get() = client.showSunInfo
+
+    val RAID_MUSIC_CHANNEL: String
+        get() = client.raidMusicChannel
 
 
     val COFFEE_BUFF_DURATION: Int

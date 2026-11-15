@@ -89,6 +89,10 @@
   "death.attack.paint": "%1$s was turned into an art piece by %2$s",
 
   "options.plantz.title": "Plants & Zombies",
+  "options.plantz.raid_music_channel": "Raid Music Channel: %s",
+  "options.plantz.raid_music_channel.music": "Music",
+  "options.plantz.raid_music_channel.ambient": "Ambient",
+  "options.plantz.raid_music_channel.ui": "UI",
   "options.plantz.show_raid_ui": "Raid UI: %s",
   "options.plantz.show_sun_info": "Sun Info HUD: %s",
   "options.plantz.split_item_tabs": "Split Item Tabs: %s",

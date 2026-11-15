@@ -12,7 +12,6 @@ import net.minecraft.world.level.saveddata.SavedData
 import net.minecraft.world.level.saveddata.SavedDataType
 import java.util.UUID
 
-/** Per-player almanac contents. Stored on the server, independent of the almanac item. */
 data class AlmanacData(
     val seedPackets: List<ItemStack> = emptyList(),
     val zombieProgress: Set<Identifier> = emptySet(),
