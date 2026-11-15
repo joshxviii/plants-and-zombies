@@ -35,6 +35,7 @@ object PazTags {
     }
 
     object EntityTypes {
+        @JvmField val ALMANAC_ENTRIES = tag("almanac_entries")
         @JvmField val PLANT = tag("plant")
         @JvmField val MUSHROOM = tag("mushroom")
         @JvmField val PLANTABLE_ON_WATER = tag("plantable_on_water")

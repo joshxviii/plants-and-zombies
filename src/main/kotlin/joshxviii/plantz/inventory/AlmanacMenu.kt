@@ -42,7 +42,7 @@ class AlmanacMenu(
         const val INVENTORY_Y = 153
 
         fun plantTypes(): List<EntityType<*>> =
-            BuiltInRegistries.ENTITY_TYPE.getTagOrEmpty(PazTags.EntityTypes.PLANT).map { it.value() }
+            BuiltInRegistries.ENTITY_TYPE.getTagOrEmpty(PazTags.EntityTypes.ALMANAC_ENTRIES).map { it.value() }
 
         fun pageCount(tab: Int, plantCount: Int): Int =
             if (tab == AlmanacTab.SEED_PACKETS.ordinal) maxOf(1, (plantCount + SLOTS_PER_PAGE - 1) / SLOTS_PER_PAGE) else 1
