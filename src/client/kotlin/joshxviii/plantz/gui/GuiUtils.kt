@@ -7,9 +7,13 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.client.renderer.RenderPipelines
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.client.sounds.SoundManager
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.FontDescription
 import net.minecraft.resources.Identifier
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.ARGB
 import net.minecraft.util.FormattedCharSequence
 
@@ -47,8 +51,13 @@ open class PazButton(
     val enabledRequirement: ((button: PazButton) -> Boolean) = { true },
     val clickRequirement: ((button: PazButton) -> Boolean) = enabledRequirement,
     val text: Component = Component.empty(),
-    val color: Int = -1
+    val color: Int = -1,
+    val sound: SoundEvent = SoundEvents.UI_BUTTON_CLICK.value()
 ) : Button(buttonX, buttonY, buttonWidth, buttonHeight, text, clickAction, DEFAULT_NARRATION) {
+
+    override fun playDownSound(soundManager: SoundManager) {
+        soundManager.play(SimpleSoundInstance.forUI(sound, 1.0f))
+    }
 
     override fun extractContents(
         graphics: GuiGraphicsExtractor,

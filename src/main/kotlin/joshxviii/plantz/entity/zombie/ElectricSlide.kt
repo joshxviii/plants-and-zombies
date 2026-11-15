@@ -6,11 +6,13 @@ import joshxviii.plantz.PazDataSerializers.ELECTRIC_SLIDE_VARIANT
 import joshxviii.plantz.PazEffects
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
+import joshxviii.plantz.PazTags
 import joshxviii.plantz.PlasmaBurstOptions
 import joshxviii.plantz.ai.goal.BeamAttackGoal
 import joshxviii.plantz.ai.goal.MeleeAttackActionGoal
 import joshxviii.plantz.ai.goal.NavigateToTargetGoal
 import joshxviii.plantz.raid.BossType
+import net.minecraft.core.BlockPos
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.chat.Component
@@ -20,7 +22,9 @@ import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.util.RandomSource
 import net.minecraft.util.Unit
+import net.minecraft.world.Difficulty
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.effect.MobEffectInstance
@@ -38,6 +42,21 @@ import kotlin.jvm.optionals.getOrDefault
 class ElectricSlide(type: EntityType<out ElectricSlide>, level: Level) : PazZombie(type, level) {
 
     companion object {
+        fun checkElectricSlideSpawnRules(
+            type: EntityType<out Mob>,
+            level: ServerLevelAccessor,
+            spawnReason: EntitySpawnReason,
+            pos: BlockPos,
+            random: RandomSource
+        ): Boolean {
+            val isThundering = level.level.isThundering
+            return level.difficulty != Difficulty.PEACEFUL
+                    && (EntitySpawnReason.ignoresLightRequirements(spawnReason) || isDarkEnoughToSpawn(level, pos, random))
+                    && checkMobSpawnRules(type, level, spawnReason, pos, random)
+                    && pos.y > level.seaLevel
+                    && isThundering
+        }
+
         val DATA_VARIANT_ID: EntityDataAccessor<ElectricSlideVariant> = SynchedEntityData.defineId(ElectricSlide::class.java, ELECTRIC_SLIDE_VARIANT)
 
         private val TORNADO_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(ElectricSlide::class.java, EntityDataSerializers.INT)

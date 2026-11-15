@@ -20,6 +20,7 @@ import net.minecraft.locale.Language
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySpawnReason
@@ -46,19 +47,25 @@ class AlmanacMainScreen(
         private const val PLANT_SLOT_SIZE = 20
         private const val PAGE_BUTTON_WIDTH = 18
         private const val PAGE_BUTTON_HEIGHT = 11
+        private const val DETAILS_BUTTON_WIDTH = 12
+        private const val DETAILS_BUTTON_HEIGHT = 10
 
         private val BACKGROUND = pazResource("textures/gui/almanac/background.png")
         private val PAPER_BACKGROUND = pazResource("textures/gui/almanac/paper_background.png")
+        private val INVENTORY_BACKGROUND = pazResource("textures/gui/letter/inventory.png")
         private val PLANT_SLOT = pazResource("textures/gui/almanac/plant_slot.png")
         private val PLANT_SLOT_SELECTED = pazResource("textures/gui/almanac/plant_slot_selected.png")
         private val PAGE_BACK = pazResource("textures/gui/almanac/page_back.png")
         private val PAGE_FORWARD = pazResource("textures/gui/almanac/page_forward.png")
-        private val INVENTORY_BACKGROUND = pazResource("textures/gui/letter/inventory.png")
+        private val DETAILS_BUTTON = pazResource("textures/gui/almanac/details_button.png")
+        private val DETAILS_BUTTON_HOVER = pazResource("textures/gui/almanac/details_button_hover.png")
+
     }
 
     private val tabButtons = ArrayList<PazButton>()
     private lateinit var backButton: PazButton
     private lateinit var forwardButton: PazButton
+    private lateinit var detailsButton: PazButton
 
     override fun init() {
         super.init()
@@ -75,14 +82,23 @@ class AlmanacMainScreen(
         backButton = addRenderableWidget(
             PazButton(
                 leftPos + 4, topPos + BACKGROUND_HEIGHT - 10, PAGE_BUTTON_WIDTH, PAGE_BUTTON_HEIGHT,
-                { navigate(menu.tab, menu.page - 1) }, PAGE_BACK
+                { navigate(menu.tab, menu.page - 1) }, PAGE_BACK,
+                sound = SoundEvents.BOOK_PAGE_TURN,
             )
         )
         forwardButton = addRenderableWidget(
             PazButton(
                 leftPos + BACKGROUND_WIDTH - 4 - PAGE_BUTTON_WIDTH, topPos + BACKGROUND_HEIGHT - 10,
                 PAGE_BUTTON_WIDTH, PAGE_BUTTON_HEIGHT,
-                { navigate(menu.tab, menu.page + 1) }, PAGE_FORWARD
+                { navigate(menu.tab, menu.page + 1) }, PAGE_FORWARD,
+                sound = SoundEvents.BOOK_PAGE_TURN,
+            )
+        )
+        detailsButton = addRenderableWidget(
+            PazButton(
+                leftPos + BACKGROUND_WIDTH - DETAILS_BUTTON_WIDTH - 9, topPos + 23,
+                DETAILS_BUTTON_WIDTH, DETAILS_BUTTON_HEIGHT,
+                { menu.detailedView != menu.detailedView }, DETAILS_BUTTON, DETAILS_BUTTON_HOVER
             )
         )
     }
@@ -97,6 +113,7 @@ class AlmanacMainScreen(
         val seedTab = menu.tab == AlmanacTab.SEED_PACKETS.ordinal
         backButton.visible = seedTab && menu.page > 0
         forwardButton.visible = seedTab && menu.page < menu.pageCount - 1
+        detailsButton.visible = seedTab
     }
 
     override fun containerTick() {
@@ -156,7 +173,7 @@ class AlmanacMainScreen(
             blit(graphics, if (slot.index == menu.selected) PLANT_SLOT_SELECTED else PLANT_SLOT, x, y, PLANT_SLOT_SIZE, PLANT_SLOT_SIZE)
         }
         menu.selectedType()?.let {
-            PlantProfile.extractProfile(graphics, it, menu.selectedItem(), leftPos, topPos, BACKGROUND_WIDTH, BACKGROUND_HEIGHT)
+            PlantProfile.extractProfile(graphics, it, menu.selectedItem(), leftPos, topPos, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, menu.detailedView)
         }
     }
 

@@ -2,6 +2,7 @@ package joshxviii.plantz
 
 import joshxviii.plantz.entity.plant.*
 import joshxviii.plantz.entity.zombie.DiggerZombie
+import joshxviii.plantz.entity.zombie.ElectricSlide
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.entity.zombie.Zombat
 import joshxviii.plantz.entity.zombie.ZombieYeti
@@ -162,6 +163,9 @@ object PazSpawnPlacements {
         addBiomeSpawn(PazTags.Biomes.HAS_IMP, PazEntities.IMP, category = MobCategory.MONSTER,
             weight = 7, minGroupSize = 1, maxGroupSize = 1)
         registerSpawnPlacement(PazEntities.IMP, PazZombie::checkPazZombieSpawnRules)
+        addBiomeSpawn(PazTags.Biomes.HAS_BROWNCOAT, PazEntities.ELECTRIC_SLIDE, category = MobCategory.MONSTER,
+            weight = 10, minGroupSize = 1, maxGroupSize = 1)
+        registerSpawnPlacement(PazEntities.ELECTRIC_SLIDE, ElectricSlide::checkElectricSlideSpawnRules)
         addBiomeSpawn(PazTags.Biomes.DAY_SPAWNS, PazEntities.ZOMBAT, category = MobCategory.MONSTER,
             weight = 20, minGroupSize = 1, maxGroupSize = 2)
         registerSpawnPlacement(PazEntities.ZOMBAT, Zombat::checkZombatSpawnRules)

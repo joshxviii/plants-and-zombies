@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.network.chat.Component
+import net.minecraft.sounds.SoundEvents
 
 class AlmanacTabButton(
     val tab: AlmanacTab,
@@ -18,7 +19,8 @@ class AlmanacTabButton(
     x + 8 + tab.ordinal * (TAB_WIDTH + 2), y - TAB_HEIGHT + 8, TAB_WIDTH, TAB_HEIGHT, clickAction,
     texture = TAB_UNSELECTED,
     disabledTexture = TAB_SELECTED,
-    enabledRequirement = enabledRequirement
+    enabledRequirement = enabledRequirement,
+    sound = SoundEvents.BOOK_PAGE_TURN,
 ) {
     companion object {
         private const val TAB_WIDTH = 16

@@ -10,9 +10,9 @@
       "translate": "advancements.plantz.bigger_three.description"
     }
   },
-  "parent": "plantz:robo_zombie",
+  "parent": "plantz:big_three",
   "criteria": {
-    "plantz:all_star": {
+    "plantz:robo_zombie": {
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {

@@ -52,6 +52,7 @@ class AlmanacMenu(
 
     var responseMessage: Component = Component.empty()
     var responseTimeout: Int = 0
+    var detailedView: Boolean = false
 
     val hand: InteractionHand = if (handIndex == 0) InteractionHand.MAIN_HAND else InteractionHand.OFF_HAND
     private val heldInventorySlot = if (hand == InteractionHand.MAIN_HAND) inventory.selectedSlot else 40
