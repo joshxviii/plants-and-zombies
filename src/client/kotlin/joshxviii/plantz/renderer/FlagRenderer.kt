@@ -79,10 +79,10 @@ class FlagRenderer(
 
         if (PazNetwork.ZombieRaidClientCache.isActive() && state.maxHealth > 100) renderBeam(state, poseStack, submitNodeCollector, camera)
 
-        val material = state.sprite
-        val renderType = material.renderType { RenderTypes.entitySolid(it) }
         poseStack.translate(0.5f, 0.0f, 0.5f)
         poseStack.rotate(Axis.YP.rotationDegrees(state.angle+90f))
+        val material = state.sprite
+        val renderType = material.renderType { RenderTypes.entitySolid(it) }
         submitNodeCollector.submitModel(
             flagModel,
             state,
@@ -117,9 +117,7 @@ class FlagRenderer(
 
     }
 
-    override fun shouldRenderOffScreen(): Boolean {
-        return PazNetwork.ZombieRaidClientCache.isActive()
-    }
+    override fun shouldRenderOffScreen(): Boolean = true
 
     override fun getViewDistance(): Int {
         return Minecraft.getInstance().options.effectiveRenderDistance * 16
