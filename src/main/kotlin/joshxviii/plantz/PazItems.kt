@@ -17,6 +17,7 @@ import joshxviii.plantz.PazEntities.IMP
 import joshxviii.plantz.PazEntities.NEWSPAPER_ZOMBIE
 import joshxviii.plantz.PazEntities.PIRATE_CAPTAIN
 import joshxviii.plantz.PazEntities.PIRATE_CAPTAIN_GHOST
+import joshxviii.plantz.PazEntities.RA_ZOMBIE
 import joshxviii.plantz.PazEntities.ROBO_ZOMBIE
 import joshxviii.plantz.PazEntities.SOLDIER_ZOMBIE
 import joshxviii.plantz.PazEntities.SUPER_BRAINZ
@@ -270,7 +271,6 @@ object PazItems {
         DyeColor.MAGENTA to    MAGENTA_BALLOON,
         DyeColor.PINK to       PINK_BALLOON
     )
-
     @JvmField
     val DYE_BLASTER: Item = registerItem(
         "dye_blaster", ::DyeBlasterItem,
@@ -278,6 +278,16 @@ object PazItems {
             .durability(685)
             .enchantable(1)
             .repairable(BRAINZ_ALLOY)
+            .stacksTo(1)
+    )
+    @JvmField
+    val RA_STAFF: Item = registerItem(
+        "ra_staff", ::RaStaffItem,
+        properties = Item.Properties()
+            .rarity(Rarity.RARE)
+            .useCooldown(2f)
+            .durability(560)
+            .enchantable(1)
             .stacksTo(1)
     )
     @JvmField
@@ -414,6 +424,7 @@ object PazItems {
     @JvmField val BACKUP_DANCER_SPAWN_EGG: Item = registerSpawnEgg(BACKUP_DANCER)
     @JvmField val ALL_STAR_SPAWN_EGG: Item = registerSpawnEgg(ALL_STAR)
     @JvmField val GRAVE_DIGGER_SPAWN_EGG: Item = registerSpawnEgg(GRAVE_DIGGER)
+    @JvmField val RA_ZOMBIE_SPAWN_EGG: Item = registerSpawnEgg(RA_ZOMBIE)
     @JvmField val SOLDIER_ZOMBIE_SPAWN_EGG: Item = registerSpawnEgg(SOLDIER_ZOMBIE)
     @JvmField val ROBO_ZOMBIE_SPAWN_EGG: Item = registerSpawnEgg(ROBO_ZOMBIE)
     @JvmField val PIRATE_CAPTAIN_SPAWN_EGG: Item = registerSpawnEgg(PIRATE_CAPTAIN)

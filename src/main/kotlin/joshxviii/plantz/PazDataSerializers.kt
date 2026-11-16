@@ -7,6 +7,7 @@ import joshxviii.plantz.entity.gnome.GnomeSoundVariant
 import joshxviii.plantz.entity.gnome.GnomeVariant
 import joshxviii.plantz.entity.zombie.AllStarVariant
 import joshxviii.plantz.entity.zombie.BrownCoatVariant
+import joshxviii.plantz.entity.zombie.DiggerVariant
 import joshxviii.plantz.entity.zombie.ElectricSlideVariant
 import joshxviii.plantz.entity.zombie.GargantuarVariant
 import joshxviii.plantz.entity.zombie.ImpVariant
@@ -25,6 +26,7 @@ object PazDataSerializers {
     @JvmField val DATA_ZOMBIE_STATE = EntityDataSerializer.forValueType<ZombieState>(ZombieState.STREAM_CODEC)
     @JvmField val BROWN_COAT_VARIANT = EntityDataSerializer.forValueType<BrownCoatVariant>(BrownCoatVariant.STREAM_CODEC)
     @JvmField val IMP_VARIANT = EntityDataSerializer.forValueType<ImpVariant>(ImpVariant.STREAM_CODEC)
+    @JvmField val DIGGER_VARIANT = EntityDataSerializer.forValueType<DiggerVariant>(DiggerVariant.STREAM_CODEC)
     @JvmField val ALL_STAR_VARIANT = EntityDataSerializer.forValueType<AllStarVariant>(AllStarVariant.STREAM_CODEC)
     @JvmField val ROBO_ZOMBIE_VARIANT = EntityDataSerializer.forValueType<RoboZombieVariant>(RoboZombieVariant.STREAM_CODEC)
     @JvmField val SUPER_BRAINZ_VARIANT = EntityDataSerializer.forValueType<SuperBrainzVariant>(SuperBrainzVariant.STREAM_CODEC)
@@ -40,6 +42,7 @@ object PazDataSerializers {
         FabricEntityDataRegistry.register(pazResource("zombie_state"), DATA_ZOMBIE_STATE)
         FabricEntityDataRegistry.register(pazResource("brown_coat_variant"), BROWN_COAT_VARIANT)
         FabricEntityDataRegistry.register(pazResource("imp_variant"), IMP_VARIANT)
+        FabricEntityDataRegistry.register(pazResource("digger_variant"), DIGGER_VARIANT)
         FabricEntityDataRegistry.register(pazResource("all_star_variant"), ALL_STAR_VARIANT)
         FabricEntityDataRegistry.register(pazResource("robo_zombie_variant"), ROBO_ZOMBIE_VARIANT)
         FabricEntityDataRegistry.register(pazResource("super_brainz_variant"), SUPER_BRAINZ_VARIANT)

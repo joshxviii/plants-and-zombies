@@ -2,6 +2,7 @@ package joshxviii.plantz.model.plants;
 
 import joshxviii.plantz.animation.plants.CoffeeBeanAnimation;
 import joshxviii.plantz.animation.plants.SquashAnimation;
+import joshxviii.plantz.renderer.RenderingUtilsKt;
 import joshxviii.plantz.renderer.entity.plant.PlantRenderState;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -53,6 +54,7 @@ public class SquashModel extends PlantModel {
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
+		RenderingUtilsKt.scale(locator_hat, 1.5f);
 		this.body.yRot += state.yRot * (float) (Mth.PI / 180.0);
 	}
 }

@@ -22,6 +22,7 @@ public class PlantModel extends EntityModel<@NotNull PlantRenderState> {
     KeyframeAnimation actionAnimation;
     KeyframeAnimation sleepAnimation;
     KeyframeAnimation walkAnimation;
+    public ModelPart body;
     public ModelPart locator_hat;
     private java.util.List<ModelPart> locatorHatChain;
     final KeyframeAnimation bounceAnimation;
@@ -30,6 +31,7 @@ public class PlantModel extends EntityModel<@NotNull PlantRenderState> {
     protected PlantModel(ModelPart root) {
         super(root);
         bounceAnimation = PlantAnimations.bounce.bake(root);
+        this.body = partLookup.apply("body");
         this.locator_hat = partLookup.apply("locator_hat");
         if (this.locator_hat != null) {
             java.util.List<ModelPart> chain = new java.util.ArrayList<>();

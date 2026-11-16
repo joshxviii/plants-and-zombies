@@ -97,7 +97,6 @@ open class PlantRenderer(
         collector: SubmitNodeCollector,
         camera: CameraRenderState
     ) {
-        // drawn by the wearer's PlantHeadAttachmentRenderLayer instead
         if (state.renderedByWearer) return
         // debug info text
         if (PazConfig.SHOW_DEBUG_INFO) collector.submitNameTag(
@@ -106,7 +105,7 @@ open class PlantRenderer(
             true, -1, camera
         )
 
-        model = if (state.isBaby && babyModel != null) babyModel else defaultModel
+        if (state.isBaby && babyModel != null) model = babyModel
         super.submit(state, poseStack, collector, camera)
     }
 
@@ -258,23 +257,19 @@ class PumpkinArmorLayer<M : EntityModel<PlantRenderState>>(
     ) {
         if (state.pumpkinArmor <= 0 || state.silhouette) return
         poseStack.pushPose()
+        val pumpkinState = PumpkinRenderState()
         val onHat = (parentModel as? PlantModel)?.applyLocatorHat(poseStack) ?: false
         poseStack.scale(-1.0f, -1.0f, 1.0f)
-        if (onHat) {
-            poseStack.translate(0.0f, 0.2f, 0.0f)
-            poseStack.rotate(Axis.ZP.rotationDegrees(-180f))
-        }
+        if (onHat) pumpkinState.helmetMode = true
         else poseStack.translate(0.0f, -1.503f, 0.0f)
         poseStack.rotate(Axis.YP.rotationDegrees(-180f))
 
-        val pumpkinState = PumpkinRenderState()
         pumpkinState.lightCoords = state.lightCoords
         pumpkinState.ageInTicks = state.ageInTicks
         pumpkinState.isAsleep = state.isAsleep
 
         pumpkinState.sleepAnimationState.copyFrom(state.sleepAnimationState)
         pumpkinState.idleAnimationState.copyFrom(state.idleAnimationState)
-
         pumpkinArmorRenderer.submit(pumpkinState, poseStack, submitNodeCollector, CameraRenderState())
         poseStack.popPose()
 
@@ -297,7 +292,7 @@ open class PlantRenderState : LivingEntityRenderState() {
     var damagedAmount: Float = 0.0f
     var isAsleep: Boolean = false
     var customName: String = ""
-    var textureExtra: List<String> = listOf()
+    var textureExtra: MutableList<String> = mutableListOf()
     var glowPercent: Float = 0f
     var plantState: PlantState = PlantState.IDLE
     var useSpecialAction: Boolean = false

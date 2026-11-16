@@ -98,9 +98,9 @@ object RailGrinding {
     private class Conn(val dir: Direction, val up: Boolean)
 
     private const val MIN_START_SPEED = 0.08
-    private const val MIN_GRIND_SPEED = 0.22
-    private const val JUMP_SPEED_BOOST = 2.0
-    private const val JUMP_LIFT_BOOST = 0.22
+    private const val MIN_GRIND_SPEED = 0.2
+    private const val JUMP_SPEED_BOOST = 1.75
+    private const val JUMP_LIFT_BOOST = 0.15
     private const val REGRIND_COOLDOWN = 10
     private const val EPS = 1e-7
 
