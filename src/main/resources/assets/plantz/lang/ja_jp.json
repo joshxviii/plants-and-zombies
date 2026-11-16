@@ -291,6 +291,7 @@
   "item.plantz.backup_dancer_spawn_egg": "バックダンサーゾンビのスポーンエッグ",
   "item.plantz.all_star_spawn_egg": "オールスターゾンビのスポーンエッグ",
   "item.plantz.grave_digger_spawn_egg": "グレイブディガーのスポーンエッグ",
+  "item.plantz.ra_zombie_spawn_egg": "ラーゾンビのスポーンエッグ",
   "item.plantz.soldier_zombie_spawn_egg": "兵士ゾンビのスポーンエッグ",
   "item.plantz.robo_zombie_spawn_egg": "ロボゾンビのスポーンエッグ",
   "item.plantz.pirate_captain_spawn_egg": "海賊船長ゾンビのスポーンエッグ",
@@ -406,6 +407,7 @@
   "entity.plantz.all_star": "オールスターゾンビ",
   "entity.plantz.all_star.variant.giga": "ギガフットボールゾンビ",
   "entity.plantz.grave_digger": "グレイブディガー",
+  "entity.plantz.ra_zombie": "ラーゾンビ",
   "entity.plantz.soldier_zombie": "兵士ゾンビ",
   "entity.plantz.robo_zombie": "ロボゾンビ",
   "entity.plantz.robo_zombie.variant.general": "ロボジェネラル",
@@ -457,7 +459,6 @@
   "gui.plantz.letter.confirm_sign": "署名",
   "gui.plantz.letter.title": "手紙",
   "gui.plantz.letter.signed_by": "%sによって署名されました",
-
 
   "plantz.subtitles.projectile.deflected": "投射物が弾かれた",
   "plantz.subtitles.projectile.shoot": "投射物が発射された",
