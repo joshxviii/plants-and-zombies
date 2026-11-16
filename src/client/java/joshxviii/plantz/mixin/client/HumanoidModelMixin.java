@@ -67,8 +67,8 @@ public class HumanoidModelMixin {
             RenderingUtilsKt.scaleDownRotation(rightArm, f);
             RenderingUtilsKt.scaleDownRotation(leftLeg, f);
             RenderingUtilsKt.scaleDownRotation(rightLeg, f);
-            if (isSkating) skateAnimation.applyWalk(pos, speed, 2f, 1f);
-            else railGrindAnimation.applyWalk(pos, speed, 2f, 1f);
+            if (isRailGrinding) railGrindAnimation.applyWalk(0, speed, 2f, 1f);
+            else skateAnimation.applyWalk(pos, speed, 2f, 1f);
         }
 
         var hasBodyBlocker = state.chestEquipment.has(PazComponents.WORN_BODY_BLOCKER);

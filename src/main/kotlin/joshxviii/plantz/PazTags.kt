@@ -17,6 +17,7 @@ object PazTags {
         @JvmField val YETI_SPAWNABLE_ON = tag("yeti_spawnable_on")
         @JvmField val DIGGER_BREAKABLE = tag("digger_breakable")
         @JvmField val INVALID_RAID_SPAWN = tag("invalid_raid_spawn")
+        @JvmField val RAIL_GRINDABLE = tag("rail_grindable")
 
         //TODO add "can survive on" block tags for all plants.
         @JvmField val POTATOMINE_SPAWNABLE_ON = tag("can_survive_on/potatomine")
@@ -53,7 +54,6 @@ object PazTags {
         @JvmField val IGNORED_BY_PLANT_ATTACKERS = tag("ignored_by_plant_attackers")
         @JvmField val GNOME_RIDEABLE = tag("gnome_rideable")
         @JvmField val WALLNUT_DEFLECTABLE = tag("wallnut_deflectable")
-        @JvmField val RAIL_GRINDABLE = tag("rail_grindable")
         private fun tag(name: String): TagKey<EntityType<*>> = TagKey.create(Registries.ENTITY_TYPE, pazResource(name))
     }
 
