@@ -102,11 +102,7 @@ object RaidMusicManager {
         if (tick >0) tick++
     }
 
-    fun channel(): SoundSource = when (PazConfig.RAID_MUSIC_CHANNEL.uppercase()) {
-        "AMBIENT" -> SoundSource.AMBIENT
-        "UI" -> SoundSource.UI
-        else -> SoundSource.MUSIC
-    }
+
 
     fun onChannelChanged() {
         if (activeLayers.isNotEmpty()) restart()
@@ -121,7 +117,7 @@ object RaidMusicManager {
         // to avoid resetting the music, only start if there are no active layers already
         if (activeLayers.isNotEmpty()) return
         stop()
-        val source = channel()
+        val source = PazConfig.raidMusicChannel()
         RaidMusicLayer.entries.forEach {
             val layer = RaidMusicSoundInstance(it.music.value(), source)
             layer.volume = 0.0f

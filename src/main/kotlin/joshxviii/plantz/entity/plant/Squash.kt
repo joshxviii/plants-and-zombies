@@ -38,9 +38,6 @@ import net.minecraft.world.level.block.state.BlockState
 class Squash(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
 
     companion object {
-        private val SQUASH_MODIFIER = AttributeModifier(
-            pazResource("squash"), 100.0, AttributeModifier.Operation.ADD_MULTIPLIED_BASE
-        )
         val SQUASH_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(Squash::class.java, EntityDataSerializers.INT)
     }
 
@@ -68,7 +65,7 @@ class Squash(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
                 50, 1.2, 0.4, 1.2, 0.2
             )
         }
-        val range = 4.5
+        val range = 3.0
         val candidates = level().getEntities(this, boundingBox.inflate(range)) { entity ->
             entity is LivingEntity && entity.isAlive && !entity.hasSameRootOwner(this) && owner != entity
         }

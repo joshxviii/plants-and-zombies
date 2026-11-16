@@ -6,12 +6,16 @@ import joshxviii.plantz.PazSounds
 import joshxviii.plantz.ai.goal.NavigateToTargetGoal
 import joshxviii.plantz.ai.goal.ProjectileAttackGoal
 import joshxviii.plantz.entity.projectile.PaintBall
+import net.minecraft.core.component.DataComponents
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.entity.*
 import net.minecraft.world.item.DyeColor
+import net.minecraft.world.item.ItemStackTemplate
+import net.minecraft.world.item.component.ChargedProjectiles
+import net.minecraft.world.item.component.DyedItemColor
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.storage.ValueInput
@@ -84,8 +88,10 @@ class SoldierZombie(type: EntityType<out SoldierZombie>, level: Level) : PazZomb
     ): SpawnGroupData? {
         val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
 
-        setItemSlot(EquipmentSlot.MAINHAND, PazItems.DYE_BLASTER.defaultInstance)
         dyeColor = potentialDyes.random()
+        val blaster = PazItems.DYE_BLASTER.defaultInstance
+        blaster.set(DataComponents.DYED_COLOR, DyedItemColor(dyeColor.fireworkColor))
+        setItemSlot(EquipmentSlot.MAINHAND, blaster)
         setDropChance(EquipmentSlot.MAINHAND, 0.0f)
         if (spawnReason != EntitySpawnReason.CONVERSION) {
             setCanBreakDoors(true)

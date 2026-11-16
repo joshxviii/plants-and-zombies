@@ -5,15 +5,15 @@ import com.mojang.math.Axis
 import joshxviii.plantz.PazConfig
 import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.entity.plant.*
+import joshxviii.plantz.model.plants.PlantModel
 import joshxviii.plantz.renderer.entity.plant.PlantRenderState.Companion.TEXTURE_PATH
 import joshxviii.plantz.renderer.PlantHeadAttachmentRenderLayer
+import joshxviii.plantz.renderer.getChildOrNull
 import joshxviii.plantz.renderer.getEmissiveTextureLocation
 import joshxviii.plantz.renderer.getTextureLocation
 import joshxviii.plantz.renderer.validMagicName
 import net.minecraft.client.Minecraft
 import net.minecraft.client.model.EntityModel
-import net.minecraft.client.model.Model
-import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.MobRenderer
@@ -257,11 +257,15 @@ class PumpkinArmorLayer<M : EntityModel<PlantRenderState>>(
         xRot: Float
     ) {
         if (state.pumpkinArmor <= 0 || state.silhouette) return
-
         poseStack.pushPose()
+        val onHat = (parentModel as? PlantModel)?.applyLocatorHat(poseStack) ?: false
         poseStack.scale(-1.0f, -1.0f, 1.0f)
+        if (onHat) {
+            poseStack.translate(0.0f, 0.2f, 0.0f)
+            poseStack.rotate(Axis.ZP.rotationDegrees(-180f))
+        }
+        else poseStack.translate(0.0f, -1.503f, 0.0f)
         poseStack.rotate(Axis.YP.rotationDegrees(-180f))
-        poseStack.translate(0.0f, -1.503f, 0.0f)
 
         val pumpkinState = PumpkinRenderState()
         pumpkinState.lightCoords = state.lightCoords
@@ -273,6 +277,7 @@ class PumpkinArmorLayer<M : EntityModel<PlantRenderState>>(
 
         pumpkinArmorRenderer.submit(pumpkinState, poseStack, submitNodeCollector, CameraRenderState())
         poseStack.popPose()
+
     }
 }
 
