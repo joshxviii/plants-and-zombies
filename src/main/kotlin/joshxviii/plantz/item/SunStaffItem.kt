@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ItemUseAnimation
 import net.minecraft.world.level.Level
 
-class RaStaffItem(properties: Properties) : Item(properties) {
+class SunStaffItem(properties: Properties) : Item(properties) {
     companion object {
         const val USE_DURATION = 8
         private const val BEAM_RANGE = 14.0

@@ -1,6 +1,20 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "plantz:item/spawn_egg/digger_zombie"
+    "type": "minecraft:select",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "cases": [
+      {
+        "when": "explorer",
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/spawn_egg/digger_zombie/explorer"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "plantz:item/spawn_egg/digger_zombie/digger_zombie"
+    }
   }
 }

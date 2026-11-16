@@ -67,11 +67,9 @@ import net.minecraft.world.item.equipment.ArmorMaterials
 import net.minecraft.world.item.equipment.ArmorType
 import net.minecraft.world.item.equipment.EquipmentAssets
 import net.minecraft.world.item.equipment.Equippable
-import net.minecraft.world.level.block.ComposterBlock
 import net.minecraft.world.level.block.DispenserBlock
 import net.minecraft.world.level.storage.loot.providers.number.floats.ContextFloatProviders
 import net.minecraft.world.level.storage.loot.providers.number.floats.ResolvableFloat
-import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProvider
 import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders
 import net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt
 import net.minecraft.world.phys.AABB
@@ -281,8 +279,8 @@ object PazItems {
             .stacksTo(1)
     )
     @JvmField
-    val RA_STAFF: Item = registerItem(
-        "ra_staff", ::RaStaffItem,
+    val SUN_STAFF: Item = registerItem(
+        "sun_staff", ::SunStaffItem,
         properties = Item.Properties()
             .rarity(Rarity.RARE)
             .useCooldown(2f)

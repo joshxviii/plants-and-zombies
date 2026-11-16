@@ -67,6 +67,7 @@ object PazCreativeTabs {
         if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.brownCoat())
         output.accept(PazItems.NEWSPAPER_ZOMBIE_SPAWN_EGG)
         output.accept(PazItems.DIGGER_ZOMBIE_SPAWN_EGG)
+        if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.diggerZombie())
         output.accept(PazItems.ENGINEER_ZOMBIE_SPAWN_EGG)
         output.accept(PazItems.BACKUP_DANCER_SPAWN_EGG)
         output.accept(PazItems.DISCO_ZOMBIE_SPAWN_EGG)
@@ -76,6 +77,7 @@ object PazCreativeTabs {
         output.accept(PazItems.ZOMBIE_YETI_SPAWN_EGG)
         output.accept(PazItems.IMP_SPAWN_EGG)
         if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.imp())
+        if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(PazItems.RA_ZOMBIE_SPAWN_EGG)
         output.accept(PazItems.SOLDIER_ZOMBIE_SPAWN_EGG)
         output.accept(PazItems.ROBO_ZOMBIE_SPAWN_EGG)
         if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.roboZombie())
@@ -118,6 +120,7 @@ object PazCreativeTabs {
         output.accept(PazItems.PARTY_HAT)
         output.accept(PazItems.DYE_BLASTER)
         output.accept(PazItems.ROLLER_SKATES)
+        if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(PazItems.SUN_STAFF)
         output.accept(PazItems.BARON_STAFF)
         if (PazConfig.SPLIT_ITEM_TABS) BuiltInRegistries.BLOCK.forEach { if (it.defaultBlockState().`is`(BlockTags.DOORS)) output.accept(stackFor(it)) }
         else output.accept(PazItems.DOOR_SHIELD)
