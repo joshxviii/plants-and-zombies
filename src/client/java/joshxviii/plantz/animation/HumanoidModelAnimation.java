@@ -9,6 +9,7 @@ import net.minecraft.client.animation.KeyframeAnimations;
  * @author Josh
  */
 public class HumanoidModelAnimation {
+        public static final AnimationDefinition rail_grind = AnimationDefinition.Builder.withLength(2.0F).looping().build();
         public static final AnimationDefinition roller_skate = AnimationDefinition.Builder.withLength(2.0F).looping()
                 .addAnimation("body", new AnimationChannel(AnimationChannel.Targets.ROTATION,
                         new Keyframe(0.0F, KeyframeAnimations.degreeVec(26.157F, 29.7622F, 13.7013F), AnimationChannel.Interpolations.CATMULLROM),

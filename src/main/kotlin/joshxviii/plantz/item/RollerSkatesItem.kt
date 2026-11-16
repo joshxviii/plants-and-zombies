@@ -29,6 +29,10 @@ class RollerSkatesItem(properties: Properties) : Item(properties) {
             return !(entity is Player && (!entity.isSprinting || entity.isFallFlying || entity.isSwimming)) && hasSkates
         }
 
+        fun isRailGrinding(entity: LivingEntity): Boolean {
+            return false
+        }
+
         fun removeModifiers(entity: LivingEntity?) {
             entity?.getAttribute(Attributes.FRICTION_MODIFIER)?.removeModifier(ROLLER_SKATES_ID)
             entity?.getAttribute(Attributes.MOVEMENT_SPEED)?.removeModifier(ROLLER_SKATES_ID)
