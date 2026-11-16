@@ -19,8 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.Function;
 
-import static joshxviii.plantz.PazModels.HAS_HYPNO_KEY;
-import static joshxviii.plantz.PazModels.IS_SKATING;
+import static joshxviii.plantz.PazModels.*;
 
 /**
  * @author Josh
@@ -30,6 +29,8 @@ public class HumanoidModelMixin {
 
     @Unique
     private KeyframeAnimation skateAnimation;
+    @Unique
+    private KeyframeAnimation railGrindAnimation;
 
     @Shadow @Final
     public ModelPart head;
@@ -49,6 +50,7 @@ public class HumanoidModelMixin {
     @Inject(method = "<init>(Lnet/minecraft/client/model/geom/ModelPart;Ljava/util/function/Function;)V", at = @At("TAIL"))
     public void addAnim(ModelPart root, Function<String, ModelPart> renderType, CallbackInfo ci) {
         skateAnimation = HumanoidModelAnimation.roller_skate.bake(root);
+        railGrindAnimation = HumanoidModelAnimation.rail_grind.bake(root);
     }
 
     @Inject(method = "setupAnim*", at = @At("TAIL"))
@@ -56,7 +58,8 @@ public class HumanoidModelMixin {
         if (!(o instanceof HumanoidRenderState state)) return;
 
         var isSkating = state.getDataOrDefault(IS_SKATING, false);
-        if (isSkating){
+        var isRailGrinding = state.getDataOrDefault(IS_RAIL_GRINDING, false);
+        if (isSkating || isRailGrinding){
             var pos = state.walkAnimationPos;
             var speed = state.walkAnimationSpeed;
             var f = 1-(speed);
@@ -64,7 +67,8 @@ public class HumanoidModelMixin {
             RenderingUtilsKt.scaleDownRotation(rightArm, f);
             RenderingUtilsKt.scaleDownRotation(leftLeg, f);
             RenderingUtilsKt.scaleDownRotation(rightLeg, f);
-            skateAnimation.applyWalk(pos, speed, 2f, 1f);
+            if (isRailGrinding) railGrindAnimation.applyWalk(0, speed, 2f, 1f);
+            else skateAnimation.applyWalk(pos, speed, 2f, 1f);
         }
 
         var hasBodyBlocker = state.chestEquipment.has(PazComponents.WORN_BODY_BLOCKER);

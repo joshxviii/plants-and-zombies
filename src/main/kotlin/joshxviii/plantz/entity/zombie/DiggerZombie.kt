@@ -1,5 +1,7 @@
 package joshxviii.plantz.entity.zombie
 
+import joshxviii.plantz.PazDataSerializers.ALL_STAR_VARIANT
+import joshxviii.plantz.PazDataSerializers.DIGGER_VARIANT
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.raid.ZombieRaid
@@ -30,6 +32,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
+import kotlin.jvm.optionals.getOrDefault
 
 
 class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie(type, level) {
@@ -53,6 +56,8 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
         val TUNNEL_COOLDOWN_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(DiggerZombie::class.java, EntityDataSerializers.INT)
         val MINE_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(DiggerZombie::class.java, EntityDataSerializers.INT)
         val TUNNEL_TIME_ID: EntityDataAccessor<Int> = SynchedEntityData.defineId<Int>(DiggerZombie::class.java, EntityDataSerializers.INT)
+        val DATA_VARIANT_ID: EntityDataAccessor<DiggerVariant> = SynchedEntityData.defineId(DiggerZombie::class.java, DIGGER_VARIANT)
+
         const val TUNNELING_DURATION: Int = 82
         const val TUNNELING_COOLDOWN = 300
     }
@@ -60,6 +65,10 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
     val mineBlockAnimation : AnimationState = AnimationState()
     val tunnelAnimation : AnimationState = AnimationState()
     private var tunnelExitPos: BlockPos? = null
+
+    var variant: DiggerVariant
+        get() = this.entityData.get(DATA_VARIANT_ID)
+        set(value) = this.entityData.set(DATA_VARIANT_ID, value)
 
     var mineBlockTime: Int
         get() = this.entityData.get(MINE_TIME_ID)
@@ -76,11 +85,13 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
         output.putInt("tunnelCooldown", tunnelCooldown)
+        output.store("variant", DiggerVariant.CODEC, variant)
     }
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
         tunnelCooldown = input.getIntOr("tunnelCooldown", TUNNELING_COOLDOWN)
+        variant = input.read("variant", DiggerVariant.CODEC).getOrDefault(DiggerVariant.getDefault())
     }
 
     override fun registerGoals() {
@@ -157,7 +168,6 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
         return super.wantsToPickUp(level, itemStack)
     }
 
-
     override fun finalizeSpawn(
         level: ServerLevelAccessor,
         difficulty: DifficultyInstance,
@@ -167,6 +177,11 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
         val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
 
         tunnelCooldown = TUNNELING_COOLDOWN + random.nextInt(20, 100)
+
+        variant = DiggerVariant.pickForBiome(
+            level.getBiome(blockPosition()).`is`(PazTags.Biomes.HAS_BROWNCOAT_DESERT),
+            random
+        )
 
         setCanBreakDoors(true)
         setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_PICKAXE.defaultInstance)

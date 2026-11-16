@@ -64,6 +64,7 @@ abstract public class LivingEntityRendererMixin<T extends LivingEntity, S extend
         if (entity instanceof LivingEntity living && entityRenderState instanceof LivingEntityRenderState livingState) {
             PlantHeadAttachmentRenderLayer.extractWornPlant(living, livingState, v, this.getModel());
             entityRenderState.setData(IS_SKATING, RollerSkatesItem.Companion.isSkating(living));
+            entityRenderState.setData(IS_RAIL_GRINDING, RollerSkatesItem.Companion.isRailGrinding(living));
         }
 
         if (entityRenderState instanceof LivingEntityRenderState state) {

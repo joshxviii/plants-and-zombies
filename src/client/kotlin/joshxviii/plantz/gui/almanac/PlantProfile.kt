@@ -187,7 +187,7 @@ object PlantProfile {
             state.yRot = 0f
         }
         val size = max(max(state.boundingBoxHeight, state.boundingBoxWidth), 0.1f)
-        val scale = (y2 - y) * 0.7f / size * 0.6f
+        val scale = (y2 - y) * 0.7f / size * 0.45f
         val flip = Quaternionf().rotateX(Math.PI.toFloat() * 0.15f).rotateY(Math.PI.toFloat() * -0.75f).rotateZ(Math.PI.toFloat())
 
         graphics.guiRenderState.addPicturesInPictureState(

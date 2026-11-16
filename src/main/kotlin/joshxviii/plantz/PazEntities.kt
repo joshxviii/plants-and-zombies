@@ -537,6 +537,15 @@ object PazEntities {
             spawnReinforcementsChance = 2.0,
         )
     )
+    @JvmField val RA_ZOMBIE: EntityType<RaZombie> = registerZombie(
+        "ra_zombie",
+        EntityType.Builder.of(::RaZombie, MobCategory.MONSTER)
+            .sized(0.6f, 1.95f)
+            .eyeHeight(1.74f)
+            .clientTrackingRange(8),
+        attributes = PazZombie.Companion.PazZombieAttributes(
+        )
+    )
     @JvmField val PIRATE_CAPTAIN: EntityType<PirateCaptain> =  registerZombie(
         "pirate_captain",
         EntityType.Builder.of(::PirateCaptain, MobCategory.MONSTER)

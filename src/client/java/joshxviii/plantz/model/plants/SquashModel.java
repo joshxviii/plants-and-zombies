@@ -2,6 +2,7 @@ package joshxviii.plantz.model.plants;
 
 import joshxviii.plantz.animation.plants.CoffeeBeanAnimation;
 import joshxviii.plantz.animation.plants.SquashAnimation;
+import joshxviii.plantz.renderer.RenderingUtilsKt;
 import joshxviii.plantz.renderer.entity.plant.PlantRenderState;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -43,6 +44,8 @@ public class SquashModel extends PlantModel {
 
 		PartDefinition cube_r2 = body.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(26, 46).addBox(0.0F, -4.0F, -1.0F, 0.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -18.0F, 0.0F, 2.0025F, -1.2091F, -1.612F));
 
+		PartDefinition locator_hat = body.addOrReplaceChild("locator_hat", CubeListBuilder.create(), PartPose.offset(0.0F, -18.0F, 0.0F));
+
 		PartDefinition brow = body.addOrReplaceChild("brow", CubeListBuilder.create().texOffs(0, 48).addBox(-6.0F, -1.0F, -1.0F, 12.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -13.0F, -7.0F));
 
 		return LayerDefinition.create(meshdefinition, 128, 128);
@@ -51,6 +54,7 @@ public class SquashModel extends PlantModel {
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
+		RenderingUtilsKt.scale(locator_hat, 1.5f);
 		this.body.yRot += state.yRot * (float) (Mth.PI / 180.0);
 	}
 }

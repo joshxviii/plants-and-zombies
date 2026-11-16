@@ -126,8 +126,8 @@ class ZombieRaid(
         const val BOSS_WAVE_DURATION: Int = 4500 // 3.75 minutes
         const val FINAL_WAVE_DURATION: Int = WAVE_DURATION * 2 // 5 minutes
         const val PANIC_START_TIME: Int = 600
-        const val MIN_PANIC_DISTANCE: Int = 8
-        const val MAX_PANIC_DISTANCE: Int = 28
+        const val MIN_PANIC_DISTANCE: Int = 6
+        const val MAX_PANIC_DISTANCE: Int = 12
 
         const val FLAG_MAX_HEALTH: Int = 500
 
@@ -246,7 +246,7 @@ class ZombieRaid(
                 PazCriteria.WIN_HARDEST_RAID.trigger(player, numWaves>=MAXIMUM_WAVE_COUNT && starterHasSeenCredits)
                 GardenHeroRewards.setPlayerRewards(player, waves)
                 player.sendSystemMessage(ZOMBIE_RAID_VICTORY)
-                showTitleMessage(ZOMBIE_RAID_VICTORY_TITLE, sound = PazSounds.RAID_VICTORY, soundSource = SoundSource.MUSIC)
+                showTitleMessage(ZOMBIE_RAID_VICTORY_TITLE, sound = PazSounds.RAID_VICTORY, soundSource = PazConfig.raidMusicChannel())
             }
             vanishAllZombies(level)
             return
@@ -257,7 +257,7 @@ class ZombieRaid(
             postRaidTicks = POST_RAID_TICKS
             zombieRaidEvent.players.forEach { player ->
                 player.sendSystemMessage(ZOMBIE_RAID_DEFEAT)
-                showTitleMessage(ZOMBIE_RAID_DEFEAT_TITLE, sound = PazSounds.RAID_DEFEAT, soundSource = SoundSource.MUSIC)
+                showTitleMessage(ZOMBIE_RAID_DEFEAT_TITLE, sound = PazSounds.RAID_DEFEAT, soundSource = PazConfig.raidMusicChannel())
             }
             vanishAllZombies(level)
             return

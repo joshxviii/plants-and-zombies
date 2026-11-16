@@ -48,7 +48,23 @@ import java.util.*;
 import static joshxviii.plantz.PazDataSerializers.DATA_PAINT_COLORS;
 
 @Mixin(LivingEntity.class)
-abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHeroRewards {
+abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHeroRewards, joshxviii.plantz.item.RailGrindHolder {
+
+    @Unique
+    private joshxviii.plantz.item.RailGrindState plantz$grindState = null;
+
+    @Override
+    public joshxviii.plantz.item.RailGrindState plantz$getGrindState() { return plantz$grindState; }
+
+    @Override
+    public void plantz$setGrindState(joshxviii.plantz.item.RailGrindState value) { plantz$grindState = value; }
+
+    @Inject(method = "travel", at = @At("HEAD"), cancellable = true)
+    private void plantz$railGrind(Vec3 input, CallbackInfo ci) {
+        LivingEntity self = (LivingEntity) (Object) this;
+        if (self.isLocalInstanceAuthoritative() && joshxviii.plantz.item.RailGrinding.tick(self)) ci.cancel();
+    }
+
 
     @Unique
     private static final EntityDataAccessor<Boolean> DATA_HYPNO_ID = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.BOOLEAN);

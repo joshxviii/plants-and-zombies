@@ -29,7 +29,7 @@
 - Added General variant for Robo-Zombie, which can spawn as a Boss
 - The Graveyard Biome now properly generates
 - Added a Mausoleum Structure to the Graveyard Biome
-  - The Mausoleum will also generate with a Brainz Flag as loot.
+  - The Mausoleum will always generate with a Brainz Flag as loot.
 - Added Brainz Alloy Door and Trapdoor
 - Added Door Shields
   - Can be crafted from any Door and a Shield.

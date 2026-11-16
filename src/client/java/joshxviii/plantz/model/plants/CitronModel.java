@@ -1,6 +1,7 @@
 package joshxviii.plantz.model.plants;
 
 import joshxviii.plantz.animation.plants.CitronAnimation;
+import joshxviii.plantz.renderer.RenderingUtilsKt;
 import joshxviii.plantz.renderer.entity.plant.PlantRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -90,6 +91,8 @@ public class CitronModel extends PlantModel {
 
 		PartDefinition cube_r1 = head.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(55, 3).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -1.0F, -5.0F, -0.7854F, 0.0F, 0.0F));
 
+		PartDefinition locator_hat = head.addOrReplaceChild("locator_hat", CubeListBuilder.create(), PartPose.offset(0.0F, -6.0F, 0.0F));
+
 		PartDefinition glasses = head.addOrReplaceChild("glasses", CubeListBuilder.create().texOffs(50, 0).addBox(-3.5F, -1.0F, 0.0F, 7.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -2.0F, -5.25F));
 
 		PartDefinition eyebrows = head.addOrReplaceChild("eyebrows", CubeListBuilder.create(), PartPose.offset(0.0F, -3.5F, -5.2F));
@@ -145,6 +148,8 @@ public class CitronModel extends PlantModel {
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
+		RenderingUtilsKt.scale(locator_hat, 1.05f);
+
 		this.body.yRot = state.bodyRot * Mth.DEG_TO_RAD;
 		this.head.xRot = state.xRot * Mth.DEG_TO_RAD;
 		this.head.yRot = state.yRot * Mth.DEG_TO_RAD;

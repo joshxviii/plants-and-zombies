@@ -6,22 +6,14 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.pazResource
 import joshxviii.plantz.renderer.entity.ProjectileRenderState
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.Font
-import net.minecraft.client.gui.GuiGraphicsExtractor
-import net.minecraft.client.gui.components.Button
-import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.client.model.geom.ModelPart
-import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState
 import net.minecraft.client.renderer.entity.state.EntityRenderState
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.client.renderer.texture.OverlayTexture
-import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.FontDescription
 import net.minecraft.resources.Identifier
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.ARGB
-import net.minecraft.util.FormattedCharSequence
 import net.minecraft.world.entity.EntityType
 import org.spongepowered.asm.mixin.Unique
 
@@ -60,6 +52,20 @@ object RenderingUtils {
 
 // MODEL RENDERING
 fun ModelPart?.getChildOrNull(name: String): ModelPart? = if (this?.hasChild(name) == true) this.getChild(name) else null
+
+fun ModelPart?.findOrNull(name: String): ModelPart? {
+    val found = getChildOrNull(name)
+    if (found != null) return found
+    val children = this?.allParts?: return null
+    for (child in children) return child.findOrNull(name)
+    return null
+}
+
+fun ModelPart?.scale(scale: Float) {
+    this?.xScale = scale
+    this?.yScale = scale
+    this?.zScale = scale
+}
 
 @Unique
 fun ModelPart.scaleDownRotation(scale: Float) {

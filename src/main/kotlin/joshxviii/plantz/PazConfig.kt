@@ -5,6 +5,7 @@ import net.fabricmc.api.EnvType
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
+import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.EntityType
 import java.nio.file.Files
 import java.nio.file.Path
@@ -246,5 +247,11 @@ object PazConfig {
     fun putDefaultAlloyCost(entityId: Identifier, alloyCost: Int) {
         server.alloyCosts.putIfAbsent(entityId.toString(), alloyCost.coerceAtLeast(0))
         saveServer()
+    }
+
+    fun raidMusicChannel(): SoundSource = when (RAID_MUSIC_CHANNEL.uppercase()) {
+        "AMBIENT" -> SoundSource.AMBIENT
+        "UI" -> SoundSource.UI
+        else -> SoundSource.MUSIC
     }
 }
