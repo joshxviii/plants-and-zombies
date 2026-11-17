@@ -7,6 +7,7 @@ import joshxviii.plantz.block.MailboxBlock.Companion.FACING
 import joshxviii.plantz.block.MailboxBlock.Companion.STATE
 import joshxviii.plantz.block.MailboxState
 import joshxviii.plantz.inventory.MailboxMenu
+import joshxviii.plantz.item.RewardLetterItem
 import joshxviii.plantz.raid.CompletedWave
 import joshxviii.plantz.raid.GardenHeroRewards
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider
@@ -17,10 +18,10 @@ import net.minecraft.core.component.DataComponentGetter
 import net.minecraft.core.component.DataComponentMap
 import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.resources.ResourceKey
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
-import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
@@ -81,8 +82,7 @@ class MailboxBlockEntity(
                 val buffer = blockEntity.heroMailBuffer
                 if (buffer.isNotEmpty()) {// Hero Mail Rewards
                     if (blockEntity.ejectTimer % Mth.floor((HERO_MAIL_EJECT_DELAY+buffer.size)/buffer.size.toFloat()) == 0) buffer.getOrNull(blockEntity.heroMailIndex)?.let { reward ->
-                        blockEntity.getHeroMail(reward.type.lootTableFn(blockEntity.heroMailIndex)).forEach { item -> blockEntity.ejectItem(item) }
-
+                        blockEntity.ejectItem(RewardLetterItem.create(reward, blockEntity.heroMailIndex))
                         if (reward.boss!=null) {
                             blockEntity.getHeroMail(PazLootTables.MAIL_REWARDS_BONUS).forEach { item -> blockEntity.ejectItem(item) }
                             blockEntity.confetti()
@@ -179,8 +179,7 @@ class MailboxBlockEntity(
             .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockPos))
             .create(LootContextParamSets.CHEST)
         val lootTable: LootTable = level.server.reloadableRegistries().getLootTable(lootTable)
-        val items = lootTable.getRandomItems(params)
-        return items
+        return lootTable.getRandomItems(params)
     }
 
     private fun getDropPos(): Vec3 = blockState.getValue(FACING).unitVec3.scale(0.6).add(Vec3.atCenterOf(blockPos))

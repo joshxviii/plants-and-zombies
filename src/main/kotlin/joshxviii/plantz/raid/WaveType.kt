@@ -45,7 +45,7 @@ enum class WaveType(
     private val weightFn: (ZombieRaid, Boolean) -> Float,
     private val spawnFn: (ZombieRaid, Boolean) -> List<WaveSpawnEntry>,
     val lootTableFn: (Int) -> ResourceKey<LootTable> = { PazLootTables.MAIL_REWARD_DEFAULT_EASY },
-    val color: Int = 0x423e6c // Letter color
+    val color: Int = 0xCA3D32
 ): StringRepresentable {
     //TODO: wave types should also be data-driven. A wave type should be defined in "plantz/wave_type/[wave_name].json".
     // SpawnRequirements, Weights, WaveSpawnEntries, LootTables and Zombie Configurations should all be editable in the .json.
@@ -165,7 +165,8 @@ enum class WaveType(
                 graveDiggerEntry(raid),
             )
         },
-        lootTableFn = { PazLootTables.MAIL_REWARD_HALFTIME }
+        lootTableFn = { PazLootTables.MAIL_REWARD_HALFTIME },
+        color = 0xf72811
     ),
     WINTER_WONDERLAND(
         minWave = 5,
@@ -199,7 +200,8 @@ enum class WaveType(
                 graveDiggerEntry(raid),
             )
         },
-        lootTableFn = { PazLootTables.MAIL_REWARD_WINTER }
+        lootTableFn = { PazLootTables.MAIL_REWARD_WINTER },
+        color = 0x00cbeb
     ),
     DISCO_PARTY(
         minWave = 4,
@@ -232,7 +234,8 @@ enum class WaveType(
                 ),
             )
         },
-        lootTableFn = { PazLootTables.MAIL_REWARD_DEFAULT_HARD }
+        lootTableFn = { PazLootTables.MAIL_REWARD_DEFAULT_HARD },
+        color = 0xf792f4
     ),
     ZOMBOWEEN(
         minWave = 4,
@@ -277,7 +280,8 @@ enum class WaveType(
                 )
             )
         },
-        lootTableFn = { PazLootTables.MAIL_REWARD_ZOMBOWEEN }
+        lootTableFn = { PazLootTables.MAIL_REWARD_ZOMBOWEEN },
+        color = 0xeb8500
     ),
     PIRATE_INVASION(
         minWave = 9,
@@ -310,7 +314,8 @@ enum class WaveType(
                 graveDiggerEntry(raid),
             )
         },
-        lootTableFn = { PazLootTables.MAIL_REWARD_PIRATE }
+        lootTableFn = { PazLootTables.MAIL_REWARD_PIRATE },
+        color = 0x000000
     ),
     ROBO_ARMY(
         minWave = 10,
@@ -347,7 +352,8 @@ enum class WaveType(
                 ),
             )
         },
-        lootTableFn = { PazLootTables.MAIL_REWARD_ARMY }
+        lootTableFn = { PazLootTables.MAIL_REWARD_ARMY },
+        color = 0x8c898f
     ),
     LEAGUE_OF_AWESOME(
         minWave = 12,
@@ -373,7 +379,8 @@ enum class WaveType(
                 )
             )
         },
-        lootTableFn = { PazLootTables.MAIL_REWARD_LEAGUE }
+        lootTableFn = { PazLootTables.MAIL_REWARD_LEAGUE },
+        color = 0xa53dff
     ),
     ZOMBOSS(
         minWave = 20,
@@ -649,7 +656,7 @@ enum class WaveType(
         }
 
     fun popupMessage(): Component {
-        return Component.translatable("event.plantz.zombie_raid.special_wave.${name.lowercase()}")
+        return Component.translatable("event.plantz.zombie_raid.wave.${name.lowercase()}")
     }
 
     data class WaveSpawnEntry(

@@ -374,6 +374,13 @@ object PazItems {
             .component(PazComponents.LETTER_DATA, LetterDataComponent())
     )
     @JvmField
+    val REWARD_LETTER: Item = registerItem(
+        "reward_letter", ::RewardLetterItem,
+        properties = Item.Properties()
+            .rarity(Rarity.UNCOMMON)
+            .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
+    )
+    @JvmField
     val ALMANAC: Item = registerItem(
         "almanac", ::AlmanacItem,
         properties = Item.Properties().stacksTo(1)
