@@ -31,10 +31,10 @@ class OverworldRegion(
         ParameterPointListBuilder()
             .temperature(Temperature.span(Temperature.COOL, Temperature.WARM))
             .humidity(Humidity.span(Humidity.NEUTRAL, Humidity.HUMID))
-            .continentalness(Continentalness.FAR_INLAND)
-            .erosion(Erosion.EROSION_0, Erosion.EROSION_1)
+            .continentalness(Continentalness.MID_INLAND, Continentalness.FAR_INLAND)
+            .erosion(Erosion.EROSION_5, Erosion.EROSION_6)
             .depth(Depth.SURFACE, Depth.FLOOR)
-            .weirdness(Weirdness.HIGH_SLICE_NORMAL_ASCENDING, Weirdness.MID_SLICE_NORMAL_DESCENDING)
+            .weirdness(Weirdness.MID_SLICE_NORMAL_ASCENDING, Weirdness.MID_SLICE_NORMAL_DESCENDING)
             .build().forEach(Consumer { point: ParameterPoint? -> builder.add(point, PazWorldGen.GRAVEYARD) })
 
         builder.build().forEach(mapper)

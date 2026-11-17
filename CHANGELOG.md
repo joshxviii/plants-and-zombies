@@ -9,7 +9,7 @@
 - Plants & Zombies has migrated to 26.3!
 ### Changes / Additions
 - Added Marigold
-  - Obtained through raid rewards.
+  - Obtained through boss raid rewards.
   - Marigold will drop treasure instead of seed packets from zen gardening.
 - Added Squash
   - Can be found in Dappled Forests and Savannas
@@ -18,7 +18,7 @@
   - The chance increases exponentially every wave.
   - Once a boss spawns, the chance is reset.
   - Holding "Tab" will display the Boss Chance and other details about the raid.
-- Rewards for raids are now packaged in a "Reward Letter" for each completed wave.
+- Rewards for special waves are now packaged in a "Reward Letter".
 - Bonus Rewards are now given for each Boss Defeated rather than every 5 waves.
 - Added Baron Von Bats
   - Baron Von Bats has a chance to spawn as a Boss.
@@ -29,6 +29,8 @@
   - Has a variant "Electric Boogaloo", which can spawn as a Boss.
 - Added Giga variant for All Star, which can spawn as a Boss
 - Added General variant for Robo-Zombie, which can spawn as a Boss
+- Added explorer variant for Digger Zombie
+- Added Mummy variant for Imp
 - The Graveyard Biome now properly generates
 - Added a Mausoleum Structure to the Graveyard Biome
   - The Mausoleum will always generate with a Brainz Flag as loot.

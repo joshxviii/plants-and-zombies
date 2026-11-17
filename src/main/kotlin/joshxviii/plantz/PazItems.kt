@@ -377,7 +377,6 @@ object PazItems {
     val REWARD_LETTER: Item = registerItem(
         "reward_letter", ::RewardLetterItem,
         properties = Item.Properties()
-            .rarity(Rarity.UNCOMMON)
             .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
     )
     @JvmField

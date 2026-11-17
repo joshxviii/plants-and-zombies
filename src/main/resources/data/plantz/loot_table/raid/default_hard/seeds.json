@@ -20,11 +20,6 @@
           ]
         },
         {
-          "type": "minecraft:loot_table",
-          "value": "plantz:marigold_colors",
-          "weight": 10
-        },
-        {
           "type": "minecraft:item",
           "name": "plantz:seed_packet",
           "weight": 10,

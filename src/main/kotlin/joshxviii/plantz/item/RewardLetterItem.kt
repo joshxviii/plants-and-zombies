@@ -3,6 +3,7 @@ package joshxviii.plantz.item
 import joshxviii.plantz.PazComponents
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazLootTables
+import joshxviii.plantz.PazSounds
 import joshxviii.plantz.item.component.RewardLetterDataComponent
 import joshxviii.plantz.raid.WaveType
 import joshxviii.plantz.raid.CompletedWave
@@ -11,6 +12,8 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.stats.Stats
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -48,6 +51,7 @@ class RewardLetterItem(properties: Properties) : Item(properties) {
             }
             itemStack.shrink(1)
         }
+        player.playSound(SoundEvents.UI_LOOM_SELECT_PATTERN, 1f, 1f)// TODO custom sounds
         player.awardStat(Stats.ITEM_USED.get(this))
         return InteractionResult.SUCCESS
     }

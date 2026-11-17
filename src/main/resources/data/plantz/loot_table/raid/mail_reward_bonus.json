@@ -7,7 +7,7 @@
         {
           "type": "minecraft:item",
           "name": "plantz:taco",
-          "weight": 30,
+          "weight": 28,
           "modifier": [
             {
               "type": "minecraft:set_count",
@@ -18,6 +18,11 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:loot_table",
+          "value": "plantz:marigold_colors",
+          "weight": 6
         },
         {
           "type": "minecraft:loot_table",

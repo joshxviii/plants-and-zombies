@@ -10,6 +10,7 @@ import joshxviii.plantz.inventory.MailboxMenu
 import joshxviii.plantz.item.RewardLetterItem
 import joshxviii.plantz.raid.CompletedWave
 import joshxviii.plantz.raid.GardenHeroRewards
+import joshxviii.plantz.raid.WaveType
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
@@ -82,7 +83,10 @@ class MailboxBlockEntity(
                 val buffer = blockEntity.heroMailBuffer
                 if (buffer.isNotEmpty()) {// Hero Mail Rewards
                     if (blockEntity.ejectTimer % Mth.floor((HERO_MAIL_EJECT_DELAY+buffer.size)/buffer.size.toFloat()) == 0) buffer.getOrNull(blockEntity.heroMailIndex)?.let { reward ->
-                        blockEntity.ejectItem(RewardLetterItem.create(reward, blockEntity.heroMailIndex))
+                        if (reward.type == WaveType.DEFAULT) {// normal loot for regular waves
+                            blockEntity.getHeroMail(reward.type.lootTableFn(blockEntity.heroMailIndex)).forEach { item -> blockEntity.ejectItem(item) }
+                        }// letters for special waves
+                        else blockEntity.ejectItem(RewardLetterItem.create(reward, blockEntity.heroMailIndex))
                         if (reward.boss!=null) {
                             blockEntity.getHeroMail(PazLootTables.MAIL_REWARDS_BONUS).forEach { item -> blockEntity.ejectItem(item) }
                             blockEntity.confetti()

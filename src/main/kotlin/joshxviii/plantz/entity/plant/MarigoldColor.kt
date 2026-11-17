@@ -33,6 +33,7 @@ enum class MarigoldColor(val id: Int, val title: String, val color: Int) : Strin
 
         fun getDefault(): MarigoldColor = NONE
         fun pickRandomVariant(): MarigoldColor = entries.random()
+        fun fromName(name: String?): MarigoldColor = entries.firstOrNull { it.title == name } ?: NONE
 
         val CODEC: Codec<MarigoldColor> = StringRepresentable.fromEnum(MarigoldColor::values)
         private val BY_ID: IntFunction<MarigoldColor> = ByIdMap.continuous(MarigoldColor::id, entries.toTypedArray(), ByIdMap.OutOfBoundsStrategy.ZERO);

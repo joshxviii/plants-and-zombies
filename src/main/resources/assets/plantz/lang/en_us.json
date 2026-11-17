@@ -120,8 +120,6 @@
   "event.plantz.zombie_raid.announce_wave": "Special Wave: %s!",
   "event.plantz.zombie_raid.boss.spawn": "A boss has spawned: %s",
   "event.plantz.zombie_raid.boss.defeat": "The Boss was defeated!",
-  "event.plantz.zombie_raid.wave.default_easy": "Default",
-  "event.plantz.zombie_raid.wave.default_hard": "Default (Hard)",
   "event.plantz.zombie_raid.wave.bucket_brigade": "Bucket Brigade",
   "event.plantz.zombie_raid.wave.halftime_showdown": "Half-Time Showdown",
   "event.plantz.zombie_raid.wave.winter_wonderland": "Winter Wonderland",
