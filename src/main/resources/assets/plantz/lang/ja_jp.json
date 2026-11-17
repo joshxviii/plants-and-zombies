@@ -387,9 +387,8 @@
   "entity.plantz.pumpkin": "パンプキン",
   "entity.plantz.squash": "スクワッシュ",
 
-//place holder maybe someday will use huh
-  "entity.plantz.citron": "シトロン",
-  "entity.plantz.royal_sunflower": "ロイヤルサンフラワー",
+  "entity.plantz.citron": "Place Holder シトロン",
+  "entity.plantz.royal_sunflower": "Place Holder ロイヤルサンフラワー",
 
   "entity.plantz.browncoat": "ゾンビ",
   "entity.plantz.browncoat.variant.balloon": "風船ゾンビ",

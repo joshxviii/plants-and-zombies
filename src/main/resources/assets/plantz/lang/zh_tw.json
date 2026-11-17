@@ -387,9 +387,8 @@
   "entity.plantz.pumpkin": "南瓜",
   "entity.plantz.squash": "窩瓜",
 
-//place holder maybe someday will use huh
-  "entity.plantz.citron": "香櫞",
-  "entity.plantz.royal_sunflower": "皇家向日葵",
+  "entity.plantz.citron": "Place Holder 香櫞",
+  "entity.plantz.royal_sunflower": "Place Holder 皇家向日葵",
 
   "entity.plantz.browncoat": "殭屍",
   "entity.plantz.browncoat.variant.balloon": "氣球殭屍",
