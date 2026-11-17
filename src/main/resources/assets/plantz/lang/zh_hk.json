@@ -37,7 +37,7 @@
   "advancements.plantz.craft_plant_flag.description": "使用腦袋旗幟合成一面植物旗幟。",
   "advancements.plantz.taco_time": "塔可時間！",
   "advancements.plantz.taco_time.description": "擊敗2只Boss",
-  "advancements.plantz.boss_slayer": "我哋識得咩？ ",
+  "advancements.plantz.boss_slayer": "你算條貼？ ",
   "advancements.plantz.boss_slayer.description": "擊敗30只Boss",
   "advancements.plantz.all_gnomes": "我係地精，我係花園地精",
   "advancements.plantz.all_gnomes.description": "集齊所有種類的花園地精",
@@ -387,6 +387,10 @@
   "entity.plantz.pumpkin": "南瓜",
   "entity.plantz.squash": "窩瓜",
 
+//place holder maybe someday will use huh
+  "entity.plantz.citron": "香櫞",
+  "entity.plantz.royal_sunflower": "皇家向日葵",
+
   "entity.plantz.browncoat": "殭屍",
   "entity.plantz.browncoat.variant.balloon": "氣球殭屍",
   "entity.plantz.browncoat.variant.snowcoat": "雪衣殭屍",
@@ -510,5 +514,5 @@
   "biome.plantz.jurassic_period": "大侏羅紀",
   "biome.plantz.dark_ages": "黑暗時代",
   "biome.plantz.far_future": "遙遠未來",
-  "biome.plantz.gnome_space": "地精空間"
+  "biome.plantz.gnome_space": "地精宇宙"
 }

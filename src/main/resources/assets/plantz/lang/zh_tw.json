@@ -387,6 +387,10 @@
   "entity.plantz.pumpkin": "南瓜",
   "entity.plantz.squash": "窩瓜",
 
+//place holder maybe someday will use huh
+  "entity.plantz.citron": "香櫞",
+  "entity.plantz.royal_sunflower": "皇家向日葵",
+
   "entity.plantz.browncoat": "殭屍",
   "entity.plantz.browncoat.variant.balloon": "氣球殭屍",
   "entity.plantz.browncoat.variant.snowcoat": "雪衣殭屍",
@@ -510,5 +514,5 @@
   "biome.plantz.jurassic_period": "大侏羅紀",
   "biome.plantz.dark_ages": "黑暗時代",
   "biome.plantz.far_future": "遙遠未來",
-  "biome.plantz.gnome_space": "地精空間"
+  "biome.plantz.gnome_space": "地精宇宙"
 }
