@@ -1007,6 +1007,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         stopRiding()
         restoreAttachment(entity)
         entity.positionPlant(this)
+        onAttachmentChanged()
         return true
     }
 
@@ -1025,7 +1026,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         yRot = clampYRot(yRot, true)
         yHeadRot = clampYRot(yHeadRot, true)
         yBodyRot = clampYRot(yBodyRot, true)
+        onAttachmentChanged()
     }
+
+    open fun onAttachmentChanged() {}
 
     private fun tickAttachment(level: ServerLevel): Boolean {
         val wearer = EntityReference.getLivingEntity(attachedPlayerReference, level)// searches all levels
@@ -1089,10 +1093,16 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         return this.hasSameRootOwner(target)
     }
 
+    /**
+     * Write only the save data that should survive being dug up into a seed packet.
+     * Keys written here are loaded back into the plant when the packet is planted.
+     */
+    open fun saveRetainedData(tag: CompoundTag) {}
+
     fun dropAsSeedPacketItem(force: Boolean = false, dropPumpkin: Boolean = false): Boolean {
         val level = level() as? ServerLevel ?: return false
         if (force || customName!=null) {// Spawn a seed packet item containing this plant's data
-            val drop = SeedPacketItem.stackFor(this.type).also { if (customName!=null) it.set(DataComponents.CUSTOM_NAME, customName) }
+            val drop = SeedPacketItem.stackFor(this.type, CompoundTag().also { saveRetainedData(it) }).also { if (customName!=null) it.set(DataComponents.CUSTOM_NAME, customName) }
             val itemEntity = ItemEntity(level, x, y + 0.5, z, drop)
             level.addFreshEntity(itemEntity)
         }

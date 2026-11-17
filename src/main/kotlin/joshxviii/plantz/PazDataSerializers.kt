@@ -5,6 +5,7 @@ import joshxviii.plantz.ai.PlantState
 import joshxviii.plantz.ai.ZombieState
 import joshxviii.plantz.entity.gnome.GnomeSoundVariant
 import joshxviii.plantz.entity.gnome.GnomeVariant
+import joshxviii.plantz.entity.plant.MarigoldColor
 import joshxviii.plantz.entity.zombie.AllStarVariant
 import joshxviii.plantz.entity.zombie.BrownCoatVariant
 import joshxviii.plantz.entity.zombie.DiggerVariant
@@ -20,6 +21,7 @@ import net.minecraft.world.item.DyeColor
 import org.apache.logging.log4j.core.util.Integers
 
 object PazDataSerializers {
+    @JvmField val MARIGOLD_COLORS = EntityDataSerializer.forValueType<MarigoldColor>(MarigoldColor.STREAM_CODEC)
     @JvmField val DATA_PAINT_COLORS = EntityDataSerializer.forValueType<Map<Int, Int>>(ByteBufCodecs.map(::HashMap, ByteBufCodecs.INT, ByteBufCodecs.INT))
     @JvmField val DATA_DYE_COLOR = EntityDataSerializer.forValueType<DyeColor>(DyeColor.STREAM_CODEC)
     @JvmField val DATA_PLANT_STATE = EntityDataSerializer.forValueType<PlantState>(PlantState.STREAM_CODEC)
@@ -36,6 +38,7 @@ object PazDataSerializers {
     @JvmField val GNOME_SOUND_VARIANT = EntityDataSerializer.forValueType<GnomeSoundVariant>(GnomeSoundVariant.STREAM_CODEC)
 
     fun initialize() {
+        FabricEntityDataRegistry.register(pazResource("marigold_colors"), MARIGOLD_COLORS)
         FabricEntityDataRegistry.register(pazResource("paint_colors"), DATA_PAINT_COLORS)
         FabricEntityDataRegistry.register(pazResource("dye_color"), DATA_DYE_COLOR)
         FabricEntityDataRegistry.register(pazResource("plant_state"), DATA_PLANT_STATE)

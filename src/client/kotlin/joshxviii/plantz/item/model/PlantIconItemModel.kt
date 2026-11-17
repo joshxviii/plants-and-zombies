@@ -16,10 +16,10 @@ import net.minecraft.world.entity.ItemOwner
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
 import org.joml.Matrix4fc
-import kotlin.collections.get
 
 class PlantIconItemModel(
-    private val overlays: Map<EntityType<*>, ItemModel>
+    private val overlays: Map<EntityType<*>, ItemModel>,
+    private val variants: Map<Identifier, ItemModel> = emptyMap()
 ) : ItemModel {
     companion object {
 
@@ -31,6 +31,25 @@ class PlantIconItemModel(
                 val modelLocation = Identifier.fromNamespaceAndPath(id.namespace, "models/${id.path}.json")
                 if (resourceManager.getResource(modelLocation).isPresent) type else null
             }
+        }
+
+        /** Entity data keys whose string value selects an icon variant, e.g. `plant_icon/marigold/red`. Add more keys to extend. */
+        val VARIANT_KEYS = listOf("color")
+
+        /** Finds every variant model under `models/item/plant_icon/<plant>/`. */
+        fun variantIdsFor(type: EntityType<*>): List<Identifier> {
+            val base = overlayIdFor(type)
+            val prefix = "models/${base.path}"
+            return Minecraft.getInstance().resourceManager
+                .listResources(prefix) { it.path.endsWith(".json") }.keys
+                .filter { it.namespace == base.namespace && it.path.startsWith("$prefix/") }
+                .map { Identifier.fromNamespaceAndPath(it.namespace, it.path.removePrefix("models/").removeSuffix(".json")) }
+        }
+
+        fun variantIdFor(type: EntityType<*>, data: net.minecraft.nbt.CompoundTag): Identifier {
+            val base = overlayIdFor(type)
+            val name = VARIANT_KEYS.firstNotNullOfOrNull { data.getString(it).orElse(null) }
+            return Identifier.fromNamespaceAndPath(base.namespace, "${base.path}/${name ?: type.let { BuiltInRegistries.ENTITY_TYPE.getKey(it).path }}")
         }
 
         fun overlayIdFor(type: EntityType<*>): Identifier {
@@ -51,7 +70,8 @@ class PlantIconItemModel(
         val data = item.get(DataComponents.ENTITY_DATA)
         val type = data?.type()
 
-        overlays[type]?.let {
+        val model = if (type != null) variants[variantIdFor(type, data.copyTagWithoutId())] ?: variants[variantIdFor(type, net.minecraft.nbt.CompoundTag())] ?: overlays[type] else null
+        model?.let {
             output.appendModelIdentityElement(it)
             it.update(output, item, resolver, displayContext, level, owner, seed)
         }
@@ -70,11 +90,19 @@ class PlantIconItemModel(
                 entityIcons[type] = ItemModelUtils.plainModel(overlayIdFor(type)).bake(context, transformation)
             }
 
-            return PlantIconItemModel(entityIcons)
+            val variantIcons = mutableMapOf<Identifier, ItemModel>()
+            for (type in plantEntityTypes()) for (id in variantIdsFor(type)) {
+                variantIcons[id] = ItemModelUtils.plainModel(id).bake(context, transformation)
+            }
+
+            return PlantIconItemModel(entityIcons, variantIcons)
         }
 
         override fun resolveDependencies(resolver: ResolvableModel.Resolver) {
-            for (type in plantEntityTypes()) overlayIdFor(type).let { resolver.markDependency(it) }
+            for (type in plantEntityTypes()) {
+                resolver.markDependency(overlayIdFor(type))
+                variantIdsFor(type).forEach { resolver.markDependency(it) }
+            }
         }
     }
 }

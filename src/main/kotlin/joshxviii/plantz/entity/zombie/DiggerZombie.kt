@@ -117,6 +117,7 @@ class DiggerZombie(type: EntityType<out DiggerZombie>, level: Level) : PazZombie
         entityData.define(MINE_TIME_ID, 0)
         entityData.define(TUNNEL_TIME_ID, 0)
         entityData.define(TUNNEL_COOLDOWN_ID, 0)
+        entityData.define(DATA_VARIANT_ID, DiggerVariant.getDefault())
     }
 
     override fun isImmobile(): Boolean = super.isImmobile() || tunnelTime>0

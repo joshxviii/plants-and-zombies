@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/spear_in_hand",
   "textures": {
-    "layer0": "plantz:item/ra_staff_in_hand"
+    "layer0": "plantz:item/sun_staff_in_hand"
   }
 }

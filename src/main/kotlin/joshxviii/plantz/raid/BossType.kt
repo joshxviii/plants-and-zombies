@@ -54,7 +54,7 @@ enum class BossType(
         bossSpawns = { raid, wave ->
             mutableListOf<BossEntry>().let {
                 val waveCount = raid.currentWaveNumber()
-                val count = Mth.floor(waveCount/7.0).coerceAtLeast(1)
+                val count = Mth.floor(waveCount/6.0).coerceAtLeast(1)
                 for (i in 0 until count) it.add(BossEntry(PazEntities.BARON_VON_BATS))
                 it
             }
@@ -80,7 +80,7 @@ enum class BossType(
         bossSpawns = { raid, wave ->
             mutableListOf<BossEntry>().let {
                 val waveCount = raid.currentWaveNumber()
-                val count = Mth.floor(waveCount/7.0).coerceAtLeast(1)
+                val count = Mth.floor(waveCount/7.5).coerceAtLeast(1)
                 for (i in 0 until count) it.add(
                     BossEntry(PazEntities.GARGANTUAR,
                     { if (it is Gargantuar && wave == WaveType.PIRATE_INVASION) it.variant = GargantuarVariant.PIRATE }
@@ -96,7 +96,7 @@ enum class BossType(
         bossSpawns = { raid, wave ->
             mutableListOf<BossEntry>().let {
                 val waveCount = raid.currentWaveNumber()
-                val count = Mth.floor(waveCount/7.0).coerceAtLeast(1)
+                val count = Mth.floor(waveCount/7.5).coerceAtLeast(1)
                 for (i in 0 until count) it.add(BossEntry(PazEntities.ROBO_ZOMBIE, ::bossify))
                 it
             }

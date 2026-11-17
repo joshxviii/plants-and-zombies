@@ -6,6 +6,7 @@ import joshxviii.plantz.item.component.BlockBreakChanceComponent
 import joshxviii.plantz.item.component.DoorShieldComponent
 import joshxviii.plantz.item.component.LetterDataComponent
 import joshxviii.plantz.item.component.ProtectsHeadDataComponent
+import joshxviii.plantz.item.component.RewardLetterDataComponent
 import joshxviii.plantz.item.component.StoredSun
 import joshxviii.plantz.item.component.StoredWater
 import joshxviii.plantz.item.component.SunCost
@@ -64,6 +65,14 @@ object PazComponents {
         "block_break_chance"
     ) { it.persistent(BlockBreakChanceComponent.CODEC)
         .networkSynchronized(BlockBreakChanceComponent.STREAM_CODEC)
+        .cacheEncoding()
+    }
+
+    @JvmField
+    val REWARD_LETTER_DATA: DataComponentType<RewardLetterDataComponent> = register(
+        "reward_letter_data"
+    ) { it.persistent(RewardLetterDataComponent.CODEC)
+        .networkSynchronized(RewardLetterDataComponent.STREAM_CODEC)
         .cacheEncoding()
     }
 

@@ -26,5 +26,9 @@ public class LawnMowerAnimation {
                         new Keyframe(0.48F, KeyframeAnimations.posVec(-0.5F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
                         new Keyframe(0.52F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
                 ))
+                .addAnimation("blade", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+                        new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+                        new Keyframe(0.52F, KeyframeAnimations.degreeVec(0.0F, -1260.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+                ))
                 .build();
 }

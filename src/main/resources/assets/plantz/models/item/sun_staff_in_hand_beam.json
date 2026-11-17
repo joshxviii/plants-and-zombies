@@ -1,5 +1,5 @@
 {
-	"parent": "plantz:item/ra_staff_in_hand",
+	"parent": "plantz:item/sun_staff_in_hand",
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [0, -90, 0],

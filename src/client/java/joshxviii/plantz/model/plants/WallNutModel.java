@@ -42,7 +42,7 @@ public class WallNutModel extends PlantModel {
 				.texOffs(59, 37).addBox(-6.0F, -18.0F, -6.0F, 12.0F, 3.0F, 12.0F, new CubeDeformation(0.0F))
 				.texOffs(59, 54).addBox(-6.0F, -2.0F, -6.0F, 12.0F, 2.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 9.0F, 0.0F));
 
-		PartDefinition locator_hat = body.addOrReplaceChild("locator_hat", CubeListBuilder.create(), PartPose.offset(0.0F, -17.25F, 0.0F));
+		PartDefinition locator_hat = body.addOrReplaceChild("locator_hat", CubeListBuilder.create(), PartPose.offset(0.0F, -16.5F, 0.0F));
 
 		PartDefinition inner = body.addOrReplaceChild("inner", CubeListBuilder.create().texOffs(3, 37).addBox(-6.0F, -15.0F, -6.0F, 12.0F, 12.0F, 12.0F, new CubeDeformation(0.0F))
 				.texOffs(67, 2).addBox(-5.0F, -17.0F, -5.0F, 10.0F, 2.0F, 10.0F, new CubeDeformation(0.0F))
@@ -54,7 +54,7 @@ public class WallNutModel extends PlantModel {
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
-		RenderingUtilsKt.scale(locator_hat, 1.5f);
+		RenderingUtilsKt.scale(locator_hat, 1.25f);
 
 		roll.xRot = 0.0F;
 		roll.yRot = 0.0F;

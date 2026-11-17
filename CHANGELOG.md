@@ -18,6 +18,8 @@
   - The chance increases exponentially every wave.
   - Once a boss spawns, the chance is reset.
   - Holding "Tab" will display the Boss Chance and other details about the raid.
+- Rewards for raids are now packaged in a "Reward Letter" for each completed wave.
+- Bonus Rewards are now given for each Boss Defeated rather than every 5 waves.
 - Added Baron Von Bats
   - Baron Von Bats has a chance to spawn as a Boss.
 - Added Zombat
@@ -41,7 +43,6 @@
 - Added Roller Skates
   - A drop from Electric Slide.
 - During the final wave at the 1-minute mark, all remaining zombies will teleport closer to the flag.
-- Hero Bonus rewards are now given for each Boss Wave rather than every 5 waves.
 - Cones, Buckets, and Football helmets now only block damage from above.
   - They have also been given a buff to armor and armor toughness.
 - Newspapers now work like Shields and only block damage from the front.

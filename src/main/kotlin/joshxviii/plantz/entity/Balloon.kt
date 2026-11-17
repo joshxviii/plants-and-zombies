@@ -10,6 +10,8 @@ import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.Mth
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResult
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.Leashable.LeashData
@@ -18,11 +20,13 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.levelgen.Heightmap
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
+import java.util.function.Predicate
 import kotlin.math.atan2
 import kotlin.math.sqrt
 
@@ -107,6 +111,13 @@ class Balloon(
         super.baseTick()
         yRotO = yRot
         xRotO = xRot
+    }
+
+    // do not allow balloon to be a leash holder
+    override fun interact(player: Player, hand: InteractionHand, location: Vec3): InteractionResult {
+        val leashables = Leashable.leashableInArea(this) { l: Leashable? -> l?.leashHolder === player }
+        if (!this.level().isClientSide && player.isSecondaryUseActive && leashables.isNotEmpty()) return InteractionResult.PASS
+        return super.interact(player, hand, location)
     }
 
     override fun tick() {

@@ -5,7 +5,7 @@
       {
         "model": {
           "type": "minecraft:model",
-          "model": "plantz:item/ra_staff"
+          "model": "plantz:item/sun_staff"
         },
         "when": [
           "gui",
@@ -20,11 +20,11 @@
       "property": "minecraft:using_item",
       "on_false": {
         "type": "minecraft:model",
-        "model": "plantz:item/ra_staff_in_hand"
+        "model": "plantz:item/sun_staff_in_hand"
       },
       "on_true": {
         "type": "minecraft:model",
-        "model": "plantz:item/ra_staff_in_hand_beam"
+        "model": "plantz:item/sun_staff_in_hand_beam"
       }
     },
     "property": "minecraft:display_context"

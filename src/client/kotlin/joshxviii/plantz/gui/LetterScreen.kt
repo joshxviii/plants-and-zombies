@@ -231,5 +231,5 @@ class LetterScreen(
     fun backgroundTop() = topPos
 
     fun textLeft() = backgroundLeft() - (TEXT_WIDTH - LETTER_WIDTH) / 2
-    fun textTop() = topPos + 10
+    fun textTop() = topPos + 11
 }

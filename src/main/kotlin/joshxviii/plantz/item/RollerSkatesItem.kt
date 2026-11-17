@@ -1,6 +1,7 @@
 package joshxviii.plantz.item
 
 import joshxviii.plantz.PazItems
+import joshxviii.plantz.PazServerParticles
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.pazResource
 import net.minecraft.ChatFormatting
@@ -38,7 +39,7 @@ class RollerSkatesItem(properties: Properties) : Item(properties) {
         }
 
         fun isRailGrinding(entity: LivingEntity): Boolean {
-            return RailGrinding.isGrinding(entity)
+           return RailGrinding.isGrinding(entity)
         }
 
         fun removeModifiers(entity: LivingEntity?) {
@@ -49,7 +50,7 @@ class RollerSkatesItem(properties: Properties) : Item(properties) {
     }
     override fun inventoryTick(itemStack: ItemStack, level: ServerLevel, owner: Entity, slot: EquipmentSlot?) {
         super.inventoryTick(itemStack, level, owner, slot)
-        if (level.isClientSide || owner !is LivingEntity) return
+        if (owner !is LivingEntity || level.isClientSide) return
         if (!owner.getItemBySlot(EquipmentSlot.FEET).`is`(PazItems.ROLLER_SKATES)) {
             removeModifiers(owner)
             return
@@ -78,7 +79,7 @@ class RollerSkatesItem(properties: Properties) : Item(properties) {
             owner.getAttribute(Attributes.MOVEMENT_SPEED)?.removeModifier(ROLLER_SKATES_ID)
             owner.getAttribute(Attributes.STEP_HEIGHT)?.removeModifier(ROLLER_SKATES_ID)
         }
-        if (!level.isClientSide && (isRailGrinding(owner) || isSkating(owner)) && owner.tickCount % DAMAGE_INTERVAL == 0 && owner.getRandom().nextFloat() > 0.5f) {
+        if ((isRailGrinding(owner) || isSkating(owner)) && owner.tickCount % DAMAGE_INTERVAL == 0 && owner.getRandom().nextFloat() > 0.5f) {
             if (slot != null) itemStack.hurtAndBreak(1, owner, slot)
         }
     }
@@ -286,6 +287,7 @@ object RailGrinding {
         entity.setDeltaMovement(d.stepX * st.speed, 0.0, d.stepZ * st.speed)
         entity.setOnGround(true)
         entity.resetFallDistance()
+        level.addParticle(PazServerParticles.GRIND_SPARK, entity.getRandomX(0.4), entity.y, entity.getRandomZ(0.4), 0.0, 0.0, 0.0)
         return true
     }
 }

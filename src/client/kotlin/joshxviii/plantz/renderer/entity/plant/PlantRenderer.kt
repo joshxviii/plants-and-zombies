@@ -183,6 +183,7 @@ open class PlantRenderer(
                     else -> ""
                 })
                 is KernelPult -> if (entity.hasButterShot) add("butter")
+                is Marigold -> if (entity.color != MarigoldColor.getDefault()) add(entity.color.name.lowercase())
                 else -> {}
             }
         }

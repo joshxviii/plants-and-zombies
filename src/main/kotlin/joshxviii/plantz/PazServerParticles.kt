@@ -43,6 +43,7 @@ object PazServerParticles {
     @JvmField val NEEDS_TIME: SimpleParticleType = registerSimple("needs_time")
     @JvmField val ZOMBIE_OMEN: SimpleParticleType = registerSimple("zombie_omen")
     @JvmField val CONFETTI: SimpleParticleType = registerSimple("confetti")
+    @JvmField val GRIND_SPARK: SimpleParticleType = registerSimple("grind_spark")
     @JvmField val PLASMA_BURST: ParticleType<PlasmaBurstOptions> = register("plasma_burst", { PlasmaBurstOptions.CODEC}, {PlasmaBurstOptions.STREAM_CODEC})
     @JvmField val NUKE_WAVE: ParticleType<NukeWaveParticleOptions> = register("nuke_wave", { NukeWaveParticleOptions.CODEC}, {NukeWaveParticleOptions.STREAM_CODEC})
     @JvmField val NUKE_BLAST: ParticleType<NukeBlastParticleOptions> = register("nuke_blast", {NukeBlastParticleOptions.CODEC}, {NukeBlastParticleOptions.STREAM_CODEC})

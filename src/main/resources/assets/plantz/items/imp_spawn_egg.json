@@ -12,6 +12,13 @@
         }
       },
       {
+        "when": "mummy",
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/spawn_egg/imp/mummy"
+        }
+      },
+      {
         "when": "pirate",
         "model": {
           "type": "minecraft:model",

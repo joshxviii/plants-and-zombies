@@ -12,7 +12,8 @@ import java.util.function.IntFunction
 enum class ImpVariant(val suffix: String, val id: Int) : StringRepresentable {
     IMP("", 0),
     YETI("yeti", 1),
-    PIRATE("pirate", 2);
+    MUMMY("mummy", 2),
+    PIRATE("pirate", 3);
 
     override fun getSerializedName(): String = suffix
 
@@ -20,9 +21,10 @@ enum class ImpVariant(val suffix: String, val id: Int) : StringRepresentable {
         fun getDefault(): ImpVariant = IMP
         fun pickRandomVariant(): ImpVariant = entries.random()
 
-        fun pickForBiome(isSnowy: Boolean, random: RandomSource): ImpVariant {
+        fun pickForBiome(isSnowy: Boolean, isDesert: Boolean, random: RandomSource): ImpVariant {
             return when {
                 isSnowy -> YETI
+                isDesert -> MUMMY
                 else -> IMP
             }
         }

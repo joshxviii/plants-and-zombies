@@ -632,7 +632,7 @@ class ZombieRaid(
         val subtitle: Component = wave.popupMessage().copy().apply { withStyle(subColor, ChatFormatting.BOLD) }
         showTitleMessage(Component.empty(), subtitle)
         zombieRaidEvent.players.forEach {
-            it.sendSystemMessage(Component.translatable("event.plantz.zombie_raid.special_wave", subtitle).withColor(0x872727))
+            it.sendSystemMessage(Component.translatable("event.plantz.zombie_raid.announce_wave", subtitle).withColor(0x872727))
         }
     }
 
