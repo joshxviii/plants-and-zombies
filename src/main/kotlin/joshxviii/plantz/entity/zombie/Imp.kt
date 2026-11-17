@@ -18,6 +18,7 @@ import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.*
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.Items
@@ -153,6 +154,7 @@ class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie
             val chance = random.nextFloat()
             when (variant) {
                 ImpVariant.IMP -> if (chance < 0.2f) target.addEffect(MobEffectInstance(PazEffects.TOXIC, effectTime * 20, 0), this)
+                ImpVariant.MUMMY -> if (chance < 0.33f) target.addEffect(MobEffectInstance(MobEffects.WITHER, (effectTime * 10).coerceAtLeast(10), 1), this)
                 ImpVariant.YETI -> if (chance < 0.5f) target.addEffect(MobEffectInstance(PazEffects.CHILLED, (effectTime * 30).coerceAtLeast(20), 1), this)
                 else -> {}
             }

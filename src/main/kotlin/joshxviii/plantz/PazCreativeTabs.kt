@@ -94,7 +94,7 @@ object PazCreativeTabs {
 
         // Robots
         if (PazConfig.SPLIT_ITEM_TABS) {
-            output.accept(PazItems.ZOMBIE_GOAT_SPAWN_EGG)
+            if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(PazItems.ZOMBIE_GOAT_SPAWN_EGG)
             output.accept(PazItems.ZOMBIE_TURRET_SPAWN_EGG)
             output.accept(PazItems.ZOMBIE_DRONE_SPAWN_EGG)
             output.accept(PazItems.ELECTRO_TURRET_SPAWN_EGG)
@@ -170,7 +170,7 @@ object PazCreativeTabs {
             output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_TURRET))
             output.accept(BlueprintItem.stackFor(PazEntities.ELECTRO_TURRET))
             output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_DRONE))
-            output.accept(BlueprintItem.stackFor(PazEntities.LAWN_MOWER))
+            if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(BlueprintItem.stackFor(PazEntities.LAWN_MOWER))
         }
     }
 

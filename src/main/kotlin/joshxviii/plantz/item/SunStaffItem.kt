@@ -26,7 +26,7 @@ class SunStaffItem(properties: Properties) : Item(properties) {
 
     override fun onUseTick(level: Level, livingEntity: LivingEntity, itemStack: ItemStack, ticksRemaining: Int) {
         if (ticksRemaining==USE_DURATION)
-            level.playSound(livingEntity, livingEntity.blockPosition(), PazSounds.ELECTRIC_ZAP, livingEntity.soundSource, 0.3f, 2.0f)
+            level.playSound(livingEntity, livingEntity.blockPosition(), PazSounds.PLANT_GENERATE_SUN, livingEntity.soundSource, 1.0f, 0.5f)
         if (ticksRemaining==1) healingBeam(level, livingEntity, itemStack, BEAM_DAMAGE)
     }
 

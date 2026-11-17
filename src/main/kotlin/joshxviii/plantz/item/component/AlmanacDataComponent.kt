@@ -28,11 +28,7 @@ data class AlmanacDataComponent(
         flag: TooltipFlag,
         components: DataComponentGetter
     ) {
-        consumer.accept(
-            if (owner != null && ownerName.isNotEmpty())
-                Component.translatable("component.plantz.almanac", ownerName).withStyle(ChatFormatting.DARK_GRAY)
-            else Component.empty()
-        )
+        if (owner != null && ownerName.isNotEmpty()) consumer.accept(Component.translatable("component.plantz.almanac", ownerName).withStyle(ChatFormatting.DARK_GRAY))
     }
 
     companion object {

@@ -1,6 +1,9 @@
 package joshxviii.plantz.model.zombies;
 
+import joshxviii.plantz.animation.zombies.DiggerZombieAnimation;
+import joshxviii.plantz.animation.zombies.RaZombieAnimation;
 import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderState;
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -13,9 +16,11 @@ import static joshxviii.plantz.UtilsKt.pazResource;
 
 public class RaZombieModel<S extends PazZombieRenderState> extends PazZombieModel<S> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(pazResource("ra_zombie"), "main");
+    private final KeyframeAnimation actionAnimation;
 
     public RaZombieModel(final ModelPart root) {
         super(null, root);
+        this.actionAnimation = RaZombieAnimation.action.bake(root);
     }
 
     @Override
@@ -34,8 +39,10 @@ public class RaZombieModel<S extends PazZombieRenderState> extends PazZombieMode
 
         PartDefinition nemas = head.addOrReplaceChild("nemas", CubeListBuilder.create(), PartPose.offset(0.0F, -8.075F, -0.0375F));
 
-        PartDefinition cube_r1 = nemas.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(76, 14).mirror().addBox(-2.0F, -5.0F, 0.0F, 4.0F, 11.0F, 0.0F, new CubeDeformation(0.0F)).mirror(false)
-                .texOffs(84, 14).addBox(10.0F, -5.0F, 0.0F, 4.0F, 11.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-6.0F, 5.0F, -2.0F, -0.1745F, 0.0F, 0.0F));
+        PartDefinition cube_r1 = nemas.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(77, 26).mirror().addBox(0.0F, -3.0F, 0.0F, 2.0F, 7.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false)
+                .texOffs(77, 14).mirror().addBox(2.0F, -5.0F, 0.0F, 2.0F, 11.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false)
+                .texOffs(85, 26).addBox(14.0F, -3.0F, 0.0F, 2.0F, 7.0F, 1.0F, new CubeDeformation(0.0F))
+                .texOffs(85, 14).addBox(12.0F, -5.0F, 0.0F, 2.0F, 11.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-8.0F, 4.75F, -2.0F, -0.1745F, 0.0F, 0.0F));
 
         PartDefinition cube_r2 = nemas.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(65, 14).addBox(-1.0F, -1.0F, -7.0F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F))
                 .texOffs(64, 0).addBox(-5.0F, -2.0F, -5.0F, 10.0F, 4.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.1745F, 0.0F, 0.0F));
@@ -48,14 +55,22 @@ public class RaZombieModel<S extends PazZombieRenderState> extends PazZombieMode
         PartDefinition right_arm = root.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(40, 16).addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
                 .texOffs(40, 32).addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.25F)), PartPose.offset(-5.0F, -2.6667F, 0.0F));
 
+        PartDefinition locator_right_hand = right_arm.addOrReplaceChild("locator_right_hand", CubeListBuilder.create(), PartPose.offsetAndRotation(-1.0F, 9.75F, -1.5F, -2.0944F, 3.1416F, 0.0F));
+
         PartDefinition left_arm = root.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(32, 48).addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
                 .texOffs(48, 48).mirror().addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.25F)).mirror(false), PartPose.offset(5.0F, -2.6667F, 0.0F));
+
+        PartDefinition locator_left_hand = left_arm.addOrReplaceChild("locator_left_hand", CubeListBuilder.create(), PartPose.offsetAndRotation(1.0F, 9.75F, -1.5F, 2.0944F, 0.0F, 0.0F));
 
         PartDefinition right_leg = root.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
                 .texOffs(0, 32).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.25F)), PartPose.offset(-1.9F, 7.3333F, 0.0F));
 
+        PartDefinition locator_right_leg = right_leg.addOrReplaceChild("locator_right_leg", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+
         PartDefinition left_leg = root.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(16, 48).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
                 .texOffs(0, 48).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.25F)), PartPose.offset(1.9F, 7.3333F, 0.0F));
+
+        PartDefinition locator_left_leg = left_leg.addOrReplaceChild("locator_left_leg", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 128, 128);
     }

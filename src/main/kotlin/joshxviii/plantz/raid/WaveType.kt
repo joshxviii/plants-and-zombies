@@ -44,7 +44,8 @@ enum class WaveType(
     private val creditsRequired: Boolean,
     private val weightFn: (ZombieRaid, Boolean) -> Float,
     private val spawnFn: (ZombieRaid, Boolean) -> List<WaveSpawnEntry>,
-    val lootTableFn: (Int) -> ResourceKey<LootTable> = { PazLootTables.MAIL_REWARD_DEFAULT_EASY }
+    val lootTableFn: (Int) -> ResourceKey<LootTable> = { PazLootTables.MAIL_REWARD_DEFAULT_EASY },
+    val color: Int = 0x423e6c // Letter color
 ): StringRepresentable {
     //TODO: wave types should also be data-driven. A wave type should be defined in "plantz/wave_type/[wave_name].json".
     // SpawnRequirements, Weights, WaveSpawnEntries, LootTables and Zombie Configurations should all be editable in the .json.

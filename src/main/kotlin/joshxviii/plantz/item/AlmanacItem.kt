@@ -6,6 +6,7 @@ import joshxviii.plantz.item.component.AlmanacDataComponent
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.stats.Stats
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -42,6 +43,7 @@ class AlmanacItem(properties: Properties) : Item(properties) {
                 override fun getScreenOpeningData(player: ServerPlayer): Int = handIndex
             })
         }
+        player.playSound(SoundEvents.BOOK_PAGE_TURN, 1f, 1f)// TODO custom sounds
         player.awardStat(Stats.ITEM_USED.get(this))
         return InteractionResult.SUCCESS
     }

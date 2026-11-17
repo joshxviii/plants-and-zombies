@@ -15,6 +15,8 @@ import net.minecraft.world.level.Level
 
 class LetterItem(properties: Properties) : Item(properties) {
 
+    //TODO letters given from raids should be consumed on use and spawn the items on the players
+
     override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResult {
         if (!level.isClientSide && player is ServerPlayer) {
             val handIndex = if (hand == InteractionHand.MAIN_HAND) 0 else 1

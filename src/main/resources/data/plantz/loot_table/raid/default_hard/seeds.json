@@ -22,7 +22,7 @@
         {
           "type": "minecraft:loot_table",
           "value": "plantz:marigold_colors",
-          "weight": 8
+          "weight": 10
         },
         {
           "type": "minecraft:item",
@@ -41,51 +41,9 @@
               "type": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 1,
+                "min": 2,
                 "max": 3
               }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "plantz:seed_packet",
-          "weight": 3,
-          "modifier": [
-            {
-              "type": "minecraft:set_components",
-              "components": {
-                "minecraft:entity_data": {
-                  "id": "plantz:doomshroom"
-                }
-              }
-            },
-            {
-              "type": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 2
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "plantz:seed_packet",
-          "weight": 1,
-          "modifier": [
-            {
-              "type": "minecraft:set_components",
-              "components": {
-                "minecraft:entity_data": {
-                  "id": "plantz:electric_peashooter"
-                }
-              }
-            },
-            {
-              "type": "minecraft:set_count",
-              "count": 1
             }
           ]
         }
