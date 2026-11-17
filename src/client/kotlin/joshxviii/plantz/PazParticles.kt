@@ -138,6 +138,10 @@ object PazParticles {
             ConfettiParticle.Provider(spriteSet)
         }
 
+        it.register(PazServerParticles.GRIND_SPARK) { spriteSet ->
+            EmberParticle.Provider(spriteSet)
+        }
+
         it.register(PazServerParticles.ZOMBIE_OMEN) { sprite ->
             SpellParticle.Provider(sprite)
         }

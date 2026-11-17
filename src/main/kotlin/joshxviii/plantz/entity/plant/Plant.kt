@@ -1007,6 +1007,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         stopRiding()
         restoreAttachment(entity)
         entity.positionPlant(this)
+        onAttachmentChanged()
         return true
     }
 
@@ -1025,7 +1026,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         yRot = clampYRot(yRot, true)
         yHeadRot = clampYRot(yHeadRot, true)
         yBodyRot = clampYRot(yBodyRot, true)
+        onAttachmentChanged()
     }
+
+    open fun onAttachmentChanged() {}
 
     private fun tickAttachment(level: ServerLevel): Boolean {
         val wearer = EntityReference.getLivingEntity(attachedPlayerReference, level)// searches all levels
