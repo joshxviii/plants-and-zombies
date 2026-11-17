@@ -14,9 +14,4 @@ class Pumpkin(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
     override fun canSurviveOn(block: BlockState): Boolean = true
 
     override fun isPickable(): Boolean = !isAttached()
-    override fun canBeCollidedWith(other: Entity?): Boolean = !isAttached()
-
-    override fun onAttachmentChanged() {
-        refreshDimensions()
-    }
 }

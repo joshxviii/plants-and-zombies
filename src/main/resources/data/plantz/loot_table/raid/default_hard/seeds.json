@@ -20,23 +20,9 @@
           ]
         },
         {
-          "type": "minecraft:item",
-          "name": "plantz:seed_packet",
-          "weight": 8,
-          "modifier": [
-            {
-              "type": "minecraft:set_components",
-              "components": {
-                "minecraft:entity_data": {
-                  "id": "plantz:marigold"
-                }
-              }
-            },
-            {
-              "type": "minecraft:set_count",
-              "count": 1
-            }
-          ]
+          "type": "minecraft:loot_table",
+          "value": "plantz:marigold_colors",
+          "weight": 8
         },
         {
           "type": "minecraft:item",

@@ -47,7 +47,11 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
     override fun getName(itemStack: ItemStack): Component {
         val entityData = itemStack.get(DataComponents.ENTITY_DATA) ?: return super.getName(itemStack)
         val entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entityData.type())
-        val entityName = Component.translatable("entity.${entityId.namespace}.${entityId.path}")
+        var entityName: Component = Component.translatable("entity.${entityId.namespace}.${entityId.path}")
+        if (entityData.type() == PazEntities.MARIGOLD) {
+            val color = entityData.copyTagWithoutId().getString("color").getOrNull()
+            if (color != null && color != "none") entityName = Component.translatable("entity.plantz.marigold.color", Component.translatable("color.minecraft.$color"))
+        }
         return Component.translatable("item.plantz.seed_packet.entity", entityName)
     }
 
@@ -266,9 +270,9 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
             }
         }
 
-        fun stackFor(type: EntityType<*>): ItemStack {
+        fun stackFor(type: EntityType<*>, retainedData: CompoundTag = CompoundTag()): ItemStack {
             val stack = ItemStack(PazItems.SEED_PACKET)
-            stack.set(DataComponents.ENTITY_DATA, TypedEntityData.of(type, CompoundTag()))
+            stack.set(DataComponents.ENTITY_DATA, TypedEntityData.of(type, retainedData))
 
             return stack
         }

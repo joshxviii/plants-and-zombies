@@ -172,6 +172,7 @@ object PlantProfile {
     private fun renderEntity(graphics: GuiGraphicsExtractor, entity: Entity?, itemStack: ItemStack?, x: Int, y: Int, x2: Int, y2: Int, known: Boolean) {
         if (entity == null) return
         val name = if (known) itemStack?.get(DataComponents.CUSTOM_NAME)?.string ?: "" else ""
+        if (known) itemStack?.get(DataComponents.ENTITY_DATA)?.loadInto(entity)
         val partial = mc.deltaTracker.getGameTimeDeltaPartialTick(true)
         val state = mc.entityRenderDispatcher.extractEntity(entity, 1f)
 

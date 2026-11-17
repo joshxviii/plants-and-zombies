@@ -1,0 +1,236 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:group",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 20,
+              "modifier": [
+                {
+                  "type": "minecraft:set_components",
+                  "components": {
+                    "minecraft:entity_data": "{id:\"plantz:marigold\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 15,
+              "modifier": [
+                {
+                  "type": "minecraft:set_components",
+                  "components": {
+                    "minecraft:entity_data": "{id:\"plantz:marigold\",color:\"orange\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 15,
+              "modifier": [
+                {
+                  "type": "minecraft:set_components",
+                  "components": {
+                    "minecraft:entity_data": "{id:\"plantz:marigold\",color:\"magenta\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 15,
+              "modifier": [
+                {
+                  "type": "minecraft:set_components",
+                  "components": {
+                    "minecraft:entity_data": "{id:\"plantz:marigold\",color:\"light_blue\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 15,
+              "modifier": [
+                {
+                  "type": "minecraft:set_components",
+                  "components": {
+                    "minecraft:entity_data": "{id:\"plantz:marigold\",color:\"yellow\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 15,
+              "modifier": [
+                {
+                  "type": "minecraft:set_components",
+                  "components": {
+                    "minecraft:entity_data": "{id:\"plantz:marigold\",color:\"lime\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 15,
+              "modifier": [
+                {
+                  "type": "minecraft:set_components",
+                  "components": {
+                    "minecraft:entity_data": "{id:\"plantz:marigold\",color:\"pink\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 15,
+              "modifier": [
+                {
+                  "type": "minecraft:set_components",
+                  "components": {
+                    "minecraft:entity_data": "{id:\"plantz:marigold\",color:\"gray\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 15,
+              "modifier": [
+                {
+                  "type": "minecraft:set_components",
+                  "components": {
+                    "minecraft:entity_data": "{id:\"plantz:marigold\",color:\"light_gray\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 15,
+              "modifier": [
+                {
+                  "type": "minecraft:set_components",
+                  "components": {
+                    "minecraft:entity_data": "{id:\"plantz:marigold\",color:\"cyan\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 15,
+              "modifier": [
+                {
+                  "type": "minecraft:set_components",
+                  "components": {
+                    "minecraft:entity_data": "{id:\"plantz:marigold\",color:\"purple\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 15,
+              "modifier": [
+                {
+                  "type": "minecraft:set_components",
+                  "components": {
+                    "minecraft:entity_data": "{id:\"plantz:marigold\",color:\"blue\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 15,
+              "modifier": [
+                {
+                  "type": "minecraft:set_components",
+                  "components": {
+                    "minecraft:entity_data": "{id:\"plantz:marigold\",color:\"brown\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 15,
+              "modifier": [
+                {
+                  "type": "minecraft:set_components",
+                  "components": {
+                    "minecraft:entity_data": "{id:\"plantz:marigold\",color:\"green\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 15,
+              "modifier": [
+                {
+                  "type": "minecraft:set_components",
+                  "components": {
+                    "minecraft:entity_data": "{id:\"plantz:marigold\",color:\"red\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 15,
+              "modifier": [
+                {
+                  "type": "minecraft:set_components",
+                  "components": {
+                    "minecraft:entity_data": "{id:\"plantz:marigold\",color:\"black\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "plantz:seed_packet",
+              "weight": 1,
+              "modifier": [
+                {
+                  "type": "minecraft:set_components",
+                  "components": {
+                    "minecraft:entity_data": "{id:\"plantz:marigold\",color:\"rainbow\"}"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
