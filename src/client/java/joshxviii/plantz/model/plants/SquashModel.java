@@ -54,7 +54,7 @@ public class SquashModel extends PlantModel {
 	@Override
 	public void setupAnim(@NotNull PlantRenderState state) {
 		super.setupAnim(state);
-		RenderingUtilsKt.scale(locator_hat, 1.5f);
+		RenderingUtilsKt.scale(locator_hat, 1.25f);
 		this.body.yRot += state.yRot * (float) (Mth.PI / 180.0);
 	}
 }

@@ -7,6 +7,7 @@ import com.mojang.serialization.Codec;
 import joshxviii.plantz.*;
 import joshxviii.plantz.effect.PaintedMobEffect;
 import joshxviii.plantz.entity.plant.Plant;
+import joshxviii.plantz.entity.plant.Pumpkin;
 import joshxviii.plantz.item.DuckTubeItem;
 import joshxviii.plantz.raid.CompletedWave;
 import joshxviii.plantz.raid.GardenHeroRewards;
@@ -18,6 +19,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
@@ -277,6 +279,16 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     @Inject(method = "onEffectUpdated", at = @At("TAIL"))
     public void updateEffect(CallbackInfo ci) {
         updateEffects();
+    }
+
+    @Inject(method = "hurtServer", at = @At("HEAD"), cancellable = true)
+    public void plantz$pumpkinTanksWearerDamage(ServerLevel level, DamageSource source, float damage, CallbackInfoReturnable<Boolean> cir) {
+        var self = (LivingEntity) (Object) this;
+        if (source.is(PazTags.DamageTypes.BYPASSES_PUMPKIN_ARMOR)) return;
+        if (!(PlantHeadAttachment.wornPlant(self) instanceof Pumpkin pumpkin)) return;
+        self.playSound(SoundEvents.WOOD_HIT, 0.5f, 1.0f);
+        cir.setReturnValue(pumpkin.hurtServer(level, source, damage));
+        cir.cancel();
     }
 
     @Inject(method = "hurtServer", at = @At("HEAD"), cancellable = true)
