@@ -1,0 +1,29 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:short_grass",
+    "minecraft:tall_grass",
+    "minecraft:short_dry_grass",
+    "minecraft:tall_dry_grass",
+    "minecraft:seagrass",
+    "minecraft:tall_seagrass",
+    "minecraft:kelp",
+    "minecraft:fern",
+    "minecraft:bush",
+    "minecraft:dead_bush",
+    "minecraft:sweet_berry_bush",
+    "minecraft:firefly_bush",
+    "minecraft:leaf_litter",
+    "minecraft:moss_carpet",
+    "minecraft:pale_moss_carpet",
+    "minecraft:sugar_cane",
+    "#minecraft:crops",
+    "#minecraft:replaceable",
+    "#minecraft:flowers",
+    "#minecraft:edible_for_sheep",
+    {
+      "id": "#c:flowers",
+      "required": false
+    }
+  ]
+}

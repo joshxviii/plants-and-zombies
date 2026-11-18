@@ -18,6 +18,7 @@ object PazTags {
         @JvmField val DIGGER_BREAKABLE = tag("digger_breakable")
         @JvmField val INVALID_RAID_SPAWN = tag("invalid_raid_spawn")
         @JvmField val RAIL_GRINDABLE = tag("rail_grindable")
+        @JvmField val LAWN_MOWABLE = tag("lawn_mowable")
 
         //TODO add "can survive on" block tags for all plants.
         @JvmField val POTATOMINE_SPAWNABLE_ON = tag("can_survive_on/potatomine")
