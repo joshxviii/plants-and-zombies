@@ -8,21 +8,7 @@
         "max": 2
       },
       "entries": [
-        {
-          "type": "minecraft:loot_table",
-          "value": "plantz:raid/default_hard/materials",
-          "weight": 15
-        },
-        {
-          "type": "minecraft:loot_table",
-          "value": "plantz:raid/winter/seeds",
-          "weight": 6
-        },
-        {
-          "type": "minecraft:loot_table",
-          "value": "plantz:raid/winter/treasure",
-          "weight": 12
-        }
+
       ]
     }
   ],

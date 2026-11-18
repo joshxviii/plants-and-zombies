@@ -18,7 +18,6 @@
   - The chance increases exponentially every wave.
   - Once a boss spawns, the chance resets.
   - Holding "Tab" during a raid will display the Boss Chance and other details.
-- Rewards for special waves are now packaged in a "Reward Letter".
 - Bonus Rewards are now given for each Boss Defeated rather than every 5 waves.
 - Added Baron Von Bats
   - Baron Von Bats has a chance to spawn as a Boss.
@@ -45,6 +44,15 @@
 - Added Roller Skates
   - A drop from Electric Slide.
   - While skating, the wearing can rail grind on Rails, Iron Bars, or Chains.
+- Added Letter
+  - Crafted with 3 x Newspaper and 3 x Paper.
+  - Used to write fun letters to send to your friends.
+  - Rewards for special waves are now packaged in a "Reward Letter".
+- Added Almanac **(Creative only for now)**
+  - Used to keep track of and collect plants.
+- Added Lawn Mower **(Creative only for now)**
+  - Mows tall grass and mobs in its path.
+  - Can be activated with redstone to auto mow for 8 seconds.
 - During the final wave at the 1-minute mark, all remaining zombies will teleport closer to the flag.
 - Cones, Buckets, and Football helmets now only block damage from above.
   - They have also been given a buff to armor and armor toughness.

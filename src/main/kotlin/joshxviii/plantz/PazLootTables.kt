@@ -26,6 +26,7 @@ object PazLootTables {
     @JvmField val MAIL_REWARD_BUCKET = registerLootTable("raid/mail_reward_bucket")
     @JvmField val MAIL_REWARD_HALFTIME = registerLootTable("raid/mail_reward_halftime")
     @JvmField val MAIL_REWARD_WINTER = registerLootTable("raid/mail_reward_winter")
+    @JvmField val MAIL_REWARD_DISCO_PARTY = registerLootTable("raid/mail_reward_disco_party")
     @JvmField val MAIL_REWARD_ZOMBOWEEN = registerLootTable("raid/mail_reward_zomboween")
     @JvmField val MAIL_REWARD_PIRATE = registerLootTable("raid/mail_reward_pirate")
     @JvmField val MAIL_REWARD_ARMY = registerLootTable("raid/mail_reward_army")

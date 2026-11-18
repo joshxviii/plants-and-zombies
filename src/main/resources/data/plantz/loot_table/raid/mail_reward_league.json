@@ -8,21 +8,7 @@
         "max": 2
       },
       "entries": [
-        {
-          "type": "minecraft:loot_table",
-          "value": "plantz:raid/league/materials",
-          "weight": 20
-        },
-        {
-          "type": "minecraft:loot_table",
-          "value": "plantz:raid/default_hard/seeds",
-          "weight": 4
-        },
-        {
-          "type": "minecraft:loot_table",
-          "value": "plantz:raid/league/treasure",
-          "weight": 10
-        }
+
       ]
     }
   ],

@@ -234,7 +234,7 @@ enum class WaveType(
                 ),
             )
         },
-        lootTableFn = { PazLootTables.MAIL_REWARD_DEFAULT_HARD },
+        lootTableFn = { PazLootTables.MAIL_REWARD_DISCO_PARTY },
         color = 0xf792f4
     ),
     ZOMBOWEEN(

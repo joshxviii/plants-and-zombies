@@ -128,8 +128,8 @@ object PazCreativeTabs {
         output.accept(PazBlocks.PLANTZ_FLAG_BLOCK)
         output.accept(PazItems.TACO)
         output.accept(PazItems.BRAINZ_ALLOY)
-        if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(PazItems.LETTER)
-        if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(PazItems.ALMANAC)
+        output.accept(PazItems.LETTER)
+        output.accept(PazItems.ALMANAC)
 
         // music
         output.accept(PazItems.MUSIC_DISC_GRASSY_GROOVE)
@@ -167,10 +167,10 @@ object PazCreativeTabs {
 
         // blueprints
         if (PazConfig.SPLIT_ITEM_TABS) {
-            output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_TURRET))
-            output.accept(BlueprintItem.stackFor(PazEntities.ELECTRO_TURRET))
-            output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_DRONE))
-            if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(BlueprintItem.stackFor(PazEntities.LAWN_MOWER))
+            if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_TURRET))
+            if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(BlueprintItem.stackFor(PazEntities.ELECTRO_TURRET))
+            if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_DRONE))
+            output.accept(BlueprintItem.stackFor(PazEntities.LAWN_MOWER))
         }
     }
 
