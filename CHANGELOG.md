@@ -44,12 +44,14 @@
   - Has a rare chance to drop from defeating Baron Von Bats.
 - Added Roller Skates
   - A drop from Electric Slide.
+  - While skating, the wearing can rail grind on Rails, Iron Bars, or Chains.
 - During the final wave at the 1-minute mark, all remaining zombies will teleport closer to the flag.
 - Cones, Buckets, and Football helmets now only block damage from above.
   - They have also been given a buff to armor and armor toughness.
 - Newspapers now work like Shields and only block damage from the front.
 - While a plant is equipped with the Plant Pot Helmet, The Gardening Glove can be used to place the plant back on the ground.
 - Dye Blaster, Gardening Glove, Plant Pot Helmet, and Ducky Tube can now be enchanted.
+- Browncoats can transform into Super Brainz when struck by lightning.
 - Added a new enchantment, "Lobbing".
   - This enchantment applies to the Gardening Glove and allows the player to toss the held plant.
 - Worn plants with the Plant Pot Helmet can be placed back down by shift-clicking.

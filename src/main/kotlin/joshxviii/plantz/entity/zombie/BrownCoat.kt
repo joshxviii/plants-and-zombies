@@ -47,7 +47,7 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
 
     override fun thunderHit(level: ServerLevel, lightningBolt: LightningBolt) {
         super.thunderHit(level, lightningBolt)
-        if (random.nextFloat() < 0.75f) convertToSuperBrainz()
+        convertToSuperBrainz()
     }
 
     fun convertToSuperBrainz() {
