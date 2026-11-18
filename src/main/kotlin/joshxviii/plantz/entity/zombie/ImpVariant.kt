@@ -13,9 +13,18 @@ enum class ImpVariant(val suffix: String, val id: Int) : StringRepresentable {
     IMP("", 0),
     YETI("yeti", 1),
     MUMMY("mummy", 2),
-    PIRATE("pirate", 3);
+    DISCO_BALL("disco_ball", 3),
+    PIRATE("pirate", 4);
 
     override fun getSerializedName(): String = suffix
+
+    fun explodable(): Boolean {
+        return when (this) {
+            PIRATE,
+            DISCO_BALL
+            -> true else -> false
+        }
+    }
 
     companion object {
         fun getDefault(): ImpVariant = IMP

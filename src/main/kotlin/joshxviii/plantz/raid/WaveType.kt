@@ -495,6 +495,7 @@ enum class WaveType(
         }
 
         fun configureDiscoParty(zombie: Zombie) {
+            if (zombie is Imp) zombie.variant = ImpVariant.DISCO_BALL
             if (zombie is Imp || zombie is BrownCoat) {
                 if (zombie.random.nextFloat() < 0.45f) {
                     zombie.setItemSlot(EquipmentSlot.HEAD, PazItems.PARTY_HAT.defaultInstance)

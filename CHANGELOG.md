@@ -6,7 +6,7 @@
 - Added Citron
 
 # Changelog 1.5.2
-- Plants & Zombies has migrated to 26.3!
+### Plants & Zombies has migrated to 26.3!
 ### Changes / Additions
 - Added Marigold
   - Obtained through boss raid rewards.
@@ -16,8 +16,8 @@
 - Zombie Raids now have "Boss Chance"
   - Boss Chance represents the odds that the next wave will spawn a boss.
   - The chance increases exponentially every wave.
-  - Once a boss spawns, the chance is reset.
-  - Holding "Tab" will display the Boss Chance and other details about the raid.
+  - Once a boss spawns, the chance resets.
+  - Holding "Tab" during a raid will display the Boss Chance and other details.
 - Rewards for special waves are now packaged in a "Reward Letter".
 - Bonus Rewards are now given for each Boss Defeated rather than every 5 waves.
 - Added Baron Von Bats
@@ -25,12 +25,12 @@
 - Added Zombat
   - Heals itself when hurting other mobs.
 - Added Electric Slide
-  - A Roller Skating Zombie that spawns during the "Party Time".
+  - A Roller Skating Zombie that can spawn during "Disco of the Undead" special wave.
   - Has a variant "Electric Boogaloo", which can spawn as a Boss.
-- Added Giga variant for All Star, which can spawn as a Boss
-- Added General variant for Robo-Zombie, which can spawn as a Boss
-- Added explorer variant for Digger Zombie
-- Added Mummy variant for Imp
+- Added "Giga" variant for All Star, which can spawn as a Boss
+- Added "General" variant for Robo-Zombie, which can spawn as a Boss
+- Added "Explorer" variant for Digger Zombie
+- Added "Mummy" and "Disco Ball" variant for Imp
 - The Graveyard Biome now properly generates
 - Added a Mausoleum Structure to the Graveyard Biome
   - The Mausoleum will always generate with a Brainz Flag as loot.

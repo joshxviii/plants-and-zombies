@@ -86,7 +86,7 @@ object ZombieSpawnEggs {
 
     fun brownCoat() = loadoutEggs(PazEntities.BROWN_COAT, PazItems.BROWN_COAT_SPAWN_EGG, BROWN_COAT_LOADOUTS) +
         variantEggs(PazEntities.BROWN_COAT, PazItems.BROWN_COAT_SPAWN_EGG, BrownCoatVariant.entries)
-    fun imp() = variantEggs(PazEntities.IMP, PazItems.IMP_SPAWN_EGG, ImpVariant.entries) { if (it == ImpVariant.PIRATE) nbt { putBoolean("hasBarrel", true) } }
+    fun imp() = variantEggs(PazEntities.IMP, PazItems.IMP_SPAWN_EGG, ImpVariant.entries) { if (it.explodable()) nbt { putBoolean("primed", true) } }
     fun diggerZombie() = variantEggs(PazEntities.DIGGER_ZOMBIE, PazItems.DIGGER_ZOMBIE_SPAWN_EGG, DiggerVariant.entries)
     fun gargantuar() = variantEggs(PazEntities.GARGANTUAR, PazItems.GARGANTUAR_SPAWN_EGG, GargantuarVariant.entries)
     fun superBrainz() = variantEggs(PazEntities.SUPER_BRAINZ, PazItems.SUPER_BRAINZ_SPAWN_EGG, SuperBrainzVariant.entries)
