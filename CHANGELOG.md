@@ -59,7 +59,7 @@
 - Newspapers now work like Shields and only block damage from the front.
 - While a plant is equipped with the Plant Pot Helmet, The Gardening Glove can be used to place the plant back on the ground.
 - Dye Blaster, Gardening Glove, Plant Pot Helmet, and Ducky Tube can now be enchanted.
-- Browncoats can transform into Super Brainz when struck by lightning.
+- Some naturally spawned Browncoats have a very small chance to be able to transform into Super Brainz when approached.
 - Added a new enchantment, "Lobbing".
   - This enchantment applies to the Gardening Glove and allows the player to toss the held plant.
 - Worn plants with the Plant Pot Helmet can be placed back down by shift-clicking.

@@ -104,6 +104,7 @@ object PazCreativeTabs {
     fun miscItems(output: CreativeModeTab.Output) {
         // items
         output.accept(PazItems.SUN)
+        output.accept(PazItems.BRAIN)
         output.accept(PazItems.SUN_BOTTLE)
         output.accept(PazItems.SUN_BATTERY)
         output.accept(PazItems.WATERING_CAN)

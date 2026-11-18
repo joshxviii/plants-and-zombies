@@ -1,6 +1,5 @@
 package joshxviii.plantz
 
-import joshxviii.plantz.item.component.BlockBreakChanceComponent
 import joshxviii.plantz.PazEntities.ALL_STAR
 import joshxviii.plantz.PazEntities.BACKUP_DANCER
 import joshxviii.plantz.PazEntities.BARON_VON_BATS
@@ -48,6 +47,8 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.DamageTypeTags
 import net.minecraft.tags.ItemTags
 import net.minecraft.world.damagesource.DamageType
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -56,12 +57,10 @@ import net.minecraft.world.item.*
 import net.minecraft.world.item.Item.BASE_ATTACK_DAMAGE_ID
 import net.minecraft.world.item.Item.BASE_ATTACK_SPEED_ID
 import net.minecraft.world.item.Items.GLASS_BOTTLE
-import net.minecraft.world.item.component.BlocksAttacks
+import net.minecraft.world.item.component.*
 import net.minecraft.world.item.component.BlocksAttacks.DamageReduction
 import net.minecraft.world.item.component.BlocksAttacks.ItemDamageFunction
-import net.minecraft.world.item.component.CookingFuel
-import net.minecraft.world.item.component.ItemAttributeModifiers
-import net.minecraft.world.item.component.UseCooldown
+import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect
 import net.minecraft.world.item.enchantment.Enchantable
 import net.minecraft.world.item.equipment.ArmorMaterials
 import net.minecraft.world.item.equipment.ArmorType
@@ -76,7 +75,6 @@ import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import java.util.*
 import java.util.function.Function
-import kotlin.jvm.java
 
 object PazItems {
     @JvmField
@@ -84,6 +82,22 @@ object PazItems {
         "sun", ::SunItem,
         properties = Item.Properties()
             .cookingFuel(ContextIntProviders.COOKING_TIME_BAMBOO)
+    )
+    @JvmField
+    val BRAIN: Item = registerItem(
+        "brain",
+        properties = Item.Properties()
+            .food(FoodProperties.Builder().nutrition(5).saturationModifier(0.1F).build(), Consumables.defaultFood()
+                .sound(SoundEvents.GENERIC_EAT)// TODO custom sounds
+                .onConsume(
+                    ApplyStatusEffectsConsumeEffect(
+                        listOf(
+                            MobEffectInstance(MobEffects.HUNGER, 180, 3),
+                            MobEffectInstance(MobEffects.NAUSEA, 100, 0)
+                        )
+                    )
+                )
+                .build())
     )
     @JvmField
     val SUN_BOTTLE: Item = registerItem(
@@ -160,7 +174,7 @@ object PazItems {
     @JvmField
     val TACO: Item = registerItem(
         "taco",
-        properties = Item.Properties().food(FoodProperties.Builder().nutrition(9).saturationModifier(1.1f).build())
+        properties = Item.Properties().food(FoodProperties.Builder().nutrition(10).saturationModifier(1.1f).build())
     )
     @JvmField
     val DOOR_SHIELD: Item = registerItem(
