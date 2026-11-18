@@ -1,5 +1,6 @@
 package joshxviii.plantz.entity.blueprint_machines
 
+import joshxviii.plantz.PazConfig
 import joshxviii.plantz.PazDamageTypes
 import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
@@ -210,7 +211,8 @@ class LawnMower(type: EntityType<out LawnMower>, level: Level) : LivingEntity(ty
         release()
         discard()
         if (drop && level.gameRules.get(GameRules.ENTITY_DROPS)) {
-            spawnAtLocation(level, PazItems.BRAINZ_ALLOY.defaultInstance)
+            val item = PazItems.BRAINZ_ALLOY.defaultInstance.copyWithCount(PazConfig.getAlloyCost(this.type))
+            spawnAtLocation(level, item)
         }
     }
 
