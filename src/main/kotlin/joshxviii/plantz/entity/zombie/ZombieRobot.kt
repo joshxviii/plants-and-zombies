@@ -2,6 +2,7 @@ package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazOwnableZombie
 import joshxviii.plantz.PazSounds
+import joshxviii.plantz.entity.plant.ExplosivePlant.Companion.scaledExplosion
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.hasSameRootOwner
 import joshxviii.plantz.item.BlueprintItem
@@ -110,6 +111,11 @@ abstract class ZombieRobot(type: EntityType<out ZombieRobot>, level: Level) : Pa
         super.tick()
         if (tickCount < 20) initAnimation.startIfStopped(tickCount)
         idleAnimation.startIfStopped(tickCount)
+    }
+
+    override fun tickDeath() {
+        super.tickDeath()
+        if (deathTime == 19) scaledExplosion(scale = 0.5f, playSound = true)
     }
 
     override fun getAmbientSound(): SoundEvent = PazSounds.ROBO_ZOMBIE_AMBIENT

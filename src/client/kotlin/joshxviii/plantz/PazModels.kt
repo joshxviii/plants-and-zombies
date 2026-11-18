@@ -7,6 +7,7 @@ import joshxviii.plantz.model.GnomeArmorModel
 import joshxviii.plantz.model.GnomeModel
 import joshxviii.plantz.model.blueprint_machines.ElectroTurretModel
 import joshxviii.plantz.model.blueprint_machines.LawnMowerModel
+import net.minecraft.client.renderer.entity.NoopRenderer
 import joshxviii.plantz.model.blueprint_machines.ZombieDroneModel
 import joshxviii.plantz.model.blueprint_machines.ZombieTurretModel
 import joshxviii.plantz.model.plants.*
@@ -267,6 +268,7 @@ object PazModels {
         EntityRenderers.register(PazEntities.ZOMBIE_TURRET) { BlueprintMachineRenderer(it) }
         EntityRenderers.register(PazEntities.ELECTRO_TURRET) { BlueprintMachineRenderer(it, ElectroTurretModel(it.bakeLayer(ElectroTurretModel.LAYER_LOCATION))) }
         EntityRenderers.register(PazEntities.ZOMBIE_DRONE) { BlueprintMachineRenderer(it, ZombieDroneModel(it.bakeLayer(ZombieDroneModel.LAYER_LOCATION))) }
+        EntityRenderers.register(PazEntities.LAWN_MOWER_HANDLE) { NoopRenderer(it) }
         EntityRenderers.register(PazEntities.LAWN_MOWER) { BlueprintMachineRenderer(it, LawnMowerModel(it.bakeLayer(LawnMowerModel.LAYER_LOCATION))) }
 
         EntityRenderers.register(PazEntities.GNOME) { GnomeRenderer(it) }

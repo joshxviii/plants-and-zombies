@@ -124,6 +124,32 @@
     "sounds": [{ "name": "plantz:entity/plant/scaredyshroom/hide", "volume": 1.0, "pitch": 1.2 }], "subtitle": "plantz.subtitles.entity.scaredyshroom.hide"
   },
 
+  "entity.bonkchoy.windup": {
+    "sounds": [
+      { "name": "plantz:entity/plant/bonkchoy/hardpunch_windup_01", "volume": 0.3, "pitch": 1.2 },
+      { "name": "plantz:entity/plant/bonkchoy/hardpunch_windup_02", "volume": 0.3, "pitch": 1.2 },
+      { "name": "plantz:entity/plant/bonkchoy/hardpunch_windup_03", "volume": 0.3, "pitch": 1.2 }
+    ], "subtitle": "plantz.subtitles.entity.bonkchoy.windup"
+  },
+
+  "entity.bonkchoy.hardpunch": {
+    "sounds": [
+      { "name": "plantz:entity/plant/bonkchoy/hardpunch_impact_01", "volume": 1.5, "pitch": 1.0 },
+      { "name": "plantz:entity/plant/bonkchoy/hardpunch_impact_02", "volume": 1.5, "pitch": 1.0 },
+      { "name": "plantz:entity/plant/bonkchoy/hardpunch_impact_03", "volume": 1.5, "pitch": 1.0 }
+    ], "subtitle": "plantz.subtitles.entity.bonkchoy.hardpunch"
+  },
+
+  "entity.bonkchoy.lightpunch": {
+    "sounds": [
+      { "name": "plantz:entity/plant/bonkchoy/lightpunch_impact_01", "volume": 1.0, "pitch": 1.0 },
+      { "name": "plantz:entity/plant/bonkchoy/lightpunch_impact_02", "volume": 1.0, "pitch": 1.0 },
+      { "name": "plantz:entity/plant/bonkchoy/lightpunch_impact_03", "volume": 1.0, "pitch": 1.0 },
+      { "name": "plantz:entity/plant/bonkchoy/lightpunch_impact_04", "volume": 1.0, "pitch": 1.0 },
+      { "name": "plantz:entity/plant/bonkchoy/lightpunch_impact_05", "volume": 1.0, "pitch": 1.0 }
+    ], "subtitle": "plantz.subtitles.entity.bonkchoy.lightpunch"
+  },
+
   "entity.potatomine.explode": {
     "sounds": [
       { "name": "plantz:entity/plant/potatomine/explode1", "volume": 1.0, "pitch": 1.2 },

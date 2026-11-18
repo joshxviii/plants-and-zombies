@@ -49,6 +49,7 @@ import java.time.LocalDate
 import java.time.Month
 import java.time.MonthDay
 import java.time.temporal.ChronoUnit
+import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.pow
@@ -253,6 +254,8 @@ fun Player.removeItemFromInventory(itemType: Item?, amount: Int = 1): Int {
 }
 
 fun clampYRot(yaw: Float, flip: Boolean = false): Float = Direction.fromYRot(yaw.toDouble()).apply { if(flip) opposite }.toYRot()
+
+fun String.capitalize() = replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
 
 fun Float.percentFormat(): String = "%.0f%%".format(this * 100)
 

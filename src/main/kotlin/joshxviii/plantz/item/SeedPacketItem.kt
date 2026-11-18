@@ -4,6 +4,7 @@ import joshxviii.plantz.*
 import joshxviii.plantz.block.entity.SunBatteryBlockEntity
 import joshxviii.plantz.entity.PlantPotMinecart
 import joshxviii.plantz.entity.plant.GraveBuster
+import joshxviii.plantz.entity.plant.MarigoldColor
 import joshxviii.plantz.entity.plant.Plant
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
@@ -49,8 +50,8 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
         val entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entityData.type())
         var entityName: Component = Component.translatable("entity.${entityId.namespace}.${entityId.path}")
         if (entityData.type() == PazEntities.MARIGOLD) {
-            val color = entityData.copyTagWithoutId().getString("color").getOrNull()
-            if (color != null && color != "none") entityName = Component.translatable("entity.plantz.marigold.color", Component.translatable("color.minecraft.$color"))
+            val color = MarigoldColor.fromName(entityData.copyTagWithoutId().getString("color").getOrNull())
+            if (color != MarigoldColor.NONE) entityName = Component.translatable("entity.plantz.marigold.color", color.name.lowercase().capitalize())
         }
         return Component.translatable("item.plantz.seed_packet.entity", entityName)
     }

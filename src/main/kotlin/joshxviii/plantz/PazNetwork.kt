@@ -5,6 +5,8 @@ import joshxviii.plantz.networking.SendMailRequestPayload
 import joshxviii.plantz.networking.SendMailRequestPayload.Companion.handleSendMailPacket
 import joshxviii.plantz.networking.SendMailResponsePayload
 import joshxviii.plantz.networking.OpenOptionsScreenPayload
+import joshxviii.plantz.networking.ReleaseLawnMowerPayload
+import joshxviii.plantz.networking.ReleaseLawnMowerPayload.Companion.handleReleaseLawnMowerPacket
 import joshxviii.plantz.networking.ServerConfigResponsePayload
 import joshxviii.plantz.networking.UpdateCollectionBoxPayload
 import joshxviii.plantz.networking.UpdateCollectionBoxPayload.Companion.handleUpdateCollectionBoxPacket
@@ -35,6 +37,7 @@ object PazNetwork {
         PayloadTypeRegistry.serverboundPlay().register(SendMailRequestPayload.ID, SendMailRequestPayload.STREAM_CODEC)
         PayloadTypeRegistry.serverboundPlay().register(UpdateCollectionBoxPayload.ID, UpdateCollectionBoxPayload.STREAM_CODEC)
         PayloadTypeRegistry.serverboundPlay().register(UpdateLetterPayload.ID, UpdateLetterPayload.STREAM_CODEC)
+        PayloadTypeRegistry.serverboundPlay().register(ReleaseLawnMowerPayload.ID, ReleaseLawnMowerPayload.STREAM_CODEC)
 
         PayloadTypeRegistry.clientboundPlay().register(SendMailRequestPayload.ID, SendMailRequestPayload.STREAM_CODEC)
         PayloadTypeRegistry.clientboundPlay().register(SendMailResponsePayload.ID, SendMailResponsePayload.STREAM_CODEC)
@@ -47,5 +50,6 @@ object PazNetwork {
         ServerPlayNetworking.registerGlobalReceiver(SendMailRequestPayload.ID, ::handleSendMailPacket)
         ServerPlayNetworking.registerGlobalReceiver(UpdateCollectionBoxPayload.ID, ::handleUpdateCollectionBoxPacket)
         ServerPlayNetworking.registerGlobalReceiver(UpdateLetterPayload.ID, ::handleUpdateLetterPacket)
+        ServerPlayNetworking.registerGlobalReceiver(ReleaseLawnMowerPayload.ID, ::handleReleaseLawnMowerPacket)
     }
 }

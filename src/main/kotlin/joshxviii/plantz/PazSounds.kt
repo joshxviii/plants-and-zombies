@@ -26,6 +26,9 @@ object PazSounds {
     @JvmField val CHOMPER_ATTACK = register("entity.chomper.attack")
     @JvmField val SCAREDYSHROOM_HIDE = register("entity.scaredyshroom.hide")
     @JvmField val SCAREDYSHROOM_PEEK = register("entity.scaredyshroom.peek")
+    @JvmField val BONKCHOY_WINDUP = register("entity.bonkchoy.windup")
+    @JvmField val BONKCHOY_HARD_PUNCH = register("entity.bonkchoy.hardpunch")
+    @JvmField val BONKCHOY_LIGHT_PUNCH = register("entity.bonkchoy.lightpunch")
 
     @JvmField val ZOMBIE_EATS = register("entity.zombie.eat")
 

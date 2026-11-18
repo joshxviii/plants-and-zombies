@@ -1,6 +1,7 @@
 package joshxviii.plantz.entity.plant
 
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.PazSounds
 import joshxviii.plantz.ai.goal.MeleeAttackActionGoal
 import joshxviii.plantz.applyImpulse
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -31,6 +32,9 @@ class BonkChoy(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
         usingEntity = this,
         actionDelay = 7,
         cooldownTime = 16,
+        actionSuccessEffect = {
+            playSound(PazSounds.BONKCHOY_LIGHT_PUNCH, 1.0f, 1.0f)
+        }
     )
 
     // uppercut
@@ -39,9 +43,11 @@ class BonkChoy(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
         actionDelay = 18,
         cooldownTime = 40,
         damageMultiplier = 2.0f,
+        actionStartEffect = {
+            playSound(PazSounds.BONKCHOY_WINDUP, 1.0f, 1.0f)
+        },
         actionSuccessEffect = {
-            //TODO custom sounds
-            playSound(SoundEvents.WIND_CHARGE_BURST.value(), 2.0f, 0.8f)
+            playSound(PazSounds.BONKCHOY_HARD_PUNCH, 1.2f, 1.0f)
         },
         afterHitEntityEffect = {
             val lookDirection = calculateViewVector(-45f, yHeadRot)
