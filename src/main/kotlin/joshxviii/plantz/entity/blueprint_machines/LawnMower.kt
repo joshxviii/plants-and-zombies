@@ -6,6 +6,7 @@ import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.clampYRot
+import joshxviii.plantz.entity.plant.ExplosivePlant.Companion.scaledExplosion
 import joshxviii.plantz.item.BlueprintItem
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleTypes
@@ -16,6 +17,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.Mth
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.HumanoidArm
@@ -203,7 +205,10 @@ class LawnMower(type: EntityType<out LawnMower>, level: Level) : LivingEntity(ty
         gameEvent(GameEvent.ENTITY_DAMAGE, source.entity)
 
         val creative = (source.entity as? Player)?.abilities?.instabuild == true
-        if (creative || damageTaken > MAX_HEALTH) destroy(level, drop = !creative)
+        if (creative || damageTaken > MAX_HEALTH) {
+            destroy(level, drop = !creative)
+            if (source.`is`(DamageTypes.DROWN)) scaledExplosion(scale = 0.5f, playSound = true)
+        }
         return true
     }
 
@@ -215,6 +220,8 @@ class LawnMower(type: EntityType<out LawnMower>, level: Level) : LivingEntity(ty
             spawnAtLocation(level, item)
         }
     }
+
+    override fun isSensitiveToWater(): Boolean = true
 
     override fun remove(reason: RemovalReason) {
         handle?.discard()

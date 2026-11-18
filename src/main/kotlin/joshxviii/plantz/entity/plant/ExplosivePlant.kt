@@ -17,6 +17,7 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
 import net.minecraft.util.Mth
 import net.minecraft.util.random.WeightedList
 import net.minecraft.world.InteractionHand
@@ -41,7 +42,8 @@ abstract class ExplosivePlant(type: EntityType<out ExplosivePlant>, level: Level
             waveColor: Int = 0xD0370D,
             blastColor: Int = 0xFFE88D,
             smokeColor: Int = 0xB87878,
-            scale: Float = if (this is LivingEntity) this.scale else 1.0f
+            scale: Float = if (this is LivingEntity) this.scale else 1.0f,
+            playSound: Boolean = false
         ) {
             val level = level() as? ServerLevel ?: return
             level.sendParticles(
@@ -57,8 +59,9 @@ abstract class ExplosivePlant(type: EntityType<out ExplosivePlant>, level: Level
                 x, y, z, 1, 0.0, 0.0, 0.0, 0.0
             )
             level.sendParticles(NukeSmokeParticleOptions(color = smokeColor, scale = 0.4f * scale),
-                x, y+1, z, 16, 0.0, 0.5, 0.0, 0.0
+                x, y+1, z, 6, 0.0, 0.5, 0.0, 0.0
             )
+            if (playSound) level.playSound(null, x, y, z, PazSounds.MISSILE_EXPLODE, SoundSource.BLOCKS, 0.5f, 2.0f)
         }
 
 
