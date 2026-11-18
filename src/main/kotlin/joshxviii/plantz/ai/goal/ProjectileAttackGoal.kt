@@ -94,7 +94,7 @@ class ProjectileAttackGoal(
 
         val targetPosNow = Vec3(
             target.x - projectile.x,
-            target.boundingBox.minY + (target.bbHeight * .5) - projectile.y,
+            target.boundingBox.minY + (target.bbHeight*0.5) - projectile.y,
             target.z - projectile.z
         )
         val distanceRatio = (targetPosNow.horizontalDistance() / attackRadius).coerceIn(0.0, 1.0)
@@ -130,7 +130,7 @@ class ProjectileAttackGoal(
     private fun calculateMovingTargetPosition(target: Entity, projectile: Entity, v: Double): Vec3 {
         val basePos = Vec3(
             target.x - projectile.x,
-            target.boundingBox.minY + (target.bbHeight * 0.5) - projectile.y,
+            target.boundingBox.minY + (target.bbHeight*0.5) - projectile.y,
             target.z - projectile.z
         )
 

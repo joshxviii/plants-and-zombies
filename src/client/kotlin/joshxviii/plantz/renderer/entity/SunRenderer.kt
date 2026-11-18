@@ -75,7 +75,7 @@ class SunRenderer(context: EntityRendererProvider.Context) :
         super.extractRenderState(entity, state, partialTicks)
         state.value = entity.value
         state.isExpiring = entity.isExpiring
-        state.centerY = entity.bbHeight / 2f
+        state.centerY = entity.bbHeight*0.5f
         state.phase = entity.id * 0.7f
     }
 
