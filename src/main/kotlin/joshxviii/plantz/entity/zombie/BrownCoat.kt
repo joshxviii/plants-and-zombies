@@ -1,6 +1,7 @@
 package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazDataSerializers.BROWN_COAT_VARIANT
+import joshxviii.plantz.PazEntities
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.entity.ZombieEquipment.equipZombieEquipment
 import joshxviii.plantz.raid.BossType
@@ -9,6 +10,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.StructureTags
 import net.minecraft.util.RandomSource
 import net.minecraft.world.DifficultyInstance
@@ -41,6 +43,18 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         val result = super.doHurtTarget(level, target)
         return result
+    }
+
+    override fun thunderHit(level: ServerLevel, lightningBolt: LightningBolt) {
+        super.thunderHit(level, lightningBolt)
+        if (random.nextFloat() < 0.75f) convertToSuperBrainz()
+    }
+
+    fun convertToSuperBrainz() {
+        convertTo(PazEntities.SUPER_BRAINZ, ConversionParams.single(this, true, true)) {
+            it.playSound(SoundEvents.ZOMBIE_VILLAGER_CONVERTED)// TODO custom sounds
+            it.heal(it.maxHealth)
+        }
     }
 
     override fun isBaby(): Boolean = isBabyZombie()
