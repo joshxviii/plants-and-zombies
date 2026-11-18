@@ -91,7 +91,7 @@ class BlueprintItem(properties: Properties) : Item(properties) {
                 )
                 return InteractionResult.FAIL
             }
-            val yaw = horizontalDir.opposite.toYRot()
+            val yaw = horizontalDir.toYRot()
             entity.yHeadRot = yaw
             entity.yBodyRot = yaw
             entity.yRot = yaw

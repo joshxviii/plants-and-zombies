@@ -1,11 +1,6 @@
 package joshxviii.plantz.entity.blueprint_machines
 
-import joshxviii.plantz.PazConfig
-import joshxviii.plantz.PazDamageTypes
-import joshxviii.plantz.PazEntities
-import joshxviii.plantz.PazItems
-import joshxviii.plantz.PazTags
-import joshxviii.plantz.clampYRot
+import joshxviii.plantz.*
 import joshxviii.plantz.entity.plant.ExplosivePlant.Companion.scaledExplosion
 import joshxviii.plantz.item.BlueprintItem
 import net.minecraft.core.BlockPos
@@ -18,10 +13,7 @@ import net.minecraft.util.Mth
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
-import net.minecraft.world.entity.AnimationState
-import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.HumanoidArm
-import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.*
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
@@ -65,6 +57,7 @@ class LawnMower(type: EntityType<out LawnMower>, level: Level) : LivingEntity(ty
 
     val isGrabbed: Boolean get() = grabberId != -1
     val isAutoMowing: Boolean get() = autoMowTime > 0
+    val isMowing: Boolean get() = isAutoMowing || isGrabbed
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
@@ -87,7 +80,7 @@ class LawnMower(type: EntityType<out LawnMower>, level: Level) : LivingEntity(ty
     override fun onSyncedDataUpdated(accessor: EntityDataAccessor<*>) {
         super.onSyncedDataUpdated(accessor)
         if (accessor == DATA_GRABBER_ID || accessor == AUTO_MOW_TIME_ID && level().isClientSide) {
-            if (isGrabbed || isAutoMowing) actionAnimation.startIfStopped(tickCount) else actionAnimation.stop()
+            if (isMowing) actionAnimation.startIfStopped(tickCount) else actionAnimation.stop()
         }
     }
 
@@ -108,6 +101,7 @@ class LawnMower(type: EntityType<out LawnMower>, level: Level) : LivingEntity(ty
         grabberId = -1
     }
 
+    override fun canBeSeenAsEnemy(): Boolean = false
     override fun maxUpStep(): Float {
         return max(super.maxUpStep(), 1.0f)
     }
@@ -135,8 +129,9 @@ class LawnMower(type: EntityType<out LawnMower>, level: Level) : LivingEntity(ty
         super.tick()
         autoMowWhenPowered()
 
-        if (isGrabbed || isAutoMowing) {
+        if (isMowing) {
             val level = level as ServerLevel
+            if (isInWater && tickCount % 5 == 0) this.hurtServer(level, this.damageSources().drown(), 1.5f)
             if (tickCount % 20 == 0) level.sendParticles(ParticleTypes.SMOKE, x, y+0.6, z, 1, 0.0, 0.0, 0.0, 0.0)
             player?.let { setRotation(Mth.rotLerp(0.3f, yRot, player.yRot)) }
             damageNearby(level, player)
@@ -147,6 +142,10 @@ class LawnMower(type: EntityType<out LawnMower>, level: Level) : LivingEntity(ty
             }
         }
         handle?.followMower(this)
+    }
+
+    override fun doPush(entity: Entity) {
+        if (!isMowing) super.doPush(entity)
     }
 
     private fun pullToward(player: Player) {
@@ -176,7 +175,7 @@ class LawnMower(type: EntityType<out LawnMower>, level: Level) : LivingEntity(ty
     }
 
     private fun damageNearby(level: ServerLevel, player: Player?) {
-        val source = damageSources().source(PazDamageTypes.MOWED, player)
+        val source = damageSources().source(PazDamageTypes.MOWED, player?:this)
         val targets = level.getEntitiesOfClass(LivingEntity::class.java, boundingBox.inflate(0.1)) {
             it !== this && it !== player && it !is LawnMower && it.isAlive && !it.isAlliedTo(player)
         }
@@ -220,8 +219,6 @@ class LawnMower(type: EntityType<out LawnMower>, level: Level) : LivingEntity(ty
             spawnAtLocation(level, item)
         }
     }
-
-    override fun isSensitiveToWater(): Boolean = true
 
     override fun remove(reason: RemovalReason) {
         handle?.discard()
