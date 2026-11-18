@@ -11,6 +11,7 @@ import joshxviii.plantz.entity.PlantPotMinecart
 import joshxviii.plantz.entity.Sun
 import joshxviii.plantz.entity.blueprint_machines.ElectroTurret
 import joshxviii.plantz.entity.blueprint_machines.LawnMower
+import joshxviii.plantz.entity.blueprint_machines.LawnMowerHandle
 import joshxviii.plantz.entity.blueprint_machines.ZombieDrone
 import joshxviii.plantz.entity.blueprint_machines.ZombieTurret
 import joshxviii.plantz.entity.gnome.Gnome
@@ -739,7 +740,12 @@ object PazEntities {
     )
     @JvmField val LAWN_MOWER: EntityType<LawnMower> = registerOther(
         "lawn_mower",
-        EntityType.Builder.of(::LawnMower, MobCategory.MISC).sized(0.8f, 0.6f),
+        EntityType.Builder.of(::LawnMower, MobCategory.MISC).sized(0.8f, 0.6f).updateInterval(1),
+    )
+
+    @JvmField val LAWN_MOWER_HANDLE: EntityType<LawnMowerHandle> = register(
+        "lawn_mower_handle",
+        EntityType.Builder.of(::LawnMowerHandle, MobCategory.MISC).sized(0.7f, 0.5f).noSave().noSummon().fireImmune().updateInterval(1)
     )
 
     @JvmField val GNOME: EntityType<Gnome> =  registerGnome(

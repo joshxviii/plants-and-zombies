@@ -1,6 +1,7 @@
 package joshxviii.plantz.renderer.entity
 
 import com.mojang.blaze3d.vertex.PoseStack
+import joshxviii.plantz.entity.blueprint_machines.LawnMower
 import joshxviii.plantz.entity.zombie.ZombieRobot
 import joshxviii.plantz.model.blueprint_machines.ZombieTurretModel
 import joshxviii.plantz.renderer.getEmissiveTextureLocation
@@ -46,6 +47,7 @@ class BlueprintMachineRenderer(
 
     override fun extractRenderState(entity: LivingEntity, state: BlueprintMachineRenderState, partialTicks: Float) {
         super.extractRenderState(entity, state, partialTicks)
+        if (entity is LawnMower) state.actionAnimationState.copyFrom(entity.actionAnimation)
         if (entity is ZombieRobot) {
             state.initAnimationState.copyFrom(entity.initAnimation)
             state.idleAnimationState.copyFrom(entity.idleAnimation)

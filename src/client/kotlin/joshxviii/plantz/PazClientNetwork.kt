@@ -7,15 +7,25 @@ import joshxviii.plantz.gui.PazOptionsScreen
 import joshxviii.plantz.networking.MailboxListResponsePayload
 import joshxviii.plantz.networking.OpenOptionsScreenPayload
 import joshxviii.plantz.networking.SendMailResponsePayload
+import joshxviii.plantz.entity.blueprint_machines.LawnMower
+import joshxviii.plantz.networking.ReleaseLawnMowerPayload
 import joshxviii.plantz.networking.ServerConfigResponsePayload
 import joshxviii.plantz.networking.ZombieRaidResponsePayload
 import joshxviii.plantz.raid.ZombieRaid
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
+import net.minecraft.client.Minecraft
 
 object PazClientNetwork {
     fun initialize() {
         ZombieRaidClientCache.clear()
+
+        LawnMower.clientGrabHook = { mower ->
+            val mc = Minecraft.getInstance()
+            if (mower.grabberId == mc.player?.id && !mc.options.keyUse.isDown) {
+                ClientPlayNetworking.send(ReleaseLawnMowerPayload(mower.id))
+            }
+        }
 
         ClientTickEvents.START_CLIENT_TICK.register { client ->
             RaidMusicManager.tick()
