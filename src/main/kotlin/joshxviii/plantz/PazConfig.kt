@@ -83,7 +83,7 @@ data class ServerConfig(
 )
 data class ClientConfig(
     var showDebugInfo: Boolean = false,
-    var splitItemTabs: Boolean = false,
+    var splitItemTabs: Boolean = true,
     var showRaidUi: Boolean = true,
     var showSunInfo: Boolean = false,
     var raidMusicChannel: String = "MUSIC"

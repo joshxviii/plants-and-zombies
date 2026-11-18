@@ -93,7 +93,7 @@ object PazItems {
                     ApplyStatusEffectsConsumeEffect(
                         listOf(
                             MobEffectInstance(MobEffects.HUNGER, 180, 3),
-                            MobEffectInstance(MobEffects.NAUSEA, 100, 0)
+                            MobEffectInstance(MobEffects.NAUSEA, 200, 0)
                         )
                     )
                 )

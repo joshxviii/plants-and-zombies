@@ -26,7 +26,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "plantz:brainz_alloy",
+          "name": "plantz:brain",
           "weight": 18,
           "modifier": [
             {

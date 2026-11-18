@@ -13,6 +13,9 @@
   - Marigold will drop treasure instead of seed packets from zen gardening.
 - Added Squash
   - Can be found in Dappled Forests and Savannas
+- Added Brains
+  - Used to craft Brainz Alloy.
+  - Gravestones, Raid Rewards, and some Zombies will now drop Brains instead of Brainz Alloy. 
 - Zombie Raids now have "Boss Chance"
   - Boss Chance represents the odds that the next wave will spawn a boss.
   - The chance increases exponentially every wave.

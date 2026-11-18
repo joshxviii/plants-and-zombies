@@ -544,6 +544,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
 
     override fun wantsToPickUp(level: ServerLevel, itemStack: ItemStack): Boolean {
         if (itemStack.`is`(PazBlocks.PLANTZ_FLAG_BLOCK.asItem())) return false
+        if (itemStack.`is`(PazItems.BRAIN)) return true
         return super.wantsToPickUp(level, itemStack)
     }
 
