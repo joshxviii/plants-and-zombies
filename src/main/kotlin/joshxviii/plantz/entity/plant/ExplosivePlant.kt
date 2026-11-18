@@ -39,8 +39,8 @@ abstract class ExplosivePlant(type: EntityType<out ExplosivePlant>, level: Level
     companion object {
 
         fun Entity.scaledExplosion(
-            waveColor: Int = 0xD0370D,
-            blastColor: Int = 0xFFE88D,
+            waveColor: Int = 0xBD110B,
+            blastColor: Int = 0xF88704,
             smokeColor: Int = 0xB87878,
             scale: Float = if (this is LivingEntity) this.scale else 1.0f,
             playSound: Boolean = false,

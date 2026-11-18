@@ -15,6 +15,7 @@ import net.minecraft.tags.StructureTags
 import net.minecraft.util.RandomSource
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.entity.*
+import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
@@ -29,6 +30,25 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
 
     init {
         xpReward = 3
+    }
+
+    var transformationTrap: Boolean = false
+        set(value) {
+            if (value == field) return
+            field = value
+            if (value) goalSelector.addGoal(1, transformationTrapGoal)
+            else goalSelector.removeGoal(transformationTrapGoal)
+        }
+    private val transformationTrapGoal = TransformationTrapGoal()
+
+    private inner class TransformationTrapGoal : Goal() {
+        override fun canUse(): Boolean = level().hasNearbyAlivePlayer(x, y, z, 10.0)
+        override fun tick() {
+            val level = level() as? ServerLevel ?: return
+            transformationTrap = false
+            EntityTypes.LIGHTNING_BOLT.create(level, EntitySpawnReason.TRIGGERED)?.let { bolt -> bolt.snapTo(x, y, z); bolt.setVisualOnly(true); level.addFreshEntity(bolt) }
+            convertToSuperBrainz()
+        }
     }
 
     var variant: BrownCoatVariant
@@ -65,11 +85,13 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
         output.store("variant", BrownCoatVariant.CODEC, variant)
+        output.putBoolean("transformation_trap", transformationTrap)
     }
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
         variant = input.read<BrownCoatVariant>("variant", BrownCoatVariant.CODEC).getOrDefault(BrownCoatVariant.getDefault())
+        transformationTrap = input.getBooleanOr("transformation_trap", false)
     }
 
     override fun canFreeze(): Boolean {
@@ -109,6 +131,9 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
+        if (spawnReason == EntitySpawnReason.NATURAL && level.random.nextFloat() < 0.001f + difficulty.specialMultiplier * 0.01f) {
+            transformationTrap = true// super brainz trap chance
+        }
         val random = level.random
         setCanBreakDoors(true)
         val structureManager = (level as ServerLevel).structureManager()
