@@ -123,8 +123,6 @@
   "event.plantz.zombie_raid.announce_wave": "特殊ウェーブ：%s！",
   "event.plantz.zombie_raid.boss.spawn": "ボスが現れた：%s",
   "event.plantz.zombie_raid.boss.defeat": "ボスが倒された！",
-  "event.plantz.zombie_raid.wave.default_easy": "デフォルト",
-  "event.plantz.zombie_raid.wave.default_hard": "デフォルト（ハード）",
   "event.plantz.zombie_raid.wave.bucket_brigade": "バケツ部隊",
   "event.plantz.zombie_raid.wave.halftime_showdown": "ハーフタイム決戦",
   "event.plantz.zombie_raid.wave.winter_wonderland": "ウィンターワンダーランド",

@@ -123,8 +123,6 @@
   "event.plantz.zombie_raid.announce_wave": "特殊波次：%s！",
   "event.plantz.zombie_raid.boss.spawn": "Boss已出现：%s",
   "event.plantz.zombie_raid.boss.defeat": "Boss被击败了！",
-  "event.plantz.zombie_raid.wave.default_easy": "默认",
-  "event.plantz.zombie_raid.wave.default_hard": "默认（困难）",
   "event.plantz.zombie_raid.wave.bucket_brigade": "铁桶小队",
   "event.plantz.zombie_raid.wave.halftime_showdown": "中场对决",
   "event.plantz.zombie_raid.wave.winter_wonderland": "寒冬奇境",
