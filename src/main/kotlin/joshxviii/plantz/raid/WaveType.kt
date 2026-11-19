@@ -186,7 +186,7 @@ enum class WaveType(
                     }),
                 WaveSpawnEntry(
                     PazEntities.IMP,
-                    scaled(3f + wave * 0.6f, omen, credits, min = 2), {
+                    scaled(3f + wave * 0.75f, omen, credits, min = 3), {
                         configureDiscoParty(it)
                     }),
                 WaveSpawnEntry(

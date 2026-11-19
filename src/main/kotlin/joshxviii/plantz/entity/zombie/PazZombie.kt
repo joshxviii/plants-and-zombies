@@ -21,6 +21,7 @@ import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.tags.EntityTypeTags
 import net.minecraft.tags.FluidTags
 import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
@@ -169,7 +170,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         }
 
         fun brainDropChance(zombie: LivingEntity, level: ServerLevel, source: DamageSource) {
-            if (zombie.`is`(EntityTypes.ZOMBIE) && !zombie.`is`(PazTags.EntityTypes.CANNOT_DROP_BRAINS)) return
+            if (!zombie.`is`(EntityTypeTags.ZOMBIES) || zombie.`is`(PazTags.EntityTypes.CANNOT_DROP_BRAINS)) return
             if (level.getRandom().nextFloat() < BRAIN_DROP_CHANCE && source.entity?.`is`(PazTags.EntityTypes.DROP_ZOMBIE_LOOT_WHEN_KILLED_BY) == true
             ) zombie.spawnAtLocation(level, PazItems.BRAIN)
         }

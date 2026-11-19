@@ -14,6 +14,7 @@
 - Added Squash
   - Can be found in Dappled Forests and Savannas
 - Added Brains
+  - They really don't taste that great.
   - Used to craft Brainz Alloy.
   - Gravestones, Raid Rewards, and some Zombies will now drop Brains instead of Brainz Alloy. 
 - Zombie Raids now have "Boss Chance"
