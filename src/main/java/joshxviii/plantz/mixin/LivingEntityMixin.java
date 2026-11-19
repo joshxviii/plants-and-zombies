@@ -8,6 +8,7 @@ import joshxviii.plantz.*;
 import joshxviii.plantz.effect.PaintedMobEffect;
 import joshxviii.plantz.entity.plant.Plant;
 import joshxviii.plantz.entity.plant.Pumpkin;
+import joshxviii.plantz.entity.zombie.PazZombie;
 import joshxviii.plantz.item.DuckTubeItem;
 import joshxviii.plantz.raid.CompletedWave;
 import joshxviii.plantz.raid.GardenHeroRewards;
@@ -24,10 +25,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.pathfinder.PathType;
@@ -159,6 +157,11 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
     private boolean prevFloatTag = false;
     @Unique
     private float prevWaterMalus = 0f;
+
+    @Inject(method = "dropAllDeathLoot", at = @At("TAIL"))
+    private void plantz$dropBrainFromZombie(ServerLevel level, DamageSource source, CallbackInfo ci) {
+        PazZombie.Companion.brainDropChance((LivingEntity) (Object) this, level, source);
+    }
 
     @Inject(method = "onEquipItem", at = @At("TAIL"))
     private void plantz$checkFloatTag(EquipmentSlot slot, ItemStack oldStack, ItemStack stack, CallbackInfo ci) {

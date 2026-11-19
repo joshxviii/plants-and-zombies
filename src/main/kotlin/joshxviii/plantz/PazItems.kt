@@ -358,6 +358,8 @@ object PazItems {
     val PARTY_HAT: Item = registerItem(
         "party_hat",
         properties = Item.Properties()
+            .durability(85)
+            .enchantable(1)
             .component(
                 DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
                     .setEquipSound(SoundEvents.ARMOR_EQUIP_LEATHER)

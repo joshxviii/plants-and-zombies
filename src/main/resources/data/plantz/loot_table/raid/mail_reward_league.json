@@ -2,15 +2,50 @@
   "type": "minecraft:generic",
   "pools": [
     {
-      "rolls": {
-        "type": "minecraft:uniform",
-        "min": 1,
-        "max": 2
-      },
+      "rolls": 1,
       "entries": [
-
+        {
+          "type": "minecraft:item",
+          "name": "plantz:brain",
+          "weight": 60,
+          "modifier": [
+            { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 20, "max": 30 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:brainz_alloy",
+          "weight": 15,
+          "modifier": [
+            { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 4, "max": 10 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond",
+          "weight": 10,
+          "modifier": [
+            { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 4, "max": 15 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:seed_packet",
+          "weight": 8,
+          "modifier": [
+            { "type": "minecraft:set_components", "components": { "minecraft:entity_data": { "id": "plantz:electric_peashooter" } } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:seed_packet",
+          "weight": 7,
+          "modifier": [
+            { "type": "minecraft:set_components", "components": { "minecraft:entity_data": { "id": "plantz:lightning_reed" } } }
+          ]
+        }
       ]
     }
   ],
-  "random_sequence": "plantz:raid/default_mail_rewards"
+  "random_sequence": "plantz:raid/mail_reward_league"
 }

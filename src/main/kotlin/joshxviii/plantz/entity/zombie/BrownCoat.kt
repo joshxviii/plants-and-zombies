@@ -2,6 +2,8 @@ package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.PazDataSerializers.BROWN_COAT_VARIANT
 import joshxviii.plantz.PazEntities
+import joshxviii.plantz.PazServerParticles
+import joshxviii.plantz.PazSounds
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.entity.ZombieEquipment.equipZombieEquipment
 import joshxviii.plantz.raid.BossType
@@ -21,6 +23,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
+import org.apache.logging.log4j.core.jmx.Server
 import kotlin.jvm.optionals.getOrDefault
 
 class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type, level) {
@@ -60,6 +63,11 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
         entityData.define(DATA_VARIANT_ID, BrownCoatVariant.getDefault())
     }
 
+    override fun tick() {
+        super.tick()
+        if (transformationTrap && tickCount % 6 == 0) (level() as? ServerLevel)?.sendParticles(PazServerParticles.ELECTRIFIED, true, true, x, y+bbHeight*0.5, z, 1, 0.25, bbHeight*0.15, 0.25, 0.0)
+    }
+
     override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         val result = super.doHurtTarget(level, target)
         return result
@@ -71,9 +79,12 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
     }
 
     fun convertToSuperBrainz() {
+        dropAllLeashConnections(null)
         convertTo(PazEntities.SUPER_BRAINZ, ConversionParams.single(this, true, true)) {
             it.playSound(SoundEvents.ZOMBIE_VILLAGER_CONVERTED)// TODO custom sounds
+            it.playSound(PazSounds.SUPER_BRAINZ_HURT, 3f, 0.9f)
             it.heal(it.maxHealth)
+            it.isFlying = isFlying
         }
     }
 
@@ -131,9 +142,6 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
         val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
-        if (spawnReason == EntitySpawnReason.NATURAL && level.random.nextFloat() < 0.001f + difficulty.specialMultiplier * 0.01f) {
-            transformationTrap = true// super brainz trap chance
-        }
         val random = level.random
         setCanBreakDoors(true)
         val structureManager = (level as ServerLevel).structureManager()
@@ -152,6 +160,10 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
                 isShipwreckSpawn,
                 random
             )
+        }
+
+        if (spawnReason == EntitySpawnReason.NATURAL && variant == BrownCoatVariant.BROWNCOAT && level.random.nextFloat() < 0.001f + difficulty.specialMultiplier * 0.01f) {
+            transformationTrap = true// super brainz trap chance
         }
 
         return data

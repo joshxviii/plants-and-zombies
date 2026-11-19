@@ -2,15 +2,39 @@
   "type": "minecraft:generic",
   "pools": [
     {
-      "rolls": {
-        "type": "minecraft:uniform",
-        "min": 1,
-        "max": 2
-      },
+      "rolls": 1,
       "entries": [
-
+        {
+          "type": "minecraft:item",
+          "name": "plantz:brain",
+          "weight": 65,
+          "modifier": [
+            { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 4, "max": 6 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:seed_packet",
+          "weight": 15,
+          "modifier": [
+            { "type": "minecraft:set_components", "components": { "minecraft:entity_data": { "id": "plantz:explode_o_nut" } } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:enchanted_book",
+          "weight": 15,
+          "modifier": [
+            { "type": "minecraft:set_enchantments", "enchantments": { "minecraft:protection": { "type": "minecraft:uniform", "min": 1, "max": 3 } } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:football_helmet",
+          "weight": 5
+        }
       ]
     }
   ],
-  "random_sequence": "plantz:raid/default_mail_rewards"
+  "random_sequence": "plantz:raid/mail_reward_halftime"
 }
