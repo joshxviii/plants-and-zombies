@@ -50,7 +50,7 @@
 - Added Letter
   - Crafted with 3 x Newspaper and 3 x Paper.
   - Used to write fun letters to send to your friends.
-  - Rewards for special waves are now packaged in a "Reward Letter".
+  - Rewards for special waves are now packaged in "Reward Letters".
 - Added Almanac **(Creative only for now)**
   - Used to keep track of and collect plants.
 - Added Lawn Mower **(Creative only for now)**

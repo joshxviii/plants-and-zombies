@@ -36,8 +36,8 @@
             "type": "minecraft:set_ominous_bottle_amplifier",
             "amplifier": {
               "type": "minecraft:uniform",
-              "min": 1,
-              "max": 2
+              "min": 3,
+              "max": 5
             }
           }
         }
@@ -125,14 +125,27 @@
         },
         {
           "type": "minecraft:item",
+          "name": "plantz:brain",
+          "weight": 4,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 2,
+              "max": 5
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
           "name": "plantz:brainz_alloy",
           "weight": 2,
           "modifier": {
             "type": "minecraft:set_count",
             "count": {
               "type": "minecraft:uniform",
-              "min": 5,
-              "max": 10
+              "min": 2,
+              "max": 9
             }
           }
         }
