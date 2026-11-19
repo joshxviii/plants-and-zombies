@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "brainz_alloy",
+  "ingredients": [
+    "plantz:brain",
+    "minecraft:gold_ingot",
+    "minecraft:copper_ingot",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "count": 1,
+    "id": "plantz:brainz_alloy"
+  }
+}

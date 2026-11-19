@@ -1,0 +1,47 @@
+{
+  "type": "minecraft:generic",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "plantz:brain",
+          "weight": 60,
+          "modifier": [
+            { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 7, "max": 14 } }
+          ]
+        },
+        {
+          "type": "minecraft:loot_table",
+          "value": "plantz:balloons",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:cake",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:seed_packet",
+          "weight": 10,
+          "modifier": [
+            { "type": "minecraft:set_components", "components": { "minecraft:entity_data": { "id": "plantz:hypnoshroom" } } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:party_hat",
+          "weight": 7
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:roller_skates",
+          "weight": 3
+        }
+      ]
+    }
+  ],
+  "random_sequence": "plantz:raid/mail_reward_disco_party"
+}

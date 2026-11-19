@@ -8,12 +8,9 @@ import joshxviii.plantz.ai.control.PazMoveControl
 import joshxviii.plantz.ai.goal.FlyingPathfindingGoal
 import joshxviii.plantz.ai.pathfinding.PazFlyingPathNavigation
 import joshxviii.plantz.ai.pathfinding.PazGroundPathNavigation
-import joshxviii.plantz.raid.BossType
-import joshxviii.plantz.raid.PazZombieGroupData
+import joshxviii.plantz.mixin.LivingEntityMixin
+import joshxviii.plantz.raid.*
 import joshxviii.plantz.raid.ZombieRaid.Companion.RAID_DISTANCE
-import joshxviii.plantz.raid.ZombieRaider
-import joshxviii.plantz.raid.getZombieRaids
-import joshxviii.plantz.raid.setCountHealth
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
@@ -62,6 +59,7 @@ import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
+import org.spongepowered.asm.mixin.Unique
 import java.util.*
 import kotlin.jvm.optionals.getOrElse
 import kotlin.math.max
@@ -170,6 +168,12 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             Objects.requireNonNull<AttributeInstance>(zombie.getAttribute(Attributes.SPAWN_REINFORCEMENTS_CHANCE)).removeModifier(LEADER_MODIFIER_ID)
         }
 
+        fun brainDropChance(zombie: LivingEntity, level: ServerLevel, source: DamageSource) {
+            if (zombie.`is`(EntityTypes.ZOMBIE) && !zombie.`is`(PazTags.EntityTypes.CANNOT_DROP_BRAINS)) return
+            if (level.getRandom().nextFloat() < BRAIN_DROP_CHANCE && source.entity?.`is`(PazTags.EntityTypes.DROP_ZOMBIE_LOOT_WHEN_KILLED_BY) == true
+            ) zombie.spawnAtLocation(level, PazItems.BRAIN)
+        }
+
         // for group spawning and gravestone spawning
         val SPAWN_TABLE_WEIGHTS = mapOf(
             PazEntities.BROWN_COAT          to 40,
@@ -179,6 +183,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             PazEntities.ALL_STAR            to 1,
         )
 
+        private const val BRAIN_DROP_CHANCE = 0.02f
         const val ZOMBIE_SPEED = 0.23
         const val MAX_EQUIPPABLE_BALLOONS = 4
         val LEADER_MODIFIER_ID: Identifier = Identifier.withDefaultNamespace("leader_zombie_bonus")
@@ -544,6 +549,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
 
     override fun wantsToPickUp(level: ServerLevel, itemStack: ItemStack): Boolean {
         if (itemStack.`is`(PazBlocks.PLANTZ_FLAG_BLOCK.asItem())) return false
+        if (itemStack.`is`(PazItems.BRAIN)) return true
         return super.wantsToPickUp(level, itemStack)
     }
 

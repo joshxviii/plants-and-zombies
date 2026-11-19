@@ -16,7 +16,7 @@
       "translate": "advancements.plantz.solar_power.description"
     }
   },
-  "parent": "plantz:plant_pot_minecart",
+  "parent": "plantz:brainz_alloy",
   "criteria": {
     "has_sun_battery": {
       "trigger": "minecraft:inventory_changed",

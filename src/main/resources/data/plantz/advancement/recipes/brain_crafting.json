@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": ["plantz:brainz_alloy"]
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_brain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "plantz:brain"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_brain"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "plantz:brainz_flag",
+      "plantz:brainz_alloy"
+    ]
+  }
+}

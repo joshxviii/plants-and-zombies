@@ -100,7 +100,7 @@ open class PazZombieRenderer(
                 is BrownCoat -> add(entity.variant.suffix)
                 is Imp -> {
                     add(entity.variant.suffix)
-                    if (entity.hasBarrel) add("barrel")
+                    if (entity.primed) add("primed")
                 }
                 is DiggerZombie -> add(entity.variant.suffix)
                 is AllStar -> add(entity.variant.suffix)

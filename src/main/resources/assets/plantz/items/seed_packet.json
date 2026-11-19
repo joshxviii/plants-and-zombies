@@ -4,7 +4,7 @@
     "models": [
       {
         "type": "minecraft:model",
-        "model": "plantz:item/seed_packet"
+        "model": "plantz:item/seed_packet/tier_1"
       },
       {
         "type": "plantz:plant_icon"

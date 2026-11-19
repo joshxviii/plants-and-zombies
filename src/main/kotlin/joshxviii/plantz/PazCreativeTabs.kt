@@ -2,8 +2,11 @@ package joshxviii.plantz
 
 import joshxviii.plantz.item.BlueprintItem
 import joshxviii.plantz.item.DoorShieldItem.Companion.stackFor
+import joshxviii.plantz.item.RewardLetterItem
 import joshxviii.plantz.item.SeedPacketItem
 import joshxviii.plantz.item.ZombieSpawnEggs
+import joshxviii.plantz.raid.CompletedWave
+import joshxviii.plantz.raid.WaveType
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
@@ -104,6 +107,7 @@ object PazCreativeTabs {
     fun miscItems(output: CreativeModeTab.Output) {
         // items
         output.accept(PazItems.SUN)
+        output.accept(PazItems.BRAIN)
         output.accept(PazItems.SUN_BOTTLE)
         output.accept(PazItems.SUN_BATTERY)
         output.accept(PazItems.WATERING_CAN)
@@ -127,9 +131,18 @@ object PazCreativeTabs {
         output.accept(PazBlocks.BRAINZ_FLAG_BLOCK)
         output.accept(PazBlocks.PLANTZ_FLAG_BLOCK)
         output.accept(PazItems.TACO)
-        output.accept(PazItems.BRAINZ_ALLOY)
-        if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(PazItems.LETTER)
-        if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(PazItems.ALMANAC)
+        output.accept(PazItems.ALMANAC)
+        output.accept(PazItems.LETTER)
+        if (PazConfig.SPLIT_ITEM_TABS) {
+            output.accept(RewardLetterItem.create(CompletedWave(WaveType.BUCKET_BRIGADE)))
+            output.accept(RewardLetterItem.create(CompletedWave(WaveType.HALFTIME_SHOWDOWN)))
+            output.accept(RewardLetterItem.create(CompletedWave(WaveType.DISCO_PARTY)))
+            output.accept(RewardLetterItem.create(CompletedWave(WaveType.WINTER_WONDERLAND)))
+            output.accept(RewardLetterItem.create(CompletedWave(WaveType.PIRATE_INVASION)))
+            output.accept(RewardLetterItem.create(CompletedWave(WaveType.ROBO_ARMY)))
+            output.accept(RewardLetterItem.create(CompletedWave(WaveType.LEAGUE_OF_AWESOME)))
+            output.accept(RewardLetterItem.create(CompletedWave(WaveType.ZOMBOWEEN)))
+        }
 
         // music
         output.accept(PazItems.MUSIC_DISC_GRASSY_GROOVE)
@@ -142,6 +155,7 @@ object PazCreativeTabs {
         output.accept(PazBlocks.MAIL_COLLECTION_BOX)
 
         // blocks
+        output.accept(PazItems.BRAINZ_ALLOY)
         output.accept(PazBlocks.BRAINZ_ALLOY_BLOCK)
         output.accept(PazBlocks.BRAINZ_ALLOY_STAIRS)
         output.accept(PazBlocks.BRAINZ_ALLOY_SLAB)
@@ -167,10 +181,10 @@ object PazCreativeTabs {
 
         // blueprints
         if (PazConfig.SPLIT_ITEM_TABS) {
-            output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_TURRET))
-            output.accept(BlueprintItem.stackFor(PazEntities.ELECTRO_TURRET))
-            output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_DRONE))
-            if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(BlueprintItem.stackFor(PazEntities.LAWN_MOWER))
+            if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_TURRET))
+            if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(BlueprintItem.stackFor(PazEntities.ELECTRO_TURRET))
+            if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_DRONE))
+            output.accept(BlueprintItem.stackFor(PazEntities.LAWN_MOWER))
         }
     }
 

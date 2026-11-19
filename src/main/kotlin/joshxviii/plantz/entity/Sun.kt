@@ -110,7 +110,7 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
     }
 
     fun unstuckIfPossible(maxDistance: Double) {
-        val center = position().add(0.0, bbHeight / 2.0, 0.0)
+        val center = position().add(0.0, bbHeight*0.5, 0.0)
         val allowedCenters = Shapes.create(AABB.ofSize(center, maxDistance, maxDistance, maxDistance))
         level()
             .findFreePosition(
@@ -121,7 +121,7 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
                 bbHeight.toDouble(),
                 bbWidth.toDouble()
             )
-            .ifPresent(Consumer { pos: Vec3? -> setPos(pos!!.add(0.0, -bbHeight / 2.0, 0.0)) })
+            .ifPresent(Consumer { pos: Vec3? -> setPos(pos!!.add(0.0, -bbHeight*0.5, 0.0)) })
     }
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
@@ -153,7 +153,7 @@ class Sun(type: EntityType<out Sun>, level: Level) : Entity(type, level) {
 
         if (followingEntity == null && colliding) {
             val nextColliding = !level().noCollision(boundingBox.move(deltaMovement))
-            if (nextColliding) moveTowardsClosestSpace(x, (boundingBox.minY + boundingBox.maxY) / 2.0, z)
+            if (nextColliding) moveTowardsClosestSpace(x, y+(bbHeight*0.5), z)
         }
 
         val fallSpeed = deltaMovement.y

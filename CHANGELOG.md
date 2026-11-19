@@ -6,31 +6,33 @@
 - Added Citron
 
 # Changelog 1.5.2
-- Plants & Zombies has migrated to 26.3!
+### Plants & Zombies has migrated to 26.3!
 ### Changes / Additions
 - Added Marigold
   - Obtained through boss raid rewards.
   - Marigold will drop treasure instead of seed packets from zen gardening.
 - Added Squash
   - Can be found in Dappled Forests and Savannas
+- Added Brains
+  - Used to craft Brainz Alloy.
+  - Gravestones, Raid Rewards, and some Zombies will now drop Brains instead of Brainz Alloy. 
 - Zombie Raids now have "Boss Chance"
   - Boss Chance represents the odds that the next wave will spawn a boss.
   - The chance increases exponentially every wave.
-  - Once a boss spawns, the chance is reset.
-  - Holding "Tab" will display the Boss Chance and other details about the raid.
-- Rewards for special waves are now packaged in a "Reward Letter".
+  - Once a boss spawns, the chance resets.
+  - Holding "Tab" during a raid will display the Boss Chance and other details.
 - Bonus Rewards are now given for each Boss Defeated rather than every 5 waves.
 - Added Baron Von Bats
   - Baron Von Bats has a chance to spawn as a Boss.
 - Added Zombat
   - Heals itself when hurting other mobs.
 - Added Electric Slide
-  - A Roller Skating Zombie that spawns during the "Party Time".
+  - A Roller Skating Zombie that can spawn during "Disco of the Undead" special wave.
   - Has a variant "Electric Boogaloo", which can spawn as a Boss.
-- Added Giga variant for All Star, which can spawn as a Boss
-- Added General variant for Robo-Zombie, which can spawn as a Boss
-- Added explorer variant for Digger Zombie
-- Added Mummy variant for Imp
+- Added "Giga" variant for All Star, which can spawn as a Boss
+- Added "General" variant for Robo-Zombie, which can spawn as a Boss
+- Added "Explorer" variant for Digger Zombie
+- Added "Mummy" and "Disco Ball" variant for Imp
 - The Graveyard Biome now properly generates
 - Added a Mausoleum Structure to the Graveyard Biome
   - The Mausoleum will always generate with a Brainz Flag as loot.
@@ -44,12 +46,23 @@
   - Has a rare chance to drop from defeating Baron Von Bats.
 - Added Roller Skates
   - A drop from Electric Slide.
+  - While skating, the wearing can rail grind on Rails, Iron Bars, or Chains.
+- Added Letter
+  - Crafted with 3 x Newspaper and 3 x Paper.
+  - Used to write fun letters to send to your friends.
+  - Rewards for special waves are now packaged in "Reward Letters".
+- Added Almanac **(Creative only for now)**
+  - Used to keep track of and collect plants.
+- Added Lawn Mower **(Creative only for now)**
+  - Mows tall grass and mobs in its path.
+  - Can be activated with redstone to auto mow for 8 seconds.
 - During the final wave at the 1-minute mark, all remaining zombies will teleport closer to the flag.
 - Cones, Buckets, and Football helmets now only block damage from above.
   - They have also been given a buff to armor and armor toughness.
 - Newspapers now work like Shields and only block damage from the front.
 - While a plant is equipped with the Plant Pot Helmet, The Gardening Glove can be used to place the plant back on the ground.
 - Dye Blaster, Gardening Glove, Plant Pot Helmet, and Ducky Tube can now be enchanted.
+- Some naturally spawned Browncoats have a very small chance to be able to transform into Super Brainz when approached.
 - Added a new enchantment, "Lobbing".
   - This enchantment applies to the Gardening Glove and allows the player to toss the held plant.
 - Worn plants with the Plant Pot Helmet can be placed back down by shift-clicking.

@@ -32,6 +32,7 @@ public class ImpModel<S extends PazZombieRenderState> extends PazZombieModel<S> 
         PartDefinition root = partdefinition.addOrReplaceChild("root", CubeListBuilder.create(), PartPose.offset(0.0F, 17.0F, 0.0F));
 
         PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-3.5F, -7.0F, -3.5F, 7.0F, 7.0F, 7.0F, new CubeDeformation(0.0F))
+                .texOffs(28, 0).addBox(-3.5F, -7.0F, -3.5F, 7.0F, 7.0F, 7.0F, new CubeDeformation(0.5F))
                 .texOffs(0, 52).addBox(1.5F, -9.0F, -0.5F, 2.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
                 .texOffs(0, 52).mirror().addBox(-3.5F, -9.0F, -0.5F, 2.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(0.0F, -2.0F, 0.0F));
 

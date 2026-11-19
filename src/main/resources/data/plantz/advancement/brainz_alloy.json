@@ -1,0 +1,25 @@
+{
+  "display": {
+    "icon": {
+      "id": "plantz:brainz_alloy"
+    },
+    "title": {
+      "translate": "advancements.plantz.brainz_alloy"
+    },
+    "description": {
+      "translate": "advancements.plantz.brainz_alloy.description"
+    }
+  },
+  "parent": "plantz:root",
+  "criteria": {
+    "craft_alloy": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipes": [
+          "plantz:brainz_alloy"
+        ]
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

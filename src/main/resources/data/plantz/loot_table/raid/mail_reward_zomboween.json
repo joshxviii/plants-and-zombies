@@ -2,29 +2,39 @@
   "type": "minecraft:generic",
   "pools": [
     {
-      "rolls": {
-        "type": "minecraft:uniform",
-        "min": 1,
-        "max": 2
-      },
+      "rolls": 1,
       "entries": [
         {
-          "type": "minecraft:loot_table",
-          "value": "plantz:raid/default_hard/materials",
-          "weight": 15
+          "type": "minecraft:item",
+          "name": "plantz:brain",
+          "weight": 70,
+          "modifier": [
+            { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 16, "max": 28 } }
+          ]
         },
         {
-          "type": "minecraft:loot_table",
-          "value": "plantz:raid/zomboween/seeds",
+          "type": "minecraft:item",
+          "name": "plantz:seed_packet",
+          "weight": 12,
+          "modifier": [
+            { "type": "minecraft:set_components", "components": { "minecraft:entity_data": { "id": "plantz:pumpkin" } } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:seed_packet",
+          "weight": 12,
+          "modifier": [
+            { "type": "minecraft:set_components", "components": { "minecraft:entity_data": { "id": "plantz:grave_buster" } } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:baron_staff",
           "weight": 6
-        },
-        {
-          "type": "minecraft:loot_table",
-          "value": "plantz:raid/default_hard/treasure",
-          "weight": 12
         }
       ]
     }
   ],
-  "random_sequence": "plantz:raid/default_mail_rewards"
+  "random_sequence": "plantz:raid/mail_reward_zomboween"
 }

@@ -4,6 +4,7 @@
     "#plantz:plant_damage",
     "#plantz:is_electric",
     "plantz:zombie_energy",
-    "plantz:toxic"
+    "plantz:toxic",
+    "plantz:mowed"
   ]
 }

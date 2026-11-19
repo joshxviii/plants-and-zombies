@@ -1123,7 +1123,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         if (level is ServerLevel) {
             level.sendParticles(
                 particle,
-                x, y + height + bbHeight/2, z,
+                x, y + height + bbHeight*0.5, z,
                 amount.random(),
                 horizontalSpreadScale/4, verticalSpreadScale/2, horizontalSpreadScale/4,
                 speed

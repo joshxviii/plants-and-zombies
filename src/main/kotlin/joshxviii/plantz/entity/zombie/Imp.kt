@@ -2,9 +2,7 @@ package joshxviii.plantz.entity.zombie
 
 import joshxviii.plantz.*
 import joshxviii.plantz.PazDataSerializers.IMP_VARIANT
-import joshxviii.plantz.entity.Balloon
 import joshxviii.plantz.entity.plant.ExplosivePlant.Companion.scaledExplosion
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup.level
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -37,16 +35,19 @@ class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie
         val BARREL_DAMAGE_CALCULATOR: ExplosionDamageCalculator = SimpleExplosionDamageCalculator(false, true, Optional.of(1.75f), Optional.ofNullable(null))
 
         val DATA_VARIANT_ID: EntityDataAccessor<ImpVariant> = SynchedEntityData.defineId(Imp::class.java, IMP_VARIANT)
-        val BARREL: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Imp::class.java, EntityDataSerializers.BOOLEAN)
+        val PRIMED: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Imp::class.java, EntityDataSerializers.BOOLEAN)
     }
 
     var variant: ImpVariant
         get() = this.entityData.get(DATA_VARIANT_ID)
         set(value) = this.entityData.set(DATA_VARIANT_ID, value)
 
-    var hasBarrel: Boolean
-        get() = this.entityData.get(BARREL) && variant == ImpVariant.PIRATE
-        set(value) = this.entityData.set(BARREL, value)
+    var primed: Boolean
+        get() = this.entityData.get(PRIMED)
+        set(value) = this.entityData.set(PRIMED, value)
+
+    private val canExplode: Boolean
+        get() = variant.explodable() && primed
 
     init {
         xpReward = 3
@@ -54,20 +55,20 @@ class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
-        entityData.define(BARREL, true)
+        entityData.define(PRIMED, true)
         entityData.define(DATA_VARIANT_ID, ImpVariant.getDefault())
     }
 
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
         output.store("variant", ImpVariant.CODEC, variant)
-        output.putBoolean("hasBarrel", hasBarrel)
+        output.putBoolean("primed", primed)
     }
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
         variant = input.read<ImpVariant>("variant", ImpVariant.CODEC).getOrDefault(ImpVariant.getDefault())
-        hasBarrel = input.getBooleanOr("hasBarrel", true)
+        primed = input.getBooleanOr("primed", true)
     }
 
     override fun getAmbientSound(): SoundEvent {
@@ -85,7 +86,7 @@ class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie
 
     override fun tick() {
         super.tick()
-        if (hasBarrel) {
+        if (canExplode) {
             target?.let {
                 if (distanceToSqr(it) < 1.0) {
                     explode()
@@ -109,9 +110,9 @@ class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie
             WeightedList.of(),
             SoundEvents.GENERIC_EXPLODE
         )
-
+        if (variant == ImpVariant.DISCO_BALL) level.sendParticles(PazServerParticles.CONFETTI, x, y+eyeHeight, z, 25, 0.2, 0.2, 0.2, 0.15)
         scaledExplosion()
-        hasBarrel = false
+        primed = false
     }
 
     override fun canPickUpLoot(): Boolean = false
@@ -121,7 +122,7 @@ class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie
     }
 
     override fun tickDeath() {
-        if (lastDamageSource?.directEntity != null && deathTime == 0 && hasBarrel) explode()
+        if (lastDamageSource?.directEntity != null && deathTime == 0 && canExplode) explode()
         else super.tickDeath()
     }
 

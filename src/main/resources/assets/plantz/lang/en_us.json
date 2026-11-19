@@ -21,6 +21,8 @@
   "advancements.plantz.plant_pot_minecart.description": "Place a plant in a Minecart with Plant Pot",
   "advancements.plantz.wallnut_bowling": "Strike!",
   "advancements.plantz.wallnut_bowling.description": "Hit 10 mobs with a rolling Wallnut",
+  "advancements.plantz.brainz_alloy": "The Brainz Age",
+  "advancements.plantz.brainz_alloy.description": "Craft Brainz Alloy",
   "advancements.plantz.solar_power": "Solar Powered",
   "advancements.plantz.solar_power.description": "Fully Charged a Solar Battery",
   "advancements.plantz.time_machine": "A Blast of the Past",
@@ -181,6 +183,7 @@
   "item.plantz.zombie_banner": "Brainz Banner",
 
   "item.plantz.sun": "Sun",
+  "item.plantz.brain": "Brain",
   "item.plantz.sun_bottle": "Bottle of Sun",
   "item.plantz.sun_battery": "Solar Battery",
   "item.plantz.time_machine": "Time Machine",
@@ -285,7 +288,7 @@
   "item.minecraft.splash_potion.effect.electrified": "Splash Potion of Electricity",
   "item.minecraft.lingering_potion.effect.electrified": "Lingering Potion of Electricity",
 
-  "item.plantz.browncoat_spawn_egg": "Brown Coat Spawn Egg",
+  "item.plantz.browncoat_spawn_egg": "Browncoat Spawn Egg",
   "item.plantz.newspaper_zombie_spawn_egg": "Newspaper Zombie Spawn Egg",
   "item.plantz.digger_zombie_spawn_egg": "Digger Spawn Egg",
   "item.plantz.engineer_zombie_spawn_egg": "Engineer Spawn Egg",
@@ -407,6 +410,7 @@
   "entity.plantz.imp.variant.yeti": "Yeti Imp",
   "entity.plantz.imp.variant.pirate": "Pirate Imp",
   "entity.plantz.imp.variant.mummy": "Mummy Imp",
+  "entity.plantz.imp.variant.disco_ball": "Disco Ball Imp",
   "entity.plantz.engineer_zombie": "Engineer Zombie",
   "entity.plantz.zombie_yeti": "Zombie Yeti",
   "entity.plantz.disco_zombie": "Disco Zombie",

@@ -57,7 +57,7 @@ class RewardLetterItem(properties: Properties) : Item(properties) {
     }
 
     companion object {
-        fun create(reward: CompletedWave, index: Int): ItemStack {
+        fun create(reward: CompletedWave, index: Int = 0): ItemStack {
             val lootTables = listOf(reward.type.lootTableFn(index).identifier())
             val stack = ItemStack(PazItems.REWARD_LETTER)
             stack.set(PazComponents.REWARD_LETTER_DATA, RewardLetterDataComponent(reward.type, lootTables))

@@ -2,29 +2,52 @@
   "type": "minecraft:generic",
   "pools": [
     {
-      "rolls": {
-        "type": "minecraft:uniform",
-        "min": 1,
-        "max": 2
-      },
+      "rolls": 1,
       "entries": [
         {
-          "type": "minecraft:loot_table",
-          "value": "plantz:raid/army/materials",
-          "weight": 20
+          "type": "minecraft:item",
+          "name": "plantz:brain",
+          "weight": 60,
+          "modifier": [
+            { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 24, "max": 28 } }
+          ]
         },
         {
-          "type": "minecraft:loot_table",
-          "value": "plantz:raid/default_hard/seeds",
-          "weight": 4
+          "type": "minecraft:item",
+          "name": "plantz:brainz_alloy",
+          "weight": 15,
+          "modifier": [
+            { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 8, "max": 12 } }
+          ]
         },
         {
-          "type": "minecraft:loot_table",
-          "value": "plantz:raid/army/treasure",
-          "weight": 10
+          "type": "minecraft:item",
+          "name": "plantz:seed_packet",
+          "weight": 10,
+          "modifier": [
+            { "type": "minecraft:set_components", "components": { "minecraft:entity_data": { "id": "plantz:fire_peashooter" } } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:enchanted_book",
+          "weight": 7,
+          "modifier": [
+            { "type": "minecraft:set_enchantments", "enchantments": { "minecraft:smite": { "type": "minecraft:uniform", "min": 2, "max": 5 } } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:sun_battery",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "plantz:dye_blaster",
+          "weight": 3
         }
       ]
     }
   ],
-  "random_sequence": "plantz:raid/default_mail_rewards"
+  "random_sequence": "plantz:raid/mail_reward_army"
 }

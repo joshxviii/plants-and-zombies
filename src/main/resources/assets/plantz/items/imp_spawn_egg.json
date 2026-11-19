@@ -19,6 +19,13 @@
         }
       },
       {
+        "when": "disco_ball",
+        "model": {
+          "type": "minecraft:model",
+          "model": "plantz:item/spawn_egg/imp/disco_ball"
+        }
+      },
+      {
         "when": "pirate",
         "model": {
           "type": "minecraft:model",
