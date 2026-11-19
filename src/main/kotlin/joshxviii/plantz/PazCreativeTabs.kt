@@ -131,7 +131,6 @@ object PazCreativeTabs {
         output.accept(PazBlocks.BRAINZ_FLAG_BLOCK)
         output.accept(PazBlocks.PLANTZ_FLAG_BLOCK)
         output.accept(PazItems.TACO)
-        output.accept(PazItems.BRAINZ_ALLOY)
         output.accept(PazItems.ALMANAC)
         output.accept(PazItems.LETTER)
         if (PazConfig.SPLIT_ITEM_TABS) {
@@ -156,6 +155,7 @@ object PazCreativeTabs {
         output.accept(PazBlocks.MAIL_COLLECTION_BOX)
 
         // blocks
+        output.accept(PazItems.BRAINZ_ALLOY)
         output.accept(PazBlocks.BRAINZ_ALLOY_BLOCK)
         output.accept(PazBlocks.BRAINZ_ALLOY_STAIRS)
         output.accept(PazBlocks.BRAINZ_ALLOY_SLAB)
