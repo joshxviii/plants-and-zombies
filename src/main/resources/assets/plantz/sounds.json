@@ -29,6 +29,17 @@
     ], "subtitle": "plantz.subtitles.item.balloon.pop"
   },
 
+  "item.roller_skates.grind": {
+    "sounds": [{ "name": "plantz:item/roller_skates/railgrind", "volume": 1.0, "pitch": 1.0}], "subtitle": "plantz.subtitles.item.roller_skates.grind"
+  },
+  "item.roller_skates.grind_start": {
+    "sounds": [
+      { "name": "plantz:item/roller_skates/railgrind_start_01", "volume": 1.0, "pitch": 1.0},
+      { "name": "plantz:item/roller_skates/railgrind_start_02", "volume": 1.0, "pitch": 1.0},
+      { "name": "plantz:item/roller_skates/railgrind_start_03", "volume": 1.0, "pitch": 1.0}
+    ], "subtitle": "plantz.subtitles.item.roller_skates.grind_start"
+  },
+
   "entity.projectile.hit_paper": {
     "sounds": [
       { "name": "plantz:projectile/hit_paper1", "volume": 1.0},

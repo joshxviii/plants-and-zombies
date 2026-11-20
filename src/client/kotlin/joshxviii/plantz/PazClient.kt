@@ -2,15 +2,14 @@ package joshxviii.plantz
 
 import joshxviii.plantz.PazItems.DUCKY_TUBE
 import joshxviii.plantz.PazItems.DYE_BLASTER
-import joshxviii.plantz.PazItems.FOOTBALL_HELMET
 import joshxviii.plantz.PazItems.GARDENING_GLOVE
 import joshxviii.plantz.PazItems.PLANT_POT_HELMET
 import joshxviii.plantz.item.DuckTubeItem
 import joshxviii.plantz.item.DyeBlasterItem
-import joshxviii.plantz.item.FootballHelmetItem
 import joshxviii.plantz.item.GardeningGloveItem
 import joshxviii.plantz.item.PlantPotHelmetItem
 import net.fabricmc.api.ClientModInitializer
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader
 import net.minecraft.client.KeyMapping
@@ -27,6 +26,8 @@ object PazClient : ClientModInitializer {
 		PazScreens.registerAll()
 		PazClientNetwork.initialize()
 		PazRenderPipelines.initialize()
+
+		ClientTickEvents.END_CLIENT_TICK.register { RailGrindSoundManager.tick(it) }
 
 		ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(
 			pazResource("server_data_reload"),
