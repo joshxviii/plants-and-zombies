@@ -225,7 +225,7 @@ abstract public class LivingEntityMixin implements PlantHeadAttachment, GardenHe
         // spawned on the next server tick by PlantHeadAttachment.tickWearer
         plantz$setPendingPlant(input.read("plantz:AttachedPlant", CompoundTag.CODEC).orElseGet(CompoundTag::new));
         if (self instanceof ServerPlayer) {
-            plantz$setWaveList(input.read("plantz:CompletedWaveList", Codec.list(CompletedWave.Companion.getCODEC())).orElseGet(List::of));
+            plantz$setWaveList(input.read("plantz:CompletedWaveList", Codec.list(CompletedWave.Companion.getCODEC())).map(java.util.ArrayList::new).orElseGet(java.util.ArrayList::new));
         }
 
         if (self instanceof PathfinderMob mob) {

@@ -3,6 +3,7 @@ package joshxviii.plantz
 import joshxviii.plantz.PazNetwork.ZombieRaidClientCache
 import joshxviii.plantz.PazSounds.RAID_MUSIC_ARMY
 import joshxviii.plantz.PazSounds.RAID_MUSIC_BUCKET
+import joshxviii.plantz.PazSounds.RAID_MUSIC_DISCO
 import joshxviii.plantz.PazSounds.RAID_MUSIC_HALFTIME
 import joshxviii.plantz.PazSounds.RAID_MUSIC_HIGH
 import joshxviii.plantz.PazSounds.RAID_MUSIC_LEAGUE
@@ -36,12 +37,13 @@ enum class RaidMusicLayer(
     HIGH(RAID_MUSIC_HIGH, 2, "high"),
     BUCKET(RAID_MUSIC_BUCKET, 3, "bucket"),
     HALFTIME(RAID_MUSIC_HALFTIME, 4, "halftime"),
-    WINTER(RAID_MUSIC_WINTER, 5, "winter"),
-    ZOMBOWEEN(RAID_MUSIC_ZOMBOWEEN, 6, "zomboween"),
-    PIRATE(RAID_MUSIC_PIRATE, 6, "pirate"),
-    ARMY(RAID_MUSIC_ARMY, 7, "army"),
-    LEAGUE(RAID_MUSIC_LEAGUE, 8, "league"),
-    ZOMBOSS(RAID_MUSIC_ZOMBOSS, 9, "zomboss");
+    DISCO(RAID_MUSIC_DISCO, 5, "disco"),
+    WINTER(RAID_MUSIC_WINTER, 6, "winter"),
+    ZOMBOWEEN(RAID_MUSIC_ZOMBOWEEN, 7, "zomboween"),
+    PIRATE(RAID_MUSIC_PIRATE, 8, "pirate"),
+    ARMY(RAID_MUSIC_ARMY, 9, "army"),
+    LEAGUE(RAID_MUSIC_LEAGUE, 10, "league"),
+    ZOMBOSS(RAID_MUSIC_ZOMBOSS, 11, "zomboss");
 }
 
 object RaidMusicManager {
@@ -148,7 +150,7 @@ object RaidMusicManager {
         val bossType = raidEvent.currentWaveType()?.boss
 
         //Boss music
-        if (bossType != null) return when (bossType) {
+        if (raidEvent.bossIsAlive()) return when (bossType) {
             BossType.BARON_VON_BATS -> RaidMusicLayer.ZOMBOWEEN
             else -> RaidMusicLayer.HIGH
         }
@@ -166,6 +168,7 @@ object RaidMusicManager {
             WaveType.BUCKET_BRIGADE -> RaidMusicLayer.BUCKET
             WaveType.HALFTIME_SHOWDOWN -> RaidMusicLayer.HALFTIME
             WaveType.WINTER_WONDERLAND -> RaidMusicLayer.WINTER
+            WaveType.DISCO_PARTY -> RaidMusicLayer.DISCO
             WaveType.ZOMBOWEEN -> RaidMusicLayer.ZOMBOWEEN
             WaveType.PIRATE_INVASION -> RaidMusicLayer.PIRATE
             WaveType.ROBO_ARMY -> RaidMusicLayer.ARMY

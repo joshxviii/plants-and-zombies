@@ -896,7 +896,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     // whether another plant is in the same block space as this one
     private fun isOverlappingWithOther(): Boolean {
         val otherPlantsAtPos = level().getEntitiesOfClass(Plant::class.java, AABB(blockPosition())) { it != this }
-        return otherPlantsAtPos.any { it.isAlive && !it.isDeadOrDying }
+        return otherPlantsAtPos.any { it.isAlive && !it.isDeadOrDying && boundingBox.intersects(it.boundingBox) }
     }
 
     override fun finalizeSpawn(

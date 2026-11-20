@@ -46,7 +46,7 @@ interface GardenHeroRewards {
     companion object {
         fun collectRewards(player: ServerPlayer): MutableList<CompletedWave> {
             player as GardenHeroRewards
-            return player.`plantz$getWaveList`()
+            return player.`plantz$getWaveList`().toMutableList()
         }
         fun setPlayerRewards(player: ServerPlayer, waves: List<CompletedWave>) {
             player as GardenHeroRewards

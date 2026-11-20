@@ -43,11 +43,8 @@ class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie
         set(value) = this.entityData.set(DATA_VARIANT_ID, value)
 
     var primed: Boolean
-        get() = this.entityData.get(PRIMED)
+        get() = this.entityData.get(PRIMED) && variant.explodable()
         set(value) = this.entityData.set(PRIMED, value)
-
-    private val canExplode: Boolean
-        get() = variant.explodable() && primed
 
     init {
         xpReward = 3
@@ -86,7 +83,7 @@ class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie
 
     override fun tick() {
         super.tick()
-        if (canExplode) {
+        if (primed) {
             target?.let {
                 if (distanceToSqr(it) < 1.0) {
                     explode()
@@ -110,7 +107,10 @@ class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie
             WeightedList.of(),
             SoundEvents.GENERIC_EXPLODE
         )
-        if (variant == ImpVariant.DISCO_BALL) level.sendParticles(PazServerParticles.CONFETTI, x, y+eyeHeight, z, 25, 0.2, 0.2, 0.2, 0.15)
+        if (variant == ImpVariant.DISCO_BALL) {
+            level.sendParticles(PazServerParticles.CONFETTI, x, y+eyeHeight, z, 25, 0.2, 0.2, 0.2, 0.15)
+            playSound(PazSounds.DISCO_ZOMBIE_SUMMON, 1f, 0.75f)
+        }
         scaledExplosion()
         primed = false
     }
@@ -122,7 +122,7 @@ class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie
     }
 
     override fun tickDeath() {
-        if (lastDamageSource?.directEntity != null && deathTime == 0 && canExplode) explode()
+        if (lastDamageSource?.directEntity != null && deathTime == 0 && primed) explode()
         else super.tickDeath()
     }
 

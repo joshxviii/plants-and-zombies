@@ -227,7 +227,7 @@ object PazItems {
     val COFFIN: Item = registerItem(
         "coffin",
         properties = Item.Properties()
-            .durability(80)
+            .durability(60)
             .repairable(ItemTags.PLANKS)
             .enchantable(1)
             .component(DataComponents.EQUIPPABLE,

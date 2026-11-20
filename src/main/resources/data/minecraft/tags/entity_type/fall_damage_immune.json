@@ -1,11 +1,12 @@
 {
   "replace": false,
   "values": [
-    "#plantz:plant",
     "plantz:gnome",
     "plantz:super_brainz",
     "plantz:imp",
     "plantz:baron_von_bats",
+    "plantz:lawn_mower",
+    "#plantz:plant",
     "#plantz:zombie_robots"
   ]
 }

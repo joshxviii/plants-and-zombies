@@ -30,7 +30,7 @@
           },
           {
             "type": "minecraft:random_chance",
-            "chance": 0.085
+            "chance": 0.04
           }
         ]
       }

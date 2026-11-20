@@ -511,6 +511,9 @@
   "music.raid.halftime": {
     "sounds": [{ "name": "plantz:music/raid/loon_griefers_medium", "volume": 1.0, "pitch": 1.0 }], "subtitle": "plantz.subtitles.music.raid.halftime"
   },
+  "music.raid.disco": {
+    "sounds": [{ "name": "plantz:music/raid/loon_griefers_medium", "volume": 1.0, "pitch": 1.0 }], "subtitle": "plantz.subtitles.music.raid.disco"
+  },
   "music.raid.winter": {
     "sounds": [{ "name": "plantz:music/raid/loon_griefers_high", "volume": 1.0, "pitch": 1.0 }], "subtitle": "plantz.subtitles.music.raid.winter"
   },

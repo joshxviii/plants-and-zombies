@@ -645,7 +645,7 @@ class ZombieRaid(
 
     private fun showTitleMessage(title: Component, subtitle: Component = Component.empty(), sound: Holder.Reference<SoundEvent> = PazSounds.SPECIAL_WAVE, soundSource: SoundSource = SoundSource.UI) {
         zombieRaidEvent.players.forEach {
-            it.connection.send(ClientboundSoundPacket(sound, soundSource, it.x, it.y, it.z, 1.0f, 1.0f, random.nextLong()))
+            it.connection.send(ClientboundSoundPacket(sound, soundSource, it.x, it.y, it.z, 100.0f, 1.0f, random.nextLong()))
             it.connection.send(ClientboundSetTitleTextPacket(title))
             it.connection.send(ClientboundSetSubtitleTextPacket(subtitle))
         }

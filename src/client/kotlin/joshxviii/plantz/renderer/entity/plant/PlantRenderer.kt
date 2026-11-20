@@ -319,7 +319,4 @@ open class PlantRenderState : LivingEntityRenderState() {
     }
 
     fun texture(): Identifier = getTextureLocation(TEXTURE_PATH, getSuffixes())
-    private fun idle() {
-        TODO("Not yet implemented")
-    }
 }
