@@ -221,9 +221,9 @@
   "item.plantz.plant_pot_helmet": "花盆頭盔",
   "item.plantz.plant_pot_helmet.description": "潛行時裝備植物",
   "item.plantz.seed_packet": "種子包",
-  "item.plantz.seed_packet.entity": "%s 種子",
+  "item.plantz.seed_packet.entity": "%s種子",
   "item.plantz.blueprint": "機械藍圖",
-  "item.plantz.blueprint.entity": "%s 藍圖",
+  "item.plantz.blueprint.entity": "%s藍圖",
 
   "item.plantz.white_balloon": "白色氣球",
   "item.plantz.light_gray_balloon": "淺灰色氣球",
