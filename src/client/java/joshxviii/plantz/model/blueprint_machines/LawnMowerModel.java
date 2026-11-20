@@ -51,7 +51,9 @@ public class LawnMowerModel<T extends BlueprintMachineRenderState> extends Entit
 
 		PartDefinition handle = body.addOrReplaceChild("handle", CubeListBuilder.create(), PartPose.offset(0.0F, -5.0F, 6.0F));
 
-		PartDefinition cube_r1 = handle.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(0, 30).addBox(-7.0F, -16.0F, 0.0F, 14.0F, 16.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.7854F, 0.0F, 0.0F));
+		PartDefinition cube_r1 = handle.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(42, 0).addBox(-5.0F, -1.0F, -2.0F, 10.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -10.0F, 12.0F, -0.7854F, 0.0F, 0.0F));
+
+		PartDefinition cube_r2 = handle.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(0, 30).addBox(-7.0F, -16.0F, 0.0F, 14.0F, 16.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.7854F, 0.0F, 0.0F));
 
 		PartDefinition blade = body.addOrReplaceChild("blade", CubeListBuilder.create().texOffs(-6, 46).addBox(-5.0F, -1.0F, -5.0F, 10.0F, 0.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.25F, 0.0F));
 

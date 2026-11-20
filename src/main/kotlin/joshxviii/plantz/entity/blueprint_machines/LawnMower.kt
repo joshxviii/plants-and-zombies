@@ -3,6 +3,9 @@ package joshxviii.plantz.entity.blueprint_machines
 import joshxviii.plantz.*
 import joshxviii.plantz.entity.plant.ExplosivePlant.Companion.scaledExplosion
 import joshxviii.plantz.item.BlueprintItem
+import net.fabricmc.fabric.api.event.player.UseBlockCallback
+import net.fabricmc.fabric.api.event.player.UseEntityCallback
+import net.fabricmc.fabric.api.event.player.UseItemCallback
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -31,12 +34,30 @@ class LawnMower(type: EntityType<out LawnMower>, level: Level) : LivingEntity(ty
 
         const val MAX_HEALTH = 40f
         const val COLLISION_DAMAGE = 4f
-        const val MAX_GRAB_RANGE_SQR = 8.0 * 8.0
+        const val MAX_GRAB_RANGE = 8.0
+        const val MAX_GRAB_RANGE_SQR = MAX_GRAB_RANGE * MAX_GRAB_RANGE
         const val MIN_GRAB_DISTANCE = 0.9
         const val MAX_GRAB_DISTANCE = 1.1
         const val AUTO_MOW_TIME = 160
 
         @JvmField var clientGrabHook: ((LawnMower) -> Unit)? = null
+
+        fun isGrabbedBy(player: Player): Boolean =
+            player.level().getEntitiesOfClass(LawnMower::class.java, player.boundingBox.inflate(MAX_GRAB_RANGE)) {
+                it.grabberId == player.id
+            }.isNotEmpty()
+
+        fun registerInteractionLock() {
+            UseBlockCallback.EVENT.register { player, _, _, _ ->
+                if (isGrabbedBy(player)) InteractionResult.FAIL else InteractionResult.PASS
+            }
+            UseItemCallback.EVENT.register { player, _, _ ->
+                if (isGrabbedBy(player)) InteractionResult.FAIL else InteractionResult.PASS
+            }
+            UseEntityCallback.EVENT.register { player, _, _, _, _ ->
+                if (isGrabbedBy(player)) InteractionResult.FAIL else InteractionResult.PASS
+            }
+        }
     }
 
     val actionAnimation = AnimationState()
@@ -87,12 +108,13 @@ class LawnMower(type: EntityType<out LawnMower>, level: Level) : LivingEntity(ty
     override fun getPickResult(): ItemStack = BlueprintItem.stackFor(this.type)
 
     fun startGrab(player: Player): InteractionResult {
-        if (level().isClientSide) return InteractionResult.PASS
-        if (isGrabbed) return if (grabberId == player.id) InteractionResult.PASS else InteractionResult.PASS
-        val handleCenter = handle?.boundingBox?.center ?: position()
-        grabDistance = player.eyePosition.distanceTo(handleCenter).coerceIn(MIN_GRAB_DISTANCE, MAX_GRAB_DISTANCE)
-        grabberId = player.id
-        return InteractionResult.PASS
+        if (level().isClientSide) return InteractionResult.SUCCESS
+        if (!isGrabbed) {
+            val handleCenter = handle?.boundingBox?.center ?: position()
+            grabDistance = player.eyePosition.distanceTo(handleCenter).coerceIn(MIN_GRAB_DISTANCE, MAX_GRAB_DISTANCE)
+            grabberId = player.id
+        }
+        return InteractionResult.SUCCESS
     }
 
     fun release() {

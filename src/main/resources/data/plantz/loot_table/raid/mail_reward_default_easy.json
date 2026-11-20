@@ -16,12 +16,12 @@
         {
           "type": "minecraft:loot_table",
           "value": "plantz:raid/default_easy/seeds",
-          "weight": 5
+          "weight": 8
         },
         {
           "type": "minecraft:loot_table",
           "value": "plantz:raid/default_easy/treasure",
-          "weight": 12
+          "weight": 11
         }
       ]
     }

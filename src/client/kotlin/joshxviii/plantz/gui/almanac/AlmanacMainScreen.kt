@@ -80,14 +80,14 @@ class AlmanacMainScreen(
         }
         backButton = addRenderableWidget(
             PazButton(
-                leftPos + 4, topPos + BACKGROUND_HEIGHT - 10, PAGE_BUTTON_WIDTH, PAGE_BUTTON_HEIGHT,
+                leftPos - 10, topPos + BACKGROUND_HEIGHT - 10, PAGE_BUTTON_WIDTH, PAGE_BUTTON_HEIGHT,
                 { navigate(menu.tab, menu.page - 1) }, PAGE_BACK,
                 sound = SoundEvents.BOOK_PAGE_TURN,
             )
         )
         forwardButton = addRenderableWidget(
             PazButton(
-                leftPos + BACKGROUND_WIDTH - 4 - PAGE_BUTTON_WIDTH, topPos + BACKGROUND_HEIGHT - 10,
+                leftPos + BACKGROUND_WIDTH + 10 - PAGE_BUTTON_WIDTH, topPos + BACKGROUND_HEIGHT - 10,
                 PAGE_BUTTON_WIDTH, PAGE_BUTTON_HEIGHT,
                 { navigate(menu.tab, menu.page + 1) }, PAGE_FORWARD,
                 sound = SoundEvents.BOOK_PAGE_TURN,

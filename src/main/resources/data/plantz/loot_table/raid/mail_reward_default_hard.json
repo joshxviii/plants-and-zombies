@@ -16,7 +16,7 @@
         {
           "type": "minecraft:loot_table",
           "value": "plantz:raid/default_hard/seeds",
-          "weight": 6
+          "weight": 8
         },
         {
           "type": "minecraft:loot_table",

@@ -1,5 +1,6 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.entity.blueprint_machines.LawnMower
 import joshxviii.plantz.command.PazCommands
 import joshxviii.plantz.block.entity.MailboxBlockEntity
 import joshxviii.plantz.api.MailboxManager
@@ -65,6 +66,7 @@ object PazMain : ModInitializer {
 		PazEffects.initialize()
 		PazCreativeTabs.initialize()
 		PazEntities.initialize()
+		LawnMower.registerInteractionLock()
 		PazDamageTypes.initialize()
 		PazCriteria.initialize()
 		PazDataSerializers.initialize()

@@ -2,6 +2,7 @@ package joshxviii.plantz.renderer.entity.zombie
 
 import com.mojang.blaze3d.vertex.PoseStack
 import joshxviii.plantz.PazConfig
+import joshxviii.plantz.PazEntities
 import joshxviii.plantz.ai.ZombieState
 import joshxviii.plantz.entity.zombie.*
 import joshxviii.plantz.model.zombies.PazZombieModel
@@ -78,6 +79,7 @@ open class PazZombieRenderer(
         state.headOnly = false
         state.zombieState = entity.state
         state.isFlying = entity.isFlying
+        if (entity.`is`(PazEntities.IMP)) state.isBaby = true
         state.emergeAnimationState.copyFrom(entity.emergeAnimation)
         state.retreatAnimationState.copyFrom(entity.retreatAnimation)
         state.floatAnimationState.copyFrom(entity.floatAnimation)
@@ -195,8 +197,8 @@ open class PazZombieRenderState : ZombieRenderState() {
         val suffixes = mutableListOf<String>().apply {
             if (magicName!=null)      add(magicName)
             else {
-                textureExtra.forEach  { add(it) }
-                if (isBaby)           add("baby")
+                textureExtra.forEach    { add(it) }
+                if (isBaby && entityType != PazEntities.IMP)    add("baby")
             }
         }.filter { it.isNotEmpty() }.toMutableList()
         return suffixes
