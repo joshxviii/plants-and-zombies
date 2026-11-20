@@ -41,6 +41,16 @@
 				"value": "joshxviii.plantz.PazModMenu",
 				"adapter": "kotlin"
 			}
+		],
+		"jade": [
+			{
+				"value": "joshxviii.plantz.compat.jade.PazJadePlugin",
+				"adapter": "kotlin"
+			},
+			{
+				"value": "joshxviii.plantz.compat.jade.PazJadeClientPlugin",
+				"adapter": "kotlin"
+			}
 		]
 	},
 	"mixins": [
@@ -56,5 +66,8 @@
 		"java": ">=25",
 		"fabric-api": "*",
 		"fabric-language-kotlin": "*"
+	},
+	"suggests": {
+		"jade": "*"
 	}
 }

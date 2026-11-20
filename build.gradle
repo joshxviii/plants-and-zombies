@@ -47,6 +47,8 @@ dependencies {
 
 	compileOnly "maven.modrinth:iris:${project.iris_version}"
 	compileOnly "maven.modrinth:modmenu:${project.modmenu_version}"
+	compileOnly "maven.modrinth:jade:${project.jade_version}"
+	localRuntime "maven.modrinth:jade:${project.jade_version}"
 }
 
 processResources {

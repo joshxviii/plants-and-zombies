@@ -10,6 +10,7 @@ import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.LerpingBossEvent
+import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
@@ -206,6 +207,13 @@ object ZombieRaidOverlay {
     }
 
     private fun isDamageFlashActive(guiTicks: Int, flashUntil: Int): Boolean = guiTicks < flashUntil
+
+    fun getHudBounds(): ScreenRectangle? {
+        if (!PazConfig.SHOW_RAID_UI) return null
+        val raidEvent = ZombieRaidClientCache.get() ?: return null
+        val height = if (raidEvent.bossProgressBar > 0f) 45 else BG_HEIGHT
+        return ScreenRectangle((mc.window.guiScaledWidth - BG_WIDTH) / 2, 0, BG_WIDTH, height)
+    }
 
     private fun isTabDown(): Boolean = mc.options.keyPlayerList.isDown
 }
