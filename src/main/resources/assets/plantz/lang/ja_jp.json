@@ -21,7 +21,7 @@
   "advancements.plantz.plant_pot_minecart.description": "プラントポット付きトロッコにプラントを植える",
   "advancements.plantz.wallnut_bowling": "ストライク！",
   "advancements.plantz.wallnut_bowling.description": "転がっているウォールナッツでモブを10体倒す",
-  "advancements.plantz.brainz_alloy": " 脳の時代に",
+  "advancements.plantz.brainz_alloy": " 脳の時代へ",
   "advancements.plantz.brainz_alloy.description": "脳合金を作る",
   "advancements.plantz.solar_power": "太陽光の力",
   "advancements.plantz.solar_power.description": "太陽電池をフルチャージさせる",
@@ -221,7 +221,7 @@
   "item.plantz.plant_pot_helmet": "ヘルポット",
   "item.plantz.plant_pot_helmet.description": "しゃがむ時にプラントを装備する",
   "item.plantz.seed_packet": "シードパケット",
-  "item.plantz.seed_packet.entity": "%s シード",
+  "item.plantz.seed_packet.entity": "%sのシード",
   "item.plantz.blueprint": "マシンの設計図",
   "item.plantz.blueprint.entity": "%sの設計図",
 

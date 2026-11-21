@@ -21,7 +21,7 @@
   "advancements.plantz.plant_pot_minecart.description": "將植物放置在花盆礦車中",
   "advancements.plantz.wallnut_bowling": "全倒！",
   "advancements.plantz.wallnut_bowling.description": "用滾動的牆果擊中10個生物",
-  "advancements.plantz.brainz_alloy": " 腦子時代",
+  "advancements.plantz.brainz_alloy": " 腦袋時代",
   "advancements.plantz.brainz_alloy.description": "合成腦合金",
   "advancements.plantz.solar_power": "太陽能驅動",
   "advancements.plantz.solar_power.description": "將太陽能電池充滿電",
@@ -183,7 +183,7 @@
   "item.plantz.zombie_banner": "腦袋旗幟",
 
   "item.plantz.sun": "太陽",
-  "item.plantz.brain": "腦子",
+  "item.plantz.brain": "腦袋",
   "item.plantz.sun_bottle": "太陽瓶",
   "item.plantz.sun_battery": "太陽能電池",
   "item.plantz.time_machine": "時光機",
