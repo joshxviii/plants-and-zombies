@@ -180,10 +180,10 @@ object PazCreativeTabs {
         if (PazConfig.SPLIT_ITEM_TABS) output.accept(PazItems.GNOME_SPAWN_EGG)
 
         // blueprints
-        if (PazConfig.SPLIT_ITEM_TABS) {
-            if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_TURRET))
-            if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(BlueprintItem.stackFor(PazEntities.ELECTRO_TURRET))
-            if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_DRONE))
+        if (PazConfig.SPLIT_ITEM_TABS && PazConfig.EXPERIMENTAL_FEATURES_ENABLED) {
+            output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_TURRET))
+            output.accept(BlueprintItem.stackFor(PazEntities.ELECTRO_TURRET))
+            output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_DRONE))
             output.accept(BlueprintItem.stackFor(PazEntities.LAWN_MOWER))
         }
     }

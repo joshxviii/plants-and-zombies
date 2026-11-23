@@ -4,7 +4,9 @@ import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazNetwork
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.getHeldBalloons
+import joshxviii.plantz.raid.ZombieRaid.Companion.RAID_DISTANCE
 import joshxviii.plantz.raid.isActiveInRaid
+import joshxviii.plantz.raid.isBoss
 import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderState
 import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderer
 import net.minecraft.client.DeltaTracker
@@ -27,8 +29,8 @@ object ZombieHudMarkers {
 
     const val ICON_SIZE = 8
 
-    private const val MIN_DISTANCE = 10.0
-    private const val MAX_DISTANCE = 96.0
+    private const val MIN_DISTANCE = 6.0
+    private const val MIN_FORCED_DISTANCE = 64.0
 
     fun renderIcons(graphics: GuiGraphicsExtractor, deltaTracker: DeltaTracker) {
         val mc = Minecraft.getInstance()
@@ -75,12 +77,13 @@ object ZombieHudMarkers {
         // outline
         submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale * state.scale, outlinePad = 1.15f)
         // head icon
-        // TODO I should probably take a screen shot when resources are loaded of each entity in the zombie raider tag list and save the head marker image to reuse here
         submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale * state.scale)
 
+        // flag icon
         if (zombie.mainHandItem.`is`(PazBlocks.BRAINZ_FLAG_BLOCK.asItem()) || zombie.offhandItem.`is`(PazBlocks.BRAINZ_FLAG_BLOCK.asItem())) submitItem(graphics,
             PazBlocks.BRAINZ_FLAG_BLOCK.asItem().defaultInstance, cx, cy, baseScale)
 
+        //balloon icon
         val balloon = (zombie as? PazZombie)?.getHeldBalloons()?.firstOrNull()
         if (balloon != null) submitItem(graphics, balloon.pickResult, cx, cy-8, baseScale)
     }
@@ -125,14 +128,14 @@ object ZombieHudMarkers {
 
                 if (!entity.isActiveInRaid()) continue
 
-                if (!isViewObscured(cam, entity)) continue
-
                 val pos = entity.getPosition(client.deltaTracker.getGameTimeDeltaPartialTick(false)).add(0.0, entity.eyeHeight.toDouble(), 0.0)
                 val dist = pos.distanceToSqr(cam)
-                if (dist !in (MIN_DISTANCE*MIN_DISTANCE)..(MAX_DISTANCE*MAX_DISTANCE)) continue
+
+                if (!isViewObscured(cam, entity) && dist < (MIN_FORCED_DISTANCE*MIN_FORCED_DISTANCE)) continue
+                if (dist !in (MIN_DISTANCE*MIN_DISTANCE)..(RAID_DISTANCE*RAID_DISTANCE).toDouble()) continue
                 add(Marker(pos, entity))
             }
-        }.sortedByDescending { it.zombie.distanceToSqr(cam) }
+        }.sortedByDescending { it.zombie.distanceToSqr(cam) * if (it.zombie.isBoss()) 0.01 else 1.0 }// bosses render on top
     }
 
     fun isViewObscured(camPos: Vec3, target: LivingEntity): Boolean {

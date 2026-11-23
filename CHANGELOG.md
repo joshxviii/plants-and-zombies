@@ -4,6 +4,9 @@
 - Added Time Machine.
   - ***Currently not obtainable outside of Creative mode.***
 - Added Citron
+- Added Lawn Mower **(Creative only for now)**
+  - Mows tall grass and mobs in its path.
+  - Can be activated with redstone to auto mow for 8 seconds.
 
 # Changelog 1.5.2
 ### Plants & Zombies has migrated to 26.3!
@@ -54,9 +57,6 @@
   - Rewards for special waves are now packaged in "Reward Letters".
 - Added Almanac **(Creative only for now)**
   - Used to keep track of and collect plants.
-- Added Lawn Mower **(Creative only for now)**
-  - Mows tall grass and mobs in its path.
-  - Can be activated with redstone to auto mow for 8 seconds.
 - During the final wave at the 1-minute mark, all remaining zombies will teleport closer to the flag.
 - Cones, Buckets, and Football helmets now only block damage from above.
   - They have also been given a buff to armor and armor toughness.
