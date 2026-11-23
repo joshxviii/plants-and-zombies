@@ -75,7 +75,7 @@ enum class BossType(
     ),
     GARGANTUAR(
         minWave = 9,
-        maxWave = 20,
+        maxWave = 30,
         weightFn = { _, wave -> if (wave == WaveType.DEFAULT || wave == WaveType.PIRATE_INVASION) 3f else 0f },
         bossSpawns = { raid, wave ->
             mutableListOf<BossEntry>().let {
@@ -91,12 +91,12 @@ enum class BossType(
     ),
     ROBO_GENERAL(
         minWave = 10,
-        maxWave = 20,
+        maxWave = 99,
         weightFn = { _, wave -> if (wave == WaveType.DEFAULT || wave == WaveType.ROBO_ARMY) 1f else 0f },
         bossSpawns = { raid, wave ->
             mutableListOf<BossEntry>().let {
                 val waveCount = raid.currentWaveNumber()
-                val count = Mth.floor(waveCount/7.5).coerceAtLeast(1)
+                val count = Mth.floor(waveCount/6.5).coerceAtLeast(1)
                 for (i in 0 until count) it.add(BossEntry(PazEntities.ROBO_ZOMBIE, ::bossify))
                 it
             }
@@ -104,7 +104,7 @@ enum class BossType(
     ),
     ZOMBOSS(
         minWave = 20,
-        maxWave = 20,
+        maxWave = 99,
         weightFn = { _, wave -> if (wave == WaveType.ZOMBOSS) 1f else 0f },
         bossSpawns = { raid, wave -> listOf() }
     );

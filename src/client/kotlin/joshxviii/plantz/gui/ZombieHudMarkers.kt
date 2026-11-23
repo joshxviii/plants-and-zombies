@@ -15,7 +15,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.model.HumanoidModel
 import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
-import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.item.ItemStack
@@ -30,7 +29,7 @@ object ZombieHudMarkers {
     const val ICON_SIZE = 8
 
     private const val MIN_DISTANCE = 6.0
-    private const val MIN_FORCED_DISTANCE = 64.0
+    private const val MIN_FORCED_DISTANCE = 50.0
 
     fun renderIcons(graphics: GuiGraphicsExtractor, deltaTracker: DeltaTracker) {
         val mc = Minecraft.getInstance()
@@ -75,9 +74,9 @@ object ZombieHudMarkers {
         val baseScale = ICON_SIZE * 2.0f
 
         // outline
-        submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale * state.scale, outlinePad = 1.15f)
+        submitHead(graphics, zombie, model, texture, cx, cy, baseScale * state.scale, outlinePad = 1.15f)
         // head icon
-        submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale * state.scale)
+        submitHead(graphics, zombie, model, texture, cx, cy, baseScale * state.scale)
 
         // flag icon
         if (zombie.mainHandItem.`is`(PazBlocks.BRAINZ_FLAG_BLOCK.asItem()) || zombie.offhandItem.`is`(PazBlocks.BRAINZ_FLAG_BLOCK.asItem())) submitItem(graphics,
@@ -107,15 +106,14 @@ object ZombieHudMarkers {
         zombie: Zombie,
         model: HumanoidModel<*>,
         texture: Identifier,
-        itemStack: ItemStack,
         cx: Double,
         cy: Double,
         scale: Float,
         outlinePad: Float = 0f
     ) {
-        graphics.guiRenderState.addGuiElement(
-            HeadHudMarker(zombie, model, texture, itemStack, cx, cy, scale, outlinePad)
-        )
+        for (segment in HeadHudMarker.build(zombie, model, texture, cx, cy, scale, outlinePad)) {
+            graphics.guiRenderState.addGuiElement(segment)
+        }
     }
 
     fun collect(client: Minecraft): List<Marker> {
