@@ -80,7 +80,7 @@ class DiscoZombie(type: EntityType<out DiscoZombie>, level: Level) : PazZombie(t
                 trackedBackupDancerIds,
                 isSummoning = { summoningTime > 0 },
                 beginSummoning = { summoningTime = 1 },
-                shouldAddToRaid = false
+                shouldAddToRaidHealth = false
             )
         )
     }

@@ -11,7 +11,7 @@ import joshxviii.plantz.raid.isBoss
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.render.TextureSetup
-import net.minecraft.client.model.HumanoidModel
+import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.item.ItemStackRenderState
@@ -44,11 +44,16 @@ class HeadHudMarker private constructor(
         const val BOSS_OUTLINE_COLOR = 0xFF0000
 
         /**
+         * TODO: Hash the head model part for each entity model to reuse
+         */
+        fun EntityModel<*>.findHead(): ModelPart? = this.root().createPartLookup().apply("head")
+
+        /**
          * Returns the head as GUI segments, ordered back-to-front by depth so worn items and head parts overlap
          */
         fun build(
             zombie: Zombie,
-            model: HumanoidModel<*>,
+            model: EntityModel<*>,
             texture: Identifier,
             cx: Double,
             cy: Double,
@@ -59,7 +64,7 @@ class HeadHudMarker private constructor(
             val tint = ARGB.opaque(if (zombie.isBoss()) (if (outline) BOSS_OUTLINE_COLOR else ARGB.addRgb(BOSS_OUTLINE_COLOR, 0xBBBBBB)) else (if (outline) OUTLINE_COLOR else 0xFFFFFF))
 
             model.resetPose()
-            model.head.setPos(0f, 0f, 0f)
+            model.findHead()?.setPos(0f, 0f, 0f)
             val draws = ArrayList<MarkerDraw>()
             collectHead(model, headPose(zombie, cx, cy, scale, outlinePad), texture, draws)
 
@@ -81,8 +86,9 @@ class HeadHudMarker private constructor(
             return pose
         }
 
-        private fun collectHead(model: HumanoidModel<*>, pose: PoseStack, texture: Identifier, out: MutableList<MarkerDraw>) {
-            model.head.visit(pose) { cubePose, _, _, cube ->
+        private fun collectHead(model: EntityModel<*>, pose: PoseStack, texture: Identifier, out: MutableList<MarkerDraw>) {
+            val head = model.findHead() ?: return
+            head.visit(pose) { cubePose, _, _, cube ->
                 val matrix = cubePose.pose()
                 val center = Vector3f()
                 matrix.transformPosition(

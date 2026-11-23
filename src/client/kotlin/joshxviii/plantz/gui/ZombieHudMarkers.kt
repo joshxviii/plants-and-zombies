@@ -12,7 +12,8 @@ import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderer
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
-import net.minecraft.client.model.HumanoidModel
+import net.minecraft.client.model.EntityModel
+import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.LivingEntity
@@ -65,8 +66,8 @@ object ZombieHudMarkers {
             it.movementDirection = Vec3.ZERO
         }?: return
 
-        val renderer = mc.entityRenderDispatcher.getRenderer(state) as? PazZombieRenderer ?: return
-        val model = if(state.isBaby) renderer.babyModel ?: renderer.defaultModel else renderer.defaultModel
+        val renderer = mc.entityRenderDispatcher.getRenderer(state) as? MobRenderer<*, PazZombieRenderState, *> ?: return
+        val model = renderer.model
         val texture = renderer.getTextureLocation(state)
 
         val cx = x + ICON_SIZE * 0.5
@@ -104,7 +105,7 @@ object ZombieHudMarkers {
     private fun submitHead(
         graphics: GuiGraphicsExtractor,
         zombie: Zombie,
-        model: HumanoidModel<*>,
+        model: EntityModel<*>,
         texture: Identifier,
         cx: Double,
         cy: Double,

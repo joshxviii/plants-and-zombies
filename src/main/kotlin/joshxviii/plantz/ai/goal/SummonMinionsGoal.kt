@@ -28,7 +28,7 @@ class SummonMinionsGoal(
     private val beginSummoning: () -> Unit,
     private val configureMinion: (PazZombie) -> Unit = {},
     private val canSummon: () -> Boolean = { true },
-    private val shouldAddToRaid: Boolean = true
+    private val shouldAddToRaidHealth: Boolean = true
 ) : Goal() {
     companion object {
         const val DEFAULT_AMOUNT = 3
@@ -137,7 +137,8 @@ class SummonMinionsGoal(
         )
         minion.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.REINFORCEMENT,
             PazZombieGroupData(
-                isRaider = summoner.isActiveInRaid() && shouldAddToRaid,
+                isRaider = summoner.isActiveInRaid(),
+                isCountedTowardRaidHealth = summoner.isActiveInRaid() && shouldAddToRaidHealth,
                 ignoreFlag = true
             )
         )

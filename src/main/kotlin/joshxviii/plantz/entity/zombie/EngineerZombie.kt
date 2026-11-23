@@ -5,6 +5,7 @@ import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazSounds
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.raid.PazZombieGroupData
+import joshxviii.plantz.raid.isActiveInRaid
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.Vec3i
@@ -175,7 +176,7 @@ class EngineerZombie(type: EntityType<out EngineerZombie>, level: Level) : PazZo
                 val bot : ZombieRobot = ZOMBIE_BOTS.random().create(level, EntitySpawnReason.MOB_SUMMONED)?: return
                 bot.snapTo(buildPos, engineerZombie.yRot, 0.0f)
                 bot.finalizeSpawn(level, level.getCurrentDifficultyAt(buildPos), EntitySpawnReason.REINFORCEMENT,
-                    PazZombieGroupData(isRaider = true, isCountedTowardRaidHealth = false)
+                    PazZombieGroupData(isRaider = engineerZombie.isActiveInRaid(), isCountedTowardRaidHealth = false)
                 )
                 bot.owner = engineerZombie
                 level.addFreshEntity(bot)
