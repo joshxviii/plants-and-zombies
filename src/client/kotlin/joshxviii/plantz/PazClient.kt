@@ -8,6 +8,7 @@ import joshxviii.plantz.item.DuckTubeItem
 import joshxviii.plantz.item.DyeBlasterItem
 import joshxviii.plantz.item.GardeningGloveItem
 import joshxviii.plantz.item.PlantPotHelmetItem
+import joshxviii.plantz.renderer.clearTextureResolutionCache
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
@@ -35,7 +36,10 @@ object PazClient : ClientModInitializer {
 		)
 		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(
 			pazResource("client_reload"),
-			ResourceManagerReloadListener({ if (PazNetwork.ZombieRaidClientCache.isActive()) { RaidMusicManager.restart() } })
+			ResourceManagerReloadListener({
+				clearTextureResolutionCache()
+				if (PazNetwork.ZombieRaidClientCache.isActive()) { RaidMusicManager.restart() }
+			})
 		)
 
 		// custom tooltips

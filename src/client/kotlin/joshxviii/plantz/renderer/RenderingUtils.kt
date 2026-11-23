@@ -16,6 +16,7 @@ import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.ARGB
 import net.minecraft.world.entity.EntityType
 import org.spongepowered.asm.mixin.Unique
+import java.util.Optional
 
 object RenderingUtils {
     fun plane(
@@ -81,7 +82,29 @@ fun List<String>.permutationsDescending(): List<String> = buildList {
     }
 }
 
+private val resolvedTextureCache = HashMap<String, Optional<Identifier>>()
+private val textureExistsCache = HashMap<Identifier, Boolean>()
+
+fun clearTextureResolutionCache() {
+    resolvedTextureCache.clear()
+    textureExistsCache.clear()
+}
+
 fun resolveTextureLocation(base: String, rm: ResourceManager, suffixes: List<String> = listOf()): Identifier? {
+    val key = buildString {
+        append(base)
+        for (suffix in suffixes) {
+            append('\u0001')
+            append(suffix)
+        }
+    }
+    resolvedTextureCache[key]?.let { return it.orElse(null) }
+    val found = findTextureLocation(base, rm, suffixes)
+    resolvedTextureCache[key] = Optional.ofNullable(found)
+    return found
+}
+
+private fun findTextureLocation(base: String, rm: ResourceManager, suffixes: List<String>): Identifier? {
     for (suffix in suffixes.permutationsDescending()) {
         if (suffix.isEmpty()) break
         val candidate = pazResource("${base}_${suffix}.png")
@@ -115,11 +138,13 @@ fun EntityRenderState.getProjectileTextureLocation(emissive: Boolean = false): I
     val entityName = entityType.toShortString().lowercase()
     val path = "${ProjectileRenderState.TEXTURE_PATH}/${entityName}${if (emissive) "_emissive" else ""}.png"
     val texture = pazResource(path)
-    val isValid = Minecraft.getInstance().resourceManager.getResource(texture).isPresent
+    val isValid = textureExistsCache.getOrPut(texture) {
+        Minecraft.getInstance().resourceManager.getResource(texture).isPresent
+    }
     return if (isValid) texture else null
 }
 
-fun EntityRenderState.getTextureLocation(basePath: String, suffixes: MutableList<String> = mutableListOf()): Identifier {
+fun EntityRenderState.getTextureLocation(basePath: String, suffixes: List<String> = emptyList()): Identifier {
     val entityName = entityType.toShortString().lowercase()
     val base = "${basePath}/${entityName}/${entityName}"
     val rm = Minecraft.getInstance().resourceManager
@@ -128,10 +153,10 @@ fun EntityRenderState.getTextureLocation(basePath: String, suffixes: MutableList
     return textureLocation?: pazResource("${base}.png")
 }
 
-fun EntityRenderState.getEmissiveTextureLocation(basePath: String, suffixes: MutableList<String> = mutableListOf()): Identifier? {
+fun EntityRenderState.getEmissiveTextureLocation(basePath: String, suffixes: List<String> = emptyList()): Identifier? {
     val entityName = entityType.toShortString().lowercase()
     val base = "${basePath}/${entityName}/${entityName}"
     val rm = Minecraft.getInstance().resourceManager
 
-    return resolveTextureLocation(base, rm, suffixes.apply { add("emissive") })
+    return resolveTextureLocation(base, rm, suffixes + "emissive")
 }

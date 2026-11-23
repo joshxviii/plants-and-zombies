@@ -49,9 +49,8 @@ class PumpkinRenderer(
 
     override fun getTextureLocation(state: PlantRenderState): Identifier {
         (state as PumpkinRenderState)
-        val s = state.getSuffixes()
-        if (state.helmetMode) s.add("helmet")
-        return state.getTextureLocation(TEXTURE_PATH, s)
+        if (!state.helmetMode) return state.bodyTexture ?: state.getTextureLocation(TEXTURE_PATH, state.bodySuffixes)
+        return state.getTextureLocation(TEXTURE_PATH, state.bodySuffixes + "helmet")
     }
 }
 

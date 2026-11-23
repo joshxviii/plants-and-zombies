@@ -62,6 +62,7 @@
   - They have also been given a buff to armor and armor toughness.
 - Newspapers now work like Shields and only block damage from the front.
 - While a plant is equipped with the Plant Pot Helmet, The Gardening Glove can be used to place the plant back on the ground.
+- Certain plants that are able to move around, like the Wall Nut and Squash, will wear pumpkin armor as helmets instead.
 - Dye Blaster, Gardening Glove, Plant Pot Helmet, and Ducky Tube can now be enchanted.
 - Some naturally spawned Browncoats have a very small chance to be able to transform into Super Brainz when approached.
 - Added a new enchantment, "Lobbing".

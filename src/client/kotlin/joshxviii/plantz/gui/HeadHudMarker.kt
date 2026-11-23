@@ -11,13 +11,11 @@ import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.render.TextureSetup
 import net.minecraft.client.model.HumanoidModel
 import net.minecraft.client.renderer.RenderPipelines
-import net.minecraft.client.renderer.item.ItemStackRenderState
 import net.minecraft.client.renderer.state.gui.GuiElementRenderState
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.Identifier
 import net.minecraft.util.LightCoordsUtil
 import net.minecraft.world.entity.monster.zombie.Zombie
-import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
 
 class HeadHudMarker(
@@ -42,7 +40,6 @@ class HeadHudMarker(
         if (outlinePad>0f) pose.scale(outlinePad, outlinePad, outlinePad)
         model.head.setPos(0f, 0f, 0f)
         model.head.render(pose, vertexConsumer, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY)
-        mc.itemModelResolver.updateForTopItem(ItemStackRenderState(), itemStack, ItemDisplayContext.HEAD, mc.level, zombie, 0)
 
         pose.popPose()
     }
