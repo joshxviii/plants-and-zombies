@@ -44,6 +44,8 @@ object PazDamageTypes {
     val ENERGY = registerDamageType("energy")
     @JvmField
     val MOWED = registerDamageType("mowed")
+    @JvmField
+    val WALLNUT_BOWLING = registerDamageType("wallnut_bowling")
 
     private fun registerDamageType(
         name: String
