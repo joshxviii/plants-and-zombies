@@ -40,7 +40,6 @@ import net.minecraft.world.BossEvent
 import net.minecraft.world.Difficulty
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.entity.SpawnGroupData
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.projectile.FireworkRocketEntity
 import net.minecraft.world.entity.projectile.Projectile
@@ -221,8 +220,6 @@ class ZombieRaid(
             if (raidCooldownTicks <= 0) {
                 status = ZombieRaidStatus.ONGOING
                 raidCooldownTicks = PRE_RAID_TICKS
-                totalZombieHealth = 0f
-                totalBossHealth = 0f
             }
             else {
                 status = ZombieRaidStatus.NEXT_WAVE
@@ -369,6 +366,10 @@ class ZombieRaid(
     }
 
     fun spawnNextWave(level: ServerLevel, forceWaveType: WaveType? = null, forceBossType: BossType? = null) {
+        if (getAliveRaiders() == 0) {
+            totalZombieHealth = 0f
+            totalBossHealth = 0f
+        }
         val pos = findRandomSpawnPos(level, 20) ?: return
         val creditsUnlocked = hasRaidStarterSeenCredits(level)
         val waveType = forceWaveType ?: WaveType.pickWaveType(this, creditsUnlocked)
@@ -386,9 +387,7 @@ class ZombieRaid(
         //next boss chance
         bossChance = calculateBossChance()
         if (isFinalWave()) showTitleMessage(Component.translatable("event.plantz.zombie_raid.final_wave").apply { withStyle(ChatFormatting.RED) }, Component.empty())
-        zombieRaidEvent.players.forEach { player ->
-            PazCriteria.RAID_WAVE_TRIGGER.trigger(player, currentWaveNumber())
-        }
+        zombieRaidEvent.players.forEach { player -> PazCriteria.RAID_WAVE_TRIGGER.trigger(player, currentWaveNumber()) }
     }
 
     /**
@@ -429,8 +428,7 @@ class ZombieRaid(
         val bossEntities = bossType.bossEntityEntries(this, waveType)
         for ((type, configure) in bossEntities) {
             val zombie = type.create(level, EntitySpawnReason.EVENT) ?: break
-            setBoss(zombie)
-            if (joinRaid(level, zombie, true, exists = false, pos = pos, configure = configure))
+            if (joinRaid(level, zombie, true, joinAsBoss = true, exists = false, pos = pos, configure = configure))
             if (bossName == null) bossName = zombie.name
         }
         announceBoss((bossName ?: Component.empty()))
@@ -448,6 +446,7 @@ class ZombieRaid(
         level: ServerLevel,
         zombie: Zombie,
         addMaxHealth: Boolean = true,
+        joinAsBoss: Boolean = false,
         waveNumber: Int = currentWaveNumber(),
         exists: Boolean = true,
         pos: BlockPos? = null,
@@ -462,18 +461,19 @@ class ZombieRaid(
                     level,
                     level.getCurrentDifficultyAt(pos),
                     EntitySpawnReason.EVENT,
-                    null as SpawnGroupData?
+                    PazZombieGroupData(true, joinAsBoss, addMaxHealth)
                 )
                 zombie.setOnGround(true)
                 zombie.setPersistenceRequired()
                 configure(zombie)
                 level.addFreshEntityWithPassengers(zombie)
             }
+            (zombie as? ZombieRaider)?.`plantz$setIsBoss`(joinAsBoss)
             if (addMaxHealth) {
                 val countHealth = (zombie as? ZombieRaider)?.`plantz$getAddsHealthToRaid`() ?: true
                 if (countHealth) {
                     totalZombieHealth += zombie.maxHealth
-                    if (zombie.isBoss()) totalBossHealth += zombie.maxHealth
+                    if (joinAsBoss) totalBossHealth += zombie.maxHealth
                 }
             }
         }
@@ -561,10 +561,6 @@ class ZombieRaid(
         (zombie as? ZombieRaider)?.`plantz$setIsLeader`(true)
         zombie.setItemSlot(EquipmentSlot.OFFHAND, PazBlocks.BRAINZ_FLAG_BLOCK.asItem().defaultInstance)
         zombie.setDropChance(EquipmentSlot.OFFHAND, 0.0f)
-    }
-
-    fun setBoss(zombie: Zombie) {
-        (zombie as? ZombieRaider)?.`plantz$setIsBoss`(true)
     }
 
     fun isStopped(): Boolean = status == ZombieRaidStatus.STOPPED

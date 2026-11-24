@@ -7,6 +7,9 @@ import joshxviii.plantz.ai.goal.SummonMinionsGoal
 import joshxviii.plantz.ai.goal.NavigateToTargetGoal
 import joshxviii.plantz.entity.ZombieEquipment.COFFIN
 import joshxviii.plantz.entity.ZombieEquipment.equipZombieEquipment
+import joshxviii.plantz.raid.PazZombieGroupData
+import joshxviii.plantz.raid.isActiveInRaid
+import joshxviii.plantz.raid.isBoss
 import net.minecraft.core.UUIDUtil
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -317,7 +320,14 @@ class BaronVonBats(type: EntityType<out BaronVonBats>, level: Level) : PazZombie
             val spawnPos = Vec3(x + cos(angle) * 1.5, y + 0.5, z + sin(angle) * 1.5)
             val bat = PazEntities.ZOMBAT.create(serverLevel, EntitySpawnReason.MOB_SUMMONED) ?: return@repeat
             bat.snapTo(spawnPos, random.nextFloat() * 360.0f, 0.0f)
-            bat.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(blockPosition()), EntitySpawnReason.MOB_SUMMONED, null)
+            bat.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(blockPosition()), EntitySpawnReason.MOB_SUMMONED,
+                PazZombieGroupData(
+                    isRaider = this.isActiveInRaid(),
+                    isBoss = this.isBoss(),
+                    isCountedTowardRaidHealth = false,
+                    ignoreFlag = true
+                )
+            )
             bat.baronId = uuid
             bat.target = target
             bat.setPersistenceRequired()

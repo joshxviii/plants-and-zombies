@@ -8,12 +8,14 @@ import joshxviii.plantz.raid.ZombieRaid.Companion.RAID_DISTANCE
 import joshxviii.plantz.raid.isActiveInRaid
 import joshxviii.plantz.raid.isBoss
 import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderState
-import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderer
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.model.EntityModel
+import net.minecraft.client.renderer.entity.LivingEntityRenderer
 import net.minecraft.client.renderer.entity.MobRenderer
+import net.minecraft.client.renderer.entity.state.EntityRenderState
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.LivingEntity
@@ -50,23 +52,27 @@ object ZombieHudMarkers {
     fun headIcon(graphics: GuiGraphicsExtractor, zombie: Zombie, x: Int, y: Int) {
         val mc = Minecraft.getInstance()
         val partial = mc.deltaTracker.getGameTimeDeltaPartialTick(false)
-        val state = (mc.entityRenderDispatcher.extractEntity(zombie, partial) as? PazZombieRenderState)?.also {// state to render model as
+        val state = (mc.entityRenderDispatcher.extractEntity(zombie, partial) as? LivingEntityRenderState)?.also {// state to render model as
             it.walkAnimationPos = 0f
             it.walkAnimationSpeed = 0f
             it.deathTime = 0f
-            it.isAngry = true
             it.isBaby = zombie.isBaby
+            it.yRot = 0f
+            it.xRot = 0f
+            it.bodyRot = 0f
+        }?: return
+        (state as? PazZombieRenderState)?.let {
+            it.isAngry = true
             it.headOnly = true
             it.mainHandItemState.clear()
             it.rightHandItemState.clear()
             it.leftHandItemState.clear()
-            it.yRot = 0f
-            it.xRot = 0f
-            it.bodyRot = 0f
             it.movementDirection = Vec3.ZERO
-        }?: return
 
-        val renderer = mc.entityRenderDispatcher.getRenderer(state) as? MobRenderer<*, PazZombieRenderState, *> ?: return
+        }
+        if (state.isInvisible) return
+
+        val renderer = mc.entityRenderDispatcher.getRenderer(state) as? LivingEntityRenderer<*, LivingEntityRenderState, *> ?: return
         val model = renderer.model
         val texture = renderer.getTextureLocation(state)
 

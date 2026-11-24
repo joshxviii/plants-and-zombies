@@ -87,6 +87,7 @@ data class RaiderRecord(val uuid: UUID, val wave: Int, val health: Float, val po
 
 class PazZombieGroupData(
     val isRaider: Boolean = false,
+    val isBoss: Boolean = false,
     val isCountedTowardRaidHealth: Boolean = true,
     val ignoreFlag: Boolean = false,
     isBaby: Boolean = false
