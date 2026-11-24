@@ -180,7 +180,7 @@ class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie
     ): SpawnGroupData? {
         val data = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
         val random = level.random
-        if (spawnReason != EntitySpawnReason.CONVERSION) {
+        if (spawnReason != EntitySpawnReason.EVENT && spawnReason != EntitySpawnReason.SPAWN_ITEM_USE && spawnReason != EntitySpawnReason.COMMAND) {
             setCanPickUpLoot(false)
             setCanBreakDoors(true)
 
