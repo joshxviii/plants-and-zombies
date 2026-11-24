@@ -199,7 +199,7 @@ class Imp(type: EntityType<out Imp> = PazEntities.IMP, level: Level) : PazZombie
                 }
             }
 
-            val spawnBalloons = (spawnReason != EntitySpawnReason.EVENT && spawnReason != EntitySpawnReason.REINFORCEMENT && y > level.seaLevel && random.nextFloat() < 0.08)
+            val spawnBalloons = (spawnReason != EntitySpawnReason.REINFORCEMENT && y > level.seaLevel && random.nextFloat() < 0.08)
             if (spawnBalloons) spawnWithBalloons()
         }
 
