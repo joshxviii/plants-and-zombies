@@ -141,6 +141,13 @@ object RailGrinding {
                 s to BlockStateProperties.SOUTH, w to BlockStateProperties.WEST
             ).filter { (_, p) -> state.getValue(p) }.map { Conn(it.first, false) }
         }
+        if (state.hasProperty(BlockStateProperties.FACING)) return when (state.getValue(BlockStateProperties.FACING)) {
+            Direction.NORTH -> c(n, s)
+            Direction.SOUTH -> c(s, n)
+            Direction.EAST -> c(e, w)
+            Direction.WEST -> c(w, e)
+            else -> emptyList()
+        }
         return c(n, e, s, w)
     }
 

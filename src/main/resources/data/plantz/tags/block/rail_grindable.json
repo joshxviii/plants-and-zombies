@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
+    "plantz:brainz_alloy_fence",
+    "#minecraft:lightning_rods",
     "#minecraft:bars",
     "#minecraft:rails",
     "#minecraft:chains"
