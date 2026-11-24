@@ -55,6 +55,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.gamerules.GameRules
 import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
@@ -168,6 +169,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         }
 
         fun brainDropChance(zombie: LivingEntity, level: ServerLevel, source: DamageSource) {
+            if (!level.gameRules.get(GameRules.MOB_DROPS)) return
             if (!zombie.`is`(EntityTypeTags.ZOMBIES) || zombie.`is`(PazTags.EntityTypes.CANNOT_DROP_BRAINS)) return
             if (level.getRandom().nextFloat() < BRAIN_DROP_CHANCE && source.entity?.`is`(PazTags.EntityTypes.DROP_ZOMBIE_LOOT_WHEN_KILLED_BY) == true
             ) zombie.spawnAtLocation(level, PazItems.BRAIN)
