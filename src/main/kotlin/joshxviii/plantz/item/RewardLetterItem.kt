@@ -7,6 +7,7 @@ import joshxviii.plantz.PazSounds
 import joshxviii.plantz.item.component.RewardLetterDataComponent
 import joshxviii.plantz.raid.WaveType
 import joshxviii.plantz.raid.CompletedWave
+import net.minecraft.ChatFormatting
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
@@ -45,7 +46,7 @@ class RewardLetterItem(properties: Properties) : Item(properties) {
 
         if (level is ServerLevel) {
             for (id in data.lootTables) {
-                rollLoot(level, player.position(), ResourceKey.create(Registries.LOOT_TABLE, id)).forEach { loot ->
+                rollLoot(level, player.position(), ResourceKey.create(Registries.LOOT_TABLE, id), data.wave.brains.random()).forEach { loot ->
                     level.addFreshEntity(ItemEntity(level, player.x, player.y, player.z, loot))
                 }
             }
@@ -65,11 +66,12 @@ class RewardLetterItem(properties: Properties) : Item(properties) {
             return stack
         }
 
-        fun rollLoot(level: ServerLevel, origin: Vec3, lootTable: ResourceKey<LootTable>): List<ItemStack> {
+        fun rollLoot(level: ServerLevel, origin: Vec3, lootTable: ResourceKey<LootTable>, brainCount: Int): List<ItemStack> {
+            val brains = PazItems.BRAIN.defaultInstance.copyWithCount(brainCount)
             val params = LootParams.Builder(level)
                 .withParameter(LootContextParams.ORIGIN, origin)
                 .create(LootContextParamSets.CHEST)
-            return level.server.reloadableRegistries().getLootTable(lootTable).getRandomItems(params)
+            return level.server.reloadableRegistries().getLootTable(lootTable).getRandomItems(params).plus(brains)
         }
     }
 }

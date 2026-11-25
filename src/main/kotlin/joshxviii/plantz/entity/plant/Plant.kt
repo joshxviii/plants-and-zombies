@@ -150,7 +150,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         private val KNOCK_BACK_MODIFIER = AttributeModifier(ROLLING_ID, 99.0, AttributeModifier.Operation.ADD_VALUE)
         private val STEP_HEIGHT_MODIFIER = AttributeModifier(ROLLING_ID, 0.75, AttributeModifier.Operation.ADD_VALUE)
 
-        const val PLANT_DAMAGE = 1.0
+        const val PLANT_DAMAGE = 1.25
 
         data class PlantAttributes(
             val maxHealth: Double = 20.0,
@@ -358,7 +358,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     fun plantSaveData(output: ValueOutput) {
-        output.putBoolean("classic_mode", classicMode)
+        output.putBoolean("classic_mode", entityData.get(CLASSIC_MODE))
         output.putInt("plantz:ReceivedSun", receivedSun)
         output.putInt("plantz:ReceivedWater", receivedWater)
         output.putInt("plantz:SeedGrowTime", seedGrowCooldown)

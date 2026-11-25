@@ -178,6 +178,7 @@
   "component.plantz.worn_body_blocker": "Blocks direct attacks",
   "component.plantz.letter.signed": "From: %s",
   "component.plantz.letter.item": "%s x%s",
+  "component.plantz.reward_letter.brains": "Brains: %s-%s",
   "component.plantz.door_shield": "%s",
 
   "item.plantz.zombie_banner": "Brainz Banner",

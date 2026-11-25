@@ -509,6 +509,7 @@ object PazItems {
 
     fun initialize() {
         // Modify components
+        ItemComponentTooltipProviderRegistry.addFirst(PazComponents.REWARD_LETTER_DATA)
         ItemComponentTooltipProviderRegistry.addFirst(PazComponents.PROTECTS_HEAD)
         ItemComponentTooltipProviderRegistry.addFirst(PazComponents.WORN_BODY_BLOCKER)
         ItemComponentTooltipProviderRegistry.addLast(PazComponents.DOOR_SHIELD)

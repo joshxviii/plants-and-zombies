@@ -21,7 +21,7 @@
         {
           "type": "minecraft:loot_table",
           "value": "plantz:raid/default_hard/treasure",
-          "weight": 10
+          "weight": 9
         }
       ]
     }

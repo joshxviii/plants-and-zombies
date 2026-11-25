@@ -184,7 +184,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             PazEntities.ALL_STAR            to 1,
         )
 
-        private const val BRAIN_DROP_CHANCE = 0.02f
+        private const val BRAIN_DROP_CHANCE = 0.015f
         const val ZOMBIE_SPEED = 0.23
         const val MAX_EQUIPPABLE_BALLOONS = 4
         val LEADER_MODIFIER_ID: Identifier = Identifier.withDefaultNamespace("leader_zombie_bonus")
@@ -519,6 +519,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
+        entityData.define(CLASSIC_MODE, false)
         entityData.define(ZOMBIE_STATE, ZombieState.IDLE)
         entityData.define(FLYING, false)
     }
@@ -527,6 +528,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         super.addAdditionalSaveData(output)
         output.putInt("plantz:State", state.ordinal)
         output.putBoolean("plantz:IsFlying", entityData.get(FLYING))
+        output.putBoolean("classic_mode", entityData.get(CLASSIC_MODE))
     }
 
     override fun readAdditionalSaveData(input: ValueInput) {

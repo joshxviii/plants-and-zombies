@@ -25,6 +25,7 @@
   - The chance increases exponentially every wave.
   - Once a boss spawns, the chance resets.
   - Holding "Tab" during a raid will display the Boss Chance and other details.
+- Added "Disco of the Undead" special wave. (waves 4–15)
 - Bonus Rewards are now given for each Boss Defeated rather than every 5 waves.
 - Added Baron Von Bats
   - Baron Von Bats has a chance to spawn as a Boss.
