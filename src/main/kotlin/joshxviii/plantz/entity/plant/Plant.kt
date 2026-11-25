@@ -549,7 +549,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     override fun getDefaultGravity(): Double = if (isAttached()) 0.0 else super.getDefaultGravity()
-    override fun doPush(entity: Entity) { if (!clampToGrid() && !isAttached()) super.doPush(entity) }
+    override fun doPush(entity: Entity) { if ((canWalk() || rolling || isOverlappingWithOther()) && !isAttached()) super.doPush(entity) }
     override fun isAffectedByBlocks(): Boolean = if (isAttached()) !isRemoved else super.isAffectedByBlocks()
 
     override fun tick() {
@@ -629,6 +629,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
 
         if (rolling && !level().isClientSide) calculateRollFriction()
+
+        if(clampToGrid()) level().getEntitiesOfClass(Plant::class.java, AABB(blockPosition())) { it != this }
+            .forEach { push(it) }
     }
 
     /**
@@ -894,9 +897,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     // whether another plant is in the same block space as this one
-    private fun isOverlappingWithOther(): Boolean {
+    fun isOverlappingWithOther(): Boolean {
         val otherPlantsAtPos = level().getEntitiesOfClass(Plant::class.java, AABB(blockPosition())) { it != this }
-        return otherPlantsAtPos.any { it.isAlive && !it.isDeadOrDying && boundingBox.intersects(it.boundingBox) }
+        return otherPlantsAtPos.any { it.isAlive && !it.isDeadOrDying && boundingBox.clampSize().intersects(it.boundingBox.clampSize()) }
     }
 
     override fun finalizeSpawn(

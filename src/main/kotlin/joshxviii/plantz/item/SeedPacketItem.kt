@@ -177,15 +177,14 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
                 entity.yRot = yaw
                 entity.yHeadRot = yaw
                 entity.yBodyRot = yaw
-            }
 
-            entity.let {
-                val existingPlants = level.getEntitiesOfClass(Plant::class.java, AABB(it.blockPosition()))
-                if (existingPlants.isNotEmpty()) {
-                    player.sendOverlayMessage(
-                        Component.translatable("message.plantz.already_planted").withStyle(ChatFormatting.RED)
-                    )
-                    return InteractionResult.FAIL
+                entity.let {
+                    if (entity.isOverlappingWithOther()) {
+                        player.sendOverlayMessage(
+                            Component.translatable("message.plantz.already_planted").withStyle(ChatFormatting.RED)
+                        )
+                        return InteractionResult.FAIL
+                    }
                 }
             }
 

@@ -4,23 +4,17 @@ import joshxviii.plantz.PazMain.MODID
 import joshxviii.plantz.entity.Balloon
 import joshxviii.plantz.entity.plant.Plant
 import joshxviii.plantz.entity.plant.saveAsCompoundTag
-import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.world.InteractionHand
-import net.fabricmc.fabric.api.event.player.UseBlockCallback
 import net.minecraft.core.Vec3i
 import net.minecraft.core.component.DataComponents
-import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerEntityGetter
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.ARGB
 import net.minecraft.util.Mth
-import net.minecraft.world.InteractionResult
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.*
@@ -161,6 +155,29 @@ fun Vec3.toAngle(): Float {
 }
 
 fun Item.name(): Component = Component.translatable(this.descriptionId)
+
+fun AABB.clampSize(
+    maxSizeX: Double = 1.0,
+    maxSizeY: Double = 1.0,
+    maxSizeZ: Double = 1.0,
+): AABB {
+    val sx = xsize
+    val sy = ysize
+    val sz = zsize
+
+    if (sx <= maxSizeX && sy <= maxSizeY && sz <= maxSizeZ) return this
+
+    val cx = (minX + maxX) * 0.5
+    val cy = (minY + maxY) * 0.5
+    val cz = (minZ + maxZ) * 0.5
+
+    return AABB.ofSize(
+        Vec3(cx, cy, cz),
+        sx.coerceAtMost(maxSizeX),
+        sy.coerceAtMost(maxSizeY),
+        sz.coerceAtMost(maxSizeZ),
+    )
+}
 
 fun Entity.getHeldBalloons(): List<Balloon> {
     return Leashable.leashableLeashedTo(this).filterIsInstance<Balloon>()
