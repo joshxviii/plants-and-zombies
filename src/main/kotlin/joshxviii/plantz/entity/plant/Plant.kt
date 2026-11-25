@@ -141,6 +141,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val SLEEPING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, EntityDataSerializers.BOOLEAN)
         val POWERED_UP: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, EntityDataSerializers.BOOLEAN)
         val ROLLING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, EntityDataSerializers.BOOLEAN)
+        val CLASSIC_MODE: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, EntityDataSerializers.BOOLEAN)
 
         private val LEGACY_ON_HEAD_SCALE: Identifier = pazResource("on_player_head_effects")
         val ROLLING_ID: Identifier = pazResource("rolling")
@@ -213,6 +214,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             stateUpdated(value)
             this.entityData.set(PLANT_STATE, value)
         }
+
+    var classicMode: Boolean
+        get() = this.entityData.get(CLASSIC_MODE)
+        set(value) = this.entityData.set(CLASSIC_MODE, value)
 
     var cooldown: Int
         get() = this.entityData.get(COOLDOWN)
@@ -333,6 +338,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         entityData.define(POWERED_UP, false)
         entityData.define(ATTACHED_PLAYER, Optional.empty())
         entityData.define(ROLLING, false)
+        entityData.define(CLASSIC_MODE, false)
     }
 
     override fun onSyncedDataUpdated(accessor: EntityDataAccessor<*>) {
@@ -352,6 +358,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     fun plantSaveData(output: ValueOutput) {
+        output.putBoolean("classic_mode", classicMode)
         output.putInt("plantz:ReceivedSun", receivedSun)
         output.putInt("plantz:ReceivedWater", receivedWater)
         output.putInt("plantz:SeedGrowTime", seedGrowCooldown)
@@ -365,6 +372,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
+        classicMode = input.getBooleanOr("classic_mode", false)
         receivedSun = input.getInt("plantz:ReceivedSun").getOrElse { 0 }
         receivedWater = input.getInt("plantz:ReceivedWater").getOrElse { 0 }
         seedGrowCooldown = input.getInt("plantz:SeedGrowTime").getOrElse { 0 }

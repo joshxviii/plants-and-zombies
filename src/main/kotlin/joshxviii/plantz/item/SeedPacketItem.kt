@@ -18,6 +18,7 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.stats.Stats
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySelector
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityType
@@ -49,10 +50,10 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
         val entityData = itemStack.get(DataComponents.ENTITY_DATA) ?: return super.getName(itemStack)
         val entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entityData.type())
         var entityName: Component = Component.translatable("entity.${entityId.namespace}.${entityId.path}")
-        if (entityData.type() == PazEntities.MARIGOLD) {
-            val color = MarigoldColor.fromName(entityData.copyTagWithoutId().getString("color").getOrNull())
-            if (color != MarigoldColor.NONE) entityName = Component.translatable("entity.plantz.marigold.color", color.name.lowercase().capitalize())
-        }
+//        if (entityData.type() == PazEntities.MARIGOLD) {
+//            val color = MarigoldColor.fromName(entityData.copyTagWithoutId().getString("color").getOrNull())
+//            if (color != MarigoldColor.NONE) entityName = Component.translatable("entity.plantz.marigold.color.${color.name.lowercase()}")
+//        }
         return Component.translatable("item.plantz.seed_packet.entity", entityName)
     }
 
@@ -65,6 +66,8 @@ class SeedPacketItem(properties: Properties) : Item(properties) {
     }
 
     companion object {
+        val previewEntities = HashMap<EntityType<*>, Entity?>()
+
         fun use(level: Level, player: Player, hand: InteractionHand): InteractionResult {
             val itemStack = player.getItemInHand(hand)
 

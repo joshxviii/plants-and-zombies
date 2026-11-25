@@ -229,6 +229,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
 
         val ZOMBIE_STATE: EntityDataAccessor<ZombieState> = SynchedEntityData.defineId<ZombieState>(PazZombie::class.java, DATA_ZOMBIE_STATE)
         val FLYING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(PazZombie::class.java, EntityDataSerializers.BOOLEAN)
+        val CLASSIC_MODE: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(PazZombie::class.java, EntityDataSerializers.BOOLEAN)
     }
 
     override fun getAmbientSound(): SoundEvent {
@@ -279,6 +280,10 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     var state: ZombieState
         get() = this.entityData.get(ZOMBIE_STATE)
         set(value) = this.entityData.set(ZOMBIE_STATE, value)
+
+    var classicMode: Boolean
+        get() = this.entityData.get(CLASSIC_MODE)
+        set(value) = this.entityData.set(CLASSIC_MODE, value)
 
     var isFlying: Boolean
         get() = this.entityData.get(FLYING)
