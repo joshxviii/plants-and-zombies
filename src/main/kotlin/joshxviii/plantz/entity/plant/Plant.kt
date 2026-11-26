@@ -524,13 +524,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun isImmobile(): Boolean = state == PlantState.INIT || super.isImmobile()
 
     override fun travel(input: Vec3) {
-        if (clampToGrid() && onGround()) {
+        if (clampToGrid() && !isInWater) {
             if (tickCount%20 == 0) super.travel(input)
         } else super.travel(input)
     }
 
     override fun setPos(x: Double, y: Double, z: Double) {
-        if (clampToGrid() && !isPassenger && !isAttached() && onGround()) {
+        if (clampToGrid() && !isPassenger && !isAttached()) {
             super.setPos(Mth.floor(x) + 0.5, y, Mth.floor(z) + 0.5)
         } else super.setPos(x, y, z)
     }
@@ -837,7 +837,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
     /** if on invalid ground plant should start to suffocate */
     fun onValidGround() : Boolean {
-        return (attachedEntity != null) || hasPumpkinArmor() || canSurviveOn(getBlockBelow()) || vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
+        return (canSurviveOn(getBlockBelow()) && if (canBreatheUnderwater()) isInWater || onGround() else onGround()) || (attachedEntity != null) || hasPumpkinArmor() || vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
     }
 
     fun sunIsVisible() : Boolean {
@@ -851,7 +851,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     open fun canSurviveOn(block: BlockState) : Boolean = canWalk() || block.`is`(PLANTABLE)
     open fun canPlaceOn(block: BlockState) : Boolean = canSurviveOn(block)
     open fun canProduceSeeds(): Boolean = true
-    open fun clampToGrid() = onGround() && !canWalk() && !rolling && onValidGround() && !isOverlappingWithOther()
+    open fun clampToGrid() = !canWalk() && !rolling && onValidGround() && !isOverlappingWithOther()
     open fun cooldownFinished() {}
     open fun rollingFriction(): Float = 0.5f
     override fun shouldDiscardFriction(): Boolean {
