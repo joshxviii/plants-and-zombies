@@ -48,6 +48,7 @@ class Squash(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
     override fun tick() {
         super.tick()
         if (squashTime > 0) {
+            if (deltaMovement.y < 0.0) deltaMovement = deltaMovement.add(0.0, -0.1, 0.0)
             squashTime++
             if (squashTime>10 && onGround()) {
                 squashTime=0
@@ -66,8 +67,8 @@ class Squash(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
             )
         }
         val range = 3.0
-        val candidates = level().getEntities(this, boundingBox.inflate(range)) { entity ->
-            entity is LivingEntity && entity.isAlive && !entity.hasSameRootOwner(this) && owner != entity
+        val candidates = level().getEntitiesOfClass(LivingEntity::class.java, boundingBox.inflate(range)) { entity ->
+            entity.isAlive && !entity.hasSameRootOwner(this) && owner != entity
         }
         for (entity in candidates) {
             val damage : Float = this.attributes.getValue(Attributes.ATTACK_DAMAGE).toFloat()
@@ -76,7 +77,7 @@ class Squash(type: EntityType<out Plant>, level: Level) : Plant(type, level) {
                 val drop = (1.0 - (distance / (range*range))).toFloat()
                 val dmg = damage * drop
                 if(entity.hurtServer(level, damageSources().source(PazDamageTypes.PLANT, this, this), dmg)) {
-                    entity.applyImpulse(entity.position().subtract(this.position()).normalize().add(0.0, 0.5, 0.0), pow = drop * 0.75f)
+                    entity.knockback(0.5, x-entity.x, z-entity.z)
                 }
             }
         }

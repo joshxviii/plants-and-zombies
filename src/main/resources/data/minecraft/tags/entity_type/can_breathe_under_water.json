@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "plantz:coffeebean",
+    "plantz:squash",
+    "#plantz:plantable_on_water"
+  ]
+}
