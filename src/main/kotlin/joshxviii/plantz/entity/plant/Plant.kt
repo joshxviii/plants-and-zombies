@@ -46,6 +46,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.control.BodyRotationControl
 import net.minecraft.world.entity.ai.control.LookControl
+import net.minecraft.world.entity.ai.goal.FloatGoal
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal
@@ -413,6 +414,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
         if (canWalk()) {
             this.goalSelector.addGoal(4, RandomStrollGoal(this, 1.0))
+            this.goalSelector.addGoal(4, FloatGoal(this))
         }
         attackGoals()
     }
@@ -837,7 +839,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
     /** if on invalid ground plant should start to suffocate */
     fun onValidGround() : Boolean {
-        return (canSurviveOn(getBlockBelow()) && if (canBreatheUnderwater()) isInWater || onGround() else onGround()) || (attachedEntity != null) || hasPumpkinArmor() || vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
+        return canWalk() || (canSurviveOn(getBlockBelow()) && if (canBreatheUnderwater()) isInWater || onGround() else onGround()) || (attachedEntity != null) || hasPumpkinArmor() || vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
     }
 
     fun sunIsVisible() : Boolean {
