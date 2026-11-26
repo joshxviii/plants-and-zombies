@@ -11,6 +11,7 @@
 # Changelog 1.5.2
 ### Plants & Zombies has migrated to 26.3!
 ### Changes / Additions
+- Added a client-side options menu accessible with `/pz options`
 - Added Marigold
   - Obtained through boss raid rewards.
   - Marigold will drop treasure instead of seed packets from zen gardening.
@@ -26,7 +27,6 @@
   - Once a boss spawns, the chance resets.
   - Holding "Tab" during a raid will display the Boss Chance and other details.
 - Added "Disco of the Undead" special wave. (waves 4–15)
-- Bonus Rewards are now given for each Boss Defeated rather than every 5 waves.
 - Added Baron Von Bats
   - Baron Von Bats has a chance to spawn as a Boss.
 - Added Zombat
@@ -50,8 +50,8 @@
 - Added Baron's Staff
   - Has a rare chance to drop from defeating Baron Von Bats.
 - Added Roller Skates
-  - A drop from Electric Slide.
-  - While skating, the wearing can rail grind on Rails, Iron Bars, or Chains.
+  - A rare drop from Electric Slide.
+  - While skating, the wearing can grind on Rails, Iron Bars, or Chains.
 - Added Letter
   - Crafted with 3 x Newspaper and 3 x Paper.
   - Used to write fun letters to send to your friends.
@@ -62,15 +62,13 @@
 - Cones, Buckets, and Football helmets now only block damage from above.
   - They have also been given a buff to armor and armor toughness.
 - Newspapers now work like Shields and only block damage from the front.
-- While a plant is equipped with the Plant Pot Helmet, The Gardening Glove can be used to place the plant back on the ground.
 - Certain plants that are able to move around, like the Wall Nut and Squash, will wear pumpkin armor as helmets instead.
 - Dye Blaster, Gardening Glove, Plant Pot Helmet, and Ducky Tube can now be enchanted.
-- Some naturally spawned Browncoats have a very small chance to be able to transform into Super Brainz when approached.
+- Some naturally spawned Browncoats have a very small chance to be able to transform into Super Brainz when approached or struck by lightning.
 - Added a new enchantment, "Lobbing".
-  - This enchantment applies to the Gardening Glove and allows the player to toss the held plant.
+  - Applies to the Gardening Glove and allows the player to toss held plants.
 - Worn plants with the Plant Pot Helmet can be placed back down by shift-clicking.
 - Dye Blasters now store dye ammo. Dye Blaster can only be fired after being loaded with dye. Each shot has a chance to consume the stored dye.
-- Added a client-side options menu accessible with `/pz options`
 ### Fixes / Technical Changes
 - Pumpkins are no longer duplicated when using a Gardening Glove.
 - Leader zombies no longer spawn a bunch of other zombies that do not despawn.
@@ -111,7 +109,7 @@
     ]
   }
   ```
-- Various other bug fixes and improvements
+- Various other bug fixes and improvements.
 
 # Changelog 1.5.1
 ### Changes / Additions
