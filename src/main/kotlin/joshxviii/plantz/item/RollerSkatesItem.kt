@@ -2,6 +2,7 @@ package joshxviii.plantz.item
 
 import joshxviii.plantz.PazItems
 import joshxviii.plantz.PazServerParticles
+import joshxviii.plantz.PazSounds
 import joshxviii.plantz.PazTags
 import joshxviii.plantz.pazResource
 import net.minecraft.ChatFormatting
@@ -9,6 +10,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
@@ -139,6 +141,13 @@ object RailGrinding {
                 s to BlockStateProperties.SOUTH, w to BlockStateProperties.WEST
             ).filter { (_, p) -> state.getValue(p) }.map { Conn(it.first, false) }
         }
+        if (state.hasProperty(BlockStateProperties.FACING)) return when (state.getValue(BlockStateProperties.FACING)) {
+            Direction.NORTH -> c(n, s)
+            Direction.SOUTH -> c(s, n)
+            Direction.EAST -> c(e, w)
+            Direction.WEST -> c(w, e)
+            else -> emptyList()
+        }
         return c(n, e, s, w)
     }
 
@@ -227,6 +236,7 @@ object RailGrinding {
             val along = (entity.x - (pos.x + 0.5)) * best.dir.stepX + (entity.z - (pos.z + 0.5)) * best.dir.stepZ
             st = RailGrindState(best.dir, maxOf(speed, MIN_GRIND_SPEED), pos, along >= 0.0)
             holder.`plantz$setGrindState`(st)
+            entity.playSound(PazSounds.ROLLER_SKATE_GRIND_START, 1.0f, 1.0f)
         } else if (dm.y > 0.1) {
             // jumped off the rail boost
             release(entity, st, dm.y + JUMP_LIFT_BOOST, JUMP_SPEED_BOOST)

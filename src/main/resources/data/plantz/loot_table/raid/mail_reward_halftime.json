@@ -3,15 +3,11 @@
   "pools": [
     {
       "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.35
+      },
       "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "plantz:brain",
-          "weight": 65,
-          "modifier": [
-            { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 4, "max": 6 } }
-          ]
-        },
         {
           "type": "minecraft:item",
           "name": "plantz:seed_packet",

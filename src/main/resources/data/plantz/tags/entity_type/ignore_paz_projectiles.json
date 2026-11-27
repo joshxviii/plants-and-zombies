@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "plantz:lawn_mower",
     "minecraft:armor_stand",
     "minecraft:item_frame",
     "#minecraft:boat",

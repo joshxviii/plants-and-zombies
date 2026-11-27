@@ -9,8 +9,8 @@ import terrablender.api.*
 import terrablender.api.ParameterUtils.*
 import java.util.function.Consumer
 
-/** Only loaded when TerraBlender is present (see [PazWorldGen.initialize]). */
-internal object PazTerraBlender {
+// TODO: seems like the api entry point doesn't exist and the dependency for the github version doesn't work. Will figure this out later
+object PazTerraBlender {
     fun register() {
         Regions.register(OverworldRegion("graveyard"))
         MaterialRuleManager.addRules(MaterialRuleManager.RuleCategory.OVERWORLD, PazMain.MODID, PazWorldGen.GRAVEYARD_MATERIAL)

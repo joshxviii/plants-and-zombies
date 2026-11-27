@@ -15,6 +15,9 @@ object PazSounds {
     @JvmField val BALLOON_INFLATE = register("item.balloon.inflate")
     @JvmField val BALLOON_POP = register("item.balloon.pop")
 
+    @JvmField val ROLLER_SKATE_GRIND = register("item.roller_skates.grind")
+    @JvmField val ROLLER_SKATE_GRIND_START = register("item.roller_skates.grind_start")
+
     @JvmField val PROJECTILE_SHOOT = register("entity.projectile.shoot")
     @JvmField val PROJECTILE_HIT_CONE = register("entity.projectile.hit_cone")
     @JvmField val PROJECTILE_HIT_BUCKET = register("entity.projectile.hit_bucket")

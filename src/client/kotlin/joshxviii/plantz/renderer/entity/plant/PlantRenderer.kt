@@ -8,7 +8,6 @@ import joshxviii.plantz.entity.plant.*
 import joshxviii.plantz.model.plants.PlantModel
 import joshxviii.plantz.renderer.entity.plant.PlantRenderState.Companion.TEXTURE_PATH
 import joshxviii.plantz.renderer.PlantHeadAttachmentRenderLayer
-import joshxviii.plantz.renderer.getChildOrNull
 import joshxviii.plantz.renderer.getEmissiveTextureLocation
 import joshxviii.plantz.renderer.getTextureLocation
 import joshxviii.plantz.renderer.validMagicName
@@ -33,7 +32,6 @@ import net.minecraft.util.Mth
 import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.phys.Vec3
 import org.joml.Quaternionf
-import kotlin.collections.listOf
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -48,6 +46,8 @@ open class PlantRenderer(
 ) {
 
     companion object {
+        private val rollDelta = Quaternionf()
+
         private fun updateClientRoll(entity: Plant, partialTick: Float) {
             if (Minecraft.getInstance().isPaused) return
             val tickScale = entity.level().tickRateManager().tickrate() / 20f
@@ -79,8 +79,8 @@ open class PlantRenderer(
             axisX /= axisLen
             axisZ /= axisLen
 
-            val delta = Quaternionf().fromAxisAngleRad(axisX, 0f, axisZ, angle)
-            delta.mul(entity.rollRotation, entity.rollRotation)
+            rollDelta.fromAxisAngleRad(axisX, 0f, axisZ, angle)
+            rollDelta.mul(entity.rollRotation, entity.rollRotation)
             entity.rollRotation.normalize()
         }
     }
@@ -105,14 +105,14 @@ open class PlantRenderer(
             true, -1, camera
         )
 
-        if (state.isBaby && babyModel != null) model = babyModel
+        if (babyModel != null) model = if (state.isBaby) babyModel else defaultModel
         super.submit(state, poseStack, collector, camera)
     }
 
     override fun getFlipDegrees(): Float = 0f
 
     override fun getShadowRadius(state: PlantRenderState): Float {
-        return if (!state.embeddedOnWearer && state.rotations == Quaternionf()) super.getShadowRadius(state) * (0.9f) else 0f
+        return if (!state.embeddedOnWearer && state.hasIdentityRotation()) super.getShadowRadius(state) * (0.9f) else 0f
     }
 
     override fun scale(state: PlantRenderState, poseStack: PoseStack) {
@@ -142,13 +142,12 @@ open class PlantRenderer(
         super.extractRenderState(entity, state, partialTick)
         val attached = entity.attachedEntity
         state.renderedByWearer = attached != null && PlantHeadAttachmentRenderLayer.wearerRendersPlant(attached)
-        state.rotations = if (attached != null) {// plant pot helmet (unused rn)
+        state.rotations.identity()
+        if (attached != null) {
             val pitch = -Mth.lerp(partialTick, attached.xRotO, attached.xRot)
             val yaw = Mth.lerp(partialTick, attached.yRotO, attached.yRot)
-            Quaternionf()
-                .rotateY(Mth.DEG_TO_RAD * (180.0f - yaw))
-                .rotateX(Mth.DEG_TO_RAD * pitch)
-        } else Quaternionf()
+            state.rotations.rotateY(Mth.DEG_TO_RAD * (180.0f - yaw)).rotateX(Mth.DEG_TO_RAD * pitch)
+        }
         state.plantState = entity.state
         if (entity is ExplosivePlant) state.swelling = entity.getSwelling(partialTick)
         state.cooldown = entity.cooldown
@@ -175,17 +174,15 @@ open class PlantRenderer(
                 is Citron -> entity.rolling
                 else -> false
             }
-        state.textureExtra = mutableListOf<String>().apply {
-            when (entity) {
-                is WallNut -> add(when {
-                    state.damagedAmount >= 0.75f -> "damage_medium"
-                    state.damagedAmount >= 0.5f -> "damage_low"
-                    else -> ""
-                })
-                is KernelPult -> if (entity.hasButterShot) add("butter")
-                is Marigold -> if (entity.color != MarigoldColor.getDefault()) add(entity.color.name.lowercase())
-                else -> {}
-            }
+        state.textureExtra = when (entity) {
+            is WallNut -> listOf(when {
+                state.damagedAmount >= 0.75f -> "damage_medium"
+                state.damagedAmount >= 0.5f -> "damage_low"
+                else -> ""
+            })
+            is KernelPult -> if (entity.hasButterShot) listOf("butter") else emptyList()
+            is Marigold -> if (entity.color != MarigoldColor.getDefault()) listOf(entity.color.name.lowercase()) else emptyList()
+            else -> emptyList()
         }
         state.glowPercent = when (entity) {
             is Sunflower, is SunShroom -> {
@@ -196,9 +193,11 @@ open class PlantRenderer(
             is ExplosivePlant -> entity.getSwelling(partialTick)
             else -> 0f
         }
+        state.prepareTextures()
     }
 
-    override fun getTextureLocation(state: PlantRenderState): Identifier = state.texture()
+    override fun getTextureLocation(state: PlantRenderState): Identifier =
+        state.bodyTexture ?: state.getTextureLocation(TEXTURE_PATH, state.bodySuffixes)
 }
 
 class EmissivePlantLayer<M : EntityModel<PlantRenderState>>(
@@ -214,8 +213,8 @@ class EmissivePlantLayer<M : EntityModel<PlantRenderState>>(
         xRot: Float
     ) {
         if (state.silhouette) return
-        val textureLocation = state.getEmissiveTextureLocation(TEXTURE_PATH, state.getSuffixes()) ?: return
-        submitNodeCollector.order(1).submitModel(this.parentModel, state, poseStack, RenderTypes.eyes(textureLocation), lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor);
+        val textureLocation = state.emissiveTexture ?: return
+        submitNodeCollector.order(1).submitModel(this.parentModel, state, poseStack, RenderTypes.eyes(textureLocation), lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor)
     }
 
     override fun renderType(): RenderType = RenderTypes.lines()
@@ -235,10 +234,9 @@ class SunGlowLayer<M : EntityModel<PlantRenderState>>(
         if (state.silhouette) return
         val alphaPercent = state.glowPercent
         if (alphaPercent <= 0f) return
+        val glowTexture = state.glowTexture ?: return
         val color = ARGB.color(Mth.floor(alphaPercent * 0xFF), 0xFFFFFF)
-
-        val glowTexture = state.getTextureLocation(TEXTURE_PATH, state.getSuffixes().apply { add("glow") })
-        submitNodeCollector.submitModel(this.parentModel, state, poseStack, RenderTypes.eyes(glowTexture), LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, color, null, -1);
+        submitNodeCollector.submitModel(this.parentModel, state, poseStack, RenderTypes.eyes(glowTexture), LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, color, null, -1)
     }
     override fun renderType(): RenderType = RenderTypes.lines()
 }
@@ -248,6 +246,9 @@ class PumpkinArmorLayer<M : EntityModel<PlantRenderState>>(
     val renderer: RenderLayerParent<PlantRenderState, M>,
     val pumpkinArmorRenderer: PumpkinRenderer = PumpkinRenderer(context)
 ): RenderLayer<PlantRenderState, M>(renderer) {
+    private val pumpkinState = PumpkinRenderState()
+    private val cameraState = CameraRenderState()
+
     override fun submit(
         poseStack: PoseStack,
         submitNodeCollector: SubmitNodeCollector,
@@ -258,22 +259,20 @@ class PumpkinArmorLayer<M : EntityModel<PlantRenderState>>(
     ) {
         if (state.pumpkinArmor <= 0 || state.silhouette) return
         poseStack.pushPose()
-        val pumpkinState = PumpkinRenderState()
         val onHat = (parentModel as? PlantModel)?.applyLocatorHat(poseStack) ?: false
         poseStack.scale(-1.0f, -1.0f, 1.0f)
-        if (onHat) pumpkinState.helmetMode = true
-        else poseStack.translate(0.0f, -1.503f, 0.0f)
+        if (!onHat) poseStack.translate(0.0f, -1.503f, 0.0f)
         poseStack.rotate(Axis.YP.rotationDegrees(-180f))
 
+        pumpkinState.helmetMode = onHat
         pumpkinState.lightCoords = state.lightCoords
         pumpkinState.ageInTicks = state.ageInTicks
         pumpkinState.isAsleep = state.isAsleep
-
         pumpkinState.sleepAnimationState.copyFrom(state.sleepAnimationState)
         pumpkinState.idleAnimationState.copyFrom(state.idleAnimationState)
-        pumpkinArmorRenderer.submit(pumpkinState, poseStack, submitNodeCollector, CameraRenderState())
+        pumpkinState.prepareTextures()
+        pumpkinArmorRenderer.submit(pumpkinState, poseStack, submitNodeCollector, cameraState)
         poseStack.popPose()
-
     }
 }
 
@@ -293,7 +292,7 @@ open class PlantRenderState : LivingEntityRenderState() {
     var damagedAmount: Float = 0.0f
     var isAsleep: Boolean = false
     var customName: String = ""
-    var textureExtra: MutableList<String> = mutableListOf()
+    var textureExtra: List<String> = emptyList()
     var glowPercent: Float = 0f
     var plantState: PlantState = PlantState.IDLE
     var useSpecialAction: Boolean = false
@@ -307,16 +306,31 @@ open class PlantRenderState : LivingEntityRenderState() {
     val sleepAnimationState: AnimationState = AnimationState()
     val bounceAnimationState: AnimationState = AnimationState()
 
-    fun getSuffixes(): MutableList<String> {
-        val magicName = this.validMagicName(customName)
-        val suffixes = mutableListOf<String>().apply {
-            textureExtra.forEach                { add(it) }
-            if (isBaby)                         add("baby")
-            if (isAsleep || deathTime > 0)      add("sleep")
-            if (magicName!=null)                add(magicName)
-        }.filter { it.isNotEmpty() }.toMutableList()
-        return suffixes
-    }
+    var bodySuffixes: List<String> = emptyList()
+        private set
+    var bodyTexture: Identifier? = null
+        private set
+    var emissiveTexture: Identifier? = null
+        private set
+    var glowTexture: Identifier? = null
+        private set
 
-    fun texture(): Identifier = getTextureLocation(TEXTURE_PATH, getSuffixes())
+    fun hasIdentityRotation(): Boolean =
+        rotations.x == 0f && rotations.y == 0f && rotations.z == 0f && rotations.w == 1f
+
+    /**
+     * Resolves every texture this state needs. Call once per extraction, after the fields above are set,
+     */
+    fun prepareTextures() {
+        val magicName = validMagicName(customName)
+        bodySuffixes = buildList {
+            textureExtra.forEach { if (it.isNotEmpty()) add(it) }
+            if (isBaby) add("baby")
+            if (isAsleep || deathTime > 0) add("sleep")
+            if (magicName != null) add(magicName)
+        }
+        bodyTexture = getTextureLocation(TEXTURE_PATH, bodySuffixes)
+        emissiveTexture = getEmissiveTextureLocation(TEXTURE_PATH, bodySuffixes)
+        glowTexture = if (glowPercent > 0f) getTextureLocation(TEXTURE_PATH, bodySuffixes + "glow") else null
+    }
 }

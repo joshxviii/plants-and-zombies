@@ -53,6 +53,7 @@ class BaronVonBatsRenderer(
         state.teleportAnimationState.copyFrom(entity.teleportAnimation)
         state.transformAnimationState.copyFrom(entity.transformAnimation)
         state.isTransformed = entity.isTransformed
+        state.isInvisible = entity.isTransformed
         state.teleportTime = entity.teleportTime
         state.isAppearing = (entity.teleportTime > BaronVonBats.TELEPORT_DURATION * 0.5)
     }

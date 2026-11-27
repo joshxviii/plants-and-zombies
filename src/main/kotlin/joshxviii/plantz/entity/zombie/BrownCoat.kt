@@ -147,11 +147,8 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
         val structureManager = (level as ServerLevel).structureManager()
         val isShipwreckSpawn = structureManager.getStructureWithPieceAt(blockPosition(), StructureTags.SHIPWRECK).isValid
 
-        if (spawnReason != EntitySpawnReason.EVENT) equipZombieEquipment(random, difficulty.specialMultiplier + 0.1f)
-
-        if (spawnReason != EntitySpawnReason.SPAWN_ITEM_USE) {
-            val spawnBalloons = (spawnReason != EntitySpawnReason.EVENT && spawnReason != EntitySpawnReason.REINFORCEMENT && y > level.seaLevel && random.nextFloat() < 0.02)
-            if (spawnBalloons) spawnWithBalloons()
+        if (spawnReason != EntitySpawnReason.EVENT && spawnReason != EntitySpawnReason.SPAWN_ITEM_USE && spawnReason != EntitySpawnReason.COMMAND) {
+            equipZombieEquipment(random, difficulty.specialMultiplier + 0.1f)
 
             variant = BrownCoatVariant.pickForBiome(
                 level.getBiome(blockPosition()).`is`(PazTags.Biomes.HAS_BROWNCOAT_SNOW),
@@ -160,6 +157,9 @@ class BrownCoat(type: EntityType<out BrownCoat>, level: Level) : PazZombie(type,
                 isShipwreckSpawn,
                 random
             )
+
+            val spawnBalloons = (spawnReason != EntitySpawnReason.REINFORCEMENT && y > level.seaLevel && random.nextFloat() < 0.02)
+            if (spawnBalloons) spawnWithBalloons()
         }
 
         if (spawnReason == EntitySpawnReason.NATURAL && variant == BrownCoatVariant.BROWNCOAT && level.random.nextFloat() < 0.001f + difficulty.specialMultiplier * 0.01f) {

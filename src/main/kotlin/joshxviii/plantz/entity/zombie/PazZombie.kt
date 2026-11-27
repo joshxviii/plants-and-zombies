@@ -8,7 +8,6 @@ import joshxviii.plantz.ai.control.PazMoveControl
 import joshxviii.plantz.ai.goal.FlyingPathfindingGoal
 import joshxviii.plantz.ai.pathfinding.PazFlyingPathNavigation
 import joshxviii.plantz.ai.pathfinding.PazGroundPathNavigation
-import joshxviii.plantz.mixin.LivingEntityMixin
 import joshxviii.plantz.raid.*
 import joshxviii.plantz.raid.ZombieRaid.Companion.RAID_DISTANCE
 import net.minecraft.core.BlockPos
@@ -56,11 +55,11 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.gamerules.GameRules
 import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
-import org.spongepowered.asm.mixin.Unique
 import java.util.*
 import kotlin.jvm.optionals.getOrElse
 import kotlin.math.max
@@ -170,6 +169,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         }
 
         fun brainDropChance(zombie: LivingEntity, level: ServerLevel, source: DamageSource) {
+            if (!level.gameRules.get(GameRules.MOB_DROPS)) return
             if (!zombie.`is`(EntityTypeTags.ZOMBIES) || zombie.`is`(PazTags.EntityTypes.CANNOT_DROP_BRAINS)) return
             if (level.getRandom().nextFloat() < BRAIN_DROP_CHANCE && source.entity?.`is`(PazTags.EntityTypes.DROP_ZOMBIE_LOOT_WHEN_KILLED_BY) == true
             ) zombie.spawnAtLocation(level, PazItems.BRAIN)
@@ -184,7 +184,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
             PazEntities.ALL_STAR            to 1,
         )
 
-        private const val BRAIN_DROP_CHANCE = 0.02f
+        private const val BRAIN_DROP_CHANCE = 0.015f
         const val ZOMBIE_SPEED = 0.23
         const val MAX_EQUIPPABLE_BALLOONS = 4
         val LEADER_MODIFIER_ID: Identifier = Identifier.withDefaultNamespace("leader_zombie_bonus")
@@ -229,6 +229,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
 
         val ZOMBIE_STATE: EntityDataAccessor<ZombieState> = SynchedEntityData.defineId<ZombieState>(PazZombie::class.java, DATA_ZOMBIE_STATE)
         val FLYING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(PazZombie::class.java, EntityDataSerializers.BOOLEAN)
+        val CLASSIC_MODE: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(PazZombie::class.java, EntityDataSerializers.BOOLEAN)
     }
 
     override fun getAmbientSound(): SoundEvent {
@@ -279,6 +280,10 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
     var state: ZombieState
         get() = this.entityData.get(ZOMBIE_STATE)
         set(value) = this.entityData.set(ZOMBIE_STATE, value)
+
+    var classicMode: Boolean
+        get() = this.entityData.get(CLASSIC_MODE)
+        set(value) = this.entityData.set(CLASSIC_MODE, value)
 
     var isFlying: Boolean
         get() = this.entityData.get(FLYING)
@@ -514,6 +519,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
+        entityData.define(CLASSIC_MODE, false)
         entityData.define(ZOMBIE_STATE, ZombieState.IDLE)
         entityData.define(FLYING, false)
     }
@@ -522,6 +528,7 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         super.addAdditionalSaveData(output)
         output.putInt("plantz:State", state.ordinal)
         output.putBoolean("plantz:IsFlying", entityData.get(FLYING))
+        output.putBoolean("classic_mode", entityData.get(CLASSIC_MODE))
     }
 
     override fun readAdditionalSaveData(input: ValueInput) {
@@ -585,17 +592,12 @@ abstract class PazZombie(type: EntityType<out PazZombie>, level: Level) : Zombie
         spawnReason: EntitySpawnReason,
         groupData: SpawnGroupData?
     ): SpawnGroupData? {
-        val newData = PazZombieGroupData(
-            isRaider = (groupData as? PazZombieGroupData)?.isRaider ?: false,
-            isCountedTowardRaidHealth = (groupData as? PazZombieGroupData)?.isCountedTowardRaidHealth ?: false,
-            ignoreFlag = (groupData as? PazZombieGroupData)?.ignoreFlag ?: false,
-            isBaby = isBaby && (groupData as? ZombieGroupData)?.isBaby ?: false
-        )
+        val newData = (groupData as? PazZombieGroupData) ?: PazZombieGroupData()
         val level = level() as ServerLevel
         if (newData.isRaider) {
             val raid = level.getZombieRaids().getNearbyRaid(blockPosition(), RAID_DISTANCE)
             this.setCountHealth(newData.isCountedTowardRaidHealth)
-            raid?.joinRaid(level, this)
+            raid?.joinRaid(level, this, true, joinAsBoss = newData.isBoss)
         }
         (this as? ZombieRaider)?.`plantz$setIgnoreFlag`(newData.ignoreFlag)
 

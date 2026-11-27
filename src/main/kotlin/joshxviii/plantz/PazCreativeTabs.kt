@@ -1,5 +1,6 @@
 package joshxviii.plantz
 
+import joshxviii.plantz.entity.plant.MarigoldColor
 import joshxviii.plantz.item.BlueprintItem
 import joshxviii.plantz.item.DoorShieldItem.Companion.stackFor
 import joshxviii.plantz.item.RewardLetterItem
@@ -23,7 +24,6 @@ object PazCreativeTabs {
     fun plantEntities(output: CreativeModeTab.Output) {
         // plant seed packets
         output.accept(SeedPacketItem.stackFor(PazEntities.SUNFLOWER))
-        output.accept(SeedPacketItem.stackFor(PazEntities.MARIGOLD))
         output.accept(SeedPacketItem.stackFor(PazEntities.PEA_SHOOTER))
         output.accept(SeedPacketItem.stackFor(PazEntities.WALL_NUT))
         output.accept(SeedPacketItem.stackFor(PazEntities.EXPLODE_O_NUT))
@@ -54,45 +54,47 @@ object PazCreativeTabs {
         output.accept(SeedPacketItem.stackFor(PazEntities.GRAVE_BUSTER))
         output.accept(SeedPacketItem.stackFor(PazEntities.PUMPKIN))
         output.accept(SeedPacketItem.stackFor(PazEntities.SQUASH))
+        output.accept(SeedPacketItem.stackFor(PazEntities.MARIGOLD))
+        if (PazConfig.SPLIT_ITEM_TABS) customSpawnItems(output, MarigoldColor.seedPackets())
         if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) {
             output.accept(SeedPacketItem.stackFor(PazEntities.CITRON))
             output.accept(SeedPacketItem.stackFor(PazEntities.ROYAL_SUNFLOWER))
         }
     }
 
-    private fun customEggs(output: CreativeModeTab.Output, stacks: List<ItemStack>) {
+    private fun customSpawnItems(output: CreativeModeTab.Output, stacks: List<ItemStack>) {
         stacks.forEach { output.accept(it) }
     }
 
     fun zombieEntities(output: CreativeModeTab.Output) {
         // zombie spawn eggs
         output.accept(PazItems.BROWN_COAT_SPAWN_EGG)
-        if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.brownCoat())
+        if (PazConfig.SPLIT_ITEM_TABS) customSpawnItems(output, ZombieSpawnEggs.brownCoat())
         output.accept(PazItems.NEWSPAPER_ZOMBIE_SPAWN_EGG)
         output.accept(PazItems.DIGGER_ZOMBIE_SPAWN_EGG)
-        if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.diggerZombie())
+        if (PazConfig.SPLIT_ITEM_TABS) customSpawnItems(output, ZombieSpawnEggs.diggerZombie())
         output.accept(PazItems.ENGINEER_ZOMBIE_SPAWN_EGG)
         output.accept(PazItems.BACKUP_DANCER_SPAWN_EGG)
         output.accept(PazItems.DISCO_ZOMBIE_SPAWN_EGG)
         output.accept(PazItems.ALL_STAR_SPAWN_EGG)
-        if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.allStar())
+        if (PazConfig.SPLIT_ITEM_TABS) customSpawnItems(output, ZombieSpawnEggs.allStar())
         output.accept(PazItems.GRAVE_DIGGER_SPAWN_EGG)
         output.accept(PazItems.ZOMBIE_YETI_SPAWN_EGG)
         output.accept(PazItems.IMP_SPAWN_EGG)
-        if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.imp())
+        if (PazConfig.SPLIT_ITEM_TABS) customSpawnItems(output, ZombieSpawnEggs.imp())
         if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(PazItems.RA_ZOMBIE_SPAWN_EGG)
         output.accept(PazItems.SOLDIER_ZOMBIE_SPAWN_EGG)
         output.accept(PazItems.ROBO_ZOMBIE_SPAWN_EGG)
-        if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.roboZombie())
+        if (PazConfig.SPLIT_ITEM_TABS) customSpawnItems(output, ZombieSpawnEggs.roboZombie())
         output.accept(PazItems.PIRATE_CAPTAIN_SPAWN_EGG)
         if (PazConfig.SPLIT_ITEM_TABS) output.accept(PazItems.PIRATE_CAPTAIN_GHOST_SPAWN_EGG)
         output.accept(PazItems.SUPER_BRAINZ_SPAWN_EGG)
-        if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.superBrainz())
+        if (PazConfig.SPLIT_ITEM_TABS) customSpawnItems(output, ZombieSpawnEggs.superBrainz())
         output.accept(PazItems.BARON_VON_BATS_SPAWN_EGG)
         output.accept(PazItems.ELECTRIC_SLIDE_SPAWN_EGG)
-        if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.electricSlide())
+        if (PazConfig.SPLIT_ITEM_TABS) customSpawnItems(output, ZombieSpawnEggs.electricSlide())
         output.accept(PazItems.GARGANTUAR_SPAWN_EGG)
-        if (PazConfig.SPLIT_ITEM_TABS) customEggs(output, ZombieSpawnEggs.gargantuar())
+        if (PazConfig.SPLIT_ITEM_TABS) customSpawnItems(output, ZombieSpawnEggs.gargantuar())
         output.accept(PazItems.ZOMBAT_SPAWN_EGG)
 
         // Robots
@@ -180,10 +182,10 @@ object PazCreativeTabs {
         if (PazConfig.SPLIT_ITEM_TABS) output.accept(PazItems.GNOME_SPAWN_EGG)
 
         // blueprints
-        if (PazConfig.SPLIT_ITEM_TABS) {
-            if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_TURRET))
-            if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(BlueprintItem.stackFor(PazEntities.ELECTRO_TURRET))
-            if (PazConfig.EXPERIMENTAL_FEATURES_ENABLED) output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_DRONE))
+        if (PazConfig.SPLIT_ITEM_TABS && PazConfig.EXPERIMENTAL_FEATURES_ENABLED) {
+            output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_TURRET))
+            output.accept(BlueprintItem.stackFor(PazEntities.ELECTRO_TURRET))
+            output.accept(BlueprintItem.stackFor(PazEntities.ZOMBIE_DRONE))
             output.accept(BlueprintItem.stackFor(PazEntities.LAWN_MOWER))
         }
     }

@@ -6,16 +6,8 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "plantz:brain",
-          "weight": 70,
-          "modifier": [
-            { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 16, "max": 28 } }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "plantz:seed_packet",
-          "weight": 12,
+          "weight": 22,
           "modifier": [
             { "type": "minecraft:set_components", "components": { "minecraft:entity_data": { "id": "plantz:pumpkin" } } }
           ]
@@ -23,7 +15,7 @@
         {
           "type": "minecraft:item",
           "name": "plantz:seed_packet",
-          "weight": 12,
+          "weight": 22,
           "modifier": [
             { "type": "minecraft:set_components", "components": { "minecraft:entity_data": { "id": "plantz:grave_buster" } } }
           ]
@@ -31,7 +23,7 @@
         {
           "type": "minecraft:item",
           "name": "plantz:baron_staff",
-          "weight": 6
+          "weight": 1
         }
       ]
     }

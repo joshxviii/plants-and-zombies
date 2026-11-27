@@ -32,7 +32,5 @@ object PazWorldGen {
 
     fun isTimeDimension(dimension: ResourceKey<Level>): Boolean = dimension == TIME_SPACE || dimension == GNOME_SPACE
 
-    fun initialize() {
-        if (FabricLoader.getInstance().isModLoaded("terrablender")) PazTerraBlender.register()
-    }
+    fun initialize() {}
 }

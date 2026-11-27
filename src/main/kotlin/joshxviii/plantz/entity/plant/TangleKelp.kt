@@ -93,8 +93,6 @@ class TangleKelp(type: EntityType<out Plant>, level: Level) : Plant(type, level)
         entityData.define(TANGLE_TIME_ID, 0)
     }
 
-    override fun canBreatheUnderwater(): Boolean = true
-
     private fun canTargetBePulled(target: LivingEntity): Boolean {
         if (this.hurtTime > 0) return false
         if (target is Plant) return false

@@ -12,5 +12,5 @@ void main() {
     float a = texture(Sampler0, texCoord0).a * vertexColor.a;
     if (a < 0.1) discard;
 
-    fragColor = vec4(0.0, 0.0, 0.0, 1.0);
+    fragColor = vertexColor;
 }

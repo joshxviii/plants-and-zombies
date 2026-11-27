@@ -9,9 +9,18 @@
           "name": "plantz:brain",
           "weight": 60,
           "modifier": [
-            { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 7, "max": 14 } }
+            { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 3, "max": 10 } }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.45
+      },
+      "entries": [
         {
           "type": "minecraft:loot_table",
           "value": "plantz:balloons",

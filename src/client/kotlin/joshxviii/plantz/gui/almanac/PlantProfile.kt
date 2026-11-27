@@ -2,6 +2,7 @@ package joshxviii.plantz.gui.almanac
 
 import joshxviii.plantz.PazConfig
 import joshxviii.plantz.ai.PlantState
+import joshxviii.plantz.item.SeedPacketItem
 import joshxviii.plantz.pazResource
 import joshxviii.plantz.renderer.entity.plant.PlantRenderState
 import net.minecraft.client.Minecraft
@@ -48,7 +49,6 @@ object PlantProfile {
     private const val NAMEPLATE_HEIGHT = 10
     private val NAMEPLATE = pazResource("textures/gui/almanac/info_box_name.png")
 
-    private val previewEntities = HashMap<EntityType<*>, Entity?>()
     val mc = Minecraft.getInstance()
     val font = mc.font
 
@@ -77,7 +77,7 @@ object PlantProfile {
 
     fun extractProfile(graphics: GuiGraphicsExtractor, type: EntityType<*>, itemStack: ItemStack?, x: Int, y: Int, width: Int, height: Int, detailedView: Boolean) {
         val level = mc.level ?: return
-        val entity = previewEntities.getOrPut(type) { type.create(level, EntitySpawnReason.LOAD)?.also { it.id = -1 } }
+        val entity = SeedPacketItem.previewEntities.getOrPut(type) { type.create(level, EntitySpawnReason.LOAD)?.also { it.id = -1 } }
         val known = isKnown(itemStack)
 
         if (detailedView) {

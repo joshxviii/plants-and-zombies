@@ -46,6 +46,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.control.BodyRotationControl
 import net.minecraft.world.entity.ai.control.LookControl
+import net.minecraft.world.entity.ai.goal.FloatGoal
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal
@@ -141,6 +142,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         val SLEEPING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, EntityDataSerializers.BOOLEAN)
         val POWERED_UP: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, EntityDataSerializers.BOOLEAN)
         val ROLLING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, EntityDataSerializers.BOOLEAN)
+        val CLASSIC_MODE: EntityDataAccessor<Boolean> = SynchedEntityData.defineId<Boolean>(Plant::class.java, EntityDataSerializers.BOOLEAN)
 
         private val LEGACY_ON_HEAD_SCALE: Identifier = pazResource("on_player_head_effects")
         val ROLLING_ID: Identifier = pazResource("rolling")
@@ -149,7 +151,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         private val KNOCK_BACK_MODIFIER = AttributeModifier(ROLLING_ID, 99.0, AttributeModifier.Operation.ADD_VALUE)
         private val STEP_HEIGHT_MODIFIER = AttributeModifier(ROLLING_ID, 0.75, AttributeModifier.Operation.ADD_VALUE)
 
-        const val PLANT_DAMAGE = 1.0
+        const val PLANT_DAMAGE = 1.25
 
         data class PlantAttributes(
             val maxHealth: Double = 20.0,
@@ -213,6 +215,10 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
             stateUpdated(value)
             this.entityData.set(PLANT_STATE, value)
         }
+
+    var classicMode: Boolean
+        get() = this.entityData.get(CLASSIC_MODE)
+        set(value) = this.entityData.set(CLASSIC_MODE, value)
 
     var cooldown: Int
         get() = this.entityData.get(COOLDOWN)
@@ -333,6 +339,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         entityData.define(POWERED_UP, false)
         entityData.define(ATTACHED_PLAYER, Optional.empty())
         entityData.define(ROLLING, false)
+        entityData.define(CLASSIC_MODE, false)
     }
 
     override fun onSyncedDataUpdated(accessor: EntityDataAccessor<*>) {
@@ -352,6 +359,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     fun plantSaveData(output: ValueOutput) {
+        output.putBoolean("classic_mode", entityData.get(CLASSIC_MODE))
         output.putInt("plantz:ReceivedSun", receivedSun)
         output.putInt("plantz:ReceivedWater", receivedWater)
         output.putInt("plantz:SeedGrowTime", seedGrowCooldown)
@@ -365,6 +373,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
+        classicMode = input.getBooleanOr("classic_mode", false)
         receivedSun = input.getInt("plantz:ReceivedSun").getOrElse { 0 }
         receivedWater = input.getInt("plantz:ReceivedWater").getOrElse { 0 }
         seedGrowCooldown = input.getInt("plantz:SeedGrowTime").getOrElse { 0 }
@@ -405,6 +414,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
         if (canWalk()) {
             this.goalSelector.addGoal(4, RandomStrollGoal(this, 1.0))
+            this.goalSelector.addGoal(4, FloatGoal(this))
         }
         attackGoals()
     }
@@ -516,13 +526,13 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     override fun isImmobile(): Boolean = state == PlantState.INIT || super.isImmobile()
 
     override fun travel(input: Vec3) {
-        if (clampToGrid() && onGround()) {
+        if (clampToGrid() && !isInWater) {
             if (tickCount%20 == 0) super.travel(input)
         } else super.travel(input)
     }
 
     override fun setPos(x: Double, y: Double, z: Double) {
-        if (clampToGrid() && !isPassenger && !isAttached() && onGround()) {
+        if (clampToGrid() && !isPassenger && !isAttached()) {
             super.setPos(Mth.floor(x) + 0.5, y, Mth.floor(z) + 0.5)
         } else super.setPos(x, y, z)
     }
@@ -549,7 +559,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     override fun getDefaultGravity(): Double = if (isAttached()) 0.0 else super.getDefaultGravity()
-    override fun doPush(entity: Entity) { if (!clampToGrid() && !isAttached()) super.doPush(entity) }
+    override fun doPush(entity: Entity) { if ((canWalk() || rolling || isOverlappingWithOther()) && !isAttached()) super.doPush(entity) }
     override fun isAffectedByBlocks(): Boolean = if (isAttached()) !isRemoved else super.isAffectedByBlocks()
 
     override fun tick() {
@@ -629,6 +639,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
         }
 
         if (rolling && !level().isClientSide) calculateRollFriction()
+
+        if(clampToGrid()) level().getEntitiesOfClass(Plant::class.java, AABB(blockPosition())) { it != this }
+            .forEach { push(it) }
     }
 
     /**
@@ -826,7 +839,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
     /** if on invalid ground plant should start to suffocate */
     fun onValidGround() : Boolean {
-        return (attachedEntity != null) || hasPumpkinArmor() || canSurviveOn(getBlockBelow()) || vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
+        return canWalk() || (canSurviveOn(getBlockBelow()) && if (canBreatheUnderwater()) isInWater || onGround() else onGround()) || (attachedEntity != null) || hasPumpkinArmor() || vehicle?.`is`(PazEntities.PLANT_POT_MINECART) == true
     }
 
     fun sunIsVisible() : Boolean {
@@ -840,7 +853,7 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     open fun canSurviveOn(block: BlockState) : Boolean = canWalk() || block.`is`(PLANTABLE)
     open fun canPlaceOn(block: BlockState) : Boolean = canSurviveOn(block)
     open fun canProduceSeeds(): Boolean = true
-    open fun clampToGrid() = onGround() && !canWalk() && !rolling && onValidGround() && !isOverlappingWithOther()
+    open fun clampToGrid() = !canWalk() && !rolling && onValidGround() && !isOverlappingWithOther()
     open fun cooldownFinished() {}
     open fun rollingFriction(): Float = 0.5f
     override fun shouldDiscardFriction(): Boolean {
@@ -894,9 +907,9 @@ abstract class Plant(type: EntityType<out Plant>, level: Level) : TamableAnimal(
     }
 
     // whether another plant is in the same block space as this one
-    private fun isOverlappingWithOther(): Boolean {
+    fun isOverlappingWithOther(): Boolean {
         val otherPlantsAtPos = level().getEntitiesOfClass(Plant::class.java, AABB(blockPosition())) { it != this }
-        return otherPlantsAtPos.any { it.isAlive && !it.isDeadOrDying && boundingBox.intersects(it.boundingBox) }
+        return otherPlantsAtPos.any { it.isAlive && !it.isDeadOrDying && boundingBox.clampSize().intersects(it.boundingBox.clampSize()) }
     }
 
     override fun finalizeSpawn(

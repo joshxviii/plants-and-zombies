@@ -243,7 +243,7 @@ class PlantHeadAttachmentRenderLayer<S : LivingEntityRenderState, M : EntityMode
             val plantYaw = plantState.bodyRot + plantState.yRot
             plantState.renderedByWearer = false
             plantState.embeddedOnWearer = true
-            plantState.rotations = Quaternionf()
+            plantState.rotations.identity()
             plantState.bodyRot = 180f
             plantState.yRot = Mth.wrapDegrees(plantYaw - wearerYaw).coerceIn(-MAX_LOOK_YAW, MAX_LOOK_YAW)
             plantState.xRot = (plantState.xRot - wearerPitch).coerceIn(-MAX_LOOK_PITCH, MAX_LOOK_PITCH)

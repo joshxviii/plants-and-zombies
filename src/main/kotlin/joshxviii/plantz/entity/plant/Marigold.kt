@@ -43,7 +43,7 @@ class Marigold(type: EntityType<out Plant>, level: Level, ) : Plant(type, level)
     }
 
     override fun getTypeName(): Component {
-        return if (color != MarigoldColor.NONE) Component.translatable("entity.plantz.marigold.color", color.name.lowercase())
+        return if (color != MarigoldColor.NONE) Component.translatable("entity.plantz.marigold.color.${color.name.lowercase()}")
         else super.getTypeName()
     }
 

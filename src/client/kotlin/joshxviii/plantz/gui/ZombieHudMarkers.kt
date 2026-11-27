@@ -4,16 +4,20 @@ import joshxviii.plantz.PazBlocks
 import joshxviii.plantz.PazNetwork
 import joshxviii.plantz.entity.zombie.PazZombie
 import joshxviii.plantz.getHeldBalloons
+import joshxviii.plantz.raid.ZombieRaid.Companion.RAID_DISTANCE
 import joshxviii.plantz.raid.isActiveInRaid
+import joshxviii.plantz.raid.isBoss
 import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderState
-import joshxviii.plantz.renderer.entity.zombie.PazZombieRenderer
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
-import net.minecraft.client.model.HumanoidModel
+import net.minecraft.client.model.EntityModel
+import net.minecraft.client.renderer.entity.LivingEntityRenderer
+import net.minecraft.client.renderer.entity.MobRenderer
+import net.minecraft.client.renderer.entity.state.EntityRenderState
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
-import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.item.ItemStack
@@ -27,8 +31,8 @@ object ZombieHudMarkers {
 
     const val ICON_SIZE = 8
 
-    private const val MIN_DISTANCE = 10.0
-    private const val MAX_DISTANCE = 96.0
+    private const val MIN_DISTANCE = 6.0
+    private const val MIN_FORCED_DISTANCE = 50.0
 
     fun renderIcons(graphics: GuiGraphicsExtractor, deltaTracker: DeltaTracker) {
         val mc = Minecraft.getInstance()
@@ -48,24 +52,28 @@ object ZombieHudMarkers {
     fun headIcon(graphics: GuiGraphicsExtractor, zombie: Zombie, x: Int, y: Int) {
         val mc = Minecraft.getInstance()
         val partial = mc.deltaTracker.getGameTimeDeltaPartialTick(false)
-        val state = (mc.entityRenderDispatcher.extractEntity(zombie, partial) as? PazZombieRenderState)?.also {// state to render model as
+        val state = (mc.entityRenderDispatcher.extractEntity(zombie, partial) as? LivingEntityRenderState)?.also {// state to render model as
             it.walkAnimationPos = 0f
             it.walkAnimationSpeed = 0f
             it.deathTime = 0f
-            it.isAngry = true
             it.isBaby = zombie.isBaby
+            it.yRot = 0f
+            it.xRot = 0f
+            it.bodyRot = 0f
+        }?: return
+        (state as? PazZombieRenderState)?.let {
+            it.isAngry = true
             it.headOnly = true
             it.mainHandItemState.clear()
             it.rightHandItemState.clear()
             it.leftHandItemState.clear()
-            it.yRot = 0f
-            it.xRot = 0f
-            it.bodyRot = 0f
             it.movementDirection = Vec3.ZERO
-        }?: return
 
-        val renderer = mc.entityRenderDispatcher.getRenderer(state) as? PazZombieRenderer ?: return
-        val model = if(state.isBaby) renderer.babyModel ?: renderer.defaultModel else renderer.defaultModel
+        }
+        if (state.isInvisible) return
+
+        val renderer = mc.entityRenderDispatcher.getRenderer(state) as? LivingEntityRenderer<*, LivingEntityRenderState, *> ?: return
+        val model = renderer.model
         val texture = renderer.getTextureLocation(state)
 
         val cx = x + ICON_SIZE * 0.5
@@ -73,14 +81,15 @@ object ZombieHudMarkers {
         val baseScale = ICON_SIZE * 2.0f
 
         // outline
-        submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale * state.scale, outlinePad = 1.15f)
+        submitHead(graphics, zombie, model, texture, cx, cy, baseScale * state.scale, outlinePad = 1.15f)
         // head icon
-        // TODO I should probably take a screen shot when resources are loaded of each entity in the zombie raider tag list and save the head marker image to reuse here
-        submitHead(graphics, zombie, model, texture, zombie.getItemBySlot(EquipmentSlot.HEAD), cx, cy, baseScale * state.scale)
+        submitHead(graphics, zombie, model, texture, cx, cy, baseScale * state.scale)
 
+        // flag icon
         if (zombie.mainHandItem.`is`(PazBlocks.BRAINZ_FLAG_BLOCK.asItem()) || zombie.offhandItem.`is`(PazBlocks.BRAINZ_FLAG_BLOCK.asItem())) submitItem(graphics,
             PazBlocks.BRAINZ_FLAG_BLOCK.asItem().defaultInstance, cx, cy, baseScale)
 
+        //balloon icon
         val balloon = (zombie as? PazZombie)?.getHeldBalloons()?.firstOrNull()
         if (balloon != null) submitItem(graphics, balloon.pickResult, cx, cy-8, baseScale)
     }
@@ -102,17 +111,16 @@ object ZombieHudMarkers {
     private fun submitHead(
         graphics: GuiGraphicsExtractor,
         zombie: Zombie,
-        model: HumanoidModel<*>,
+        model: EntityModel<*>,
         texture: Identifier,
-        itemStack: ItemStack,
         cx: Double,
         cy: Double,
         scale: Float,
         outlinePad: Float = 0f
     ) {
-        graphics.guiRenderState.addGuiElement(
-            HeadHudMarker(zombie, model, texture, itemStack, cx, cy, scale, outlinePad)
-        )
+        for (segment in HeadHudMarker.build(zombie, model, texture, cx, cy, scale, outlinePad)) {
+            graphics.guiRenderState.addGuiElement(segment)
+        }
     }
 
     fun collect(client: Minecraft): List<Marker> {
@@ -125,14 +133,14 @@ object ZombieHudMarkers {
 
                 if (!entity.isActiveInRaid()) continue
 
-                if (!isViewObscured(cam, entity)) continue
-
                 val pos = entity.getPosition(client.deltaTracker.getGameTimeDeltaPartialTick(false)).add(0.0, entity.eyeHeight.toDouble(), 0.0)
                 val dist = pos.distanceToSqr(cam)
-                if (dist !in (MIN_DISTANCE*MIN_DISTANCE)..(MAX_DISTANCE*MAX_DISTANCE)) continue
+
+                if (!isViewObscured(cam, entity) && dist < (MIN_FORCED_DISTANCE*MIN_FORCED_DISTANCE)) continue
+                if (dist !in (MIN_DISTANCE*MIN_DISTANCE)..(RAID_DISTANCE*RAID_DISTANCE).toDouble()) continue
                 add(Marker(pos, entity))
             }
-        }.sortedByDescending { it.zombie.distanceToSqr(cam) }
+        }.sortedByDescending { it.zombie.distanceToSqr(cam) * if (it.zombie.isBoss()) 0.01 else 1.0 }// bosses render on top
     }
 
     fun isViewObscured(camPos: Vec3, target: LivingEntity): Boolean {
